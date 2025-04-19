@@ -1,0 +1,1018 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>使用 Laravel Excel 实现 Excel/CSV 文件导入导出 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="UIXRvtJNSp25hlYxpQ3SQtDTO9HkIE23wnVZr6t6">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Flutter/overview.html">Flutter</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件&amp;工具/jwnex89yxd.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PayPal/overview.html">PayPal</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Redis/overview.html">Redis</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付宝/overview.html">支付宝</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../阿里云/overview.html">阿里云</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>Laravel</h2>
+<ul>
+<li id="blog1"><a href="kq1ezkerl5.html#blog1">Laravel 请求的生命周期介绍</a>
+<li id="blog2"><a href="z64y96y5lg.html#blog2">Laravel blade 模板压缩、加速扩展 renatomarinho/Laravel-page-speed 介绍</a>
+<li id="blog7"><a href="m0wekxvp9k.html#blog7">Laravel 生成精美的项目使用文档扩展 overtrue/wisteria</a>
+<li id="blog8"><a href="7okv5nv1nw.html#blog8">Laravel 腾讯云 cos 存储扩展</a>
+<li id="blog16"><a href="nq5vrgy7p3.html#blog16">如何在 Laravel 中创建自定义辅助函数</a>
+<li id="blog17"><a href="1j6y0je2k8.html#blog17">如何在 Laravel 中创建自定义日志文件？</a>
+<li id="blog27"><a href="mx5e6dkv0r.html#blog27">使你的 Laravel 项目模块化</a>
+<li id="blog77"><a href="n2oegkzv73.html#blog77">Dcat Admin 扩展收集</a>
+<li id="blog78"><a href="7ndvd92eo2.html#blog78">使用 Octane 扩展加速您的 Laravel 项目</a>
+<li id="blog127"><a href="mx5e6j8v0r.html#blog127">Laravel 文件和数据库备份工具 spatie/laravel-backup 介绍</a>
+<li id="blog135"><a href="pwde4ldy6q.html#blog135">Laravel中使用group by报错的问题</a>
+<li id="blog152"><a href="rpnv3l0vwm.html#blog152">Laravel 项目加速</a>
+<li id="blog155"><a href="m0wek0wvp9.html#blog155">Laravel 、 PHP 二维码生成扩展 SimpleSoftwareIO/simple-qrcode</a>
+<li id="blog156"><a href="7okv521v1n.html#blog156">Laravel 代码提示工具 Laravel IDE Helper 介绍</a>
+<li id="blog158"><a href="54lvo06v6z.html#blog158">使用 Laravel Excel 实现 Excel/CSV 文件导入导出</a>
+<li id="blog159"><a href="3qk945gvw1.html#blog159">客户端 User Agent 解析扩展</a>
+<li id="blog229"><a href="n2oeg58v73.html#blog229">Laravel 常用扩展收集</a>
+<li id="blog322"><a href="71xyjjryd9.html#blog322">Larvale MySQL事务回退、悲观锁</a>
+<li id="blog422"><a href="71xyjpxyd9.html#blog422">Laravel octane 使用蓝绿部署方案实现0停机部署</a>
+<li id="blog434"><a href="54lvo52e6z.html#blog434">使用 AdapterMan 扩展加速您的 Laravel 项目</a>
+</ul>
+</li>
+<li>
+<h2>生命周期</h2>
+<ul>
+<li id="blog1"><a href="kq1ezkerl5.html#blog1">Laravel 请求的生命周期介绍</a>
+</ul>
+</li>
+<li>
+<h2>扩展</h2>
+<ul>
+<li id="blog7"><a href="m0wekxvp9k.html#blog7">Laravel 生成精美的项目使用文档扩展 overtrue/wisteria</a>
+<li id="blog155"><a href="m0wek0wvp9.html#blog155">Laravel 、 PHP 二维码生成扩展 SimpleSoftwareIO/simple-qrcode</a>
+<li id="blog156"><a href="7okv521v1n.html#blog156">Laravel 代码提示工具 Laravel IDE Helper 介绍</a>
+<li id="blog158"><a href="54lvo06v6z.html#blog158">使用 Laravel Excel 实现 Excel/CSV 文件导入导出</a>
+<li id="blog159"><a href="3qk945gvw1.html#blog159">客户端 User Agent 解析扩展</a>
+<li id="blog229"><a href="n2oeg58v73.html#blog229">Laravel 常用扩展收集</a>
+</ul>
+</li>
+<li>
+<h2>DcatAdmin</h2>
+<ul>
+<li id="blog37"><a href="4oxy778y98.html#blog37">DcatAdmin 表格和表单各按钮显示控制方法汇总</a>
+<li id="blog49"><a href="kq1ez6kvrl.html#blog49">给 Dcat Admin 框架 Markdown 编辑器添加图片复制粘贴自动上传功能</a>
+<li id="blog77"><a href="n2oegkzv73.html#blog77">Dcat Admin 扩展收集</a>
+<li id="blog87"><a href="j25v1g6v1n.html#blog87">Dcat Admin 自定义 TinyMce 富文本编辑器设置</a>
+<li id="blog88"><a href="nq5vr3gv7p.html#blog88">Dcat Admin 关联模型字段翻译设置</a>
+<li id="blog89"><a href="1j6y0dje2k.html#blog89">Dcat Admin 实现 Excel 数据导入</a>
+<li id="blog90"><a href="xkdvp9qezo.html#blog90">Dcat Admin 数据表格工具栏添加后台交互按钮</a>
+<li id="blog178"><a href="7ndvdjpvo2.html#blog178">Dcat Admin 表格中每行添加异步加载数据表格按钮方法</a>
+</ul>
+</li>
+<li>
+<h2>editor.md</h2>
+<ul>
+<li id="blog49"><a href="kq1ez6kvrl.html#blog49">给 Dcat Admin 框架 Markdown 编辑器添加图片复制粘贴自动上传功能</a>
+</ul>
+</li>
+<li>
+<h2>Octane</h2>
+<ul>
+<li id="blog78"><a href="7ndvd92eo2.html#blog78">使用 Octane 扩展加速您的 Laravel 项目</a>
+<li id="blog422"><a href="71xyjpxyd9.html#blog422">Laravel octane 使用蓝绿部署方案实现0停机部署</a>
+</ul>
+</li>
+<li>
+<h2>swoole</h2>
+<ul>
+<li id="blog78"><a href="7ndvd92eo2.html#blog78">使用 Octane 扩展加速您的 Laravel 项目</a>
+</ul>
+</li>
+<li>
+<h2>TinyMce</h2>
+<ul>
+<li id="blog87"><a href="j25v1g6v1n.html#blog87">Dcat Admin 自定义 TinyMce 富文本编辑器设置</a>
+</ul>
+</li>
+<li>
+<h2>备份</h2>
+<ul>
+<li id="blog127"><a href="mx5e6j8v0r.html#blog127">Laravel 文件和数据库备份工具 spatie/laravel-backup 介绍</a>
+</ul>
+</li>
+<li>
+<h2>跨域</h2>
+<ul>
+<li id="blog130"><a href="7ndvd4pvo2.html#blog130">Lumen 框架解决非简单请求 cors 跨域问题</a>
+</ul>
+</li>
+<li>
+<h2>Lumen</h2>
+<ul>
+<li id="blog130"><a href="7ndvd4pvo2.html#blog130">Lumen 框架解决非简单请求 cors 跨域问题</a>
+</ul>
+</li>
+<li>
+<h2>MySQL</h2>
+<ul>
+<li id="blog135"><a href="pwde4ldy6q.html#blog135">Laravel中使用group by报错的问题</a>
+<li id="blog322"><a href="71xyjjryd9.html#blog322">Larvale MySQL事务回退、悲观锁</a>
+<li id="blog460"><a href="x569xd8vep.html#blog460">Laravel 动态创建 mysql 数据库表</a>
+</ul>
+</li>
+<li>
+<h2>PHP</h2>
+<ul>
+<li id="blog155"><a href="m0wek0wvp9.html#blog155">Laravel 、 PHP 二维码生成扩展 SimpleSoftwareIO/simple-qrcode</a>
+</ul>
+</li>
+<li>
+<h2>二维码</h2>
+<ul>
+<li id="blog155"><a href="m0wek0wvp9.html#blog155">Laravel 、 PHP 二维码生成扩展 SimpleSoftwareIO/simple-qrcode</a>
+</ul>
+</li>
+<li>
+<h2>Excel</h2>
+<ul>
+<li id="blog158"><a href="54lvo06v6z.html#blog158">使用 Laravel Excel 实现 Excel/CSV 文件导入导出</a>
+</ul>
+</li>
+<li>
+<h2>User Agent</h2>
+<ul>
+<li id="blog159"><a href="3qk945gvw1.html#blog159">客户端 User Agent 解析扩展</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '54lvo06v6z.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/54lvo06v6z.html', function (data, status) {
+                addView('54lvo06v6z.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script> -->
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>使用 Laravel Excel 实现 Excel/CSV 文件导入导出</h1><ul>
+<li><a href="54lvo06v6z.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="54lvo06v6z.html#4734eebe11033cc7e259ddab1c25fc39">安装&amp;配置</a>
+<ul>
+<li><a href="54lvo06v6z.html#170e635ab2686c42ba2f8e845a035640">使用Composer安装依赖</a></li>
+<li><a href="54lvo06v6z.html#224e2ccda861c2514faa683b3683c361">配置</a></li>
+</ul></li>
+<li><a href="54lvo06v6z.html#c00ad82a02c2cfebed4b7f022bcc2b2f">Excel 导入教程</a>
+<ul>
+<li><a href="54lvo06v6z.html#d5b5b0e69a4966c5a1ad406bfd0b536f">分块导入</a></li>
+<li><a href="54lvo06v6z.html#5bfd0f5f74c9424edea1d4fbac943258">多 sheet 导入</a></li>
+</ul></li>
+<li><a href="54lvo06v6z.html#f79d19270b11175799217f7ae8cac8e7">Excel 导出教程</a>
+<ul>
+<li><a href="54lvo06v6z.html#4f437d6442351f4a55a46c9f2c470945">单元格格式化</a></li>
+<li><a href="54lvo06v6z.html#a0e04b3efcf218d891499ee89b26f244">自动适应单元格宽</a></li>
+<li><a href="54lvo06v6z.html#cfd38e7635b7ec0c50e34977fb4da153">导出多 sheet</a></li>
+<li><a href="54lvo06v6z.html#f3b2aa97df194e437a84e20575778b9f">设置单元格高度以及垂直居中，字体颜色、背景色等</a></li>
+<li><a href="54lvo06v6z.html#0130accd92930dfbdf2b84675052b3a2">导出图片</a></li>
+</ul></li>
+</ul><p><img src="../../storage/images/2022/02/08/e0200f0b118c04966fbaaf94e46b2e67.png" alt="" /></p>
+<h2 id="e05dce83e5129785b9f316978a14b896">简介</h2>
+<p>Laravel Excel 在 Laravel 5 中集成 <a href="https://github.com/PHPOffice">PHPOffice</a> 套件中的 <a href="https://github.com/PHPOffice/PHPExcel">PHPExcel</a>，从而方便我们以优雅的、富有表现力的代码实现Excel/CSV文件的导入和导出。</p>
+<p>该项目的GitHub地址是：<a href="https://github.com/SpartnerNL/Laravel-Excel">https://github.com/SpartnerNL/Laravel-Excel</a>。</p>
+<p>本文我们将在Laravel中使用Laravel Excel简单实现Excel文件的导入和导出。</p>
+<h2 id="4734eebe11033cc7e259ddab1c25fc39">安装&amp;配置</h2>
+<h3 id="170e635ab2686c42ba2f8e845a035640">使用Composer安装依赖</h3>
+<p>首先在Laravel项目根目录下使用Composer安装依赖：</p>
+<pre><code class="language-bash">composer require maatwebsite/excel</code></pre>
+<h3 id="224e2ccda861c2514faa683b3683c361">配置</h3>
+<pre><code class="language-bash">php artisan vendor:publish --provider="Maatwebsite\Excel\ExcelServiceProvider" --tag=config</code></pre>
+<p>执行成功后会在config目录下生成一个配置文件excel.php。</p>
+<p>具体使用参考官方文档：<a href="https://docs.laravel-excel.com/3.1/getting-started/">https://docs.laravel-excel.com/3.1/getting-started/</a></p>
+<h2 id="c00ad82a02c2cfebed4b7f022bcc2b2f">Excel 导入教程</h2>
+<p>新建导入文件，导入导出业务代码尽量不要和原来业务耦合。我们拿官网 user 模块举例</p>
+<pre><code class="   language-php"># toModel 模式
+php artisan make:import -m App\Models\Users UsersImport
+
+# ToCollection 模式
+php artisan make:import UsersImport</code></pre>
+<p>会在 app 目录下创建 Exports 目录</p>
+<pre><code class="   language-php">.
+├── app
+│   ├── Imports
+│   │   ├── UsersImport.php
+│ 
+└── composer.json</code></pre>
+<p>UsersImport.php 代码内容</p>
+<pre><code class="language-php">&lt;?php
+
+namespace App\Imports;
+
+use App\User;
+use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Concerns\ToModel;
+
+class UsersImport implements ToModel
+{
+    /**
+     * @param array $row
+     *
+     * @return User|null
+     */
+    public function model(array $row)
+    {
+        return new User([
+           'name'     =&gt; $row[0],
+           'email'    =&gt; $row[1], 
+           'password' =&gt; Hash::make($row[2]),
+        ]);
+    }
+}</code></pre>
+<p>业务控制器中调用</p>
+<pre><code class="language-php">use App\Imports\UsersImport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\Controller;
+
+class UsersController extends Controller 
+{
+    public function import() 
+    {
+        Excel::import(new UsersImport, 'users.xlsx');
+    }
+}</code></pre>
+<p>需要说明的是，上面所用的模式是 toModel，不需要手动去调用 save 方法，如果需要手动控制存储过程，请使用下列方法。</p>
+<pre><code class="language-php">&lt;?php
+
+namespace App\Imports;
+
+use App\User;
+use Illuminate\Support\Facades\Hash;
+//替换 toModel
+use Maatwebsite\Excel\Concerns\ToCollection;
+
+class UsersImport implements ToCollection
+{
+
+  /**
+     * @param Collection $collection
+     */
+    public function collection(Collection $collection)
+    {
+        $data = $collection-&gt;toArray();
+        //如果需要去除表头
+        unset($data['0']);
+        if (count($data) &gt; 1) {
+            $this-&gt;createData($data);
+        }
+    }
+
+    // 具体业务代码 
+    public function createData($rows)
+    {
+        //todo
+    }
+}</code></pre>
+<p>Excel 导入基本功能到这基本完成，应该可以满足80%业务需求。如果有更多需求请继续阅读，下面将介绍分块导入、多表导入。</p>
+<h3 id="d5b5b0e69a4966c5a1ad406bfd0b536f">分块导入</h3>
+<p>如果 excel 数据量比较大，不适合一次性导入数据库，可以通过按量分块导入的方式节约内存。</p>
+<p>按 1000 条为基准取出导入</p>
+<pre><code class="language-php">namespace App\Imports;
+
+use App\User;
+use Maatwebsite\Excel\Concerns\ToModel;
+//新增
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+
+class UsersImport implements ToModel, WithBatchInserts, WithChunkReading
+{
+    public function model(array $row)
+    {
+        return new User([
+            'name' =&gt; $row[0],
+        ]);
+    }
+
+    //批量导入1000条
+    public function batchSize(): int
+    {
+        return 1000;
+    }
+    //以1000条数据基准切割数据
+    public function chunkSize(): int
+    {
+        return 1000;
+    }
+}</code></pre>
+<h3 id="5bfd0f5f74c9424edea1d4fbac943258">多 sheet 导入</h3>
+<p>和导出比较类似，需要两步操作，第一步读取整体 excel 结构，第二步完成对应表数据导入。</p>
+<p>第一个文件 UsersImport.php</p>
+<pre><code class="language-php">namespace App\Imports;
+
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+
+class UsersImport implements WithMultipleSheets 
+{
+
+    public function sheets(): array
+    {
+        //这里需要注意的是键，这个键可以是sheet表的名称，比如 'sheet1'=&gt; new FirstSheetImport()
+        return [
+            0 =&gt; new FirstSheetImport(),
+            1 =&gt; new SecondSheetImport(),
+        ];
+    }
+}</code></pre>
+<p>这里我没有找到获取所有 sheet 的方法，所以只能一个个指定，如果你调用的方法是一致的，可以参考以下我的写法。如果你有更好的方式，欢迎交流。</p>
+<pre><code class="language-php">public function sheets(): array
+{
+    $sheet = [];
+    for ($i=1; $i&lt;=26; $i++) {
+        $sheet[$i] = new CustomSheetImport();
+    }
+    return $sheet;
+}</code></pre>
+<p>第二个文件处理数据</p>
+<pre><code class="language-php">namespace App\Imports;
+
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+
+class FirstSheetImport implements ToCollection
+{
+    public function collection(Collection $rows)
+    {
+        //todo
+    }
+}</code></pre>
+<p>其他比如数据验证之类的方法我觉得还是不要使用它提供的方式，大部分业务环境不需要这些额外繁琐的东西。</p>
+<h2 id="f79d19270b11175799217f7ae8cac8e7">Excel 导出教程</h2>
+<p>新建导出文件，导入导出业务代码尽量不要和原来业务耦合。我们拿官网 user 模块举例</p>
+<p>使用make:export命令在 <code>p/Exports</code> 创建导出类</p>
+<pre><code class="language-bash">php artisan make:export UsersExport --model=User</code></pre>
+<p>会在 app 目录下创建 Exports 目录</p>
+<pre><code class="   language-php">.
+├── app
+│   ├── Exports
+│   │   ├── UsersExport.php
+│ 
+└── composer.json</code></pre>
+<p>UsersExport.php 代码内容</p>
+<pre><code class="language-php">&lt;?php
+
+namespace App\Exports;
+
+use App\User;
+use Maatwebsite\Excel\Concerns\FromCollection;
+
+class UsersExport implements FromCollection
+{
+    public function collection()
+    {
+        return User::all();
+    }
+}</code></pre>
+<p>业务控制器中调用此导出</p>
+<pre><code class="language-php">
+&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+class UsersController extends Controller 
+{
+    public function export() 
+    {
+        return Excel::download(new UsersExport, 'users.xlsx');
+    }
+}</code></pre>
+<p>很方便简单是不是。这样可以把 user 表中所有内容都导入 excel 。很显然你的业务不会如此简单，那就继续。</p>
+<p>Laravel Excel 支持查询语句导出、数组导出、视图表格导出，这些可以具体查看文档。</p>
+<p>我们通常情况下需要组装业务数据，集合导出可以作为通用的导出方案。</p>
+<pre><code class="language-php">&lt;?php
+
+namespace App\Exports;
+
+use App\User;
+use Maatwebsite\Excel\Concerns\FromCollection;
+
+class UsersExport implements FromCollection
+{
+    protected $data;
+
+    //构造函数传值
+    public function __construct($data)
+    {
+        $this-&gt;data = $data;
+    }
+    //数组转集合
+    public function collection()
+    {
+        return new Collection($this-&gt;createData());
+    }
+    //业务代码
+    public function createData()
+    {
+      //todo 业务
+    }
+}</code></pre>
+<p>createData 方法返回的数据格式如下</p>
+<pre><code class="language-php">return [
+            ['编号', '姓名', '年龄']
+            [1, '小明', '18岁'],
+            [4, '小红', '17岁']
+       ];</code></pre>
+<p>需要注意的是，这里组装了 excel 的表头，这也是比较方便的地方。<br />
+如此，简单的业务导出就完成了，应该可以满足80%需求，接下来我们继续，比如单元格格式化、自动适应、设置宽高、导出图片、多 sheet 表等功能。</p>
+<h3 id="4f437d6442351f4a55a46c9f2c470945">单元格格式化</h3>
+<p>有时候我们需要对单元格处理文本、数字、日期、金额等格式。</p>
+<pre><code class="language-php">&lt;?php
+
+namespace App\Exports;
+
+use App\User;
+use Maatwebsite\Excel\Concerns\FromCollection;
+//新增两个 use
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+
+//新增 WithColumnFormatting
+class UsersExport implements FromCollection, WithColumnFormatting
+{
+    public function collection()
+    {
+        return User::all();
+    }
+}
+
+ /**
+   * @return array
+   */
+public function columnFormats(): array
+{
+    return [
+        'B' =&gt; NumberFormat::FORMAT_DATE_DDMMYYYY, //日期
+        'C' =&gt; NumberFormat::FORMAT_NUMBER_00, //金额保留两位小数
+    ];
+}</code></pre>
+<h3 id="a0e04b3efcf218d891499ee89b26f244">自动适应单元格宽</h3>
+<pre><code class="language-php">&lt;?php
+
+namespace App\Exports;
+
+use App\User;
+use Maatwebsite\Excel\Concerns\FromCollection;
+//新增
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+
+//新增 ShouldAutoSize
+class UsersExport implements FromCollection, ShouldAutoSize
+{
+    public function collection()
+    {
+        return User::all();
+    }
+}</code></pre>
+<h3 id="cfd38e7635b7ec0c50e34977fb4da153">导出多 sheet</h3>
+<p>多表导出需要做两步操作，第一组装 sheet，第二生成对应的 sheet 表</p>
+<pre><code class="language-php">&lt;?php
+
+namespace App\Exports;
+
+use App\User;
+//新增
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+
+//新增 WithMultipleSheets
+class UsersExport implements WithMultipleSheets
+{
+    use Exportable;
+
+    protected $year;
+
+    public function __construct(int $year)
+    {
+        $this-&gt;year = $year;
+    }
+
+    /**
+     * @return array
+     */
+    public function sheets(): array
+    {
+        $sheets = [];
+
+        for ($month = 1; $month &lt;= 12; $month++) {
+            //不同的数据可以调用不同的方法
+            $sheets[] = new UserPerMonthSheet($this-&gt;year, $month);
+        }
+
+        return $sheets;
+    }
+}</code></pre>
+<p>然后新建 UserPerMonthSheet 类</p>
+<pre><code class="language-php">namespace App\Exports;
+
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithTitle;
+
+class UserPerMonthSheet implements FromQuery, WithTitle
+{
+    private $month;
+    private $year;
+
+    public function __construct(int $year, int $month)
+    {
+        $this-&gt;month = $month;
+        $this-&gt;year  = $year;
+    }
+
+    /**
+     * @return Builder
+     */
+    public function query()
+    {
+        return User
+            ::query()
+            -&gt;whereYear('created_at', $this-&gt;year)
+            -&gt;whereMonth('created_at', $this-&gt;month);
+    }
+
+    /**
+     * sheet 表名称
+     * @return string
+     */
+    public function title(): string
+    {
+        return 'Month ' . $this-&gt;month;
+    }
+}</code></pre>
+<h3 id="f3b2aa97df194e437a84e20575778b9f">设置单元格高度以及垂直居中，字体颜色、背景色等</h3>
+<p>这里需要用到 Laravel Excel 的事件模块</p>
+<p>提供多种事件 BeforeExport、BeforeWriting、BeforeSheet，AfterSheet等等，也就是导出功能的生命周期，具体查看文档即可。修改单元格高度我们这里使用 AfterSheet</p>
+<pre><code class="language-php">namespace App\Exports;
+
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\BeforeExport;
+use Maatwebsite\Excel\Events\BeforeWriting;
+use Maatwebsite\Excel\Events\BeforeSheet;
+
+class UserExport implements WithEvents
+{
+    /**
+     * 注册事件
+     * @return array
+     */
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class  =&gt; function(AfterSheet $event) {
+                //设置作者
+                $event-&gt;writer-&gt;setCreator('Patrick');
+                //设置列宽
+                $event-&gt;sheet-&gt;getDelegate()-&gt;getColumnDimension('A')-&gt;setWidth(50);
+                //设置行高，$i为数据行数
+                for ($i = 0; $i&lt;=1265; $i++) {
+                    $event-&gt;sheet-&gt;getDelegate()-&gt;getRowDimension($i)-&gt;setRowHeight(50);
+                }
+
+               // 设置区域单元格自动换行
+               $event-&gt;sheet-&gt;getStyle('A1:Z1265')-&gt;getAlignment()-&gt;setWrapText(true);
+
+               // 设置指定单元格自动换行
+              $event-&gt;sheet-&gt;getStyle('A2')-&gt;getAlignment()-&gt;setWrapText(true);
+
+                //设置区域单元格垂直居中
+                $event-&gt;sheet-&gt;getDelegate()-&gt;getStyle('A1:K1265')-&gt;getAlignment()-&gt;setVertical('center');
+                //设置区域单元格字体、颜色、背景等，其他设置请查看 applyFromArray 方法，提供了注释
+                $event-&gt;sheet-&gt;getDelegate()-&gt;getStyle('A1:K6')-&gt;applyFromArray([
+                    'font' =&gt; [
+                        'name' =&gt; 'Arial',
+                        'bold' =&gt; true,
+                        'italic' =&gt; false,
+                        'strikethrough' =&gt; false,
+                        'color' =&gt; [
+                            'rgb' =&gt; '808080'
+                        ]
+                    ],
+                    'fill' =&gt; [
+                        'fillType' =&gt; 'linear', //线性填充，类似渐变
+                        'rotation' =&gt; 45, //渐变角度
+                        'startColor' =&gt; [
+                            'rgb' =&gt; '000000' //初始颜色
+                        ],
+                        //结束颜色，如果需要单一背景色，请和初始颜色保持一致
+                        'endColor' =&gt; [
+                            'argb' =&gt; 'FFFFFF'
+                        ]
+                    ]
+                ]);
+                //合并单元格
+                $event-&gt;sheet-&gt;getDelegate()-&gt;mergeCells('A1:B1');
+            }
+        ];
+    }
+}</code></pre>
+<p>我没找到能全局处理的方式，如果你们知道请告诉我，万分感谢。</p>
+<h3 id="0130accd92930dfbdf2b84675052b3a2">导出图片</h3>
+<pre><code class="language-php">&lt;?php
+
+namespace App\Exports;
+
+//新增
+use Maatwebsite\Excel\Concerns\WithDrawings;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+
+class UserExport implements WithDrawings
+{
+    public function drawings()
+    {
+        $drawing = new Drawing();
+        $drawing-&gt;setName('Logo');
+        $drawing-&gt;setDescription('This is my logo');
+        $drawing-&gt;setPath(public_path('/img/logo.jpg'));
+        $drawing-&gt;setHeight(50);
+        $drawing-&gt;setCoordinates('B3');
+
+        $drawing2 = new Drawing();
+        $drawing2-&gt;setName('Other image');
+        $drawing2-&gt;setDescription('This is a second image');
+        $drawing2-&gt;setPath(public_path('/img/other.jpg'));
+        $drawing2-&gt;setHeight(120);
+        $drawing2-&gt;setCoordinates('G2');
+
+        return [$drawing, $drawing2];
+    }
+}</code></pre>
+<p>这是官方的例子，实际使用中我们不可能手写这么多方法块，我改写一下</p>
+<pre><code class="language-php">public function drawings()
+{
+    //这里的数据自己组装
+    $draw_arr = [1 =&gt;'detail1.jpg', 2 =&gt; 'detail2.jpg'];
+    $result = [];
+    foreach ($draw_arr as $k =&gt; $v) {
+      ${'drawing'.$k} = new Drawing();
+      ${'drawing'.$k}-&gt;setName('Other image');
+      ${'drawing'.$k}-&gt;setDescription('This is a second image');
+      //图片路径
+      ${'drawing'.$k}-&gt;setPath(public_path($v));
+      ${'drawing'.$k}-&gt;setHeight(50);
+      //设置图片列
+      ${'drawing'.$k}-&gt;setCoordinates('U'.$k);
+      $result[] = ${'drawing'.$k};
+    }
+    return $result;
+}</code></pre><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> PHPOffice: <i><a href="https://github.com/PHPOffice" target="_blank">https://github.com/PHPOffice</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> PHPExcel: <i><a href="https://github.com/PHPOffice/PHPExcel" target="_blank">https://github.com/PHPOffice/PHPExcel</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> https://github.com/SpartnerNL/Laravel-Excel: <i><a href="https://github.com/SpartnerNL/Laravel-Excel" target="_blank">https://github.com/SpartnerNL/Laravel-Excel</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> https://docs.laravel-excel.com/3.1/getting-started/: <i><a href="https://docs.laravel-excel.com/3.1/getting-started/" target="_blank">https://docs.laravel-excel.com/3.1/getting-started/</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

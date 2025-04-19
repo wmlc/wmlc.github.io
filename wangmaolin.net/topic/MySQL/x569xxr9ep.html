@@ -1,0 +1,474 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>高并发系统数据库架构设计 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="UIXRvtJNSp25hlYxpQ3SQtDTO9HkIE23wnVZr6t6">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    MySQL <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Flutter/overview.html">Flutter</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件&amp;工具/jwnex89yxd.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PayPal/overview.html">PayPal</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Redis/overview.html">Redis</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付宝/overview.html">支付宝</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../阿里云/overview.html">阿里云</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>字段</h2>
+<ul>
+<li id="blog71"><a href="x2ev8zwvor.html#blog71">MySQL 批量替换字段中的域名</a>
+<li id="blog112"><a href="jwnex74vxd.html#blog112">Mysql 的日期时间类型说明</a>
+<li id="blog337"><a href="mdgy70xvw2.html#blog337">MySql 字段类型说明和推荐</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog82"><a href="4x3vo76ym1.html#blog82">MySQL 回表查询</a>
+<li id="blog336"><a href="x569xxr9ep.html#blog336">高并发系统数据库架构设计</a>
+<li id="blog351"><a href="k3dyk7zvl0.html#blog351">MySql 定位和分析执行效率的方法</a>
+<li id="blog488"><a href="od6vrqr93g.html#blog488">MySql 单表分页 Limit 性能优化</a>
+<li id="blog492"><a href="4wevwlzyl2.html#blog492">MySql 索引介绍</a>
+<li id="blog675"><a href="3dykq84yl0.html#blog675">Mysql 性能优化方法汇总</a>
+</ul>
+</li>
+<li>
+<h2>MySQL</h2>
+<ul>
+<li id="blog86"><a href="lgwyldne3q.html#blog86">MySQL concat、concat_ws、group_concat 函数用法</a>
+<li id="blog107"><a href="m0wek4wyp9.html#blog107">SQL 中 WHERE 和 HAVING 子句有什么区别？</a>
+<li id="blog134"><a href="54lvo36v6z.html#blog134">MySql 5.7 报错 sql_mode=only_full_group_by 问题解决方法</a>
+<li id="blog148"><a href="8loyn5oyz3.html#blog148">mysql 控制 sql 长度的相关参数</a>
+<li id="blog172"><a href="de296j6vq7.html#blog172">MySql 各日志配置方法：错误日志、慢查询日志、执行日志</a>
+<li id="blog177"><a href="n2oegm5e73.html#blog177">MySQL 查询中 where in 如何保持顺序</a>
+<li id="blog270"><a href="71xyjw0ed9.html#blog270">理解 MySQL 字符集</a>
+<li id="blog300"><a href="8loyn11vz3.html#blog300">MySQL order by limit 分页数据重复或丢失问题说明</a>
+<li id="blog301"><a href="nxq9zd5ydo.html#blog301">mysql 事务特性以及隔离级别说明</a>
+<li id="blog302"><a href="z64y912e5l.html#blog302">MySQL 共享锁&amp;排他锁</a>
+<li id="blog352"><a href="rpnv37wywm.html#blog352">MySQL 创建索引报错 &quot;Specified key was too long; max key length is 767 bytes&quot; 原因</a>
+<li id="blog473"><a href="nxq9zgjydo.html#blog473">MySQL中当字段值为 <code>NULL</code> 时的注意事项</a>
+<li id="blog489"><a href="02ky0klvz8.html#blog489">SQL 的执行顺序</a>
+<li id="blog490"><a href="n2qvpnzy3m.html#blog490">MySQL 基础架构</a>
+<li id="blog491"><a href="5m892e6901.html#blog491">MySQL不能远程连接解决方法</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'x569xxr9ep.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/x569xxr9ep.html', function (data, status) {
+                addView('x569xxr9ep.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script> -->
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>高并发系统数据库架构设计</h1><ul>
+<li><a href="x569xxr9ep.html#bd1b7f7d7e8d579a6d996ffcdec021ad">WEB应用和数据库部署在同一台服务器上</a></li>
+<li><a href="x569xxr9ep.html#00f0aad30d3ef97c8426264da6b00a3a">WEB应用和数据库部署在各自独立的服务器上</a></li>
+<li><a href="x569xxr9ep.html#106ac1c61cb9595886cce1ad8b39c5aa">数据库服务器采用集群方式部署（比如Oracle的一个数据库多个实例的情况）</a></li>
+<li><a href="x569xxr9ep.html#2dfbafa703bb119f9667234732f766c4">数据库采用主从部署方式</a>
+<ul>
+<li><a href="x569xxr9ep.html#765b1ffc5f56c9246ab45a5f013773b5">主从复制：</a></li>
+<li><a href="x569xxr9ep.html#1d73c8c10b2f6fb68163d877c45de91b">读写分离：</a></li>
+<li><a href="x569xxr9ep.html#87c19af1cc31f9867c0744e98d635ca2">数据库反向代理：</a></li>
+</ul></li>
+<li><a href="x569xxr9ep.html#ca2b4bb35ef230f2a2165eddd6ab1176">数据库垂直分割</a></li>
+<li><a href="x569xxr9ep.html#63b02b3b9fd00c433cddd736b96eb3ea">数据库水平分割</a>
+<ul>
+<li><a href="x569xxr9ep.html#a7601dabe687ffbd68bc324e9cd41d64">余数分区：</a></li>
+<li><a href="x569xxr9ep.html#2e7f645728cb532128682bce2a7f20b5">范围分区：</a></li>
+<li><a href="x569xxr9ep.html#1f5e68772e13a40222495590b5f2fb65">映射关系分区：</a></li>
+</ul></li>
+</ul><p>在WEB网站的规模从小到大不断扩展的过程中，数据库的访问压力也不断的增加，数据库的架构也需要动态扩展，在数据库的扩展过程基本上包含如下几步，每一个扩展都可以比上一步骤的部署方式的性能得到数量级的提升。</p>
+<h2 id="bd1b7f7d7e8d579a6d996ffcdec021ad">WEB应用和数据库部署在同一台服务器上</h2>
+<p>一般的小规模的网站采用这种方式，用户量、数据量、并发访问量都比较小，否则单台服务器无法承受，并且在遇到性能瓶颈的时候升级硬件所需要的费用非常高昂，在访问量增加的时候，应用程序和数据库都来抢占有限的系统资源，很快就又会遇到性能问题。</p>
+<h2 id="00f0aad30d3ef97c8426264da6b00a3a">WEB应用和数据库部署在各自独立的服务器上</h2>
+<p>web应用和数据库分开部署，WEB应用服务器和数据库服务器各司其职，在系统访问量增加的时候可以分别升级应用服务器和数据库服务器，这种部署方式是一般小规模网站的典型部署方式。在将应用程序进行性能优化并且使用数据库对象缓存策略的情况下，可以承载较大的访问量，比如2000用户，200个并发，百万级别的数据量。</p>
+<h2 id="106ac1c61cb9595886cce1ad8b39c5aa">数据库服务器采用集群方式部署（比如Oracle的一个数据库多个实例的情况）</h2>
+<p>数据库集群方式能承担的负载是比较大的，数据库物理介质为一个磁盘阵列，多个数据库实例以虚拟IP方式向外部应用服务器提供数据库连接服务。这种部署方式基本上可以满足绝大多数的常见WEB应用，但是还是不能满足大用户量、高负载、数据库读写访问非常频繁的应用。</p>
+<h2 id="2dfbafa703bb119f9667234732f766c4">数据库采用主从部署方式</h2>
+<p>在面向大众用户的博客、论谈、交友、CMS等系统中，有上百万的用户，有上千万的数据量，存在众多的数据库查询操作，也有较多的数据库写操作，并且在多数情况下都是读操作远大于写操作的。在这个时候，假如能将数据库的读写操作分离的话，对于系统来讲是一个很大的提高啦。数据库的主从部署方式就走到我们面前啦。</p>
+<h3 id="765b1ffc5f56c9246ab45a5f013773b5">主从复制：</h3>
+<p>几乎所有的主流数据库都支持复制，这是进行数据库简单扩展的基本手段。下面以Mysql为例来说明，它支持主从复制，配置也并不复杂，只需要开启主服务器上的二进制日志以及在主服务器和从服务器上分别进行简单的配置和授权。Mysql的主从复制是一句主服务器的二进制日志文件进行的，主服务器日志中记录的操作会在从服务器上重放，从而实现复制，所以主服务器必须开启二进制日志，自动记录所有对于主数据库的更新操作，从服务器再定时到主服务器取得二进制日志文件进行重放则完成了数据的复制。主从复制也用于自动备份。</p>
+<h3 id="1d73c8c10b2f6fb68163d877c45de91b">读写分离：</h3>
+<p>为保证数据库数据的一致性，我们要求所有对于数据库的更新操作都是针对主数据库的，但是读操作是可以针对从数据库来进行。大多数站点的数据库读操作比写操作更加密集，而且查询条件相对复杂，数据库的大部分性能消耗在查询操作上了。</p>
+<p>主从复制数据是异步完成的，这就导致主从数据库中的数据有一定的延迟，在读写分离的设计中必须要考虑这一点。以博客为例，用户登录后发表了一篇文章，他需要马上看到自己的文章，但是对于其它用户来讲可以允许延迟一段时间（1分钟/5分钟/30分钟），不会造成什么问题。这时对于当前用户就需要读主数据库，对于其他访问量更大的外部用户就可以读从数据库。</p>
+<h3 id="87c19af1cc31f9867c0744e98d635ca2">数据库反向代理：</h3>
+<p>在读写分离的方式使用主从部署方式的数据库的时候，会遇到一个问题，一个主数据库对应多台从服务器，对于写操作是针对主数据库的，数据库个数是唯一的，但是对于从服务器的读操作就需要使用适当的算法来分配请求啦，尤其对于多个从服务器的配置不一样的时候甚至需要读操作按照权重来分配。</p>
+<p>对于上述问题可以使用数据库方向代理来实现。就像WEB方向代理服务器一样，MYsql Proxy同样可以在SQL语句转发到后端的Mysql服务器之前对它进行修改。</p>
+<h2 id="ca2b4bb35ef230f2a2165eddd6ab1176">数据库垂直分割</h2>
+<p>主从部署数据库中，当写操作占了主数据库的CPU消耗的50%以上的时候，我们再增加从服务器的意义就不是很大了，因为所有的从服务器的写操作也将占到CPU消耗的50%以上，一台从服务器提供出来查询的资源非常有限。数据库就需要重新架构了，我们需要采用数据库垂直分区技术啦。</p>
+<p>最简单的垂直分区方式是将原来的数据库中独立的业务进行分拆（被分拆出来的部分与其它部分不需要进行Join连接查询操作），比如WEB站点的BLOG和论坛，是相对独立的，与其它的数据的关联性不是很强，这时可以将原来的的数据库拆分为一个BLog库，一个论坛库，以及剩余的表所组成的库。这三个库再各自进行主从数据库方式部署，这样整个数据库的压力就分担啦。</p>
+<p>另外查询扩展性也是采用数据库分区最主要的原因之一。将一个大的数据库分成多个小的数据库可以提高查询的性能，因为每个数据库分区拥有自己的一小部分数据。假设您想扫描1亿条记录，对一个单一分区的数据库来讲，该扫描操作需要数据库管理器独立扫描一亿条记录，如果您将数据库系统做成50个分区，并将这1亿条记录平均分配到这50个分区上，那么每个数据库分区的数据库管理器将只扫描200万记录。</p>
+<h2 id="63b02b3b9fd00c433cddd736b96eb3ea">数据库水平分割</h2>
+<p>在数据库的垂直分区之后，假如我们的BLOG库又再次无法承担写操作的时候，我们又该怎么办呢？数据库垂直分区这种扩展方式又无能为力了，我们需要的是水平分区。</p>
+<p>水平分区意味着我们可以将同一个数据库表中的记录通过特定的算法进行分离，分别保存在不同的数据库表中，从而可以部署在不同的数据库服务器上。很多的大规模的站点基本上都是主从复制+垂直分区+水平分区这样的架构。水平分区并不依赖什么特定的技术，完全是逻辑村面的规划，需要的是经验和业务的细分。</p>
+<p>如何分区呢？对于大型的WEB站点来说，必须分区，并且对于分区我们没有选择的余地，对于那些频繁访问导致站点接近崩溃的热点数据，我们必须分区。</p>
+<p>在对数据分区的时候，我们必须要存在一个分区索引字段，比如USER_ID，它必须和所有的记录都存在关系，是分区数据库中的核心表的主键，在其它表中作为外键，并且在使用主键的时候，该主键不能是自增长的，必须是业务主键才可以。</p>
+<h3 id="a7601dabe687ffbd68bc324e9cd41d64">余数分区：</h3>
+<p>我们可以将User_ID%10后的值为依据存入到不同的分区数据库中，该算法简单高效，但是在分区数据库个数有变动的时候，整个系统的数据需要重新分布。</p>
+<h3 id="2e7f645728cb532128682bce2a7f20b5">范围分区：</h3>
+<p>我们可以将User_ID的范围进行分区，比如1-100000范围为一个分区数据库，100001-200000范围为一个分区数据库，该算法在分区数据库个数有变动的时候，系统非常有利于扩展，但是容易导致不同分区之间的压力不同，比如老用户所在的分区数据库的压力很大，但是新用户的分区数据库的压力偏小。</p>
+<h3 id="1f5e68772e13a40222495590b5f2fb65">映射关系分区：</h3>
+<p>将对分区索引字段的每个可能的结果创建一个分区映射关系，这个映射关系非常庞大，需要将它们写入数据库中。比如当应用程序需要知道User_id为10的用户的BLOG内容在那个分区时，它必须查询数据库获取答案，当然，我们可以使用缓存来提高性能。</p>
+<p>这种方式详细保存了每一个记录的分区对应关系，所以各个分区有非常强的可伸缩性，可以灵活的控制，并且将数据库从一个分区迁移到另一个分区也很简单，也可以使各个分区通过灵活的动态调节来保持压力的分布平衡。</p>
+<p>转自：<a href="http://www.cnblogs.com/lihaozy/archive/2013/08/02/3231776.html">http://www.cnblogs.com/lihaozy/archive/2013/08/02/3231776.html</a></p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> http://www.cnblogs.com/lihaozy/archive/2013/08/02/3231776.html: <i><a href="http://www.cnblogs.com/lihaozy/archive/2013/08/02/3231776.html" target="_blank">http://www.cnblogs.com/lihaozy/archive/2013/08/02/3231776.html</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

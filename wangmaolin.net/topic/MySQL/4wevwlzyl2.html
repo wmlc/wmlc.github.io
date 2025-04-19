@@ -1,0 +1,792 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>MySql 索引介绍 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="UIXRvtJNSp25hlYxpQ3SQtDTO9HkIE23wnVZr6t6">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    MySQL <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Flutter/overview.html">Flutter</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件&amp;工具/jwnex89yxd.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PayPal/overview.html">PayPal</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Redis/overview.html">Redis</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付宝/overview.html">支付宝</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../阿里云/overview.html">阿里云</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>字段</h2>
+<ul>
+<li id="blog71"><a href="x2ev8zwvor.html#blog71">MySQL 批量替换字段中的域名</a>
+<li id="blog112"><a href="jwnex74vxd.html#blog112">Mysql 的日期时间类型说明</a>
+<li id="blog337"><a href="mdgy70xvw2.html#blog337">MySql 字段类型说明和推荐</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog82"><a href="4x3vo76ym1.html#blog82">MySQL 回表查询</a>
+<li id="blog336"><a href="x569xxr9ep.html#blog336">高并发系统数据库架构设计</a>
+<li id="blog351"><a href="k3dyk7zvl0.html#blog351">MySql 定位和分析执行效率的方法</a>
+<li id="blog488"><a href="od6vrqr93g.html#blog488">MySql 单表分页 Limit 性能优化</a>
+<li id="blog492"><a href="4wevwlzyl2.html#blog492">MySql 索引介绍</a>
+<li id="blog675"><a href="3dykq84yl0.html#blog675">Mysql 性能优化方法汇总</a>
+</ul>
+</li>
+<li>
+<h2>MySQL</h2>
+<ul>
+<li id="blog86"><a href="lgwyldne3q.html#blog86">MySQL concat、concat_ws、group_concat 函数用法</a>
+<li id="blog107"><a href="m0wek4wyp9.html#blog107">SQL 中 WHERE 和 HAVING 子句有什么区别？</a>
+<li id="blog134"><a href="54lvo36v6z.html#blog134">MySql 5.7 报错 sql_mode=only_full_group_by 问题解决方法</a>
+<li id="blog148"><a href="8loyn5oyz3.html#blog148">mysql 控制 sql 长度的相关参数</a>
+<li id="blog172"><a href="de296j6vq7.html#blog172">MySql 各日志配置方法：错误日志、慢查询日志、执行日志</a>
+<li id="blog177"><a href="n2oegm5e73.html#blog177">MySQL 查询中 where in 如何保持顺序</a>
+<li id="blog270"><a href="71xyjw0ed9.html#blog270">理解 MySQL 字符集</a>
+<li id="blog300"><a href="8loyn11vz3.html#blog300">MySQL order by limit 分页数据重复或丢失问题说明</a>
+<li id="blog301"><a href="nxq9zd5ydo.html#blog301">mysql 事务特性以及隔离级别说明</a>
+<li id="blog302"><a href="z64y912e5l.html#blog302">MySQL 共享锁&amp;排他锁</a>
+<li id="blog352"><a href="rpnv37wywm.html#blog352">MySQL 创建索引报错 &quot;Specified key was too long; max key length is 767 bytes&quot; 原因</a>
+<li id="blog473"><a href="nxq9zgjydo.html#blog473">MySQL中当字段值为 <code>NULL</code> 时的注意事项</a>
+<li id="blog489"><a href="02ky0klvz8.html#blog489">SQL 的执行顺序</a>
+<li id="blog490"><a href="n2qvpnzy3m.html#blog490">MySQL 基础架构</a>
+<li id="blog491"><a href="5m892e6901.html#blog491">MySQL不能远程连接解决方法</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '4wevwlzyl2.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/4wevwlzyl2.html', function (data, status) {
+                addView('4wevwlzyl2.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script> -->
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>MySql 索引介绍</h1><ul>
+<li><a href="4wevwlzyl2.html#86baf84eb4d9a6e0a71f8bc062ad06af">索引作用</a></li>
+<li><a href="4wevwlzyl2.html#6f58175e93d441ad8ec02a1539aa8f6c">索引类型</a></li>
+<li><a href="4wevwlzyl2.html#bcb8a71c744439715a5c192dbf8c255d">索引方法</a></li>
+<li><a href="4wevwlzyl2.html#21d7a7a9d2a8b6f04c6a1a6a4e342e79">索引创建原则：</a></li>
+<li><a href="4wevwlzyl2.html#c8f6bbf8dbb919183fd3cc9b54cb7105">创建索引：</a></li>
+<li><a href="4wevwlzyl2.html#9cb6227a742144764591845a67ff8753">删除索引：</a></li>
+<li><a href="4wevwlzyl2.html#a491cb5f8795199038389605ab8355e8">查看索引：</a></li>
+<li><a href="4wevwlzyl2.html#7778d2b4ea7f3f1b1ec0ccbe48d5d5d8">使用多索引</a>
+<ul>
+<li><a href="4wevwlzyl2.html#cdba38c0c8e1299504e4f00815f1553d">索引合并的工作原理</a></li>
+<li><a href="4wevwlzyl2.html#8cef2ec81a9120cdeba69ea688fe4292">如何识别索引合并</a></li>
+<li><a href="4wevwlzyl2.html#65df6a67b9914d466d928d5006f219c3">示例输出</a></li>
+</ul></li>
+<li><a href="4wevwlzyl2.html#c13195a094099084746cc5bdcb0048cf">前缀索引</a>
+<ul>
+<li><a href="4wevwlzyl2.html#980fdbfd6170499361fb7bfdce802b4d">前缀长度的选择：</a></li>
+<li><a href="4wevwlzyl2.html#423f31a66efb36d1e3772f5a7146c7e4">索引的有效性：</a></li>
+<li><a href="4wevwlzyl2.html#5db73f16bb1acf66becadc3ac01fc7f2">存储引擎的支持：</a></li>
+</ul></li>
+<li><a href="4wevwlzyl2.html#fb50589ca6d8e0db1eda3988a0fc0bc8">索引有效性检查 explain</a></li>
+</ul><p>索引是存储在一张表中特定列上的数据结构，索引是在列上创建的。并且，索引是一种数据结构。</p>
+<h2 id="86baf84eb4d9a6e0a71f8bc062ad06af">索引作用</h2>
+<p>在索引列上，除了有序查找之外，数据库利用各种各样的快速定位技术，能够大大提高查询效率。特别是当数据量非常大，查询涉及多个表时，使用索引往往能使查询速度加快成千上万倍。</p>
+<h2 id="6f58175e93d441ad8ec02a1539aa8f6c">索引类型</h2>
+<ul>
+<li>
+<p>主键索引：PRIMARY KEY，PRIMARY KEY索引和UNIQUE索引非常类似。事实上，PRIMARY KEY索引仅是一个具有名称PRIMARY的UNIQUE索引。这表示一个表只能包含一个PRIMARY KEY，因为一个表中不可能具有两个同名的索引。</p>
+</li>
+<li>
+<p>唯一索引：UNIQUE，单列或多列</p>
+</li>
+<li>
+<p>普通索引</p>
+</li>
+<li>
+<p>复合索引</p>
+</li>
+<li>
+<p>前缀索引</p>
+</li>
+</ul>
+<h2 id="bcb8a71c744439715a5c192dbf8c255d">索引方法</h2>
+<ul>
+<li>
+<p>全局索引(FULLTEXT)：全局索引，MyISAM 引擎支持全局索引, Innodb（MySQL 5.6以上支持），它的出现是为了解决针对文本的模糊查询效率较低的问题。</p>
+</li>
+<li>
+<p>哈希索引(HASH)：哈希索引是 MySQL 中用到的唯一 key-value 键值对的数据结构，很适合作为索引。HASH 索引具有一次定位的好处，不需要像树那样逐个节点查找，但是这种查找适合应用于查找单个键的情况，对于范围查找，HASH 索引的性能就会很低。</p>
+</li>
+<li>
+<p><strong>B-Tree 索引</strong>：B 就是 Balance 的意思，BTree 是一种平衡树，它有很多变种，最常见的就是 B+ Tree，它被 MySQL 广泛使用。<strong>Mysql中主要的索引类型。</strong></p>
+</li>
+<li>
+<p>R-Tree 索引：R-Tree 在 MySQL 很少使用，仅支持 geometry 数据类型，支持该类型的存储引擎只有MyISAM、BDb、InnoDb、NDb、Archive几种，相对于 B-Tree 来说，R-Tree 的优势在于范围查找。</p>
+</li>
+</ul>
+<h2 id="21d7a7a9d2a8b6f04c6a1a6a4e342e79">索引创建原则：</h2>
+<ul>
+<li>
+<p>表的主键、外键必须有索引；</p>
+</li>
+<li>
+<p>数据量<strong>超过300的表</strong>应该有索引；</p>
+</li>
+<li>
+<p>经常与其他表进行连接的表，在连接字段上应该建立索引</p>
+</li>
+<li>
+<p>经常出现在Where子句中的字段，特别是大表的字段，应该建立索引；</p>
+</li>
+<li>
+<p>索引的字段必须是经常作为查询条件的字段;</p>
+</li>
+<li>
+<p>索引应该建在小字段上，对于大的文本字段甚至超长字段，不要建索引，实在要建的话可以用前缀索引；</p>
+</li>
+<li>
+<p>复合索引的建立需要进行仔细分析；尽量考虑用单字段索引代替：复合索引在处理包含索引中所有字段的查询时效果最佳，但如果查询经常只使用其中一部分字段，那么单字段索引可能更有效。</p>
+</li>
+<li>
+<p>正确选择复合索引中的主列字段，一般是选择性较好的字段；</p>
+</li>
+<li>
+<p>复合索引的几个字段是否经常同时以AND方式出现在Where子句中？单字段查询是否极少甚至没有？如果是，则可以建立复合索引；否则考虑单字段索引；</p>
+</li>
+<li>
+<p>如果复合索引中包含的字段经常单独出现在Where子句中，则分解为多个单字段索引；</p>
+</li>
+<li>
+<p>如果复合索引所包含的字段超过3个，那么仔细考虑其必要性，考虑减少复合的字段；</p>
+</li>
+<li>
+<p>如果索引多个字段，第一个字段是要经常作为查询条件的。如果只有第二个字段作为查询条件，这个索引不会起到作用;</p>
+</li>
+<li>
+<p>频繁进行数据插入、更新操作的表，不要建立太多的索引；</p>
+</li>
+<li>
+<p>删除无用的索引，避免对执行计划造成负面影响；</p>
+</li>
+<li>
+<p>不要过度索引。不要以为 索引 “ 越多越好 ” ，什么东西都用索引是错的。每个额外的 索引都要占用额外的磁盘空间，并降低写操作的性能。如果想给已索引的表增加索引，应该考虑所要增加的索引是否是现有多列索引的最左索引。如果是，则就不要费力去增加这个索引了，因为已经有了。</p>
+</li>
+<li>
+<p>考虑在列上进行的比较类型。索引可用于 “ &lt; ” 、 “ &lt;= ” 、 “ = ” 、 “ &gt;= ” 、 “ &gt;” 、&quot;IN()&quot; 和 BETWEEN 运算。在模式具有一个直接量前缀时（第一个字符不是通配符的情况下），索引也用于 LIKE 运算（xxx%）, LIKE %abc% 不会走索引。</p>
+</li>
+<li>
+<p>&quot;!=&quot; 、 &quot;&lt;&gt;&quot;、&quot;not in&quot; 在主键上会使用索引但在普通字段上不一定会走索引，尽量避免在 where 子句中使用这几种操作符。</p>
+</li>
+<li>
+<p>对于值唯一不重复的列要添加唯一索引，可以更快速的通过该索引来确定某条记录。<strong>唯一索引是最有效的</strong>。</p>
+</li>
+<li>
+<p>WHERE字句的查询条件里使用了<strong>函数</strong>（如：WHERE DAY(column)=...），MYSQL将无法使用索引；</p>
+</li>
+<li>
+<p>查询语句中索引的列如果是表达式的一部分（如where num/2=100）或者是函数的参数，则索引失效。要在代码中计算好字段值带入到SQL语句中，不要在SQL语句中计算。</p>
+</li>
+<li>
+<p>如果某个数据列里包含着许多重复的值，就算为它建立了索引也不会有很好的效果。比如说，如果某个数据列里包含了净是些诸如“0/1”或“Y/N”等值，就没有必要为它创建一个索引。</p>
+</li>
+<li>
+<p>索引对于插入、删除、更新操作是会增加处理上的额外开销的。</p>
+</li>
+<li>
+<p>重复索引没必要，如（A，B）和（A）重复。</p>
+</li>
+<li>
+<p>索引在where条件查询和group by语法查询的时候特别有效。</p>
+</li>
+<li>
+<p>将范围查询放在条件查询的最后，防止范围查询导致的右边索引失效的问题。</p>
+</li>
+<li>
+<p>索引列不要出现null。</p>
+</li>
+<li>
+<p>对于索引，若表字段类型为 varchar 用 int 取查询则整个语句都不会使用索引；反之 int 类型当做 varchar 类型去查询，索引是有效的。</p>
+</li>
+<li>
+<p>建立索引index（part1,part2,part3）,相当于建立了 index(part1),index(part1,part2)和index(part1,part2,part3）三个索引。</p>
+</li>
+</ul>
+<h2 id="c8f6bbf8dbb919183fd3cc9b54cb7105">创建索引：</h2>
+<ul>
+<li>1、执行CREATE   TABLE语句时可以创建索引：</li>
+</ul>
+<p>实例：</p>
+<pre><code class="language-sql">CREATE TABLE log_day_url_body (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  body varchar(255) NOT NULL DEFAULT '',
+  p_id int(11) NOT NULL DEFAULT '0',
+  plt_id int(3) NOT NULL DEFAULT '1',
+  PRIMARY KEY (id),
+  KEY body (body),
+  KEY categories (body,plt_id,p_id),
+  UNIQUE KEY url (id,plt_id,p_id),
+  UNIQUE KEY url_3 (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='注释语句'</code></pre>
+<ul>
+<li>2、单独用CREATE   INDEX来为表增加索引：</li>
+</ul>
+<p>CREATE  INDEX可对表增加普通索引或UNIQUE索引。</p>
+<pre><code class="language-sql">CREATE INDEX index_name ON table_name (column_list)
+CREATE UNIQUE INDEX index_name ON table_name (column_list)</code></pre>
+<p>table_name、index_name和column_list具有与ALTER TABLE语句中相同的含义，索引名不可选。另外，不能用CREATE INDEX语句创建PRIMARY KEY索引。</p>
+<ul>
+<li>3、单独用ALTER   TABLE来为表增加索引：</li>
+</ul>
+<p>ALTER TABLE用来创建普通索引、UNIQUE索引或PRIMARY KEY索引。</p>
+<pre><code class="language-sql">ALTER TABLE table_name ADD INDEX index_name (column_list)
+ALTER TABLE table_name ADD UNIQUE (column_list)
+ALTER TABLE table_name ADD PRIMARY KEY (column_list)
+
+#添加FULLTEXT(全文索引)
+ALTER TABLE table_name ADD FULLTEXT ( column)
+
+ALTER TABLE table_name ADD INDEX index_name ( column1, column2, column3 )</code></pre>
+<p>column_list指出对哪些列进行索引，多列时各列之间用逗号分隔。索引名index_name可选，缺省时，MySQL将根据第一个索引列赋一个名称。另外，ALTER TABLE允许在单个语句中更改多个表，因此可以在同时创建多个索引。</p>
+<h2 id="9cb6227a742144764591845a67ff8753">删除索引：</h2>
+<p>可利用ALTER TABLE或DROP INDEX语句来删除索引。DROP INDEX可以在ALTER TABLE内部作为一条语句处理，语法如下。</p>
+<pre><code class="language-sql">DROP INDEX index_name ON talbe_name
+ALTER TABLE table_name DROP INDEX index_name
+ALTER TABLE table_name DROP PRIMARY KEY</code></pre>
+<p>其中，前两条语句是等价的，删除掉table_name中的索引index_name。</p>
+<p>第3条语句只在删除PRIMARY KEY索引时使用，因为一个表只可能有一个PRIMARY KEY索引，因此不需要指定索引名。</p>
+<p>如果没有创建PRIMARY KEY索引，但表具有一个或多个UNIQUE索引，则MySQL将删除第一个UNIQUE索引。</p>
+<p>如果从表中删除了某列，则索引会受到影响。对于多列组合的索引，如果删除其中的某列，则该列也会从索引中删除。</p>
+<p>如果删除组成索引的所有列，则整个索引将被删除。</p>
+<h2 id="a491cb5f8795199038389605ab8355e8">查看索引：</h2>
+<pre><code class="language-sql">show index from tblname;
+'或'
+show keys from tblname;</code></pre>
+<p>查询结果列：</p>
+<pre><code class="language-sql">*************************** 1. row ***************************
+        Table: gift # 表的名称
+   Non_unique: 0 # 如果索引不能包括重复词，则为0。如果可以，则为1。
+     Key_name: PRIMARY # 索引的名称
+ Seq_in_index: 1 # 索引中的列序列号，从1开始。
+  Column_name: id # 列名称。
+    Collation: A # 列以什么方式存储在索引中。在MySQL中，有值‘A’（升序）或NULL（无分类）。
+  Cardinality: 258 # 索引中唯一值的数目的估计值。通过运行ANALYZE TABLE或myisamchk -a可以更新。
+                   # 基数根据被存储为整数的统计数据来计数，所以即使对于小型表，该值也没有必要是精确的。
+                   # 基数越大，当进行联合时，MySQL使用该索引的机会就越大。
+     Sub_part: NULL # 如果列只是被部分地编入索引，则为被编入索引的字符的数目。
+                    # 如果整列被编入索引，则为NULL。
+       Packed: NULL # 指示关键字如何被压缩。如果没有被压缩，则为NULL。
+         Null: # 如果列含有NULL，则含有YES。如果没有，则该列含有NO。
+   Index_type: BTREE # 用过的索引方法（BTREE, FULLTEXT, HASH, RTREE）。
+      Comment:  # 一些关于索引的常用语句
+Index_comment: 
+      Visible: YES
+   Expression: NULL
+*************************** 2. row ***************************
+        Table: gift
+   Non_unique: 1
+     Key_name: gift_group_id_status_index
+ Seq_in_index: 1
+  Column_name: group_id
+    Collation: A
+  Cardinality: 7
+     Sub_part: NULL
+       Packed: NULL
+         Null: 
+   Index_type: BTREE
+      Comment: 
+Index_comment: 
+      Visible: YES
+   Expression: NULL
+2 rows in set (0.01 sec)</code></pre>
+<h2 id="7778d2b4ea7f3f1b1ec0ccbe48d5d5d8">使用多索引</h2>
+<p>在MySQL中，一条查询SQL语句中使用多个索引的情况主要通过“索引合并”（Index Merge）技术实现。索引合并是指MySQL查询优化器在处理复杂的查询条件时，会选择使用多个索引来优化查询性能。这种技术允许MySQL将来自不同索引的结果集合并起来，从而减少需要扫描的数据量。</p>
+<h3 id="cdba38c0c8e1299504e4f00815f1553d">索引合并的工作原理</h3>
+<p>假设有一个表 <code>employees</code>，该表有两个字段 <code>department_id</code> 和 <code>salary</code>，并且在这两个字段上分别创建了索引。如果执行如下查询：</p>
+<pre><code class="language-sql">SELECT * FROM employees WHERE department_id = 10 OR salary &gt; 50000;</code></pre>
+<p>在这个例子中，MySQL可能不会选择单一的索引来满足整个查询条件，而是选择使用两个索引：</p>
+<ol>
+<li>
+<p>一个索引用于查找 <code>department_id = 10</code> 的记录。</p>
+</li>
+<li>
+<p>另一个索引用于查找 <code>salary &gt; 50000</code> 的记录。</p>
+</li>
+</ol>
+<p>然后，MySQL会将这两个索引的结果集进行合并，最终得到符合查询条件的所有记录。</p>
+<p>绝大多数情况下一条SQL查询语句都是使用一个最优索引，对于上面 or 语句可以理解为执行了两条语句，分别用自己的索引然后再合并</p>
+<pre><code class="language-sql">SELECT * FROM employees WHERE department_id = 10;
+SELECT * FROM employees WHERE salary &gt; 50000;</code></pre>
+<h3 id="8cef2ec81a9120cdeba69ea688fe4292">如何识别索引合并</h3>
+<p>你可以使用 <code>EXPLAIN</code> 命令来查看查询的执行计划，了解MySQL是否使用了索引合并。例如：</p>
+<pre><code class="language-sql">EXPLAIN SELECT * FROM employees WHERE department_id = 10 OR salary &gt; 50000;</code></pre>
+<p>在 <code>EXPLAIN</code> 输出中，如果你看到 <code>type</code> 列显示为 <code>index_merge</code>，则表示MySQL使用了索引合并技术。</p>
+<h3 id="65df6a67b9914d466d928d5006f219c3">示例输出</h3>
+<pre><code class="language-sql">*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: employees
+   partitions: NULL
+         type: index_merge
+possible_keys: idx_department_id,idx_salary
+          key: idx_department_id,idx_salary
+      key_len: 8,766
+          ref: NULL
+         rows: 357
+     filtered: 100.00
+        Extra: Using union(idx_department_id,idx_salary); Using where
+1 row in set, 1 warning (0.00 sec)</code></pre>
+<p>在这个输出中：</p>
+<ul>
+<li>
+<p><code>type: index_merge</code> 表示使用了索引合并。</p>
+</li>
+<li>
+<p><code>possible_keys</code> 列出了可能使用的索引。</p>
+</li>
+<li>
+<p><code>key</code> 列显示了实际使用的索引。</p>
+</li>
+<li>
+<p><code>Extra</code> 列中的 <code>Using union(idx_department_id,idx_salary)</code> 表示MySQL使用了这两个索引的结果集的并集。</p>
+</li>
+</ul>
+<h2 id="c13195a094099084746cc5bdcb0048cf">前缀索引</h2>
+<p>在 MySQL 中，创建前缀索引可以帮助提高索引的性能，特别是在处理长字符串列（BLOB/TEXT类型的字段）时。前缀索引只对列的前几个字符建立索引，而不是整个字符串，这样可以减少索引的大小，提高查询性能。</p>
+<pre><code class="language-sql">CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    INDEX idx_username_prefix (username(10)) -- 创建前缀索引，前缀长度为10
+);
+
+# 或
+
+ALTER TABLE users ADD INDEX idx_username_prefix (username(10));</code></pre>
+<p>在这个例子中，<code>idx_username_prefix</code> 是索引的名称，<code>username(10)</code> 表示只对 <code>username</code> 列的前 10 个字符建立索引。</p>
+<h3 id="980fdbfd6170499361fb7bfdce802b4d">前缀长度的选择：</h3>
+<ul>
+<li>
+<p>前缀长度应根据实际数据的分布情况来选择。一般来说，前缀长度应足以区分大部分不同的值，但又不至于太长，以免浪费空间。</p>
+</li>
+<li>
+<p>可以通过分析数据来确定合适的前缀长度。例如，可以使用 <code>SUBSTRING</code> 函数来统计前缀的唯一性</p>
+</li>
+</ul>
+<pre><code class="language-sql">SELECT SUBSTRING(username, 1, 10), COUNT(*) FROM users
+GROUP BY SUBSTRING(username, 1, 10)
+ORDER BY COUNT(*) DESC;</code></pre>
+<h3 id="423f31a66efb36d1e3772f5a7146c7e4">索引的有效性：</h3>
+<ul>
+<li>
+<p>前缀索引的有效性取决于前缀的区分度。如果前缀长度过短，可能会导致很多不同的值在前缀上相同，从而降低索引的效果。</p>
+</li>
+<li>
+<p>如果前缀长度过长，可能会导致索引变得过大，影响性能。</p>
+</li>
+</ul>
+<h3 id="5db73f16bb1acf66becadc3ac01fc7f2">存储引擎的支持：</h3>
+<ul>
+<li>不是所有的存储引擎都支持前缀索引。例如，InnoDB 存储引擎( 3072 字节)支持前缀索引，而 MyISAM 也支持，但具体支持的前缀长度可能有所不同。</li>
+</ul>
+<h2 id="fb50589ca6d8e0db1eda3988a0fc0bc8">索引有效性检查 explain</h2>
+<pre><code class="language-sql">explain select * from table where id=1;
+
+EXPLAIN SELECT * FROM users WHERE id=6;
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+
+| id | select_type | table | type  | possible_keys | key     | key_len | ref   | rows | Extra |
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+
+|  1 | SIMPLE      | users | const | PRIMARY       | PRIMARY | 4       | const |    1 | NULL  |
++----+-------------+-------+-------+---------------+---------+---------+-------+------+-------+
+1 row in set (0.03 sec)</code></pre>
+<p>下面我们就来看看这个EXPLAIN分析结果的含义:</p>
+<pre><code class="language-sql">table：这是表的名字。
+type：连接操作的类型。
+
+主要包含如下几中类型：
+
+◇ all：全表扫描
+◇ const：读常量，且最多只会有一条记录匹配，由于是常量，所以实际上只需要读一次；
+◇ eq_ref：最多只会有一条匹配结果，一般是通过主键或者唯一键索引来访问；
+◇ fulltext：
+◇ index：全索引扫描；
+◇ index_merge：查询中同时使用两个（或更多）索引，然后对索引结果进行merge 之后再读
+               取表数据；
+◇ index_subquery：子查询中的返回结果字段组合是一个索引（或索引组合），但不是一个
+                  主键或者唯一索引；
+◇ rang：索引范围扫描；
+◇ ref：Join 语句中被驱动表索引引用查询；
+◇ ref_or_null：与ref 的唯一区别就是在使用索引引用查询之外再增加一个空值的查询；
+◇ system：系统表，表中只有一行数据；
+◇ unique_subquery：子查询中的返回结果字段组合是主键或者唯一约束；
+
+从好到差  system,const,eq_ref,ref,range,index,ALL
+
+possible_keys：可能可以利用的索引的名字。
+
+Key：它显示了MySQL实际使用的索引的名字。如果它为空（或NULL），则MySQL不使用索引。
+
+key_len：索引中被使用部分的长度，以字节计。
+
+ref：它显示的是列的名字（或单词“const”），MySQL将根据这些列来选择行。
+
+rows：MySQL所认为的它在找到正确的结果之前必须扫描的记录数。显然，这里最理想的数字就是1。
+
+Extra：这里可能出现许多不同的选项，其中大多数将对查询产生负面影响。
+
+ID：Query Optimizer 所选定的执行计划中查询的序列号；
+
+Select_type：所使用的查询类型</code></pre>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

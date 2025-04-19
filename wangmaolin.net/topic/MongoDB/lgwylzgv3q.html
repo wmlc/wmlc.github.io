@@ -1,0 +1,590 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>MongoDB学习笔记（2）- MongoDB 安装、后台管理 Shell 介绍 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="UIXRvtJNSp25hlYxpQ3SQtDTO9HkIE23wnVZr6t6">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    MongoDB <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Flutter/overview.html">Flutter</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件&amp;工具/jwnex89yxd.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PayPal/overview.html">PayPal</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Redis/overview.html">Redis</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付宝/overview.html">支付宝</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../阿里云/overview.html">阿里云</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>MongoDB</h2>
+<ul>
+<li id="blog137"><a href="4oxy7l6v98.html#blog137">MongoDB学习笔记（1）- MongoDB 简介、概念解释及数据类型</a>
+<li id="blog138"><a href="lgwylzgv3q.html#blog138">MongoDB学习笔记（2）- MongoDB 安装、后台管理 Shell 介绍</a>
+<li id="blog139"><a href="j25v19qe1n.html#blog139">MongoDB shell 使用 mongosh 替换 mongo</a>
+</ul>
+</li>
+<li>
+<h2>nosql</h2>
+<ul>
+<li id="blog137"><a href="4oxy7l6v98.html#blog137">MongoDB学习笔记（1）- MongoDB 简介、概念解释及数据类型</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'lgwylzgv3q.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/lgwylzgv3q.html', function (data, status) {
+                addView('lgwylzgv3q.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script> -->
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>MongoDB学习笔记（2）- MongoDB 安装、后台管理 Shell 介绍</h1><ul>
+<li><a href="lgwylzgv3q.html#e655a410ff21cd07e7a0150491e04371">安装</a></li>
+<li><a href="lgwylzgv3q.html#5aaf7efcf4e60e7773b569b12f8cf54a">创建数据库目录</a>
+<ul>
+<li><a href="lgwylzgv3q.html#ee4b6d6f5f5dea237f650e473b2c0fef">启动 Mongodb 服务</a></li>
+</ul></li>
+<li><a href="lgwylzgv3q.html#5f69e7c6edd414bdb11afb2e6592a240">MongoDB 后台管理 Shell</a>
+<ul>
+<li><a href="lgwylzgv3q.html#66b9e682d4bf5aafceffe56d96d98ea3">终止 mongodb 服务</a></li>
+</ul></li>
+</ul><h2 id="e655a410ff21cd07e7a0150491e04371">安装</h2>
+<p>以Linux平台为例安装MongoDB</p>
+<p>MongoDB 提供了 linux 各个发行版本 64 位的安装包，你可以在官网下载安装包。</p>
+<p>MongoDB 源码下载地址：<a href="https://www.mongodb.com/download-center#community">https://www.mongodb.com/download-center#community</a></p>
+<p><img src="../../storage/images/2022/01/20/Dz7YEmfWR473G0mTto40GyhtIad7ceeqfPJaEHdN.png" alt="" /></p>
+<p>如上图所示选择版本、平台、压缩包后直接下载或复制下载地址Linux系统中使用 wget 下载。</p>
+<p>这里我们选择 tgz 下载，下载完安装包，并解压 tgz（以下演示的是 64 位 Linux上的安装） 。</p>
+<pre><code class="language-bash"># 下载
+wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-5.0.5.tgz
+
+# 解压
+tar -zxvf mongodb-linux-x86_64-ubuntu2004-5.0.5.tgz 
+
+# 将解压包拷贝到 mongodb 安装目录
+sudo mv mongodb-linux-x86_64-ubuntu2004-5.0.5 /usr/local/mongodb5
+</code></pre>
+<p>MongoDB 的可执行文件位于 bin 目录下，所以可以将其添加到 PATH 路径中：</p>
+<pre><code class="language-bash">export PATH=/usr/local/mongodb5/bin:$PATH</code></pre>
+<h2 id="5aaf7efcf4e60e7773b569b12f8cf54a">创建数据库目录</h2>
+<p>默认情况下 MongoDB 启动后会初始化以下两个目录：</p>
+<ul>
+<li>数据存储目录：/var/lib/mongodb</li>
+<li>日志文件目录：/var/log/mongodb</li>
+</ul>
+<p>我们在启动前可以先创建这两个目录并设置当前用户有读写权限：</p>
+<pre><code class="language-bash">sudo mkdir -p /var/lib/mongo
+sudo mkdir -p /var/log/mongodb
+sudo chown `whoami` /var/lib/mongo     # 设置权限
+sudo chown `whoami` /var/log/mongodb   # 设置权限</code></pre>
+<h3 id="ee4b6d6f5f5dea237f650e473b2c0fef">启动 Mongodb 服务</h3>
+<p>接下来启动 Mongodb 服务：</p>
+<pre><code class="language-bash">mongod --dbpath /var/lib/mongo --logpath /var/log/mongodb/mongod.log --fork</code></pre>
+<p>参数说明</p>
+<pre><code class="   language-php">--dbpath 设置数据存放目录
+--logpath 设置日志存放目录
+--fork 在后台运行，无该参数则前台运行
+--port  指定端口号 默认为 27017
+--bind_ip  监听的IP地址，可有多个，用逗号分隔 ；默认情况下为localhost 只允许本机访问；
+--bind_ip_all   绑定到所有ip地址</code></pre>
+<p>打开 <code>`/var/log/mongodb/mongod.log</code> 文件看到以下信息，说明启动成功。</p>
+<pre><code class="   language-php"># tail -10f /var/log/mongodb/mongod.log
+
+2020-07-09T12:20:17.391+0800 I  NETWORK  [listener] Listening on /tmp/mongodb-27017.sock
+2020-07-09T12:20:17.392+0800 I  NETWORK  [listener] Listening on 127.0.0.1
+2020-07-09T12:20:17.392+0800 I  NETWORK  [listener] waiting for connections on port 27017</code></pre>
+<p>通过命令启动的方式并不适合管理，毕竟每次输入命令都需要考虑各参数的配置。我们可以通过指定配置文件的方式启动服务，这样在管理 MongoDB 上就比较方便了。</p>
+<p>创建配置文件  <code>/etc/mongod.conf</code></p>
+<pre><code class="language-conf"># 数据库文件位置
+dbpath=/var/lib/mongodb
+
+#日志文件的路径
+logpath=/var/log/mongodb/mongodb.log
+
+# 是否追加方式写入日志，默认True
+logappend=true
+
+# 设置绑定ip
+bind_ip = 127.0.0.1
+
+# 设置端口
+port = 27017
+
+# 是否以守护进程方式运行，默认false
+fork = true
+
+# 启用日志文件，默认启用
+journal=true
+
+# 启用定期记录CPU利用率和 I/O 等待,默认false
+#cpu = true
+
+# 是否以安全认证方式运行，默认是不认证的非安全方式
+#noauth = true
+#auth = true
+
+# 详细记录输出，默认false
+#verbose = true
+
+#用于开发驱动程序时验证客户端请求
+#objcheck = true
+
+# # 启用数据库配额管理,默认false
+#quota = true
+
+# 设置oplog日志记录等级，默认0
+#   0=off (default)
+#   1=W
+#   2=R
+#   3=both
+#   7=W+some reads
+#oplog = 0
+
+# 是否打开动态调试项，默认false
+#nocursors = true
+
+# 忽略查询提示，默认false
+#nohints = true
+
+# 禁用http界面，默认为localhost：28017
+#nohttpinterface = true
+
+# 关闭服务器端脚本，这将极大的限制功能，默认false
+#noscripting = true
+
+# 关闭扫描表，任何查询将会是扫描失败
+#notablescan = true
+
+# 关闭数据文件预分配
+#noprealloc = true
+
+# 为新数据库指定.ns文件的大小，单位:MB
+# nssize = &lt;size&gt;
+
+# 用于Mongo监控服务器的Accout token。
+#mms-token = &lt;token&gt;
+
+# Mongo监控服务器的服务器名称。
+#mms-name = &lt;server-name&gt;
+
+# Mongo监控服务器的Ping间隔时间，即心跳
+#mms-interval = &lt;seconds&gt;
+
+# Replication Options
+
+# 设置主从复制参数
+#slave = true # 设置从节点
+#source = master.example.com # 指定从节点的主节点
+# Slave only: 指定要复制的单个数据库
+#only = master.example.com
+# or
+#master = true # 设置主节点
+#source = slave.example.com 
+
+# 设置副本集的名字，所有的实例指定相同的名字属于一个副本集
+replSet = name
+
+#pairwith = &lt;server:port&gt;
+
+# 仲裁服务器地址
+#arbiter = &lt;server:port&gt;
+
+# 默认为false，用于从实例设置。是否自动重新同步
+#autoresync = true
+
+# 指定的复制操作日志（OPLOG）的最大大小
+#oplogSize = &lt;MB&gt;
+
+# 限制复制操作的内存使用
+#opIdMem = &lt;bytes&gt;
+
+# 设置ssl认证
+# Enable SSL on normal ports
+#sslOnNormalPorts = true
+
+# SSL Key file and password
+#sslPEMKeyFile = /etc/ssl/mongodb.pem
+#sslPEMKeyPassword = pass</code></pre>
+<p>根据配置文件启动服务</p>
+<pre><code class="language-bash">mongod -f /etc/mongod.conf</code></pre>
+<h2 id="5f69e7c6edd414bdb11afb2e6592a240">MongoDB 后台管理 Shell</h2>
+<p>如果你需要进入 mongodb 后台管理，你需要先打开 mongodb 装目录的下的 bin 目录，然后执行 <code>mongo</code> 命令文件。</p>
+<p>MongoDB Shell 是 MongoDB 自带的交互式 Javascript shell，用来对 MongoDB 进行操作和管理的交互式环境。</p>
+<p>当你进入 mongoDB 后台后，它默认会链接到 test 文档（数据库）：</p>
+<pre><code class="language-bash">$ cd /usr/local/mongodb5/bin
+$ ./mongo
+
+MongoDB shell version v5.0.5
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&amp;gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("023f2b4a-1bfb-41c2-9f88-97270fc1dda8") }
+MongoDB server version: 5.0.5
+......
+</code></pre>
+<p>注意：mongo已废弃，建议安装 mongosh, <a href="https://wangmaolin.net/article/j25v19qe1n.html">参考文档</a></p>
+<p>现在让我们插入一些简单的数据，并对插入的数据进行检索：</p>
+<pre><code class="language-bash">&gt; db.runoob.insert({x:10})
+WriteResult({ "nInserted" : 1 })
+
+&gt; db.runoob.find()
+{ "_id" : ObjectId("5f069bdb4e02f8baf90f1184"), "x" : 10 }
+&gt; </code></pre>
+<p>第一个命令将数字 10 插入到 runoob 集合的 x 字段中。</p>
+<h3 id="66b9e682d4bf5aafceffe56d96d98ea3">终止 mongodb 服务</h3>
+<p>如果要停止 mongodb 可以使用以下命令：</p>
+<pre><code class="language-bash">mongod --dbpath /var/lib/mongo --logpath /var/log/mongodb/mongod.log --shutdown</code></pre>
+<p>也可以在 mongo 的命令出口中实现：</p>
+<pre><code class="language-bash">&gt; use admin
+switched to db admin
+&gt; db.shutdownServer()</code></pre><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> https://www.mongodb.com/download-center#community: <i><a href="https://www.mongodb.com/download-center#community" target="_blank">https://www.mongodb.com/download-center#community</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 参考文档: <i><a href="https://wangmaolin.net/article/j25v19qe1n.html" target="_blank">//wangmaolin.net/article/j25v19qe1n.html</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

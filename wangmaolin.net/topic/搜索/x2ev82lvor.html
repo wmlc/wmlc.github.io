@@ -1,0 +1,747 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>站内全文搜索引擎 Sphinx/coreseek 安装使用教程 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="UIXRvtJNSp25hlYxpQ3SQtDTO9HkIE23wnVZr6t6">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    搜索 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Flutter/overview.html">Flutter</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件&amp;工具/jwnex89yxd.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PayPal/overview.html">PayPal</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Redis/overview.html">Redis</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付宝/overview.html">支付宝</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../阿里云/overview.html">阿里云</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>XunSearch</h2>
+<ul>
+<li id="blog220"><a href="4wevwg19l2.html#blog220">Xunsearch 介绍</a>
+<li id="blog221"><a href="1ndvmeny3j.html#blog221">Xunsearch 安装、启动</a>
+<li id="blog222"><a href="j3oyj3lvp5.html#blog222">XunSearch 安装报错bufferevent_openssl.lo解决方案</a>
+<li id="blog437"><a href="mdgy7g5yw2.html#blog437">xunsearch 解决单字符、无意义字符被分词导致的搜索不准确问题</a>
+<li id="blog438"><a href="xrwylexvz8.html#blog438">xunsearch 搜索时按字段索引词加权</a>
+</ul>
+</li>
+<li>
+<h2>Sphinx</h2>
+<ul>
+<li id="blog223"><a href="x2ev82lvor.html#blog223">站内全文搜索引擎 Sphinx/coreseek 安装使用教程</a>
+<li id="blog224"><a href="de2964zvq7.html#blog224">sphinx/coreseek配置说明</a>
+<li id="blog225"><a href="nxq9z889do.html#blog225">ubuntu 安装sphinx报错解决方法</a>
+<li id="blog226"><a href="62wy326vkm.html#blog226">sphinx 不关闭进程更新索引</a>
+<li id="blog227"><a href="k3dykkwyl0.html#blog227">sphinx增量索引配置</a>
+<li id="blog458"><a href="4x3vol4vm1.html#blog458">拼音首字母搜索</a>
+</ul>
+</li>
+<li>
+<h2>MeiliSearch</h2>
+<ul>
+<li id="blog703"><a href="3dykq0myl0.html#blog703">Meilisearch 的安装与运行</a>
+<li id="blog704"><a href="enyd53897d.html#blog704">MeiliSearch 索引创建</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'x2ev82lvor.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/x2ev82lvor.html', function (data, status) {
+                addView('x2ev82lvor.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script> -->
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>站内全文搜索引擎 Sphinx/coreseek 安装使用教程</h1><p>Sphinx是开源的搜索引擎，它支持英文的全文检索。所以如果单独搭建Sphinx，你就已经可以使用全文索引了。但是往往我们要求的是中文索引，怎么做呢？国人提供了一个可供企业使用的，基于Sphinx的中文全文检索引擎。也就是说Coreseek实际上的内核还是Sphinx。</p>
+<p>sphinx可以通过设置为“一元切分模式”来支持搜索中文在实际使用中，搜索非中文的话，sphinx比coreseek要快；搜索短中文字符串的话，开启了“一元切分模式”的sphinx比coreseek要快；只有在搜索长中文字串时，coreseek的分词优势才能显现，比sphinx要快</p>
+<p>根据你的应用场景来选择用哪个，如果是索引英文、数字、字符较多的数据，就用源生sphinx；如果是索引中文非常多非常长的数据，还是用coreseek吧。Coreseek是基于Sphinx开发的一款软件，对Sphinx做了一些改动，在中文方面支持得比Sphinx好</p>
+<p>安装注意</p>
+<p>Coreseek发布了3.2.14版本和4.1版本等多个版本</p>
+<p>3.2.14版本是2010年发布的，它是基于Sphinx0.9.9搜索引擎的。4.1版本是2011年发布的，它是基于Sphinx2.0.2以后的</p>
+<p>本文章以安装  coreseek-4.1-beta 版本为例：<br />
+安装包下载地址 ：</p>
+<pre><code class="language-bash">http://dl.download.csdn.net/down11/20160530/de90462e2cf8350cbd4ad0f758105c9d.gz?response-content-disposition=attachment%3Bfilename%3D%22coreseek-4.1-beta.tar.gz%22&amp;OSSAccessKeyId=9q6nvzoJGowBj4q1&amp;Expires=1474535438&amp;Signature=8jae9H6dIfmd7zHRs72qcgi4Q1k%3D</code></pre>
+<p>3.2.14  稳定版（线上环境用此版本）</p>
+<pre><code class="language-bash">http://124.202.166.45/file3.data.weipan.cn/76885328/d22215f7ac79a8eff90a6eec0d7ccdc7f86048b6?ip=1490457292,118.144.20.162&amp;ssig=z3aZVW70%2FY&amp;Expires=1490457892&amp;KID=sae,l30zoo1wmz&amp;fn=coreseek-3.2.14.tar.gz&amp;skiprd=2&amp;se_ip_debug=118.144.20.162&amp;corp=2&amp;from=1221134&amp;wshc_tag=0&amp;wsts_tag=58d68e1c&amp;wsid_tag=75647862&amp;wsiphost=ipdbm</code></pre>
+<p><strong>第一步：安装升级autoconf</strong></p>
+<p>因为coreseek需要autoconf 2.64以上版本，因此需要升级autoconf，不然会报错<br />
+安装方法如下：</p>
+<pre><code class="language-bash">yum -y install glibc-common libtool autoconf automake mysql-devel expat-devel</code></pre>
+<p><strong>第二步：安装mmseg(coreseek所使用的词典)</strong></p>
+<pre><code class="language-bash">tar -zxvf coreseek-4.1-beta.tar.gz
+cd coreseek-4.1-beta
+cd mmseg-4.1-beta/
+./bootstrap    #输出的warning信息可以忽略，如果出现error则需要解决
+./configure --prefix=/usr/local/mmseg3
+make
+make install
+
+# 检测是否安装完成
+mmseg
+提示：-bash: mmseg: command not found
+
+# 问题解决方法
+ln -s /usr/local/mmseg3/bin/mmseg /bin/mmseg
+
+# 再测试下
+mmseg
+
+# 显示以下内容表示安装成功
+Coreseek COS(tm) MM Segment 1.0
+Copyright By Coreseek.com All Right Reserved.
+Usage: mmseg &lt;option&gt; &lt;file&gt;
+-u &lt;unidict&gt;           Unigram Dictionary
+-r           Combine with -u, used a plain text build Unigram Dictionary, default Off
+-b &lt;Synonyms&gt;           Synonyms Dictionary
+-t &lt;thesaurus&gt;          Thesaurus Dictionary
+-h            print this help and exit</code></pre>
+<p><strong>第三步：安装csft-4.1-beta</strong></p>
+<pre><code class="language-bash">cd csft-4.1-beta/
+sh buildconf.sh    #输出的warning信息可以忽略，如果出现error则需要解决 
+./configure 
+--prefix=/usr/local/sphinx 
+--without-unixodbc 
+--with-mmseg 
+--with-mmseg-includes=/usr/local/mmseg3/include/mmseg/ 
+--with-mmseg-libs=/usr/local/mmseg3/lib/ 
+--with-mysql=/usr/local/mysql/ 
+
+make
+make install
+
+#./configure --prefix=/usr/local/sphinx/ --with-mysql=/usr/local/mysql/ --enable-id64 
+make 
+make install 
+# 注意1：采用这种方式安装不支持中文分词。
+# 注意2：--enable-id64 系统是64位，开启后Sphinx存储模块可以支持4-5G,不开启支持2G左右，不开启检索效率会高些，一般情况下建议不开启
+
+# 错误：
+collect2: ld 返回 1 
+make[2]: *** [indexer] 错误 1 
+
+# 修改configure文件中：
+LIBS="$LIBS -L/usr/local/lib"
+# 改为：
+LIBS="$LIBS -liconv -L/usr/local/lib"</code></pre>
+<p>测试mmseg分词和coreseek搜索</p>
+<pre><code class="language-bash">cd testpack 
+cat var/test/test.xml  #此时应该正确显示中文 
+/usr/local/mmseg3/bin/mmseg -d /usr/local/mmseg3/etc var/test/test.xml 
+/usr/local/sphinx/bin/indexer -c etc/csft.conf --all 
+/usr/local/sphinx/bin/search -c etc/csft.conf 网络搜索 
+#此时正确的应该返回 
+words: 
+1. '网络': 1 documents, 1 hits 
+2. '搜索': 2 documents, 5 hits</code></pre>
+<p><strong>第四步：配置mmseg中文分词</strong></p>
+<p>目前这里不用操作，安装时已经帮我配置好了</p>
+<pre><code class="language-bash">cd /usr/local/mmseg3/
+
+# 生成unigram.txt.uni
+./bin/mmseg -u /usr/local/mmseg/etc/unigram.txt
+vim etc/mmseg.ini
+
+[mmseg]
+merge_number_and_ascii=0;    ;合并英文和数字 abc123/x
+number_and_ascii_joint=;    ;定义可以连接英文和数字的字符
+compress_space=1;    ;暂不支持
+seperate_number_ascii=0;    ;将字母和数字打散
+
+# 复制到sphinx/dict目录
+cp etc/mmseg.ini /usr/local/sphinx/dict/mmseg.ini
+
+# 复制到sphinx/dict目录
+cp etc/unigram.txt /usr/local/sphinx/dict/uni.lib</code></pre>
+<p><strong>第五步：配置sphinx</strong></p>
+<pre><code class="language-bash"># 创建配置文件
+mkdir -p /usr/local/sphinx/etc/conf.d/
+vim /usr/local/sphinx/etc/conf.d/sphinx.conf</code></pre>
+<p>sphinx.conf 配置文件内容</p>
+<pre><code class="language-bash">#配置数据源，可以有多个
+source src_blog
+{
+    #数据库类型
+    type = mysql
+    #是否去掉html标签
+    strip_html = 0
+    sql_host = 127.0.0.1
+    sql_user = root
+    sql_pass = woshishui
+    sql_db = yphp_tutiantian
+    sql_port = 3006
+    #在执行sql_query前执行的sql命令, 可以有多条
+    sql_query_pre= SET NAMES utf8
+    #全文检索要显示的内容，在这里尽可能不使用where或group by，将where与groupby的内容交给sphinx，
+    #由sphinx进行条件过滤与groupby效率会更高
+    #注意：select 出来的字段必须至少包括一个唯一主键(ARTICLESID)以及要全文检索的字段，
+    #你计划原本在where中要用到的字段也要select出来
+    #这里不用使用orderby
+    sql_query = SELECT * FROM tu_pic
+    #开头的表示一些属性字段，你原计划要用在where,orderby,groupby中的字段要在这里定义
+    #根据我们原先的SQL:
+    #select * from eht_articles where title like ? and catalogid=? And                edituserid=?  And addtime between ? and ? order by hits desc
+    #我们需要对catalogid,edituserid,addtime,hits进行属性定义(这四个字段也要在select的字段列表中)，
+    #定义时不同的字段类型有不同的属性名称，具体可以见sphinx.conf.in中的说明
+    sql_attr_uint= pr
+    sql_attr_uint = big_id
+    sql_attr_uint = small_id
+    sql_attr_uint= uid
+    sql_attr_uint= is_del
+    sql_ranged_throttle = 0
+}
+
+# 在这里要注意，rt_field是检索字段，rt_attr_uint是返回字段
+#定义索引名称
+index sphinx_blog
+{
+    #数据源名
+    source = src_blog
+    #索引记录存放目录
+    path = /usr/local/sphinx/var/data/sphinx_blog
+    docinfo = extern
+    mlock = 0
+    stopwords =
+    min_prefix_len = 0
+    min_infix_len = 0
+    morphology = none
+    min_word_len = 2
+    #字符集
+    charset_type = zh_cn.utf-8
+    #指明分词法读取词典文件的位置，当启用分词法时，为必填项。在使用LibMMSeg作为分词 库时，
+    #需要确保词典文件uni.lib在指定的目录下
+    charset_dictpath = /usr/local/mmseg3/etc/
+    charset_table = U+FF10..U+FF19-&gt;0..9, 0..9, U+FF41..U+FF5A-&gt;a..z, U+FF21..U+FF3A-&gt;a..z,A..Z-&gt;a..z, a..z, U+0149, U+017F, U+0138, U+00DF, U+00FF, U+00C0..U+00D6-&gt;U+00E0..U+00F6,U+00E0..U+00F6, U+00D8..U+00DE-&gt;U+00F8..U+00FE, U+00F8..U+00FE, U+0100-&gt;U+0101, U+0101,U+0102-&gt;U+0103, U+0103, U+0104-&gt;U+0105, U+0105, U+0106-&gt;U+0107, U+0107, U+0108-&gt;U+0109,U+0109, U+010A-&gt;U+010B, U+010B, U+010C-&gt;U+010D, U+010D, U+010E-&gt;U+010F, U+010F,U+0110-&gt;U+0111, U+0111, U+0112-&gt;U+0113, U+0113, U+0114-&gt;U+0115, U+0115, U+0116-&gt;U+0117,U+0117, U+0118-&gt;U+0119, U+0119, U+011A-&gt;U+011B, U+011B, U+011C-&gt;U+011D, U+011D,U+011E-&gt;U+011F, U+011F, U+0130-&gt;U+0131, U+0131, U+0132-&gt;U+0133, U+0133, U+0134-&gt;U+0135,U+0135, U+0136-&gt;U+0137, U+0137, U+0139-&gt;U+013A, U+013A, U+013B-&gt;U+013C, U+013C,U+013D-&gt;U+013E, U+013E, U+013F-&gt;U+0140, U+0140, U+0141-&gt;U+0142, U+0142, U+0143-&gt;U+0144,U+0144, U+0145-&gt;U+0146, U+0146, U+0147-&gt;U+0148, U+0148, U+014A-&gt;U+014B, U+014B,U+014C-&gt;U+014D, U+014D, U+014E-&gt;U+014F, U+014F, U+0150-&gt;U+0151, U+0151, U+0152-&gt;U+0153,U+0153, U+0154-&gt;U+0155, U+0155, U+0156-&gt;U+0157, U+0157, U+0158-&gt;U+0159, U+0159,U+015A-&gt;U+015B, U+015B, U+015C-&gt;U+015D, U+015D, U+015E-&gt;U+015F, U+015F, U+0160-&gt;U+0161,U+0161, U+0162-&gt;U+0163, U+0163, U+0164-&gt;U+0165, U+0165, U+0166-&gt;U+0167, U+0167,U+0168-&gt;U+0169, U+0169, U+016A-&gt;U+016B, U+016B, U+016C-&gt;U+016D, U+016D, U+016E-&gt;U+016F,U+016F, U+0170-&gt;U+0171, U+0171, U+0172-&gt;U+0173, U+0173, U+0174-&gt;U+0175, U+0175,U+0176-&gt;U+0177, U+0177, U+0178-&gt;U+00FF, U+00FF, U+0179-&gt;U+017A, U+017A, U+017B-&gt;U+017C,U+017C, U+017D-&gt;U+017E, U+017E, U+0410..U+042F-&gt;U+0430..U+044F, U+0430..U+044F,U+05D0..U+05EA, U+0531..U+0556-&gt;U+0561..U+0586, U+0561..U+0587, U+0621..U+063A, U+01B9,U+01BF, U+0640..U+064A, U+0660..U+0669, U+066E, U+066F, U+0671..U+06D3, U+06F0..U+06FF,U+0904..U+0939, U+0958..U+095F, U+0960..U+0963, U+0966..U+096F, U+097B..U+097F,U+0985..U+09B9, U+09CE, U+09DC..U+09E3, U+09E6..U+09EF, U+0A05..U+0A39, U+0A59..U+0A5E,U+0A66..U+0A6F, U+0A85..U+0AB9, U+0AE0..U+0AE3, U+0AE6..U+0AEF, U+0B05..U+0B39,U+0B5C..U+0B61, U+0B66..U+0B6F, U+0B71, U+0B85..U+0BB9, U+0BE6..U+0BF2, U+0C05..U+0C39,U+0C66..U+0C6F, U+0C85..U+0CB9, U+0CDE..U+0CE3, U+0CE6..U+0CEF, U+0D05..U+0D39, U+0D60,U+0D61, U+0D66..U+0D6F, U+0D85..U+0DC6, U+1900..U+1938, U+1946..U+194F, U+A800..U+A805,U+A807..U+A822, U+0386-&gt;U+03B1, U+03AC-&gt;U+03B1, U+0388-&gt;U+03B5, U+03AD-&gt;U+03B5,U+0389-&gt;U+03B7, U+03AE-&gt;U+03B7, U+038A-&gt;U+03B9, U+0390-&gt;U+03B9, U+03AA-&gt;U+03B9,U+03AF-&gt;U+03B9, U+03CA-&gt;U+03B9, U+038C-&gt;U+03BF, U+03CC-&gt;U+03BF, U+038E-&gt;U+03C5,U+03AB-&gt;U+03C5, U+03B0-&gt;U+03C5, U+03CB-&gt;U+03C5, U+03CD-&gt;U+03C5, U+038F-&gt;U+03C9,U+03CE-&gt;U+03C9, U+03C2-&gt;U+03C3, U+0391..U+03A1-&gt;U+03B1..U+03C1,U+03A3..U+03A9-&gt;U+03C3..U+03C9, U+03B1..U+03C1, U+03C3..U+03C9, U+0E01..U+0E2E,U+0E30..U+0E3A, U+0E40..U+0E45, U+0E47, U+0E50..U+0E59, U+A000..U+A48F, U+4E00..U+9FBF,U+3400..U+4DBF, U+20000..U+2A6DF, U+F900..U+FAFF, U+2F800..U+2FA1F, U+2E80..U+2EFF,U+2F00..U+2FDF, U+3100..U+312F, U+31A0..U+31BF, U+3040..U+309F, U+30A0..U+30FF,U+31F0..U+31FF, U+AC00..U+D7AF, U+1100..U+11FF, U+3130..U+318F, U+A000..U+A48F,U+A490..U+A4CF
+    html_strip = 0
+}
+
+#全局index定义
+indexer
+{
+    mem_limit = 256M
+}
+
+#sphinx守护进程配置
+searchd
+{
+    port = 9312
+    read_timeout = 5
+    max_children = 10
+    compat_sphinxql_magics = 0
+    pid_file = /usr/local/sphinx/var/log/searchd.pid
+    #全文检索日志
+    log = /usr/local/sphinx/var/log/searchd.log
+    #查询日志
+    query_log = /usr/local/sphinx/var/log/query_log.log
+    #最大匹配数，也就是查找的数据再多也只返回这里设置的1000条
+    max_matches = 1000
+    seamless_rotate = 1
+}</code></pre>
+<p><strong>建立sphinx 索引</strong>（若日常更新sphinx数据，只需执行以下1、2、3步即可，可写入sh文件执行）</p>
+<pre><code class="language-bash"># 结束所有索引
+#pkill -9 search
+
+1、#停止正在运行的searchd
+/usr/local/sphinx/bin/searchd --config /usr/local/sphinx/etc/conf.d/sphinx.conf  --stop
+
+2、# 创建索引
+# /usr/local/sphinx/bin/indexer --c --config /usr/local/sphinx/etc/conf.d/sphinx.conf --all
+
+#如果只想对某个数据源进行索引，则可以这样：
+#/usr/local/sphinx/bin/indexer --c --config /usr/local/sphinx/etc/conf.d/sphinx.conf 索引名称
+
+3、# 启动索引
+# /usr/local/sphinx/bin/searchd --config /usr/local/sphinx/etc/conf.d/sphinx.conf
+
+# 错误解决
+# 解决：复制Mysql客户端文件到所有用户可以放的目录去
+cp /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib/
+
+# 64位系统需要在创建一个软连接
+ln -s /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib64</code></pre>
+<p>服务器所用MySQL在当时编译时并没有编译Sphinx扩展,而重新编译mysql并加入Sphinx暂时又无法实现(项目用到了多台服务器,在不影响现有业务的情况下不可能去重新编译MySQL的),所以采用的是程序通过API来外部调用Sphinx.Sphinx自带的API有PHP,Python,Ruby,Java等众多版本,所以基本也够用了,本人使用的编程语言是php所以下文的条用示例采用的是PHP版的API.</p>
+<p><strong>以下步骤不需要执行，原因如上：</strong></p>
+<p><strong>第六步：安装sphinxclient</strong></p>
+<p>php模块依赖于libsphinxclient包</p>
+<pre><code class="language-bash"># 进入sphinx 源码包的api目录
+cd coreseek-4.1/csft-4.1/api/libsphinxclient
+./configure --prefix=/usr/local/libsphinxclient
+#若报一下错误
+config.status: error: cannot find input file: Makefile.in   #报错configure失败      
+#处理configure报错，运行下列指令再次编译：  
+aclocal  
+libtoolize --force  
+automake --add-missing  
+autoconf  
+autoheader  
+make clean  
+
+//重新configure编译  
+./configure --prefix=/usr/local/libsphinxclient
+make
+make install</code></pre>
+<p><strong>第七步：安装php的Sphinx扩展 </strong></p>
+<pre><code class="language-bash"># PHP7以前的版本使用下面扩展
+wget http://pecl.php.net/get/sphinx-1.3.0.tgz
+
+# PHP7 使用下面的扩展
+wget http://git.php.net/?p=pecl/search_engine/sphinx.git;a=snapshot;h=9a3d08c67af0cad216aa0d38d39be71362667738;sf=tgz
+
+tar -zxvf sphinx-1.3.0.tgz
+cd sphinx-1.3.0
+/usr/local/php/bin/phpize ./configure --with-php-config=/usr/local/php/bin/php-config --with-sphinx=/usr/local/libsphinxclient/
+make &amp;&amp; make install
+# 安装好后，在安装目录下etc目录下，有份测试数据和配置的样本</code></pre>
+<p><strong>第八步：配置PHP支持Sphinx</strong></p>
+<p>编辑php.ini文件</p>
+<pre><code class="language-bash">vim /usr/local/php/etc/php.ini
+
+# 修改以下内容
+extension_dir = "/usr/local/php/lib/php/extensions/no-debug-non-zts-20100525/"
+
+# 增加扩展到php
+extension = sphinx.so
+
+# 重新启动php-fpm
+/etc/init.d/php-fpm restart</code></pre>
+<p>查看Sphinx是否安装成功<br />
+新建PHP文件</p>
+<pre><code class="language-bash">vim index.php
+
+# 写入一下内容：
+&lt;?php
+echo phpinfo();</code></pre>
+<p>浏览器输入地址访问<br />
+看到sphinx表示扩展安装成功<br />
+<img src="https://wangmaolin.net/usr/uploads/2020/03/2710629680.png#alt=20160922184509832.png" alt="" /></p>
+<p><strong>第九步：php使用sphinx</strong></p>
+<pre><code class="language-php">&lt;?php
+// --------------------------------------------------------------------------
+// File name   : test_coreseek.php
+// Description : coreseek中文全文检索系统测试程序
+// Requirement : PHP5 (http://www.php.net)
+//
+// Copyright(C), HonestQiao, 2011, All Rights Reserved.
+//
+// Author: HonestQiao (honestqiao@gmail.com)
+//
+// 最新使用文档，请查看：http://www.coreseek.cn/products/products-install/
+//
+// --------------------------------------------------------------------------
+#若SphinxClient是php默认类，则不需要引入sphinxapi.php
+#sphinxapi.php文件在/coreseek-3.2.14/testpack/api/ 中
+require ( "sphinxapi.php" );
+$cl = new SphinxClient ();
+$cl-&gt;SetServer ( '127.0.0.1', 9312);
+$cl-&gt;SetConnectTimeout ( 3 );
+$cl-&gt;SetArrayResult ( true );
+$cl-&gt;SetMatchMode ( SPH_MATCH_ANY);
+
+$cl-&gt;setLimits(0,300);
+$keyword = $_GET['keyword'];
+// // 执行查询，第一个参数查询的关键字，第二个查询的索引名称，多个索引名称以,分开，也可以用*表示所有索引。
+$res = $cl-&gt;Query ( $keyword, "sphinx_blog" );
+print_r($res);</code></pre>
+<p>查询结果：</p>
+<pre><code class="language-php">Array
+(
+    [error] =&gt; 
+    [warning] =&gt; 
+    [status] =&gt; 0
+    [fields] =&gt; Array
+        (
+            [0] =&gt; search_word
+            [1] =&gt; actors
+            [2] =&gt; directors
+            [3] =&gt; wktag
+            [4] =&gt; pinyin
+            [5] =&gt; pinyin_first
+        )
+
+    [attrs] =&gt; Array
+        (
+            [xid] =&gt; 1
+        )
+
+    [matches] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    #matches中的id就是指配置文件中sql_query SELECT语句中的第一个字段
+                    [id] =&gt; 33514269
+                    [weight] =&gt; 1
+                    [attrs] =&gt; Array
+                        (
+                            [xid] =&gt; 33514269
+                        )
+
+                )
+
+        )
+
+    [total] =&gt; 1
+    [total_found] =&gt; 1
+    [time] =&gt; 0.002
+    [words] =&gt; Array
+        (
+            [兔先生] =&gt; Array
+                (
+                    [docs] =&gt; 1
+                    [hits] =&gt; 1
+                )
+
+        )
+
+)</code></pre>
+<p>Matches中就是查询的结果了，但是仿佛不是我们想要的数据，比如titile，content字段的内容就没有查询出来，根据官方的说明是Sphinx并没有连接到MySQL去取数据，只是根据它自己的索引内容进行计算，因此如果想用Sphinx提供的API去取得我们想要的数据，还必须以查询的结果为依据，再次查询MySQL从而得到我们想要的数据。</p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

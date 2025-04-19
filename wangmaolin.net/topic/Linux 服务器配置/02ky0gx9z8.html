@@ -1,0 +1,492 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Redis 配置错误日志、慢日志方法 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="UIXRvtJNSp25hlYxpQ3SQtDTO9HkIE23wnVZr6t6">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Linux 服务器配置 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Flutter/overview.html">Flutter</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件&amp;工具/jwnex89yxd.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PayPal/overview.html">PayPal</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Redis/overview.html">Redis</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付宝/overview.html">支付宝</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../阿里云/overview.html">阿里云</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>新购服务器配置</h2>
+<ul>
+<li id="blog161"><a href="4oxy7n6e98.html#blog161">ubuntu 切换 sh 为 bash</a>
+<li id="blog19"><a href="5m892ov01p.html#blog19">新增用户&amp;赋予 sudo 权限</a>
+<li id="blog5"><a href="15dvekv4xj.html#blog5">创建自定义命令</a>
+<li id="blog21"><a href="qk2vmoep0m.html#blog21">配置公私钥登录,禁止密码登录</a>
+<li id="blog20"><a href="jrqvwly8pn.html#blog20">配置指定命令 sudo 免密码使用</a>
+<li id="blog56"><a href="7okv5gne1n.html#blog56">修改 SSH 连接的端口</a>
+<li id="blog55"><a href="m0wek8xep9.html#blog55">SSH 设置保持连接方法</a>
+<li id="blog54"><a href="7ndvdn2yo2.html#blog54">修改系统 hostname</a>
+<li id="blog53"><a href="15dve4k94x.html#blog53">nginx 配置 auth_basic 登录认证</a>
+<li id="blog22"><a href="j3oyj89p57.html#blog22">iptables 封禁 ip 方法</a>
+<li id="blog189"><a href="02ky02xvz8.html#blog189">Linux 服务器的基本安全配置</a>
+</ul>
+</li>
+<li>
+<h2>Lnmp 相关配置</h2>
+<ul>
+<li id="blog170"><a href="71xyjlmvd9.html#blog170">Lnmp 环境配置</a>
+<li id="blog172"><a href="de296j6vq7.html#blog172">MySql 日志配置</a>
+<li id="blog53"><a href="15dve4k94x.html#blog53">nginx 配置 auth_basic 登录认证</a>
+<li id="blog64"><a href="od6vrxev3g.html#blog64">nginx 日志格式 log_format 配置</a>
+<li id="blog101"><a href="kq1ez4qyrl.html#blog101">Linux日志切割工具logrotate 配置</a>
+<li id="blog117"><a href="02ky0gx9z8.html#blog117">Redis 日志配置</a>
+<li id="blog119"><a href="5m89225901.html#blog119">redis 监听执行日志</a>
+<li id="blog171"><a href="wjkv8qnv62.html#blog171">php-fpm.conf 配置说明</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '02ky0gx9z8.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/02ky0gx9z8.html', function (data, status) {
+                addView('02ky0gx9z8.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script> -->
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Redis 配置错误日志、慢日志方法</h1><ul>
+<li><a href="02ky0gx9z8.html#0908a12474818e3c1c72f3b6cb8b209b">启动、错误日志</a>
+<ul>
+<li><a href="02ky0gx9z8.html#2be3e177a700b5a3ba67e518fa6f76b6">日志级别</a></li>
+<li><a href="02ky0gx9z8.html#6b160bce47a4db8239c17204009857f4">指定日志输出文件</a></li>
+</ul></li>
+<li><a href="02ky0gx9z8.html#442373ad11dde225c211722302630dd3">慢日志</a>
+<ul>
+<li><a href="02ky0gx9z8.html#097490a1c06865c20b7d9ed2790c6423">如何配置</a></li>
+<li><a href="02ky0gx9z8.html#5273db6f5ad9145f42e061aa71d5018f">查询慢日志</a></li>
+</ul></li>
+</ul><h2 id="0908a12474818e3c1c72f3b6cb8b209b">启动、错误日志</h2>
+<h3 id="2be3e177a700b5a3ba67e518fa6f76b6">日志级别</h3>
+<p>Redis 总共支持四个级别：debug、verbose、notice、warning</p>
+<p>debug:会打印生成大量信息，适用于开发/测试阶段</p>
+<p>verbose:包含很多不太有用的信息，但是不像debug级别那么混乱</p>
+<p>notice:适度冗长，适用于生产环境</p>
+<p>warning:仅记录非常重要、关键的警告消息</p>
+<p>配置： <code>sudo vim /usr/local/redis/etc/redis.conf</code></p>
+<pre><code class="language-conf"># Specify the server verbosity level.
+# This can be one of:
+# debug (a lot of information, useful for development/testing)
+# verbose (many rarely useful info, but not a mess like the debug level)
+# notice (moderately verbose, what you want in production probably)
+# warning (only very important / critical messages are logged)
+loglevel notice</code></pre>
+<h3 id="6b160bce47a4db8239c17204009857f4">指定日志输出文件</h3>
+<p>默认是  logfile stdout ，这种日志记录方式，默认为标准输出，如果配置 Redis 为守护进程方式运行，而这里又配置为日志记录方式为标准输出，则日志将会发送给 /dev/null</p>
+<p>配置： <code>sudo vim /usr/local/redis/etc/redis.conf</code></p>
+<pre><code class="language-conf"># Specify the log file name. Also the empty string can be used to force
+# Redis to log on the standard output. Note that if you use standard
+# output for logging but daemonize, logs will be sent to /dev/null
+logfile "/alidata/log/redis/redis.log"</code></pre>
+<p>重启 Redis 服务生效</p>
+<h2 id="442373ad11dde225c211722302630dd3">慢日志</h2>
+<p>慢日志(Slow log) 是 Redis 用来记录命令执行时间的日志系统。例如线上Redis突然出现堵塞，使用该命令可以查询Redis服务器耗时的命令列表，快速定位问题。</p>
+<p>由于慢日志是存储于内存的，读写速度非常快，不用担心因为使用慢日志而造成性能问题。</p>
+<h3 id="097490a1c06865c20b7d9ed2790c6423">如何配置</h3>
+<p>2种配置方法。</p>
+<p>第一种是修改redis.conf配置文件，</p>
+<p>第二种则是使用CONFIG SET动态修改。</p>
+<p>需要配置的参数：</p>
+<p>slowlog-log-slower-than 配置对执行时间大于多少微秒(microsecond, 1秒=10^6微秒) 的命令进行记录。线上可以设置为10000微秒，也就是10毫秒。</p>
+<p>slowlog-max-len 设置最大考验记录多少条记录。 slow log 本身是一个先进先出(FIFO) 队列，当队列大小超过该配置的值时，最旧的一条日志将被删除。线上可以设置为1000以上。</p>
+<p>示例：</p>
+<p>若修改redis.conf 也是修改这两个参数</p>
+<pre><code class="   language-php">CONFIG SET slowlog-log-slower-than 10000
+CONFIG SET slowlog-max-len 128</code></pre>
+<p>查询是否生效，可以使用CONFIG GET命令：</p>
+<pre><code class="   language-php">127.0.0.1:6379&gt; CONFIG GET slowlog-log-slower-than
+1) "slowlog-log-slower-than"
+2) "10000"
+
+127.0.0.1:6379&gt; CONFIG GET slowlog-max-len
+1) "slowlog-max-len"
+2) "128"</code></pre>
+<h3 id="5273db6f5ad9145f42e061aa71d5018f">查询慢日志</h3>
+<p>查询很简单，使用SLOWLOG GET命令：</p>
+<pre><code class="   language-php">127.0.0.1:6379&gt; SLOWLOG GET 2
+1) 1) (integer) 207
+   2) (integer) 1582875104
+   3) (integer) 98977
+   4) 1) "SPOP"
+      2) "wt_pre_room_wxids"
+2) 1) (integer) 206
+   2) (integer) 1582875103
+   3) (integer) 501649
+   4) 1) "SPOP"
+      2) "wt_bind_user_wxids"</code></pre>
+<p>该命令如果不给参数，则打印出所有慢查询命令。</p>
+<p>现在按结果集顺序讲解一下输出的结果含义：</p>
+<pre><code class="   language-php">唯一性(unique)的日志标识符。日志的唯一 id 只有在 Redis 服务器重启的时候才会重置，这样可以避免对日志的重复处理。
+
+被记录命令的执行时间点，以 UNIX 时间戳格式表示
+
+查询执行时间，单位为微秒
+
+执行的命令，以数组的形式排列</code></pre>
+<p>如果仅需要知道当前慢查询的数量，则使用命令SLOWLOG LEN即可：</p>
+<pre><code class="   language-php">127.0.0.1:6379&gt; SLOWLOG LEN
+(integer) 128</code></pre>
+<p>使用命令 SLOWLOG RESET 可以清空 慢日志 :</p>
+<pre><code class="   language-php">127.0.0.1:6379&gt; SLOWLOG RESET
+OK</code></pre>
+<p>提示：慢查询较多的情况下，可能会丢失部分慢查询命令，可以定期执行 SLOWLOG GET命令将慢查询日志持久化到其他存储(例如ES)中。然后制作可视化界面查询。</p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

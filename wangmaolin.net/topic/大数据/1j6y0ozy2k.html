@@ -1,0 +1,524 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>使用 Filebeat 监听日志文件 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="UIXRvtJNSp25hlYxpQ3SQtDTO9HkIE23wnVZr6t6">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    大数据 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Flutter/overview.html">Flutter</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件&amp;工具/jwnex89yxd.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PayPal/overview.html">PayPal</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Redis/overview.html">Redis</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付宝/overview.html">支付宝</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../阿里云/overview.html">阿里云</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>Filebeat</h2>
+<ul>
+<li id="blog341"><a href="1j6y0ozy2k.html#blog341">使用 Filebeat 监听日志文件</a>
+<li id="blog342"><a href="xkdvp38ezo.html#blog342">Filebeat 配置详解</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '1j6y0ozy2k.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/1j6y0ozy2k.html', function (data, status) {
+                addView('1j6y0ozy2k.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script> -->
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>使用 Filebeat 监听日志文件</h1><ul>
+<li><a href="1j6y0ozy2k.html#a8d40d0ae72e95124478848d86c44282">filebeat的工作流程</a></li>
+<li><a href="1j6y0ozy2k.html#38c4512c3673fdd95b7519dff0dbb8b4">Filebeat 安装</a></li>
+<li><a href="1j6y0ozy2k.html#e1bef845d70bf97bb8a47b6b3fcc3306">设置filebeat.yaml文件</a>
+<ul>
+<li><a href="1j6y0ozy2k.html#480c216fb9f264085ac2a89b46347611">实例</a></li>
+<li><a href="1j6y0ozy2k.html#8514c29b261cbc93898ffab1abc61905">其他的输出方式</a></li>
+<li><a href="1j6y0ozy2k.html#dd7725f5397bcf8559f49cb63eac9da1">不同的应用日志使用不同的rediskey值</a>
+<ul>
+<li><a href="1j6y0ozy2k.html#15936d25f566261ebb1dd2c8a31dfca5">根据 message 区分：</a></li>
+<li><a href="1j6y0ozy2k.html#f36d2be3deb3bc9cb11231faa9a31985">根据 log_source 区分</a></li>
+</ul></li>
+</ul></li>
+<li><a href="1j6y0ozy2k.html#9c6d9036d91c82d96acd3c7a14effcbc">使用 Supervisor 管理 filebeat</a></li>
+<li><a href="1j6y0ozy2k.html#1eb1532e90e1ef75ae7a2753a307f9af">各竞品介绍</a>
+<ul>
+<li><a href="1j6y0ozy2k.html#65859d7d6b0c6a5327b8f0b0c09653ad">Logstash</a></li>
+<li><a href="1j6y0ozy2k.html#d9d580b4e3c744b24c34a81290800624">Filebeat</a></li>
+</ul></li>
+</ul><p>Filebeat是一个日志文件托运工具，在你的服务器上安装客户端后，filebeat 会监控日志目录或者指定的日志文件，追踪读取这些文件（追踪文件的变化，不停的读），并且转发这些信息到elasticsearch 或者 logstarsh 、redis、kafka 中存放。</p>
+<h2 id="a8d40d0ae72e95124478848d86c44282">filebeat的工作流程</h2>
+<p><img src="../../storage/images/2023/02/15/ko5AKidPoA8EQPimv1TMazBsGHhWQiBEyFRfpyXy.png" alt="" /></p>
+<p>当你开启filebeat程序的时候，它会启动一个或多个探测器（prospectors）去检测你指定的日志目录或文件，对于探测器找出的每一个日志文件，filebeat 启动收割进程（harvester），每一个收割进程读取一个日志文件的新内容(逐行读取)，并发送这些新的日志数据到处理程序（spooler），处理程序会集合这些事件，最后filebeat会发送集合的数据到你指定的地点。</p>
+<h2 id="38c4512c3673fdd95b7519dff0dbb8b4">Filebeat 安装</h2>
+<p>以 Linux 系统为例</p>
+<p>参考文档：<a href="https://www.elastic.co/guide/en/beats/filebeat/8.6/filebeat-installation-configuration.html">filebeat-installation-configuration</a></p>
+<pre><code class="language-bash"> curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.6.1-linux-x86_64.tar.gz
+tar xzvf filebeat-8.6.1-linux-x86_64.tar.gz</code></pre>
+<h2 id="e1bef845d70bf97bb8a47b6b3fcc3306">设置filebeat.yaml文件</h2>
+<p>编辑配置文件来配置filebeat，对于rpm或者deb包安装来说，默认配置文件是 <code>/etc/filebeat/filebeat.yml</code> 这个文件。</p>
+<p>这里有一个简单的filebeat的配置文件filebeat.yml的样本，filebeat会使用很多默认的选项。</p>
+<p>filebeat.yaml 文件配置了 filebeat 需要采集的文件信息和输出信息。</p>
+<h3 id="480c216fb9f264085ac2a89b46347611">实例</h3>
+<p>如监听 nginx 日志，输出到 redis 中，自定义配置文件地址 <code>/etc/filebeat/conf.d/nginx.yml</code></p>
+<p><code>vim /etc/filebeat/conf.d/nginx.yml</code></p>
+<pre><code class="language-yaml">filebeat.inputs:
+- type: log
+  enabled: true
+  tail_files: true
+  paths: # 定义你的日志文件的路径（一个或多个）, 支持正则
+    - /alidata/log/nginx/access.log
+    - /alidata/log/nginx/access.1.log
+    - /alidata/log/nginx/*.log
+  # fields表示在filebeat收集的日志中多增加一个字段log_source,其值用来在logstash的output输出到elasticsearch中判断日志的来源，从而建立相应的索引 
+  fields:
+    log_source: access
+  # fields_under_root设置为true，表示上面新增的字段是顶级参数
+  fields_under_root: true
+  # prospector扫描新文件的时间间隔，默认10秒
+  scan_frequency: 3s
+  # 单文件最大收集的字节数，单文件超过此字节数后的字节将被丢弃，默认10MB，需要增大，保持与日志输出配置的单文件最大值一致即可
+  max_bytes: 10485760000
+
+# 又一个日志源监听
+- type: log
+  enabled: true
+  paths:
+    - /usr/local/nginx/logs/error.log
+  tags: ["nginx-log-error"]
+  fields:
+    log_source: error
+  fields_under_root: true
+
+output.redis:
+  hosts: ["127.0.0.1:6379"]
+  key: NginxLog
+  password: 111111
+  db: 1
+  datatype: list</code></pre>
+<p>启动监听任务：</p>
+<pre><code class="   language-php">filebeat -c /etc/filebeat/conf.d/nginx.yml 
+
+# 参数说明
+# -e 日志输出到 stderr 并禁用 syslog/file 输出
+# -c 指定配置文件
+# -d 启用对指定选择器的调试，publish 可以看到完整的 event 信息
+sudo nohup filebeat -e -c filebeat.yml -d "publish" &gt;filebeat.log 2&gt;&amp;1 &amp;
+
+# FileBeat 会在注册表中存储每个文件收集的状态，
+# 想强制 FileBeat 从日志的最开始重新读取，可以直接删除注册表文件
+sudo rm data/registry
+# deb/rpm 安装路径
+sudo rm /var/lib/filebeat/registry
+
+# 查看 filebeat 运行日志，发送的事件格式
+tail -100f /var/log/filebeat/filebeat</code></pre>
+<h3 id="8514c29b261cbc93898ffab1abc61905">其他的输出方式</h3>
+<p>filebeat支持输出到不同的设备，可以直接输出到 elasticsearch 或者通过 logstash 格式化日志在到 es。在最新的版本7.10.1只支持输出到一个ouput中。</p>
+<pre><code class="   language-php">output.logstash:
+  hosts: ["192.168.0.126:5047"]</code></pre>
+<p>或者</p>
+<pre><code class="   language-php">output.elasticsearch:
+  hosts: ["192.168.0.126:9200"]</code></pre>
+<p>对于多组日志我们可以定义多个input收集数据，指定不同的fields.tag，对不同的日志进行切分，数据写入到不同的索引中，也可以配置不同的conf文件，启动多个不同的filebeat分别采集数据。</p>
+<h3 id="dd7725f5397bcf8559f49cb63eac9da1">不同的应用日志使用不同的rediskey值</h3>
+<p><img src="../../storage/images/2023/02/15/Nb8gCyyCTCBAJEEHqHafFos0Bk3G7UwFWMrepzDj.png" alt="" /></p>
+<h4 id="15936d25f566261ebb1dd2c8a31dfca5">根据 message 区分：</h4>
+<pre><code class="language-yml">output.redis:
+  hosts: ["localhost"]
+  key: "default_list"
+  keys:
+    - key: "error_list"   # send to info_list if `message` field contains INFO
+      when.contains:
+        message: "error"
+    - key: "debug_list"  # send to debug_list if `message` field contains DEBUG
+      when.contains:
+        message: "DEBUG"
+    - key: "%{[fields.list]}"</code></pre>
+<p>默认的key值是default_list，keys的值是动态分配创建的，当redis接收到的日志中message字段的值包含有error字段，则创建key为error_list，当包含有DEBUG字段，则创建key为debug_list。</p>
+<p>问题的解决方法是在每个应用的输出日志中新增一个能够区分这个日志的值，然后再在keys中设置，这样一来就能够把不同应用的日志输出到不同的redis的key中。</p>
+<h4 id="f36d2be3deb3bc9cb11231faa9a31985">根据 log_source 区分</h4>
+<pre><code class="language-yml">output {
+  # 根据redis键 messages_secure 对应的列表值中，每一行数据的其中一个参数来判断日志来源
+  if [log_source] == 'messages' {  # 注意判断条件的写法
+    elasticsearch {
+      hosts =&gt; ["http://192.168.80.104:9200"]
+      index =&gt; "filebeat-message-%{+YYYY.MM.dd}"
+      #user =&gt; "elastic"
+      #password =&gt; "elastic123"
+    }
+  }
+} 
+</code></pre>
+<h2 id="9c6d9036d91c82d96acd3c7a14effcbc">使用 Supervisor 管理 filebeat</h2>
+<pre><code class="language-conf">[program:filebeat_nginx]
+command= /usr/bin/filebeat -e -c /etc/filebeat/conf.d/nginx.yml </code></pre>
+<h2 id="1eb1532e90e1ef75ae7a2753a307f9af">各竞品介绍</h2>
+<h3 id="65859d7d6b0c6a5327b8f0b0c09653ad">Logstash</h3>
+<p>优势</p>
+<p>Logstash 主要的有点就是它的灵活性，主要因为它有很多插件，详细的文档以及直白的配置格式让它可以在多种场景下应用。我们基本上可以在网上找到很多资源，几乎可以处理任何问题。</p>
+<p>劣势</p>
+<p>Logstash 致命的问题是它的性能以及资源消耗(默认的堆大小是 1GB)。尽管它的性能在近几年已经有很大提升，与它的替代者们相比还是要慢很多的。</p>
+<h3 id="d9d580b4e3c744b24c34a81290800624">Filebeat</h3>
+<p>作为 Beats 家族的一员，Filebeat 是一个轻量级的日志传输工具，它的存在正弥补了 Logstash 的缺点：Filebeat 作为一个轻量级的日志传输工具可以将日志推送到中心 Logstash。</p>
+<p>优势</p>
+<p>Filebeat 只是一个二进制文件没有任何依赖。它占用资源极少，尽管它还十分年轻，正式因为它简单，所以几乎没有什么可以出错的地方，所以它的可靠性还是很高的。它也为我们提供了很多可以调节的点，例如：它以何种方式搜索新的文件，以及当文件有一段时间没有发生变化时，何时选择关闭文件句柄。</p>
+<p>劣势</p>
+<p>Filebeat 的应用范围十分有限，所以在某些场景下我们会碰到问题。例如，如果使用 Logstash 作为下游管道，我们同样会遇到性能问题。正因为如此，Filebeat 的范围在扩大。开始时，它只能将日志发送到 Logstash 和 Elasticsearch，而现在它可以将日志发送给 Kafka 和 Redis，在 5.x 版本中，它还具备过滤的能力。</p>
+<p>其他像 Fluentd、Logagent、rsyslog 不做更多介绍，各有优劣，详情查看 <a href="https://zhuanlan.zhihu.com/p/63725444">详解日志采集工具--Logstash、Filebeat、Fluentd、Logagent对比</a></p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> filebeat-installation-configuration: <i><a href="https://www.elastic.co/guide/en/beats/filebeat/8.6/filebeat-installation-configuration.html" target="_blank">https://www.elastic.co/guide/en/beats/filebeat/8.6/filebeat-installation-configuration.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 详解日志采集工具--Logstash、Filebeat、Fluentd、Logagent对比: <i><a href="https://zhuanlan.zhihu.com/p/63725444" target="_blank">https://zhuanlan.zhihu.com/p/63725444</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

@@ -1,0 +1,661 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>MongoDB学习笔记（1）- MongoDB 简介、概念解释及数据类型 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="UIXRvtJNSp25hlYxpQ3SQtDTO9HkIE23wnVZr6t6">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    MongoDB <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Flutter/overview.html">Flutter</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件&amp;工具/jwnex89yxd.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PayPal/overview.html">PayPal</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Redis/overview.html">Redis</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付宝/overview.html">支付宝</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../阿里云/overview.html">阿里云</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>MongoDB</h2>
+<ul>
+<li id="blog137"><a href="4oxy7l6v98.html#blog137">MongoDB学习笔记（1）- MongoDB 简介、概念解释及数据类型</a>
+<li id="blog138"><a href="lgwylzgv3q.html#blog138">MongoDB学习笔记（2）- MongoDB 安装、后台管理 Shell 介绍</a>
+<li id="blog139"><a href="j25v19qe1n.html#blog139">MongoDB shell 使用 mongosh 替换 mongo</a>
+</ul>
+</li>
+<li>
+<h2>nosql</h2>
+<ul>
+<li id="blog137"><a href="4oxy7l6v98.html#blog137">MongoDB学习笔记（1）- MongoDB 简介、概念解释及数据类型</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '4oxy7l6v98.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/4oxy7l6v98.html', function (data, status) {
+                addView('4oxy7l6v98.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script> -->
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>MongoDB学习笔记（1）- MongoDB 简介、概念解释及数据类型</h1><ul>
+<li><a href="4oxy7l6v98.html#146ed97db49fe690571224f3eaa405e3">什么是MongoDB ?</a></li>
+<li><a href="4oxy7l6v98.html#591285207da80031d0def6fdf0650ef3">MongoDB 主要特点</a></li>
+<li><a href="4oxy7l6v98.html#a757fae79d14542843f16701802b53df">MongoDB 中的概念解析</a>
+<ul>
+<li><a href="4oxy7l6v98.html#68051bf4aa2743b030984b694628ee9c">数据库</a></li>
+<li><a href="4oxy7l6v98.html#512e5cbcafd8d7f86cb6a93cb93318f3">文档(Document)</a>
+<ul>
+<li><a href="4oxy7l6v98.html#3fc8433fadd70ca9f99f5d3a8186dd4f">文档注意点</a></li>
+<li><a href="4oxy7l6v98.html#c7cd944b92dd42a2a6fd711ae0822897">文档键命名规范：</a></li>
+</ul></li>
+<li><a href="4oxy7l6v98.html#508b37f195b91f7d901273d4cd2d87f0">集合</a>
+<ul>
+<li><a href="4oxy7l6v98.html#cd1313df298faef367948ff6bbdc5e8c">集合命名规范</a></li>
+<li><a href="4oxy7l6v98.html#501fc1cd408ce6b81942d4212a5ee3c9">capped collections</a></li>
+</ul></li>
+</ul></li>
+<li><a href="4oxy7l6v98.html#37124727f5d2c7d4db6b216c1f3246a6">MongoDB 数据类型</a>
+<ul>
+<li><a href="4oxy7l6v98.html#07f343857ade196f6659dc124cd951e7">ObjectId</a></li>
+<li><a href="4oxy7l6v98.html#cc4dd1da7e1a754534215f02fb9ba85d">字符串</a></li>
+<li><a href="4oxy7l6v98.html#0c6482892e9df6505c8de1eabca68266">时间戳</a></li>
+<li><a href="4oxy7l6v98.html#4ff1e74e43a3586339251494117185ad">日期</a></li>
+</ul></li>
+</ul><h2 id="146ed97db49fe690571224f3eaa405e3">什么是MongoDB ?</h2>
+<p>MongoDB 是由C++语言编写的，是一个<code>基于分布式文件存储的开源数据库系统</code>。</p>
+<p>在高负载的情况下，添加更多的节点，可以保证服务器性能。</p>
+<p>MongoDB 旨在为WEB应用提供可扩展的高性能数据存储解决方案。</p>
+<p>MongoDB 将数据存储为一个文档，数据结构由键值(key=&gt;value)对组成。MongoDB 使用 BSON 作为数据格式，类似于 JSON 对象。</p>
+<p>字段值可以包含其他文档，数组及文档数组。</p>
+<p><img src="../../storage/images/2022/01/19/ueQvKPXSGI0kKQS1ERo8LpRilOIDjTVtRvgm9GtT.png" alt="" /></p>
+<h2 id="591285207da80031d0def6fdf0650ef3">MongoDB 主要特点</h2>
+<ul>
+<li>
+<p>MongoDB 是一个面向文档存储的数据库，操作起来比较简单和容易。</p>
+</li>
+<li>
+<p>你可以在MongoDB记录中设置任何属性的索引 (如：FirstName=&quot;Sameer&quot;,Address=&quot;8 Gandhi Road&quot;)来实现更快的排序。</p>
+</li>
+<li>
+<p>你可以通过本地或者网络创建数据镜像，这使得MongoDB有更强的扩展性。</p>
+</li>
+<li>
+<p>如果负载的增加（需要更多的存储空间和更强的处理能力） ，它可以分布在计算机网络中的其他节点上这就是所谓的分片。</p>
+</li>
+<li>
+<p>Mongo支持丰富的查询表达式。查询指令使用JSON形式的标记，可轻易查询文档中内嵌的对象及数组。</p>
+</li>
+<li>
+<p>MongoDb 使用update()命令可以实现替换完成的文档（数据）或者一些指定的数据字段 。</p>
+</li>
+<li>
+<p>Mongodb中的Map/reduce主要是用来对数据进行批量处理和聚合操作。</p>
+</li>
+<li>
+<p>Map和Reduce。Map函数调用emit(key,value)遍历集合中所有的记录，将key与value传给Reduce函数进行处理。</p>
+</li>
+<li>
+<p>Map函数和Reduce函数是使用Javascript编写的，并可以通过db.runCommand或mapreduce命令来执行MapReduce操作。</p>
+</li>
+<li>
+<p>GridFS是MongoDB中的一个内置功能，可以用于存放大量小文件。</p>
+</li>
+<li>
+<p>MongoDB允许在服务端执行脚本，可以用Javascript编写某个函数，直接在服务端执行，也可以把函数的定义存储在服务端，下次直接调用即可。</p>
+</li>
+<li>
+<p>MongoDB支持各种编程语言:RUBY，PYTHON，JAVA，C++，PHP，C#等多种语言。</p>
+</li>
+<li>
+<p>MongoDB安装简单。</p>
+</li>
+</ul>
+<h2 id="a757fae79d14542843f16701802b53df">MongoDB 中的概念解析</h2>
+<p>在mongodb中基本的概念是<code>文档、集合、数据库</code>，下面我们挨个介绍。</p>
+<p>下表通过与SQL中概念的比较帮助您更容易理解Mongo中的一些概念：</p>
+<p><img src="../../storage/images/2022/01/19/SUpvOUwmEUS8d5wNEqNdv2wlZ5XTRBuqVqQuaDI4.png" alt="" /></p>
+<p>通过下图实例，我们也可以更直观的了解Mongo中的一些概念：</p>
+<p><img src="../../storage/images/2022/01/19/nkN1kGoCrvtQMh8FnPEw0lRBoD1yY3Cf0VySW5QK.png" alt="" /></p>
+<h3 id="68051bf4aa2743b030984b694628ee9c">数据库</h3>
+<p>一个mongodb中可以建立多个数据库。</p>
+<p>MongoDB的默认数据库为&quot;db&quot;，该数据库存储在data目录中。</p>
+<p>MongoDB的单个实例可以容纳多个独立的数据库，每一个都有自己的集合和权限，不同的数据库也放置在不同的文件中。</p>
+<p><code>show dbs</code> 命令可以显示所有数据的列表。</p>
+<pre><code class="language-bash">$ ./mongo
+MongoDB shell version: 3.0.6
+connecting to: test
+&gt; show dbs
+local  0.078GB
+test   0.078GB
+&gt; </code></pre>
+<p>执行 <code>db</code> 命令可以显示当前数据库对象或集合。</p>
+<pre><code class="language-bash">$ ./mongo
+MongoDB shell version: 3.0.6
+connecting to: test
+&gt; db
+test
+&gt; </code></pre>
+<p>运行 <code>use</code> 命令，可以连接到一个指定的数据库。</p>
+<pre><code class="language-bash">&gt; use local
+switched to db local
+&gt; db
+local
+&gt; </code></pre>
+<p>以上实例命令中，&quot;local&quot; 是你要链接的数据库。</p>
+<p>数据库也通过名字来标识。数据库名可以是满足以下条件的任意UTF-8字符串。</p>
+<ul>
+<li>不能是空字符串（&quot;&quot;)。</li>
+<li>不得含有' '（空格)、.、$、/、\和\0 (空字符)。</li>
+<li>应全部小写。</li>
+<li>最多64字节。</li>
+</ul>
+<p>有一些数据库名是保留的，可以直接访问这些有特殊作用的数据库。</p>
+<ul>
+<li>admin： 从权限的角度来看，这是&quot;root&quot;数据库。要是将一个用户添加到这个数据库，这个用户自动继承所有数据库的权限。一些特定的服务器端命令也只能从这个数据库运行，比如列出所有的数据库或者关闭服务器。</li>
+<li>local: 这个数据永远不会被复制，可以用来存储限于本地单台服务器的任意集合</li>
+<li>config: 当Mongo用于分片设置时，config数据库在内部使用，用于保存分片的相关信息。</li>
+</ul>
+<h3 id="512e5cbcafd8d7f86cb6a93cb93318f3">文档(Document)</h3>
+<p>对应 SQL 中的行。</p>
+<p>文档是一组键值(key-value)对(即 BSON)。MongoDB 的文档不需要设置相同的字段，并且相同的字段不需要相同的数据类型，这与关系型数据库有很大的区别，也是 MongoDB 非常突出的特点。</p>
+<p>一个简单的文档例子如下：</p>
+<pre><code class="   language-php">{"site":"www.runoob.com", "name":"菜鸟教程"}</code></pre>
+<h4 id="3fc8433fadd70ca9f99f5d3a8186dd4f">文档注意点</h4>
+<ul>
+<li>文档中的键/值对是有序的。</li>
+<li>文档中的值不仅可以是在双引号里面的字符串，还可以是其他几种数据类型（甚至可以是整个嵌入的文档)。</li>
+<li>MongoDB区分类型和大小写。</li>
+<li>MongoDB的文档不能有重复的键。</li>
+<li>文档的键是字符串。除了少数例外情况，键可以使用任意UTF-8字符。</li>
+</ul>
+<h4 id="c7cd944b92dd42a2a6fd711ae0822897">文档键命名规范：</h4>
+<ul>
+<li>键不能含有\0 (空字符)。这个字符用来表示键的结尾。</li>
+<li>.和$有特别的意义，只有在特定环境下才能使用。</li>
+<li>以下划线&quot;_&quot;开头的键是保留的(不是严格要求的)。</li>
+</ul>
+<h3 id="508b37f195b91f7d901273d4cd2d87f0">集合</h3>
+<p>对应 SQL 中的表格</p>
+<p>集合就是 MongoDB 文档组。</p>
+<p>集合存在于数据库中，集合没有固定的结构，这意味着你在对集合可以插入不同格式和类型的数据，但通常情况下我们插入集合的数据都会有一定的关联性。</p>
+<p>比如，我们可以将以下不同数据结构的文档插入到集合中：</p>
+<pre><code class="   language-php">{"site":"www.baidu.com"}
+{"site":"www.google.com","name":"Google"}
+{"site":"www.runoob.com","name":"菜鸟教程","num":5}</code></pre>
+<p>当第一个文档插入时，集合就会被创建。</p>
+<h4 id="cd1313df298faef367948ff6bbdc5e8c">集合命名规范</h4>
+<ul>
+<li>集合名不能是空字符串&quot;&quot;。</li>
+<li>集合名不能含有\0字符（空字符)，这个字符表示集合名的结尾。</li>
+<li>集合名不能以&quot;system.&quot;开头，这是为系统集合保留的前缀。</li>
+<li>用户创建的集合名字不能含有保留字符。有些驱动程序的确支持在集合名里面包含，这是因为某些系统生成的集合中包含该字符。除非你要访问这种系统创建的集合，否则千万不要在名字里出现<code>$</code>。　</li>
+</ul>
+<p>如下实例：</p>
+<pre><code class="language-bash">db.col.findOne()</code></pre>
+<h4 id="501fc1cd408ce6b81942d4212a5ee3c9">capped collections</h4>
+<p>Capped collections 就是固定大小的collection。</p>
+<p>它有很高的性能以及队列过期的特性(过期按照插入的顺序). 有点和 &quot;RRD&quot; 概念类似。</p>
+<p>Capped collections 是高性能自动的维护对象的插入顺序。它非常适合类似记录日志的功能和标准的 collection 不同，你必须要显式的创建一个capped collection，指定一个 collection 的大小，单位是字节。collection 的数据存储空间值提前分配的。</p>
+<p>Capped collections 可以按照文档的插入顺序保存到集合中，而且这些文档在磁盘上存放位置也是按照插入顺序来保存的，所以当我们更新Capped collections 中文档的时候，更新后的文档不可以超过之前文档的大小，这样话就可以确保所有文档在磁盘上的位置一直保持不变。</p>
+<p>由于 Capped collection 是按照文档的插入顺序而不是使用索引确定插入位置，这样的话可以提高增添数据的效率。MongoDB 的操作日志文件 oplog.rs 就是利用 Capped Collection 来实现的。</p>
+<p>要注意的是指定的存储大小包含了数据库的头信息。</p>
+<pre><code class="   language-php">db.createCollection("mycoll", {capped:true, size:100000})</code></pre>
+<ul>
+<li>在 capped collection 中，你能添加新的对象。</li>
+<li>能进行更新，然而，对象不会增加存储空间。如果增加，更新就会失败 。</li>
+<li>使用 Capped Collection 不能删除一个文档，可以使用 drop() 方法删除 collection 所有的行。</li>
+<li>删除之后，你必须显式的重新创建这个 collection。</li>
+<li>在32bit机器中，capped collection 最大存储为 1e9( 1X109)个字节。</li>
+</ul>
+<h2 id="37124727f5d2c7d4db6b216c1f3246a6">MongoDB 数据类型</h2>
+<ul>
+<li>
+<p><code>String</code>  字符串。存储数据常用的数据类型。在 MongoDB 中，UTF-8 编码的字符串才是合法的。</p>
+</li>
+<li>
+<p><code>Integer</code> 整型数值。用于存储数值。根据你所采用的服务器，可分为 32 位或 64 位。</p>
+</li>
+<li>
+<p><code>Boolean</code> 布尔值。用于存储布尔值（真/假）。</p>
+</li>
+<li>
+<p><code>Double</code>  双精度浮点值。用于存储浮点值。</p>
+</li>
+<li>
+<p><code>Min/Max keys</code>    将一个值与 BSON（二进制的 JSON）元素的最低值和最高值相对比。</p>
+</li>
+<li>
+<p><code>Array</code>   用于将数组或列表或多个值存储为一个键。</p>
+</li>
+<li>
+<p><code>Timestamp</code>   时间戳。记录文档修改或添加的具体时间。</p>
+</li>
+<li>
+<p><code>Object</code>  用于内嵌文档。</p>
+</li>
+<li>
+<p><code>Null</code>    用于创建空值。</p>
+</li>
+<li>
+<p><code>Symbol</code>  符号。该数据类型基本上等同于字符串类型，但不同的是，它一般用于采用特殊符号类型的语言。</p>
+</li>
+<li>
+<p><code>Date</code>    日期时间。用 UNIX 时间格式来存储当前日期或时间。你可以指定自己的日期时间：创建 Date 对象，传入年月日信息。</p>
+</li>
+<li>
+<p><code>Object ID</code>   对象 ID。用于创建文档的 ID。</p>
+</li>
+<li>
+<p><code>Binary Data</code> 二进制数据。用于存储二进制数据。</p>
+</li>
+<li>
+<p><code>Code</code>    代码类型。用于在文档中存储 JavaScript 代码。</p>
+</li>
+<li>
+<p><code>Regular expression</code>  正则表达式类型。用于存储正则表达式。</p>
+</li>
+</ul>
+<p>下面说明下几种重要的数据类型。</p>
+<h3 id="07f343857ade196f6659dc124cd951e7">ObjectId</h3>
+<p>ObjectId 类似唯一主键，可以很快的去生成和排序，包含 12 bytes，含义是：</p>
+<p>前 4 个字节表示创建 unix 时间戳,格林尼治时间 UTC 时间，比北京时间晚了 8 个小时</p>
+<p>接下来的 3 个字节是机器标识码</p>
+<p>紧接的两个字节由进程 id 组成 PID</p>
+<p>最后三个字节是随机数</p>
+<p><img src="../../storage/images/2022/01/19/2UpLEBpsHRj2YIdYsMKOJqpmi09QY3x1G73le7ao.png" alt="" /></p>
+<p>MongoDB 中存储的文档必须有一个<code>_id</code> 键。这个键的值可以是任何类型的，默认是个 ObjectId 对象</p>
+<p>由于 ObjectId 中保存了创建的时间戳，所以你不需要为你的文档保存时间戳字段，你可以通过 getTimestamp 函数来获取文档的创建时间:</p>
+<pre><code class="language-bash">&gt; var newObject = ObjectId()
+&gt; newObject.getTimestamp()
+ISODate("2017-11-25T07:21:10Z")</code></pre>
+<p>ObjectId 转为字符串</p>
+<pre><code class="language-bash">&gt; newObject.str
+5a1919e63df83ce79df8b38f</code></pre>
+<h3 id="cc4dd1da7e1a754534215f02fb9ba85d">字符串</h3>
+<p>BSON 字符串都是 UTF-8 编码。</p>
+<h3 id="0c6482892e9df6505c8de1eabca68266">时间戳</h3>
+<p>BSON 有一个特殊的时间戳类型用于 MongoDB 内部使用，与普通的 日期 类型不相关。 时间戳值是一个 64 位的值。其中：</p>
+<ul>
+<li>前32位是一个 time_t 值（与Unix新纪元相差的秒数）</li>
+<li>后32位是在某秒中操作的一个递增的序数</li>
+</ul>
+<p>在单个 mongod 实例中，时间戳值通常是唯一的。</p>
+<p>在复制集中， oplog 有一个 ts 字段。这个字段中的值使用BSON时间戳表示了操作时间。</p>
+<blockquote>
+<p>BSON 时间戳类型主要用于 MongoDB 内部使用。在大多数情况下的应用开发中，你可以使用 BSON 日期类型。</p>
+</blockquote>
+<h3 id="4ff1e74e43a3586339251494117185ad">日期</h3>
+<p>表示当前距离 Unix新纪元（1970年1月1日）的毫秒数。日期类型是有符号的, 负数表示 1970 年之前的日期。</p>
+<pre><code class="language-bash">&gt; var mydate1 = new Date()     //格林尼治时间
+&gt; mydate1
+ISODate("2018-03-04T14:58:51.233Z")
+&gt; typeof mydate1
+object</code></pre>
+<pre><code class="language-bash">&gt; var mydate2 = ISODate() //格林尼治时间
+&gt; mydate2
+ISODate("2018-03-04T15:00:45.479Z")
+&gt; typeof mydate2
+object</code></pre>
+<p>这样创建的时间是日期类型，可以使用 JS 中的 Date 类型的方法。</p>
+<p>返回一个时间类型的字符串：</p>
+<pre><code class="language-bash">&gt; var mydate1str = mydate1.toString()
+&gt; mydate1str
+Sun Mar 04 2018 14:58:51 GMT+0000 (UTC) 
+&gt; typeof mydate1str
+string</code></pre>
+<p>或者</p>
+<pre><code class="language-bash">&gt; Date()
+Sun Mar 04 2018 15:02:59 GMT+0000 (UTC)   </code></pre>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>
