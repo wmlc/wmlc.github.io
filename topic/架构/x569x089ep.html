@@ -1,0 +1,572 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>提高前端代码性能的最佳实践 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    架构 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>分布式</h2>
+<ul>
+<li id="blog76"><a href="jenydjoy7d.html#blog76">TCC 分布式事务的实现原理</a>
+</ul>
+</li>
+<li>
+<h2>地图</h2>
+<ul>
+<li id="blog216"><a href="od6vrzn93g.html#blog216">后台管理系统如何给具体地址添加经纬度坐标？</a>
+</ul>
+</li>
+<li>
+<h2>微服务</h2>
+<ul>
+<li id="blog269"><a href="qk2vmw9yp0.html#blog269">微服务是什么?</a>
+</ul>
+</li>
+<li>
+<h2>架构</h2>
+<ul>
+<li id="blog316"><a href="nq5vrnke7p.html#blog316">直播间状态变更通知所有用户方案</a>
+<li id="blog324"><a href="8loynj1vz3.html#blog324">系统注销用户的逻辑</a>
+<li id="blog363"><a href="j25v16ge1n.html#blog363">设计无密码登录指南</a>
+<li id="blog383"><a href="3qk94gx9w1.html#blog383">系统负载介绍</a>
+<li id="blog452"><a href="rpnv39dvwm.html#blog452">下云 - 什么情况下不能离开云计算</a>
+<li id="blog487"><a href="ekpv1d2v8w.html#blog487">广告系统架构介绍</a>
+<li id="blog570"><a href="j3oyjek9p5.html#blog570">地图红绿灯倒计时功能是如何实现的？</a>
+<li id="blog676"><a href="enyd5oo97d.html#blog676">单点登录的实现</a>
+<li id="blog677"><a href="5dve2ekv4x.html#blog677">如何防止订单重复支付</a>
+<li id="blog694"><a href="3oyjdg8yp5.html#blog694">抢红包系统设计</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog317"><a href="02ky0m69z8.html#blog317">Cloudflare 推出 Turnstile — 一款用户友好且保护隐私的 CAPTCHA 替代方案</a>
+<li id="blog379"><a href="wkl9nd8yz4.html#blog379">JWT 认证和授权：详细介绍</a>
+<li id="blog380"><a href="gxpv5n5v86.html#blog380">浏览器同源政策及其规避方法</a>
+<li id="blog381"><a href="n3xyqnlymq.html#blog381">跨域资源共享 CORS 详解</a>
+<li id="blog382"><a href="4x3voeo9m1.html#blog382">XSS 跨站脚本攻击介绍</a>
+<li id="blog444"><a href="4wevwrzyl2.html#blog444">双因素认证（2FA）教程</a>
+<li id="blog477"><a href="15dved394x.html#blog477">开发安全的 API 所需要核对的清单</a>
+<li id="blog667"><a href="m892gnoy01.html#blog667">target=&quot;_blank” 属性的安全漏洞</a>
+<li id="blog678"><a href="4rvgnzkydj.html#blog678">CSRF跨站请求伪造攻击</a>
+<li id="blog708"><a href="xpv52r1v86.html#blog708">文件上传安全注意事项</a>
+<li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
+<li id="blog710"><a href="x3vo0qkvm1.html#blog710">服务器漏洞</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog338"><a href="xrwyl6zyz8.html#blog338">关于系统性能的认知</a>
+<li id="blog436"><a href="x569x089ep.html#blog436">提高前端代码性能的最佳实践</a>
+<li id="blog720"><a href="wevwmxn9l2.html#blog720">高并发相关技巧(待完善)</a>
+</ul>
+</li>
+<li>
+<h2>编程</h2>
+<ul>
+<li id="blog569"><a href="1ndvm4pv3j.html#blog569">提高代码可读性和效率的 11 个技巧</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'x569x089ep.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/x569x089ep.html', function (data, status) {
+                addView('x569x089ep.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>提高前端代码性能的最佳实践</h1><ul>
+<li><a href="x569x089ep.html#f9c7a21eecb0f0f452d51722983e2546">1、图片优化</a>
+<ul>
+<li><a href="x569x089ep.html#c9d67bfc3cd78c453ed32be05b5c5a28">图片压缩</a></li>
+<li><a href="x569x089ep.html#c09c0ad1f79988b6484e7ef64495a67c">使用现代图片格式</a></li>
+<li><a href="x569x089ep.html#273948facdea450de1e9df0d91d95e89">懒加载图像</a></li>
+</ul></li>
+<li><a href="x569x089ep.html#36df3f50e3ae0997a9aa8ed35e0b385d">2、缩小和压缩代码</a>
+<ul>
+<li><a href="x569x089ep.html#d945f304589a5fd1ba95be7962ba0944">缩小 HTML、CSS 和 JavaScript</a></li>
+<li><a href="x569x089ep.html#3a3e4e270abc98fcbcc8fe8ad36b4ea8">使用构建工具</a></li>
+<li><a href="x569x089ep.html#088d3e96f47f83150fe47d9b7ab91ead">应用 Gzip 压缩</a></li>
+<li><a href="x569x089ep.html#256dacd50b99706e9f7da2800fc75c23">使用 CDN</a></li>
+</ul></li>
+<li><a href="x569x089ep.html#89fd18d7767b4e046abf2e11260368d5">3、减少请求数量</a>
+<ul>
+<li><a href="x569x089ep.html#788154b8fd0e2ffbcf705e48f185c91e">合并文件</a></li>
+<li><a href="x569x089ep.html#2f1eac413b3549b41cb52a996d38d594">使用浏览器缓存</a></li>
+<li><a href="x569x089ep.html#68bf7c6f87c7d2279cdde486c9e9213b">重构代码以减少请求</a></li>
+<li><a href="x569x089ep.html#50e11c7aeba91f95f6cc279a8a54bf06">优化关键渲染路径</a></li>
+</ul></li>
+<li><a href="x569x089ep.html#20be5b471f048e383832e4dd413edd2f">4、网络传输性能检测工具—— PageSpeed</a></li>
+</ul><p>前端开发是 Web 应用程序的基础。在本文中，我们将介绍各种优化应用前端性能的技术，如图像压缩、懒加载和浏览器缓存。</p>
+<h2 id="f9c7a21eecb0f0f452d51722983e2546">1、图片优化</h2>
+<h3 id="c9d67bfc3cd78c453ed32be05b5c5a28">图片压缩</h3>
+<p>您可能听说过压缩图像，但您知道它是如何工作的吗？图像压缩是在不影响图像质量的情况下减小图像大小的过程。压缩图像可以提高网页性能。</p>
+<p>有两种类型的压缩：无损压缩和有损压缩。无损保留图像质量。有损可能会造成一些质量损失，通常用于人眼可能无法察觉质量差异的 Web 应用程序。</p>
+<p><img src="../../storage/images/2023/09/01/mtqadFmajcpNi5sSxGARIldaITiHuhbwYIq2L3pT.png" alt="" /></p>
+<p>下面是一些工具可以帮助您压缩 Web 应用程序的图像，如 <a href="https://tinypng.com/">TinyPNG</a>、<a href="https://jakearchibald.github.io/svgomg/">SVGOMG</a>、<a href="https://squoosh.app/">Squoosh.app</a>、<a href="https://compressor.io/">Compressor.io</a>、<a href="https://www.jpegmini.com/">JPEGmini</a> 和 <a href="https://kraken.io/">Kraken.io</a>。</p>
+<h3 id="c09c0ad1f79988b6484e7ef64495a67c">使用现代图片格式</h3>
+<p>对于图片，您可以使用多种不同的格式。但如果您想确保您的网站得到优化，那么使用现代图像格式是正确的选择。</p>
+<p>通过利用这些更高级的文件类型（如 WebP、AVIF、FLIF 和 HEIF），您可以获得比 JPEG 和 PNG 等传统格式更好的压缩率，这意味着访问者的加载速度更快！</p>
+<p>要使用这些现代图像格式，您应确保它们在各种浏览器上都能得到支持，如果不支持，请使用 <code>picture</code> 元素添加 <code>PNG</code> 作为备用。</p>
+<pre><code class="language-html">&lt;picture &gt;  
+  &lt; source type = "image/avif" srcset = "image.avif" &gt;  
+  &lt;img src = "image.png" alt = "Image" &gt;  
+&lt;/ picture &gt;</code></pre>
+<h3 id="273948facdea450de1e9df0d91d95e89">懒加载图像</h3>
+<p>懒加载是一种通过仅加载用户可见的图像而不是一次加载所有图像来帮助提高网站性能和速度的技术。可以使用 <code>img</code> 元素并将 <code>loading</code> 属性设置为<code>lazy</code>来实现。</p>
+<pre><code class="language-html">&lt;img src="image.jpg" alt="Image" loading="lazy" width="400" height="300"&gt;</code></pre>
+<p>对于不支持 <code>loading</code> 属性的旧版浏览器，可以使用 <code>JavaScript</code> 手动实现延迟加载。这有助于通过仅加载可见或即将可见的图像来减少页面加载时间并改善用户体验。</p>
+<h2 id="36df3f50e3ae0997a9aa8ed35e0b385d">2、缩小和压缩代码</h2>
+<h3 id="d945f304589a5fd1ba95be7962ba0944">缩小 HTML、CSS 和 JavaScript</h3>
+<p>可以删除源代码中不必要的字符，从而减小文件大小，提高网站性能。这可应用于 HTML、CSS、JavaScript 和其他类型的源代码。</p>
+<p>大多数开发人员在创建 HTML、CSS 和 JavaScript 文件时在代码中使用空格和注释，以使其可读，这有利于自己和他人理解代码。</p>
+<p>不过，在为页面渲染到浏览器时，您应该考虑删除注释和未使用的代码、简化变量名并删除空格。精简的版本不会删除页面的任何功能。</p>
+<p>出于开发目的，保留代码的非精简版本非常重要。有多种工具可用于缩小源代码，例如 <a href="https://www.minifier.org/">minifer.org</a>、<a href="https://www.willpeavy.com/tools/minifier/">HTMLMinifer</a>、<a href="https://www.toptal.com/developers/cssminifier">CSS Minifer</a> 和 <a href="https://jsminify.org/">JSMinify</a>。</p>
+<h3 id="3a3e4e270abc98fcbcc8fe8ad36b4ea8">使用构建工具</h3>
+<p>构建工具可自动构建和部署 Web 应用程序。它可以简化开发并自动执行代码缩小、转译和资产优化任务。常用的工具包括 <a href="https://webpack.js.org/">Webpack</a> 和 <a href="https://parceljs.org/">Parcel</a>。这些工具有助于提高性能和可维护性。</p>
+<p><img src="../../storage/images/2023/09/01/Nj6s9o6kOQbayuVsn09GIaWX6rI2BbQfAPSrhnxU.png" alt="" /></p>
+<h3 id="088d3e96f47f83150fe47d9b7ab91ead">应用 Gzip 压缩</h3>
+<p>Gzip 压缩是一种减少从服务器发送到 Web 浏览器的文件大小的技术，从而提高网站的性能和速度。它可以通过 FTP 客户端或 CPanel 进行设置。</p>
+<p>Gzip 压缩还可用于优化图像的大小而不影响其质量。图片上传到服务器，用 Gzip 压缩后再传回。</p>
+<p>Gzip 压缩可以节省存储空间，提高网络数据传输效率，是提高网站性能和用户体验的有效工具。</p>
+<h3 id="256dacd50b99706e9f7da2800fc75c23">使用 CDN</h3>
+<p><img src="../../storage/images/2023/09/01/DN9Sg7FIUiEQLYCrmOrmeNlbHJIe7XHZXN7Q8EPe.png" alt="" /></p>
+<p>内容分发网络(CDN)是一种地理位置分散的服务器，可跨不同国家/地区分发Web内容。它通过共享您的网站内容来发挥作用。</p>
+<p>例如，视频、图片等内容存储在全球多个服务器上，因此无论用户从哪里请求，都能快速访问。</p>
+<p>CDN 是一种通过在服务器网络上分发图像和视频等内容来提高网站性能和可用性的系统。</p>
+<p>CDN 可以帮助改善用户体验、防止分布式拒绝服务 (DDoS) 攻击、通过更快的加载时间提高搜索引擎优化 (SEO) 排名并通过分散网站服务器上的负载来提高可用性，从而为网站带来显着的好处。</p>
+<h2 id="89fd18d7767b4e046abf2e11260368d5">3、减少请求数量</h2>
+<h3 id="788154b8fd0e2ffbcf705e48f185c91e">合并文件</h3>
+<p>作为一名网站开发人员，您可能希望合并多个文件，以加快网站加载速度。这有助于提高页面加载速度，减少服务器负载，最终实现双赢！</p>
+<p>合并文件的方法有多种，例如：</p>
+<ul>
+<li>在 Linux 中执行命令</li>
+</ul>
+<pre><code class="language-bash">cat 1.txt 2.txt 3.txt &gt; 0.txt  </code></pre>
+<p>在此示例中，我们使用 cat 和 &gt; 进行 shell 重定向。这会将 1.txt、2.txt 和 3.txt 合并为 0.txt。</p>
+<ul>
+<li>
+<p>另一种方法是使用 ZIP 或 TAR 压缩器。它允许你创建一个包含多个文件的压缩包。</p>
+</li>
+<li>
+<p>您还可以使用文本编辑器将多个文件合并为一个文件。</p>
+</li>
+</ul>
+<h3 id="2f1eac413b3549b41cb52a996d38d594">使用浏览器缓存</h3>
+<p>缓存可存储临时保存的图像、文本和网页等数据，以便快速响应未来的请求。</p>
+<p>当您第一次访问某个网站时，您的信息将存储在浏览器缓存中，因此当您再次访问时，它会从缓存中加载您的信息，这样会更快并减少加载时间。它还可以节省网络带宽。</p>
+<p><img src="../../storage/images/2024/09/IFDgfUlISB1CpHjvK0CrxIRCyyV4KFhFJ6pLf06G.png" alt="浏览器处理缓存的策略" /></p>
+<h3 id="68bf7c6f87c7d2279cdde486c9e9213b">重构代码以减少请求</h3>
+<p><img src="../../storage/images/2023/09/02/C4e8EbC29AP8XhZk2WYkgguuYP0z91V84OIImVej.png" alt="" /></p>
+<p>重构包括在不改变代码原有功能的情况下重组代码。目标是通过遵循简洁代码原则来改进代码的结构和设计。</p>
+<p>重构代码可以让您和其他开发人员在将来更好的理解和维护代码。</p>
+<p><code>何时应该重构代码呢？</code></p>
+<ul>
+<li>
+<p>当需要更新代码库以使用新技术、新库等时。</p>
+</li>
+<li>
+<p>当你遇到重复的代码时。</p>
+</li>
+<li>
+<p>如果您的代码未遵循最佳实践。</p>
+</li>
+</ul>
+<p><code>如何重构我的代码？</code></p>
+<ul>
+<li>
+<p>删除未使用的代码。</p>
+</li>
+<li>
+<p>重新命名变量、方法和类，以反映其用途(见名知意)。</p>
+</li>
+<li>
+<p>将大的复杂的函数分解成更小、更易读的函数。</p>
+</li>
+</ul>
+<p>重构可以让开发人员更容易阅读和理解您的代码，并乐于为您的代码做出贡献。</p>
+<h3 id="50e11c7aeba91f95f6cc279a8a54bf06">优化关键渲染路径</h3>
+<p><img src="../../storage/images/2023/09/02/WOBb3ZTmMs7pJng7oqnKIJgZI6IOk6tpLDnp737w.png" alt="" /></p>
+<p>这是浏览器将 HTML、CSS 和 JavaScript 完美地显示在屏幕上的一系列步骤。它通过 DOM 和 CSSOM 的渲染树来显示。</p>
+<p>重要的是要优化文件，使用单个 CSS 文件而不是多个 CSS 文件，并确保 CSS 位于脚本标签之前，以便在脚本执行之前显示网页的样式。</p>
+<p>按正确的顺序排列文件可以缩短页面的加载时间。建议您遵循以下几个策略：</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+ &lt;meta charset="UTF-8"&gt;
+ &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+ &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+ &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+ &lt;h1&gt;Optimizing the Order of Styles and Scripts&lt;/h1&gt;
+ &lt;script src="index.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li>
+<p>HTML 中的样式标签应位于 head 标签的内部。这一点很重要，因为在呈现 HTML 之后，它应该先呈现 CSS，然后才是 JavaScript。</p>
+</li>
+<li>
+<p>您还应该将 JavaScript 标记放在 body 标记的底部。这样可以使 HTML 和 CSS 优先加载，从而提高页面性能。</p>
+</li>
+<li>
+<p>需要加载的样式和脚本越多，页面加载的时间就越长。建议尽量减少页面上的样式和脚本数量。</p>
+</li>
+</ul>
+<h2 id="20be5b471f048e383832e4dd413edd2f">4、网络传输性能检测工具—— PageSpeed</h2>
+<p>我们还可以使用 PageSpeed 工具分析和优化您的网站</p>
+<p>访问地址 <a href="https://pagespeed.web.dev/">https://pagespeed.web.dev/</a></p>
+<p><img src="../../storage/images/2024/09/uM3T7hSXIUWHak276car7oWtWgzQBWiFWDlsmNCI.png" alt="" /></p>
+<p>以上即是我们优化网站前端性能的常用策略。</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> TinyPNG: <i><a href="https://tinypng.com/" target="_blank">https://tinypng.com/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> SVGOMG: <i><a href="https://jakearchibald.github.io/svgomg/" target="_blank">https://jakearchibald.github.io/svgomg/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Squoosh.app: <i><a href="https://squoosh.app/" target="_blank">https://squoosh.app/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Compressor.io: <i><a href="https://compressor.io/" target="_blank">https://compressor.io/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> JPEGmini: <i><a href="https://www.jpegmini.com/" target="_blank">https://www.jpegmini.com/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Kraken.io: <i><a href="https://kraken.io/" target="_blank">https://kraken.io/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> minifer.org: <i><a href="https://www.minifier.org/" target="_blank">https://www.minifier.org/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> HTMLMinifer: <i><a href="https://www.willpeavy.com/tools/minifier/" target="_blank">https://www.willpeavy.com/tools/minifier/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> CSS Minifer: <i><a href="https://www.toptal.com/developers/cssminifier" target="_blank">https://www.toptal.com/developers/cssminifier</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> JSMinify: <i><a href="https://jsminify.org/" target="_blank">https://jsminify.org/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> Webpack: <i><a href="https://webpack.js.org/" target="_blank">https://webpack.js.org/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> Parcel: <i><a href="https://parceljs.org/" target="_blank">https://parceljs.org/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> https://pagespeed.web.dev/: <i><a href="https://pagespeed.web.dev/" target="_blank">https://pagespeed.web.dev/</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

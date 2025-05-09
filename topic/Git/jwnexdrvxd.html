@@ -1,0 +1,524 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Git 工作流程以及常用命令 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Git <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>GitHub</h2>
+<ul>
+<li id="blog61"><a href="mdgy768vw2.html#blog61">如何给你的 GitHub 仓库添加精美的数据统计卡片</a>
+</ul>
+</li>
+<li>
+<h2>Git</h2>
+<ul>
+<li id="blog147"><a href="wjkv8znv62.html#blog147">如何搭建自己的 git 服务</a>
+<li id="blog299"><a href="mx5e613v0r.html#blog299">git x分支强制覆盖master分支方法</a>
+<li id="blog312"><a href="jwnexdrvxd.html#blog312">Git 工作流程以及常用命令</a>
+<li id="blog313"><a href="mdgy78x9w2.html#blog313">一台电脑上不同的Git仓库账号使用不同的公私钥设置</a>
+<li id="blog327"><a href="k3dykjzvl0.html#blog327">Git分支管理策略</a>
+<li id="blog335"><a href="pwde4pxe6q.html#blog335">Git 将其他分支文件或提交合并到当前分支</a>
+<li id="blog348"><a href="de296019q7.html#blog348">PhpStorm 取消创建或删除一个文件就自动 add 到git</a>
+<li id="blog349"><a href="kq1ezn5erl.html#blog349">Git 如何修改远程仓库地址？</a>
+<li id="blog350"><a href="z64y922v5l.html#blog350">Git 连接远程仓库方法</a>
+<li id="blog376"><a href="rpnv3gwywm.html#blog376">如何使用 .gitignore 文件</a>
+<li id="blog420"><a href="4wevwjz9l2.html#blog420">Git 如何忽略已提交过的文件</a>
+<li id="blog670"><a href="3oyjd48yp5.html#blog670">Git 重新添加已被忽略过文件(夹)</a>
+<li id="blog735"><a href="qk9425gvw1.html#blog735">Git 清理不再存在于远程仓库中的分支的本地引用</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'jwnexdrvxd.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/jwnexdrvxd.html', function (data, status) {
+                addView('jwnexdrvxd.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Git 工作流程以及常用命令</h1><ul>
+<li><a href="jwnexdrvxd.html#cf5b19a05102cf77ad420c00ecc6fe80">Git工作流程</a>
+<ul>
+<li><a href="jwnexdrvxd.html#4fa8c1a36bbe965939d9693b32aa1595">工作区</a></li>
+<li><a href="jwnexdrvxd.html#15dc2fdf41f6d02ebd29a21acd4c4435">暂存区</a></li>
+<li><a href="jwnexdrvxd.html#7d4a0da22c7dd6f584ab713043570b6f">本地仓库</a></li>
+<li><a href="jwnexdrvxd.html#44a6ae3f9974317b328e635b361d97e5">远程仓库</a></li>
+<li><a href="jwnexdrvxd.html#5db9fd7c5a5554033a1f4bb7e6d86e7e">小结</a></li>
+</ul></li>
+<li><a href="jwnexdrvxd.html#1bae402cc9d4f34518d51491c41345a6">常用Git命令</a>
+<ul>
+<li><a href="jwnexdrvxd.html#e15e216fc1c639f787b1231ecdfa1bf8">HEAD</a></li>
+<li><a href="jwnexdrvxd.html#34ec78fcc91ffb1e54cd85e4a0924332">add</a></li>
+<li><a href="jwnexdrvxd.html#fffca4d67ea0a788813031b8bbc3b329">commit</a></li>
+<li><a href="jwnexdrvxd.html#9603a224b40d7b67210b78f2e390d00f">branch</a></li>
+<li><a href="jwnexdrvxd.html#65464c31b2e6ac04da1fcaa37c9bd9c7">merge</a></li>
+<li><a href="jwnexdrvxd.html#c16ad6e2f4211c8adae80c725f918731">rebase</a></li>
+<li><a href="jwnexdrvxd.html#86266ee937d97f812a8e57d22b62ee29">reset</a></li>
+<li><a href="jwnexdrvxd.html#4bc48a3c9ac7468d2d5d1a6fb5f87654">revert</a>
+<ul>
+<li><a href="jwnexdrvxd.html#10024169d0b10eacddc567965ff1a030">revert与reset的区别</a></li>
+</ul></li>
+<li><a href="jwnexdrvxd.html#21a361d96e3e13f5f109748c2a9d2434">push</a></li>
+<li><a href="jwnexdrvxd.html#0c2ded9d0bcea4177c62ea590ee815b6">其他命令</a></li>
+</ul></li>
+</ul><h2 id="cf5b19a05102cf77ad420c00ecc6fe80">Git工作流程</h2>
+<p><img src="../../storage/images/2022/09/19/KG9dVz1yhbhA8e2LMFmppEfiDekESPB5HBNLx8aN.png" alt="" /></p>
+<p>以上包括一些简单而常用的命令，但是先不关心这些，先来了解下面这4个专有名词。</p>
+<pre><code class="   language-php">Workspace：工作区
+
+Index / Stage：暂存区
+
+Repository：仓库区（或本地仓库）
+
+Remote：远程仓库</code></pre>
+<h3 id="4fa8c1a36bbe965939d9693b32aa1595">工作区</h3>
+<p>程序员进行开发改动的地方，是你当前看到的，也是最新的。</p>
+<p>平常我们开发就是拷贝远程仓库中的一个分支，基于该分支进行开发。在开发过程中就是对工作区的操作。</p>
+<h3 id="15dc2fdf41f6d02ebd29a21acd4c4435">暂存区</h3>
+<p>.git目录下的index文件, 暂存区会记录 git add 添加文件的相关信息(文件名、大小、timestamp…)，不保存文件实体, 通过id指向每个文件实体。可以使用 git status 查看暂存区的状态。暂存区标记了你当前工作区中，哪些内容是被git管理的。</p>
+<p>当你完成某个需求或功能后需要提交到远程仓库，那么第一步就是通过 git add 先提交到暂存区，被git管理。</p>
+<h3 id="7d4a0da22c7dd6f584ab713043570b6f">本地仓库</h3>
+<p>保存了对象被提交 过的各个版本，比起工作区和暂存区的内容，它要更旧一些。</p>
+<p>git commit 后同步index的目录树到本地仓库，方便从下一步通过 git push 同步本地仓库与远程仓库的同步。</p>
+<h3 id="44a6ae3f9974317b328e635b361d97e5">远程仓库</h3>
+<p>远程仓库的内容可能被分布在多个地点的处于协作关系的本地仓库修改，因此它可能与本地仓库同步，也可能不同步，但是它的内容是最旧的。</p>
+<h3 id="5db9fd7c5a5554033a1f4bb7e6d86e7e">小结</h3>
+<pre><code class="   language-php">任何对象都是在工作区中诞生和被修改；
+
+任何修改都是从进入index区才开始被版本控制；
+
+只有把修改提交到本地仓库，该修改才能在仓库中留下痕迹；
+
+与协作者分享本地的修改，可以把它们push到远程仓库来共享。</code></pre>
+<p>下面这幅图更加直接阐述了四个区域之间的关系，可能有些命令不太清楚，没关系，下部分会详细介绍。</p>
+<p><img src="../../storage/images/2022/09/19/D4Klkuzc6CRCOwzayTsIi3JR4AqKroOzZoxCZEoF.png" alt="" /></p>
+<h2 id="1bae402cc9d4f34518d51491c41345a6">常用Git命令</h2>
+<p><img src="../../storage/images/2022/09/19/R4t8mvCT6EE1R9aPnYTUclqDJkFmKGJlEvS0BQ82.png" alt="" /></p>
+<p>网上找了个图，别人整理的一张图，很全很好，借来用下。下面详细解释一些常用命令。</p>
+<h3 id="e15e216fc1c639f787b1231ecdfa1bf8">HEAD</h3>
+<p><img src="../../storage/images/2022/09/19/stFNyDAQ773cQUVAZwVA9jWWsc1DJvgJxo3Hhn7t.png" alt="" /></p>
+<p>在掌握具体命令前，先理解下HEAD。</p>
+<p>HEAD，它始终指向当前所处分支的最新的提交点。你所处的分支变化了，或者产生了新的提交点，HEAD就会跟着改变。</p>
+<h3 id="34ec78fcc91ffb1e54cd85e4a0924332">add</h3>
+<p><img src="../../storage/images/2022/09/19/sVjhw74WXcCrfXNrMdsnWkTpArOB6PP0aE0gZ4SB.png" alt="" /></p>
+<p>add相关命令很简单，主要实现将工作区修改的内容提交到暂存区，交由git管理。</p>
+<pre><code class="language-bash">git add .   添加当前目录的所有文件到暂存区
+git add [dir]   添加指定目录到暂存区，包括子目录
+git add [file1] 添加指定文件到暂存区</code></pre>
+<h3 id="fffca4d67ea0a788813031b8bbc3b329">commit</h3>
+<p>commit相关命令也很简单，主要实现将暂存区的内容提交到本地仓库，并使得当前分支的HEAD向后移动一个提交点。</p>
+<pre><code class="language-bash">git commit -m [message] 提交暂存区到本地仓库,message代表说明信息
+git commit [file1] -m [message] 提交暂存区的指定文件到本地仓库
+git commit —amend -m [message]  使用一次新的commit，替代上一次提交</code></pre>
+<h3 id="9603a224b40d7b67210b78f2e390d00f">branch</h3>
+<p><img src="../../storage/images/2022/09/19/lPj8pmHjGhKFOjo4R2PKb3z1k2r0gVfF4jgaOxPc.png" alt="" /></p>
+<p>涉及到协作，自然会涉及到分支，关于分支，大概有展示分支，切换分支，创建分支，删除分支这四种操作。</p>
+<pre><code class="language-bash">git branch  列出所有本地分支
+git branch -r   列出所有远程分支
+git branch -a   列出所有本地分支和远程分支
+git branch [branch-name]    新建一个分支，但依然停留在当前分支
+git checkout -b [branch-name]   新建一个分支，并切换到该分支
+git branch —track [branch][remote-branch]   新建一个分支，与指定的远程分支建立追踪关系
+git checkout [branch-name]  切换到指定分支，并更新工作区
+git branch -d [branch-name] 删除分支
+git branch -D [branch-name]     强制删除
+git push origin —delete [branch-name]   删除远程分支</code></pre>
+<h3 id="65464c31b2e6ac04da1fcaa37c9bd9c7">merge</h3>
+<p><img src="../../storage/images/2022/09/19/E3ZgS7mH1puDNDfj5Rb3xNk0dkV2blAK1ZZzb213.png" alt="" /></p>
+<p>merge命令把不同的分支合并起来。如上图，在实际开放中，我们可能从master分支中切出一个分支，然后进行开发完成需求，中间经过R3,R4,R5的commit记录，最后开发完成需要合入master中，这便用到了merge。</p>
+<pre><code class="language-bash">git fetch [remote]  merge之前先拉一下远程仓库最新代码
+git merge [branch]  合并指定分支到当前分支</code></pre>
+<p>一般在merge之后，会出现conflict，需要针对冲突情况，手动解除冲突。主要是因为两个用户修改了同一文件的同一块区域。</p>
+<h3 id="c16ad6e2f4211c8adae80c725f918731">rebase</h3>
+<p>rebase又称为衍合，是合并的另外一种选择。</p>
+<p>在开始阶段，我们处于new分支上，执行git rebase dev，那么new分支上新的commit都在master分支上重演一遍，最后checkout切换回到new分支。这一点与merge是一样的，合并前后所处的分支并没有改变。git rebase dev，通俗的解释就是new分支想站在dev的肩膀上继续下去。rebase也需要手动解决冲突。</p>
+<p>rebase与merge的区别</p>
+<p>现在我们有这样的两个分支，test和master，提交如下：</p>
+<p>D—-E test</p>
+<p>/</p>
+<p>A—-B—-C—-F master</p>
+<p>在master执行git merge test,然后会得到如下结果：</p>
+<p>D————E</p>
+<p>/ \</p>
+<p>A—-B—-C—-F——G test, master</p>
+<p>在master执行 git rebase test，然后得到如下结果：</p>
+<p>A—-B—-D—-E—-C’—-F’ test, master</p>
+<p>可以看到，merge操作会生成一个新的节点，之前的提交分开显示。而rebase操作不会生成新的节点，是将两个分支融合成一个线性的提交。</p>
+<p>如果你想要一个干净的，没有merge commit的线性历史树，那么你应该选择git rebase 如果你想保留完整的历史记录，并且想要避免重写commit history的风险，你应该选择使用git merge。</p>
+<h3 id="86266ee937d97f812a8e57d22b62ee29">reset</h3>
+<p><img src="../../storage/images/2022/09/19/rKEVCDcrbpzciw75f5XolTm3Ws2Ug2Nh2IyInZfx.png" alt="" /></p>
+<p>reset命令把当前分支指向另一个位置，并且相应的变动工作区和暂存区。</p>
+<pre><code class="language-bash">git reset —soft [commit]    只改变提交点，暂存区和工作目录的内容都不改变
+git reset —mixed [commit]   改变提交点，同时改变暂存区的内容
+git reset —hard [commit]    暂存区、工作区的内容都会被修改到与提交点完全一致的状态
+git reset —hard HEAD    让工作区回到上次提交时的状态</code></pre>
+<h3 id="4bc48a3c9ac7468d2d5d1a6fb5f87654">revert</h3>
+<p><img src="../../storage/images/2022/09/19/2DqWCaaWNwOmEFfOSJWJ8OHGIItk17qVtYDULU6c.png" alt="" /></p>
+<p>git revert用一个新提交来消除一个历史提交所做的任何修改。</p>
+<h4 id="10024169d0b10eacddc567965ff1a030">revert与reset的区别</h4>
+<p><img src="../../storage/images/2022/09/19/sX2GciBtiKJnYycovvatHMa4tkvuTytpBlHfXp6v.png" alt="" /></p>
+<p>git revert是用一次新的commit来回滚之前的commit，git reset是直接删除指定的commit。</p>
+<p>在回滚这一操作上看，效果差不多。但是在日后继续merge以前的老版本时有区别。因为git revert是用一次逆向的commit“中和”之前的提交，因此日后合并老的branch时，导致这部分改变不会再次出现，减少冲突。但是git reset是之间把某些commit在某个branch上删除，因而和老的branch再次merge时，这些被回滚的commit应该还会被引入，产生很多冲突。</p>
+<p>git reset 是把HEAD向后移动了一下，而git revert是HEAD继续前进，只是新的commit的内容和要revert的内容正好相反，能够抵消要被revert的内容。</p>
+<h3 id="21a361d96e3e13f5f109748c2a9d2434">push</h3>
+<p>上传本地仓库分支到远程仓库分支，实现同步。</p>
+<pre><code class="language-bash">git push [remote][branch]   上传本地指定分支到远程仓库
+git push [remote] —force    强行推送当前分支到远程仓库，即使有冲突
+git push [remote] —all  推送所有分支到远程仓库</code></pre>
+<h3 id="0c2ded9d0bcea4177c62ea590ee815b6">其他命令</h3>
+<pre><code class="language-bash">git status  显示有变更的文件
+git log 显示当前分支的版本历史
+git diff    显示暂存区和工作区的差异
+git diff HEAD   显示工作区与当前分支最新commit之间的差异
+git cherry-pick [commit]    选择一个commit，合并进当前分支</code></pre>
+<p>参考文章 <a href="https://mp.weixin.qq.com/s/FM-wcjd0WT84spIbLuiIaw">https://mp.weixin.qq.com/s/FM-wcjd0WT84spIbLuiIaw</a></p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> https://mp.weixin.qq.com/s/FM-wcjd0WT84spIbLuiIaw: <i><a href="https://mp.weixin.qq.com/s/FM-wcjd0WT84spIbLuiIaw" target="_blank">https://mp.weixin.qq.com/s/FM-wcjd0WT84spIbLuiIaw</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

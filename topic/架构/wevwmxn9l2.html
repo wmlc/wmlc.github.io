@@ -1,0 +1,598 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>高并发相关技巧(待完善) | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    架构 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>分布式</h2>
+<ul>
+<li id="blog76"><a href="jenydjoy7d.html#blog76">TCC 分布式事务的实现原理</a>
+</ul>
+</li>
+<li>
+<h2>地图</h2>
+<ul>
+<li id="blog216"><a href="od6vrzn93g.html#blog216">后台管理系统如何给具体地址添加经纬度坐标？</a>
+</ul>
+</li>
+<li>
+<h2>微服务</h2>
+<ul>
+<li id="blog269"><a href="qk2vmw9yp0.html#blog269">微服务是什么?</a>
+</ul>
+</li>
+<li>
+<h2>架构</h2>
+<ul>
+<li id="blog316"><a href="nq5vrnke7p.html#blog316">直播间状态变更通知所有用户方案</a>
+<li id="blog324"><a href="8loynj1vz3.html#blog324">系统注销用户的逻辑</a>
+<li id="blog363"><a href="j25v16ge1n.html#blog363">设计无密码登录指南</a>
+<li id="blog383"><a href="3qk94gx9w1.html#blog383">系统负载介绍</a>
+<li id="blog452"><a href="rpnv39dvwm.html#blog452">下云 - 什么情况下不能离开云计算</a>
+<li id="blog487"><a href="ekpv1d2v8w.html#blog487">广告系统架构介绍</a>
+<li id="blog570"><a href="j3oyjek9p5.html#blog570">地图红绿灯倒计时功能是如何实现的？</a>
+<li id="blog676"><a href="enyd5oo97d.html#blog676">单点登录的实现</a>
+<li id="blog677"><a href="5dve2ekv4x.html#blog677">如何防止订单重复支付</a>
+<li id="blog694"><a href="3oyjdg8yp5.html#blog694">抢红包系统设计</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog317"><a href="02ky0m69z8.html#blog317">Cloudflare 推出 Turnstile — 一款用户友好且保护隐私的 CAPTCHA 替代方案</a>
+<li id="blog379"><a href="wkl9nd8yz4.html#blog379">JWT 认证和授权：详细介绍</a>
+<li id="blog380"><a href="gxpv5n5v86.html#blog380">浏览器同源政策及其规避方法</a>
+<li id="blog381"><a href="n3xyqnlymq.html#blog381">跨域资源共享 CORS 详解</a>
+<li id="blog382"><a href="4x3voeo9m1.html#blog382">XSS 跨站脚本攻击介绍</a>
+<li id="blog444"><a href="4wevwrzyl2.html#blog444">双因素认证（2FA）教程</a>
+<li id="blog477"><a href="15dved394x.html#blog477">开发安全的 API 所需要核对的清单</a>
+<li id="blog667"><a href="m892gnoy01.html#blog667">target=&quot;_blank” 属性的安全漏洞</a>
+<li id="blog678"><a href="4rvgnzkydj.html#blog678">CSRF跨站请求伪造攻击</a>
+<li id="blog708"><a href="xpv52r1v86.html#blog708">文件上传安全注意事项</a>
+<li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
+<li id="blog710"><a href="x3vo0qkvm1.html#blog710">服务器漏洞</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog338"><a href="xrwyl6zyz8.html#blog338">关于系统性能的认知</a>
+<li id="blog436"><a href="x569x089ep.html#blog436">提高前端代码性能的最佳实践</a>
+<li id="blog720"><a href="wevwmxn9l2.html#blog720">高并发相关技巧(待完善)</a>
+</ul>
+</li>
+<li>
+<h2>编程</h2>
+<ul>
+<li id="blog569"><a href="1ndvm4pv3j.html#blog569">提高代码可读性和效率的 11 个技巧</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'wevwmxn9l2.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/wevwmxn9l2.html', function (data, status) {
+                addView('wevwmxn9l2.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>高并发相关技巧(待完善)</h1><ul>
+<li><a href="wevwmxn9l2.html#0b81843ae4c0f7ee1cfa83a98440ebd1">1.系统的稳定性</a>
+<ul>
+<li><a href="wevwmxn9l2.html#af97afccf2a70d8b5f545953192913c0">限流（Rate Limiting）</a></li>
+<li><a href="wevwmxn9l2.html#e7990050a2231b45b751bebcdba42ce0">熔断（Circuit Breaker）</a></li>
+<li><a href="wevwmxn9l2.html#d7a7b84dafe90c73200ed84ac92988eb">降级策略</a></li>
+</ul></li>
+<li><a href="wevwmxn9l2.html#0c59c34fb3cf06edb0548717272c8b80">2.资源争抢与锁竞争</a>
+<ul>
+<li><a href="wevwmxn9l2.html#6b683dde7e01115e2608217dd812e071">数据库并发控制</a></li>
+<li><a href="wevwmxn9l2.html#334aa49eb1bc7757b7ded4581dba27eb">分布式锁</a></li>
+</ul></li>
+<li><a href="wevwmxn9l2.html#acabf69fd0acc5da7a543be6c3709afc">3.缓存的优化设计</a>
+<ul>
+<li><a href="wevwmxn9l2.html#71038b6d61ebd9ea486f6035292fcaad">缓存穿透、击穿和雪崩</a></li>
+<li><a href="wevwmxn9l2.html#598826f16a801a8d7b4e8e681f9e8356">缓存更新策略</a></li>
+</ul></li>
+<li><a href="wevwmxn9l2.html#7ca44af965eeef445629beb4b62ffc12">4.数据库压力和优化</a>
+<ul>
+<li><a href="wevwmxn9l2.html#574856cf52f9e0ca20b03540dd63b55f">分库分表</a></li>
+<li><a href="wevwmxn9l2.html#dd145fa0309599db75fe7a674cec7482">读写分离</a></li>
+<li><a href="wevwmxn9l2.html#d8e736da6f8718473136dd1759c9bf50">索引和查询优化</a></li>
+</ul></li>
+<li><a href="wevwmxn9l2.html#c45fc5cbb79df6333dfd4a216ec6354b">5.队列和异步处理</a>
+<ul>
+<li><a href="wevwmxn9l2.html#8bedb7aae7ae74964d0363a1556c7a59">消息队列</a></li>
+<li><a href="wevwmxn9l2.html#3860bfd3f7eac2d818b547ec68ac3b15">异步任务处理</a></li>
+</ul></li>
+<li><a href="wevwmxn9l2.html#2b5fb6849b54ec60afbd86476c542082">6.前端优化和静态资源处理</a>
+<ul>
+<li><a href="wevwmxn9l2.html#b80c9c1727cfe580fd621f9fdcf6f3d4">前端静态资源优化</a></li>
+<li><a href="wevwmxn9l2.html#ae3526113a981cc2249b059b80176fa6">前后端分离</a></li>
+</ul></li>
+<li><a href="wevwmxn9l2.html#711e2751a5308a9822713f5085ffe185">7.应用服务扩展与容器化</a>
+<ul>
+<li><a href="wevwmxn9l2.html#a04cb838005f980da9386858f358f52a">服务扩展</a></li>
+<li><a href="wevwmxn9l2.html#95f3bc99cf25106ad202ef15acc3e032">微服务拆分</a></li>
+</ul></li>
+<li><a href="wevwmxn9l2.html#b352765f258ef607f31397b56182664f">8.日志和监控</a>
+<ul>
+<li><a href="wevwmxn9l2.html#052031df1666aab0a05cd458133afa2d">全链路监控</a></li>
+<li><a href="wevwmxn9l2.html#4090744110954e57d4fbe8e694b3a9ca">日志分析</a></li>
+</ul></li>
+<li><a href="wevwmxn9l2.html#36804a722ed0c6920f8587750354050b">9.连接池和线程池管理</a>
+<ul>
+<li><a href="wevwmxn9l2.html#a70c462034884869335a132689fe1e9a">数据库连接池</a></li>
+<li><a href="wevwmxn9l2.html#595121aff38f43c78cf6d0c313c4191e">线程池管理</a></li>
+</ul></li>
+<li><a href="wevwmxn9l2.html#4a8922cc7b24b1d3e51d3ba1c3272bec">10.安全性与防护</a>
+<ul>
+<li><a href="wevwmxn9l2.html#dba270f1fd66e3867d0d75b13f6e20bc">流量防刷</a></li>
+<li><a href="wevwmxn9l2.html#c9f1a08a5b6a4e0cbdc6198f480748e1">数据防篡改</a></li>
+</ul></li>
+</ul><h2 id="0b81843ae4c0f7ee1cfa83a98440ebd1">1.系统的稳定性</h2>
+<p>高并发业务中首先要考虑的是：系统的稳定性。是首先要保证的问题点。</p>
+<blockquote>
+<p>就好比我一卖早点的，突然一千人冲过来了，咋办，为了保证我店面的安全，要么让排队，然后限制供应。要是油条半天做不出来，等的人等了很久了，咱就给它熔断掉，不卖了，大家也别等了，告辞了您嘞。还有就是卖豆浆的师傅扛不住了，太累了就休息休息，不干主力了。就好比我一卖早点的，突然一千人冲过来了，咋办，为了保证我店面的安全，要么让排队，然后限制供应。要是油条半天做不出来，等的人等了很久了，咱就给它熔断掉，不卖了，大家也别等了，告辞了您嘞。还有就是卖豆浆的师傅扛不住了，太累了就休息休息，不干主力了。</p>
+</blockquote>
+<h3 id="af97afccf2a70d8b5f545953192913c0">限流（Rate Limiting）</h3>
+<p>限流是指通过限制系统的请求速率，防止系统因流量过大而崩溃。其核心思想是控制流量，确保系统在可承受的范围内运行。</p>
+<p>目的：防止系统资源被耗尽，避免系统因过载而崩溃。</p>
+<ul>
+<li>常见算法：</li>
+</ul>
+<p><code>令牌桶算法</code>：系统以固定速率生成令牌，请求需要消耗令牌才能通过。当令牌不足时，请求被拒绝。这种模式可以保证请求在一段时间内不会超过预设的阈值，但是突发请求可能会超过限制。</p>
+<p><code>漏桶算法</code>：请求像水一样流入漏桶，以固定速率流出。当桶满时，新请求被丢弃。这种模式严格平滑流量，无突发流量。</p>
+<p><code>计数器算法</code>：在固定时间窗口内限制请求数量。</p>
+<p><code>滑动窗口算法</code>：在动态时间窗口内限制请求数量，支持动态调整限流策略，适合复杂场景。</p>
+<ul>
+<li>适用场景：</li>
+</ul>
+<p>API接口限流，防止恶意刷量。<br />
+秒杀系统限流，控制秒杀活动的请求速率。<br />
+消息队列限流，限制消息的生产和消费速率。<br />
+微服务调用限流，防止某个服务的故障导致整个系统崩溃。<br />
+数据库访问限流，防止数据库因高并发而宕机。</p>
+<h3 id="e7990050a2231b45b751bebcdba42ce0">熔断（Circuit Breaker）</h3>
+<p>熔断机制是一种保护机制，当服务异常或不可用时，自动切换到备用逻辑或停止访问，避免大量请求堆积导致系统崩溃。其核心思想是快速失败，防止系统雪崩。</p>
+<ul>
+<li>状态：</li>
+</ul>
+<p><code>关闭状态</code>（Closed）：正常调用服务。此时，断路器观察到请求失败比例没有达到阈值，认为被代理服务状态良好。</p>
+<p><code>打开状态</code>（Open）：切断服务调用，直接返回错误。此时，断路器观察到请求失败比例已经达到阈值，认为被代理服务故障，于是打开开关，请求不再到达被代理的服务。</p>
+<p><code>半开状态</code>（Half-Open）：尝试恢复服务调用，根据结果决定是否切换到关闭状态。为了能自动恢复对被代理服务的访问，断路器会切换到半开放状态，去尝试请求被代理服务以查看服务是否已经故障恢复。如果成功，会转成关闭状态；否则转到打开状态。</p>
+<ul>
+<li>实现原理</li>
+</ul>
+<p>服务熔断是指调用方访问服务时通过断路器做代理进行访问。断路器会持续观察服务返回的成功、失败状态，当失败超过设置的阈值时，断路器打开，请求就不能真正地访问到服务了。</p>
+<ul>
+<li>适用场景</li>
+</ul>
+<p>主要用于微服务架构中，防止某个服务的故障扩散到整个系统。例如，当某个远程服务调用失败率达到一定阈值时，可以熔断对该服务的调用，避免继续请求已经故障的服务，从而保护系统的稳定性。</p>
+<h3 id="d7a7b84dafe90c73200ed84ac92988eb">降级策略</h3>
+<p>某个功能扛不住时，可以先让它 “休息” 一下，比如返回缓存数据或者提示用户功能暂时不可用。</p>
+<h2 id="0c59c34fb3cf06edb0548717272c8b80">2.资源争抢与锁竞争</h2>
+<p>高并发场景下，资源争抢问题尤其严重。</p>
+<blockquote>
+<p>就好比几个顾客一起冲到摊位上抢油条，咱到底该先卖给谁？如果不加以控制，可能还会发生顾客互相抢油条的情况，最后弄得大家都不高兴。钱付了，最后油条不够，这就尴尬了。</p>
+</blockquote>
+<h3 id="6b683dde7e01115e2608217dd812e071">数据库并发控制</h3>
+<p>用乐观锁或者悲观锁来防止数据被同时修改出问题。比如，用版本号或者时间戳来确保数据更新的正确性。</p>
+<h3 id="334aa49eb1bc7757b7ded4581dba27eb">分布式锁</h3>
+<p>在分布式系统中，避免多个节点同时操作同一资源。可以用 Redis 或 Zookeeper 实现分布式锁。</p>
+<h2 id="acabf69fd0acc5da7a543be6c3709afc">3.缓存的优化设计</h2>
+<blockquote>
+<p>缓存就像是摊位上的 “预制油条”，顾客来了不需要每次都现做，直接从缓存里取现成的，速度快得多。但如果处理不好，缓存也会有自己的麻烦，比如 “缓存穿透”、“缓存击穿” 和 “缓存雪崩”。</p>
+</blockquote>
+<h3 id="71038b6d61ebd9ea486f6035292fcaad">缓存穿透、击穿和雪崩</h3>
+<p>缓存不命中、大量请求涌入数据库时，系统压力会很大。可以用布隆过滤器（Bloom Filter）避免无效查询，用多级缓存架构（比如 Redis 加本地缓存）来分担压力。</p>
+<h3 id="598826f16a801a8d7b4e8e681f9e8356">缓存更新策略</h3>
+<p>比如用双写策略或者异步更新，甚至是基于消息队列的延迟双删策略来保证缓存和数据库的数据一致性。</p>
+<p>穿透是指缓存中没有，全跑到表里去查询了。击穿是指一个热点数据失效了，突然大量的请求到库里了。而雪崩是指，大量数据到过期时间了，全部失效，这时候大量数据打到库里了。穿透的解决方案上边说了，布隆过滤器。击穿就需要用正确的过期回填策略，雪崩最容易避免，别把大量数据的过期时间设置的相同就好了。</p>
+<h2 id="7ca44af965eeef445629beb4b62ffc12">4.数据库压力和优化</h2>
+<blockquote>
+<p>数据库就像是摊位背后仓库的库存登记表，如果顾客太多、需求太高，这个表很容易被搞得乱七八糟，甚至崩溃。为了解决这个问题，我们需要做一些优化，就像给摊主配上更多的仓库和店员，一起分担工作。</p>
+</blockquote>
+<h3 id="574856cf52f9e0ca20b03540dd63b55f">分库分表</h3>
+<p>当一张表的数据太多时，可以水平分表或者垂直拆分，同时要注意分片键的选择。</p>
+<h3 id="dd145fa0309599db75fe7a674cec7482">读写分离</h3>
+<p>将读请求和写请求分散到不同的数据库实例上，以减轻主库的压力。</p>
+<h3 id="d8e736da6f8718473136dd1759c9bf50">索引和查询优化</h3>
+<p>创建合适的索引，避免全表扫描和大范围查询，提升查询效率。</p>
+<h2 id="c45fc5cbb79df6333dfd4a216ec6354b">5.队列和异步处理</h2>
+<blockquote>
+<p>如果所有任务都要求立刻处理，系统就像一口气涌入了太多顾客的摊位，摊主根本忙不过来。这时候就需要用到消息队列和异步处理来分担工作量，就像安排顾客有序地排队，先登记一下需求，再慢慢满足。</p>
+</blockquote>
+<h3 id="8bedb7aae7ae74964d0363a1556c7a59">消息队列</h3>
+<p>使用消息队列（如 Kafka、RabbitMQ）将瞬时的大量请求缓冲起来，再让消费者慢慢处理，这样可以平衡系统的负载。</p>
+<h3 id="3860bfd3f7eac2d818b547ec68ac3b15">异步任务处理</h3>
+<p>将一些不需要实时处理的任务放到后台，让主业务流程更流畅。</p>
+<h2 id="2b5fb6849b54ec60afbd86476c542082">6.前端优化和静态资源处理</h2>
+<blockquote>
+<p>前端和静态资源的优化就像是提前把油条摊位前的各种调料、筷子、餐巾纸等都准备好，避免顾客反复问摊主要这些小东西，从而减少摊主的工作量，让整个摊位的运转更高效。</p>
+</blockquote>
+<h3 id="b80c9c1727cfe580fd621f9fdcf6f3d4">前端静态资源优化</h3>
+<p>用 CDN 和缓存技术减少服务器请求量。合理配置浏览器缓存策略（如 ETag、Cache-Control、 max-age），降低服务器负担。</p>
+<h3 id="ae3526113a981cc2249b059b80176fa6">前后端分离</h3>
+<p>前端和后端完全分离，减少后端资源消耗，提高系统的整体性能。</p>
+<h2 id="711e2751a5308a9822713f5085ffe185">7.应用服务扩展与容器化</h2>
+<blockquote>
+<p>当摊位（系统）越来越火爆时，摊主一个人显然忙不过来了，这时候就需要考虑如何扩展摊位、增加人手（服务扩展），甚至把整个业务划分成多个摊位，每个摊位各管各的（微服务拆分），这样才能高效运转，满足越来越多的顾客需求。</p>
+</blockquote>
+<h3 id="a04cb838005f980da9386858f358f52a">服务扩展</h3>
+<p>通过增加实例数量来提升系统处理能力，可以使用 Kubernetes 等容器化平台实现自动扩展。</p>
+<h3 id="95f3bc99cf25106ad202ef15acc3e032">微服务拆分</h3>
+<p>将一个大的应用拆分成多个微服务，每个微服务专注于自己的一块业务，这样可以减少资源竞争和锁问题。</p>
+<h2 id="b352765f258ef607f31397b56182664f">8.日志和监控</h2>
+<blockquote>
+<p>做高并发系统就像经营一个大型连锁摊位，如果没有及时的信息反馈和监控手段，就像摊主完全不知道店里发生了什么，顾客堵门了都没察觉，等出问题了再处理已经晚了。因此，实时的日志和监控就像摊主的眼睛和耳朵，可以帮助他随时掌握店铺的运营状况，及时发现问题并迅速处理。</p>
+</blockquote>
+<h3 id="052031df1666aab0a05cd458133afa2d">全链路监控</h3>
+<p>通过 APM 工具（如 SkyWalking、Zipkin）进行全链路监控，及时发现和定位性能瓶颈。</p>
+<h3 id="4090744110954e57d4fbe8e694b3a9ca">日志分析</h3>
+<p>利用 ELK 等日志分析系统，实时监控系统状态，帮助分析故障原因。</p>
+<h2 id="36804a722ed0c6920f8587750354050b">9.连接池和线程池管理</h2>
+<blockquote>
+<p>高并发系统中，就像一个繁忙的摊位，摊主得合理分配资源和人手（线程和连接），才能确保摊位高效运行，不然摊主忙不过来就容易出现问题。连接池和线程池的管理就像安排摊位前的排队和后厨的工作分配，让各个环节都有条不紊地运作，避免出现忙成一团的混乱场面。</p>
+</blockquote>
+<h3 id="a70c462034884869335a132689fe1e9a">数据库连接池</h3>
+<p>合理配置数据库连接池的大小，避免连接数耗尽导致系统崩溃。</p>
+<h3 id="595121aff38f43c78cf6d0c313c4191e">线程池管理</h3>
+<p>用合适的线程池（如 JDK 自带的 ThreadPoolExecutor），合理配置核心线程数、最大线程数和队列长度，避免线程耗尽或任务丢失。</p>
+<h2 id="4a8922cc7b24b1d3e51d3ba1c3272bec">10.安全性与防护</h2>
+<blockquote>
+<p>在一个繁忙的摊位，安全和防护同样重要。如果不加以防范，就可能遭遇恶意顾客的攻击，造成损失。安全性和防护策略就像摊主在店门口设置的守卫和监控，确保摊位的正常运营不被打扰。</p>
+</blockquote>
+<h3 id="dba270f1fd66e3867d0d75b13f6e20bc">流量防刷</h3>
+<p>通过验证码、IP 黑白名单、行为分析等手段，防止恶意流量攻击。</p>
+<h3 id="c9f1a08a5b6a4e0cbdc6198f480748e1">数据防篡改</h3>
+<p>对关键数据进行签名校验或一致性校验，防止并发下数据被非法篡改。</p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

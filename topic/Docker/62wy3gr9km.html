@@ -1,0 +1,596 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Docker 高级网络配置 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Docker <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>服务</h2>
+<ul>
+<li id="blog280"><a href="gxpv5kwv86.html#blog280">使用 docker 安装 MySql</a>
+<li id="blog449"><a href="nxq9zzj9do.html#blog449">使用 docker 安装 Redis</a>
+<li id="blog503"><a href="k3dyk3n9l0.html#blog503">使用 Docker 安装 LInux 容器</a>
+<li id="blog504"><a href="jenydzd97d.html#blog504">使用Docker 安装 xunsearch 容器</a>
+</ul>
+</li>
+<li>
+<h2>Docker</h2>
+<ul>
+<li id="blog494"><a href="j3oyjzx9p5.html#blog494">Docker 简介</a>
+<li id="blog495"><a href="x2ev84o9or.html#blog495">Docker 的基本概念</a>
+<li id="blog496"><a href="de296qwyq7.html#blog496">Docker 镜像介绍</a>
+<li id="blog497"><a href="nxq9z0jvdo.html#blog497">Dockerfile 详解</a>
+<li id="blog498"><a href="62wy3g39km.html#blog498">Docker 容器介绍</a>
+<li id="blog499"><a href="k3dyk3o9l0.html#blog499">Docker 仓库介绍</a>
+<li id="blog500"><a href="de296qqyq7.html#blog500">Docker 数据管理</a>
+<li id="blog501"><a href="nxq9z03vdo.html#blog501">Docker 中的网络功能介绍</a>
+<li id="blog502"><a href="62wy3gr9km.html#blog502">Docker 高级网络配置</a>
+<li id="blog505"><a href="15dve32y4x.html#blog505">Docker Swarm mode 介绍</a>
+<li id="blog506"><a href="34rvgdevdj.html#blog506">Docker 安全</a>
+<li id="blog507"><a href="wkl9n4myz4.html#blog507">Docker 底层实现</a>
+<li id="blog508"><a href="gxpv50qy86.html#blog508">Docker Buildx</a>
+<li id="blog509"><a href="n3xyqlq9mq.html#blog509">Docker Etcd</a>
+<li id="blog510"><a href="4x3voxmvm1.html#blog510">Docker 常见问题总结</a>
+<li id="blog511"><a href="3qk94rlyw1.html#blog511">Docker 命令</a>
+<li id="blog512"><a href="x569x6k9ep.html#blog512">Dockerfile 最佳实践</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '62wy3gr9km.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/62wy3gr9km.html', function (data, status) {
+                addView('62wy3gr9km.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Docker 高级网络配置</h1><ul>
+<li><a href="62wy3gr9km.html#89a0c0e3c241795282a7a015dcf8f159">高级网络配置</a></li>
+<li><a href="62wy3gr9km.html#8470433d3427d36b4b6be5790352ee98">快速配置指南</a></li>
+<li><a href="62wy3gr9km.html#a3a433f4aa7549c35e0f6bfc751d3714">容器访问控制</a>
+<ul>
+<li><a href="62wy3gr9km.html#a24b89a19ae3c6e0f4ceddc6eea32e12">容器访问外部网络</a></li>
+<li><a href="62wy3gr9km.html#b78f25bd0b24b7868d13be76277f29e0">容器之间访问</a>
+<ul>
+<li><a href="62wy3gr9km.html#19fbaa56725778f8876ebe748a6bfd03">访问所有端口</a></li>
+<li><a href="62wy3gr9km.html#d6a6f7a8fa4d4513ed36c7599cd7eee5">访问指定端口</a></li>
+</ul></li>
+</ul></li>
+<li><a href="62wy3gr9km.html#bfee00e8a6bd71f798bd6e0c8ca28f65">映射容器端口到宿主主机的实现</a>
+<ul>
+<li><a href="62wy3gr9km.html#92f0935f6565aefdaa7beaf9dd648d7f">容器访问外部实现</a></li>
+<li><a href="62wy3gr9km.html#2ffd40b78b4f3029f1d7671275d727ca">外部访问容器实现</a></li>
+</ul></li>
+<li><a href="62wy3gr9km.html#7120ff060889423df377d15888953a65">自定义网桥</a></li>
+<li><a href="62wy3gr9km.html#21d50f8d6794edf88965d665e9d53841">工具和示例</a>
+<ul>
+<li><a href="62wy3gr9km.html#83bf527fa0053862282ae5c818ed84b9">pipework</a></li>
+<li><a href="62wy3gr9km.html#96c70b1dc0455bd80da8756721c6f6a7">playground</a></li>
+</ul></li>
+<li><a href="62wy3gr9km.html#baaad0cbb0bb7b276d28b18c1a93fc3c">编辑网络配置文件</a></li>
+<li><a href="62wy3gr9km.html#0a62ed7628fc6343b6368e3a868389d3">示例：创建一个点到点连接</a></li>
+</ul><h2 id="89a0c0e3c241795282a7a015dcf8f159">高级网络配置</h2>
+<blockquote>
+<p>注意：本章属于 <code>Docker</code> 高级配置，如果您是初学者，您可以暂时跳过本章节，直接学习 <a href="https://wangmaolin.net/topic/compose">Docker Compose</a> 一节。</p>
+</blockquote>
+<p>本章将介绍 Docker 的一些高级网络配置和选项。</p>
+<p>当 Docker 启动时，会自动在主机上创建一个 <code>docker0</code> 虚拟网桥，实际上是 Linux 的一个 bridge，可以理解为一个软件交换机。它会在挂载到它的网口之间进行转发。</p>
+<p>同时，Docker 随机分配一个本地未占用的私有网段（在 <a href="https://datatracker.ietf.org/doc/html/rfc1918">RFC1918</a> 中定义）中的一个地址给 <code>docker0</code> 接口。比如典型的 <code>172.17.42.1</code>，掩码为 <code>255.255.0.0</code>。此后启动的容器内的网口也会自动分配一个同一网段（<code>172.17.0.0/16</code>）的地址。</p>
+<p>当创建一个 Docker 容器的时候，同时会创建了一对 <code>veth pair</code> 接口（当数据包发送到一个接口时，另外一个接口也可以收到相同的数据包）。这对接口一端在容器内，即 <code>eth0</code>；另一端在本地并被挂载到 <code>docker0</code> 网桥，名称以 <code>veth</code> 开头（例如 <code>vethAQI2QT</code>）。通过这种方式，主机可以跟容器通信，容器之间也可以相互通信。Docker 就创建了在主机和所有容器之间一个虚拟共享网络。</p>
+<p><img src="../../storage/images/2024/07/XBF5e5mL9xkfZd9OXmCOY6kGfbukys4RzgHqbOPk.png" alt="" /></p>
+<p>接下来的部分将介绍在一些场景中，Docker 所有的网络定制配置。以及通过 Linux 命令来调整、补充、甚至替换 Docker 默认的网络配置。</p>
+<h2 id="8470433d3427d36b4b6be5790352ee98">快速配置指南</h2>
+<p>下面是一个跟 Docker 网络相关的命令列表。</p>
+<p>其中有些命令选项只有在 Docker 服务启动的时候才能配置，而且不能马上生效。</p>
+<ul>
+<li><code>-b BRIDGE</code> 或 <code>--bridge=BRIDGE</code> 指定容器挂载的网桥</li>
+<li><code>--bip=CIDR</code> 定制 docker0 的掩码</li>
+<li><code>-H SOCKET...</code> 或 <code>--host=SOCKET...</code> Docker 服务端接收命令的通道</li>
+<li><code>--icc=true|false</code> 是否支持容器之间进行通信</li>
+<li><code>--ip-forward=true|false</code> 请看下文容器之间的通信</li>
+<li><code>--iptables=true|false</code> 是否允许 Docker 添加 iptables 规则</li>
+<li><code>--mtu=BYTES</code> 容器网络中的 MTU</li>
+</ul>
+<p>下面2个命令选项既可以在启动服务时指定，也可以在启动容器时指定。在 Docker 服务启动的时候指定则会成为默认值，后面执行 <code>docker run</code> 时可以覆盖设置的默认值。</p>
+<ul>
+<li><code>--dns=IP_ADDRESS...</code> 使用指定的DNS服务器</li>
+<li><code>--dns-search=DOMAIN...</code> 指定DNS搜索域</li>
+</ul>
+<p>最后这些选项只有在 <code>docker run</code> 执行时使用，因为它是针对容器的特性内容。</p>
+<ul>
+<li><code>-h HOSTNAME</code> 或 <code>--hostname=HOSTNAME</code> 配置容器主机名</li>
+<li><code>--link=CONTAINER_NAME:ALIAS</code> 添加到另一个容器的连接</li>
+<li><code>--net=bridge|none|container:NAME_or_ID|host</code> 配置容器的桥接模式</li>
+<li><code>-p SPEC</code> 或 <code>--publish=SPEC</code> 映射容器端口到宿主主机</li>
+<li><code>-P or --publish-all=true|false</code> 映射容器所有端口到宿主主机</li>
+</ul>
+<h2 id="a3a433f4aa7549c35e0f6bfc751d3714">容器访问控制</h2>
+<p>容器的访问控制，主要通过 Linux 上的 <code>iptables</code> 防火墙来进行管理和实现。<code>iptables</code> 是 Linux 上默认的防火墙软件，在大部分发行版中都自带。</p>
+<h3 id="a24b89a19ae3c6e0f4ceddc6eea32e12">容器访问外部网络</h3>
+<p>容器要想访问外部网络，需要本地系统的转发支持。在Linux 系统中，检查转发是否打开。</p>
+<pre><code class="language-bash">$sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 1</code></pre>
+<p>如果为 0，说明没有开启转发，则需要手动打开。</p>
+<pre><code class="language-bash">$sysctl -w net.ipv4.ip_forward=1</code></pre>
+<p>如果在启动 Docker 服务的时候设定 <code>--ip-forward=true</code>, Docker 就会自动设定系统的 <code>ip_forward</code> 参数为 1。</p>
+<h3 id="b78f25bd0b24b7868d13be76277f29e0">容器之间访问</h3>
+<p>容器之间相互访问，需要两方面的支持。</p>
+<ul>
+<li>容器的网络拓扑是否已经互联。默认情况下，所有容器都会被连接到 <code>docker0</code> 网桥上。</li>
+<li>本地系统的防火墙软件 -- <code>iptables</code> 是否允许通过。</li>
+</ul>
+<h4 id="19fbaa56725778f8876ebe748a6bfd03">访问所有端口</h4>
+<p>当启动 Docker 服务（即 dockerd）的时候，默认会添加一条转发策略到本地主机 iptables 的 FORWARD 链上。策略为通过（<code>ACCEPT</code>）还是禁止（<code>DROP</code>）取决于配置<code>--icc=true</code>（缺省值）还是 <code>--icc=false</code>。当然，如果手动指定 <code>--iptables=false</code> 则不会添加 <code>iptables</code> 规则。</p>
+<p>可见，默认情况下，不同容器之间是允许网络互通的。如果为了安全考虑，可以在 <code>/etc/docker/daemon.json</code> 文件中配置 <code>{"icc": false}</code> 来禁止它。</p>
+<h4 id="d6a6f7a8fa4d4513ed36c7599cd7eee5">访问指定端口</h4>
+<p>在通过 <code>-icc=false</code> 关闭网络访问后，还可以通过 <code>--link=CONTAINER_NAME:ALIAS</code> 选项来访问容器的开放端口。</p>
+<p>例如，在启动 Docker 服务时，可以同时使用 <code>icc=false --iptables=true</code> 参数来关闭允许相互的网络访问，并让 Docker 可以修改系统中的 <code>iptables</code> 规则。</p>
+<p>此时，系统中的 <code>iptables</code> 规则可能是类似</p>
+<pre><code class="language-bash">$ sudo iptables -nL
+...
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+DROP       all  --  0.0.0.0/0            0.0.0.0/0
+...</code></pre>
+<p>之后，启动容器（<code>docker run</code>）时使用 <code>--link=CONTAINER_NAME:ALIAS</code> 选项。Docker 会在 <code>iptable</code> 中为 两个容器分别添加一条 <code>ACCEPT</code> 规则，允许相互访问开放的端口（取决于 <code>Dockerfile</code> 中的 <code>EXPOSE</code> 指令）。</p>
+<p>当添加了 <code>--link=CONTAINER_NAME:ALIAS</code> 选项后，添加了 <code>iptables</code> 规则。</p>
+<pre><code class="language-bash">$ sudo iptables -nL
+...
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+ACCEPT     tcp  --  172.17.0.2           172.17.0.3           tcp spt:80
+ACCEPT     tcp  --  172.17.0.3           172.17.0.2           tcp dpt:80
+DROP       all  --  0.0.0.0/0            0.0.0.0/0</code></pre>
+<p>注意：<code>--link=CONTAINER_NAME:ALIAS</code> 中的 <code>CONTAINER_NAME</code> 目前必须是 Docker 分配的名字，或使用 <code>--name</code> 参数指定的名字。主机名则不会被识别。</p>
+<h2 id="bfee00e8a6bd71f798bd6e0c8ca28f65">映射容器端口到宿主主机的实现</h2>
+<p>默认情况下，容器可以主动访问到外部网络的连接，但是外部网络无法访问到容器。</p>
+<h3 id="92f0935f6565aefdaa7beaf9dd648d7f">容器访问外部实现</h3>
+<p>容器所有到外部网络的连接，源地址都会被 NAT 成本地系统的 IP 地址。这是使用 <code>iptables</code> 的源地址伪装操作实现的。</p>
+<p>查看主机的 NAT 规则。</p>
+<pre><code class="language-bash">$ sudo iptables -t nat -nL
+...
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination
+MASQUERADE  all  --  172.17.0.0/16       !172.17.0.0/16
+...</code></pre>
+<p>其中，上述规则将所有源地址在 <code>172.17.0.0/16</code> 网段，目标地址为其他网段（外部网络）的流量动态伪装为从系统网卡发出。MASQUERADE 跟传统 SNAT 的好处是它能动态从网卡获取地址。</p>
+<h3 id="2ffd40b78b4f3029f1d7671275d727ca">外部访问容器实现</h3>
+<p>容器允许外部访问，可以在 <code>docker run</code> 时候通过 <code>-p</code> 或 <code>-P</code> 参数来启用。</p>
+<p>不管用那种办法，其实也是在本地的 <code>iptable</code> 的 nat 表中添加相应的规则。</p>
+<p>使用 <code>-P</code> 时：</p>
+<pre><code class="language-bash">$ iptables -t nat -nL
+...
+Chain DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:49153 to:172.17.0.2:80</code></pre>
+<p>使用 <code>-p 80:80</code> 时：</p>
+<pre><code class="language-bash">$ iptables -t nat -nL
+Chain DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:80 to:172.17.0.2:80</code></pre>
+<p>注意：</p>
+<ul>
+<li>
+<p>这里的规则映射了 <code>0.0.0.0</code>，意味着将接受主机来自所有接口的流量。用户可以通过 <code>-p IP:host_port:container_port</code> 或 <code>-p IP::port</code> 来指定允许访问容器的主机上的 IP、接口等，以制定更严格的规则。</p>
+</li>
+<li>
+<p>如果希望永久绑定到某个固定的 IP 地址，可以在 Docker 配置文件 <code>/etc/docker/daemon.json</code> 中添加如下内容。</p>
+</li>
+</ul>
+<pre><code class="language-json">{
+  "ip": "0.0.0.0"
+}</code></pre>
+<h2 id="7120ff060889423df377d15888953a65">自定义网桥</h2>
+<p>除了默认的 <code>docker0</code> 网桥，用户也可以指定网桥来连接各个容器。</p>
+<p>在启动 Docker 服务的时候，使用 <code>-b BRIDGE</code>或<code>--bridge=BRIDGE</code> 来指定使用的网桥。</p>
+<p>如果服务已经运行，那需要先停止服务，并删除旧的网桥。</p>
+<pre><code class="language-bash">$ sudo systemctl stop docker
+$ sudo ip link set dev docker0 down
+$ sudo brctl delbr docker0</code></pre>
+<p>然后创建一个网桥 <code>bridge0</code>。</p>
+<pre><code class="language-bash">$ sudo brctl addbr bridge0
+$ sudo ip addr add 192.168.5.1/24 dev bridge0
+$ sudo ip link set dev bridge0 up</code></pre>
+<p>查看确认网桥创建并启动。</p>
+<pre><code class="language-bash">$ ip addr show bridge0
+4: bridge0: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state UP group default
+    link/ether 66:38:d0:0d:76:18 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.5.1/24 scope global bridge0
+       valid_lft forever preferred_lft forever</code></pre>
+<p>在 Docker 配置文件 <code>/etc/docker/daemon.json</code> 中添加如下内容，即可将 Docker 默认桥接到创建的网桥上。</p>
+<pre><code class="language-json">{
+  "bridge": "bridge0",
+}</code></pre>
+<p>启动 Docker 服务。</p>
+<p>新建一个容器，可以看到它已经桥接到了 <code>bridge0</code> 上。</p>
+<p>可以继续用 <code>brctl show</code> 命令查看桥接的信息。另外，在容器中可以使用 <code>ip addr</code> 和 <code>ip route</code> 命令来查看 IP 地址配置和路由信息。</p>
+<h2 id="21d50f8d6794edf88965d665e9d53841">工具和示例</h2>
+<p>在介绍自定义网络拓扑之前，你可能会对一些外部工具和例子感兴趣：</p>
+<h3 id="83bf527fa0053862282ae5c818ed84b9">pipework</h3>
+<p>Jérôme Petazzoni 编写了一个叫 <a href="https://github.com/jpetazzo/pipework">pipework</a> 的 shell 脚本，可以帮助用户在比较复杂的场景中完成容器的连接。</p>
+<h3 id="96c70b1dc0455bd80da8756721c6f6a7">playground</h3>
+<p>Brandon Rhodes 创建了一个提供完整的 Docker 容器网络拓扑管理的 <a href="https://github.com/brandon-rhodes/fopnp/tree/m/playground">Python库</a>，包括路由、NAT 防火墙；以及一些提供 <code>HTTP</code> <code>SMTP</code> <code>POP</code> <code>IMAP</code> <code>Telnet</code> <code>SSH</code> <code>FTP</code> 的服务器。</p>
+<h2 id="baaad0cbb0bb7b276d28b18c1a93fc3c">编辑网络配置文件</h2>
+<p>Docker 1.2.0 开始支持在运行中的容器里编辑 <code>/etc/hosts</code>, <code>/etc/hostname</code> 和 <code>/etc/resolv.conf</code> 文件。</p>
+<p>但是这些修改是临时的，只在运行的容器中保留，容器终止或重启后并不会被保存下来，也不会被 <code>docker commit</code> 提交。</p>
+<h2 id="0a62ed7628fc6343b6368e3a868389d3">示例：创建一个点到点连接</h2>
+<p>默认情况下，Docker 会将所有容器连接到由 <code>docker0</code> 提供的虚拟子网中。</p>
+<p>用户有时候需要两个容器之间可以直连通信，而不用通过主机网桥进行桥接。</p>
+<p>解决办法很简单：创建一对 <code>peer</code> 接口，分别放到两个容器中，配置成点到点链路类型即可。</p>
+<p>首先启动 2 个容器：</p>
+<pre><code class="language-bash">$ docker run -i -t --rm --net=none base /bin/bash
+root@1f1f4c1f931a:/#
+$ docker run -i -t --rm --net=none base /bin/bash
+root@12e343489d2f:/#</code></pre>
+<p>找到进程号，然后创建网络命名空间的跟踪文件。</p>
+<pre><code class="language-bash">$ docker inspect -f '{{.State.Pid}}' 1f1f4c1f931a
+2989
+$ docker inspect -f '{{.State.Pid}}' 12e343489d2f
+3004
+$ sudo mkdir -p /var/run/netns
+$ sudo ln -s /proc/2989/ns/net /var/run/netns/2989
+$ sudo ln -s /proc/3004/ns/net /var/run/netns/3004</code></pre>
+<p>创建一对 <code>peer</code> 接口，然后配置路由</p>
+<pre><code class="language-bash">$ sudo ip link add A type veth peer name B
+
+$ sudo ip link set A netns 2989
+$ sudo ip netns exec 2989 ip addr add 10.1.1.1/32 dev A
+$ sudo ip netns exec 2989 ip link set A up
+$ sudo ip netns exec 2989 ip route add 10.1.1.2/32 dev A
+
+$ sudo ip link set B netns 3004
+$ sudo ip netns exec 3004 ip addr add 10.1.1.2/32 dev B
+$ sudo ip netns exec 3004 ip link set B up
+$ sudo ip netns exec 3004 ip route add 10.1.1.1/32 dev B</code></pre>
+<p>现在这 2 个容器就可以相互 ping 通，并成功建立连接。点到点链路不需要子网和子网掩码。</p>
+<p>此外，也可以不指定 <code>--net=none</code> 来创建点到点链路。这样容器还可以通过原先的网络来通信。</p>
+<p>利用类似的办法，可以创建一个只跟主机通信的容器。但是一般情况下，更推荐使用 <code>--icc=false</code> 来关闭容器之间的通信。</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Docker Compose: <i><a href="https://wangmaolin.net/topic/compose" target="_blank">../compose</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> RFC1918: <i><a href="https://datatracker.ietf.org/doc/html/rfc1918" target="_blank">https://datatracker.ietf.org/doc/html/rfc1918</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> pipework: <i><a href="https://github.com/jpetazzo/pipework" target="_blank">https://github.com/jpetazzo/pipework</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Python库: <i><a href="https://github.com/brandon-rhodes/fopnp/tree/m/playground" target="_blank">https://github.com/brandon-rhodes/fopnp/tree/m/playground</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

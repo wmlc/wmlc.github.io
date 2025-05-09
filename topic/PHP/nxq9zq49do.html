@@ -1,0 +1,730 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>基于 php 的项目部署工具 deployer 介绍 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    PHP <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>PHP</h2>
+<ul>
+<li id="blog12"><a href="jwnex9exd1.html#blog12">PHP 内置 Web 服务器</a>
+<li id="blog59"><a href="3qk94739w1.html#blog59">PHP 开启 opcache 提高性能</a>
+<li id="blog133"><a href="qd7yqzjy2w.html#blog133">defined('IN_IA') or exit('Access Denied'); 代码用途</a>
+<li id="blog171"><a href="wjkv8qnv62.html#blog171">php-fpm.conf 配置说明</a>
+<li id="blog258"><a href="4x3vo65vm1.html#blog258">Mac 上编译安装 php</a>
+<li id="blog262"><a href="xrwyl7n9z8.html#blog262">Composer 加速，镜像源修改方法</a>
+<li id="blog267"><a href="2dne2nke5q.html#blog267">php 二维数组自定义排序方法</a>
+<li id="blog311"><a href="pwde41xe6q.html#blog311">PHP 将空数组统一 json 序列化为 [] 的弊端</a>
+<li id="blog340"><a href="od6vrgjy3g.html#blog340">ubuntu 下编译安装PHP报错 configure: error: Unable to detect ICU prefix or no failed. Please verify ICU install prefix and make sure icu-config works.</a>
+<li id="blog416"><a href="85k9rpwxm1.html#blog416">base64 &amp; urlbase64 介绍</a>
+<li id="blog445"><a href="qk2vmdjvp0.html#blog445">PHP 登录引入双因素认证服务</a>
+<li id="blog471"><a href="x2ev8royor.html#blog471">PHP 中 try、catch、finally 用法总结</a>
+<li id="blog472"><a href="de296lw9q7.html#blog472">PHP 中令人困惑的 strtotime</a>
+<li id="blog717"><a href="2ky046x9z8.html#blog717">利用 http_build_query 字符串拼接生成签名注意事项</a>
+<li id="blog718"><a href="2qvpxm493m.html#blog718">urldecode &amp; rawurldecode 说明</a>
+<li id="blog719"><a href="m892g35y01.html#blog719">PHP-FPM 进程模型</a>
+<li id="blog734"><a href="x3vo0mkvm1.html#blog734">PHP 调整 Gif 图片播放速度</a>
+</ul>
+</li>
+<li>
+<h2>FastAdmin</h2>
+<ul>
+<li id="blog15"><a href="j25v16e1nk.html#blog15">FastAdmin 框架中图片点击放大预览</a>
+</ul>
+</li>
+<li>
+<h2>扩展</h2>
+<ul>
+<li id="blog97"><a href="nxq9znr9do.html#blog97">PHP MarkDown 解析为 HTML 的方法</a>
+<li id="blog103"><a href="k3dyk8myl0.html#blog103">PHP SimpleSoftwareIO/simple-qrcode 扩展生成空白透明二维码解决方法</a>
+<li id="blog104"><a href="jenydo8v7d.html#blog104">在macOS中给PHP 8安装 imageick 扩展方法</a>
+<li id="blog155"><a href="wkl9nxwvz4.html#blog155">Laravel 、 PHP 二维码生成扩展 SimpleSoftwareIO/simple-qrcode</a>
+<li id="blog157"><a href="n3xyqzjymq.html#blog157">PHP 图片处理扩展 Intervention/image 使用说明</a>
+<li id="blog159"><a href="3qk945gvw1.html#blog159">客户端 User Agent 解析扩展</a>
+<li id="blog173"><a href="nxq9zq49do.html#blog173">基于 php 的项目部署工具 deployer 介绍</a>
+<li id="blog179"><a href="wkl9nlwvz4.html#blog179">PHP网站如何创建 Rss 订阅源？</a>
+<li id="blog264"><a href="nq5vrwoe7p.html#blog264">PHP Fatal error: Call to undefined function imagettfbbox() 解决方法</a>
+<li id="blog432"><a href="7okv53oy1n.html#blog432">PHP 编译安装 inotify 扩展</a>
+<li id="blog433"><a href="qd7yqo6e2w.html#blog433">PHP 编译安装 event 扩展</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog293"><a href="1ndvm1nv3j.html#blog293">nginx+php使用open_basedir限制站点目录防止跨站</a>
+</ul>
+</li>
+<li>
+<h2>workerman</h2>
+<ul>
+<li id="blog315"><a href="j25v1pgv1n.html#blog315">GatewayWorker websocket 连接 1 分钟后自动断开原因？</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'nxq9zq49do.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/nxq9zq49do.html', function (data, status) {
+                addView('nxq9zq49do.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>基于 php 的项目部署工具 deployer 介绍</h1><ul>
+<li><a href="nxq9zq49do.html#61a3ec6656837d917b6f69525a262eec">介绍</a>
+<ul>
+<li><a href="nxq9zq49do.html#276861bbc1dd3396221bed49bbff6707">deployer 的优势</a></li>
+<li><a href="nxq9zq49do.html#de4cc2cc8db74c8250a798395ad360eb">使用 deployer 的前提条件</a></li>
+</ul></li>
+<li><a href="nxq9zq49do.html#2a8ba11fb2cb99eb1b2752fc34e736f8">Deployer 6.x 版本</a>
+<ul>
+<li><a href="nxq9zq49do.html#9e1bb02b0340e561b739d87a122a0fe7">使用说明</a>
+<ul>
+<li><a href="nxq9zq49do.html#cf148000afc315bad821959a3e7c819e">1、安装</a></li>
+<li><a href="nxq9zq49do.html#cbbc3f08a5b6e48345c1f8140dc2be5c">2、生成部署脚本代码</a></li>
+<li><a href="nxq9zq49do.html#8759dbf32dfcfbda40c6f8ec8a24d0eb">3、使用说明</a></li>
+<li><a href="nxq9zq49do.html#6234fab90a6a16de24822d97c6852810">实例：</a></li>
+<li><a href="nxq9zq49do.html#0689add2fb9399818a422150e44e092f">执行部署命令</a></li>
+<li><a href="nxq9zq49do.html#57ec19fde62a60f71c5eb9d9d5e5010c">当你第一次成功部署的时候， Deployer 会自动帮你在服务器上生成一下文件：</a></li>
+</ul></li>
+<li><a href="nxq9zq49do.html#138a676635c31bde1e2c8b2c62432936">注意</a>
+<ul>
+<li><a href="nxq9zq49do.html#4d0727d1e42595a965c8a6ba255af9f2">php和composer版本设置</a></li>
+</ul></li>
+<li><a href="nxq9zq49do.html#c6d242c4798fd8b560b9693d766d60b1">官方文档地址</a></li>
+</ul></li>
+<li><a href="nxq9zq49do.html#a3541db410c539578632058036e7872d">Deployer 7.x 版本</a>
+<ul>
+<li><a href="nxq9zq49do.html#dfd68c447b4c8e6bf6657877177d0636">配置实例</a></li>
+</ul></li>
+</ul><h2 id="61a3ec6656837d917b6f69525a262eec">介绍</h2>
+<p>Deployer 是一个基于 SSH 协议的无侵入 web 项目部署工具，因为它不需要你在目标 服务器 上装什么服务之类的东西即可使用，它只需要在你的开发机，或者你的笔记本，就是发起部署动作的一方安装即可。</p>
+<p>它的原理就是通过 SSH 到你的机器去创建目录，移动文件，执行指定的动作来完成项目的部署。</p>
+<p>Deployer 不但可以部署php项目，也可以部署其他语言醒目</p>
+<h3 id="276861bbc1dd3396221bed49bbff6707">deployer 的优势</h3>
+<pre><code class="   language-php">真正解放双手，一条命令完成部署。
+进行部署的过程中，项目仍然能够正常访问。部署成功完成后才切到新的版本。
+能十分方便地进行回滚。
+丰富任务钩子和预置任务可灵活的组合完成各种任务，比如执行前端依赖的安装、构建等。</code></pre>
+<h3 id="de4cc2cc8db74c8250a798395ad360eb">使用 deployer 的前提条件</h3>
+<pre><code class="   language-php">本地机器（也就是你执行 dep 命令时所在的机器）能够 SSH 连接到目标机器
+指定用户有登录目标机器并调整一些设置的权限
+目标主机有拉取项目仓库的权限</code></pre>
+<h2 id="2a8ba11fb2cb99eb1b2752fc34e736f8">Deployer 6.x 版本</h2>
+<h3 id="9e1bb02b0340e561b739d87a122a0fe7">使用说明</h3>
+<h4 id="cf148000afc315bad821959a3e7c819e">1、安装</h4>
+<pre><code class="   language-php">curl -LO https://deployer.org/deployer.phar
+mv deployer.phar /usr/local/bin/dep
+chmod +x /usr/local/bin/dep</code></pre>
+<h4 id="cbbc3f08a5b6e48345c1f8140dc2be5c">2、生成部署脚本代码</h4>
+<p>切换到要部署的项目目录下，执行以下命令</p>
+<pre><code class="   language-php">dep init</code></pre>
+<p>此时会在改目录下生成 deploy.php文件</p>
+<h4 id="8759dbf32dfcfbda40c6f8ec8a24d0eb">3、使用说明</h4>
+<p>未便于管理最好再创建文件deploy.config.php文件，提出公共配置，便于维护部署脚本。</p>
+<h5 id="6234fab90a6a16de24822d97c6852810">实例：</h5>
+<p>以deploy部署go语言项目为例：</p>
+<p>deploy.config.php</p>
+<pre><code class="   language-php">&lt;?php
+
+return [
+    'application' =&gt; 'miner-proxy', # 进程名称
+    'git' =&gt; 'git@bitbucket.org:miner/miner-proxy.git',
+    'branch' =&gt; 'master',
+    'deploy_path' =&gt; '/alidata/deploy/miner-proxy',
+    'servers' =&gt; [
+        'proxy0' =&gt; '192.134.45.45',
+        'proxy1' =&gt; '192.45.67.8',
+        'proxy2' =&gt; '193.168.45.67',
+    ],
+    'rsync' =&gt; [
+        'rsync -avz /alidata/deploy/miner-proxy/current/build/bin/* public@{ip}:/alidata/service/miner-proxy/',
+        'rsync -avz /alidata/deploy/miner-proxy/current/build/supervisord.conf public@{ip}:/alidata/service/miner-proxy/'
+    ]
+];</code></pre>
+<p>deploy.php</p>
+<pre><code class="   language-php">&lt;?php
+namespace Deployer;
+
+require 'recipe/common.php';
+$config = require 'deploy.config.php';
+
+// 项目名
+set('application', $config['application']);
+
+// 项目仓库地址
+set('repository', $config['git']);
+
+// Shared files/dirs between deploys 
+set('shared_files', []);
+set('shared_dirs', []);
+
+// Writable dirs by web server 
+set('writable_dirs', []);
+
+set('keep_releases', 5);
+
+if (strtolower(substr(PHP_OS, 0, 3)) === 'win') {
+    // [Optional] Allocate tty for git clone. Default value is false.
+    set('git_tty', false);
+    set('ssh_multiplexing', false);
+} else {
+    set('git_tty', true);
+}
+
+$stage = $_SERVER['argv'][2];
+if(!array_key_exists($stage, $config['servers'])){
+    exit('stage ' . $stage . ' 不存在');
+}
+
+# 目标主机配置
+# 192.168.45.67 机器作为程序构建机器
+# 不要用root用户，新创建一个普通用户用作部署，在部署之前设置好改账号的各个目录权限
+host('192.168.45.67')
+    -&gt;user('test')
+    -&gt;port(22)
+    -&gt;set('branch', $config['branch'])
+    -&gt;stage($stage)
+    -&gt;set('deploy_path', $config['deploy_path']);
+
+// Tasks
+desc('Deploy super-miner-proxy project');
+task('deploy', [
+    'deploy:info',
+    'deploy:prepare',
+    'deploy:lock',
+    'deploy:release',
+    'deploy:update_code',
+    'deploy:shared',
+    'deploy:writable',
+    'deploy:clear_paths',
+    'deploy:symlink',
+    'deploy:unlock',
+    'cleanup',
+    'success'
+]);
+
+# 自定义任务
+# 构建任务
+task('make', function () use ($config, $stage) {
+    run('cd ' . $config['deploy_path'] . '/current &amp;&amp; (export PATH=$PATH:/usr/local/go/bin;make)');
+});
+
+# 打包同步任务，最好先压缩再同步
+task('rsync', function () use ($config, $stage){
+    foreach ($config['rsync'] as $val){
+        $val = str_replace('{ip}', $config['servers'][$stage], $val);
+        run($val);
+    }
+});
+
+# 可执行程序同步完成后重启进程
+# 对于需要sudo操作的命令，可以在指定机器上设置该命令免密
+task('restart', function () use ($config, $stage) {
+    run('ssh  test@' . $config['servers'][$stage] . ' "sudo /usr/bin/supervisorctl restart ' . $config['application'] . '"');
+});
+
+# 如果部署失败，自动解除部署锁定状态，以免影响下次执行
+after('deploy:failed', 'deploy:unlock');
+# 部署
+after('deploy', 'make');
+# 回退
+after('rollback', 'make');
+# 同步
+after('make', 'rsync');
+# 重启
+after('rsync', 'restart');</code></pre>
+<h5 id="0689add2fb9399818a422150e44e092f">执行部署命令</h5>
+<pre><code class="   language-php">部署：
+dep deploy {stage}  -vvv
+
+回退：
+dep rollback {stage} -vvv</code></pre>
+<h5 id="57ec19fde62a60f71c5eb9d9d5e5010c">当你第一次成功部署的时候， Deployer 会自动帮你在服务器上生成一下文件：</h5>
+<pre><code class="   language-php">releases 包含你部署项目的版本（默认保留 5 个版本）
+
+shared 包含你部署项目的共享文件或目录（如：Laravel 的 Storage 目录、.env 文件等 ）
+
+current 软连接到你当前发布的版本</code></pre>
+<h3 id="138a676635c31bde1e2c8b2c62432936">注意</h3>
+<p>对于 deploy:update_code 使用Git下载新版本的代码。如果您使用的是Git 2.0版，并且git_cache config已打开，则此任务将使用先前发行版中的文件，因此仅下载更改的文件。否则重新clone 代码。</p>
+<p>因此最好将Git升级到 2.0 以上版本。</p>
+<h4 id="4d0727d1e42595a965c8a6ba255af9f2">php和composer版本设置</h4>
+<p>默认情况下php命令使用的是<code>/usr/bin/php</code>，但有时系统中安装了多个php版本，而我们并不想使用默认的php版本，可做如下设置：</p>
+<p>在 require 'recipe/laravel.php'; 下方增加：</p>
+<pre><code class="language-php"># 设置php命令路径
+set('bin/php', function () {
+    return '/usr/local/php8.0/bin/php';
+});
+
+# 设置composer命令
+set('bin/composer', function () {
+    return '/usr/local/php8.0/bin/php /usr/local/bin/composer';
+});</code></pre>
+<h3 id="c6d242c4798fd8b560b9693d766d60b1">官方文档地址</h3>
+<p>其他设置点可以通过以下网址查看</p>
+<p><a href="https://deployer.org/docs/6.x/getting-started">https://deployer.org/docs/6.x/getting-started</a></p>
+<p><a href="https://github.com/deployphp/deployer">https://github.com/deployphp/deployer</a></p>
+<h2 id="a3541db410c539578632058036e7872d">Deployer 7.x 版本</h2>
+<p>7.x 版本相比6.x做了一些改变</p>
+<p>详细文档参考 <a href="https://deployer.org/docs/7.x/getting-started">https://deployer.org/docs/7.x/getting-started</a></p>
+<h3 id="dfd68c447b4c8e6bf6657877177d0636">配置实例</h3>
+<pre><code class="language-php">&lt;?php
+
+namespace Deployer;
+
+require 'vendor/deployer/deployer/recipe/laravel.php';
+
+// Project name
+set('application', 'charming_voice');
+
+// Project repository
+set('repository', 'git@gitee.com:xxx/xxxx.git');
+set('keep_releases', 5);
+
+set('ssh_multiplexing', true);
+
+set('git_tty', true);
+set('writable_use_sudo', false);
+set('writable_mode', 'chmod');
+set('writable_chmod_mode', '0777');
+set('writable_chmod_recursive', false);
+set('allow_anonymous_stats', false);
+set('use_relative_symlink', false);
+
+// Shared files/dirs between deploys
+add('shared_dirs', ['public/vendor']);
+// Writable dirs by web server
+add('writable_dirs', ['public/vendor']);
+
+set('allow_anonymous_stats', false);
+
+//  注意这个地方和 6.x 的不同
+set('bin/php', function(){
+    return '{{which_php}}';
+});
+
+// Hosts 注意这与 6.x 的不同
+
+host('test')
+    -&gt;set('labels', ['env' =&gt; 'test'])
+    -&gt;set('hostname', 'test.a.com')
+    -&gt;set('remote_user', 'ubuntu')
+    -&gt;set('which_php', '/usr/local/php8.1/bin/php')
+    -&gt;set('branch', 'master')
+    -&gt;set('identity_file', '~/.ssh/id_rsa')
+    -&gt;set('deploy_path', '/alidata/www/test');
+
+host('pre')
+    -&gt;set('labels', ['env' =&gt; 'pre'])
+    -&gt;set('hostname', 'pre.a.com')
+    -&gt;set('remote_user', 'ubuntu')
+    -&gt;set('which_php', '/usr/local/php8.1/bin/php')
+    -&gt;set('branch', 'master')
+    -&gt;set('identity_file', '~/.ssh/id_rsa')
+    -&gt;set('deploy_path', '/alidata/www/pre');
+
+// Tasks
+
+task('file:set_permissions', function(){
+    run('cd {{release_path}} &amp;&amp; if [ -d storage/logs/ ]; then sudo chmod -R 777 storage/logs/; fi');
+});
+
+// [Optional] if deploy fails automatically unlock.
+after('deploy:failed', 'deploy:unlock');
+
+task('module:publish', function(){
+    run('cd {{release_path}} &amp;&amp; {{bin/php}} artisan module:publish &amp;&amp; {{bin/php}} artisan vendor:publish --tag views --force');
+});
+
+# 重启php
+task('php-fpm:restart', function(){
+    run('sudo /bin/lnmp php-fpm reload');
+});
+
+task('admin:publish', function(){
+    run('cd {{release_path}} &amp;&amp; {{bin/php}} artisan admin:publish &amp;&amp; {{bin/php}} artisan MigrateTinymce &amp;&amp; {{bin/php}} artisan optimize:clear');
+});
+
+task('npm:install', function(){
+    # 判断环境也与 6.x 不同
+    $env = get('labels')['env'];
+    if ($env == 'test') {
+        run('cd {{release_path}} &amp;&amp; source  ~/.bashrc &amp;&amp; /home/ubuntu/.nvm/versions/node/v14.19.0/bin/npm install --save-dev chokidar');
+    }
+});
+
+# 重启守护进程，队列 和 octane 服务
+# 不能直接 reload, 应该每个进程单独restart, reload 会同时重启 supervisord,导致重启时间很长，请求报大量502错误
+task('supervisor:reload', function(){
+    $env = get('labels')['env'];
+    if ($env == 'pro') {
+        run('sudo /usr/bin/supervisorctl restart server:');
+        run('sudo /usr/bin/supervisorctl restart queue:');
+    } elseif ($env == 'pre') {
+        run('sudo /usr/bin/supervisorctl restart server:');
+    }
+});
+
+# 查看日志
+task('tail_log', function(){
+    run('cd {{release_path}}/ &amp;&amp; tail -f storage/logs/*.log');
+});
+
+# 部署
+after('deploy', 'module:publish');
+after('module:publish', 'admin:publish');
+after('admin:publish', 'file:set_permissions');
+after('file:set_permissions', 'php-fpm:restart');
+after('php-fpm:restart', 'npm:install');
+after('npm:install', 'supervisor:reload');
+after('supervisor:reload', 'tail_log');
+</code></pre><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> https://deployer.org/docs/6.x/getting-started: <i><a href="https://deployer.org/docs/6.x/getting-started" target="_blank">https://deployer.org/docs/6.x/getting-started</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> https://github.com/deployphp/deployer: <i><a href="https://github.com/deployphp/deployer" target="_blank">https://github.com/deployphp/deployer</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> https://deployer.org/docs/7.x/getting-started: <i><a href="https://deployer.org/docs/7.x/getting-started" target="_blank">https://deployer.org/docs/7.x/getting-started</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

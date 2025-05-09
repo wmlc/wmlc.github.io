@@ -1,0 +1,646 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>前端本地存储 cookie、localStorage、sessionStorage | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    前端 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>VUE</h2>
+<ul>
+<li id="blog4"><a href="jenydov7d5.html#blog4">vue 项目中通过监听 localStorage 的变化进行父子页面传参</a>
+<li id="blog24"><a href="de296og9q7.html#blog24">VUE this.$forceUpdate () 强制页面刷新问题</a>
+<li id="blog41"><a href="02ky04j9z8.html#blog41">vue 打包网页项目 nginx 配置注意点</a>
+<li id="blog44"><a href="jrqvwmle8p.html#blog44">Vue 数组操作方法</a>
+</ul>
+</li>
+<li>
+<h2>前端</h2>
+<ul>
+<li id="blog10"><a href="4x3vo6vm15.html#blog10">前端本地存储 cookie、localStorage、sessionStorage</a>
+<li id="blog30"><a href="7ndvd32eo2.html#blog30">img 标签图片不存在时显示默认图如何设置？</a>
+<li id="blog36"><a href="x569x53yep.html#blog36">给 TinyMce 富文本编辑器图片和视频上传插件添加本地文件上传按钮</a>
+<li id="blog42"><a href="n2qvpxq93m.html#blog42">前端模板引擎 artTemplate 介绍</a>
+<li id="blog356"><a href="7okv5m5e1n.html#blog356">JavaScript 调试常用的工具和技术介绍</a>
+<li id="blog362"><a href="xrwyl3zyz8.html#blog362">收集各种 CSS 特效和组件的网站，直接复制代码就可以拿去使用</a>
+<li id="blog411"><a href="y6r9kpkqpv.html#blog411">客户端oss直传方式</a>
+</ul>
+</li>
+<li>
+<h2>Node.js</h2>
+<ul>
+<li id="blog38"><a href="xrwyl26vz8.html#blog38">Node 多版本切换工具 nvm 的安装和使用</a>
+<li id="blog39"><a href="ekpv13k98w.html#blog39">使用 pm2 远程部署前端项目</a>
+</ul>
+</li>
+<li>
+<h2>npm</h2>
+<ul>
+<li id="blog40"><a href="nq5vrlgv7p.html#blog40">NPM 国内加速方法</a>
+<li id="blog109"><a href="qd7yq7jv2w.html#blog109">将 node_modules 目录放入 Git 仓库的优点</a>
+<li id="blog372"><a href="8loyn31ez3.html#blog372">NPM 的 5 种替代方案</a>
+</ul>
+</li>
+<li>
+<h2>uniapp</h2>
+<ul>
+<li id="blog43"><a href="2dne29ov5q.html#blog43">uniapp 打包 H5 方法</a>
+<li id="blog45"><a href="qk2vm8oyp0.html#blog45">uniapp 长按保存图片代码</a>
+<li id="blog46"><a href="71xyjd8yd9.html#blog46">uniapp 点击复制文本</a>
+<li id="blog57"><a href="qd7yqmnv2w.html#blog57">uniapp 获取设置的 App 版本号</a>
+<li id="blog129"><a href="15dvekgv4x.html#blog129">Uniapp 之 h5 使用 jsonp 跨域调用地图 API</a>
+<li id="blog243"><a href="2dne2qke5q.html#blog243">HBuilderX  iOS云打包如何设置通用链接等Capabilities配置</a>
+<li id="blog282"><a href="4x3vow59m1.html#blog282">uniad 激励视频广告如何进行服务端回调，下发奖励？</a>
+</ul>
+</li>
+<li>
+<h2>Markdown</h2>
+<ul>
+<li id="blog48"><a href="de2967gvq7.html#blog48">给 Markdown 编辑器 Editor.md 添加图片复制粘贴自动上传功能</a>
+<li id="blog95"><a href="wjkv8nwv62.html#blog95">MarkDown 内容网页展示美化方法</a>
+<li id="blog255"><a href="wkl9n2d9z4.html#blog255">Markdown 嵌入视频语法</a>
+</ul>
+</li>
+<li>
+<h2>CloudFlare</h2>
+<ul>
+<li id="blog58"><a href="4x3vo46ym1.html#blog58">如何使用 Cloudflare Pages 托管静态网站</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog98"><a href="62wy3qnvkm.html#blog98">instant.page 一个通过网页预加载提升页面加载速度的 js 脚本</a>
+<li id="blog436"><a href="x569x089ep.html#blog436">提高前端代码性能的最佳实践</a>
+</ul>
+</li>
+<li>
+<h2>JavaScript</h2>
+<ul>
+<li id="blog113"><a href="mdgy7zk9w2.html#blog113">自动为网页上选中的文本生成锚点的 js 库 deeplinks.js</a>
+<li id="blog248"><a href="8loyn2ryz3.html#blog248">10 个 JavaScript 单行代码 - 提高你的工作效率</a>
+<li id="blog287"><a href="j25v1ode1n.html#blog287">如何使用 JavaScript 将 localStorage 空间填满？</a>
+<li id="blog371"><a href="wjkv8ody62.html#blog371">如何在网页中源码中隐藏 JavaScript 代码？</a>
+</ul>
+</li>
+<li>
+<h2>localStorage</h2>
+<ul>
+<li id="blog287"><a href="j25v1ode1n.html#blog287">如何使用 JavaScript 将 localStorage 空间填满？</a>
+<li id="blog288"><a href="nq5vr8oe7p.html#blog288">如何处理 localStorage 使用中的错误（如空间超出错误）</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog667"><a href="m892gnoy01.html#blog667">target=&quot;_blank” 属性的安全漏洞</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '4x3vo6vm15.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/4x3vo6vm15.html', function (data, status) {
+                addView('4x3vo6vm15.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>前端本地存储 cookie、localStorage、sessionStorage</h1><ul>
+<li><a href="4x3vo6vm15.html#2dccd1ab3e03990aea77359831c85ca2">cookie</a>
+<ul>
+<li><a href="4x3vo6vm15.html#653cd7d85c38dc744017ac465459c2eb">如何工作</a></li>
+<li><a href="4x3vo6vm15.html#1dfba5008236620fcbaae97b3832b5b8">特征</a></li>
+<li><a href="4x3vo6vm15.html#523d37cf8ec173ac1eda08d52c043b1e">cookie 操作</a>
+<ul>
+<li><a href="4x3vo6vm15.html#e366ccf1556c0672dcecba135ed5472e">设置</a></li>
+<li><a href="4x3vo6vm15.html#0cd5db00ba2a77b02d1ced5cbf3f9ce8">读取</a></li>
+<li><a href="4x3vo6vm15.html#279a38ebfc0dfc327eec1388fc47ecea">修改 cookie</a></li>
+<li><a href="4x3vo6vm15.html#2f4aaddde33c9b93c36fd2503f3d122b">删除</a></li>
+</ul></li>
+<li><a href="4x3vo6vm15.html#5ffd4ad7b724ad3391ca47a3b184db17">cookie的属性（可选项）</a>
+<ul>
+<li><a href="4x3vo6vm15.html#1fa23f4daa01d5ddfae6179aa43f0720">过期时间</a></li>
+<li><a href="4x3vo6vm15.html#c01ccc3205cbcfcd2f61ce5870364a4d">cookie的域概念（domain选项）</a></li>
+<li><a href="4x3vo6vm15.html#18de1d70b398ddf5a553ec84e0633eda">cookie的路径概念（path选项）</a></li>
+<li><a href="4x3vo6vm15.html#2c67e57a6c25652fb0bd1e803f4efec4">domain和path总结：</a></li>
+<li><a href="4x3vo6vm15.html#389067b15711755bfae33c6bd33bd990">cookie的安全性（secure选项）</a></li>
+<li><a href="4x3vo6vm15.html#afc9c748a3a3e65854c3db72a324ea1b">httpOnly</a></li>
+</ul></li>
+</ul></li>
+<li><a href="4x3vo6vm15.html#481d8d5071850454156b6a87ab2e42fe">localStorage</a>
+<ul>
+<li><a href="4x3vo6vm15.html#b4d3c72eb98467368bcc19ea5a539c80">特点</a></li>
+<li><a href="4x3vo6vm15.html#a9de52acb07aa66d37f177ef1bf95de3">操作方法</a></li>
+<li><a href="4x3vo6vm15.html#70400d016c36a998ffcd5f93a2242a6e">storage事件</a></li>
+</ul></li>
+<li><a href="4x3vo6vm15.html#daab42679eff27c43d91d152ebf5b6a8">sessionStorage</a>
+<ul>
+<li><a href="4x3vo6vm15.html#a9de52acb07aa66d37f177ef1bf95de3">操作方法</a></li>
+<li><a href="4x3vo6vm15.html#04c4a90b35c81917d30a2a5342b72a4a">特点：</a></li>
+</ul></li>
+<li><a href="4x3vo6vm15.html#3160b65b70c81721dc78c6fe6151faba">cookie、localStorage、sessionStorage区别</a>
+<ul>
+<li><a href="4x3vo6vm15.html#75332ee29688d7e37ba028f88a8fa0f3">相同：</a></li>
+<li><a href="4x3vo6vm15.html#5f72018d33695bc0c56718a67479a495">不同：</a></li>
+</ul></li>
+</ul><h2 id="2dccd1ab3e03990aea77359831c85ca2">cookie</h2>
+<h3 id="653cd7d85c38dc744017ac465459c2eb">如何工作</h3>
+<p>当网页要发http请求时，浏览器会先检查是否有相应的cookie，有则自动添加在request header中的cookie字段中。这些是浏览器自动帮我们做的，而且每一次http请求浏览器都会自动帮我们做。这个特点很重要，因为这关系到“什么样的数据适合存储在cookie中”。 </p>
+<p>存储在cookie中的数据，每次都会被浏览器自动放在http请求中，如果这些数据并不是每个请求都需要发给服务端的数据，浏览器这设置自动处理无疑增加了网络开销；但如果这些数据是每个请求都需要发给服务端的数据（比如身份认证信息），浏览器这设置自动处理就大大免去了重复添加操作。所以对于那种设置“每次请求都要携带的信息（最典型的就是身份认证信息）”就特别适合放在cookie中，其他类型的数据就不适合了。</p>
+<h3 id="1dfba5008236620fcbaae97b3832b5b8">特征</h3>
+<p>不同的浏览器存放的cookie位置不一样，也是不能通用的。</p>
+<p>cookie的存储是以域名形式进行区分的，不同的域下存储的cookie是独立的。</p>
+<p>我们可以设置cookie生效的域（当前设置cookie所在域的子域），也就是说，我们能够操作的cookie是当前域以及当前域下的所有子域</p>
+<p>一个域名下存放的cookie的个数是有限制的，不同的浏览器存放的个数不一样,一般为20个。</p>
+<p>每个cookie存放的内容大小也是有限制的，不同的浏览器存放大小不一样，一般为4KB。</p>
+<p>cookie也可以设置过期的时间，默认是会话结束的时候，当时间到期自动销毁</p>
+<p>cookie值既可以设置，也可以读取。</p>
+<h3 id="523d37cf8ec173ac1eda08d52c043b1e">cookie 操作</h3>
+<h4 id="e366ccf1556c0672dcecba135ed5472e">设置</h4>
+<pre><code class="language-js">// 客户端设置，注意一次只能设置一个
+
+document.cookie = '名字=值';
+document.cookie = 'username=cfangxu;domain=baike.baidu.com'    并且设置了生效域
+
+// 注意： 客户端可以设置cookie 的下列选项：expires、domain、path、secure 
+
+// 服务器端设置 不管你是请求一个资源文件（如 html/js/css/图片），还是发送一个ajax请求，服务端都会返回response。
+// 而response header中有一项叫set-cookie，是服务端专门用来设置cookie的。
+// Set-Cookie 消息头是一个字符串，其格式如下（中括号中的部分是可选的）：
+
+Set-Cookie: value[; expires=date][; domain=domain][; path=path][; secure]
+
+// 注意： 一个set-Cookie字段只能设置一个cookie，当你要想设置多个 cookie，需要添加同样多的set-Cookie字段。 服务端可以设置cookie 的所有选项：expires、domain、path、secure、HttpOnly</code></pre>
+<h4 id="0cd5db00ba2a77b02d1ced5cbf3f9ce8">读取</h4>
+<p>我们通过document.cookie来获取当前网站下的cookie的时候，得到的字符串形式的值，它包含了当前网站下所有的cookie（为避免跨域脚本(xss)攻击，这个方法只能获取非 HttpOnly 类型的cookie）。它会把所有的cookie通过一个分号+空格的形式串联起来，例如username=chenfangxu; job=coding</p>
+<h4 id="279a38ebfc0dfc327eec1388fc47ecea">修改 cookie</h4>
+<p>要想修改一个cookie，只需要重新赋值就行，旧的值会被新的值覆盖。但要注意一点，在设置新cookie时，path/domain这几个选项一定要旧cookie 保持一样。否则不会修改旧值，而是添加了一个新的 cookie。</p>
+<h4 id="2f4aaddde33c9b93c36fd2503f3d122b">删除</h4>
+<p>把要删除的cookie的过期时间设置成已过去的时间,path/domain/这几个选项一定要旧cookie 保持一样。</p>
+<pre><code class="language-js">document.cookie = 'uid=dkfywqkrh3;expires=' + new Date(0) + ';path=/;secure;</code></pre>
+<h3 id="5ffd4ad7b724ad3391ca47a3b184db17">cookie的属性（可选项）</h3>
+<h4 id="1fa23f4daa01d5ddfae6179aa43f0720">过期时间</h4>
+<p>如果我们想长时间存放一个cookie。需要在设置这个cookie的时候同时给他设置一个过期的时间。如果不设置，cookie默认是临时存储的，当浏览器关闭进程的时候自动销毁</p>
+<pre><code class="language-js">// document.cookie = '名称=值;expires=' + GMT(格林威治时间)格式的日期型字符串; 
+// 一般设置天数：new Date().setDate( oDate.getDate() + 5 ); 比当前时间多5天 
+
+// 一个设置cookie时效性的例子
+function setCookie(c_name, value, expiredays){
+      var exdate=new Date();
+      exdate.setDate(exdate.getDate() + expiredays);
+      document.cookie=c_name+ "=" + escape(value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
+}</code></pre>
+<p>使用方法：<code>setCookie('username','cfangxu',30)</code></p>
+<h4 id="c01ccc3205cbcfcd2f61ce5870364a4d">cookie的域概念（domain选项）</h4>
+<p>domain指定了 cookie 将要被发送至哪个或哪些域中。默认情况下，domain 会被设置为创建该 cookie 的页面所在的域名，所以当给相同域名发送请求时该 cookie 会被发送至服务器。 </p>
+<p>浏览器会把 domain 的值与请求的域名做一个尾部比较（即从字符串的尾部开始比较），并将匹配的 cookie 发送至服务器。</p>
+<pre><code class="language-js">// 客户端设置
+
+document.cookie = "username=cfangxu;path=/;domain=qq.com" 
+
+//如上：“www.qq.com" 与 "sports.qq.com" 公用一个关联的域名"qq.com"，我们如果想让 "sports.qq.com" 下的cookie被 "www.qq.com" 访问，我们就需要用到 cookie 的domain属性，并且需要把path属性设置为 "/"。
+
+// 服务端设置
+
+Set-Cookie: username=cfangxu;path=/;domain=qq.com 
+
+// 注：一定的是同域之间的访问，不能把domain的值设置成非主域的域名。</code></pre>
+<h4 id="18de1d70b398ddf5a553ec84e0633eda">cookie的路径概念（path选项）</h4>
+<p>cookie 一般都是由于用户访问页面而被创建的，可是并不是只有在创建 cookie 的页面才可以访问这个 cookie。 因为安全方面的考虑,默认情况下，只有与创建 cookie 的页面在同一个目录或子目录下的网页才可以访问。即path属性可以为服务器特定文档指定cookie，这个属性设置的url且带有这个前缀的url路径都是有效的。</p>
+<pre><code class="language-js">// 客户端设置
+// 最常用的例子就是让 cookie 在根目录下,这样不管是哪个子页面创建的 cookie，所有的页面都可以访问到了。 
+
+document.cookie = "username=cfangxu; path=/"
+
+// 服务端设置
+
+Set-Cookie:name=cfangxu; path=/blog 
+
+//如上设置：path 选项值会与 /blog，/blogrool 等等相匹配；任何以 /blog 开头的选项都是合法的。需要注意的是，只有在 domain 选项核实完毕之后才会对 path 属性进行比较。path 属性的默认值是发送 Set-Cookie 消息头所对应的 URL 中的 path 部分。</code></pre>
+<h4 id="2c67e57a6c25652fb0bd1e803f4efec4">domain和path总结：</h4>
+<p>domain是域名，path是路径，两者加起来就构成了 URL，domain和path一起来限制 cookie 能被哪些 URL 访问。 所以domain和path两个个选项共同决定了cookie何时被浏览器自动添加到请求头部中发送出去。如果没有设置这两个选项，则会使用默认值。domain的默认值为设置该cookie的网页所在的域名，path默认值为设置该cookie的网页所在的目录。</p>
+<h4 id="389067b15711755bfae33c6bd33bd990">cookie的安全性（secure选项）</h4>
+<p>通常 cookie 信息都是使用HTTP连接传递数据，这种传递方式很容易被查看，所以 cookie 存储的信息容易被窃取。假如 cookie 中所传递的内容比较重要，那么就要求使用加密的数据传输。 </p>
+<p>secure选项用来设置cookie只在确保安全的请求中才会发送。当请求是HTTPS或者其他安全协议时，包含 secure 选项的 cookie 才能被发送至服务器。 </p>
+<pre><code class="language-js">document.cookie = "username=cfangxu; secure" </code></pre>
+<p>把cookie设置为secure，只保证 cookie 与服务器之间的数据传输过程加密，而保存在本地的 cookie文件并不加密。就算设置了secure 属性也并不代表他人不能看到你机器本地保存的 cookie 信息。机密且敏感的信息绝不应该在 cookie 中存储或传输，因为 cookie 的整个机制原本都是不安全的 </p>
+<p>注意：如果想在客户端即网页中通过 js 去设置secure类型的 cookie，必须保证网页是https协议的。在http协议的网页中是无法设置secure类型cookie的。</p>
+<h4 id="afc9c748a3a3e65854c3db72a324ea1b">httpOnly</h4>
+<p>这个选项用来设置cookie是否能通过 js 去访问。默认情况下，cookie不会带httpOnly选项(即为空)，所以默认情况下，客户端是可以通过js代码去访问（包括读取、修改、删除等）这个cookie的。</p>
+<p>当cookie带httpOnly选项时，客户端则无法通过js代码去访问（包括读取、修改、删除等）这个cookie。 在客户端是不能通过js代码去设置一个httpOnly类型的cookie的，这种类型的cookie只能通过服务端来设置。</p>
+<h2 id="481d8d5071850454156b6a87ab2e42fe">localStorage</h2>
+<p>HTML5新方法，不过IE8及以上浏览器都兼容。</p>
+<h3 id="b4d3c72eb98467368bcc19ea5a539c80">特点</h3>
+<p>生命周期：持久化的本地存储，除非主动删除数据，否则数据是永远不会过期的。</p>
+<p>存储的信息在同一域中是共享的。</p>
+<p>当本页操作（新增、修改、删除）了localStorage的时候，本页面不会触发storage事件,但是别的页面会触发storage事件。</p>
+<p>大小：据说是5M（跟浏览器厂商有关系）</p>
+<p>localStorage本质上是对字符串的读取，如果存储内容多的话会消耗内存空间，会导致页面变卡</p>
+<p>localStorage受同源策略的限制</p>
+<h3 id="a9de52acb07aa66d37f177ef1bf95de3">操作方法</h3>
+<pre><code class="language-javascript">// 获取当前storage中的元素数目
+localStorage.Length();
+
+// 设置
+localStorage.setItem('name','muou');
+
+// 获取
+localStorage.getItem('name');
+
+//也可以获取键名 , 获取第一个键名
+localStorage.key(0);
+
+//删除
+localStorage.remove('name');
+
+//也可以一次性清除所有存储 
+localStorage.clear();</code></pre>
+<h3 id="70400d016c36a998ffcd5f93a2242a6e">storage事件</h3>
+<p>当storage发生改变的时候触发。 当页面对storage的操作会触发其他页面的storage事件，storage事件是可以跨页面通讯的，在你对storage对象进行任何操作的时候，都会触发storage事件,事件里边包括包括：</p>
+<pre><code class="language-js">domain：发生变化的存储空间的域名
+key：设置或者删除的键名
+newValue：如果是设置值，则是新值；如果是删除键，则是null
+oldValue：键被更改之前的值</code></pre>
+<pre><code class="language-js">window.addEventListener('storage', e=&gt;{
+    console.log(e.domain)
+})</code></pre>
+<p><a href="https://wangmaolin.net/article/rpnv35ewm5.html">storage事件使用参考</a></p>
+<p>对于sessionStorage和localStorage上的任何更改都会触发storage事件，但storage事件不会区分这两者;</p>
+<h2 id="daab42679eff27c43d91d152ebf5b6a8">sessionStorage</h2>
+<p>其实跟localStorage差不多，也是本地存储，会话本地存储</p>
+<h3 id="a9de52acb07aa66d37f177ef1bf95de3">操作方法</h3>
+<p>和 localStorage 的API完全相同</p>
+<pre><code class="language-js">// 获取当前storage中的元素数目
+localStorage.Length();
+
+sessionStorage.setItem('key','value')  // 存储数据
+
+sessionStorage.getItem('key')   // 读取数据
+
+sessionStorage.remove('key')    // 删除数据
+
+sessionStorage.clear()  // 清空</code></pre>
+<h3 id="04c4a90b35c81917d30a2a5342b72a4a">特点：</h3>
+<p>用于本地存储一个会话（session）中的数据，这些数据只有在同一个会话中的页面才能访问并且当会话结束后数据也随之销毁。因此sessionStorage不是一种持久化的本地存储，仅仅是会话级别的存储。也就是说只要这个浏览器窗口没有关闭，即使刷新页面或进入同源另一页面，数据仍然存在。关闭标签页后，sessionStorage即被销毁，或者在新的标签页打开同源的另一个页面，sessionStorage也是没有的。</p>
+<p>应用的场景有，比如说我们都知道，在页面刷新的时候，我们写的js里边的变量函数等等的，内存会被释放掉，那么这个时候可以用sessionStorage来存储一些不想被释放掉内存的数据，比如说记录一个滚动条的位置，或者播放器的进度等等 </p>
+<h2 id="3160b65b70c81721dc78c6fe6151faba">cookie、localStorage、sessionStorage区别</h2>
+<h3 id="75332ee29688d7e37ba028f88a8fa0f3">相同：</h3>
+<p>在本地（浏览器端）存储数据</p>
+<h3 id="5f72018d33695bc0c56718a67479a495">不同：</h3>
+<p>sessionStorage和localStorage 都受到同源策略限制，就是跨域问题，在访问sessionStorage和localStorage 的时候，页面必须在同一个域名，使用同一个协议，并且一个端口</p>
+<p>sessionStorage比localStorage更严苛一点，除了协议、主机名、端口外，还要求在同一窗口（也就是浏览器的标签页）下。 </p>
+<p>localStorage是永久存储，除非手动删除。 </p>
+<p>sessionStorage当会话结束（当前页面、标签页关闭的时候，自动销毁） </p>
+<p>cookie的数据会在每一次发送http请求的时候，同时发送给服务器而localStorage、sessionStorage不会。</p>
+<p>sessionStorage和localStorage 也有大小限制，相比cookie大了很多，是5M</p>
+<p>sessionStorage和localStorage只能通过客户端操作，cookie既可以通过客户端操作又可以通过服务端操作</p>
+<p>
+</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> storage事件使用参考: <i><a href="https://wangmaolin.net/article/rpnv35ewm5.html" target="_blank">//wangmaolin.net/article/rpnv35ewm5.html</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

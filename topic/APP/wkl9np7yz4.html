@@ -1,0 +1,562 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Flutter 如何与原生平台通信 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    APP <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>APP</h2>
+<ul>
+<li id="blog213"><a href="mdgy732vw2.html#blog213">各应用市场图片尺寸要求</a>
+<li id="blog355"><a href="wkl9n38vz4.html#blog355">如何查看并分析 App 使用的第三方库、使用到的技术、应用权限等信息</a>
+<li id="blog707"><a href="kl9no0wvz4.html#blog707">APP版本号、公共header规则</a>
+</ul>
+</li>
+<li>
+<h2>ios</h2>
+<ul>
+<li id="blog242"><a href="n2qvpz8y3m.html#blog242">iOS证书(.p12)和描述文件(.mobileprovision)申请方法</a>
+<li id="blog455"><a href="wkl9nn79z4.html#blog455">App Store 上架注意事项</a>
+<li id="blog469"><a href="1ndvmxj93j.html#blog469">App Store 上架错误：缺少出口合规证明</a>
+<li id="blog736"><a href="569x5w4yep.html#blog736">IOS 设备唯一标识符</a>
+</ul>
+</li>
+<li>
+<h2>Flutter</h2>
+<ul>
+<li id="blog357"><a href="n3xyqelymq.html#blog357">使用 Flutter 编写 macOS 应用</a>
+<li id="blog369"><a href="1ndvmkey3j.html#blog369">Flutter 初学者应该知道的 6 个技巧</a>
+<li id="blog430"><a href="34rvgw3ydj.html#blog430">Flutter 应用程序如何组织可扩展的文件夹结构</a>
+<li id="blog431"><a href="wkl9np7yz4.html#blog431">Flutter 如何与原生平台通信</a>
+<li id="blog435"><a href="3qk94kovw1.html#blog435">Flutter 和 React-Native 的比较与选择</a>
+<li id="blog462"><a href="xrwyl4x9z8.html#blog462">Flutter 开发环境</a>
+<li id="blog463"><a href="ekpv1q2y8w.html#blog463">Flutter 国内加速</a>
+<li id="blog470"><a href="j3oyjqx9p5.html#blog470">Flutter doctor 突然出现 Unable to find bundled Java version . 的解决方法</a>
+<li id="blog668"><a href="wevwm0l9l2.html#blog668">Flutter 新建项目运行报错 Exception in thread &quot;main&quot; java.net.ConnectException: Connection timed out: connect</a>
+<li id="blog669"><a href="ndvm3qo93j.html#blog669">使用 Gradle 构建 Android 应用程序时优雅的动态删除第三方 SDK 的权限</a>
+</ul>
+</li>
+<li>
+<h2>Android</h2>
+<ul>
+<li id="blog714"><a href="rwyl25evz8.html#blog714">通知栏应用小图标不展示APP Logo 而展示 android 默认图标</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'wkl9np7yz4.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/wkl9np7yz4.html', function (data, status) {
+                addView('wkl9np7yz4.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Flutter 如何与原生平台通信</h1><p>Flutter 是开发跨平台应用程序的完美工具。使用 Flutter，您可以轻松制作出性能卓越、美观大方的应用程序。但为了访问原生平台 API，您需要与原生平台进行通信。</p>
+<p>Flutter 只能理解 Dart 语言，原生平台只能理解它们各自的编程语言。那么，Flutter 和原生平台是如何相互通信的呢？</p>
+<p><img src="../../storage/images/2023/08/20/B6eZaR26LjUf01gqJIh6mlxtVVorzzZOUuqu5A8b.jpg" alt="" /></p>
+<p>是 二进制</p>
+<p>Flutter 通过传递二进制消息与本机平台通信。为了区分消息，使用了通道。那么我们如何跨平台发送这些二进制消息呢？</p>
+<p>我们可以利用 BinaryMessenger 类跨平台发送消息。</p>
+<p><a href="https://api.flutter.dev/flutter/services/BinaryMessenger-class.html">BinaryMessenger</a> 类是由 Flutter 团队定义的信使类，它跨 Flutter 平台屏障发送二进制数据。该类还能为接收到的信息注册处理程序。</p>
+<p><img src="../../storage/images/2023/08/20/ykft4pXYhAXAKjX00ZM9oGctXiaOb7VZKNNviFz5.png" alt="" /></p>
+<p>下面的代码使用 BinaryMessenger 通过通道 <code>foo</code>  跨平台发送二进制信息。</p>
+<pre><code class="language-java">import 'dart:convert'; 
+import 'package:flutter/services.dart';
+import 'dart:ui' as ui; 
+
+class CustomBinaryMessenger {
+
+  // 将给定值作为二进制信息发送的静态方法。
+  static Future&lt;void&gt; givenValue(String data) async {
+    // 创建一个缓冲区来保存二进制数据。
+    final WriteBuffer buffer = WriteBuffer();
+
+    // Convert the given data string into UTF-8 bytes.
+    final List&lt;int&gt; utf8Bytes = utf8.encode(data);
+
+    // Convert the UTF-8 bytes into an Uint8List.
+    final Uint8List utf8Int8List = Uint8List.fromList(utf8Bytes);
+
+    // Put the Uint8List into the buffer.
+    buffer.putUint8List(utf8Int8List);
+
+    // Get the final binary message data from the buffer.
+    final ByteData message = buffer.done();
+
+    // 通过 chaneel `foo` 使用 'Messenger' 类发送二进制消息。
+    await Messenger().send('foo', message);
+
+    return;
+  }
+}
+
+// BinaryMessenger 接口的自定义实现。为了举例说明，我在这里只处理发送
+class Messenger implements BinaryMessenger {
+  @override
+  // 处理传入的平台信息。在这种情况下，它会抛出一个不支持的错误。
+  Future&lt;void&gt; handlePlatformMessage(
+      String channel, ByteData? data, PlatformMessageResponseCallback? callback) {
+    throw UnsupportedError("This platform message handling is not supported.");
+  }
+
+  @override
+  // 使用 "ui.PlatformDispatcher "向平台发送二进制信息。
+  Future&lt;ByteData?&gt;? send(String channel, ByteData? message) {
+    // Use the 'ui.PlatformDispatcher' to send the platform message and handle the callback
+    ui.PlatformDispatcher.instance.sendPlatformMessage(channel, message, (data) {});
+
+    return null;
+  }
+
+  @override
+  // 为收到的信息设置一个处理程序。在这种情况下，它会抛出一个不支持的错误。
+  void setMessageHandler(String channel, MessageHandler? handler) {
+    throw UnsupportedError("Setting message handler is not supported.");
+  }
+}</code></pre>
+<p>在Android上，您可以使用以下代码接收它：</p>
+<pre><code class="language-java">class MainActivity : FlutterActivity() {
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+
+        // 配置二进制信使以处理来自 Flutter 的消息。
+        flutterEngine.dartExecutor.binaryMessenger.setMessageHandler("foo") { message, reply -&gt;
+        message?.order(ByteOrder.nativeOrder()) // 确保正确的字节顺序。
+        val data = decodeUtf8String(message!!) // 将二进制数据解码为 UTF-8 字符串。
+        val x = message.toString() // 将消息转换为字符串以进行演示。
+        // 显示带有收到的消息的Toast。
+        Toast.makeText(this, "Received message from Flutter: $data", Toast.LENGTH_SHORT).show()
+        reply.reply(null)
+        }
+
+        // 调用超级方法以完成FlutterEngine配置。
+        super.configureFlutterEngine(flutterEngine)
+    }
+
+    // 将 ByteBuffer 解码为 UTF-8 字符串的函数。
+    private fun decodeUtf8String(byteBuffer: ByteBuffer): String {
+        return try {
+            val byteArray = ByteArray(byteBuffer.remaining())
+            byteBuffer.get(byteArray)
+            String(byteArray, Charsets.UTF_8)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
+    }
+}
+</code></pre>
+<p>同样，对于 IOS，</p>
+<pre><code class="language-c">import UIKit
+import Flutter
+
+@UIApplicationMain
+@objc class AppDelegate: FlutterAppDelegate {
+  override func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -&gt; Bool {
+      let flutterViewController = self.window.rootViewController as! FlutterViewController
+
+      // 配置二进制信使以处理来自 Flutter 的消息。
+      let binaryMessenger = flutterViewController.engine!.binaryMessenger
+      binaryMessenger.setMessageHandlerOnChannel("foo", binaryMessageHandler: { [weak self] message, reply in
+          // 确保正确的字节顺序。
+           guard let message = message else {
+               reply(nil)
+               return
+           }
+           // 将二进制数据解码为 UTF-8 字符串。
+           if let data = String(data: message, encoding: .utf8) {
+               let x = message.debugDescription // 将消息转换为字符串以进行演示。
+               // 显示带有收到消息的提示。
+               let alertController = UIAlertController(
+                   title: "Message from Flutter",
+                   message: data,
+                   preferredStyle: .alert
+               )
+               alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+               flutterViewController.present(alertController, animated: true, completion: nil)
+           }
+           reply(nil)
+      }
+    )
+
+      GeneratedPluginRegistrant.register(with: self)
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+    // 将 ByteBuffer 解码为 UTF-8 字符串的函数。
+    private func decodeUtf8String(byteBuffer: FlutterStandardTypedData) -&gt; String? {
+            let byteArray = [UInt8](byteBuffer.data)
+            return  String(bytes: byteArray, encoding: .utf8)
+    }
+}
+</code></pre>
+<p><img src="../../storage/images/2023/08/20/GQiAxcoDEcIGEfyNxfYZRd55FhsYJ9Rn3Tumi0HW.gif" alt="" /></p>
+<p>通信是双向的，您可以从本机平台发送到 Flutter。确保在我们的类 Messenger 中实现 setMessageHandler 以接收来自本机平台的二进制消息并对其进行解码。只需反转我们的代码流，您就可以发送：</p>
+<p>在 IOS 中，使用</p>
+<pre><code class="language-c">// 从平台向 flutter 发送二进制信息。它将通道和信息作为参数
+flutterViewController.engine!.binaryMessenger.send(onChannel: &lt;#T##String#&gt;, message: &lt;#T##Data?#&gt;)
+</code></pre>
+<p>在安卓中使用：</p>
+<pre><code class="language-java">// 将二进制信息从平台发送至 flutter。
+flutterEngine.dartExecutor.binaryMessenger.send()
+</code></pre>
+<p>消息和响应以异步方式传递，以确保用户界面保持响应。</p>
+<p>现在，您可以将消息从 Flutter 传递到本机平台，反之亦然。但是，正如您在处理二进制消息时所看到的，我们必须担心编码、解码和处理寄存器等。它可能导致代码冗长并增加代码的复杂性。</p>
+<p>那么，解决方案是什么？</p>
+<p><code>平台通道</code>：让上述过程变得更加简单，就引出了平台通道。平台通道是一种将通道名称和编解码器结合在一起的结构。 </p>
+<p>这种配对可将信息转换成二进制格式进行传输，并在接收时将其从二进制格式转换回来。它让使用本机平台变得更加容易。</p>
+<p>请看这个名为 <a href="https://github.com/flutter/flutter/blob/efbf63d9c6/packages/flutter/lib/src/services/platform_channel.dart#L245">MethodChannel </a> 的平台通道。如果查看一下代码，就会发现它正在处理自己的 BinaryMessenger。</p>
+<p>后面详细介绍平台通道以及如何使用它将消息在 Flutter 和本机平台之间的传递。</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> BinaryMessenger: <i><a href="https://api.flutter.dev/flutter/services/BinaryMessenger-class.html" target="_blank">https://api.flutter.dev/flutter/services/BinaryMessenger-class.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> UInt8: <i><a href="https://wangmaolin.net/topic/APP/byteBuffer.data" target="_blank">byteBuffer.data</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> MethodChannel : <i><a href="https://github.com/flutter/flutter/blob/efbf63d9c6/packages/flutter/lib/src/services/platform_channel.dart#L245" target="_blank">https://github.com/flutter/flutter/blob/efbf63d9c6/packages/flutter/lib/src/services/platform_channel.dart#L245</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

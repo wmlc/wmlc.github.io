@@ -1,0 +1,490 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>PHP 中 try、catch、finally 用法总结 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    PHP <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>PHP</h2>
+<ul>
+<li id="blog12"><a href="jwnex9exd1.html#blog12">PHP 内置 Web 服务器</a>
+<li id="blog59"><a href="3qk94739w1.html#blog59">PHP 开启 opcache 提高性能</a>
+<li id="blog133"><a href="qd7yqzjy2w.html#blog133">defined('IN_IA') or exit('Access Denied'); 代码用途</a>
+<li id="blog171"><a href="wjkv8qnv62.html#blog171">php-fpm.conf 配置说明</a>
+<li id="blog258"><a href="4x3vo65vm1.html#blog258">Mac 上编译安装 php</a>
+<li id="blog262"><a href="xrwyl7n9z8.html#blog262">Composer 加速，镜像源修改方法</a>
+<li id="blog267"><a href="2dne2nke5q.html#blog267">php 二维数组自定义排序方法</a>
+<li id="blog311"><a href="pwde41xe6q.html#blog311">PHP 将空数组统一 json 序列化为 [] 的弊端</a>
+<li id="blog340"><a href="od6vrgjy3g.html#blog340">ubuntu 下编译安装PHP报错 configure: error: Unable to detect ICU prefix or no failed. Please verify ICU install prefix and make sure icu-config works.</a>
+<li id="blog416"><a href="85k9rpwxm1.html#blog416">base64 &amp; urlbase64 介绍</a>
+<li id="blog445"><a href="qk2vmdjvp0.html#blog445">PHP 登录引入双因素认证服务</a>
+<li id="blog471"><a href="x2ev8royor.html#blog471">PHP 中 try、catch、finally 用法总结</a>
+<li id="blog472"><a href="de296lw9q7.html#blog472">PHP 中令人困惑的 strtotime</a>
+<li id="blog717"><a href="2ky046x9z8.html#blog717">利用 http_build_query 字符串拼接生成签名注意事项</a>
+<li id="blog718"><a href="2qvpxm493m.html#blog718">urldecode &amp; rawurldecode 说明</a>
+<li id="blog719"><a href="m892g35y01.html#blog719">PHP-FPM 进程模型</a>
+<li id="blog734"><a href="x3vo0mkvm1.html#blog734">PHP 调整 Gif 图片播放速度</a>
+</ul>
+</li>
+<li>
+<h2>FastAdmin</h2>
+<ul>
+<li id="blog15"><a href="j25v16e1nk.html#blog15">FastAdmin 框架中图片点击放大预览</a>
+</ul>
+</li>
+<li>
+<h2>扩展</h2>
+<ul>
+<li id="blog97"><a href="nxq9znr9do.html#blog97">PHP MarkDown 解析为 HTML 的方法</a>
+<li id="blog103"><a href="k3dyk8myl0.html#blog103">PHP SimpleSoftwareIO/simple-qrcode 扩展生成空白透明二维码解决方法</a>
+<li id="blog104"><a href="jenydo8v7d.html#blog104">在macOS中给PHP 8安装 imageick 扩展方法</a>
+<li id="blog155"><a href="wkl9nxwvz4.html#blog155">Laravel 、 PHP 二维码生成扩展 SimpleSoftwareIO/simple-qrcode</a>
+<li id="blog157"><a href="n3xyqzjymq.html#blog157">PHP 图片处理扩展 Intervention/image 使用说明</a>
+<li id="blog159"><a href="3qk945gvw1.html#blog159">客户端 User Agent 解析扩展</a>
+<li id="blog173"><a href="nxq9zq49do.html#blog173">基于 php 的项目部署工具 deployer 介绍</a>
+<li id="blog179"><a href="wkl9nlwvz4.html#blog179">PHP网站如何创建 Rss 订阅源？</a>
+<li id="blog264"><a href="nq5vrwoe7p.html#blog264">PHP Fatal error: Call to undefined function imagettfbbox() 解决方法</a>
+<li id="blog432"><a href="7okv53oy1n.html#blog432">PHP 编译安装 inotify 扩展</a>
+<li id="blog433"><a href="qd7yqo6e2w.html#blog433">PHP 编译安装 event 扩展</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog293"><a href="1ndvm1nv3j.html#blog293">nginx+php使用open_basedir限制站点目录防止跨站</a>
+</ul>
+</li>
+<li>
+<h2>workerman</h2>
+<ul>
+<li id="blog315"><a href="j25v1pgv1n.html#blog315">GatewayWorker websocket 连接 1 分钟后自动断开原因？</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'x2ev8royor.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/x2ev8royor.html', function (data, status) {
+                addView('x2ev8royor.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>PHP 中 try、catch、finally 用法总结</h1><ul>
+<li><a href="x2ev8royor.html#a811fe52afc8eede8e537c3a89f66458">1. 结构与基本概念</a>
+<ul>
+<li><a href="x2ev8royor.html#680378f9a174f6e6475c644010e9f020">1.1 try 块</a></li>
+<li><a href="x2ev8royor.html#48f2092d533a0f39bb15ba5f7cb8c8d5">1.2 catch 块</a></li>
+<li><a href="x2ev8royor.html#29872e8908e9cb61c78a1fa2ae8120d4">1.3 finally 块（可选）</a></li>
+</ul></li>
+<li><a href="x2ev8royor.html#27d83feb3dacb6b5a3def0a114ff4229">2. 特殊行为与注意事项</a></li>
+<li><a href="x2ev8royor.html#e683e1996cd5980d678ddd6e6e147cb5">3. 示例</a></li>
+</ul><p>在PHP编程中，<code>try</code>, <code>catch</code>, 和 <code>finally</code> 是用于异常处理的关键字，它们共同构成了异常处理机制的核心部分。下面是对PHP中<code>try</code>, <code>catch</code>, 和 <code>finally</code> 用法的总结：</p>
+<h2 id="a811fe52afc8eede8e537c3a89f66458">1. 结构与基本概念</h2>
+<pre><code class="language-php">try {
+    // 尝试执行的代码块，可能抛出异常
+    // ...
+} catch (ExceptionType $exceptionVariable) {
+    // 捕获并处理指定类型的异常
+    // ...
+} catch (AnotherExceptionType $anotherException) {
+    // 可以有多个catch块，分别捕获不同类型的异常
+    // ...
+} finally {
+    // 不论是否发生异常，也不论catch块是否被执行，这段代码总会被执行
+    // ...
+}</code></pre>
+<h3 id="680378f9a174f6e6475c644010e9f020">1.1 <code>try</code> 块</h3>
+<p><code>try</code> 块包含了可能抛出异常的代码。当这部分代码运行时，如果发生了异常（即抛出了一个继承自 <code>\Throwable</code> 类的对象，通常是 <code>\Exception</code> 或其子类），程序会立即停止执行<code>try</code>块中剩余的代码，并开始寻找匹配的<code>catch</code>块。</p>
+<h3 id="48f2092d533a0f39bb15ba5f7cb8c8d5">1.2 <code>catch</code> 块</h3>
+<p><code>catch</code> 块用于捕获并处理在<code>try</code>块中抛出的异常。每个<code>catch</code>块都声明了它能够处理的异常类型（如<code>\Exception</code>, <code>\InvalidArgumentException</code>等）以及一个用于存储捕获到的异常实例的变量。当<code>try</code>块中抛出的异常类型与某个<code>catch</code>块声明的类型匹配时，该<code>catch</code>块内的代码将被执行，此时可以访问到异常实例来获取异常信息（如错误消息、错误码、堆栈跟踪等），并进行相应的错误处理或恢复操作。</p>
+<p>可以有多个<code>catch</code>块，按照顺序检查，一旦找到匹配的异常类型，后续的<code>catch</code>块将不再检查。如果所有<code>catch</code>块都无法匹配抛出的异常类型，异常将沿着调用栈向上抛出，直到遇到合适的处理代码或者导致脚本终止。</p>
+<h3 id="29872e8908e9cb61c78a1fa2ae8120d4">1.3 <code>finally</code> 块（可选）</h3>
+<p><code>finally</code> 块是可选的，它定义了一段无论是否发生异常，也不论<code>catch</code>块是否被执行，都会被执行的清理代码。这个特性特别适用于那些需要确保在任何情况下（包括正常执行、捕获异常、未捕获异常等情况）都要执行的资源释放、状态重置等操作，如关闭数据库连接、删除临时文件、取消事务等。</p>
+<h2 id="27d83feb3dacb6b5a3def0a114ff4229">2. 特殊行为与注意事项</h2>
+<ul>
+<li>
+<p><strong><code>return</code> 语句与 <code>finally</code> 块</strong>：如果<code>try</code>或<code>catch</code>块中有<code>return</code>语句，<code>finally</code>块中的代码将在<code>return</code>语句执行前被调用。这意味着即使函数或方法提前返回，<code>finally</code>块中的清理逻辑仍会得到执行。然而，<code>return</code>语句返回的值不会被<code>finally</code>块中的代码改变，除非<code>finally</code>块中也有<code>return</code>语句，此时<code>finally</code>块中的<code>return</code>将覆盖前面的返回值。</p>
+</li>
+<li>
+<p><strong><code>throw</code> 语句与 <code>finally</code> 块</strong>：在<code>catch</code>块中重新抛出异常（使用<code>throw</code>语句）时，如果<code>finally</code>块中有代码执行，这些代码会在新的异常被抛出前执行。如果<code>finally</code>块中也抛出了异常，原始的异常会被新抛出的异常替换。</p>
+</li>
+<li>
+<p><strong>异常传播</strong>：如果没有匹配的<code>catch</code>块处理异常，或者<code>finally</code>块中抛出了新的异常，原有的异常（或新的异常）将继续向上传播至外层的<code>try-catch</code>结构或导致脚本终止。</p>
+</li>
+<li>
+<p><strong><code>finally</code> 块的执行保证</strong>：只有在<code>try</code>或<code>catch</code>块中发生了致命错误（如内存溢出、致命语法错误等）导致脚本完全终止的情况下，<code>finally</code>块才无法执行。对于一般的非致命异常，<code>finally</code>块的执行是可以保证的。</p>
+</li>
+</ul>
+<h2 id="e683e1996cd5980d678ddd6e6e147cb5">3. 示例</h2>
+<pre><code class="language-php">try {
+    // 打开数据库连接
+    $connection = establishDatabaseConnection();
+
+    // 执行可能抛出异常的操作
+    performSomeDatabaseOperation($connection);
+} catch (DatabaseConnectionException $e) {
+    // 处理数据库连接异常
+    logError($e-&gt;getMessage());
+    sendAlertEmail('Database connection failed');
+} catch (DataAccessException $e) {
+    // 处理数据访问异常
+    rollbackTransaction($connection);
+    logError($e-&gt;getMessage());
+} finally {
+    // 不管是否发生异常，都要确保关闭数据库连接
+    if (isset($connection)) {
+        closeDatabaseConnection($connection);
+    }
+}
+
+// 继续执行其他代码，不受异常影响（如果已妥善处理）</code></pre>
+<p>综上所述，<code>try-catch-finally</code> 结构在PHP中提供了优雅的异常处理和资源管理机制，确保程序能够在面对预期或意外的错误时，能够进行适当的响应、记录错误信息、清理资源，并尽可能地保持程序的稳定性和健壮性。</p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

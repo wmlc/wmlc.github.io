@@ -1,0 +1,454 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>MySQL order by limit 分页数据重复或丢失问题说明 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    MySQL <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>字段</h2>
+<ul>
+<li id="blog71"><a href="x2ev8zwvor.html#blog71">MySQL 批量替换字段中的域名</a>
+<li id="blog112"><a href="jwnex74vxd.html#blog112">Mysql 的日期时间类型说明</a>
+<li id="blog337"><a href="mdgy70xvw2.html#blog337">MySql 字段类型说明和推荐</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog82"><a href="4x3vo76ym1.html#blog82">MySQL 回表查询</a>
+<li id="blog336"><a href="x569xxr9ep.html#blog336">高并发系统数据库架构设计</a>
+<li id="blog351"><a href="k3dyk7zvl0.html#blog351">MySql 定位和分析执行效率的方法</a>
+<li id="blog488"><a href="od6vrqr93g.html#blog488">MySql 单表分页 Limit 性能优化</a>
+<li id="blog492"><a href="4wevwlzyl2.html#blog492">MySql 索引介绍</a>
+<li id="blog675"><a href="3dykq84yl0.html#blog675">Mysql 性能优化方法汇总</a>
+</ul>
+</li>
+<li>
+<h2>MySQL</h2>
+<ul>
+<li id="blog86"><a href="lgwyldne3q.html#blog86">MySQL concat、concat_ws、group_concat 函数用法</a>
+<li id="blog107"><a href="m0wek4wyp9.html#blog107">SQL 中 WHERE 和 HAVING 子句有什么区别？</a>
+<li id="blog134"><a href="54lvo36v6z.html#blog134">MySql 5.7 报错 sql_mode=only_full_group_by 问题解决方法</a>
+<li id="blog148"><a href="8loyn5oyz3.html#blog148">mysql 控制 sql 长度的相关参数</a>
+<li id="blog172"><a href="de296j6vq7.html#blog172">MySql 各日志配置方法：错误日志、慢查询日志、执行日志</a>
+<li id="blog177"><a href="n2oegm5e73.html#blog177">MySQL 查询中 where in 如何保持顺序</a>
+<li id="blog270"><a href="71xyjw0ed9.html#blog270">理解 MySQL 字符集</a>
+<li id="blog300"><a href="8loyn11vz3.html#blog300">MySQL order by limit 分页数据重复或丢失问题说明</a>
+<li id="blog301"><a href="nxq9zd5ydo.html#blog301">mysql 事务特性以及隔离级别说明</a>
+<li id="blog302"><a href="z64y912e5l.html#blog302">MySQL 共享锁&amp;排他锁</a>
+<li id="blog352"><a href="rpnv37wywm.html#blog352">MySQL 创建索引报错 &quot;Specified key was too long; max key length is 767 bytes&quot; 原因</a>
+<li id="blog473"><a href="nxq9zgjydo.html#blog473">MySQL中当字段值为 <code>NULL</code> 时的注意事项</a>
+<li id="blog489"><a href="02ky0klvz8.html#blog489">SQL 的执行顺序</a>
+<li id="blog490"><a href="n2qvpnzy3m.html#blog490">MySQL 基础架构</a>
+<li id="blog491"><a href="5m892e6901.html#blog491">MySQL不能远程连接解决方法</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '8loyn11vz3.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/8loyn11vz3.html', function (data, status) {
+                addView('8loyn11vz3.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>MySQL order by limit 分页数据重复或丢失问题说明</h1><ul>
+<li><a href="8loyn11vz3.html#fa18035d2db48bf286aae591a5cdab57">问题原因</a>
+<ul>
+<li><a href="8loyn11vz3.html#a8ea245ac339a86b1601936436cc5069">分析原因</a></li>
+<li><a href="8loyn11vz3.html#957a228f87aaf86e436762129485625a">解决方法</a></li>
+</ul></li>
+</ul><p>mysql 中当 order by 与limit 同时使用，数据可能出现重复或丢失问题</p>
+<p>使用了 下面的 方法  发现也没什么问题 </p>
+<pre><code class="language-php">Db::name('users')
+-&gt;where(['is_disabled'=&gt;0])
+-&gt;field('id,nickname,team_son+team_grandson as sort,team_son,team_grandson')
+-&gt;order('sort desc')
+-&gt;page($page, 20)
+-&gt;select();</code></pre>
+<p>打印sql 语句 去运行  发现 第i 页 的数据 与 第 i+1 页 的 数据出现重复 并且 丢失了一些数据</p>
+<pre><code class="language-sql">SELECT `id`,`nickname`,team_son+team_grandson as sort,`team_son`,`team_grandson` FROM `table_name` WHERE
+`is_disabled` = 0 ORDER BY `sort` DESC LIMIT 200,20</code></pre>
+<h2 id="fa18035d2db48bf286aae591a5cdab57">问题原因</h2>
+<p>在MySQL 5.6的版本上，优化器在遇到order by limit语句的时候，做了一个优化，即使用了priority queue。</p>
+<p>如果order by的列有相同的值时， mysql会随机选取这些行，具体根据执行计划有所不同。</p>
+<h3 id="a8ea245ac339a86b1601936436cc5069">分析原因</h3>
+<p>在 MySQL 关系型数据库中，往往有多种排序算法。通过 MySQL 源码和官方文档介绍就可以知道，它的排名规则可以总结如下：</p>
+<p>当 order by 没有索引排序时，会使用排序算法进行排序；</p>
+<p>如果所有排序后的内容都可以放入内存，则只在内存中使用快速排序；</p>
+<p>如果排序后的内容无法放入内存，则将排序后的内容批量放入文件中，然后对多个文件进行合并排序；</p>
+<p>如果排序包含限制语句，则使用堆排序来优化排序过程。</p>
+<p>根据上面的总结，当order by limit Paging 数据丢失和重复时。 order by 的 sort 字段不使用索引（一般情况下，Sorted 字段也不使用索引），如果使用了索引，则会进行索引排序。</p>
+<p>因此可以得出结论，在上面的SQL语句使用了堆排序。因为 sort 字段没有索引，所以我没有使用索引排序；并使用限制。导致最终使用堆排序。</p>
+<p>如果你知道算法，你应该知道堆排序是不稳定的。这种不稳定性，意味着经过多次排序后，数字的相对位置发生了变化。</p>
+<p>然而，并不是所有的 MySQL 所有版本都是这样。从 MySQL 5.6 版本开始，优化器在使用 order by limit 的时候，做了上面的优化，导致排序字段没有使用索引，使用堆排序。</p>
+<blockquote>
+<p>堆排序的不稳定性导致了查询数据的重复或丢失</p>
+</blockquote>
+<h3 id="957a228f87aaf86e436762129485625a">解决方法</h3>
+<p>在 order by 中的排序字段中，添加索引字段，例如主键 ID。这样排序才能稳定。</p>
+<blockquote>
+<p>分页需要确定性的排序顺序：如果查询数据是排序分页的，如果排序字段没有使用索引，一定要加索引字段，比如主键ID，确保序列稳定。否则，查询数据会导致数据丢失和重复。</p>
+</blockquote>
+<p>到 order by 子句是一个好的开始，这样我们就可以继续将此索引用于流水线 order by。如果这仍然不能产生确定性的排序顺序，只需添加任何唯一的列并相应地扩展索引。</p>
+<p>若想 使用 order by 加 limit的 形式 </p>
+<pre><code class="   language-php">1、 使用 索引列 进行排序
+
+2、若不能使用索引字段的话，只能进行 双排序，也就是`ORDER BY sort DESC,id asc` 把索引字段id作为 附加条件 进行排序 就可以了</code></pre>
+<pre><code class="language-sql">SELECT `id`,`nickname`,team_son+team_grandson as sort,`team_son`,`team_grandson` FROM `users` WHERE
+`is_disabled` = 0 ORDER BY `sort` DESC,`id` ASC LIMIT 200,20</code></pre>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

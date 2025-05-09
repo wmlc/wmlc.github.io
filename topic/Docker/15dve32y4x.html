@@ -1,0 +1,714 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Docker Swarm mode 介绍 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Docker <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>服务</h2>
+<ul>
+<li id="blog280"><a href="gxpv5kwv86.html#blog280">使用 docker 安装 MySql</a>
+<li id="blog449"><a href="nxq9zzj9do.html#blog449">使用 docker 安装 Redis</a>
+<li id="blog503"><a href="k3dyk3n9l0.html#blog503">使用 Docker 安装 LInux 容器</a>
+<li id="blog504"><a href="jenydzd97d.html#blog504">使用Docker 安装 xunsearch 容器</a>
+</ul>
+</li>
+<li>
+<h2>Docker</h2>
+<ul>
+<li id="blog494"><a href="j3oyjzx9p5.html#blog494">Docker 简介</a>
+<li id="blog495"><a href="x2ev84o9or.html#blog495">Docker 的基本概念</a>
+<li id="blog496"><a href="de296qwyq7.html#blog496">Docker 镜像介绍</a>
+<li id="blog497"><a href="nxq9z0jvdo.html#blog497">Dockerfile 详解</a>
+<li id="blog498"><a href="62wy3g39km.html#blog498">Docker 容器介绍</a>
+<li id="blog499"><a href="k3dyk3o9l0.html#blog499">Docker 仓库介绍</a>
+<li id="blog500"><a href="de296qqyq7.html#blog500">Docker 数据管理</a>
+<li id="blog501"><a href="nxq9z03vdo.html#blog501">Docker 中的网络功能介绍</a>
+<li id="blog502"><a href="62wy3gr9km.html#blog502">Docker 高级网络配置</a>
+<li id="blog505"><a href="15dve32y4x.html#blog505">Docker Swarm mode 介绍</a>
+<li id="blog506"><a href="34rvgdevdj.html#blog506">Docker 安全</a>
+<li id="blog507"><a href="wkl9n4myz4.html#blog507">Docker 底层实现</a>
+<li id="blog508"><a href="gxpv50qy86.html#blog508">Docker Buildx</a>
+<li id="blog509"><a href="n3xyqlq9mq.html#blog509">Docker Etcd</a>
+<li id="blog510"><a href="4x3voxmvm1.html#blog510">Docker 常见问题总结</a>
+<li id="blog511"><a href="3qk94rlyw1.html#blog511">Docker 命令</a>
+<li id="blog512"><a href="x569x6k9ep.html#blog512">Dockerfile 最佳实践</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '15dve32y4x.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/15dve32y4x.html', function (data, status) {
+                addView('15dve32y4x.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Docker Swarm mode 介绍</h1><ul>
+<li><a href="15dve32y4x.html#fa655222c26cae011b820627f41b188c">Swarm mode</a></li>
+<li><a href="15dve32y4x.html#e2d6d0e301f7dcc1afe228f7cbcf285a">基本概念</a>
+<ul>
+<li><a href="15dve32y4x.html#3bf3c0a8d631d93aee55e4e47e2b2109">节点</a></li>
+<li><a href="15dve32y4x.html#890d53b25dc3f3ce449a47d5c4d3f5ee">服务和任务</a></li>
+</ul></li>
+<li><a href="15dve32y4x.html#9516352675b4de791a395f4285e2980f">创建 Swarm 集群</a>
+<ul>
+<li><a href="15dve32y4x.html#911945df74e15ee7dec0db0ee1a49b55">初始化集群</a></li>
+<li><a href="15dve32y4x.html#26f1f2eb774c3dfc4576ceb3995ba6f3">增加工作节点</a></li>
+<li><a href="15dve32y4x.html#3d61c89fb09b0698f0ab9af85e089006">查看集群</a></li>
+</ul></li>
+<li><a href="15dve32y4x.html#49020891def9c919a5971b80e7fd8b53">部署服务</a>
+<ul>
+<li><a href="15dve32y4x.html#f34a84e4f758843008b99ea9303b138f">新建服务</a></li>
+<li><a href="15dve32y4x.html#ad23e7bbdbe6ed03eebfc27eef7570fa">查看服务</a></li>
+<li><a href="15dve32y4x.html#0e73ea3a7bad4b5f1470093f53c733af">服务伸缩</a></li>
+<li><a href="15dve32y4x.html#a4ef01a0c7b8ab437e95bd0e64410427">删除服务</a></li>
+</ul></li>
+<li><a href="15dve32y4x.html#dec93d5ce45a898c58a67ea08ca2433b">在 Swarm 集群中使用 compose 文件</a>
+<ul>
+<li><a href="15dve32y4x.html#49020891def9c919a5971b80e7fd8b53">部署服务</a></li>
+<li><a href="15dve32y4x.html#ad23e7bbdbe6ed03eebfc27eef7570fa">查看服务</a></li>
+<li><a href="15dve32y4x.html#4ca325db9383e79dc59fccd445dd9a5f">移除服务</a></li>
+</ul></li>
+<li><a href="15dve32y4x.html#2039571d28470d62059b15ef8638fa3e">在 Swarm 集群中管理敏感数据</a></li>
+<li><a href="15dve32y4x.html#99a5276aa1f3a0bf2e32abb406d7436a">创建 secret</a>
+<ul>
+<li><a href="15dve32y4x.html#b84756725d8debd33d4f5714a9479756">查看 secret</a></li>
+<li><a href="15dve32y4x.html#b65501b77240e64f0ba6f4fc4bfc5ad4">创建 MySQL 服务</a></li>
+</ul></li>
+<li><a href="15dve32y4x.html#c18601e75f435af0c641c43e2079d171">在 Swarm 集群中管理配置数据</a>
+<ul>
+<li><a href="15dve32y4x.html#eb10e4acab1eb5fe5775d7379ff6e0d2">创建 config</a></li>
+<li><a href="15dve32y4x.html#67d52c13dbfc8250387219b473c20718">查看 config</a></li>
+<li><a href="15dve32y4x.html#e8b37536a76c105a5dc4c8307708936b">创建 redis 服务</a></li>
+</ul></li>
+<li><a href="15dve32y4x.html#30b88456277e58d779fb52c65db1be3d">SWarm mode 与滚动升级</a>
+<ul>
+<li><a href="15dve32y4x.html#bee042d6e4a8c1af8d94e2d11ec1dced">服务回退</a></li>
+</ul></li>
+</ul><h2 id="fa655222c26cae011b820627f41b188c">Swarm mode</h2>
+<p>Docker 1.12 <a href="https://docs.docker.com/engine/swarm/">Swarm mode</a> 已经内嵌入 Docker 引擎，成为了 docker 子命令 <code>docker swarm</code>。请注意与旧的 <code>Docker Swarm</code> 区分开来。</p>
+<p><code>Swarm mode</code> 内置 kv 存储功能，提供了众多的新特性，比如：具有容错能力的去中心化设计、内置服务发现、负载均衡、路由网格、动态伸缩、滚动更新、安全传输等。使得 Docker 原生的 <code>Swarm</code> 集群具备与 Mesos、Kubernetes 竞争的实力。</p>
+<h2 id="e2d6d0e301f7dcc1afe228f7cbcf285a">基本概念</h2>
+<p><code>Swarm</code> 是使用 <a href="https://github.com/docker/swarmkit/"><code>SwarmKit</code></a> 构建的 Docker 引擎内置（原生）的集群管理和编排工具。</p>
+<p>使用 <code>Swarm</code> 集群之前需要了解以下几个概念。</p>
+<h3 id="3bf3c0a8d631d93aee55e4e47e2b2109">节点</h3>
+<p>运行 Docker 的主机可以主动初始化一个 <code>Swarm</code> 集群或者加入一个已存在的 <code>Swarm</code> 集群，这样这个运行 Docker 的主机就成为一个 <code>Swarm</code> 集群的节点 (<code>node</code>) 。</p>
+<p>节点分为管理 (<code>manager</code>) 节点和工作 (<code>worker</code>) 节点。</p>
+<p>管理节点用于 <code>Swarm</code> 集群的管理，<code>docker swarm</code> 命令基本只能在管理节点执行（节点退出集群命令 <code>docker swarm leave</code> 可以在工作节点执行）。一个 <code>Swarm</code> 集群可以有多个管理节点，但只有一个管理节点可以成为 <code>leader</code>，<code>leader</code> 通过 <code>raft</code> 协议实现。</p>
+<p>工作节点是任务执行节点，管理节点将服务 (<code>service</code>) 下发至工作节点执行。管理节点默认也作为工作节点。你也可以通过配置让服务只运行在管理节点。</p>
+<p>来自 Docker 官网的这张图片形象的展示了集群中管理节点与工作节点的关系。</p>
+<p><img src="../../storage/images/2024/07/dVr9SUi3v9zEzMacl1ThliyLnawwmZvlSTqCmBNM.png" alt="" /></p>
+<h3 id="890d53b25dc3f3ce449a47d5c4d3f5ee">服务和任务</h3>
+<p>任务 （<code>Task</code>）是 <code>Swarm</code> 中的最小的调度单位，目前来说就是一个单一的容器。</p>
+<p>服务 （<code>Services</code>） 是指一组任务的集合，服务定义了任务的属性。服务有两种模式：</p>
+<ul>
+<li>
+<p><code>replicated services</code> 按照一定规则在各个工作节点上运行指定个数的任务。</p>
+</li>
+<li>
+<p><code>global services</code> 每个工作节点上运行一个任务</p>
+</li>
+</ul>
+<p>两种模式通过 <code>docker service create</code> 的 <code>--mode</code> 参数指定。</p>
+<p>来自 Docker 官网的这张图片形象的展示了容器、任务、服务的关系。</p>
+<p><img src="../../storage/images/2024/07/NfC5Eqb4sSu3u0uhQXc2kO4RXZMwYDi5rr0e5gjU.png" alt="" /></p>
+<h2 id="9516352675b4de791a395f4285e2980f">创建 Swarm 集群</h2>
+<p>阅读 <a href="https://wangmaolin.net/topic/Docker/overview.md">基本概念</a> 一节我们知道 <code>Swarm</code> 集群由 <strong>管理节点</strong> 和 <strong>工作节点</strong> 组成。本节我们来创建一个包含一个管理节点和两个工作节点的最小 <code>Swarm</code> 集群。</p>
+<h3 id="911945df74e15ee7dec0db0ee1a49b55">初始化集群</h3>
+<p>在已经安装好 Docker 的主机上执行如下命令：</p>
+<pre><code class="language-bash">$ docker swarm init --advertise-addr 192.168.99.100
+Swarm initialized: current node (dxn1zf6l61qsb1josjja83ngz) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join \
+    --token SWMTKN-1-49nj1cmql0jkz5s954yi3oex3nedyz0fb0xx14ie39trti4wxv-8vxv8rssmk743ojnwacrr2e7c \
+    192.168.99.100:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.</code></pre>
+<p>如果你的 Docker 主机有多个网卡，拥有多个 IP，必须使用 <code>--advertise-addr</code> 指定 IP。</p>
+<blockquote>
+<p>执行 <code>docker swarm init</code> 命令的节点自动成为管理节点。</p>
+</blockquote>
+<h3 id="26f1f2eb774c3dfc4576ceb3995ba6f3">增加工作节点</h3>
+<p>上一步我们初始化了一个 <code>Swarm</code> 集群，拥有了一个管理节点，下面我们继续在两个 Docker 主机中分别执行如下命令，创建工作节点并加入到集群中。</p>
+<pre><code class="language-bash">$ docker swarm join \
+    --token SWMTKN-1-49nj1cmql0jkz5s954yi3oex3nedyz0fb0xx14ie39trti4wxv-8vxv8rssmk743ojnwacrr2e7c \
+    192.168.99.100:2377
+
+This node joined a swarm as a worker.</code></pre>
+<h3 id="3d61c89fb09b0698f0ab9af85e089006">查看集群</h3>
+<p>经过上边的两步，我们已经拥有了一个最小的 <code>Swarm</code> 集群，包含一个管理节点和两个工作节点。</p>
+<p>在管理节点使用 <code>docker node ls</code> 查看集群。</p>
+<pre><code class="language-bash">$ docker node ls
+ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
+03g1y59jwfg7cf99w4lt0f662    worker2   Ready   Active
+9j68exjopxe7wfl6yuxml7a7j    worker1   Ready   Active
+dxn1zf6l61qsb1josjja83ngz *  manager   Ready   Active        Leader</code></pre>
+<h2 id="49020891def9c919a5971b80e7fd8b53">部署服务</h2>
+<p>我们使用 <code>docker service</code> 命令来管理 <code>Swarm</code> 集群中的服务，该命令只能在管理节点运行。</p>
+<h3 id="f34a84e4f758843008b99ea9303b138f">新建服务</h3>
+<p>现在我们在上一节创建的 <code>Swarm</code> 集群中运行一个名为 <code>nginx</code> 服务。</p>
+<pre><code class="language-bash">$ docker service create --replicas 3 -p 80:80 --name nginx nginx:1.13.7-alpine</code></pre>
+<p>现在我们使用浏览器，输入任意节点 IP ，即可看到 nginx 默认页面。</p>
+<h3 id="ad23e7bbdbe6ed03eebfc27eef7570fa">查看服务</h3>
+<p>使用 <code>docker service ls</code> 来查看当前 <code>Swarm</code> 集群运行的服务。</p>
+<pre><code class="language-bash">$ docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE                 PORTS
+kc57xffvhul5        nginx               replicated          3/3                 nginx:1.13.7-alpine   *:80-&gt;80/tcp</code></pre>
+<p>使用 <code>docker service ps</code> 来查看某个服务的详情。</p>
+<pre><code class="language-bash">$ docker service ps nginx
+ID                  NAME                IMAGE                 NODE                DESIRED STATE       CURRENT STATE                ERROR               PORTS
+pjfzd39buzlt        nginx.1             nginx:1.13.7-alpine   swarm2              Running             Running about a minute ago
+hy9eeivdxlaa        nginx.2             nginx:1.13.7-alpine   swarm1              Running             Running about a minute ago
+36wmpiv7gmfo        nginx.3             nginx:1.13.7-alpine   swarm3              Running             Running about a minute ago</code></pre>
+<p>使用 <code>docker service logs</code> 来查看某个服务的日志。</p>
+<pre><code class="language-bash">$ docker service logs nginx
+nginx.3.36wmpiv7gmfo@swarm3    | 10.255.0.4 - - [25/Nov/2017:02:10:30 +0000] "GET / HTTP/1.1" 200 612 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:58.0) Gecko/20100101 Firefox/58.0" "-"
+nginx.3.36wmpiv7gmfo@swarm3    | 10.255.0.4 - - [25/Nov/2017:02:10:30 +0000] "GET /favicon.ico HTTP/1.1" 404 169 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:58.0) Gecko/20100101 Firefox/58.0" "-"
+nginx.3.36wmpiv7gmfo@swarm3    | 2017/11/25 02:10:30 [error] 5#5: *1 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 10.255.0.4, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.99.102"
+nginx.1.pjfzd39buzlt@swarm2    | 10.255.0.2 - - [25/Nov/2017:02:10:26 +0000] "GET / HTTP/1.1" 200 612 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:58.0) Gecko/20100101 Firefox/58.0" "-"
+nginx.1.pjfzd39buzlt@swarm2    | 10.255.0.2 - - [25/Nov/2017:02:10:27 +0000] "GET /favicon.ico HTTP/1.1" 404 169 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:58.0) Gecko/20100101 Firefox/58.0" "-"
+nginx.1.pjfzd39buzlt@swarm2    | 2017/11/25 02:10:27 [error] 5#5: *1 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 10.255.0.2, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.99.101"</code></pre>
+<h3 id="0e73ea3a7bad4b5f1470093f53c733af">服务伸缩</h3>
+<p>我们可以使用 <code>docker service scale</code> 对一个服务运行的容器数量进行伸缩。</p>
+<p>当业务处于高峰期时，我们需要扩展服务运行的容器数量。</p>
+<pre><code class="language-bash">$ docker service scale nginx=5</code></pre>
+<p>当业务平稳时，我们需要减少服务运行的容器数量。</p>
+<pre><code class="language-bash">$ docker service scale nginx=2</code></pre>
+<h3 id="a4ef01a0c7b8ab437e95bd0e64410427">删除服务</h3>
+<p>使用 <code>docker service rm</code> 来从 <code>Swarm</code> 集群移除某个服务。</p>
+<pre><code class="language-bash">$ docker service rm nginx</code></pre>
+<h2 id="dec93d5ce45a898c58a67ea08ca2433b">在 Swarm 集群中使用 compose 文件</h2>
+<p>正如之前使用 <code>docker-compose.yml</code> 来一次配置、启动多个容器，在 <code>Swarm</code> 集群中也可以使用 <code>compose</code> 文件 （<code>docker-compose.yml</code>） 来配置、启动多个服务。</p>
+<p>上一节中，我们使用 <code>docker service create</code> 一次只能部署一个服务，使用 <code>docker-compose.yml</code> 我们可以一次启动多个关联的服务。</p>
+<p>我们以在 <code>Swarm</code> 集群中部署 <code>WordPress</code> 为例进行说明。</p>
+<pre><code class="language-yaml">version: "3"
+
+services:
+  wordpress:
+    image: wordpress
+    ports:
+      - 80:80
+    networks:
+      - overlay
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    deploy:
+      mode: replicated
+      replicas: 3
+
+  db:
+    image: mysql
+    networks:
+       - overlay
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: somewordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    stop_grace_period: 1m30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+volumes:
+  db-data:
+networks:
+  overlay:</code></pre>
+<p>在 <code>Swarm</code> 集群管理节点新建该文件，其中的 <code>visualizer</code> 服务提供一个可视化页面，我们可以从浏览器中很直观的查看集群中各个服务的运行节点。</p>
+<p>在 <code>Swarm</code> 集群中使用 <code>docker-compose.yml</code> 我们用 <code>docker stack</code> 命令，下面我们对该命令进行详细讲解。</p>
+<h3 id="49020891def9c919a5971b80e7fd8b53">部署服务</h3>
+<p>部署服务使用 <code>docker stack deploy</code>，其中 <code>-c</code> 参数指定 compose 文件名。</p>
+<pre><code class="language-bash">$ docker stack deploy -c docker-compose.yml wordpress</code></pre>
+<p>现在我们打开浏览器输入 <code>任一节点IP:8080</code> 即可看到各节点运行状态。如下图所示：</p>
+<p><img src="../../storage/images/2024/07/FqjskDx6FiR0CZVr6HyeYpWFXucJteFvjmbGxqhH.png" alt="" /></p>
+<p>在浏览器新的标签页输入 <code>任一节点IP</code> 即可看到 <code>WordPress</code> 安装界面，安装完成之后，输入 <code>任一节点IP</code> 即可看到 <code>WordPress</code> 页面。</p>
+<h3 id="ad23e7bbdbe6ed03eebfc27eef7570fa">查看服务</h3>
+<pre><code class="language-bash">$ docker stack ls
+NAME                SERVICES
+wordpress           3</code></pre>
+<h3 id="4ca325db9383e79dc59fccd445dd9a5f">移除服务</h3>
+<p>要移除服务，使用 <code>docker stack down</code></p>
+<pre><code class="language-bash">$ docker stack down wordpress
+Removing service wordpress_db
+Removing service wordpress_visualizer
+Removing service wordpress_wordpress
+Removing network wordpress_overlay
+Removing network wordpress_default</code></pre>
+<p>该命令不会移除服务所使用的 <code>数据卷</code>，如果你想移除数据卷请使用 <code>docker volume rm</code></p>
+<h2 id="2039571d28470d62059b15ef8638fa3e">在 Swarm 集群中管理敏感数据</h2>
+<p>在动态的、大规模的分布式集群上，管理和分发 <code>密码</code>、<code>证书</code> 等敏感信息是极其重要的工作。传统的密钥分发方式（如密钥放入镜像中，设置环境变量，volume 动态挂载等）都存在着潜在的巨大的安全风险。</p>
+<p>Docker 目前已经提供了 <code>secrets</code> 管理功能，用户可以在 Swarm 集群中安全地管理密码、密钥证书等敏感数据，并允许在多个 Docker 容器实例之间共享访问指定的敏感数据。</p>
+<blockquote>
+<p>注意： <code>secret</code> 也可以在 <code>Docker Compose</code> 中使用。</p>
+</blockquote>
+<p>我们可以用 <code>docker secret</code> 命令来管理敏感信息。接下来我们在上面章节中创建好的 Swarm 集群中介绍该命令的使用。</p>
+<p>这里我们以在 Swarm 集群中部署 <code>mysql</code> 和 <code>wordpress</code> 服务为例。</p>
+<h2 id="99a5276aa1f3a0bf2e32abb406d7436a">创建 secret</h2>
+<p>我们使用 <code>docker secret create</code> 命令以管道符的形式创建 <code>secret</code></p>
+<pre><code class="language-bash">$ openssl rand -base64 20 | docker secret create mysql_password -
+
+$ openssl rand -base64 20 | docker secret create mysql_root_password -</code></pre>
+<h3 id="b84756725d8debd33d4f5714a9479756">查看 secret</h3>
+<p>使用 <code>docker secret ls</code> 命令来查看 <code>secret</code></p>
+<pre><code class="language-bash">$ docker secret ls
+
+ID                          NAME                  CREATED             UPDATED
+l1vinzevzhj4goakjap5ya409   mysql_password        41 seconds ago      41 seconds ago
+yvsczlx9votfw3l0nz5rlidig   mysql_root_password   12 seconds ago      12 seconds ago</code></pre>
+<h3 id="b65501b77240e64f0ba6f4fc4bfc5ad4">创建 MySQL 服务</h3>
+<p>创建服务相关命令已经在前边章节进行了介绍，这里直接列出命令。</p>
+<pre><code class="language-bash">$ docker network create -d overlay mysql_private
+
+$ docker service create \
+     --name mysql \
+     --replicas 1 \
+     --network mysql_private \
+     --mount type=volume,source=mydata,destination=/var/lib/mysql \
+     --secret source=mysql_root_password,target=mysql_root_password \
+     --secret source=mysql_password,target=mysql_password \
+     -e MYSQL_ROOT_PASSWORD_FILE="/run/secrets/mysql_root_password" \
+     -e MYSQL_PASSWORD_FILE="/run/secrets/mysql_password" \
+     -e MYSQL_USER="wordpress" \
+     -e MYSQL_DATABASE="wordpress" \
+     mysql:latest</code></pre>
+<p>如果你没有在 <code>target</code> 中显式的指定路径时，<code>secret</code> 默认通过 <code>tmpfs</code> 文件系统挂载到容器的 <code>/run/secrets</code> 目录中。</p>
+<pre><code class="language-bash">$ docker service create \
+     --name wordpress \
+     --replicas 1 \
+     --network mysql_private \
+     --publish target=30000,port=80 \
+     --mount type=volume,source=wpdata,destination=/var/www/html \
+     --secret source=mysql_password,target=wp_db_password,mode=0444 \
+     -e WORDPRESS_DB_USER="wordpress" \
+     -e WORDPRESS_DB_PASSWORD_FILE="/run/secrets/wp_db_password" \
+     -e WORDPRESS_DB_HOST="mysql:3306" \
+     -e WORDPRESS_DB_NAME="wordpress" \
+     wordpress:latest</code></pre>
+<p>查看服务</p>
+<pre><code class="language-bash">$ docker service ls
+
+ID            NAME   MODE        REPLICAS  IMAGE
+wvnh0siktqr3  mysql      replicated  1/1       mysql:latest
+nzt5xzae4n62  wordpress  replicated  1/1       wordpress:latest</code></pre>
+<p>现在浏览器访问 <code>IP:30000</code>，即可开始 <code>WordPress</code> 的安装与使用。</p>
+<p>通过以上方法，我们没有像以前通过设置环境变量来设置 MySQL 密码， 而是采用 <code>docker secret</code> 来设置密码，防范了密码泄露的风险。</p>
+<h2 id="c18601e75f435af0c641c43e2079d171">在 Swarm 集群中管理配置数据</h2>
+<p>在动态的、大规模的分布式集群上，管理和分发配置文件也是很重要的工作。传统的配置文件分发方式（如配置文件放入镜像中，设置环境变量，volume 动态挂载等）都降低了镜像的通用性。</p>
+<p>在 Docker 17.06 以上版本中，Docker 新增了 <code>docker config</code> 子命令来管理集群中的配置信息，以后你无需将配置文件放入镜像或挂载到容器中就可实现对服务的配置。</p>
+<blockquote>
+<p>注意：<code>config</code> 仅能在 Swarm 集群中使用。</p>
+</blockquote>
+<p>这里我们以在 Swarm 集群中部署 <code>redis</code> 服务为例。</p>
+<h3 id="eb10e4acab1eb5fe5775d7379ff6e0d2">创建 config</h3>
+<p>新建 <code>redis.conf</code> 文件</p>
+<pre><code class="language-bash">port 6380</code></pre>
+<p>此项配置 Redis 监听 <code>6380</code> 端口</p>
+<p>我们使用 <code>docker config create</code> 命令创建 <code>config</code></p>
+<pre><code class="language-bash">$ docker config create redis.conf redis.conf</code></pre>
+<h3 id="67d52c13dbfc8250387219b473c20718">查看 config</h3>
+<p>使用 <code>docker config ls</code> 命令来查看 <code>config</code></p>
+<pre><code class="language-bash">$ docker config ls
+
+ID                          NAME                CREATED             UPDATED
+yod8fx8iiqtoo84jgwadp86yk   redis.conf          4 seconds ago       4 seconds ago</code></pre>
+<h3 id="e8b37536a76c105a5dc4c8307708936b">创建 redis 服务</h3>
+<pre><code class="language-bash">$ docker service create \
+     --name redis \
+     # --config source=redis.conf,target=/etc/redis.conf \
+     --config redis.conf \
+     -p 6379:6380 \
+     redis:latest \
+     redis-server /redis.conf</code></pre>
+<p>如果你没有在 <code>target</code> 中显式的指定路径时，默认的 <code>redis.conf</code> 以 <code>tmpfs</code> 文件系统挂载到容器的 <code>/config.conf</code>。</p>
+<p>经过测试，redis 可以正常使用。</p>
+<p>以前我们通过监听主机目录来配置 Redis，就需要在集群的每个节点放置该文件，如果采用 <code>docker config</code> 来管理服务的配置信息，我们只需在集群中的管理节点创建 <code>config</code>，当部署服务时，集群会自动的将配置文件分发到运行服务的各个节点中，大大降低了配置信息的管理和分发难度。</p>
+<h2 id="30b88456277e58d779fb52c65db1be3d">SWarm mode 与滚动升级</h2>
+<p>在 <a href="https://wangmaolin.net/topic/Docker/deploy.md">部署服务</a> 一节中我们使用 <code>nginx:1.13.7-alpine</code> 镜像部署了一个名为 <code>nginx</code> 的服务。</p>
+<p>现在我们想要将 <code>NGINX</code> 版本升级到 <code>1.13.12</code>，那么在 Swarm mode 中如何升级服务呢？</p>
+<p>你可能会想到，先停止原来的服务，再使用新镜像部署一个服务，不就完成服务的 “升级” 了吗。</p>
+<p>这样做的弊端很明显，如果新部署的服务出现问题，原来的服务删除之后，很难恢复，那么在 Swarm mode 中到底该如何对服务进行滚动升级呢？</p>
+<p>答案就是使用 <code>docker service update</code> 命令。</p>
+<pre><code class="language-bash">$ docker service update \
+    --image nginx:1.13.12-alpine \
+    nginx</code></pre>
+<p>以上命令使用 <code>--image</code> 选项更新了服务的镜像。当然我们也可以使用 <code>docker service update</code> 更新任意的配置。</p>
+<p><code>--secret-add</code> 选项可以增加一个密钥</p>
+<p><code>--secret-rm</code> 选项可以删除一个密钥</p>
+<p>更多选项可以通过 <code>docker service update -h</code> 命令查看。</p>
+<h3 id="bee042d6e4a8c1af8d94e2d11ec1dced">服务回退</h3>
+<p>现在假设我们发现 <code>nginx</code> 服务的镜像升级到 <code>nginx:1.13.12-alpine</code> 出现了一些问题，我们可以使用命令一键回退。</p>
+<pre><code class="language-bash">$ docker service rollback nginx</code></pre>
+<p>现在使用 <code>docker service ps</code> 命令查看 <code>nginx</code> 服务详情。</p>
+<pre><code class="language-bash">$ docker service ps nginx
+
+ID                  NAME                IMAGE                  NODE                DESIRED STATE       CURRENT STATE                ERROR               PORTS
+rt677gop9d4x        nginx.1             nginx:1.13.7-alpine   VM-20-83-debian     Running             Running about a minute ago
+d9pw13v59d00         \_ nginx.1         nginx:1.13.12-alpine  VM-20-83-debian     Shutdown            Shutdown 2 minutes ago
+i7ynkbg6ybq5         \_ nginx.1         nginx:1.13.7-alpine   VM-20-83-debian     Shutdown            Shutdown 2 minutes ago</code></pre>
+<p>结果的输出详细记录了服务的部署、滚动升级、回退的过程。</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Swarm mode: <i><a href="https://docs.docker.com/engine/swarm/" target="_blank">https://docs.docker.com/engine/swarm/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> `SwarmKit`: <i><a href="https://github.com/docker/swarmkit/" target="_blank">https://github.com/docker/swarmkit/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 基本概念: <i><a href="https://wangmaolin.net/topic/Docker/overview.md" target="_blank">overview.md</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> 部署服务: <i><a href="https://wangmaolin.net/topic/Docker/deploy.md" target="_blank">deploy.md</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

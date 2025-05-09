@@ -1,0 +1,501 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>单点登录的实现 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    架构 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>分布式</h2>
+<ul>
+<li id="blog76"><a href="jenydjoy7d.html#blog76">TCC 分布式事务的实现原理</a>
+</ul>
+</li>
+<li>
+<h2>地图</h2>
+<ul>
+<li id="blog216"><a href="od6vrzn93g.html#blog216">后台管理系统如何给具体地址添加经纬度坐标？</a>
+</ul>
+</li>
+<li>
+<h2>微服务</h2>
+<ul>
+<li id="blog269"><a href="qk2vmw9yp0.html#blog269">微服务是什么?</a>
+</ul>
+</li>
+<li>
+<h2>架构</h2>
+<ul>
+<li id="blog316"><a href="nq5vrnke7p.html#blog316">直播间状态变更通知所有用户方案</a>
+<li id="blog324"><a href="8loynj1vz3.html#blog324">系统注销用户的逻辑</a>
+<li id="blog363"><a href="j25v16ge1n.html#blog363">设计无密码登录指南</a>
+<li id="blog383"><a href="3qk94gx9w1.html#blog383">系统负载介绍</a>
+<li id="blog452"><a href="rpnv39dvwm.html#blog452">下云 - 什么情况下不能离开云计算</a>
+<li id="blog487"><a href="ekpv1d2v8w.html#blog487">广告系统架构介绍</a>
+<li id="blog570"><a href="j3oyjek9p5.html#blog570">地图红绿灯倒计时功能是如何实现的？</a>
+<li id="blog676"><a href="enyd5oo97d.html#blog676">单点登录的实现</a>
+<li id="blog677"><a href="5dve2ekv4x.html#blog677">如何防止订单重复支付</a>
+<li id="blog694"><a href="3oyjdg8yp5.html#blog694">抢红包系统设计</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog317"><a href="02ky0m69z8.html#blog317">Cloudflare 推出 Turnstile — 一款用户友好且保护隐私的 CAPTCHA 替代方案</a>
+<li id="blog379"><a href="wkl9nd8yz4.html#blog379">JWT 认证和授权：详细介绍</a>
+<li id="blog380"><a href="gxpv5n5v86.html#blog380">浏览器同源政策及其规避方法</a>
+<li id="blog381"><a href="n3xyqnlymq.html#blog381">跨域资源共享 CORS 详解</a>
+<li id="blog382"><a href="4x3voeo9m1.html#blog382">XSS 跨站脚本攻击介绍</a>
+<li id="blog444"><a href="4wevwrzyl2.html#blog444">双因素认证（2FA）教程</a>
+<li id="blog477"><a href="15dved394x.html#blog477">开发安全的 API 所需要核对的清单</a>
+<li id="blog667"><a href="m892gnoy01.html#blog667">target=&quot;_blank” 属性的安全漏洞</a>
+<li id="blog678"><a href="4rvgnzkydj.html#blog678">CSRF跨站请求伪造攻击</a>
+<li id="blog708"><a href="xpv52r1v86.html#blog708">文件上传安全注意事项</a>
+<li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
+<li id="blog710"><a href="x3vo0qkvm1.html#blog710">服务器漏洞</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog338"><a href="xrwyl6zyz8.html#blog338">关于系统性能的认知</a>
+<li id="blog436"><a href="x569x089ep.html#blog436">提高前端代码性能的最佳实践</a>
+<li id="blog720"><a href="wevwmxn9l2.html#blog720">高并发相关技巧(待完善)</a>
+</ul>
+</li>
+<li>
+<h2>编程</h2>
+<ul>
+<li id="blog569"><a href="1ndvm4pv3j.html#blog569">提高代码可读性和效率的 11 个技巧</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'enyd5oo97d.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/enyd5oo97d.html', function (data, status) {
+                addView('enyd5oo97d.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>单点登录的实现</h1><ul>
+<li><a href="enyd5oo97d.html#cf4d87bdbc4deaab58ad1401865a4512">单点登录</a></li>
+<li><a href="enyd5oo97d.html#9bbf032a560e871874c0a0855ae98411">单点登录概述：</a></li>
+<li><a href="enyd5oo97d.html#6f9b3347a5403c95d4a1eb36e8665018">SSO 机制实现流程</a></li>
+<li><a href="enyd5oo97d.html#5dc2bd99e1c1acdc35a20bf0e1323f67">SSO 机制实现方式</a>
+<ul>
+<li><a href="enyd5oo97d.html#4f2c08f56af73587edc70510492bd00d">1、父域 Cookie</a></li>
+<li><a href="enyd5oo97d.html#2b729f6f03a8893a56a772991d817a0d">2、认证中心</a></li>
+<li><a href="enyd5oo97d.html#bcc263961f456be8ab436ed456e91a2e">3、LocalStorage 跨域</a></li>
+</ul></li>
+<li><a href="enyd5oo97d.html#537d88e9b73880e664c4dd5570c61c16">SSO 单点登录退出</a></li>
+</ul><h2 id="cf4d87bdbc4deaab58ad1401865a4512"><strong>单点登录</strong></h2>
+<p>单点登录有个简称是sso，它是一个功能可以控制多个有联系的系统操作，简单地理解为通过单点登录可以让用户只需要登录一次软件或者系统，那么同系统下的平台都可以免去再次注册、验证、访问权限的麻烦程序，通俗易懂的理解为一次性登录也可以一次性下线。</p>
+<p><img src="../../storage/images/2025/01/n8fXZmlUBNN0SF3QQfeJKJb74l0rERxRtfMl3Ker.png" alt="" /></p>
+<p>如图所示，图中有4个系统，分别是Application1、Application2、Application3、和SSO。Application1、Application2、Application3没有登录模块，而SSO只有登录模块，没有其他的业务模块，当Application1、Application2、Application3需要登录时，将跳到SSO系统，SSO系统完成登录，其他的应用系统也就随之登录了。这完全符合我们对单点登录（SSO）的定义。</p>
+<h2 id="9bbf032a560e871874c0a0855ae98411"><strong>单点登录概述：</strong></h2>
+<p>1、一个系统登录流程：用户进入系统——未登录——跳转登录界面——用户名和密码发送——服务器端验证后，设置一个cookie发送到浏览器，设置一个session存放在服务器——用户再次请求（带上cookie）——服务器验证cookie和session匹配后，就可以进行业务了。</p>
+<p>2、多个系统登录：如果一个大公司有很多系统，a.seafile.com, b.seafile.com,c.seafile.com。这些系统都需要登录，如果用户在不同系统间登录需要多次输入密码，用户体验很不好。所以使用 SSO (single sign on) 单点登录实现。</p>
+<p>3、相同域名，不同子域名下的单点登录：在浏览器端，根据同源策略，不同子域名的cookie不能共享。所以设置SSO的域名为根域名。SSO登录验证后，子域名可以访问根域名的 cookie，即可完成校验。在服务器端，可以设置多个子域名session共享（Spring-session）</p>
+<p>4、不同域名下的单点登录：CAS流程：用户登录子系统时未登录，跳转到 SSO 登录界面，成功登录后，SSO 生成一个 ST （service ticket ）。用户登录不同的域名时，都会跳转到 SSO，然后 SSO 带着 ST 返回到不同的子域名，子域名中发出请求验证 ST 的正确性（防止篡改请求）。验证通过后即可完成不同的业务。</p>
+<h2 id="6f9b3347a5403c95d4a1eb36e8665018">SSO 机制实现流程</h2>
+<p>用户首次访问时，需要在认证中心登录：</p>
+<p><img src="../../storage/images/2025/01/sgsUyo3LwOGSzLrlILuL1DWBXXk0tysWdSTBK6tf.png" alt="" /></p>
+<ol>
+<li>用户访问网站 a.com 下的 pageA 页面。</li>
+</ol>
+<ul>
+<li>
+<p>由于没有登录，则会重定向到认证中心，并带上回调地址 （<code>http://www.sso.com?return\_uri=a.com/pageA%EF%BC%8C%E4%BB%A5%E4%BE%BF%E7%99%BB%E5%BD%95%E5%90%8E%E7%9B%B4%E6%8E%A5%E8%BF%9B%E5%85%A5%E5%AF%B9%E5%BA%94%E9%A1%B5%E9%9D%A2%E3%80%82</code>）</p>
+</li>
+<li>
+<p>用户在认证中心输入账号密码，提交登录。</p>
+</li>
+<li>
+<p>认证中心验证账号密码有效，然后重定向 a.com?ticket=123 带上授权码 ticket，并将认证中心 sso.com 的登录态写入 Cookie。</p>
+</li>
+<li>
+<p>在 a.com 服务器中，<strong>拿着 ticket 向认证中心确认</strong>，授权码 ticket 真实有效。</p>
+</li>
+<li>
+<p>验证成功后，服务器将登录信息写入 Cookie（此时客户端有 2 个 Cookie 分别存有 a.com 和 sso.com 的登录台）。</p>
+</li>
+</ul>
+<p>认证中心登录完成之后，继续访问 <code>a.com</code> 下的其他页面：</p>
+<p><img src="../../storage/images/2025/01/rtnVccfpzETQO7D24ZeySFrYYvaPJnr8EX7ptUof.png" alt="" /></p>
+<p>这个时候，由于 <code>a.com</code> 存在已登录的 <code>Cookie</code> 信息，所以服务器端直接认证成功。</p>
+<p><strong>如果认证中心登录完成之后，访问</strong> <strong><code>b.com</code></strong> <strong>下的页面：</strong></p>
+<p><img src="../../storage/images/2025/01/ReZ5XHNspBaPiGNXS8vSjiLoQa7eiKcQffBq8tIm.png" alt="" /></p>
+<p>这个时候，由于认证中心存在之前登录过的 <code>Cookie</code>，所以也不用再次输入账号密码，直接返回第 4 步，下发 <code>ticket</code> 给 <code>b.com</code> 即可。</p>
+<h2 id="5dc2bd99e1c1acdc35a20bf0e1323f67">SSO 机制实现方式</h2>
+<p>一般情况下，用户的登录状态是记录在 Session 中的，要实现共享登录状态，就要先共享 Session，但是由于不同的应用系统有着不同的域名，尽管 Session 共享了，但是由于 SessionId 是往往保存在浏览器 Cookie 中的，因此存在作用域的限制，无法跨域名传递，也就是说当用户在 a.com 中登录后，Session Id 仅在浏览器访问 a.com 时才会自动在请求头中携带，而当浏览器访问 b.com 时，Session Id 是不会被带过去的。实现单点登录的关键在于，如何让 Session Id（或 Token）在多个域中共享。</p>
+<h3 id="4f2c08f56af73587edc70510492bd00d">1、<strong>父域 Cookie</strong></h3>
+<p>Cookie 的作用域由 domain 属性和 path 属性共同决定。domain 属性的有效值为当前域或其父域的域名/IP地址，在 Tomcat 中，domain 属性默认为当前域的域名/IP地址。path 属性的有效值是以“/”开头的路径，在 Tomcat 中，path 属性默认为当前 Web 应用的上下文路径。</p>
+<p>如果将 Cookie 的 domain 属性设置为当前域的父域，那么就认为它是父域 Cookie。<strong>Cookie 有一个特点，即父域中的 Cookie 被子域所共享</strong>，也就是说，子域会自动继承父域中的 Cookie。</p>
+<p>利用 Cookie 的这个特点，可以将 Session Id（或 Token）保存到父域中就可以了。我们只需要将 Cookie 的 domain 属性设置为父域的域名（主域名），同时将 Cookie 的 path 属性设置为根路径，这样所有的子域应用就都可以访问到这个 Cookie 了。不过这要求应用系统的域名需建立在一个共同的主域名之下，如 tieba.baidu.com 和 map.baidu.com，它们都建立在 baidu.com 这个主域名之下，那么它们就可以通过这种方式来实现单点登录。</p>
+<p><strong>总结：此种实现方式比较简单，但不支持跨主域名。</strong></p>
+<h3 id="2b729f6f03a8893a56a772991d817a0d">2、<strong>认证中心</strong></h3>
+<p>我们可以部署一个认证中心，认证中心就是一个专门负责处理登录请求的独立的 Web 服务。</p>
+<p>用户统一在认证中心进行登录，登录成功后，认证中心记录用户的登录状态，并将 Token 写入 Cookie。（注意这个 Cookie 是认证中心的，应用系统是访问不到的）</p>
+<p>应用系统检查当前请求有没有 Token，如果没有，说明用户在当前系统中尚未登录，那么就将页面跳转至认证中心进行登录。由于这个操作会将认证中心的 Cookie 自动带过去，因此，认证中心能够根据 Cookie 知道用户是否已经登录过了。如果认证中心发现用户尚未登录，则返回登录页面，等待用户登录，如果发现用户已经登录过了，就不会让用户再次登录了，而是会跳转回目标 URL ，并在跳转前生成一个 Token，拼接在目标 URL 的后面，回传给目标应用系统。</p>
+<p>应用系统拿到 Token 之后，还需要向认证中心确认下 Token 的合法性，防止用户伪造。确认无误后，应用系统记录用户的登录状态，并将 Token 写入 Cookie，然后给本次访问放行。（这个 Cookie 是当前应用系统的，其他应用系统是访问不到的）当用户再次访问当前应用系统时，就会自动带上这个 Token，应用系统验证 Token 发现用户已登录，于是就不会有认证中心什么事了。</p>
+<p><strong>总结：此种实现方式相对复杂，支持跨域，扩展性好，是单点登录的标准做法。</strong></p>
+<h3 id="bcc263961f456be8ab436ed456e91a2e">3、<strong>LocalStorage 跨域</strong></h3>
+<p>单点登录的关键在于，如何让 Session Id（或 Token）在多个域中共享。但是 Cookie 是不支持跨主域名的，而且浏览器对 Cookie 的跨域限制越来越严格。</p>
+<p>在前后端分离的情况下，完全可以不使用 Cookie，我们可以选择将 Session Id （或 Token ）保存到浏览器的 LocalStorage 中，让前端在每次向后端发送请求时，主动将 LocalStorage 的数据传递给服务端。这些都是由前端来控制的，后端需要做的仅仅是在用户登录成功后，将 Session Id （或 Token ）放在响应体中传递给前端。</p>
+<p>在这样的场景下，单点登录完全可以在前端实现。前端拿到 Session Id （或 Token ）后，除了将它写入自己的 LocalStorage 中之外，还可以通过特殊手段将它写入多个其他域下的 LocalStorage 中。</p>
+<p>前端可以通过 iframe+postMessage() 方式，将同一份 Token 写入到了多个域下的 LocalStorage 中（参考 <a href="https://fengzhongmuou.feishu.cn/wiki/JlnMwQWNBiDoIrkMiQFcY3udnrf"> 浏览器同源政策及其规避方法</a>），前端每次在向后端发送请求之前，都会主动从 LocalStorage 中读取 Token 并在请求中携带，这样就实现了同一份 Token 被多个域所共享。</p>
+<p><strong>总结：此种实现方式完全由前端控制，几乎不需要后端参与，同样支持跨域</strong>。</p>
+<h2 id="537d88e9b73880e664c4dd5570c61c16">SSO 单点登录退出</h2>
+<p>目前我们已经完成了单点登录，在同一套认证中心的管理下，多个产品可以共享登录态。现在我们需要考虑退出了，即：在一个产品中退出了登录，怎么让其他的产品也都退出登录？</p>
+<p>原理其实不难，可以在每一个产品在向认证中心验证 ticket(token) 时，其实可以顺带将自己的退出登录 api 发送到认证中心。</p>
+<p><strong>当某个产品 c.com 退出登录时：</strong></p>
+<p>清空 c.com 中的登录态 Cookie。请求认证中心 sso.com 中的退出 api。认证中心遍历下发过 ticket(token) 的所有产品，并调用对应的退出 api，完成退出。</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code>  浏览器同源政策及其规避方法: <i><a href="https://fengzhongmuou.feishu.cn/wiki/JlnMwQWNBiDoIrkMiQFcY3udnrf" target="_blank">https://fengzhongmuou.feishu.cn/wiki/JlnMwQWNBiDoIrkMiQFcY3udnrf</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

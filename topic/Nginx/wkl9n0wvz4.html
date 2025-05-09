@@ -1,0 +1,531 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>nginx 杜绝 HTTP 伪请求头攻击 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Nginx <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>Nginx</h2>
+<ul>
+<li id="blog28"><a href="jenyd5o97d.html#blog28">Nginx 如何防止域名权重被分散?</a>
+<li id="blog62"><a href="lgwyllny3q.html#blog62">Nginx 拦截打点与输出配置</a>
+<li id="blog64"><a href="od6vrxev3g.html#blog64">nginx 请求日志格式 log_format 配置</a>
+<li id="blog140"><a href="nq5vr9qv7p.html#blog140">Nginx server<em>name </em>;  的理解</a>
+<li id="blog286"><a href="lgwylwkv3q.html#blog286">nginx如何防止域名权重被分散?</a>
+<li id="blog294"><a href="71xyj10yd9.html#blog294">Nginx 配置子目录项目</a>
+<li id="blog303"><a href="mx5e615v0r.html#blog303">启用nginx status状态页详解</a>
+<li id="blog305"><a href="n2oeglwy73.html#blog305">Nginx 配置文件说明</a>
+<li id="blog306"><a href="7ndvd0weo2.html#blog306">Nginx 禁止ip直接访问或任意域名访问</a>
+<li id="blog309"><a href="n3xyq1lvmq.html#blog309">Nginx 日志分析常用命令</a>
+<li id="blog310"><a href="54lvo8oe6z.html#blog310">正向代理与反向代理的理解</a>
+<li id="blog328"><a href="rpnv3pwywm.html#blog328">Nginx 工作原理、进程模型</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog53"><a href="15dve4k94x.html#blog53">nginx 配置 auth_basic 登录认证的方法</a>
+<li id="blog63"><a href="ekpv1mkv8w.html#blog63">Nginx 安全相关配置</a>
+<li id="blog70"><a href="j3oyjm8yp5.html#blog70">Nginx 防盗链配置</a>
+<li id="blog131"><a href="wkl9n0wvz4.html#blog131">nginx 杜绝 HTTP 伪请求头攻击</a>
+<li id="blog293"><a href="1ndvm1nv3j.html#blog293">nginx+php使用open_basedir限制站点目录防止跨站</a>
+<li id="blog304"><a href="jenyd0nv7d.html#blog304">Nginx 查看高频访问 IP，并封禁 IP 详解</a>
+</ul>
+</li>
+<li>
+<h2>负载均衡</h2>
+<ul>
+<li id="blog174"><a href="62wy35xvkm.html#blog174">Nginx 负载均衡配置</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'wkl9n0wvz4.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/wkl9n0wvz4.html', function (data, status) {
+                addView('wkl9n0wvz4.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>nginx 杜绝 HTTP 伪请求头攻击</h1><ul>
+<li><a href="wkl9n0wvz4.html#623823723f2183404779da1ea59a1772">配置方式</a>
+<ul>
+<li><a href="wkl9n0wvz4.html#08bd0169e615d931c8d16d9a16f23387">下面代码放进http{ }段内</a></li>
+<li><a href="wkl9n0wvz4.html#d07d7a4119deda434003af6c9910ce92">下面代码放进server{}段内</a></li>
+</ul></li>
+<li><a href="wkl9n0wvz4.html#b5ed4b7ce55f1add9e3ddf5b2026773d">map 说明</a>
+<ul>
+<li><a href="wkl9n0wvz4.html#e33bab9fcc291d659949d958d6bc68a3">map 指令介绍：</a></li>
+<li><a href="wkl9n0wvz4.html#96b354fe27ca094ca90bffd41acb5055">map 语法</a></li>
+<li><a href="wkl9n0wvz4.html#5aa18dd229056d7cfc1dde64751a420c">在 Nginx 配置文件中的作用段： http{} ，注意 map 不能写在 server{} 否则会报错</a>
+<ul>
+<li><a href="wkl9n0wvz4.html#aff66b2f0e968615bb4945dd7c7a59b6">实例（一）</a></li>
+<li><a href="wkl9n0wvz4.html#cdc8dee80bb03940641f48749b8c2d7a">实例（二）</a></li>
+<li><a href="wkl9n0wvz4.html#472eade5633edd7360f7b3b8f3901289">map 涉及的性能问题</a></li>
+<li><a href="wkl9n0wvz4.html#7c55b6218319854c4f7b0af378c36a7b">匹配优先级问题</a></li>
+</ul></li>
+</ul></li>
+</ul><p>在查看nginx日志时，经常发现一种攻击方式，<br />
+不用GET，也没用POST，而是用了一个16进制伪码：\0x01作为请求method.<br />
+其目标是使伺服器溢出，并导致了大量400 bad request包外流。</p>
+<p>所以应付此类攻击最好的方式就是直接掐断连接。</p>
+<h2 id="623823723f2183404779da1ea59a1772">配置方式</h2>
+<h4 id="08bd0169e615d931c8d16d9a16f23387">下面代码放进http{ }段内</h4>
+<pre><code class="language-nginx">map $request_method $ban_method{
+    default 1;
+    GET 0;
+    POST 0;
+}</code></pre>
+<h4 id="d07d7a4119deda434003af6c9910ce92">下面代码放进server{}段内</h4>
+<pre><code class="language-nginx">if ( $ban_method = 1 ) {
+    return 444;
+}</code></pre>
+<p>444: Nginx上HTTP服务器扩展。 服务器不向客户端返回任何信息，并关闭连接（有助于恶意软件的威胁）。</p>
+<h2 id="b5ed4b7ce55f1add9e3ddf5b2026773d">map 说明</h2>
+<h4 id="e33bab9fcc291d659949d958d6bc68a3">map 指令介绍：</h4>
+<p>map 指令是由 ngx_http_map_module 模块提供的，默认情况下安装 nginx 都会安装该模块。</p>
+<p>map 的主要作用是创建自定义变量，通过使用 nginx 的内置变量，去匹配某些特定规则，如果匹配成功则设置某个值给自定义变量。 而这个自定义变量又可以作于他用。</p>
+<p>直接看个例子理解起来比较清晰：</p>
+<p>场景： 匹配请求 url 的参数，如果参数是 debug 则设置 $foo = 1 ，默认设置 $foo = 0</p>
+<pre><code class="language-nginx">map $args $foo {
+    default 0;
+    debug   1;
+}</code></pre>
+<p>解释：</p>
+<p>$args 是nginx内置变量，就是获取的请求 url 的参数。 如果 $args 匹配到 debug 那么 $foo 的值会被设为 1 ，如果 $args 一个都匹配不到 $foo 就是default 定义的值，在这里就是 0</p>
+<h4 id="96b354fe27ca094ca90bffd41acb5055">map 语法</h4>
+<p>map $var1 $var2 {...}</p>
+<p>map 指令的三个参数：</p>
+<pre><code class="   language-php">1、default ： 指定源变量匹配不到任何表达式时将使用的默认值。当没有设置 default，将会用一个空的字符串作为默认的结果。
+
+2、hostnames ： 允许用前缀或者后缀掩码指定域名作为源变量值。这个参数必须写在值映射列表的最前面。
+
+3、include ： 包含一个或多个含有映射值的文件。</code></pre>
+<h4 id="5aa18dd229056d7cfc1dde64751a420c">在 Nginx 配置文件中的作用段： http{} ，注意 map 不能写在 server{} 否则会报错</h4>
+<p>map 的 $var1 为源变量，通常可以是 nginx 的内置变量，$var2 是自定义变量。 $var2 的值取决于 $var1 在对应表达式的匹配情况。 如果一个都匹配不到则 $var2 就是 default 对应的值。</p>
+<p>一个正则表达式如果以 “~” 开头，表示这个正则表达式对大小写敏感。以 “~*”开头，表示这个正则表达式对大小写不敏感。</p>
+<pre><code class="language-nginx">map $http_user_agent $agent {
+    default "";
+    ~curl curl;
+    ~*apachebench" ab;
+}</code></pre>
+<p>正则表达式里可以包含命名捕获和位置捕获，这些变量可以跟结果变量一起被其它指令使用。</p>
+<pre><code class="language-nginx">map $uri $value {
+    /abc                       /index.php;
+    ~^/teacher/(?&lt;suffix&gt;.*)$  /boy/;
+    ~/fz(/.*)                  /index.php?fz=1;                           
+}</code></pre>
+<p>注意：不能在map块里面引用命名捕获或位置捕获变量。如~^/qupeicom/(.*) /peiyin/$1; 这样会报错nginx: [emerg] unknown variable</p>
+<p>注意二：如果源变量值包含特殊字符如‘~’，则要以‘\’来转义。</p>
+<pre><code class="language-nginx">map $http_referer $value {
+    Mozilla    111;
+    \~Mozilla  222;
+}</code></pre>
+<p>源变量匹配表达式对应的结果值可以是一个字符串也可以是另外一个变量。</p>
+<pre><code class="language-nginx">map $http_referer $value {
+    Mozilla    'chrom';
+    \~safity    $http_user_agent;
+}</code></pre>
+<h3 id="aff66b2f0e968615bb4945dd7c7a59b6">实例（一）</h3>
+<p>使用 map 来实现允许多个域名跨域访问的问题<br />
+如果是允许单域名跨域访问直接配置就行了，如下：</p>
+<pre><code class="language-nginx"># 这些配置可以写在 http{} 或者 server{} 都是支持的。
+add_header Access-Control-Allow-Origin "http://www.tutu.com";
+add_header Access-Control-Allow-Methods "POST, GET, PUT, OPTIONS, DELETE";
+add_header Access-Control-Max-Age "3600";
+add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept;</code></pre>
+<p>上面的配置只允许 <a href="http://www.tutu.com">http://www.tutu.com</a> 跨域访问，如果要支持所有域名都可以跨域调用该站。  把上面一行改成这样，不过不推荐这样做，因为不安全</p>
+<pre><code class="language-nginx">add_header Access-Control-Allow-Origin "*";</code></pre>
+<p>如果不想允许所有，但是又需要允许多个域名，那么就需要用到 map</p>
+<pre><code class="language-nginx">map $http_origin $corsHost {
+    default 0;
+    "~http://www.haibakeji.com" http://www.haibakeji.com;
+    "~http://m.haibakeji.com" http://m.haibakeji.com;
+    "~http://wap.haibakeji.com" http://wap.haibakeji.com;
+}
+server
+{
+    listen 80;
+    server_name www.haibakeji.com;
+    root /nginx;
+    location /
+    {
+        add_header Access-Control-Allow-Origin $corsHost;
+    }
+}</code></pre>
+<h3 id="cdc8dee80bb03940641f48749b8c2d7a">实例（二）</h3>
+<p>使用源变量（通常是 nginx 内置变量）匹配一些规则，创建自定义变量，然后在页面输出. 这通常在调试的时候非常有用</p>
+<pre><code class="language-nginx">http {
+    map $uri $match {
+        ~^/hello/(.*) http://www.hello.com/;
+    }
+}
+server {
+    listen       8080;
+    server_name  test.hello.com;
+
+    location /hello {
+            default_type text/plain;
+            echo uri: $uri;
+            echo match: $match;
+            echo capture: $1;
+            echo new: $match$1;
+    }
+}</code></pre>
+<h3 id="472eade5633edd7360f7b3b8f3901289">map 涉及的性能问题</h3>
+<p>大家可能会有一个问题，map 既然只能用在 http 段，这是全局的啊。 这个设置会让访问所有虚拟主机的请求都要匹配并设置一遍变量的值，然而事实并非如此，对于没有用到相关变量的请求来说，并不会执行 map 操作。 就没有性能上的损失。</p>
+<h3 id="7c55b6218319854c4f7b0af378c36a7b">匹配优先级问题</h3>
+<p>如果匹配到多个特定的变量，如掩码和正则同时匹配，那么会按照下面的顺序进行选择：</p>
+<p>没有掩码的字符串<br />
+最长的带前缀的字符串，例如: “<em>.example.com”<br />
+最长的带后缀的字符串，例如：“mail.</em>”<br />
+按顺序第一个先匹配的正则表达式 （在配置文件中体现的顺序）</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> http://www.tutu.com: <i><a href="http://www.tutu.com" target="_blank">http://www.tutu.com</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

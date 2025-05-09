@@ -1,0 +1,470 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>SQL 注入漏洞 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="frrBW4DvuFNY0e6AyDqU3Itj2DLGTTxPOBGKuWip">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    架构 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>分布式</h2>
+<ul>
+<li id="blog76"><a href="jenydjoy7d.html#blog76">TCC 分布式事务的实现原理</a>
+</ul>
+</li>
+<li>
+<h2>地图</h2>
+<ul>
+<li id="blog216"><a href="od6vrzn93g.html#blog216">后台管理系统如何给具体地址添加经纬度坐标？</a>
+</ul>
+</li>
+<li>
+<h2>微服务</h2>
+<ul>
+<li id="blog269"><a href="qk2vmw9yp0.html#blog269">微服务是什么?</a>
+</ul>
+</li>
+<li>
+<h2>架构</h2>
+<ul>
+<li id="blog316"><a href="nq5vrnke7p.html#blog316">直播间状态变更通知所有用户方案</a>
+<li id="blog324"><a href="8loynj1vz3.html#blog324">系统注销用户的逻辑</a>
+<li id="blog363"><a href="j25v16ge1n.html#blog363">设计无密码登录指南</a>
+<li id="blog383"><a href="3qk94gx9w1.html#blog383">系统负载介绍</a>
+<li id="blog452"><a href="rpnv39dvwm.html#blog452">下云 - 什么情况下不能离开云计算</a>
+<li id="blog487"><a href="ekpv1d2v8w.html#blog487">广告系统架构介绍</a>
+<li id="blog570"><a href="j3oyjek9p5.html#blog570">地图红绿灯倒计时功能是如何实现的？</a>
+<li id="blog676"><a href="enyd5oo97d.html#blog676">单点登录的实现</a>
+<li id="blog677"><a href="5dve2ekv4x.html#blog677">如何防止订单重复支付</a>
+<li id="blog694"><a href="3oyjdg8yp5.html#blog694">抢红包系统设计</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog317"><a href="02ky0m69z8.html#blog317">Cloudflare 推出 Turnstile — 一款用户友好且保护隐私的 CAPTCHA 替代方案</a>
+<li id="blog379"><a href="wkl9nd8yz4.html#blog379">JWT 认证和授权：详细介绍</a>
+<li id="blog380"><a href="gxpv5n5v86.html#blog380">浏览器同源政策及其规避方法</a>
+<li id="blog381"><a href="n3xyqnlymq.html#blog381">跨域资源共享 CORS 详解</a>
+<li id="blog382"><a href="4x3voeo9m1.html#blog382">XSS 跨站脚本攻击介绍</a>
+<li id="blog444"><a href="4wevwrzyl2.html#blog444">双因素认证（2FA）教程</a>
+<li id="blog477"><a href="15dved394x.html#blog477">开发安全的 API 所需要核对的清单</a>
+<li id="blog667"><a href="m892gnoy01.html#blog667">target=&quot;_blank” 属性的安全漏洞</a>
+<li id="blog678"><a href="4rvgnzkydj.html#blog678">CSRF跨站请求伪造攻击</a>
+<li id="blog708"><a href="xpv52r1v86.html#blog708">文件上传安全注意事项</a>
+<li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
+<li id="blog710"><a href="x3vo0qkvm1.html#blog710">服务器漏洞</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog338"><a href="xrwyl6zyz8.html#blog338">关于系统性能的认知</a>
+<li id="blog436"><a href="x569x089ep.html#blog436">提高前端代码性能的最佳实践</a>
+<li id="blog720"><a href="wevwmxn9l2.html#blog720">高并发相关技巧(待完善)</a>
+</ul>
+</li>
+<li>
+<h2>编程</h2>
+<ul>
+<li id="blog569"><a href="1ndvm4pv3j.html#blog569">提高代码可读性和效率的 11 个技巧</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '3xyq4qjvmq.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/3xyq4qjvmq.html', function (data, status) {
+                addView('3xyq4qjvmq.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>SQL 注入漏洞</h1><ul>
+<li><a href="3xyq4qjvmq.html#0e50ee7205e988e3de511527f0f2da9f">SQL 注入</a></li>
+<li><a href="3xyq4qjvmq.html#40e6de117e106ed3d5e5753bd07bdf03">SQL 注入原理</a></li>
+<li><a href="3xyq4qjvmq.html#8e3bf1be3338c571cfc90767bd31a517">如何预防 SQL 注入</a></li>
+</ul><h2 id="0e50ee7205e988e3de511527f0f2da9f">SQL 注入</h2>
+<p>SQL 注入漏洞（SQL Injection）是 Web 开发中最常见的一种安全漏洞。可以用它来从数据库获取敏感信息，或者利用数据库的特性执行添加用户，导出文件等一系列恶意操作，甚至有可能获取数据库乃至系统用户最高权限。</p>
+<p>而造成 SQL 注入的原因是因为程序没有有效的转义过滤用户的输入，使攻击者成功的向服务器提交恶意的 SQL 查询代码，程序在接收后错误的将攻击者的输入作为查询语句的一部分执行，导致原始的查询逻辑被改变，额外的执行了攻击者精心构造的恶意代码。</p>
+<p>很多 Web 开发者没有意识到 SQL 查询是可以被篡改的，从而把 SQL 查询当作可信任的命令。殊不知，SQL 查询是可以绕开访问控制，从而绕过身份验证和权限检查的。更有甚者，有可能通过 SQL 查询去运行主机系统级的命令。</p>
+<h2 id="40e6de117e106ed3d5e5753bd07bdf03">SQL 注入原理</h2>
+<p>下面将通过一些真实的例子来详细讲解 SQL 注入的方式的原理。</p>
+<p>考虑以下简单的管理员登录表单：</p>
+<pre><code class="language-html">&lt;form action="/login" method="POST"&gt;
+    &lt;p&gt;Username: &lt;input type="text" name="username" /&gt;&lt;/p&gt;
+    &lt;p&gt;Password: &lt;input type="password" name="password" /&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;input type="submit" value="登陆" /&gt;&lt;/p&gt;
+&lt;/form&gt;</code></pre>
+<p>后端的 SQL 语句可能是如下这样的：</p>
+<pre><code class="language-js">let querySQL = `
+    SELECT *
+    FROM user
+    WHERE username='${username}'
+    AND psw='${password}'
+`;</code></pre>
+<p>接下来就是执行 sql 语句...</p>
+<p>目的就是来验证用户名和密码是不是正确，按理说乍一看上面的 SQL 语句也没什么毛病，确实是能够达到我们的目的，可是你只是站在用户会老老实实按照你的设计来输入的角度来看问题，如果有一个恶意攻击者输入的用户名是 zoumiaojiang' OR 1 = 1 --，密码随意输入，就可以直接登入系统了。WFT!</p>
+<p>冷静下来思考一下，我们之前预想的真实 SQL 语句是:</p>
+<pre><code class="language-sql">SELECT * FROM user WHERE username='zoumiaojiang' AND psw='mypassword'</code></pre>
+<p>可以恶意攻击者的奇怪用户名将你的 SQL 语句变成了如下形式：</p>
+<pre><code class="language-sql">SELECT * FROM user WHERE username='zoumiaojiang' OR 1 = 1 --' AND psw='xxxx'</code></pre>
+<p>在 SQL 中，-- 是注释后面的内容的意思，所以查询语句就变成了：</p>
+<pre><code class="language-sql">SELECT * FROM user WHERE username='zoumiaojiang' OR 1 = 1</code></pre>
+<p>这条 SQL 语句的查询条件永远为真，所以意思就是恶意攻击者不用我的密码，就可以登录进我的账号，然后可以在里面为所欲为，然而这还只是最简单的注入，牛逼的 SQL 注入高手甚至可以通过 SQL 查询去运行主机系统级的命令，将你主机里的内容一览无余，这里我也没有这个能力讲解的太深入，毕竟不是专业研究这类攻击的，但是通过以上的例子，已经了解了 SQL 注入的原理，我们基本已经能找到防御 SQL 注入的方案了。</p>
+<h2 id="8e3bf1be3338c571cfc90767bd31a517">如何预防 SQL 注入</h2>
+<p>防止 SQL 注入主要是不能允许用户输入的内容影响正常的 SQL 语句的逻辑，当用户的输入的信息将要用来拼接 SQL 语句的话，我们应该永远选择不相信，任何内容都必须进行转义过滤，当然做到这个还是不够的，下面列出防御 SQL 注入的几点注意事项：</p>
+<p>1、严格限制Web应用的数据库的操作权限，给此用户提供仅仅能够满足其工作的最低权限，从而最大限度的减少注入攻击对数据库的危害</p>
+<p>2、后端代码检查输入的数据是否符合预期，严格限制变量的类型，例如使用正则表达式进行一些匹配处理。</p>
+<p>3、对进入数据库的特殊字符（'，&quot;，\，&lt;，&gt;，&amp;，*，; 等）进行转义处理，或编码转换。基本上所有的后端语言都有对字符串进行转义处理的方法，比如 lodash 的 lodash._escapehtmlchar 库。</p>
+<p>4、所有查询语句建议使用数据库提供的参数化查询接口，参数化的语句使用参数而不是将用户输入变量嵌入到 SQL 语句中，即不要直接拼接 SQL 语句。例如 Node.js 中的 mysqljs 库的 query 方法中的 ? 占位参数。(预处理机制)</p>
+<p>5、在应用发布之前建议使用专业的 SQL 注入检测工具进行检测，以及时修补被发现的 SQL 注入漏洞。网上有很多这方面的开源工具，例如 sqlmap、SQLninja 等。</p>
+<p>6、避免网站打印出 SQL 错误信息，比如类型错误、字段不匹配等，把代码里的 SQL 语句暴露出来，以防止攻击者利用这些错误信息进行 SQL 注入。</p>
+<p>7、不要过于细化返回的错误信息，如果目的是方便调试，就去使用后端日志，不要在接口上过多的暴露出错信息，毕竟真正的用户不关心太多的技术细节，只要话术合理就行。</p>
+<p>8、碰到要操作的数据库的代码，一定要慎重，小心使得万年船，多找几个人多来几次 code review，将问题都暴露出来，而且要善于利用工具，操作数据库相关的代码属于机密，没事不要去各种论坛晒自家站点的 SQL 语句，万一被人盯上了呢？</p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>
