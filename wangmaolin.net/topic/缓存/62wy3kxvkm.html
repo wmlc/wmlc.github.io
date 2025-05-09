@@ -1,0 +1,466 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>单节点 Redis 分布式锁介绍 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="oGL4lMb7JcDvLaFwzTUs3ac3tbiXF736fjf8zIKH">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    缓存 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>缓存</h2>
+<ul>
+<li id="blog105"><a href="15dveegv4x.html#blog105">缓存穿透、缓存击穿、缓存雪崩的理解</a>
+<li id="blog284"><a href="jwnexj1vxd.html#blog284">缓存构建思想</a>
+<li id="blog285"><a href="4oxy7g2y98.html#blog285">缓存的三种读写模式</a>
+<li id="blog330"><a href="34rvg86ydj.html#blog330">清缓存要放到事务外部</a>
+<li id="blog409"><a href="0gn9gw3xpy.html#blog409">memcached过期策略</a>
+</ul>
+</li>
+<li>
+<h2>Redis</h2>
+<ul>
+<li id="blog117"><a href="02ky0gx9z8.html#blog117">Redis 配置错误日志、慢日志方法</a>
+<li id="blog118"><a href="n2qvp3493m.html#blog118">Redis 重启命令</a>
+<li id="blog119"><a href="5m89225901.html#blog119">redis 监听执行日志的方法</a>
+<li id="blog120"><a href="4wevwqnvl2.html#blog120">Redis 启动时的三个警告解决方法</a>
+<li id="blog121"><a href="1ndvmn3y3j.html#blog121">Redis 持久化介绍</a>
+<li id="blog122"><a href="j3oyj0mvp5.html#blog122">Redis 主从模式介绍</a>
+<li id="blog123"><a href="x2ev85qvor.html#blog123">Redis 配置认证密码方法</a>
+<li id="blog124"><a href="de296x69q7.html#blog124">Redis 数据过期策略</a>
+<li id="blog125"><a href="nxq9z44ydo.html#blog125">Redis 禁用O(n) 复杂度方法</a>
+<li id="blog126"><a href="62wy3kxvkm.html#blog126">单节点 Redis 分布式锁介绍</a>
+<li id="blog182"><a href="4x3vo2k9m1.html#blog182">使用 redis 实时统计 QPS</a>
+<li id="blog346"><a href="j3oyjxrvp5.html#blog346">单线程的 Redis 为什么这么快？</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '62wy3kxvkm.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/62wy3kxvkm.html', function (data, status) {
+                addView('62wy3kxvkm.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>单节点 Redis 分布式锁介绍</h1><ul>
+<li><a href="62wy3kxvkm.html#334aa49eb1bc7757b7ded4581dba27eb">分布式锁</a></li>
+<li><a href="62wy3kxvkm.html#5b611860aa956b6f5155758630b979e0">分布式锁需要具备的特性</a></li>
+<li><a href="62wy3kxvkm.html#9e9cb346f3a83ad2b516629d6c17e2e1">分布式锁的实现方式</a></li>
+<li><a href="62wy3kxvkm.html#ffa060bc8cd42bff2eb0f9d9f075f988">加解锁实例代码</a></li>
+<li><a href="62wy3kxvkm.html#46edfa2eb9047ccb544380772422cb2e">加解锁过程注意点</a></li>
+<li><a href="62wy3kxvkm.html#902695b4ed7aace73b39ec13bb712655">github 项目地址</a></li>
+<li><a href="62wy3kxvkm.html#374076186765634743e3b51e608d8014">单节点方式的缺点</a></li>
+<li><a href="62wy3kxvkm.html#010727e5654e7018835807f4d36ea923">分布式锁使用注意事项</a></li>
+</ul><h3 id="334aa49eb1bc7757b7ded4581dba27eb">分布式锁</h3>
+<p>分布式锁是控制分布式系统或不同系统之间共同访问共享资源的一种锁实现，如果不同的系统或同一个系统的不同主机之间共享了某个资源时，往往需要互斥来防止彼此干扰来保证一致性。</p>
+<h3 id="5b611860aa956b6f5155758630b979e0">分布式锁需要具备的特性</h3>
+<pre><code class="   language-php">互斥性：在任意一个时刻，只有一个客户端可以获取锁。
+
+无死锁：即使有一个客户端在持有锁的期间崩溃而没有主动解锁，也能保证后续客户端能加锁，加一个有效时间。
+
+持锁人解锁：加锁和解锁必须是同一个客户端，客户端不能把别人加的锁给解了。
+
+容错：只要大部分Redis节点都活着，客户端就可以获取和释放锁</code></pre>
+<h3 id="9e9cb346f3a83ad2b516629d6c17e2e1">分布式锁的实现方式</h3>
+<pre><code class="   language-php">数据库
+Memcached（add命令）
+Redis（setnx命令）
+Zookeeper（临时节点）</code></pre>
+<h3 id="ffa060bc8cd42bff2eb0f9d9f075f988">加解锁实例代码</h3>
+<pre><code class="language-php">/**
+ * 加锁
+ * @param $key        string 上锁key
+ * @param $value      string 锁对应的唯一值 uniqid() 或 UUID+threadId
+ * @param $lockExpire int 过期时间，单位毫秒
+ * @return int
+ */
+function lock($key, $value, $lockExpire)
+{
+    // key不能为空
+    if (empty($key)) {
+        throw new Exception('Key can not be empty string.', '1004');
+    }
+
+    # 加锁
+    # SET lock_key random_value NX PX 5000
+
+    $result = Redis::connection()-&gt;set($key, $value, 'NX', 'PX', $lockExpire);
+    return is_null($result) ? 0 : 1;
+}
+
+/**
+ * 解锁
+ * @param $key   string 上锁key
+ * @param $value string 锁对应的唯一值
+ * @return bool
+ */
+function unlock($key, $value)
+{
+    $lua = "if redis.call('get', KEYS[1]) == ARGV[1]
+        then
+            return redis.call('del', KEYS[1]) 
+        else 
+            return 0 
+        end";
+    return (bool)Redis::connection()-&gt;eval($lua, 1, $key, $value);
+}</code></pre>
+<h3 id="46edfa2eb9047ccb544380772422cb2e">加解锁过程注意点</h3>
+<p>1、加锁即在redis中设置(<code>set</code>)一个key,注意只有在该key不存在时设置，存在时不设置（存在即说明已经被加锁了），使用 <code>NX</code>;不能用setnx()和expire()因为这样不具有原子性；</p>
+<p>2、加锁设置key时，给key设置一个唯一不重复的<code>value</code>，避免解锁时解除了其他进程/线程设置的锁；</p>
+<p>3、加锁时给key设置一个过期时间，用<code>PX</code>毫秒级，防止进程中断导致永远无法解锁；这个过期时间要设置的合理，大于代码运行时间，也不要太长；</p>
+<p>4、解锁时用<code>lua脚本</code>，因为解锁需要判断key是否存在，且key中value是否相等再删除，要保证原子性操作才行，防止删除了其他进程的锁；</p>
+<h3 id="902695b4ed7aace73b39ec13bb712655">github 项目地址</h3>
+<p><a href="https://github.com/xiaorenaishu/laravel-redislock">地址一</a></p>
+<p><a href="https://github.com/Mitirrli/redis-lock">地址二</a></p>
+<h3 id="374076186765634743e3b51e608d8014">单节点方式的缺点</h3>
+<p>加锁时只作用在一个Redis节点上，即使Redis通过sentinel保证高可用，如果这个master节点由于某些原因发生了主从切换，那么就会出现锁丢失的情况：</p>
+<p>在Redis的master节点上拿到了锁；但是这个加锁的key还没有同步到slave节点；master故障，发生故障转移，slave节点升级为master节点；导致锁丢失。</p>
+<h3 id="010727e5654e7018835807f4d36ea923">分布式锁使用注意事项</h3>
+<p>1、加锁失败，即认为已有其他进程获得了锁，此时当前进程根据场景可以进行如下操作：接口返回错误码，请等待等；死循环获取锁，直到获取成功，每次循环之间加等待时间间隔；</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 地址一: <i><a href="https://github.com/xiaorenaishu/laravel-redislock" target="_blank">https://github.com/xiaorenaishu/laravel-redislock</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 地址二: <i><a href="https://github.com/Mitirrli/redis-lock" target="_blank">https://github.com/Mitirrli/redis-lock</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>
