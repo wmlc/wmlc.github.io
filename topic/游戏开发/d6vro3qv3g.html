@@ -1,0 +1,1657 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>游戏开发模块拆分 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="VXrP3SiCX6UhSG9yLMZPsVfpGGJJN0nTbrOTl7wU">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    游戏开发 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>游戏开发</h2>
+<ul>
+<li id="blog737"><a href="dgy7xnkvw2.html#blog737">游戏分类划分</a>
+<li id="blog738"><a href="rwyl2xevz8.html#blog738">游戏术语表</a>
+<li id="blog739"><a href="kpv13xq98w.html#blog739">选择游戏引擎</a>
+<li id="blog740"><a href="d6vro3qv3g.html#blog740">游戏开发模块拆分</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'd6vro3qv3g.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/d6vro3qv3g.html', function (data, status) {
+                addView('d6vro3qv3g.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>游戏开发模块拆分</h1><ul>
+<li><a href="d6vro3qv3g.html#211f37cd8214c5c2ce9053e76b4f30fe">一、网络通信</a>
+<ul>
+<li><a href="d6vro3qv3g.html#2ad2c09ba1ba35f0d5e44c2e5a68d111">网络通信协议：</a></li>
+<li><a href="d6vro3qv3g.html#dc9e7786fe876ad41747bec2bb965f08">网络同步</a></li>
+<li><a href="d6vro3qv3g.html#1fac36f0fa9d1114e112f3c11061a00e">网络通信框架</a></li>
+</ul></li>
+<li><a href="d6vro3qv3g.html#b0238a3726142f17cea2d2f321faf65e">二、客户端框架</a>
+<ul>
+<li><a href="d6vro3qv3g.html#5592beb10b93d233dee18396791491ea">单例模式（Singleton）</a></li>
+<li><a href="d6vro3qv3g.html#ac40e7ffb55ca362e7ebde9a1eec9b8d">网络同步（PhotonServer）</a></li>
+<li><a href="d6vro3qv3g.html#a9ff950f094c2025b56b6bbb91ca9627">消息订阅和发布（EventListener）</a></li>
+<li><a href="d6vro3qv3g.html#37df8dd3aa0b612b994d6e5cb937f952">策划数据、配置表缓存</a></li>
+<li><a href="d6vro3qv3g.html#b874c0f3b23ced1934ca363fe35d4534">技能系统（Skill）</a></li>
+<li><a href="d6vro3qv3g.html#e079c434142130d43ae8a17b62fb81b9">管理资源加载和更新模块</a></li>
+<li><a href="d6vro3qv3g.html#65205f515c72d43cb078abd022f0a139">UI开发</a></li>
+<li><a href="d6vro3qv3g.html#7dc31351bfc09b858bb4fab40c98b044">游戏状态管理类（游戏状态机）</a></li>
+<li><a href="d6vro3qv3g.html#4a18107c648d472a247249a754e5116b">主模块（AppEntry）</a></li>
+</ul></li>
+<li><a href="d6vro3qv3g.html#583cd5403bb73fbd2d62f5cb42b6674e">三、核心玩法</a>
+<ul>
+<li><a href="d6vro3qv3g.html#56e9ec8d1ffe7f6c65ef4fe1fe5d367c">玩家操作</a></li>
+<li><a href="d6vro3qv3g.html#601e4cc156fdf41741ae3d8d19b1e0e7">摄像机跟随</a></li>
+<li><a href="d6vro3qv3g.html#bd55963f1ff0eb817ee69b07ed02b72f">战斗判断</a></li>
+<li><a href="d6vro3qv3g.html#3a5d8e29f42bdf2c5ca3d06ecf5bec93">状态机</a></li>
+</ul></li>
+<li><a href="d6vro3qv3g.html#438499bd75f2292b7c6ac217f7deb634">四、插件</a>
+<ul>
+<li><a href="d6vro3qv3g.html#8d9a071ee2ef45e045968e117a205c07">导入</a></li>
+<li><a href="d6vro3qv3g.html#ab483c31be4e0f99cc186c7c8726e4a3">插件实现</a></li>
+</ul></li>
+<li><a href="d6vro3qv3g.html#3107553d1de8ba1711ca274d5dda87e8">五、打包和性能测试</a>
+<ul>
+<li><a href="d6vro3qv3g.html#c63f659f3fc6e45b99a1e24f562ac159">手动打包</a></li>
+<li><a href="d6vro3qv3g.html#9adc6846b2d6dc8a46fa974ef639847e">自动化打包</a></li>
+<li><a href="d6vro3qv3g.html#ddd22119a924356d5fd97057285c0689">性能测试</a></li>
+</ul></li>
+<li><a href="d6vro3qv3g.html#87b86fdcb823e23dcb6913100dcf2823">六、优化</a>
+<ul>
+<li><a href="d6vro3qv3g.html#9932551cd5b135b3ca97042293389e12">内存</a></li>
+<li><a href="d6vro3qv3g.html#2b55387dd066c5bac646ac61543d152d">CPU</a></li>
+<li><a href="d6vro3qv3g.html#52f9ec21735243ad9917cda3ca077d32">GPU</a></li>
+</ul></li>
+</ul><p>选择好游戏引擎之后，我们可以对游戏主体进行拆分，因为一个游戏的工程量实在是太庞大，拆分成一个个功能模块，然后将其整合。</p>
+<p>按照一个游戏的开发或运行周期，大致分为以下几个模块：</p>
+<p><img src="../../storage/images/2025/05/1PBuAv81OYpzR1D6ELB6SpKzaAYnmCS2X80ldblx.png" alt="" /></p>
+<p>下面我们开始针对每一个模块进行单独的分析和技术选型吧！</p>
+<h2 id="211f37cd8214c5c2ce9053e76b4f30fe">一、网络通信</h2>
+<p>网络通信主要是实现两个比较重要的点，一个是如何做实现客户端和服务器的通信，还有一个是游戏对象的同步方式。</p>
+<h3 id="2ad2c09ba1ba35f0d5e44c2e5a68d111">网络通信协议：</h3>
+<p>这里针对我自己对游戏的理解，做了一下<strong>网络通信协议选择和游戏的一个适用性对比</strong>，这个也不绝对，例如一款MOBA游戏，你可以用TCP做也可以用UDP实现，也能够混用，例如战斗数据传输用UDP，其他用TCP。每个协议优缺点都比较明显，我们可以通过一些策略来弥补缺点，因此协议的选择需要根据具体游戏的实际情况来。</p>
+<p><img src="../../storage/images/2025/05/AZ3kmFjV795yfEmrXChKn1Zk7MDyqTVic1OPRJAr.png" alt="" /></p>
+<p>那么咱们Mini MMORPG的话，其实选择TCP和UDP都可以，主要是需要针对协议的一些特点做一些适配，比如在延迟高的时候，为了不让玩家感受到高延迟，可以做一些<strong>客户端的行为预测（延时补偿策略）</strong>，在没有收到服务器返回的指令前，先按照客户端对这个对象的一个行为预测策略，去模拟他的行为。等服务器结果发来之后，再做一个<strong>插值运算平滑地过渡到服务器的位置上</strong>。</p>
+<h3 id="dc9e7786fe876ad41747bec2bb965f08">网络同步</h3>
+<ol>
+<li><code>帧同步</code>：核心战斗逻辑在客户端计算，客户端将计算后的结果发给服务器，服务器来做统一的转发给所有客户端。</li>
+<li><code>状态同步</code>：核心逻辑都写在服务器上进行计算，然后同步给客户端，客户端不做任何战斗计算，只做表现上的东西。</li>
+</ol>
+<p><img src="../../storage/images/2025/05/R2Mxwnb0EPwmoIDpEA9CLSd34gzKTQP7y3BETC5y.png" alt="" /></p>
+<p>不同的游戏适用于不同的同步方式，例如<strong>MMORPG游戏必须是状态同步的，因为逻辑相对复杂且庞大，且MMORPG的客户端承载有限，并不能把整个游戏的实体全部展现出来</strong>，比如很远的山和人物。例如MOBA、RTS、FPS类型游戏更适合帧同步一些，因为这类游戏对客户端表现要求“及时反馈”，且同一场战斗中对象不会特别多，在客户端的承载范围内。但是这些也都不绝对，例如很多MOBA和FPS游戏也是用状态同步方式实现的，好处就是能够有效地防止作弊和外挂。</p>
+<h3 id="1fac36f0fa9d1114e112f3c11061a00e">网络通信框架</h3>
+<p>我们的MiniGame可以选择一个能够实现上述两点的网络插件，这里我们选择 <strong>Photon Unity Network（PUN）插件</strong> 来做开发示例，这是一个采用<strong>UDP协议+帧同步</strong>的一个支持房间对战的服务器框架，可以利用他便捷地实现我们MiniGame所需要的网络模块功能。</p>
+<pre><code class="language-csharp">//Photon Unity Network插件通过将网络管理对象组件化来与Photon的云服务器通信，从而来同步游戏里的信息
+//使用者无需关注同步细节
+// Set up a MonoBehaviour to run Photon, and hide it
+GameObject photonGO = new GameObject();
+photonMono = (PhotonHandler)photonGO.AddComponent&lt;PhotonHandler&gt;();
+
+#if !(UNITY_WINRT || UNITY_WP8 || UNITY_PS3 || UNITY_WIIU)
+photonGO.AddComponent&lt;PingCloudRegions&gt;();
+#endif
+photonGO.name = "PhotonMono";
+photonGO.hideFlags = HideFlags.HideInHierarchy;
+
+//根据PhotonUnityNetwork插件的源码，是以UDP协议创建连接的
+// Set up the NetworkingPeer
+networkingPeer = new NetworkingPeer(photonMono, string.Empty, ConnectionProtocol.Udp);
+networkingPeer.LimitOfUnreliableCommands = 40;
+
+//不过Photon也支持其他协议，这个我们可以根据自己的需求自定义
+public enum ConnectionProtocol : byte
+{
+
+    Udp = 0,
+
+    Tcp = 1,
+
+    RHttp = 3
+}</code></pre>
+<p>但是这套网络底层是不开源的，因此我们也可以自己从头写一套服务器框架来做，这样可定制化程度更高，感兴趣且有能力的同学不妨一试。</p>
+<p>Unity也为我们提供了一套<strong>Socket库</strong>，可以用Socke来简单实现一套基础的网络通信流程</p>
+<pre><code class="language-csharp">//声明一个NetWorkMgr的单例类（这个我们后面会讲如何实现单例类）
+public class NetWorkMgr : Singleton&lt;NetWorkMgr&gt;
+//1.建立连接
+//声明Socket以及对应的异步回调事件
+Socket _socket;
+SocketAsyncEventArgs _connectEvent;
+SocketAsyncEventArgs _sendEvent;
+SocketAsyncEventArgs _receiveEvent;
+
+bool Connect( string ip, int port )
+{
+    IPAddress ipAddress = IPAddress.Parse( ip );
+    IPEndPoint remoteEP = new IPEndPoint( ipAddress, port );
+    //Unity建立Socket连接对象的接口，采用TCP连接，也支持其他协议
+    _socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp );
+    //设置ip和端口号
+    _connectEvent.RemoteEndPoint = remoteEP;
+    _connectEvent.UserToken = _socket;
+    //异步连接
+    bool willRaiseEvent = _socket.ConnectAsync( _connectEvent );
+    if( willRaiseEvent )
+    {
+        //未连接成功的话就等待连接
+        _connectDone.WaitOne();
+    }
+    else
+    {
+        ConnectCompleted( null, _connectEvent );
+    }
+    if( !Connected )
+    {
+
+        Disconnected = true;
+        return false;
+    }
+    //连接成功后，可以接受服务端的数据了
+
+    ReceiveData();
+    return true;
+}
+
+//2.接收数据
+byte[] _receiveBuffer;
+
+void ReceiveData()
+{
+    //设置一个1024KB大小的接收缓冲区，将收到的网络数据存入接收缓冲区
+    _receiveEvent.SetBuffer(_receiveBuffer, 0, 1024*1024 );
+    //异步接受消息事件
+    bool willRaiseEvent = _socket.ReceiveAsync( _receiveEvent );
+    if( !willRaiseEvent )
+    {
+        //成功收到数据，在这个函数里处理数据的逻辑
+        _SocketReceiveCompleted( null, _receiveEvent );
+    }
+}
+
+void _SocketReceiveCompleted( object sender, SocketAsyncEventArgs e )
+{
+    if( e.SocketError == SocketError.Success )
+    {
+        if( e.BytesTransferred == 0 )
+        {
+            //接收到的0字节的数据，可能因为网络连接中断了或者网络不好
+        }
+        else
+        {
+            //将收到的数据存入接收缓冲区，这里就是做一些字节流copy的操作
+            _CopyToReceiveBuffer( e.Buffer, e.BytesTransferred );
+            //继续接收数据
+            _Receive();
+        }
+    }
+    else
+    {
+        //返回SocketError了直接断开连接
+        Disconnect();
+        Disconnected = true;
+    }
+}
+
+//处理收到的网络数据
+//Unity Mono的Update函数，每帧调用处理缓冲区数据
+public void Update()
+{
+    if( !Connected )
+    {
+        return;
+    }
+    //心跳检测机制，记一下服务器的响应时间，如果长时间未响应则中断连接，尝试重连
+
+    TimeSpan span = DateTime.Now - _lastSendTime;
+    if( !_responsed &amp;&amp; span.TotalSeconds &gt; NetworkDef.RESPONSE_EXPIRE_SECONDS )
+    {
+        _lastSendTime = DateTime.Now;
+        Disconnected = true;
+    }
+    //监测到断线后的处理
+
+    if( Disconnected )
+    {
+        Game.Instance.StartCoroutine( TryReConnect() );
+        Disconnected = false;
+    }
+    //处理接收缓冲区的数据，解析数据协议，调用到游戏内的接口中，这边就不再详细实现了
+
+    ProcessReceiveBuffer();
+}</code></pre>
+<p>关于上述代码缓冲区的设计，可以看这个示意图来进行理解，同样发送数据的逻辑，也是通过将要发送的数据加入发送缓冲区来发送。</p>
+<p>具体什么时候把缓冲区的数据发送到服务器、什么时候接收缓冲区的数据，是由TCP底层策略来实现的，Unity应用层可以不需要关注。</p>
+<p><img src="../../storage/images/2025/05/QMdXCnvfEzXHCfPGUPh5ta8G9ryjRzLzW2yiFGOK.png" alt="" /></p>
+<h2 id="b0238a3726142f17cea2d2f321faf65e">二、客户端框架</h2>
+<p><img src="../../storage/images/2025/05/KYFuAFelpTH6oe2lnMxgrFzLvOyadXtBrD5WptRJ.png" alt="" /></p>
+<h3 id="5592beb10b93d233dee18396791491ea">单例模式（Singleton）</h3>
+<p>有很多管理类需要在游戏中有唯一实例，用来管理游戏中的某一部分的需求，因此我们要用C#实现一个单例模式基类，用来实现这些管理类</p>
+<pre><code class="language-csharp">//普通单例类
+public class Singleton&lt;T&gt; where T : new()     //由于是管理类基类，因此需要声明为泛型类型
+{
+    private static T _instance;
+    static object singletion_lock = new object();  //线程安全
+    public static T Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                lock (singletion_lock)
+                {
+                    if (_instance == null)
+                        _instance = new T();
+                }
+            }
+            return _instance;
+        }
+    }
+}
+//MonoBehavior单例类，有时候我们需要一个类继承MonoBehavior且全程只能有一个不被销毁
+//相当于把一个MonoBehavior类“静态化”
+public class MonoSingleton&lt;T&gt; : MonoBehaviour where T : Component
+    {
+        private static T _instance;
+        public static T Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = FindObjectOfType(typeof(T)) as T;
+                    if (_instance == null)
+                    {
+                        GameObject obj = new GameObject();
+                        _instance = (T)obj.AddComponent(typeof(T));
+                    }
+                }
+                return _instance;
+            }
+        }
+        public virtual void Awake()
+        {
+            DontDestroyOnLoad(this.gameObject);
+            if (_instance == null)
+            {
+                _instance = this;
+            }
+        }
+    }</code></pre>
+<p>实现好管理类基类后，我们可以开始写其他的一些管理类，来继承这个类就好了。</p>
+<pre><code class="language-csharp">//例如声明一个网络管理类
+public class NetWorkMgr : Singleton&lt;NetWorkMgr&gt;</code></pre>
+<h3 id="ac40e7ffb55ca362e7ebde9a1eec9b8d">网络同步（PhotonServer）</h3>
+<p>我们的网络框架使用<strong>PhotonServer服务器引擎</strong>来实现，同步框架示意图如下，类似于帧同步的一种网络同步方式：</p>
+<p><strong>主客户端PlayerX向我们这个房间的GameServer发送了一个事件，然后GameServer将这个事件，同步给该房间内的所有其他客户端。也就是主客户端是一切行为的发起源，服务器只是做转发</strong>。</p>
+<p>这个框架理解了，就可以开始编写同步代码了。</p>
+<p><img src="../../storage/images/2025/05/0B37t6ADFM02ve3nMM938PgiUDlSbrZjgDp44crm.png" alt="" /></p>
+<p><strong>安装配置：</strong></p>
+<p>PhotonServer的安装和下载以及服务器配置，可以参考下面链接，或者网上找一找相关资料。</p>
+<p><a href="https://vibrantlink.com/5minsphotonserver/">5分钟启动PhotonServer</a></p>
+<p><strong>如何同步：</strong></p>
+<p>我们是依靠PhotonServer这套框架实现网络对象同步的。</p>
+<p>首先根据PhotonServer的框架设计里，每一个需要联网（需要同步给别的玩家）的对象，都需要挂一个PhotonView脚本</p>
+<p><img src="../../storage/images/2025/05/wDTyL1nqNOCsYoi2VmcUgaUMjpPQIfulZiAl6nxT.png" alt="" /></p>
+<p>根据参数可以看出，PhotonView组件主要用于管理和区别服务器对象，服务器根据组件的ViewID作为唯一标识符，以区别同一预制体（prefab）生成的不同实例。</p>
+<pre><code class="language-csharp">//新增一个PlayerNetWork.cs 挂载到Player对象上，用于处理玩家的数据操作上传和同步
+public class PlayerNetwork : Photon.MonoBehaviour {}
+
+//多人MMORPG游戏， 一个客户端对应着多个玩家，多个PhotonView，而不是一个
+//传输玩家要同步的信息
+void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+{
+    //control.invoke(参数delegate)方法:在拥有此控件的基础窗口句柄的线程上执行指定的委托
+    //OnSerializeMethodInfo.Invoke((object)this.observed, new object[] { pStream, info });
+    //wrting方法只能用于MasterClient
+    if (stream.isWriting)
+    {
+        //将自己（可以是玩家，可以是怪物，可以是任何对象）的位置信息同步到服务器
+        stream.SendNext((int)playerAnimation.m_state);
+        stream.SendNext(transform.position);
+        stream.SendNext(transform.rotation);
+    }
+    else
+    {
+        //接收服务器同步过来的其他玩家的信息，当收到这条消息时，这里的PhotonView其实是该客户端内其他玩家的PhotonView的OnPhotonSerializeView方法，同步该客户端内其他玩家的位置给该客户端
+        //也就是服务器调用了所有房间内的客户端，各个客户端中其他挂有PhotonView的对象的OnPhotonSerializeView方法，然后通过本机客户端其他挂有PhotonView的Update方法将各自的位置和状态同步到本机客户端
+        playerAnimation.SetPlayerState ((PlayerState)(int)stream.ReceiveNext ());
+        correctPlayerPos = (Vector3)stream.ReceiveNext ();
+        correctPlayerRot = (Quaternion)stream.ReceiveNext ();
+    }
+}
+
+//同步场景内的其他挂载着PhotonView的对象
+private Vector3 correctPlayerPos = Vector3.zero; //其他玩家角色的正确位置
+private Quaternion correctPlayerRot = Quaternion.identity; //其他玩家角色的正确旋转角度 
+void Update()
+{
+    if (!photonView.isMine) { //同步别的玩家的位置，只需要同步别的photonview的位置
+        //采用插值法使得当前玩家角色场景中的其他玩家角色角色能够平滑地移动和旋转
+        transform.position = Vector3.Lerp (transform.position, correctPlayerPos, Time.deltaTime * 5);
+        transform.rotation = Quaternion.Lerp (transform.rotation, correctPlayerRot, Time.deltaTime * 5);
+    }
+}
+
+//上面讲了怎么同步玩家的位置和信息，那么如果广播玩家的操作呢
+//例如玩家的攻击操作，如何让别的客户端的玩家看到
+//PlayerAttack.cs
+
+//玩家对玩家角色的操作，是在客户端，但攻击对怪兽所造成的伤害，确实在服务器端实现的
+//玩家仅仅是操纵玩家角色，同步的信息都是服务器端实现的。这一句话的意思是，玩家执行攻击动作，并同步给MasterClient，然后MasterClient会通过服务器同步给其他所有客户端
+this.photonView.RPC("DidAttack", PhotonTargets.MasterClient);
+
+/// 玩家在本地客户端按了Attack键，就执行 RPC("DidAttack", PhotonTargets.MasterClient);
+/// 此时，有RPC标记的该方法在主客户端执行，且会同步给房间内的所有玩家。在玩家角色攻击范围内并且在视觉范围内的怪兽，都受到伤害
+[RPC]
+public void DidAttack()
+{
+    //只有主客户端才可以进行此操作（所谓主客户端是创建房间的人，也就是上面Photon同步框架图中的PlayerX）
+    if (!PhotonNetwork.isMasterClient)
+        return;
+    //xxxxxxxxxxxx
+}
+//除了给主客户端同步RPC，也有直接给其他所有玩家同步，或者给某个指定ViewId的玩家同步。
+this.photonView.RPC("DidAttack", PhotonTargets.MasterClient);  //同步给主客户端，主客户端上报服务器
+this.photonView.RPC("SetInActive", PhotonTargets.Others, localPlayerId);
+this.photonView.RPC("HideCharacter", PhotonTargets.All);//只在本地客户端上同步</code></pre>
+<h3 id="a9ff950f094c2025b56b6bbb91ca9627">消息订阅和发布（EventListener）</h3>
+<p>订阅和发布模式是游戏里必不可少的一个设计模式，因为当游戏模块越来越多之后，为了程序的可扩展性、低耦合性，需要能够高效地进行一些消息和数据的传递。</p>
+<p>发布订阅模式模型：</p>
+<p><img src="../../storage/images/2025/05/OkLMfbmYz1pG9oraJZu4BzkbQBdb6djHQQCb5ZZC.png" alt="" /></p>
+<pre><code class="language-csharp">//先定义一些事件
+enum MessageEvent
+{
+    eMessageEvent_Login, //通知登录
+    eMessageEvent_Loading, //通知可以loading了
+    eMessageEvent_EnterMain, //通知进入主界面了
+}
+//定义一个字典，用来管理所有的事件
+static public Dictionary&lt;MessageEvent, Delegate&gt; MessageList = new Dictionary&lt;MessageEvent, Delegate&gt;();
+//消息订阅
+public void AddListener(MessageEvent msg_id, Delegate func) {
+    MessageList[msg_id] = MessageList[msg_id] + func;
+}
+//消息触发
+public void SendMessage(MessageEvent msg_id) {
+    Delegate func;
+    //去事件管理列表中找，有没有这个事件的订阅记录，有的话，就执行对应绑定的方法
+    if (MessageList.TryGetValue(msg_id, out func)) {
+        if (func != null) {
+            func();
+        }
+    }
+}
+//在我们登录界面初始化的时候，订阅一下这个消息
+//LoginPanel.cs
+public void Ctor()
+{  
+    //在login界面初始化的时候，订阅了这个消息，并且绑定一个OpenLoginPanel的方法，一旦收到这个消息，就会触发这个方法
+    MessageMgr.AddListener(MessageEvent.eMessageEvent_Login,OpenLoginPanel);
+}
+//NetWorkMgr.cs
+//网络层收到服务器的可登录通知，发布登录消息
+MessageMgr.SendMessage(MessageEvent.eMessageEvent_Login);//发布后，登录界面就打开了</code></pre>
+<p>从上面的一个示例可以看出，这种设计模式下，界面和逻辑层是完全分离的，通过消息的一个订阅和发布来完成一些事件的传递，将程序模块与模块之间的耦合性降到最低。</p>
+<h3 id="37df8dd3aa0b612b994d6e5cb937f952">策划数据、配置表缓存</h3>
+<p>策划表是游戏必不可少的一部分，游戏里的一些设置、数值设定等都是策划配置在一个策划表的，一般都是用功能强大且通用的Excel。</p>
+<p>但是我们Unity代码是无法直接读Excel中的数据的，因此<strong>需要工具将Excel中的表转成Unity可以解析的一些文本格式，例如Lua的Table，Json格式，XML格式</strong>等，这部分我们可以直接用前辈们造好的轮子，就不用自己去写了。</p>
+<ul>
+<li><a href="https://github.com/DiegoZoracKy/convert-excel-to-json">Excel转Json</a></li>
+<li><a href="https://github.com/zhangqi-ulua/XlsxToLua">Excel转Lua</a></li>
+<li><a href="https://github.com/monkey256/ExcelExport">Excel转XML</a></li>
+</ul>
+<p>转成对应格式后，由于我们需要在游戏中实时使用这些策划数据，因此我们要创建一个DesignManager类，来<strong>解析这些数据并且缓存起来</strong>，便于我们开发时使用。</p>
+<pre><code class="language-csharp">//解析XML或者Json的库，也可以使用开源库来做，这里就不讲具体的解析细节了
+public class DesignManager : Singleton&lt;DesignManager&gt;
+//定义一个道具表的数据结构
+public class ItemData
+{
+    public uint Id;
+    public string name;
+
+}
+public DesignManager()
+{
+    Dictionary&lt;int, ItemData&gt; Item_design = new Dictionary&lt;int, ItemData&gt;();
+    Item_design = ParseXML("design/Item");  //封装一个ParseXML方法来解析xml格式的策划数据表，并且返回一个dict
+}
+//再封装一个取数据的方法，后续需要取道具的一些数据，就通过这个方法取就好了
+public static ItemData GetItemById(uint Id)
+{
+    if (DesignManager.Instance.Item_design.ContainsKey(Id))
+    {
+        return DesignManager.Instance.Item_design[Id];
+    }
+    return null;
+}
+//外部函数取道具信息
+ItemData item = DesignManager.GetItemById(ItemId);</code></pre>
+<p>通过这样的设计，将数据的解析和外部调用逻辑进行分离，所有数据通过策划表缓存中取，扩展性好且方便使用，但是如果需要考虑热更新，那么就需要别的方案了。因为策划数据已经被我们缓存了，直接更新策划表是没有作用的。</p>
+<h3 id="b874c0f3b23ced1934ca363fe35d4534">技能系统（Skill）</h3>
+<p>MMORPG游戏核心就是技能机制，而技能是一个很宽泛的一个设计，这里我们只讲几个比较常规常用，大家比较好理解的技能来做实现，以及如何设计一个技能框架。</p>
+<p>首先还是用我们面向对象的编程思想，设计一个Skill基类，实现一些所有技能都需要的通用行为</p>
+<pre><code class="language-csharp">public enum SkillType
+    {
+        Scope,//范围型技能     
+        Bullet,//弹道类技能
+        Link,//指向性技能
+        Normal,//常规技能
+    }
+public class SkillBase {
+    //为了解耦，我们一般不继承MonoBehavior类，将GameObject和Transform显示声明
+    public int Id; //技能唯一id
+    public GameObject skill_obj = null;
+    public Transform skill_transform = null;
+    public string resName;//资源路径
+    public int skilltime;//技能持续时间
+    public SkillType m_type; //技能类型
+    public bool IsOver //声明周期是否结束
+    public string resName;//资源路径
+
+    public void CreateSkill()
+    {
+        //实例化对象
+        Object o = AssetManager.Instance.LoadRes(resName);
+        skill_obj = Instantiate( o ) as GameObject;
+        //加进SkillManager中统一管理
+        SkillManager.Instance.AddSkillObj(Id,this);
+        LoadSkillFinish();
+    }
+    public virtual void LoadSkillFinish()
+    {
+        //用来给子类重写这个方法，分别实现完成加载后的一些初始化工作
+        IsOver = false;    
+    }
+    //技能的更新类，用来更新位置、声明周期等,子类可重写
+    public virtual void Update()
+    {
+        skilltime -= Time.deltaTime;
+        //当技能的生命周期结束后，在SkillManager类中将它移除
+        if (skilltime&lt;0)
+            IsOver = true;
+    }
+}
+//实现一个普通范围型AOE技能
+public class ScopeSkill : SkillBase
+{
+    public GameObject Point;//技能释放的一个位置标准点（用来定位这个技能的位置和角度）
+    public ScopeSkill()
+    {
+        m_type = SkillType.Scope;
+    }
+    public override void LoadSkillFinish()
+    {
+        //设置这个技能生成的位置（如鼠标位置、指向性范围一定距离处等）
+        base.LoadFinish();
+
+        skill_obj.transform.rotation = Quaternion.LookRotation(this.Point.tansform.rotation);
+        skill_obj.transform.rotation.position = this.Point.tansform.position;           
+    }
+}</code></pre>
+<p>除了上述的AOE技能，我们还可以依次实现上面定义的一些技能或者我们自己想做的一些技能，关键就是要做好技能的可扩展性。</p>
+<p>另外还需要一个SkillManager管理类来全局管理这些技能的创建、更新、销毁。</p>
+<pre><code class="language-csharp">public class SkillManager : Singleton&lt;SkillManager&gt;
+{       
+    public Dictionary&lt;Int, SkillBase&gt; m_SkillDic = new Dictionary&lt;Int, SkillBase&gt;();
+    public List&lt;SkillBase&gt; m_OverSkillList = new List&lt;SkillBase&gt;();
+    //添加技能到表表
+    public void AddSkillObj(Int Id, SkillBase skill)
+    {
+        if (!m_SkillDic.ContainsKey(Id))
+        {
+            m_SkillDic.Add(Id, skill);
+        }
+    }
+    //创建一个范围型AOE技能
+    public SkillBase CreateScopeSkill(string resName, GameObject parent)
+    {
+        //创建一个上面的ScopeSkill对象
+        ScopeSkill scope_skill = new ScopeSkill();
+        scope_skill.resName = resName;
+        //取到资源路径后可以实例化这个技能对象了
+        scope_skill.CreateSkill();
+        scope_skill.Point = parent;
+        //以技能唯一Id作为key，加入我们的技能管理列表
+        AddSkillObj(scope_skill.Id, scope_skill);
+        return scope_skill;
+    }
+    //同样后续可以扩展更多的创建技能接口
+    public SkillBase CreateBulletSkill(string resName, GameObject parent)
+    {
+            //**************
+    }
+    //更新所有管理的技能
+    //该函数在Main类中调用
+    public void Update()
+    {
+        foreach (var skill in m_SkillDic.Values)
+        {
+            skill.Update();//执行skill本身的Update逻辑
+            if (skill.IsOver == true)
+            {
+                //用一个list维护生命周期结束的技能，在Update后，统一销毁掉
+                m_OverSkillList.Add(skill);
+            }
+        }
+    }
+}</code></pre>
+<h3 id="e079c434142130d43ae8a17b62fb81b9">管理资源加载和更新模块</h3>
+<p>这个需要分两块来做，一个是资源的加载，一个是资源的更新。</p>
+<pre><code class="language-csharp">public class AssetManager : Singleton&lt;AssetManager&gt;</code></pre>
+<p><strong>1.资源加载</strong></p>
+<p>我们的资源最终会打包成AssetBundle，我们在Editor模式下可以直接在我们的资源目录内加载对应的资源，如果在发布平台，那么我们需要加载的是ab包文件。</p>
+<pre><code class="language-csharp">public Object LoadRes(string path)
+{
+    //Editor模式下直接从Resource目录读取即可，方便我们本地开发
+    #if UNITY_EDITOR
+        return Resources.Load(path);
+    #endif
+        //加载对应路径的ab包资源
+        //这里应该根据我们打包的AssetBundle依赖文件里的信息，先将依赖的文件加载进来，再加载我们的目标文件
+        //涉及打包相关，这里就不详细讲
+        byte[] AbBytes = File.ReadAllBytes( path );
+        AssetBundle assetBundle = AssetBundle.CreateFromMemoryImmediate( AbBytes );
+        return assetBundle.mainAsset;
+}
+//用加载得到的资源，实例化一个GameObject
+Object o = AssetManager.Instance.LoadRes("res/UIMessage");
+GameObject go = Instantiate( o ) as GameObject;</code></pre>
+<p><strong>2.资源更新</strong></p>
+<p>在游戏开发初期，可以不太关注资源更新部分，可以把更多的时间和经历放在打磨游戏细节上。但如果之后这个游戏要上线长期运营，那么就离不开资源的热更新。Unity3d提供一套资产管理解决方案，可以将Unity项目内资产按一定策略打包成AssetBundle文件，可以通过将游戏的资源打包成AssetBundle，并且将每个文件的版本信息以及md5值单独存成一个配置文件，并且生成一个版本号，放在服务器上来进行动态热更新。</p>
+<p>一般更新流程：</p>
+<p><img src="../../storage/images/2025/05/izcD0n1OTHLLaxNFVRNkbhDwmFf9WnikkYDrkz4W.png" alt="" /></p>
+<p>按照上述流程，就可以实现我们的资源动态更新了。资源动态更新的好处有很多，例如缩小包体的大小，动态更新版本（无需再走提审流程），热修复一些bug等。</p>
+<p>资源更新的这个更新的流程不仅仅适用于Unity，其他游戏引擎基本也都是同样的解决方案，比如Cocos2d-x官方的AssetManager资源更新解决方案。思路基本大同小异，实现细节上会有一些差异化，可以根据我们项目的特点和需求自定义。</p>
+<h3 id="65205f515c72d43cb078abd022f0a139">UI开发</h3>
+<p>我们选择工业界广泛应用的经典UI插件，NGUI。</p>
+<p>首先需要将NGUI插件导入我们Unity项目中，可以通过AssetStore购买或者网上下载unitypackage包导入。</p>
+<p>导入之后，就可以利用NGUI进行界面开发了</p>
+<p><img src="../../storage/images/2025/05/5CYXFeKjvG9hoEGyjaEMqnTbQDbfwEAeiiAcV20K.png" alt="" /></p>
+<p>在进行UI开发之前，首先要搞清楚UI是如何渲染在我们屏幕上的。实际上<strong>UI在Unity中也是通过构建网格然后通过UI摄像机渲染到我们屏幕上</strong>的，和其他3D资产一样也是需要通过构建DrawCall的，因此科学地搭建UI界面也是提升性能必须要做的一件事。</p>
+<p>NGUI的核心：UIPanel、UIWidget、UIDrawcall。Panel和Widget是会显示在Hierarchy层级中的，而UIDrawcall则不会</p>
+<p>NGUI层次结构：</p>
+<p><img src="../../storage/images/2025/05/9yQfNeWYiHP2fgXBZegRwh5aoJoUkeT1GssWHG3j.png" alt="" /></p>
+<p><strong>Static List：</strong>全局的List，管理着UI下所有Panel</p>
+<p><strong>UIPanel：</strong>每个Panel有两个属于自己的List：一个List 用来存储子节点，一个List&lt; UIDrawcall &gt;用来构建DrawCall</p>
+<p>NGUI的DrawCall构建：</p>
+<p><img src="../../storage/images/2025/05/Ya6nCO6L30EENtfdzgbgLqxmywNyvzof6MyNg0N5.png" alt="" /></p>
+<p>根据上图可以看到<strong>NGUI的Drawcall构建是按照Widget的深度来进行排序构建</strong>，当他们的材质或者贴图不一样时，就会单独构建一个Drawcall来渲染</p>
+<p>根据这个可以看出，我们可以<strong>尽量将同材质的对象放到一个Panel下构建，就可以减少UI渲染的Drawcall了</strong>。</p>
+<p><img src="../../storage/images/2025/05/caRSpltBMCW3FQynRFPccB3O4ojQJ6GqD4Fqi2W0.png" alt="" /></p>
+<p>大家有兴趣的可以看一下NGUI的源码，里面会有详细的渲染构建过程</p>
+<p>例如上面说的<strong>Drawcall的合并和构建代码在UIPanel.cs的一个合并设计，就在NGUI的FillAllDrawCalls函数</strong>中，也是NGUI框架中的一个核心逻辑了。</p>
+<pre><code class="language-csharp">//源码剖析
+void FillAllDrawCalls ()
+{
+        //由于要重新构建DrawCall，先将之前的DrawCall全部清理掉
+
+    for (int i = 0; i &lt; drawCalls.Count; ++i)
+        UIDrawCall.Destroy(drawCalls[i]);
+    drawCalls.Clear();
+        //标记组件初始化，用来记录和判断材质、贴图、shader是否一致                       
+
+    Material mat = null;
+    Texture tex = null;
+    Shader sdr = null;
+    UIDrawCall dc = null;
+    int count = 0;
+        //对我们的Widget进行排序（Widget有渲染优先级，根据Widget的Panel来构建绘制顺序）
+
+    if (mSortWidgets) SortWidgets();
+        //遍历排好序的Widget，开始构建新的DrawCallList                                   
+
+    for (int i = 0; i &lt; widgets.Count; ++i)
+    {
+        UIWidget w = widgets[i];
+
+        if (w.isVisible &amp;&amp; w.hasVertices)
+        {
+            Material mt = w.material;
+            Texture tx = w.mainTexture;
+            Shader sd = w.shader;
+                        //如果这个Widget的Material、Texture、Shader与上一个Widget不一致
+                        //那么这种情况就需要重新构建一个DrawCall了
+
+            if (mat != mt || tex != tx || sdr != sd)
+            {
+                if (dc != null &amp;&amp; dc.verts.size != 0)
+                {
+                    drawCalls.Add(dc);
+                    dc.UpdateGeometry(count);
+                    dc.onRender = mOnRender;
+                    mOnRender = null;
+                    count = 0;
+                    dc = null;
+                }
+
+                mat = mt;
+                tex = tx;
+                sdr = sd;
+            }
+
+            if (mat != null || sdr != null || tex != null)
+            {
+                if (dc == null)
+                {
+                                        //构建本次DrawCall的几个要素，material、Texutrue、Sahder以及depth                                        
+                    dc = UIDrawCall.Create(this, mat, tex, sdr);
+                    dc.depthStart = w.depth;
+                    dc.depthEnd = dc.depthStart;
+                    dc.panel = this;
+                }
+                else
+                {
+                    int rd = w.depth;
+                    if (rd &lt; dc.depthStart) dc.depthStart = rd;
+                    if (rd &gt; dc.depthEnd) dc.depthEnd = rd;
+                }
+                                //将本次新DrawCall的数据写入DrawCallBuffer等待绘制
+
+                w.drawCall = dc;
+
+                ++count;
+                if (generateNormals) w.WriteToBuffers(dc.verts, dc.uvs, dc.cols, dc.norms, dc.tans);
+                else w.WriteToBuffers(dc.verts, dc.uvs, dc.cols, null, null);
+
+                if (w.mOnRender != null)
+                {
+                    if (mOnRender == null) mOnRender = w.mOnRender;
+                    else mOnRender += w.mOnRender;
+                }
+            }
+        }
+        else w.drawCall = null;
+    }
+
+}</code></pre>
+<p>来自己搭一个界面测试一下</p>
+<p><img src="../../storage/images/2025/05/aIe8C5ZzPcVPLwa3GXJgXVxWwbncxygjHt6ZqI4o.png" alt="" /></p>
+<p><img src="../../storage/images/2025/05/JVGGDQX1KFZoGEAxHQhGSR8nxVnWhgbIYLsmOSu3.png" alt="" /></p>
+<p><strong>UIPanel组件会把这个Panel需要构建多少个DrawCall以及每个DrawCall绘制的内容和三角形数都显示在面板上，供我们调整，尽可能的减少DrawCall。</strong> 根据上图显示，</p>
+<p>UI开发上还有很多有趣的地方，可以实现很多很炫酷的效果，大家有兴趣的话这也是一个值得深入学习的方向。</p>
+<p>我们通过NGUI把界面拼好后，如何去高效的管理（加载、卸载）他们呢？</p>
+<pre><code class="language-csharp">//老样子，贯彻面向对象开发思想，先创建一个UI基类
+//基类同样还是以规范类的行为和提供通用接口为主
+//不继承MonoBehavior，实现界面与Script解耦，有很多把脚本跟界面绑定的，不建议采用那种UI开发方式，耦合度太高。
+ public abstract class UIBase
+{
+     private Transform root;
+
+     private string resName;
+     //这些定义成抽象类，让子类自己去实现
+     protected abstract void Init();
+
+     protected abstract void InitUI();
+
+     protected abstract void AddListener();//各自子类自己实现，通过上面的消息订阅机制去订阅一下UI的消息
+     protected abstract void RemoveListener();//UI销毁时需要把订阅的事件移除
+     public bool CreateUIRes()
+     {
+        if (root)//避免重复创建
+        {
+            return false;
+        }
+        GameObject ui_obj = AssetManager.LoadUI(resName);
+        ui_obj.transform.parent = uicamera.gameObject;//将界面挂在到UICamera上（UIRoot）
+
+        if (ui_obj == null)
+        {
+            return false;
+        }
+
+        root = obj.transform;
+
+        root.gameObject.SetActive(false);//创建后默认隐藏，等于预先加载好，避免那种大量UI同时实例化导致的内存峰值引起的卡顿
+
+        return true;
+     }
+     //惰性创建，调用Show的时候才会调用
+     public void ShowUI()
+     {
+        if (mRoot == null)
+        {
+            if (CreateUIRes())
+            {
+                InitUI();
+            }
+        } 
+        if (root)
+        {
+            root.gameObject.SetActive(true);
+            AddListener();
+        }
+    }
+ }</code></pre>
+<p>上面讲了UI类要如何设计，这里讲一下UIManager类要如何管理这些界面</p>
+<pre><code class="language-csharp">//给界面取名便于管理
+public enum UIName{
+    login,
+    loading,
+    main,
+    fight,
+}
+//老样子，Manager类需要是单例
+public class UIManager : Singleton&lt;UIManager&gt;
+{   
+    public Dictionary&lt;UIName, UIBase&gt; ui_dict = new Dictionary&lt;UIName, UIBase&gt;();
+
+    public UIManager()
+    {
+        //先把各界面的对象创建出来缓存进去，但是不加载资源
+        ui_dict[UIName.login] = new UILogin();
+        ui_dict[UIName.loading] = new UILoading();
+        ui_dict[UIName.main] = new UIMain();
+        ui_dict[UIName.fight] = new UIFight();
+    }
+    //UI有两种加载方    
+    //1.惰性加载：使用的时候再创建且显示，适用于当前场景UI不是很多的情况
+    public void ShowUI(UIName name)
+    {
+        UIBase ui;
+        if(!ui_dict.TryGetValue(name , out ui))
+        {
+            return;
+        }
+        ui.ShowUI();    
+    }
+    //2.预加载
+    //在UIManager中预先创建好，但是不渲染，先隐藏
+    //预加载适用于某个场景UI特别多的时候，我们可以在loading或者上一个场景就提前把资源加载好，防止出现因为界面过多导致的性能瓶颈。
+    public void PreLoadUI()
+    {
+        //将UI全部预加载，这里我们可以在初始化的时候给UI分类型，就可以加载我们想要的部分的类型UI了
+        //一般以场景来分UI比较合适，因为一般UI加载是按场景来加载的。
+        foreach (UIBase ui in ui_dict.Values)
+        {
+            ui.CreateUIRes();             
+        }
+    }
+
+}</code></pre>
+<h3 id="7dc31351bfc09b858bb4fab40c98b044">游戏状态管理类（游戏状态机）</h3>
+<p>在我们游戏中可以分为很多状态，状态的分类可以有多种依据，例如以当前的场景为加载依据（登录、加载、世界场景、副本场景等等），将游戏分成多个状态，好处就是当我们游戏状态发生改变的时候，可以做一些事件的统一处理。例如当我们从副本场景切回到世界场景，要对副本场景里的一些资源做统一的清理操作以及对世界场景做一些预加载操作，有状态这个标记我们就能清楚地知道“什么时候应该做什么事”。</p>
+<pre><code class="language-csharp">//首先还是定义一些可能要用到的状态
+enum GameStatus
+{
+    Update,//更新
+
+    Login,//登录
+
+    World,//世界场景
+    GamePlay,//副本
+}
+//定义一个状态接口 用来规范我们状态的设计行为
+interface Interface_GameStatus
+{
+    void SetStatus(GameStatus status);//设置当前状态
+    void EnterStatus();//进入该状态，要做的事
+    void QuitStatus();//离开该状态，要做的事
+    GameStatus GetStatus();//获取到当前我们游戏出于的状态
+}
+//实现一个副本状态类
+public class GamePlayState : Interface_GameStatus
+{
+    public GameStatus GetStatus()
+    {
+        return GameStatus.GamePlay;
+    }
+    public void Enter()
+    {
+        //加载副本场景的UI
+        AssetMgr.Instance.LoadUI("Play/PlayUI");
+        //订阅一个副本结束的消息，当副本结束时，调用副本资源的一些清除工作
+        MessageMgr.AddListener(MessageEvent.eMessageEvent_GamePlayOver,GamePlayOver);
+        //生成副本场景里的资源，比如场景，怪物等等
+        InitMap();
+        InitMonster();
+    }
+    public void GamePlayOver()
+    {
+        //Clean
+    }
+}</code></pre>
+<p>通过状态，来控制游戏的进程推进，通过状态接口来规范状态的实现和操作，实现了一个扩展性强的简易游戏状态机。</p>
+<h3 id="4a18107c648d472a247249a754e5116b">主模块（AppEntry）</h3>
+<p>上面我们设计的管理类都是继承Singleton的单例类，完全与引擎的MonoBehavior解耦，但由于我们一定需要有一个Update类（例如Skill的生命周期、资源的更新），因此我们必须要有一个继承MonoBehavior的类，我们就叫Main类好了，顾名思义就全局管理所有Manager的类</p>
+<pre><code class="language-csharp">//将Main声明成一个MonoBehavior单例类
+public class Main : MonoSingleton{
+    //在Awake中设置一些游戏全局的设置 如雾效渲染、屏幕黑屏
+    void Awake(){
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        RenderSettings.fog = false;
+    }
+    //start中可以做一下预加载工作
+    void Start () {
+        //预加载，减少进入游戏资源加载卡顿
+        DesignManager.Instance.Preload();//预加载策划表
+        //预加载特效信息
+        SkillManager.Instance.PreloadSkillEffect();
+    }
+    //最重要的Update函数，用于更新游戏里所有的Manager
+    void Update ()
+    {
+        //游戏状态机更新
+        GameStatusMgr.Instance.Update();
+        //更新技能
+        SkillManager.Instance.Update();    
+        //更新资源
+        AssetManager.Instance.Update();
+        //更新网络模块
+        NetworkManager.Instance.Update();
+        //UI更新
+        UIManager.Instance.Update();
+    }
+
+    //另外可以在Main中定义一些App生命周期相关的函数，用来实现一些跟App生命周期挂钩的需求
+    //例如在App退出的时候主动断开与服务器的连接，减少服务器的连接压力。
+    void OnApplicationQuit()
+    {
+        NetworkManager.Instance.DisConnect();
+    }
+}</code></pre>
+<h2 id="583cd5403bb73fbd2d62f5cb42b6674e">三、核心玩法</h2>
+<h3 id="56e9ec8d1ffe7f6c65ef4fe1fe5d367c">玩家操作</h3>
+<p>3D的MMORPG游戏中，玩家一般的操作自由度相对较高，一般包含行走、跳跃、加速跑、攀爬、攻击、防御等行为，这些操作都是需要程序来一一实现的，这些操作将最直接地影响玩家的体验，因此除了开发功能，更多的时间需要用到参数调试上，比如玩家的移动速度，攻击动作前摇，视角的旋转范围和速度等，也就是我们玩家所说的“手感”。</p>
+<p>我们先给玩家加上一个PlayerController脚本，用来实现玩家的各种操作</p>
+<p><img src="../../storage/images/2025/05/I4CzIbfnQIi4OU488puDzznnhFT4CSabfUyXdIfd.png" alt="" /></p>
+<p>另外我们给玩家加上一个Unity自带的CharacterController组件来帮我们实现一些角色运动的功能</p>
+<p>我们在Unity的InputSetting先配置一下操作快捷键，例如空格键代表跳跃。</p>
+<p><img src="../../storage/images/2025/05/4El3kCjlwHeCfPjmvInH8Bch65yIJz0JvLv8FMDo.png" alt="" /></p>
+<pre><code class="language-csharp">//先算出玩家的移动方向向量
+Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+moveDirection = transform.TransformDirection(moveDirection);//局部坐标系转换到世界坐标系
+//乘一个速度，相当于玩家每帧可以沿这个方向位移多少距离
+moveDirection *= walkSpeed;
+
+//PlayerAnimation是同样挂接在Player上的脚本，用来实现玩家的动画切换
+playerAnimation = GetComponent&lt;PlayerAnimation&gt;();
+
+//当速度大于一定值的时候才给玩家播放行走动画，防止误触的情况
+if (moveDirection.magnitude &gt; 0.5)
+    playerAnimation.SetPlayerState(PlayerState.walk);
+else
+    playerAnimation.SetPlayerState(PlayerState.idle);
+
+//使用重力来结束跳跃，使玩家能够落下，并确保他正在接触地面
+moveDirection.y -= gravity * Time.deltaTime;//deltaTime完成一帧所需要的时间
+
+//跳跃
+//按空格，跳跃控制，这个"Jump"具体对应哪个键位可以在Unity的InputSetting中修改
+if (Input.GetButton("Jump"))
+{
+    ResetState();//将其他状态（攻击、行走等）重置，准备切换到跳跃状态
+    playerAnimation.SetPlayerState(PlayerState.jump);
+    StartCoroutine(DoJump());
+    moveDirection.y = jumpSpeed;//给玩家运动方向向量的y方向加一个速度，玩家就会向上位移</code></pre>
+<h3 id="601e4cc156fdf41741ae3d8d19b1e0e7">摄像机跟随</h3>
+<p>摄像机拍摄到的东西就是玩家能看到的东西，因此<strong>摄像机的位置决定了屏幕渲染的内容</strong>。 同样摄像机的拍摄角度，镜头可旋转的范围，镜头旋转的速度等也会影响玩家的直接感官，没有调整好的话甚至会引起头晕，因此“摄像机体验”也是MMO开发的重点研究对象。</p>
+<p>给我们游戏的主摄像机挂上一个用来实现摄像机跟随的脚本，跟随的Target设置成我们Player身上的一个Transform（MyPosition）</p>
+<p><img src="../../storage/images/2025/05/xrkfiz08gD0pODL6jku24nJx8phzAApnPe4PeJBs.png" alt="" /></p>
+<pre><code class="language-csharp">//摄像机的一些参数设计，这些网上以及Unity官方教程都有比较详细的例子和已经调整好的参数，我们可以直接使用，并且针对我们需求做一些改动
+public class PlayerCamera : MonoBehaviour
+{
+    /// 镜头目标
+    public Transform target;
+    /// 镜头离目标的距离
+    public float distance = 10.0f;
+    /// 最大镜头距离
+    public float maxDistance = 20.0f;
+    /// 鼠标滚轮拉近拉远速度系数
+    public float scrollFactor = 10.0f;
+    /// 镜头旋转速度比率
+    public float rotateFactor = 5.0f;
+    /// 镜头水平环绕角度
+    public float horizontalAngle = 45;
+    /// 镜头竖直环绕角度
+    public float verticalAngle = 0;
+
+    private Transform mCameraTransform;
+}
+
+//这里我们选择在LateUpdate中运行摄像机跟随的逻辑
+//因为LateUpdate是晚于Update执行的，而玩家运动逻辑一般是在Update中实现的，逻辑上比较符合玩家先运动摄像机再跟随。
+//另外也是防止出现玩家还没过去，摄像机就移动了的这种情况
+void LateUpdate()
+{
+    MoveCamera();
+
+}
+//摄像机跟随函数
+void MoveCamera()
+    {
+        //滚轮控制摄像头与目标的距离，设置一个合理区间
+        distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel") * 200 * Time.deltaTime, 0.1f, maxDistance);
+
+        //按住鼠标左右键移动，镜头随之旋转
+        var isMouseLeftButtonDown = Input.GetMouseButton(0);
+        var isMouseRightButtonDown = Input.GetMouseButton(1);
+        if (isMouseLeftButtonDown || isMouseRightButtonDown)
+        {
+            var axisX = Input.GetAxis("Mouse X");
+            var axisY = Input.GetAxis("Mouse Y");
+
+            horizontalAngle += axisX * rotateFactor;
+
+            //保证上下旋转不会看到地面的下方
+            verticalAngle = Mathf.Clamp(verticalAngle + axisY * rotateFactor, -100, 0);
+
+            if (isMouseRightButtonDown)
+            {
+                //鼠标右键拖动摄像机，人物也会跟随着旋转
+                //这里是直接修改了玩家的rotation，要想表现得自然一点可以做一个插值运算平滑过度过去
+                if (target)
+                    target.parent.rotation = Quaternion.Euler(0, horizontalAngle, 0);
+            }
+        }
+
+        //按镜头距离调整位置和方向
+        var rotation = Quaternion.Euler(-verticalAngle, horizontalAngle, 0);
+        var offset = rotation * Vector3.back * distance;
+        if(target)
+            mCameraTransform.position = target.position + offset;
+        mCameraTransform.rotation = rotation;
+    }</code></pre>
+<p><img src="../../storage/images/2025/05/5UPlktgH6HIomTfjMz0X2g3K0utYuM3Qk2YtrAO5.png" alt="动图封面" /></p>
+<h3 id="bd55963f1ff0eb817ee69b07ed02b72f">战斗判断</h3>
+<p>MMORPG战斗模式可以分为多种，这个主要看游戏设定的核心玩法是什么样的。我们的MiniMMO的话，就先实现一个最基础的近战战斗。</p>
+<p>同样先给玩家绑一个用来处理攻击动作的脚本</p>
+<pre><code class="language-csharp">//我们先设计一个playerData类，绑定在玩家身上的一个全局数据管理组件
+//里面维护了一些核心玩法相关的数组，跟上面客户端框架设计的理念一样，分开管理可以降低各个组件之间的耦合度
+//PlayerData.cs
+public class PlayerData : MonoBehaviour 
+{
+    public List&lt;GameObject&gt; monsters;//进入玩家角色的监控范围（即Collider）的怪兽
+    public List&lt;GameObject&gt; otherPlayers;//进入玩家角色的监控范围（即Collider）的其他玩家角色
+}
+
+//PlayerAttack.cs
+//攻击怪物的逻辑
+if (playerData.monsters.Count &gt; 0)
+{
+    foreach (GameObject monster in playerData.monsters)
+    {
+        if (!monster)   continue;             
+        var distance = Vector3.Distance(monster.transform.position, this.transform.position);
+        // 找出怪兽相对于玩家角色的位置和角度
+        var relativeLocation = transform.InverseTransformPoint(monster.transform.position);
+        var angle = Mathf.Atan2(relativeLocation.x, relativeLocation.z) * Mathf.Rad2Deg;
+        //判断玩家的角度和距离是不是在可攻击范围内（防止出现背对着怪物或者距离怪物太远也能攻击到怪物的情况）
+        //假如之后我们要设计一些攻击距离更远的武器，就可以动态配置PlayerData.attackRadius来实现通用设计
+        if (distance &lt;= PlayerData.attackRadius &amp;&amp; Mathf.Abs(angle) &lt;= PlayerData.viewAngle)
+        {
+            //每次攻击给怪兽一个攻击力*1~2之间的随机数的伤害值
+            float attackDamage = attack*Random.Range(1,2);
+            monster.GetComponent&lt;MonsterStatus&gt;().ApplyDamage(attackDamage);
+        }
+    }
+}
+//同样攻击人的逻辑类似，就不展开说了</code></pre>
+<p>来看一下实现的攻击的效果</p>
+<p><img src="../../storage/images/2025/05/2UXI7sW0vZG1VTl56s36sanU136Fsa30Rmxpmqf5.png" alt="动图封面" /></p>
+<p>这儿我们只是实现了一下最简单的普通攻击，实际开发中要达到很好的攻击手感，要做的和计算的东西远不止于此，这里只是提供一个设计思路，后续大家有兴趣的可以深入研究一下。</p>
+<h3 id="3a5d8e29f42bdf2c5ca3d06ecf5bec93">状态机</h3>
+<p>游戏有状态机，我们的游戏主角、怪物也需要有一个状态机，来控制玩家的各种状态。</p>
+<p>有限状态机属于设计模式范畴的一种设计，为的也是用扩展性更好的代码实现玩家的各种状态之间的切换，如：walk、run、Idle、Attack、Dead等。如果简单的做切换的话，可能就是大量的if else逻辑，可读性不好且扩展性差，代码耦合度太高。</p>
+<p>Unity内置的一个动画状态机，就是一个有限状态机：</p>
+<p><img src="../../storage/images/2025/05/cA1n3PBZghuZZc68hHlrQ5HP9OpnyERiKT1lmKjb.png" alt="" /></p>
+<p>但这个动画状态机局限于控制动画的状态切换，因此游戏内对象的自定义状态需要我们自己去实现。</p>
+<pre><code class="language-csharp">//定义我们游戏需要的几种状态类型
+public enum FSM_DEF 
+{
+        IDLE,
+        WALK,
+        RUN,
+        DEAD,
+}
+
+//老样子实现一个状态基类
+public abstract class FSMBase
+{
+        public abstract void OnUpdate();
+        public virtual void Enter()
+        {
+        }
+        public virtual void Exit()
+        {
+        }
+}
+
+//除了基类，我们也可以使用接口来实现，更加规范因为所有继承接口类的子类都需要把接口的方法全部实现
+public interface FSMBase
+{
+        FSMBase State { get; }
+        void Enter(GameObject obj);//进入该状态做的事情
+        void Exit(GameObject obj);//离开该状态做的事情
+
+        void OnUpdate(GameObject obj);
+//每帧更新
+}
+
+//实现具体的状态机——run
+public class FSM_Run : FSMBase
+{
+        public static FSM_Run Instance = new FSM_Run();
+
+        public FSM_DEF FSM{
+                get
+                {
+                        return FSM_DEF.RUN;
+                }
+        }
+
+        //玩家进入Run状态时，调用PlayerController的Run方法（里面做一些设置方向速度等动作）
+        public void Enter(GameObject obj){
+            player_controller = obj.transform.GetComponent&lt;PlayerController&gt;();
+            player_controller.Run();
+        }
+        //更新函数，更新玩家在run状态下的位置变化
+        public void OnUpdate(GameObject obj){
+            player_controller = obj.transform.GetComponent&lt;PlayerController&gt;();
+            player_controller.OnRunUpdate();
+        }
+
+        public void Exit(GameObject obj){
+            player_controller = obj.transform.GetComponent&lt;PlayerController&gt;();
+            player_controller.StopRun(); 
+        }
+}
+
+//外部调用状态机，让玩家进入奔跑状态
+//PlayerController.cs
+public void ServerNotifyRun()
+{
+//先退出上一个状态
+if (this.FSM != null)
+{
+    this.FSM.Exit(this.gameObject);
+}
+//进入跑步状态
+
+this.FSM = FSM_Run.Instance
+this.FSM.Enter(this.gameObject)
+}</code></pre>
+<p>通过上述方式，扩展玩家的状态，然后通过FSM.Enter进入对应的状态，而进入对应状态之后的方法处理逻辑，我们已经全部通过FSM类封装好了，就不需要再关注这个部分了。这样设计的好处就是避免了大量的if else判断，而且扩展起来非常方便，再添加一个子类即可。</p>
+<p>想像一下如果不用状态机，我们会怎么实现</p>
+<pre><code class="language-csharp">//服务器告知，玩家可以跑动了
+public void ServerNotifyRun()
+{
+    //判断当前状态是否有冲突
+
+    if(this.status == "walk" || this.status == "attack" || this.status == "die")
+        return;
+    //播放奔跑的动画
+    PlayAnimation("Run");
+    //处理跑的逻辑，比如设置速度方向等
+    Run();
+}
+//服务器告知，玩家要进入其他状态了
+public void ServerNotifyAttack()
+{
+    //判断当前状态是否有冲突
+
+    if(this.status == "walk" || this.status == "jump" || this.status == "die")
+        return;
+    //先把跑步停了
+    StopAnimation("Run");
+    StopRun();
+    PlayAnimation("Attack");
+    Attack();
+}
+//想一想如果每一个状态都需要这样判断，当状态多的时候，简直是一场灾难。
+//状态机的实现等于把上述判抽象后封装起来，我们在外部调用的时候就简单很多了，这</code></pre>
+<h2 id="438499bd75f2292b7c6ac217f7deb634">四、插件</h2>
+<p>为了更好的了解插件的接入和开发，我们尝试<strong>接入一个破碎插件，可以做一些游戏内的物件破碎的效果</strong>，例如我们MMORPG里，可以使用技能去打一下物件，击碎之后会爆出一些道具。</p>
+<p>推荐<strong>Fracturing&amp;Destruction</strong>插件，使用方便，工具齐全，表现效果好。</p>
+<p><img src="../../storage/images/2025/05/jPSEbUiL9rdQUMMHnXmQyl44lJKzXoFiZHGSDOcH.png" alt="" /></p>
+<h3 id="8d9a071ee2ef45e045968e117a205c07">导入</h3>
+<ol>
+<li>首先我们先网上下载这个插件</li>
+</ol>
+<p><img src="../../storage/images/2025/05/KBkzoIcXpWw7iqSOJNievXRH05mhdmw6Yoj45qGL.png" alt="" /></p>
+<p>2.下载后，双击运行，导入我们项目（建议每个插件单独用一个文件夹管理，放入Plugins文件夹里）</p>
+<p><img src="../../storage/images/2025/05/7FYJJCkgZgA8mKPjm4WqeqRyApACOcRk0Fx2UWHJ.png" alt="" /></p>
+<p>导入后就可以写代码了，先创建一个我们需要破碎的对象，然后通过插件将他分块（分成很多破碎块）</p>
+<p>给这个对象设置一个Tag叫Rock，用来做碰撞检测</p>
+<p><img src="../../storage/images/2025/05/680nFHwkVhDvLT8nJ16xSByket55BoNgA89HWY9H.png" alt="" /></p>
+<pre><code class="language-csharp">//PlayerCollider.cs
+//当前我们的石块进入我们的碰撞触发器之后，将其引用
+void OnTriggerEnter(Collider collider)
+{
+    if (collider.tag == "Rock")
+        playerData.rock = collider.gameObject;
+}
+//PlayerAttack.cs
+//在我们的DoAttack方法种，加一个这个判断，如果周围有可击碎物，优先攻击它们
+if (playerData.rock)
+{
+    //由于插件代码都是开源的，等于是别人造好的轮子给我们直接使用，我们可以知道它所有的方法是怎么实现的，每个参数代表什么意义，且可以根据我们的需求做自定义扩展
+    playerData.rock.GetComponent&lt;FracturedObject&gt;().Explode(playerData.rock.transform.position,10.0f); //参数分别是破碎中心位置、破碎的力度
+    return;
+}</code></pre>
+<p>看一下效果，赞！</p>
+<p><img src="../../storage/images/2025/05/8NBQiaZHroIEN3XQsb7zmGlpmKwIScIHXhi139wg.png" alt="动图封面" /></p>
+<h3 id="ab483c31be4e0f99cc186c7c8726e4a3">插件实现</h3>
+<p>具体这个破碎效果如何实现的，有兴趣的可以看看这个插件的源码，先是将一个GameObject拆分成了很多个子物体（碎块），然后爆破的时候通过一定的物理计算来实现破碎的一个效果。</p>
+<p>下面我们针对他的实现做一下解析，<strong>如何生成破碎的子对象</strong></p>
+<pre><code class="language-csharp">private static GameObject CreateNewSplitGameObject(GameObject gameObjectIn, FracturedObject fracturedComponent, string strName, bool bTransformVerticesBackToLocal, MeshData meshData)
+    {
+        //gameObjectIn是源对象，也就是这个函数将要拆分的对象
+        //fracturedComponent是我们的源对象组件
+        //创建一个新的gameobject,mesh,chunk组件（单个碎片对象）
+        GameObject newGameObject  = new GameObject(strName);
+        MeshFilter     meshFilter     = newGameObject.AddComponent&lt;MeshFilter&gt;();
+        FracturedChunk fracturedChunk = newGameObject.AddComponent&lt;FracturedChunk&gt;();
+
+        fracturedChunk.transform.parent = fracturedComponent.transform;
+        //继承源物体的layer属性
+        if(fracturedComponent.SourceObject)
+        {
+            newGameObject.layer = fracturedComponent.SourceObject.layer;
+        }
+        else
+        {
+            newGameObject.layer = fracturedComponent.gameObject.layer;
+        }
+        //将我们新生成的这个对象组件加入我们的拆分列表
+        //ListFracturedChunks就是我们拆分后的列表，所以创建的碎片对象要加入这个里面管理
+        fracturedComponent.ListFracturedChunks.Add(fracturedChunk);
+
+        //用插件计算的碎块Mesh作为模板生成给我们的新碎片对象
+        meshData.FillMeshFilter(meshFilter, bTransformVerticesBackToLocal);
+        fracturedChunk.SplitSubMeshIndex = meshData.nSplitCloseSubMesh;
+        fracturedChunk.OnCreateFromFracturedObject(fracturedComponent, meshData.nSplitCloseSubMesh);
+
+        //给对象加MeshRender并且设置Render的属性
+        newGameObject.AddComponent&lt;MeshRenderer&gt;();
+        newGameObject.GetComponent&lt;Renderer&gt;().castShadows    = gameObjectIn.GetComponent&lt;Renderer&gt;().castShadows;
+        newGameObject.GetComponent&lt;Renderer&gt;().receiveShadows = gameObjectIn.GetComponent&lt;Renderer&gt;().receiveShadows;
+        newGameObject.GetComponent&lt;Renderer&gt;().enabled        = false;
+        //材质同样也是用我们传入进来的MeshData作为模板来生成
+        Material[] aMaterials = new Material[meshData.nSubMeshCount];
+        meshData.aMaterials.CopyTo(aMaterials, 0);
+
+        if(meshData.aMaterials.Length &lt; meshData.nSubMeshCount)
+        {
+            // Add split material
+            aMaterials[meshData.nSubMeshCount - 1] = fracturedComponent.SplitMaterial;
+        }
+        newGameObject.GetComponent&lt;Renderer&gt;().sharedMaterials = aMaterials;
+        //碎块的lightmap也要跟我们传入进来对象的lightmap参数保持一致
+        newGameObject.GetComponent&lt;Renderer&gt;().lightmapIndex        = gameObjectIn.GetComponent&lt;Renderer&gt;().lightmapIndex;
+        newGameObject.GetComponent&lt;Renderer&gt;().lightmapScaleOffset = gameObjectIn.GetComponent&lt;Renderer&gt;().lightmapScaleOffset;
+        newGameObject.GetComponent&lt;Renderer&gt;().useLightProbes       = gameObjectIn.GetComponent&lt;Renderer&gt;().useLightProbes;
+
+//      Debug.Log("Out: " + newGameObject.name + ": " + meshFilter.sharedMesh.subMeshCount + " submesh(es), " + ": " + (meshFilter.sharedMesh.triangles.Length / 3) + " triangles, " + meshFilter.sharedMesh.vertexCount + " vertices, " + (meshFilter.sharedMesh.normals != null ? meshFilter.sharedMesh.normals.Length : 0) + " normals, " + (meshFilter.sharedMesh.tangents != null ? meshFilter.sharedMesh.tangents.Length : 0) + " tangents, " + (meshFilter.sharedMesh.colors != null ? meshFilter.sharedMesh.colors.Length : 0) + " colors, " + (meshFilter.sharedMesh.colors32 != null ? meshFilter.sharedMesh.colors32.Length : 0) + " colors32, " + (meshFilter.sharedMesh.uv != null ? meshFilter.sharedMesh.uv.Length : 0) + " uv1, " + (meshFilter.sharedMesh.uv2 != null ? meshFilter.sharedMesh.uv2.Length : 0) + " uv2");
+        return newGameObject;
+    }</code></pre>
+<h2 id="3107553d1de8ba1711ca274d5dda87e8">五、打包和性能测试</h2>
+<p>玩法开发完毕后，需要开始对游戏进行打包，打包一般有常规的三种平台</p>
+<ul>
+<li>Windows：打包后，生成可运行的exe文件。</li>
+<li>Android：打包后，生成可安装的apk文件。</li>
+<li>IOS：打包后生成一个Xcode工程，<strong>想要打包成ipa文件，需要在Xcode工程上再进行打包</strong>。</li>
+</ul>
+<h3 id="c63f659f3fc6e45b99a1e24f562ac159">手动打包</h3>
+<p>我们可以在Unity的Build Setting中切换到对应平台进行开发，然后进行对应平台的打包。</p>
+<p><img src="../../storage/images/2025/05/CZVGmHVYWSy8t2eO02aYqFtSSop2ZYgN4s0W2cnd.png" alt="" /></p>
+<p>我们尝试对我们的MiniMMORPG打一个Windows的包</p>
+<p><img src="../../storage/images/2025/05/vYMmTSl0X2kKToi7EV2pPcA6nxg0Z5JtxXmwxn3K.png" alt="" /></p>
+<p>打包之后，我们会生成以上两部分文件，一部分是可运行的exe文件，一部分是我们的游戏库数据（包括Mono库等），两个文件必须在同一个目录下才可以运行。</p>
+<p>打包之后，我们运行两个客户端，验证一下我们的网络同步。</p>
+<p><img src="../../storage/images/2025/05/OJj5CTw3Ykc9EQmwd8QEi4I6r1EsaDX0BW9gMK1D.png" alt="动图封面" /></p>
+<h3 id="9adc6846b2d6dc8a46fa974ef639847e">自动化打包</h3>
+<p>当项目到了一定规模，打包时间会很长，因此肯定不能单纯地靠人工去打包。另我们需要写一些脚本来实现自动化的打包，下面简单写一些伪代码，仅提供一些思路，网上也有不少文章有自动化打包相关的详细解析，也可以学习一下。</p>
+<p><a href="https://zhuanlan.zhihu.com/p/39573386">基于python脚本，实现Unity全平台的自动打包</a></p>
+<pre><code class="language-python">//AutoBuild.py
+//1.先把unity进程杀掉
+def do_kill_unity():
+    if PLATFORM == "Windows":
+        os.system("taskkill /F /T /IM Unity.exe")
+    time.sleep(3)
+
+ //2.做一些Unity工程的清理工作
+ def do_clean():
+     LIBRARY_PATH = os.path.join(PROJECT_PATH,"Library")
+     saferemove(LIBRARY_PATH)
+
+     saferemove(os.path.join(PROJECT_PATH, r"Assets/StreamingAssets/assets"))
+
+//TODO:这里还需要做一些SVN CLEAN、SVN UPDATE的工作
+
+//3.打包win工程
+def build_win():
+    if PLATFORM != "Windows":
+        Print("cannot build windows version on other platform :%s" % PLATFORM)
+        return
+    Log("do build win start")
+    WINDOWS_ZIPFILE = os.path.join(BUILD_PATH, "windows.zip")
+    saferemove(os.path.join(BUILD_PATH, "Windows"))
+    saferemove(os.path.join(WINDOWS_ZIPFILE))
+
+    //打包命令
+    command = "%s -quit -batchmode -projectPath \"%s\" -executeMethod %s -buildOptions %s -logFile %s" % (UNITYCOMMAND, PROJECT_PATH, BuildScript, BUILD_OPTIONS, WindowsBuildLog)
+
+    os.system(command)
+    zip_file(WINDOWS_ZIPFILE, "Windows")      
+
+//4.打包安卓工程，运行Android的build脚本
+def build_android(Schema):
+
+    Log("do build android start")   
+
+    command = "%s -quit -batchmode -projectPath \"%s\" -executeMethod %s -buildOptions %s -logFile %s" % (UNITYCOMMAND, PROJECT_PATH, BuildScript_Pre, BUILD_OPTIONS, AndroidBuildLog)
+
+    os.system(command)
+
+    Print("Build Android End")                     </code></pre>
+<h3 id="ddd22119a924356d5fd97057285c0689">性能测试</h3>
+<p>打包后可以先将游戏运行到我们真机上，然后用我们的<strong>UnityProfiler</strong>连上，进行性能上的检测</p>
+<p>关于UnityProfiler具体如何去采样以及真机调试，可以学习一下：</p>
+<p><a href="https://www.jianshu.com/p/ca2ee8a51754">Unity Profiler概述及Profiler window 说明</a></p>
+<p>那么我们来对我们游戏来进行以下采样吧！</p>
+<ol>
+<li>打开Profiler面板</li>
+</ol>
+<p><img src="../../storage/images/2025/05/LZLbXWp02rCmT7qRDlzW89CjuiHsCmyJjwCcFtDC.png" alt="" /></p>
+<p>2.左边这一列加入我们需要监测的内容，例如我们要对CPU，GPU，Memory同时采样。</p>
+<p><img src="../../storage/images/2025/05/Nkhi4QwDZ14rJaklTYWTM2oNulmfhhlXvCcYrEEo.png" alt="" /></p>
+<p>3.开始运行游戏，底部面板就会显示，<strong>我们游戏运行时的具体情况，包括每个函数每个模块的具体CostTime和CPU Cost等。</strong></p>
+<p><img src="../../storage/images/2025/05/4HsFDWPi5UiMiWqdBuEaEdIcEzP0oQmK1KuGxFbr.png" alt="" /></p>
+<p>4.分析采样结果，如上图采样下来，DockArea的OnGUI函数占比比较高，因为我在游戏里加了很多测试调试的GUI，这部分效率是非常低的，正式发布的时候可以将他们去掉。</p>
+<p>另外NGUI的UIPanel.LateUpdate占比也比较高，我们也可以看一下我们代码里实现得是否有问题。</p>
+<p>我们也可以自己加一些测试代码，来验证一下UnityProfiler能否采样到我们人为制造的性能瓶颈</p>
+<pre><code class="language-csharp">//GameManager.cs
+//加上一段毁灭性的代码，再用Profiler来看一下CPU的反馈
+void Update()
+{
+    for (int i = 1; i&lt;=10000;i++)
+    {
+        GameObject profiler_test = new GameObject();
+        Destroy(profiler_test.gameObject);
+    }
+}</code></pre>
+<p><img src="../../storage/images/2025/05/zJDTqbF34DFJd9TgzCPMilEbkaDBpATMiud4lkiX.png" alt="" /></p>
+<p>可以看到，光GameManager.Update就占用了37%的CPU，非常精准。因此<strong>我们在打包前后，都可以针对我们游戏的性能进行一次采样，并且针对性地做一些优化。</strong></p>
+<h2 id="87b86fdcb823e23dcb6913100dcf2823">六、优化</h2>
+<p>上一点，我们说到，可以根<strong>据我们通过UnityProfiler对我们工程的分析，针对一些性能瓶颈进行优化</strong></p>
+<p><img src="../../storage/images/2025/05/F0c424dNE2q1jHJdt5Lg3msmKngk2zHp2CI3Rhik.png" alt="" /></p>
+<p>优化主要从几个方向入手：</p>
+<h3 id="9932551cd5b135b3ca97042293389e12">内存</h3>
+<p>虽然我们的小项目，没有什么内存压力，但是如果是大型MMORPG，内存问题永远是优化的一大重点，因为场景大、对象多、资源多，如何尽可能的减少内存占用就很重要了</p>
+<p><img src="../../storage/images/2025/05/70V3ir6sp3WEluQUnEtBoaWhDvIzam7UjLnG7Pey.png" alt="" /></p>
+<p>我们需要根据Profiler中的内存占用堆栈针对性地去做对应的优化，可以从几个方面入手：</p>
+<ol>
+<li>资源：比如我们的一些资源加载了不用了记得要销毁；避免一次性加载太多资源（内存峰值）；单个资源不要太大（例如模型、地图、纹理图集）；</li>
+<li>脚本：Update内不频繁申请和释放内存，减少内存碎片的产生，且如果出现bug容易导致内存溢出；减少函数（栈空间）；使用优质算法；</li>
+<li>插件：有一些插件的使用时也可能会占不少内存，可以根据堆栈进行优化或者裁剪一些不必要的内容。</li>
+</ol>
+<h3 id="2b55387dd066c5bac646ac61543d152d">CPU</h3>
+<p><img src="../../storage/images/2025/05/SlgCGpfJrARVEoHygzqbEGp6F8m71E0yhVoNq7Ii.png" alt="" /></p>
+<p>同样，在Profiler中可以看到CPU的每个函数占比，也是需要去选择性的优化，主要也是从几个方面入手：</p>
+<ol>
+<li>减少GC：避免产生各种临时对象（例如string拼接）、碎片化内存（装箱拆箱）等</li>
+<li>降低DrawCall：可以从我们UI、特效上，对一些纹理图片进行合批；也可以把一些模型例如山体岩石树木等做一些DrawCall Batch等。</li>
+<li>在Unity2018之后的版本，推出了JobSystem等一些多线程方案的支持，也可以减少我们游戏主线程的CPU占用。</li>
+</ol>
+<h3 id="52f9ec21735243ad9917cda3ca077d32">GPU</h3>
+<p>我们MiniMMO涉及渲染相关的东西几乎没有，但是成熟的重度游戏往往对于渲染质量和效率要求是极高的，因此GPU上的优化也是突破性能瓶颈的重要手段。</p>
+<ol>
+<li>降低DrawCall：同样是降低DrawCall，由于<strong>一次绘制是由CPU和GPU共同完成</strong>的，<strong>降低绘制数目也能有效地降低GPU的消耗</strong>。</li>
+<li>减少显存带宽：这个主要是一些比较大的纹理图集会对GPU的显存带宽带来压力，导致渲染性能下降。</li>
+</ol>
+<p><a href="https://zhuanlan.zhihu.com/p/498576422">文章转自</a></p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 5分钟启动PhotonServer: <i><a href="https://vibrantlink.com/5minsphotonserver/" target="_blank">https://vibrantlink.com/5minsphotonserver/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Excel转Json: <i><a href="https://github.com/DiegoZoracKy/convert-excel-to-json" target="_blank">https://github.com/DiegoZoracKy/convert-excel-to-json</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Excel转Lua: <i><a href="https://github.com/zhangqi-ulua/XlsxToLua" target="_blank">https://github.com/zhangqi-ulua/XlsxToLua</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Excel转XML: <i><a href="https://github.com/monkey256/ExcelExport" target="_blank">https://github.com/monkey256/ExcelExport</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> 基于python脚本，实现Unity全平台的自动打包: <i><a href="https://zhuanlan.zhihu.com/p/39573386" target="_blank">https://zhuanlan.zhihu.com/p/39573386</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Unity Profiler概述及Profiler window 说明: <i><a href="https://www.jianshu.com/p/ca2ee8a51754" target="_blank">https://www.jianshu.com/p/ca2ee8a51754</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 文章转自: <i><a href="https://zhuanlan.zhihu.com/p/498576422" target="_blank">https://zhuanlan.zhihu.com/p/498576422</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>
