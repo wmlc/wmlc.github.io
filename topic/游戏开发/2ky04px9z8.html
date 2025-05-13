@@ -1,0 +1,575 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>游戏开发中帧同步和状态同步的理解 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="q3OlzookkFVI4TNMUSe76mfkfY1CVk02GnTM2CX7">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    游戏开发 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>游戏开发</h2>
+<ul>
+<li id="blog737"><a href="dgy7xnkvw2.html#blog737">游戏分类划分</a>
+<li id="blog738"><a href="rwyl2xevz8.html#blog738">游戏术语表</a>
+<li id="blog739"><a href="kpv13xq98w.html#blog739">选择游戏引擎</a>
+<li id="blog740"><a href="d6vro3qv3g.html#blog740">游戏开发模块拆分</a>
+<li id="blog741"><a href="2ky04px9z8.html#blog741">游戏开发中帧同步和状态同步的理解</a>
+<li id="blog742"><a href="2qvpx6493m.html#blog742">多人台球游戏同步方式选择</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '2ky04px9z8.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/2ky04px9z8.html', function (data, status) {
+                addView('2ky04px9z8.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>游戏开发中帧同步和状态同步的理解</h1><ul>
+<li><a href="2ky04px9z8.html#f34f29742a1ecfe3e1f3eacca8b71f66">✅ 一、帧同步（Frame Synchronization）</a>
+<ul>
+<li><a href="2ky04px9z8.html#7288472c162d24e6fc5706bc51bbf499">🌱 概念：</a></li>
+<li><a href="2ky04px9z8.html#ecde4446fa906a2c4cb9b0dbf4f604a3">📦 工作原理：</a></li>
+<li><a href="2ky04px9z8.html#69928c126a0319fb9d61963f0c18946c">📌 关键特点：</a></li>
+<li><a href="2ky04px9z8.html#b746e3888b58391e3e8ef64f515a4248">🎮 典型应用：</a></li>
+<li><a href="2ky04px9z8.html#b938aab2afd6149e000c78fd2293897f">🧩 示例：帧同步模型（Frame Sync）</a>
+<ul>
+<li><a href="2ky04px9z8.html#e9977c2a26f37f8bb77ff2fa5003e3b2">🛠 架构说明：</a></li>
+<li><a href="2ky04px9z8.html#4d1b7bae6e2f279c2843bed6c719c7e9">服务端伪代码：</a></li>
+<li><a href="2ky04px9z8.html#e6bfe24103e0d8d634ff9d972de87b8f">客户端伪代码：</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2ky04px9z8.html#74e3fd49baced4b1fef5a26fa92e8bf8">✅ 二、状态同步（State Synchronization）</a>
+<ul>
+<li><a href="2ky04px9z8.html#7288472c162d24e6fc5706bc51bbf499">🌱 概念：</a></li>
+<li><a href="2ky04px9z8.html#ecde4446fa906a2c4cb9b0dbf4f604a3">📦 工作原理：</a></li>
+<li><a href="2ky04px9z8.html#69928c126a0319fb9d61963f0c18946c">📌 关键特点：</a></li>
+<li><a href="2ky04px9z8.html#b746e3888b58391e3e8ef64f515a4248">🎮 典型应用：</a></li>
+<li><a href="2ky04px9z8.html#4a33c82d1103b855fbecf1eacbe3f641">🧩 示例：状态同步模型（State Sync）</a>
+<ul>
+<li><a href="2ky04px9z8.html#e9977c2a26f37f8bb77ff2fa5003e3b2">🛠 架构说明：</a></li>
+<li><a href="2ky04px9z8.html#bab64c1b0f6786dba9f4228a0969896d">客户端发送请求：</a></li>
+<li><a href="2ky04px9z8.html#e95cdb1a0eab9558a1201878cd1d4b38">服务器处理并广播状态：</a></li>
+<li><a href="2ky04px9z8.html#d9b7223ed1acca7ce36f1dd4659ef48f">客户端渲染：</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2ky04px9z8.html#3835bc68cd2426a2f225cb95fa95af69">🚀 总结对比：</a></li>
+<li><a href="2ky04px9z8.html#8be7cb390bce434894d1037cb7891937">🎯 开发建议：</a></li>
+</ul><p>在游戏开发中，<strong>帧同步（Frame Sync）</strong> 和 <strong>状态同步（State Sync）</strong> 是两种主流的多人在线同步方案，它们解决的核心问题是：“如何让多位玩家在不同客户端上看到一致的游戏状态”。</p>
+<hr />
+<h2 id="f34f29742a1ecfe3e1f3eacca8b71f66">✅ 一、帧同步（Frame Synchronization）</h2>
+<h3 id="7288472c162d24e6fc5706bc51bbf499">🌱 概念：</h3>
+<p>帧同步是“<strong>同步操作指令</strong>”的方案，不直接同步状态，而是让所有客户端在同一时刻收到相同的“操作输入”，然后每个客户端用<strong>相同的逻辑代码</strong>执行，产生一致的游戏结果。</p>
+<h3 id="ecde4446fa906a2c4cb9b0dbf4f604a3">📦 工作原理：</h3>
+<ol>
+<li>客户端将玩家的输入（如移动、攻击等）发送给服务器。</li>
+<li>服务器收集所有玩家的输入指令。</li>
+<li>在下一帧统一广播这些指令给所有客户端。</li>
+<li>各客户端在本地执行这些指令，更新游戏状态。</li>
+</ol>
+<h3 id="69928c126a0319fb9d61963f0c18946c">📌 关键特点：</h3>
+<ul>
+<li>所有客户端跑相同的逻辑，结果一致。</li>
+<li>对性能要求低，带宽占用小（只传输入数据）。</li>
+<li>适合 <strong>对等性强、计算可预测</strong> 的游戏（如：MOBA、RTS）。</li>
+<li>容错性差，<strong>代码需绝对一致</strong>，否则会出现“同步失效”（即出现偏移）。</li>
+</ul>
+<h3 id="b746e3888b58391e3e8ef64f515a4248">🎮 典型应用：</h3>
+<ul>
+<li>《王者荣耀》</li>
+<li>《英雄联盟手游》</li>
+<li>RTS/MOBA 等精确同步类型游戏</li>
+</ul>
+<h3 id="b938aab2afd6149e000c78fd2293897f">🧩 示例：帧同步模型（Frame Sync）</h3>
+<p>以一个“玩家控制角色移动”的小游戏为例</p>
+<ul>
+<li>2 名玩家在一个 10x10 的网格中移动。</li>
+<li>每秒同步 10 帧，每帧发送玩家输入。</li>
+</ul>
+<h4 id="e9977c2a26f37f8bb77ff2fa5003e3b2">🛠 架构说明：</h4>
+<ul>
+<li>客户端每帧只发送输入（如：<code>{"player_id": 1, "input": "up"}</code>）。</li>
+<li>服务器收集每帧所有玩家的输入，广播给所有客户端。</li>
+<li>所有客户端执行相同逻辑来更新位置。</li>
+</ul>
+<h4 id="4d1b7bae6e2f279c2843bed6c719c7e9">服务端伪代码：</h4>
+<pre><code class="language-python"># 收集所有玩家输入
+frame_inputs = {
+    1: "up",
+    2: "left",
+}
+
+# 广播这一帧的输入给所有客户端
+broadcast_to_clients(frame_inputs)</code></pre>
+<h4 id="e6bfe24103e0d8d634ff9d972de87b8f">客户端伪代码：</h4>
+<pre><code class="language-python"># 收到这一帧的输入
+frame_inputs = receive_inputs_from_server()
+
+# 用同样的逻辑更新每个玩家位置
+for player_id, input in frame_inputs.items():
+    if input == "up":
+        players[player_id].y -= 1
+    elif input == "left":
+        players[player_id].x -= 1</code></pre>
+<p>🧠 所有客户端都在用 <strong>同一个逻辑</strong>，只要输入同步、逻辑一致，画面也就一致。</p>
+<hr />
+<h2 id="74e3fd49baced4b1fef5a26fa92e8bf8">✅ 二、状态同步（State Synchronization）</h2>
+<h3 id="7288472c162d24e6fc5706bc51bbf499">🌱 概念：</h3>
+<p>状态同步是“<strong>同步最终状态数据</strong>”的方案。游戏的<strong>权威状态</strong>由服务器维护，客户端只是接收状态并展示。</p>
+<h3 id="ecde4446fa906a2c4cb9b0dbf4f604a3">📦 工作原理：</h3>
+<ol>
+<li>服务器维护完整游戏逻辑和状态（如角色位置、血量等）。</li>
+<li>客户端发送操作请求到服务器。</li>
+<li>服务器处理后，周期性或即时广播最新的状态给所有客户端。</li>
+<li>客户端将状态渲染出来，或进行插值、预测等处理。</li>
+</ol>
+<h3 id="69928c126a0319fb9d61963f0c18946c">📌 关键特点：</h3>
+<ul>
+<li>所有状态由服务器权威控制。</li>
+<li>同步代价大（要传大量状态数据）。</li>
+<li>容错性强，即使客户端掉线或重连也能恢复状态。</li>
+<li>适合 <strong>动作游戏、非对称游戏</strong>（如射击、MMORPG）。</li>
+</ul>
+<h3 id="b746e3888b58391e3e8ef64f515a4248">🎮 典型应用：</h3>
+<ul>
+<li>《PUBG》《CS\:GO》《原神》《魔兽世界》</li>
+<li>FPS、TPS、ARPG、MMO 等非确定性游戏</li>
+</ul>
+<h3 id="4a33c82d1103b855fbecf1eacbe3f641">🧩 示例：状态同步模型（State Sync）</h3>
+<p>以一个“玩家控制角色移动”的小游戏为例</p>
+<ul>
+<li>同样是 2 名玩家在移动，但服务器完全掌握权威状态。</li>
+<li>客户端只显示状态，无法预测或执行游戏逻辑。</li>
+</ul>
+<h4 id="e9977c2a26f37f8bb77ff2fa5003e3b2">🛠 架构说明：</h4>
+<ul>
+<li>客户端发送“请求移动”。</li>
+<li>服务器处理逻辑并返回权威坐标。</li>
+<li>客户端渲染服务器给的位置（甚至用插值平滑移动）。</li>
+</ul>
+<h4 id="bab64c1b0f6786dba9f4228a0969896d">客户端发送请求：</h4>
+<pre><code class="language-json">{"player_id": 1, "action": "move_up"}</code></pre>
+<h4 id="e95cdb1a0eab9558a1201878cd1d4b38">服务器处理并广播状态：</h4>
+<pre><code class="language-json">{
+  "player_states": {
+    "1": {"x": 5, "y": 4},
+    "2": {"x": 3, "y": 6}
+  }
+}</code></pre>
+<h4 id="d9b7223ed1acca7ce36f1dd4659ef48f">客户端渲染：</h4>
+<pre><code class="language-python"># 直接更新显示位置
+for player_id, pos in player_states.items():
+    players[player_id].x = pos["x"]
+    players[player_id].y = pos["y"]</code></pre>
+<p>💡 如果网络延迟高，客户端可以对状态做预测或插值，但最终仍会以服务器状态为准。</p>
+<hr />
+<h2 id="3835bc68cd2426a2f225cb95fa95af69">🚀 总结对比：</h2>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>帧同步</th>
+<th>状态同步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>同步内容</td>
+<td>操作指令（输入）</td>
+<td>游戏状态（如位置、血量）</td>
+</tr>
+<tr>
+<td>执行逻辑</td>
+<td>客户端本地执行</td>
+<td>服务器执行</td>
+</tr>
+<tr>
+<td>网络流量</td>
+<td>小</td>
+<td>较大</td>
+</tr>
+<tr>
+<td>容错性</td>
+<td>差（易失步）</td>
+<td>高（可断线重连）</td>
+</tr>
+<tr>
+<td>客户端一致性</td>
+<td>要求严格</td>
+<td>服务端控制即可</td>
+</tr>
+<tr>
+<td>适用类型</td>
+<td>MOBA、RTS</td>
+<td>FPS、MMO、ARPG、开放世界等</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8be7cb390bce434894d1037cb7891937">🎯 开发建议：</h2>
+<ul>
+<li>
+<p><strong>帧同步适用于</strong>：玩法较封闭、对战节奏快、状态确定性强的游戏。</p>
+</li>
+<li>
+<p><strong>状态同步适用于</strong>：自由度高、逻辑复杂、实时性要求高的游戏。</p>
+</li>
+<li>
+<p>如果你希望客户端响应快、网络带宽低，并愿意付出逻辑一致性的努力 → <strong>帧同步更适合</strong>。</p>
+</li>
+<li>
+<p>如果你希望服务器完全权威、逻辑灵活、可以应对断线重连等 → <strong>状态同步更适合</strong>。</p>
+</li>
+</ul>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>
