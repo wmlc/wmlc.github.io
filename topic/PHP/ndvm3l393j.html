@@ -1,0 +1,639 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>PHP 如何执行系统命令？ | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="dyhUk5Gx05jMqeq3EDokv9qLWm6Mo9k2ZH0YoxvO">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    PHP <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../webman/overview.html">webman</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>PHP</h2>
+<ul>
+<li id="blog12"><a href="jwnex9exd1.html#blog12">PHP 内置 Web 服务器</a>
+<li id="blog59"><a href="3qk94739w1.html#blog59">PHP 开启 opcache 提高性能</a>
+<li id="blog133"><a href="qd7yqzjy2w.html#blog133">defined('IN_IA') or exit('Access Denied'); 代码用途</a>
+<li id="blog171"><a href="wjkv8qnv62.html#blog171">php-fpm.conf 配置说明</a>
+<li id="blog258"><a href="4x3vo65vm1.html#blog258">Mac 上编译安装 php</a>
+<li id="blog262"><a href="xrwyl7n9z8.html#blog262">Composer 加速，镜像源修改方法</a>
+<li id="blog267"><a href="2dne2nke5q.html#blog267">php 二维数组自定义排序方法</a>
+<li id="blog311"><a href="pwde41xe6q.html#blog311">PHP 将空数组统一 json 序列化为 [] 的弊端</a>
+<li id="blog340"><a href="od6vrgjy3g.html#blog340">ubuntu 下编译安装PHP报错 configure: error: Unable to detect ICU prefix or no failed. Please verify ICU install prefix and make sure icu-config works.</a>
+<li id="blog416"><a href="85k9rpwxm1.html#blog416">base64 &amp; urlbase64 介绍</a>
+<li id="blog445"><a href="qk2vmdjvp0.html#blog445">PHP 登录引入双因素认证服务</a>
+<li id="blog471"><a href="x2ev8royor.html#blog471">PHP 中 try、catch、finally 用法总结</a>
+<li id="blog472"><a href="de296lw9q7.html#blog472">PHP 中令人困惑的 strtotime</a>
+<li id="blog717"><a href="2ky046x9z8.html#blog717">利用 http_build_query 字符串拼接生成签名注意事项</a>
+<li id="blog718"><a href="2qvpxm493m.html#blog718">urldecode &amp; rawurldecode 说明</a>
+<li id="blog719"><a href="m892g35y01.html#blog719">PHP-FPM 进程模型</a>
+<li id="blog734"><a href="x3vo0mkvm1.html#blog734">PHP 调整 Gif 图片播放速度</a>
+<li id="blog745"><a href="ndvm3l393j.html#blog745">PHP 如何执行系统命令？</a>
+</ul>
+</li>
+<li>
+<h2>FastAdmin</h2>
+<ul>
+<li id="blog15"><a href="j25v16e1nk.html#blog15">FastAdmin 框架中图片点击放大预览</a>
+</ul>
+</li>
+<li>
+<h2>扩展</h2>
+<ul>
+<li id="blog97"><a href="nxq9znr9do.html#blog97">PHP MarkDown 解析为 HTML 的方法</a>
+<li id="blog103"><a href="k3dyk8myl0.html#blog103">PHP SimpleSoftwareIO/simple-qrcode 扩展生成空白透明二维码解决方法</a>
+<li id="blog104"><a href="jenydo8v7d.html#blog104">在macOS中给PHP 8安装 imageick 扩展方法</a>
+<li id="blog155"><a href="wkl9nxwvz4.html#blog155">Laravel 、 PHP 二维码生成扩展 SimpleSoftwareIO/simple-qrcode</a>
+<li id="blog157"><a href="n3xyqzjymq.html#blog157">PHP 图片处理扩展 Intervention/image 使用说明</a>
+<li id="blog159"><a href="3qk945gvw1.html#blog159">客户端 User Agent 解析扩展</a>
+<li id="blog173"><a href="nxq9zq49do.html#blog173">基于 php 的项目部署工具 deployer 介绍</a>
+<li id="blog179"><a href="wkl9nlwvz4.html#blog179">PHP网站如何创建 Rss 订阅源？</a>
+<li id="blog264"><a href="nq5vrwoe7p.html#blog264">PHP Fatal error: Call to undefined function imagettfbbox() 解决方法</a>
+<li id="blog432"><a href="7okv53oy1n.html#blog432">PHP 编译安装 inotify 扩展</a>
+<li id="blog433"><a href="qd7yqo6e2w.html#blog433">PHP 编译安装 event 扩展</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog293"><a href="1ndvm1nv3j.html#blog293">nginx+php使用open_basedir限制站点目录防止跨站</a>
+</ul>
+</li>
+<li>
+<h2>workerman</h2>
+<ul>
+<li id="blog315"><a href="j25v1pgv1n.html#blog315">GatewayWorker websocket 连接 1 分钟后自动断开原因？</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'ndvm3l393j.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/ndvm3l393j.html', function (data, status) {
+                addView('ndvm3l393j.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>PHP 如何执行系统命令？</h1><ul>
+<li><a href="ndvm3l393j.html#c4ce02dc201e2303364c37972031efa5">✅ PHP 在执行系统命令的常用方式：</a>
+<ul>
+<li><a href="ndvm3l393j.html#c501db5e49896515e6d0ad52c2283bc2">exec()</a></li>
+<li><a href="ndvm3l393j.html#92ce7306bfd385fbfcedd9755f65f807">system():</a></li>
+<li><a href="ndvm3l393j.html#1acd29e4a3b595d02d1686b9deef9029">shell_exec()</a></li>
+<li><a href="ndvm3l393j.html#686733dd3137c1526dc3a831c4abde9d">passthru()</a></li>
+<li><a href="ndvm3l393j.html#308fe34f3d2459b0b98a249519a2b304">反撇号</a></li>
+</ul></li>
+<li><a href="ndvm3l393j.html#cfc3df376dc2e3d1f03b424e71a9db7b">✅ 防止命令注入的措施</a>
+<ul>
+<li><a href="ndvm3l393j.html#5e651fbf84e418c52e2b7ae50a9e85d5">1.  用户输入转义：</a>
+<ul>
+<li><a href="ndvm3l393j.html#159f43c1438cce722ecbbba6b39625e7">❌ 错误用法：</a></li>
+<li><a href="ndvm3l393j.html#73f50a055f244bf481c94053f1c48801">✅ 正确做法：</a></li>
+<li><a href="ndvm3l393j.html#9ac453b6106365bd6bc64f2ba2e3ccf2">🛡️ 总结对比</a></li>
+<li><a href="ndvm3l393j.html#13f8686bce647e97730f4657c0ee8dde">✅ 最安全用法（推荐模式）</a></li>
+</ul></li>
+<li><a href="ndvm3l393j.html#ce6e0a886296ae99255e9ba74451cd31">2. 白名单校验</a></li>
+<li><a href="ndvm3l393j.html#831bf26127d6f9d9440f6567c912a9b5">3. 关闭 exec 类函数（高安全场景）</a></li>
+<li><a href="ndvm3l393j.html#bf5bbb1ea6ed4dad7e28a7391a6c7753">4. 使用 sudo 白名单（仅限特定命令）</a></li>
+</ul></li>
+</ul><p>在 Linux 上，PHP 执行系统命令主要通过以下几种函数：</p>
+<hr />
+<h2 id="c4ce02dc201e2303364c37972031efa5">✅ PHP 在执行系统命令的常用方式：</h2>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>exec()</code></td>
+<td>执行外部程序，不输出结果，结果可存入变量。</td>
+</tr>
+<tr>
+<td><code>shell_exec()</code></td>
+<td>执行命令并返回完整输出结果（字符串）。</td>
+</tr>
+<tr>
+<td><code>system()</code></td>
+<td>执行命令并立即输出结果。</td>
+</tr>
+<tr>
+<td><code>passthru()</code></td>
+<td>执行命令并直接输出原始数据，适合二进制输出（如视频、图片处理）。</td>
+</tr>
+<tr>
+<td><code>`command`</code>（反引号） | 和 <code>shell_exec()</code> 类似，执行命令并返回结果。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="c501db5e49896515e6d0ad52c2283bc2">exec()</h3>
+<pre><code class="language-php">string exec ( string $command [, array &amp;$output [, int &amp;$return_var ］ )</code></pre>
+<p>说明: exec执行系统外部命令时不会输出结果，而是返回结果的最后一行。如果想得到结果，可以使用第二个参数，让其输出到指定的数组。此数组一个记录代表输出的一行。即如果输出结果有20行，则这个数组就有20条记录，所以如果需要反复输出调用不同系统外部命令的结果，最好在输出每一条系统外部命令结果时清空这个数组unset($output)，以防混乱。第三个参数用来取得命令执行的状态码，通常 <strong>执行成功都是返回0</strong>。</p>
+<pre><code class="language-php">&lt;?php
+    // 输出运行中的 php/httpd 进程的创建者用户名
+    // （在可以执行 "whoami" 命令的系统上）
+    echo exec('whoami');
+?&gt;</code></pre>
+<h3 id="92ce7306bfd385fbfcedd9755f65f807">system():</h3>
+<pre><code class="language-php">string system ( string $command [, int &amp;$return_var ] )</code></pre>
+<p><strong>说明:</strong> system和exec的区别在于，system在执行系统外部命令时，它执行给定的命令，输出和返回结果。成功则返回命令输出的最后一行， 失败则返回 FALSE。第二个参数是可选的，用来得到命令执行后的状态码。</p>
+<pre><code class="language-php">&lt;?php
+    $res = system("pwd",$result);
+    print $result;//输出命令的结果状态码
+    print $res;//输出命令输出的最后一行
+?&gt;</code></pre>
+<p>关于第二个参数结果状态码的简单介绍：</p>
+<p>如果<strong>返回0是运行成功</strong>，</p>
+<p>在Bash中，当错误发生在致命信号时，bash会返回128+signal number做为返回值。</p>
+<p>如果找不到命令，将会返回127。</p>
+<p>如果命令找到了，但该命令是不可执行的，将返回126。</p>
+<p>除此以外，Bash本身会返回最後一个指令的返回值。</p>
+<p>若是执行中发生错误，将会返回一个非零的值。</p>
+<p>Fatal Signal : 128 + signo</p>
+<p>Can't not find command : 127</p>
+<p>Can't not execute : 126</p>
+<p>Shell script successfully executed : return the last command exit status</p>
+<p>Fatal during execution : return non-zero</p>
+<h3 id="1acd29e4a3b595d02d1686b9deef9029">shell_exec()</h3>
+<pre><code class="language-php">string shell_exec ( string $cmd )</code></pre>
+<p><strong>说明:</strong> 直接执行命令$cmd，将完整的命令输出以字符串的方式返回。如果执行过程中发生错误或者进程不产生输出，则返回 NULL。</p>
+<p>所以，使用本函数无法通过返回值检测进程是否成功执行。 如果需要检查进程执行的退出码，请使用 exec() 函数。</p>
+<pre><code class="language-php">&lt;?php
+    $output = shell_exec('ls -lart');
+    echo $output";
+?&gt;</code></pre>
+<h3 id="686733dd3137c1526dc3a831c4abde9d">passthru()</h3>
+<pre><code class="language-php">void passthru ( string $command [, int &amp;$return_var ] )</code></pre>
+<p>说明: passthru与system的区别，passthru直接将结果输出到游览器，不返回任何值，且其可以输出二进制，比如图像数据。第二个参数可选，是状态码。</p>
+<p>同 exec() 函数类似， passthru() 函数 也是用来执行外部命令（command）的。 当所执行的 Unix 命令输出二进制数据， 并且需要直接传送到浏览器的时候， 需要用此函数来替代 exec() 或 system() 函数。 常用来执行诸如 pbmplus 之类的可以直接输出图像流的命令。 通过设置 Content-type 为 image/gif， 然后调用 pbmplus 程序输出 gif 文件， 就可以从 PHP 脚本中直接输出图像到浏览器。</p>
+<pre><code class="language-php">&lt;?php
+    header("Content-type:image/gif");
+    passthru("/usr/bin/ppm2tiff  /usr/share/tk8.4/demos/images/teapot.ppm");
+?&gt;</code></pre>
+<h3 id="308fe34f3d2459b0b98a249519a2b304">反撇号</h3>
+<p>原型: 反撇号 执行系统外部命令，相当于 shell_exec</p>
+<p>说明: 在使用这种方法执行系统外部命令时，要确保shell_exec函数可用，否则是无法使用这种反撇号执行系统外部命令的。</p>
+<pre><code class="language-php">&lt;?php
+    echo `dir`; 
+?&gt;</code></pre>
+<h2 id="cfc3df376dc2e3d1f03b424e71a9db7b">✅ 防止命令注入的措施</h2>
+<p>PHP 执行系统命令 <strong>极易受到命令注入攻击</strong>，尤其是当用户输入未经处理被拼接到命令中。</p>
+<p>攻击示例（命令注入）：</p>
+<pre><code class="language-php">$user = $_GET['name'];
+shell_exec("ping $user");  // 用户输入 "127.0.0.1; rm -rf /"</code></pre>
+<h3 id="5e651fbf84e418c52e2b7ae50a9e85d5">1.  用户输入转义：</h3>
+<p><code>escapeshellarg()</code> 和 <code>escapeshellcmd()</code> 是 PHP 提供的两个专门用于避免 <strong>命令行注入</strong> 的函数，但它们的功能和用途不同。下面我详细解释它们的原理和安全性保障机制。</p>
+<ul>
+<li>✅ <code>escapeshellarg()</code> —— 用于<strong>参数</strong></li>
+</ul>
+<pre><code class="language-php">$user = escapeshellarg("127.0.0.1; rm -rf /");
+shell_exec("ping $user");  // 实际执行：ping '127.0.0.1; rm -rf /'； 这是一个合法的参数，而不是两个命令，`rm -rf /` 不会被执行 ✅</code></pre>
+<ul>
+<li>
+<p>它会把参数整体用<strong>单引号包裹</strong>（即 <code>'参数'</code>）</p>
+</li>
+<li>
+<p>并把内部的单引号（<code>'</code>）转义成安全格式（在 Linux 下是 <code>'\'\''</code>）</p>
+</li>
+<li>
+<p>把参数当成纯文本处理，<strong>终端不会再解释其中的任何命令字符</strong>（如 <code>;</code>, <code>&amp;</code>, <code>|</code>, <code>&gt;</code> 等）</p>
+</li>
+<li>
+<p>有效防止 <strong>命令拼接注入攻击</strong></p>
+</li>
+<li>
+<p>✅ <code>escapeshellcmd()</code> —— 用于<strong>整条命令</strong></p>
+</li>
+</ul>
+<pre><code class="language-php">$cmd = escapeshellcmd("ls; rm -rf /");
+shell_exec($cmd);  // 实际执行：ls\ rm\ -rf\ /</code></pre>
+<ul>
+<li>
+<p>它会在命令中的特殊字符前添加反斜杠 <code>\</code> 转义，如 <code>&amp;</code>, <code>;</code>, <code>|</code>, <code>&gt;</code>, <code>&lt;</code>, <code>!</code> 等。</p>
+</li>
+<li>
+<p>使这些字符在 shell 中不会被当作命令控制符处理。</p>
+</li>
+<li>
+<p>注意它<strong>不会加引号</strong></p>
+</li>
+<li>
+<p><strong>不能用于处理用户输入的数据参数！</strong>（比如文件名、路径、IP地址）</p>
+</li>
+</ul>
+<h4 id="159f43c1438cce722ecbbba6b39625e7">❌ 错误用法：</h4>
+<pre><code class="language-php">$input = $_GET['host'];
+shell_exec("ping " . escapeshellcmd($input));  // ❌ 仍然可能注入</code></pre>
+<h4 id="73f50a055f244bf481c94053f1c48801">✅ 正确做法：</h4>
+<pre><code class="language-php">$input = $_GET['host'];
+shell_exec("ping " . escapeshellarg($input));  // ✅ 参数应该用 escapeshellarg</code></pre>
+<hr />
+<h4 id="9ac453b6106365bd6bc64f2ba2e3ccf2">🛡️ 总结对比</h4>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>escapeshellarg()</th>
+<th>escapeshellcmd()</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>保护<strong>参数</strong></td>
+<td>保护<strong>命令行</strong>（不含参数）</td>
+</tr>
+<tr>
+<td>行为</td>
+<td>用单引号包裹整个参数</td>
+<td>转义命令中的特殊字符</td>
+</tr>
+<tr>
+<td>安全性</td>
+<td>✅ 高（建议用于用户输入）</td>
+<td>⚠️ 低（不要用在用户参数上）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="13f8686bce647e97730f4657c0ee8dde">✅ 最安全用法（推荐模式）</h4>
+<pre><code class="language-php">$host = $_GET['host'];                      // 用户输入
+$host = escapeshellarg($host);              // 转义成安全参数
+$cmd  = '/bin/ping -c 4 ' . $host;          // 拼接命令
+$output = shell_exec($cmd);
+echo "&lt;pre&gt;$output&lt;/pre&gt;";</code></pre>
+<h3 id="ce6e0a886296ae99255e9ba74451cd31">2. <strong>白名单校验</strong></h3>
+<ul>
+<li>如果必须运行用户输入的参数，先校验是否在允许的列表中。</li>
+</ul>
+<pre><code class="language-php">$allowed = ['google.com', 'example.com'];
+$host = $_GET['host'];
+if (in_array($host, $allowed)) {
+    $host = escapeshellarg($host);
+    shell_exec("ping -c 4 $host");
+}</code></pre>
+<h3 id="831bf26127d6f9d9440f6567c912a9b5">3. <strong>关闭 <code>exec</code> 类函数（高安全场景）</strong></h3>
+<ul>
+<li>在 <code>php.ini</code> 中禁用高风险函数：</li>
+</ul>
+<pre><code class="language-ini">disable_functions = exec,shell_exec,system,passthru,popen,proc_open</code></pre>
+<h3 id="bf5bbb1ea6ed4dad7e28a7391a6c7753">4. <strong>使用 sudo 白名单（仅限特定命令）</strong></h3>
+<ul>
+<li>配置 <code>/etc/sudoers</code>，只允许 PHP 执行有限命令：</li>
+</ul>
+<pre><code class="language-bash">www-data ALL=(ALL) NOPASSWD: /usr/bin/safe-command</code></pre>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>
