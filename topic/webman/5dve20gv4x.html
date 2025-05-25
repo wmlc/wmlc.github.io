@@ -1,0 +1,576 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Stomp队列 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="sSMky70gvTBTRjsrmovckBT4qvv1rdsIKBYF0X9B">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    webman <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">webman</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>入门指引</h2>
+<ul>
+<li id="blog746"><a href="3oyjd5myp5.html#blog746">webman是什么</a>
+<li id="blog747"><a href="2ev86lqyor.html#blog747">编程须知</a>
+<li id="blog748"><a href="e296oj69q7.html#blog748">社区帮助</a>
+</ul>
+</li>
+<li>
+<h2>快速开始</h2>
+<ul>
+<li id="blog749"><a href="xq9zrq4vdo.html#blog749">安装</a>
+<li id="blog750"><a href="2wy3l5xykm.html#blog750">宝塔安装</a>
+<li id="blog751"><a href="3dykqmmyl0.html#blog751">目录结构</a>
+<li id="blog752"><a href="enyd54897d.html#blog752">简单示例</a>
+</ul>
+</li>
+<li>
+<h2>基础功能</h2>
+<ul>
+<li id="blog753"><a href="5dve28gv4x.html#blog753">请求</a>
+<li id="blog754"><a href="4rvgn47ydj.html#blog754">响应</a>
+<li id="blog755"><a href="kl9nolwvz4.html#blog755">控制器</a>
+<li id="blog756"><a href="xpv5281v86.html#blog756">路由</a>
+<li id="blog757"><a href="3xyq4mjvmq.html#blog757">中间件</a>
+<li id="blog758"><a href="x3vo02kvm1.html#blog758">视图</a>
+<li id="blog759"><a href="qk942lgvw1.html#blog759">静态文件</a>
+<li id="blog760"><a href="569x5e4yep.html#blog760">session管理</a>
+<li id="blog761"><a href="dgy7xlkvw2.html#blog761">异常处理</a>
+<li id="blog762"><a href="rwyl2levz8.html#blog762">日志</a>
+<li id="blog763"><a href="kpv132q98w.html#blog763">配置文件</a>
+<li id="blog764"><a href="d6vrolqv3g.html#blog764">多应用</a>
+<li id="blog765"><a href="2ky042x9z8.html#blog765">协程</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog766"><a href="2qvpxl493m.html#blog766">快速入门</a>
+<li id="blog767"><a href="m892g85y01.html#blog767">配置数据库</a>
+<li id="blog768"><a href="wevwm3n9l2.html#blog768">查询构造器</a>
+<li id="blog769"><a href="ndvm3r393j.html#blog769">数据库模型</a>
+<li id="blog770"><a href="3oyjdomyp5.html#blog770">模型关联</a>
+<li id="blog771"><a href="2ev86kqyor.html#blog771">分页</a>
+<li id="blog772"><a href="e296oz69q7.html#blog772">数据库迁移</a>
+<li id="blog773"><a href="xq9zre4vdo.html#blog773">Redis</a>
+<li id="blog774"><a href="2wy3l0xykm.html#blog774">Cache缓存</a>
+<li id="blog775"><a href="3dykq2myl0.html#blog775">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>消息队列</h2>
+<ul>
+<li id="blog776"><a href="enyd58897d.html#blog776">Redis队列</a>
+<li id="blog777"><a href="5dve20gv4x.html#blog777">Stomp队列</a>
+</ul>
+</li>
+<li>
+<h2>常用组件</h2>
+<ul>
+<li id="blog778"><a href="4rvgnr7ydj.html#blog778">验证器</a>
+<li id="blog779"><a href="kl9norwvz4.html#blog779">限流器</a>
+<li id="blog780"><a href="xpv5261v86.html#blog780">分页组件</a>
+<li id="blog781"><a href="3xyq48jvmq.html#blog781">多语言</a>
+<li id="blog782"><a href="x3vo0rkvm1.html#blog782">图像处理</a>
+<li id="blog783"><a href="qk942mgvw1.html#blog783">验证码</a>
+<li id="blog784"><a href="569x5k4yep.html#blog784">Event 事件</a>
+<li id="blog785"><a href="dgy7x3kvw2.html#blog785">env 组件</a>
+<li id="blog786"><a href="rwyl2oevz8.html#blog786">Crontab 定时任务</a>
+<li id="blog787"><a href="kpv13rq98w.html#blog787">Excel 表格</a>
+<li id="blog788"><a href="d6vrorqv3g.html#blog788">微信SDK</a>
+<li id="blog789"><a href="2ky04rx9z8.html#blog789">支付SDK</a>
+<li id="blog790"><a href="2qvpxr493m.html#blog790">权限管理</a>
+<li id="blog791"><a href="m892gr5y01.html#blog791">单元测试</a>
+<li id="blog792"><a href="wevwmgn9l2.html#blog792">自动生成错误码</a>
+</ul>
+</li>
+<li>
+<h2>基础插件</h2>
+<ul>
+<li id="blog793"><a href="ndvm3e393j.html#blog793">基础插件</a>
+<li id="blog794"><a href="3oyjd3myp5.html#blog794">命令行</a>
+<li id="blog795"><a href="2ev862qyor.html#blog795">推送</a>
+<li id="blog796"><a href="e296o469q7.html#blog796">提交基础插件</a>
+</ul>
+</li>
+<li>
+<h2>应用插件</h2>
+<ul>
+<li id="blog797"><a href="xq9zr84vdo.html#blog797">应用插件</a>
+<li id="blog798"><a href="2wy3l2xykm.html#blog798">介绍</a>
+<li id="blog799"><a href="3dykqkmyl0.html#blog799">规范</a>
+<li id="blog800"><a href="e296o4z9q7.html#blog800">创建应用插件</a>
+<li id="blog801"><a href="xq9zr88vdo.html#blog801">目录结构</a>
+<li id="blog802"><a href="2wy3l26ykm.html#blog802">路由</a>
+<li id="blog803"><a href="3dykqkwyl0.html#blog803">配置文件</a>
+<li id="blog804"><a href="enyd5e097d.html#blog804">控制器</a>
+<li id="blog805"><a href="5dve2gjv4x.html#blog805">视图</a>
+<li id="blog806"><a href="4rvgn5qydj.html#blog806">静态文件</a>
+<li id="blog807"><a href="kl9nogdvz4.html#blog807">数据库</a>
+<li id="blog808"><a href="xpv524wv86.html#blog808">Redis</a>
+<li id="blog809"><a href="3xyq46pvmq.html#blog809">日志</a>
+<li id="blog810"><a href="x3vo0n5vm1.html#blog810">打包</a>
+<li id="blog811"><a href="qk94248vw1.html#blog811">发布</a>
+<li id="blog812"><a href="569x5n1yep.html#blog812">安装卸载</a>
+</ul>
+</li>
+<li>
+<h2>高级进阶</h2>
+<ul>
+<li id="blog813"><a href="dgy7x42vw2.html#blog813">自定义进程</a>
+<li id="blog814"><a href="rwyl2dnvz8.html#blog814">依赖自动注入</a>
+<li id="blog815"><a href="kpv130g98w.html#blog815">AOP</a>
+</ul>
+</li>
+<li>
+<h2>其它</h2>
+<ul>
+<li id="blog816"><a href="d6vroknv3g.html#blog816">安全</a>
+<li id="blog817"><a href="2ky04n49z8.html#blog817">数据库事务</a>
+<li id="blog818"><a href="2qvpxz893m.html#blog818">禁用函数检查</a>
+<li id="blog819"><a href="m892gqny01.html#blog819">自定义404 500</a>
+<li id="blog820"><a href="wevwm819l2.html#blog820">nginx代理</a>
+<li id="blog821"><a href="ndvm37n93j.html#blog821">执行流程</a>
+<li id="blog822"><a href="3oyjdrlyp5.html#blog822">生命周期</a>
+<li id="blog823"><a href="2ev86elyor.html#blog823">内存泄漏</a>
+<li id="blog824"><a href="e296okz9q7.html#blog824">业务初始化</a>
+<li id="blog825"><a href="xq9zr18vdo.html#blog825">慢业务处理</a>
+<li id="blog826"><a href="2wy3l66ykm.html#blog826">压力测试</a>
+<li id="blog827"><a href="3dykqrwyl0.html#blog827">监控进程</a>
+<li id="blog828"><a href="enyd5p097d.html#blog828">自动加载</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = '5dve20gv4x.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/5dve20gv4x.html', function (data, status) {
+                addView('5dve20gv4x.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Stomp队列</h1><ul>
+<li><a href="5dve20gv4x.html#e655a410ff21cd07e7a0150491e04371">安装</a></li>
+<li><a href="5dve20gv4x.html#224e2ccda861c2514faa683b3683c361">配置</a></li>
+<li><a href="5dve20gv4x.html#c4a2ad88de898e40640920da7c956f5b">投递消息</a></li>
+<li><a href="5dve20gv4x.html#87d8c3229e047ad2f3c3ac91e3844efc">消费消息</a>
+<ul>
+<li><a href="5dve20gv4x.html#cff35fb697dd026b1e0fd7dffc5dc34d">rabbitmq开启stomp协议</a></li>
+</ul></li>
+</ul><p>Stomp是简单(流)文本定向消息协议，它提供了一个可互操作的连接格式，允许STOMP客户端与任意STOMP消息代理（Broker）进行交互。<a href="https://github.com/walkor/stomp">workerman/stomp</a>实现了Stomp客户端，主要用于 RabbitMQ、Apollo、ActiveMQ 等消息队列场景。</p>
+<h2 id="e655a410ff21cd07e7a0150491e04371">安装</h2>
+<p><code>composer require webman/stomp</code></p>
+<h2 id="224e2ccda861c2514faa683b3683c361">配置</h2>
+<p>配置文件在 <code>config/plugin/webman/stomp</code> 下</p>
+<h2 id="c4a2ad88de898e40640920da7c956f5b">投递消息</h2>
+<pre><code class="language-php">&lt;?php
+namespace app\controller;
+
+use support\Request;
+use Webman\Stomp\Client;
+
+class Index
+{
+    public function queue(Request $request)
+    {
+        // 队列
+        $queue = 'examples';
+        // 数据（传递数组时需要自行序列化，比如使用json_encode，serialize等）
+        $data = json_encode(['to' =&gt; 'tom@gmail.com', 'content' =&gt; 'hello']);
+        // 执行投递
+        Client::send($queue, $data);
+
+        return response('redis queue test');
+    }
+
+}</code></pre>
+<blockquote>
+<p>为了兼容其它项目，Stomp组件没有提供自动序列化反序列化功能，如果投递的是数组数据，需要自行序列化，消费的时候自行反序列化</p>
+</blockquote>
+<h2 id="87d8c3229e047ad2f3c3ac91e3844efc">消费消息</h2>
+<p>新建 <code>app/queue/stomp/MyMailSend.php</code> (类名任意，符合psr4规范即可)。</p>
+<pre><code class="language-php">&lt;?php
+namespace app\queue\stomp;
+
+use Workerman\Stomp\AckResolver;
+use Webman\Stomp\Consumer;
+
+class MyMailSend implements Consumer
+{
+    // 队列名
+    public $queue = 'examples';
+
+    // 连接名，对应 stomp.php 里的连接`
+    public $connection = 'default';
+
+    // 值为 client 时需要调用$ack_resolver-&gt;ack()告诉服务端已经成功消费
+    // 值为 auto   时无需调用$ack_resolver-&gt;ack()
+    public $ack = 'auto';
+
+    // 消费
+    public function consume($data, AckResolver $ack_resolver = null)
+    {
+        // 如果是数据是数组，需要自行反序列化
+        var_export(json_decode($data, true)); // 输出 ['to' =&gt; 'tom@gmail.com', 'content' =&gt; 'hello']
+        // 告诉服务端，已经成功消费
+        $ack_resolver-&gt;ack(); // ack为 auto时可以省略此调用
+    }
+}</code></pre>
+<h1 id="cff35fb697dd026b1e0fd7dffc5dc34d">rabbitmq开启stomp协议</h1>
+<p>rabbitmq默认没有开启stomp协议，需要执行以下命令开启</p>
+<pre><code class="   language-php">rabbitmq-plugins enable rabbitmq_stomp</code></pre>
+<p>开启后stomp的端口默认为61613。</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> workerman/stomp: <i><a href="https://github.com/walkor/stomp" target="_blank">https://github.com/walkor/stomp</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

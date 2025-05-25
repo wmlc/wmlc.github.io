@@ -1,0 +1,774 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Redis队列 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="sSMky70gvTBTRjsrmovckBT4qvv1rdsIKBYF0X9B">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    webman <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">webman</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>入门指引</h2>
+<ul>
+<li id="blog746"><a href="3oyjd5myp5.html#blog746">webman是什么</a>
+<li id="blog747"><a href="2ev86lqyor.html#blog747">编程须知</a>
+<li id="blog748"><a href="e296oj69q7.html#blog748">社区帮助</a>
+</ul>
+</li>
+<li>
+<h2>快速开始</h2>
+<ul>
+<li id="blog749"><a href="xq9zrq4vdo.html#blog749">安装</a>
+<li id="blog750"><a href="2wy3l5xykm.html#blog750">宝塔安装</a>
+<li id="blog751"><a href="3dykqmmyl0.html#blog751">目录结构</a>
+<li id="blog752"><a href="enyd54897d.html#blog752">简单示例</a>
+</ul>
+</li>
+<li>
+<h2>基础功能</h2>
+<ul>
+<li id="blog753"><a href="5dve28gv4x.html#blog753">请求</a>
+<li id="blog754"><a href="4rvgn47ydj.html#blog754">响应</a>
+<li id="blog755"><a href="kl9nolwvz4.html#blog755">控制器</a>
+<li id="blog756"><a href="xpv5281v86.html#blog756">路由</a>
+<li id="blog757"><a href="3xyq4mjvmq.html#blog757">中间件</a>
+<li id="blog758"><a href="x3vo02kvm1.html#blog758">视图</a>
+<li id="blog759"><a href="qk942lgvw1.html#blog759">静态文件</a>
+<li id="blog760"><a href="569x5e4yep.html#blog760">session管理</a>
+<li id="blog761"><a href="dgy7xlkvw2.html#blog761">异常处理</a>
+<li id="blog762"><a href="rwyl2levz8.html#blog762">日志</a>
+<li id="blog763"><a href="kpv132q98w.html#blog763">配置文件</a>
+<li id="blog764"><a href="d6vrolqv3g.html#blog764">多应用</a>
+<li id="blog765"><a href="2ky042x9z8.html#blog765">协程</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog766"><a href="2qvpxl493m.html#blog766">快速入门</a>
+<li id="blog767"><a href="m892g85y01.html#blog767">配置数据库</a>
+<li id="blog768"><a href="wevwm3n9l2.html#blog768">查询构造器</a>
+<li id="blog769"><a href="ndvm3r393j.html#blog769">数据库模型</a>
+<li id="blog770"><a href="3oyjdomyp5.html#blog770">模型关联</a>
+<li id="blog771"><a href="2ev86kqyor.html#blog771">分页</a>
+<li id="blog772"><a href="e296oz69q7.html#blog772">数据库迁移</a>
+<li id="blog773"><a href="xq9zre4vdo.html#blog773">Redis</a>
+<li id="blog774"><a href="2wy3l0xykm.html#blog774">Cache缓存</a>
+<li id="blog775"><a href="3dykq2myl0.html#blog775">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>消息队列</h2>
+<ul>
+<li id="blog776"><a href="enyd58897d.html#blog776">Redis队列</a>
+<li id="blog777"><a href="5dve20gv4x.html#blog777">Stomp队列</a>
+</ul>
+</li>
+<li>
+<h2>常用组件</h2>
+<ul>
+<li id="blog778"><a href="4rvgnr7ydj.html#blog778">验证器</a>
+<li id="blog779"><a href="kl9norwvz4.html#blog779">限流器</a>
+<li id="blog780"><a href="xpv5261v86.html#blog780">分页组件</a>
+<li id="blog781"><a href="3xyq48jvmq.html#blog781">多语言</a>
+<li id="blog782"><a href="x3vo0rkvm1.html#blog782">图像处理</a>
+<li id="blog783"><a href="qk942mgvw1.html#blog783">验证码</a>
+<li id="blog784"><a href="569x5k4yep.html#blog784">Event 事件</a>
+<li id="blog785"><a href="dgy7x3kvw2.html#blog785">env 组件</a>
+<li id="blog786"><a href="rwyl2oevz8.html#blog786">Crontab 定时任务</a>
+<li id="blog787"><a href="kpv13rq98w.html#blog787">Excel 表格</a>
+<li id="blog788"><a href="d6vrorqv3g.html#blog788">微信SDK</a>
+<li id="blog789"><a href="2ky04rx9z8.html#blog789">支付SDK</a>
+<li id="blog790"><a href="2qvpxr493m.html#blog790">权限管理</a>
+<li id="blog791"><a href="m892gr5y01.html#blog791">单元测试</a>
+<li id="blog792"><a href="wevwmgn9l2.html#blog792">自动生成错误码</a>
+</ul>
+</li>
+<li>
+<h2>基础插件</h2>
+<ul>
+<li id="blog793"><a href="ndvm3e393j.html#blog793">基础插件</a>
+<li id="blog794"><a href="3oyjd3myp5.html#blog794">命令行</a>
+<li id="blog795"><a href="2ev862qyor.html#blog795">推送</a>
+<li id="blog796"><a href="e296o469q7.html#blog796">提交基础插件</a>
+</ul>
+</li>
+<li>
+<h2>应用插件</h2>
+<ul>
+<li id="blog797"><a href="xq9zr84vdo.html#blog797">应用插件</a>
+<li id="blog798"><a href="2wy3l2xykm.html#blog798">介绍</a>
+<li id="blog799"><a href="3dykqkmyl0.html#blog799">规范</a>
+<li id="blog800"><a href="e296o4z9q7.html#blog800">创建应用插件</a>
+<li id="blog801"><a href="xq9zr88vdo.html#blog801">目录结构</a>
+<li id="blog802"><a href="2wy3l26ykm.html#blog802">路由</a>
+<li id="blog803"><a href="3dykqkwyl0.html#blog803">配置文件</a>
+<li id="blog804"><a href="enyd5e097d.html#blog804">控制器</a>
+<li id="blog805"><a href="5dve2gjv4x.html#blog805">视图</a>
+<li id="blog806"><a href="4rvgn5qydj.html#blog806">静态文件</a>
+<li id="blog807"><a href="kl9nogdvz4.html#blog807">数据库</a>
+<li id="blog808"><a href="xpv524wv86.html#blog808">Redis</a>
+<li id="blog809"><a href="3xyq46pvmq.html#blog809">日志</a>
+<li id="blog810"><a href="x3vo0n5vm1.html#blog810">打包</a>
+<li id="blog811"><a href="qk94248vw1.html#blog811">发布</a>
+<li id="blog812"><a href="569x5n1yep.html#blog812">安装卸载</a>
+</ul>
+</li>
+<li>
+<h2>高级进阶</h2>
+<ul>
+<li id="blog813"><a href="dgy7x42vw2.html#blog813">自定义进程</a>
+<li id="blog814"><a href="rwyl2dnvz8.html#blog814">依赖自动注入</a>
+<li id="blog815"><a href="kpv130g98w.html#blog815">AOP</a>
+</ul>
+</li>
+<li>
+<h2>其它</h2>
+<ul>
+<li id="blog816"><a href="d6vroknv3g.html#blog816">安全</a>
+<li id="blog817"><a href="2ky04n49z8.html#blog817">数据库事务</a>
+<li id="blog818"><a href="2qvpxz893m.html#blog818">禁用函数检查</a>
+<li id="blog819"><a href="m892gqny01.html#blog819">自定义404 500</a>
+<li id="blog820"><a href="wevwm819l2.html#blog820">nginx代理</a>
+<li id="blog821"><a href="ndvm37n93j.html#blog821">执行流程</a>
+<li id="blog822"><a href="3oyjdrlyp5.html#blog822">生命周期</a>
+<li id="blog823"><a href="2ev86elyor.html#blog823">内存泄漏</a>
+<li id="blog824"><a href="e296okz9q7.html#blog824">业务初始化</a>
+<li id="blog825"><a href="xq9zr18vdo.html#blog825">慢业务处理</a>
+<li id="blog826"><a href="2wy3l66ykm.html#blog826">压力测试</a>
+<li id="blog827"><a href="3dykqrwyl0.html#blog827">监控进程</a>
+<li id="blog828"><a href="enyd5p097d.html#blog828">自动加载</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'enyd58897d.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/enyd58897d.html', function (data, status) {
+                addView('enyd58897d.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Redis队列</h1><ul>
+<li><a href="enyd58897d.html#e655a410ff21cd07e7a0150491e04371">安装</a></li>
+<li><a href="enyd58897d.html#15c64aa0b4044aa2fc1b7df04b2c6302">配置文件</a>
+<ul>
+<li><a href="enyd58897d.html#2e056e0311406f47a80d3005055ee51e">消费失败重试</a></li>
+</ul></li>
+<li><a href="enyd58897d.html#d815d215aad5f16a0deb9dfe805f76a1">投递消息(同步)</a></li>
+<li><a href="enyd58897d.html#488a2a73ef348f1f378fa099118279d1">投递消息(异步)</a></li>
+<li><a href="enyd58897d.html#5d0f4c85c1346db0aa83cd73a578bd19">在其他项目投递消息</a></li>
+<li><a href="enyd58897d.html#85f42dcd706f66322ff0ed108613ff9c">消费</a></li>
+<li><a href="enyd58897d.html#37274dfe74c52a132e6d64ff4526181e">为不同的队列设置不同的消费进程</a></li>
+<li><a href="enyd58897d.html#d1cb85e6a9c40fa1168e09dfc5069843">多redis配置</a>
+<ul>
+<li><a href="enyd58897d.html#224e2ccda861c2514faa683b3683c361">配置</a></li>
+<li><a href="enyd58897d.html#5867ee043111d05f5c5964abda673c8e">多redis投递消息</a></li>
+<li><a href="enyd58897d.html#1029609eeda08ce1a3894a60eaa1c6b6">多redis消费</a></li>
+</ul></li>
+<li><a href="enyd58897d.html#50d52dd929a75bb9b0f4afb0b7d879e1">常见问题</a></li>
+</ul><p>基于Redis的消息队列，支持消息延迟处理。</p>
+<h2 id="e655a410ff21cd07e7a0150491e04371">安装</h2>
+<p><code>composer require webman/redis-queue</code></p>
+<h2 id="15c64aa0b4044aa2fc1b7df04b2c6302">配置文件</h2>
+<p>redis配置文件自动生成在 <code>{主项目}/config/plugin/webman/redis-queue/redis.php</code>，内容类似如下：</p>
+<pre><code class="language-php">&lt;?php
+return [
+    'default' =&gt; [
+        'host' =&gt; 'redis://127.0.0.1:6379',
+        'options' =&gt; [
+            'auth' =&gt; '',         // 密码，可选参数
+            'db' =&gt; 0,            // 数据库
+            'max_attempts'  =&gt; 5, // 消费失败后，重试次数
+            'retry_seconds' =&gt; 5, // 重试间隔，单位秒
+        ]
+    ],
+];</code></pre>
+<h3 id="2e056e0311406f47a80d3005055ee51e">消费失败重试</h3>
+<p>如果消费失败(发生了异常)，则消息会放入延迟队列，等待下次重试。重试次数通过参数 <code>max_attempts</code> 控制，重试间隔由<br />
+<code>retry_seconds</code> 和 <code>max_attempts</code>共同控制。比如<code>max_attempts</code>为5，<code>retry_seconds</code>为10，第1次重试间隔为<code>1*10</code>秒，第2次重试时间间隔为 <code>2*10秒</code>，第3次重试时间间隔为<code>3*10秒</code>，以此类推直到重试5次。如果超过了<code>max_attempts</code>设置测重试次数，则消息放入key为<code>{redis-queue}-failed</code>的失败队列。</p>
+<h2 id="d815d215aad5f16a0deb9dfe805f76a1">投递消息(同步)</h2>
+<pre><code class="language-php">&lt;?php
+namespace app\controller;
+
+use support\Request;
+use Webman\RedisQueue\Redis;
+
+class Index
+{
+    public function queue(Request $request)
+    {
+        // 队列名
+        $queue = 'send-mail';
+        // 数据，可以直接传数组，无需序列化
+        $data = ['to' =&gt; 'tom@gmail.com', 'content' =&gt; 'hello'];
+        // 投递消息
+        Redis::send($queue, $data);
+        // 投递延迟消息，消息会在60秒后处理
+        Redis::send($queue, $data, 60);
+
+        return response('redis queue test');
+    }
+
+}</code></pre>
+<p>投递成功<code>Redis::send()</code> 返回true，否则返回false或者抛出异常。</p>
+<blockquote>
+<p><strong>提示</strong><br />
+延迟队列消费时间可能会出现误差，例如消费速度小于生产速度导致队列积压，进而导致消费延迟，缓解办法是多开一些消费进程。</p>
+</blockquote>
+<h2 id="488a2a73ef348f1f378fa099118279d1">投递消息(异步)</h2>
+<pre><code class="language-php">&lt;?php
+namespace app\controller;
+
+use support\Request;
+use Webman\RedisQueue\Client;
+
+class Index
+{
+    public function queue(Request $request)
+    {
+        // 队列名
+        $queue = 'send-mail';
+        // 数据，可以直接传数组，无需序列化
+        $data = ['to' =&gt; 'tom@gmail.com', 'content' =&gt; 'hello'];
+        // 投递消息
+        Client::send($queue, $data);
+        // 投递延迟消息，消息会在60秒后处理
+        Client::send($queue, $data, 60);
+
+        return response('redis queue test');
+    }
+
+}</code></pre>
+<p><code>Client::send()</code> 没有返回值，它属于异步推送，它不保证消息%100送达redis。</p>
+<blockquote>
+<p><strong>提示</strong><br />
+<code>Client::send()</code>原理是在本地内存建立一个内存队列，异步将消息同步到redis(同步速度很快，每秒大概1万笔消息)。如果进程重启，恰好本地内存队列里数据没有同步完毕，会造成消息丢失。<code>Client::send()</code>异步投递适合投递不重要的消息。</p>
+<p><strong>提示</strong><br />
+<code>Client::send()</code>是异步的，它只能在workerman的运行环境中使用，命令行脚本请使用同步接口<code>Redis::send()</code></p>
+</blockquote>
+<h2 id="5d0f4c85c1346db0aa83cd73a578bd19">在其他项目投递消息</h2>
+<p>有时候你需要在其它项目中投递消息并且无法使用<code>webman\redis-queue</code>，则可以参考以下函数向队列投递消息。</p>
+<pre><code class="language-php">function redis_queue_send($redis, $queue, $data, $delay = 0) {
+    $queue_waiting = '{redis-queue}-waiting';
+    $queue_delay = '{redis-queue}-delayed';
+    $now = time();
+    $package_str = json_encode([
+        'id'       =&gt; rand(),
+        'time'     =&gt; $now,
+        'delay'    =&gt; $delay,
+        'attempts' =&gt; 0,
+        'queue'    =&gt; $queue,
+        'data'     =&gt; $data
+    ]);
+    if ($delay) {
+        return $redis-&gt;zAdd($queue_delay, $now + $delay, $package_str);
+    }
+    return $redis-&gt;lPush($queue_waiting.$queue, $package_str);
+}</code></pre>
+<p>其中，参数<code>$redis</code>为redis实例。例如redis扩展用法类似如下：</p>
+<pre><code class="language-php">$redis = new Redis;
+$redis-&gt;connect('127.0.0.1', 6379);
+$queue = 'user-1';
+$data= ['some', 'data'];
+redis_queue_send($redis, $queue, $data);</code></pre>
+<h2 id="85f42dcd706f66322ff0ed108613ff9c">消费</h2>
+<p>消费进程配置文件在 <code>{主项目}/config/plugin/webman/redis-queue/process.php</code>。<br />
+消费者目录在 <code>{主项目}/app/queue/redis/</code> 下。</p>
+<p>执行命令<code>php webman redis-queue:consumer my-send-mail</code>则会生成文件<code>{主项目}/app/queue/redis/MyMailSend.php</code></p>
+<blockquote>
+<p><strong>提示</strong><br />
+如果命令不存在也可以手动生成</p>
+</blockquote>
+<pre><code class="language-php">&lt;?php
+
+namespace app\queue\redis;
+
+use Webman\RedisQueue\Consumer;
+
+class MyMailSend implements Consumer
+{
+    // 要消费的队列名
+    public $queue = 'send-mail';
+
+    // 连接名，对应 plugin/webman/redis-queue/redis.php 里的连接`
+    public $connection = 'default';
+
+    // 消费
+    public function consume($data)
+    {
+        // 无需反序列化
+        var_export($data); // 输出 ['to' =&gt; 'tom@gmail.com', 'content' =&gt; 'hello']
+    }
+    // 消费失败回调
+    /* 
+    $package = [
+        'id' =&gt; 1357277951, // 消息ID
+        'time' =&gt; 1709170510, // 消息时间
+        'delay' =&gt; 0, // 延迟时间
+        'attempts' =&gt; 2, // 消费次数
+        'queue' =&gt; 'send-mail', // 队列名
+        'data' =&gt; ['to' =&gt; 'tom@gmail.com', 'content' =&gt; 'hello'], // 消息内容
+        'max_attempts' =&gt; 5, // 最大重试次数
+        'error' =&gt; '错误信息' // 错误信息
+    ]
+    */
+    public function onConsumeFailure(\Throwable $e, $package)
+    {
+        echo "consume failure\n";
+        echo $e-&gt;getMessage() . "\n";
+        // 无需反序列化
+        var_export($package); 
+    }
+}</code></pre>
+<blockquote>
+<p><strong>注意</strong><br />
+消费过程中没有抛出异常和Error视为消费成功，否则消费失败，进入重试队列。<br />
+redis-queue没有ack机制，你可以把它看作是自动ack(没有产生异常或Error)。如果消费过程中想标记当前消息消费不成功，可以手动抛出异常，让当前消息进入重试队列。这实际上和ack机制没有区别。</p>
+<p><strong>提示</strong><br />
+消费者支持多服务器多进程，并且同一条消息<strong>不会</strong>被重复消费。消费过的消息会自动从队列删除，无需手动删除。</p>
+<p><strong>提示</strong><br />
+消费进程可以同时消费多种不同的队列，新增队列不需要修改<code>process.php</code>中的配置，新增队列消费者时只需要在<code>app/queue/redis</code>下新增对应的<code>Consumer</code>类即可，并用类属性<code>$queue</code>指定要消费的队列名</p>
+<p><strong>提示</strong><br />
+windows用户需要执行php windows.php 启动webman，否则不会启动消费进程</p>
+<p><strong>提示</strong><br />
+onConsumeFailure回调会在每次消费失败时触发，你可以在这里处理失败后的逻辑。</p>
+</blockquote>
+<h2 id="37274dfe74c52a132e6d64ff4526181e">为不同的队列设置不同的消费进程</h2>
+<p>默认情况下，所有的消费者共用相同的消费进程。但有时我们需要将一些队列的消费独立出来，例如消费慢的业务放到一组进程中消费，消费快的业务放到另外一组进程消费。为此我们可以将消费者分为两个目录，例如 <code>app_path() . '/queue/redis/fast'</code> 和 <code>app_path() . '/queue/redis/slow'</code> （注意消费类的命名空间需要做相应的更改），则配置如下：</p>
+<pre><code class="language-php">return [
+    ...这里省略了其它配置...
+
+    'redis_consumer_fast'  =&gt; [ // key是自定义的，没有格式限制，这里取名redis_consumer_fast
+        'handler'     =&gt; Webman\RedisQueue\Process\Consumer::class,
+        'count'       =&gt; 8,
+        'constructor' =&gt; [
+            // 消费者类目录
+            'consumer_dir' =&gt; app_path() . '/queue/redis/fast'
+        ]
+    ],
+    'redis_consumer_slow'  =&gt; [  // key是自定义的，没有格式限制，这里取名redis_consumer_slow
+        'handler'     =&gt; Webman\RedisQueue\Process\Consumer::class,
+        'count'       =&gt; 8,
+        'constructor' =&gt; [
+            // 消费者类目录
+            'consumer_dir' =&gt; app_path() . '/queue/redis/slow'
+        ]
+    ]
+];</code></pre>
+<p>这样快业务消费者放到<code>queue/redis/fast</code>目录下，慢业务消费者放到<code>queue/redis/slow</code>目录下达到给队列指定消费进程的目的。</p>
+<h2 id="d1cb85e6a9c40fa1168e09dfc5069843">多redis配置</h2>
+<h4 id="224e2ccda861c2514faa683b3683c361">配置</h4>
+<p><code>config/plugin/webman/redis-queue/redis.php</code></p>
+<pre><code class="language-php">&lt;?php
+return [
+    'default' =&gt; [
+        'host' =&gt; 'redis://192.168.0.1:6379',
+        'options' =&gt; [
+            'auth' =&gt; null,       // 密码，字符串类型，可选参数
+            'db' =&gt; 0,            // 数据库
+            'max_attempts'  =&gt; 5, // 消费失败后，重试次数
+            'retry_seconds' =&gt; 5, // 重试间隔，单位秒
+        ]
+    ],
+    'other' =&gt; [
+        'host' =&gt; 'redis://192.168.0.2:6379',
+        'options' =&gt; [
+            'auth' =&gt; null,       // 密码，字符串类型，可选参数
+            'db' =&gt; 0,             // 数据库
+            'max_attempts'  =&gt; 5, // 消费失败后，重试次数
+            'retry_seconds' =&gt; 5, // 重试间隔，单位秒
+        ]
+    ],
+];</code></pre>
+<p>注意配置里增加了一个<code>other</code>为key的redis配置</p>
+<h4 id="5867ee043111d05f5c5964abda673c8e">多redis投递消息</h4>
+<pre><code class="language-php">// 向 `default` 为key的队列投递消息
+Client::connection('default')-&gt;send($queue, $data);
+Redis::connection('default')-&gt;send($queue, $data);
+//  等同于
+Client::send($queue, $data);
+Redis::send($queue, $data);
+
+// 向 `other` 为key的队列投递消息
+Client::connection('other')-&gt;send($queue, $data);
+Redis::connection('other')-&gt;send($queue, $data);</code></pre>
+<h4 id="1029609eeda08ce1a3894a60eaa1c6b6">多redis消费</h4>
+<p>消费配置里<code>other</code> 为key的队列投递消息</p>
+<pre><code class="language-php">namespace app\queue\redis;
+
+use Webman\RedisQueue\Consumer;
+
+class SendMail implements Consumer
+{
+    // 要消费的队列名
+    public $queue = 'send-mail';
+
+    // === 这里设置为other，代表消费配置里other为key的队列 ===
+    public $connection = 'other';
+
+    // 消费
+    public function consume($data)
+    {
+        // 无需反序列化
+        var_export($data);
+    }
+}</code></pre>
+<h2 id="50d52dd929a75bb9b0f4afb0b7d879e1">常见问题</h2>
+<p><strong>为什么会有报错 <code>Workerman\Redis\Exception: Workerman Redis Wait Timeout (600 seconds)</code></strong></p>
+<p>这个错误只会存在于异步投递接口<code>Client::send()</code>中。异步投递首先会将消息保存在本地内存中，当进程空闲时将消息发送给redis。如果redis接收速度慢于消息生产速度，或者进程一直忙于其它业务没有足够的时间将内存的消息同步给redis，就会导致消息挤压。如果有消息挤压超过600秒，就会触发此错误。</p>
+<p>解决方案：投递消息使用同步投递接口<code>Redis::send()</code>。</p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

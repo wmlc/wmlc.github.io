@@ -1,5 +1,634 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>木偶笔记</title><link>//wangmaolin.net</link><description>木偶笔记文章</description><category domain="//wangmaolin.net">博客</category><item><title>PHP 如何执行系统命令？</title><link>https://wangmaolin.net/article/ndvm3l393j.html</link><pubDate>Thu, 15 May 2025 23:57:33 +0800</pubDate><description>&lt;img src=""&gt;在 Linux 上，PHP 执行系统命令主要通过以下几种函数：
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>木偶笔记</title><link>//wangmaolin.net</link><description>木偶笔记文章</description><category domain="//wangmaolin.net">博客</category><item><title>自动加载</title><link>https://wangmaolin.net/article/enyd5p097d.html</link><pubDate>Sat, 24 May 2025 00:44:00 +0800</pubDate><description>&lt;img src=""&gt;利用composer加载PSR-0规范的文件
+webman遵循PSR-4自动加载规范。如果你的业务需要加载PSR-0规范的代码库，参考以下操作。
+
+新建 extend 目录用户存放PSR-0规范的代码库
+编辑composer.json，在autoload下增加以下内容
+
+"psr-0" : {
+    "": "extend/"
+}
+最终结果类似
+
+
+执行 composer dumpautoloa</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>监控进程</title><link>https://wangmaolin.net/article/3dykqrwyl0.html</link><pubDate>Sat, 24 May 2025 00:41:56 +0800</pubDate><description>&lt;img src=""&gt;webman自带一个monitor监控进程，它支持两个功能
+
+监控文件更新并自动reload载入新的业务代码(一般在开发时使用)
+监控所有进程占用内存，如果某个进程占用内存即将超过php.ini中memory_limit限制则自动安全重启该进程(不影响业务)
+
+监控配置
+配置文件 config/process.php 中monitor配置
+
+global $argv;
+
+return [
+    </description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>压力测试</title><link>https://wangmaolin.net/article/2wy3l66ykm.html</link><pubDate>Sat, 24 May 2025 00:41:05 +0800</pubDate><description>&lt;img src=""&gt;压测结果受到哪些因素影响？
+
+压力机到服务器的网络延迟 (建议内网或本机压测)
+压力机到服务器的带宽 (建议内网或本机压测)
+是否开启HTTP keep-alive (建议开启)
+并发数是否足够 (外网压测要尽量开启更大的并发)
+服务端进程数是否合理 (helloworld业务进程数建议与cpu数相同，数据库业务进程数建议为cpu的四倍及以上)
+业务自身性能 (例如是否使用了外网数据库)
+
+HTT</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>慢业务处理</title><link>https://wangmaolin.net/article/xq9zr18vdo.html</link><pubDate>Sat, 24 May 2025 00:11:00 +0800</pubDate><description>&lt;img src=""&gt;有时候我们需要处理慢业务，为了避免慢业务影响webman的其它请求处理，这些业务根据情况不同可以使用不同的处理方案。
+方案一 使用消息队列
+参考redis队列 stomp队列
+优点
+可以应对突发海量业务处理请求
+缺点
+无法直接返回结果给客户端。如需推送结果需要配合其它服务，例如使用 webman/push 推送处理结果。
+方案二 新增HTTP端口
+新增HTTP端口处理慢请求，这些慢请求通过访问这个</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>业务初始化</title><link>https://wangmaolin.net/article/e296okz9q7.html</link><pubDate>Sat, 24 May 2025 00:06:53 +0800</pubDate><description>&lt;img src=""&gt;有时我们需要在进程启动后做一些业务初始化，这个初始化在进程生命周期只执行一次，例如进程启动后设置一个定时器，或者初始化数据库连接等。下面我们将对此进行讲解。
+原理
+根据 执行流程 中的说明，webman在进程启动后会加载config/bootstrap.php(包括config/plugin/*/*/bootstrap.php)中设置的类，并执行类的start方法。我们在start方法中可以加入业</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>内存泄漏</title><link>https://wangmaolin.net/article/2ev86elyor.html</link><pubDate>Sat, 24 May 2025 00:01:16 +0800</pubDate><description>&lt;img src=""&gt;webman是常驻内存框架，所以我们需要稍微关注下内存泄漏的情况。不过开发者不必过于担心，因为内存泄漏发生在非常极端的条件下，而且很容易规避。webman开发与传统框架开发体验基本一致，不必为内存管理做多余的操作。
+
+提示
+webman自带的monitor进程会监控所有进程内存使用情况，如果进程使用内存即将达到php.ini里memory_limit设定的值时，会自动安全重启对应的进程，达到释放内</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>生命周期</title><link>https://wangmaolin.net/article/3oyjdrlyp5.html</link><pubDate>Sat, 24 May 2025 00:00:15 +0800</pubDate><description>&lt;img src=""&gt;进程生命周期
+
+每个进程都有很长的生命周期
+每个进程是独立运行的互不干扰的
+每个进程在其生命周期内可以处理多个请求
+进程在收到stop reload restart命令时会执行退出，结束本次生命周期
+
+
+提示
+每个进程都是独立互不干扰的，这意味着每个进程都维护着自己的资源、变量和类实例等，表现在每个进程都有自己的数据库连接，一些单例在每个进程始化一次，那么多个进程就会初始化多次。
+
+请求生命周期
+</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>执行流程</title><link>https://wangmaolin.net/article/ndvm37n93j.html</link><pubDate>Fri, 23 May 2025 23:59:35 +0800</pubDate><description>&lt;img src=""&gt;进程启动流程
+执行 php start.php start 后执行流程如下：
+
+载入config/下的配置
+设置Worker的相关配置如 pid_file stdout_file log_file max_package_size 等
+创建webman进程，并监听端口（默认8787）
+根据配置创建自定义进程
+webman进程和自定义进程启动后执行以下逻辑(以下都是执行在onWorkerStart里</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>nginx代理</title><link>https://wangmaolin.net/article/wevwm819l2.html</link><pubDate>Fri, 23 May 2025 23:58:10 +0800</pubDate><description>&lt;img src=""&gt;当webman需要直接提供外网访问时，建议在webman前增加一个nginx代理，这样有以下好处。
+
+静态资源由nginx处理，让webman专注业务逻辑处理
+让多个webman共用80、443端口，通过域名区分不同站点，实现单台服务器部署多个站点
+能够实现php-fpm与webman架构共存
+nginx代理ssl实现https，更加简单高效
+能够严格过滤外网一些不合法请求
+
+nginx代理示例
+</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>自定义404 500</title><link>https://wangmaolin.net/article/m892gqny01.html</link><pubDate>Fri, 23 May 2025 23:56:27 +0800</pubDate><description>&lt;img src=""&gt;自定义404
+如果你想动态控制404的内容时，例如在ajax请求时返回json数据 {"code:"404", "msg":"404 not found"}，页面请求时返回app/view/404.html模版，请参考如下示例
+
+以下以php原生模版为例，其它模版twig blade think-tmplate 原理类似
+
+创建文件app/view/404.html
+&amp;lt;!doctype ht</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>禁用函数检查</title><link>https://wangmaolin.net/article/2qvpxz893m.html</link><pubDate>Fri, 23 May 2025 23:54:29 +0800</pubDate><description>&lt;img src=""&gt;使用这个脚本检查是否有禁用函数。命令行运行curl -Ss https://www.workerman.net/webman/check | php
+如果有提示Functions 函数名 has be disabled. Please check disable_functions in php.ini说明webman依赖的函数被禁用，需要在php.ini中解除禁用才能正常使用webman。
+解除</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>数据库事务</title><link>https://wangmaolin.net/article/2ky04n49z8.html</link><pubDate>Fri, 23 May 2025 23:53:39 +0800</pubDate><description>&lt;img src=""&gt;webman使用数据库事务与其它框架是一样的，这里列举出需要注意的地方
+代码结构
+代码结构和其它框架是一样的，例如Laravel用法(think-orm类似)
+Db::beginTransaction();
+try {
+    // ..业务处理略...
+
+    Db::commit();
+} catch (\Throwable $exception) {
+    Db::rollBack();</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>安全</title><link>https://wangmaolin.net/article/d6vroknv3g.html</link><pubDate>Fri, 23 May 2025 23:52:49 +0800</pubDate><description>&lt;img src=""&gt;运行用户
+建议将运行用户设置为权限较低的用户，例如与nginx运行用户一致。运行用户在 config/server.php 中的user和group中设置。
+类似的自定义进程的用户是通过config/process.php中的user和group来指定。
+需要注意的是，monitor进程不要设置运行用户，因为它需要高权限才能正常工作。
+控制器规范
+controller目录或者子目录下只能放置控制器</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>AOP</title><link>https://wangmaolin.net/article/kpv130g98w.html</link><pubDate>Fri, 23 May 2025 23:51:09 +0800</pubDate><description>&lt;img src=""&gt;
+感谢 Hyperf 作者的提交
+
+安装
+
+安装 aop-integration
+
+composer require "hyperf/aop-integration: ^1.1"
+增加 AOP 相关配置
+我们需要在 config 目录下，增加 config.php 配置
+&amp;lt;?php
+
+use Hyperf\Di\Annotation\AspectCollector;
+
+return [
+  </description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>依赖自动注入</title><link>https://wangmaolin.net/article/rwyl2dnvz8.html</link><pubDate>Fri, 23 May 2025 23:48:18 +0800</pubDate><description>&lt;img src=""&gt;在webman里依赖自动注入是可选功能，此功能默认关闭。如果你需要依赖自动注入，推荐使用php-di，以下是webman结合php-di的用法。
+安装
+composer require psr/container ^1.1.1 php-di/php-di ^6.3 doctrine/annotations ^1.14
+修改配置config/container.php，其最终内容如下：
+$build</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>自定义进程</title><link>https://wangmaolin.net/article/dgy7x42vw2.html</link><pubDate>Fri, 23 May 2025 23:47:25 +0800</pubDate><description>&lt;img src=""&gt;在webman中你可以像workerman那样自定义监听或者进程。
+
+注意
+windows用户需要使用 php windows.php 启动webman才能启动自定义进程。
+
+自定义http服务
+有时候你可能有某种特殊的需求，需要更改webman http服务的内核代码，这时可以采用自定义进程来实现。
+例如新建 app\Server.php
+&amp;lt;?php
+
+namespace app;
+
+us</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>安装卸载</title><link>https://wangmaolin.net/article/569x5n1yep.html</link><pubDate>Fri, 23 May 2025 23:46:01 +0800</pubDate><description>&lt;img src=""&gt;应用插件安装有两种方式：
+在插件市场安装
+进入 官方管理后台webman-admin 的应用插件页点击安装按钮安装对应的应用插件。  
+源码包安装
+从应用市场下载应用插件压缩包，解压并将解压目录上传到{主项目}/plugin/目录下(如plugin目录不存在需要手动创建)，执行 php webman app-plugin:install 插件名完成安装。
+例如下载的压缩包名称未ai.zip，解压到</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>发布</title><link>https://wangmaolin.net/article/qk94248vw1.html</link><pubDate>Fri, 23 May 2025 23:45:15 +0800</pubDate><description>&lt;img src=""&gt;开发者可以将自有版权的插件上传到应用市场，帮助他人的同时也能获得受益。
+发布地址 https://www.workerman.net/app/create
+注意：发布时填写的版本号应该与plugin/{插件}/config/app.php中版本号一致
+上架限制
+不支持以下类型应用上架
+金融类 包括但不限于聚合支付、返利、借贷、拍卖、数字币、区块链
+棋牌类 包括但不限于抽奖、夺宝、牛牛、点卡等
+采集</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>打包</title><link>https://wangmaolin.net/article/x3vo0n5vm1.html</link><pubDate>Fri, 23 May 2025 23:44:29 +0800</pubDate><description>&lt;img src=""&gt;例如打包foo应用插件
+
+设置plugin/foo/config/app.php里版本号(重要)
+删除plugin/foo里不需要打包的文件，尤其是plugin/foo/public下测试上传功能的临时文件
+如果你的项目包含数据库建表等操作，需要设置好plugin/foo/install.sql，参见安装数据库部分
+如果你的项目有自己独立的数据库、Redis配置，需要先删除这些配置，这些配置应该是</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>日志</title><link>https://wangmaolin.net/article/3xyq46pvmq.html</link><pubDate>Fri, 23 May 2025 23:42:37 +0800</pubDate><description>&lt;img src=""&gt;日志类用法也与数据库用法类似
+use support\Log;
+Log::channel('plugin.admin.default')-&amp;gt;info('test');
+如果想复用主项目的日志配置，直接使用
+use support\Log;
+Log::info('日志内容');
+// 假设主项目有个test日志配置
+Log::channel('test')-&amp;gt;info('日志内容');</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>Redis</title><link>https://wangmaolin.net/article/xpv524wv86.html</link><pubDate>Fri, 23 May 2025 23:41:34 +0800</pubDate><description>&lt;img src=""&gt;Redis用法与数据库类似，例如 plugin/foo/config/redis.php
+return [
+    'default' =&amp;gt; [
+        'host' =&amp;gt; '127.0.0.1',
+        'password' =&amp;gt; null,
+        'port' =&amp;gt; 6379,
+        'database' =&amp;gt; 0,
+    </description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>数据库</title><link>https://wangmaolin.net/article/kl9nogdvz4.html</link><pubDate>Fri, 23 May 2025 00:23:45 +0800</pubDate><description>&lt;img src=""&gt;由于大部分插件都会安装webman-admin，所以建议直接复用webman-admin的数据库配置。
+模型基类使用plugin\admin\app\model\Base则会自动使用webman-admin的数据库配置。
+&amp;lt;?php
+
+namespace plugin\foo\app\model;
+
+use plugin\admin\app\model\Base;
+
+class Orders</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>静态文件</title><link>https://wangmaolin.net/article/4rvgn5qydj.html</link><pubDate>Fri, 23 May 2025 00:22:46 +0800</pubDate><description>&lt;img src=""&gt;静态文件放置于plugin/{插件}/public下。
+例如访问http://127.0.0.1:8787/app/foo/avatar.png实际上是获取plugin/foo/public/avatar.png文件。</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>视图</title><link>https://wangmaolin.net/article/5dve2gjv4x.html</link><pubDate>Fri, 23 May 2025 00:20:58 +0800</pubDate><description>&lt;img src=""&gt;应用插件视图配置文件在plugin/{插件标识}/config/view.php里，
+应用插件使用视图与普通webman项目开发体验相同，参考视图</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>控制器</title><link>https://wangmaolin.net/article/enyd5e097d.html</link><pubDate>Fri, 23 May 2025 00:20:16 +0800</pubDate><description>&lt;img src=""&gt;根据PSR4规范，控制器类命名空间以plugin\{插件标识}开头，例如
+新建控制器文件 plugin/foo/app/controller/FooController.php。
+&amp;lt;?php
+namespace plugin\foo\app\controller;
+
+use support\Request;
+
+class FooController
+{
+    public function</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>配置文件</title><link>https://wangmaolin.net/article/3dykqkwyl0.html</link><pubDate>Fri, 23 May 2025 00:19:01 +0800</pubDate><description>&lt;img src=""&gt;插件的配置与普通webman项目一样，不过插件的配置一般只对当前插件有效，对主项目一般无影响。
+例如plugin.foo.app.controller_suffix的值只影响插件的控制器后缀，对主项目没有影响。
+例如plugin.foo.app.controller_reuse的值只影响插件是否复用控制器，对主项目没有影响。
+例如plugin.foo.middleware的值只影响插件的中间件，对</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>路由</title><link>https://wangmaolin.net/article/2wy3l26ykm.html</link><pubDate>Fri, 23 May 2025 00:18:22 +0800</pubDate><description>&lt;img src=""&gt;插件的路由配置文件在 plugin/插件名/config/route.php
+默认路由
+应用插件url地址路径都以/app开头，例如plugin\foo\app\controller\UserControllerurl地址是 http://127.0.0.1:8787/app/foo/user
+禁用默认路由
+如果想禁用某个应用插件的默认路由，在路由配置中设置类似
+Route::disableDef</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>目录结构</title><link>https://wangmaolin.net/article/xq9zr88vdo.html</link><pubDate>Fri, 23 May 2025 00:17:06 +0800</pubDate><description>&lt;img src=""&gt;plugin/
+└── foo
+    ├── app
+    │   ├── controller
+    │   │   └── IndexController.php
+    │   ├── exception
+    │   │   └── Handler.php
+    │   ├── functions.php
+    │   ├── middleware
+    │   ├── mo</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>创建应用插件</title><link>https://wangmaolin.net/article/e296o4z9q7.html</link><pubDate>Fri, 23 May 2025 00:15:48 +0800</pubDate><description>&lt;img src=""&gt;唯一标识
+每个插件都有一个唯一的应用标识，开发者开发之前需要想好标识，并且检测标识没有被占用。
+检测地址应用标识检测
+创建
+执行composer require webman/console 安装webman命令行
+使用命令php webman app-plugin:create {插件标识}可以在本地创建一个应用插件
+例如 php webman app-plugin:create foo
+重启w</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>规范</title><link>https://wangmaolin.net/article/3dykqkmyl0.html</link><pubDate>Fri, 23 May 2025 00:13:11 +0800</pubDate><description>&lt;img src=""&gt;应用插件开发规范
+应用插件要求
+
+插件不能包含侵权的代码、图标、图片等
+插件源码保证是完整的代码，且不能加密
+插件必须是完整的功能，不能是简单的功能
+必须提供完整的功能介绍、文档
+插件中不建议使用协程功能，因为用户可能并没有开启协程
+
+应用插件标识
+每个应用插件都有一个唯一标识，这个标识由字母组成。这个标识影响应用插件所在源码目录名、类的命名空间、插件数据库表前缀。
+假设开发者以foo为插件标识，</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>介绍</title><link>https://wangmaolin.net/article/2wy3l2xykm.html</link><pubDate>Fri, 23 May 2025 00:12:17 +0800</pubDate><description>&lt;img src=""&gt;理念
+像搭建积木一样快速构建自己的应用。
+介绍
+应用插件实际上是一个完整的应用，它能以插件的形式安装到主项目中，使主项目快速获得某个模块功能。
+例如主项目需要一个问答系统，则可以安装一个问答应用插件，需要一个商城系统，则安装商城应用插件。所有插件互不影响，即插即用，不需要时一键删除。
+影响
+应用插件极大的提高了webman项目的复用性，任何开发者都可以将自己的项目改造成插件，并提供给其它项目安装使</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>应用插件</title><link>https://wangmaolin.net/article/xq9zr84vdo.html</link><pubDate>Fri, 23 May 2025 00:10:50 +0800</pubDate><description>&lt;img src=""&gt;每个应用插件是一个完整的应用，源码放置于{主项目}/plugin目录下
+
+提示
+使用命令php webman app-plugin:create {插件名} 可以在本地创建一个应用插件，
+例如 php webman app-plugin:create cms 将创建如下目录结构
+
+plugin/
+└── cms
+    ├── app
+    │   ├── controller
+    │   </description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>提交基础插件</title><link>https://wangmaolin.net/article/e296o469q7.html</link><pubDate>Fri, 23 May 2025 00:08:27 +0800</pubDate><description>&lt;img src=""&gt;基础插件生成及发布流程
+原理
+1、以跨域插件为例，插件分为三部分，一个是跨域中间件程序文件，一个是中间件配置文件middleware.php，还有一个是通过命令自动生成的Install.php。
+2、我们使用命令将三个文件打包并发布到composer。
+3、当用户使用composer安装跨域插件时，插件中的Install.php会将跨域中间件程序文件以及配置文件拷贝到{主项目}/config/pl</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>推送</title><link>https://wangmaolin.net/article/2ev862qyor.html</link><pubDate>Fri, 23 May 2025 00:06:03 +0800</pubDate><description>&lt;img src=""&gt;webman/push 是一个免费的推送服务端插件，客户端基于订阅模式，兼容 pusher，拥有众多客户端如JS、安卓(java)、IOS(swift)、IOS(Obj-C)、uniapp、.NET、 Unity、Flutter、AngularJS等。后端推送SDK支持PHP、Node、Ruby、Asp、Java、Python、Go、Swift等。客户端自带心跳和断线自动重连，使用起来非常简单稳定</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>命令行</title><link>https://wangmaolin.net/article/3oyjd3myp5.html</link><pubDate>Fri, 23 May 2025 00:05:18 +0800</pubDate><description>&lt;img src=""&gt;webman/console 基于 symfony/console
+安装
+composer require webman/console
+支持的命令
+使用方法
+php webman 命令
+例如 php webman version  
+
+ 提示 
+linux系统下可简化为 ./webman 命令
+
+支持的命令
+version
+打印webman版本号
+route:list
+打印当前路由配置
+make</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>基础插件</title><link>https://wangmaolin.net/article/ndvm3e393j.html</link><pubDate>Fri, 23 May 2025 00:04:24 +0800</pubDate><description>&lt;img src=""&gt;基础插件一般是一些通用组件，一般使用composer安装，代码放置于vendor下。安装的时候可以将一些自定义的配置(中间件、进程、路由等配置)自动拷贝到{主项目}config/plugin目录下，webman会自动识别该目录配置并将配置合并到主配置当中，从而让插件可以介入到webman的任何生命周期当中。
+更多参考基础插件创建</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>自动生成错误码</title><link>https://wangmaolin.net/article/wevwmgn9l2.html</link><pubDate>Fri, 23 May 2025 00:01:30 +0800</pubDate><description>&lt;img src=""&gt;说明
+能够根据给定的规则自动维护错误码的生成。
+
+约定返回数据中 code 参数，所有自定义的 code ，正数代表服务正常，负数代表服务异常。
+
+项目地址
+https://github.com/teamones-open/response-code-msg
+安装
+composer require teamones/response-code-msg
+使用
+空 ErrorCode 类文件
+
+文件路</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>单元测试</title><link>https://wangmaolin.net/article/m892gr5y01.html</link><pubDate>Fri, 23 May 2025 00:00:45 +0800</pubDate><description>&lt;img src=""&gt;安装
+composer require --dev phpunit/phpunit
+使用
+新建文件 tests/TestConfig.php，用于测试数据库配置
+&amp;lt;?php
+use PHPUnit\Framework\TestCase;
+
+class TestConfig extends TestCase
+{
+    public function testAppConfig()
+    {</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>权限管理</title><link>https://wangmaolin.net/article/2qvpxr493m.html</link><pubDate>Fri, 23 May 2025 00:00:03 +0800</pubDate><description>&lt;img src=""&gt;说明
+Casbin是一个强大的、高效的开源访问控制框架，其权限管理机制支持多种访问控制模型。
+项目地址
+https://github.com/teamones-open/casbin
+安装
+composer require teamones/casbin
+Casbin官网
+详细使用可以去看官方中文文档，这里只讲怎么在webman中配置使用
+https://casbin.org/docs/zh-CN</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>支付SDK</title><link>https://wangmaolin.net/article/2ky04rx9z8.html</link><pubDate>Thu, 22 May 2025 23:57:38 +0800</pubDate><description>&lt;img src=""&gt;项目地址
+https://github.com/yansongda/pay
+安装
+composer require yansongda/pay ~3.0
+使用
+
+说明：以下以支付宝沙箱环境为环境进行文档编写，若有问题，请及时反馈哦！
+
+配置文件
+假设有以下配置文件 config/payment.php
+&amp;lt;?php
+/**
+ * @desc 支付配置文件
+ * @author Tinywan(</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>微信SDK</title><link>https://wangmaolin.net/article/d6vrorqv3g.html</link><pubDate>Thu, 22 May 2025 23:56:57 +0800</pubDate><description>&lt;img src=""&gt;项目地址
+https://github.com/overtrue/wechat
+安装
+composer require overtrue/wechat ~5.0
+使用
+&amp;lt;?php
+namespace app\controller;
+use support\Request;
+use EasyWeChat\Factory;
+use Symfony\Component\HttpFoundation</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>Excel 表格</title><link>https://wangmaolin.net/article/kpv13rq98w.html</link><pubDate>Thu, 22 May 2025 23:56:16 +0800</pubDate><description>&lt;img src=""&gt;项目地址
+https://github.com/PHPOffice/PhpSpreadsheet
+安装
+  composer require phpoffice/phpspreadsheet
+使用
+&amp;lt;?php
+namespace app\controller;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpread</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>Crontab 定时任务</title><link>https://wangmaolin.net/article/rwyl2oevz8.html</link><pubDate>Thu, 22 May 2025 23:55:18 +0800</pubDate><description>&lt;img src=""&gt;说明
+workerman/crontab类似linux的crontab，不同的是workerman/crontab支持秒级定时。
+时间说明：
+0   1   2   3   4   5
+|   |   |   |   |   |
+|   |   |   |   |   +------ day of week (0 - 6) (Sunday=0)
+|   |   |   |   +------ mo</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>env 组件</title><link>https://wangmaolin.net/article/dgy7x3kvw2.html</link><pubDate>Thu, 22 May 2025 23:54:12 +0800</pubDate><description>&lt;img src=""&gt;ENV组件 vlucas/phpdotenv
+说明
+vlucas/phpdotenv是一个环境变量加载组件，用来区分不同环境(如开发环境、测试环境等)的配置。
+项目地址
+https://github.com/vlucas/phpdotenv
+安装
+composer require vlucas/phpdotenv
+使用
+项目根目录新建.env文件
+.env
+DB_HOST = 127.0.0.1
+</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>Event 事件</title><link>https://wangmaolin.net/article/569x5k4yep.html</link><pubDate>Thu, 22 May 2025 23:49:04 +0800</pubDate><description>&lt;img src=""&gt;webman/event 提供一种精巧的事件机制，可实现在不侵入代码的情况下执行一些业务逻辑，实现业务模块之间的解耦。典型的场景如一个新用户注册成功时，只要发布一个自定义事件如user.register，各个模块遍能收到该事件执行相应的业务逻辑。
+安装
+composer require webman/event
+订阅事件
+订阅事件统一通过文件config/event.php来配置
+&amp;lt;?php</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>验证码</title><link>https://wangmaolin.net/article/qk942mgvw1.html</link><pubDate>Thu, 22 May 2025 23:48:19 +0800</pubDate><description>&lt;img src=""&gt;项目地址 https://github.com/webman-php/captcha
+安装
+composer require webman/captcha
+使用
+建立文件 app/controller/LoginController.php
+&amp;lt;?php
+namespace app\controller;
+
+use support\Request;
+use Webman\Captcha\Cap</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>图像处理</title><link>https://wangmaolin.net/article/x3vo0rkvm1.html</link><pubDate>Thu, 22 May 2025 23:47:37 +0800</pubDate><description>&lt;img src=""&gt;项目地址
+https://github.com/Intervention/image
+安装
+composer require intervention/image
+使用
+上传页面片段
+  &amp;lt;form method="post" action="/user/img" enctype="multipart/form-data"&amp;gt;
+      &amp;lt;input type="file" na</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>多语言</title><link>https://wangmaolin.net/article/3xyq48jvmq.html</link><pubDate>Thu, 22 May 2025 23:46:29 +0800</pubDate><description>&lt;img src=""&gt;多语言使用的是 symfony/translation 组件。
+安装
+composer require symfony/translation
+建立语言包
+webman默认将语言包放在resource/translations目录下(如果没有请自行创建)，如需更改目录，请在config/translation.php中设置。
+每种语言对应其中的一个子文件夹，语言定义默认放到messages.php</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>分页组件</title><link>https://wangmaolin.net/article/xpv5261v86.html</link><pubDate>Thu, 22 May 2025 23:43:14 +0800</pubDate><description>&lt;img src=""&gt;项目地址
+https://github.com/jasongrimes/php-paginator
+安装
+composer require "jasongrimes/paginator:^1.0.3"
+使用
+新建 app/controller/UserController.php
+&amp;lt;?php
+namespace app\controller;
+
+use support\Request;
+us</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>限流器</title><link>https://wangmaolin.net/article/kl9norwvz4.html</link><pubDate>Thu, 22 May 2025 23:40:01 +0800</pubDate><description>&lt;img src=""&gt;webman限流器，支持注解限流。
+支持apcu、redis、memory驱动。
+源码地址
+https://github.com/webman-php/rate-limiter
+安装
+composer require webman/rate-limiter
+使用
+&amp;lt;?php
+namespace app\controller;
+
+use RuntimeException;
+use Webman</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>验证器</title><link>https://wangmaolin.net/article/4rvgnr7ydj.html</link><pubDate>Thu, 22 May 2025 23:37:45 +0800</pubDate><description>&lt;img src=""&gt;composer有很多验证器可以直接在使用，例如：
+ top-think/think-validate
+ respect/validation
+
+验证器 top-think/think-validate
+说明
+ThinkPHP官方验证器
+项目地址
+https://github.com/top-think/think-validate
+安装
+composer require topthink/thi</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>Stomp队列</title><link>https://wangmaolin.net/article/5dve20gv4x.html</link><pubDate>Thu, 22 May 2025 23:36:28 +0800</pubDate><description>&lt;img src=""&gt;Stomp是简单(流)文本定向消息协议，它提供了一个可互操作的连接格式，允许STOMP客户端与任意STOMP消息代理（Broker）进行交互。workerman/stomp实现了Stomp客户端，主要用于 RabbitMQ、Apollo、ActiveMQ 等消息队列场景。
+安装
+composer require webman/stomp
+配置
+配置文件在 config/plugin/webman/</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>Redis队列</title><link>https://wangmaolin.net/article/enyd58897d.html</link><pubDate>Thu, 22 May 2025 23:35:52 +0800</pubDate><description>&lt;img src=""&gt;基于Redis的消息队列，支持消息延迟处理。
+安装
+composer require webman/redis-queue
+配置文件
+redis配置文件自动生成在 {主项目}/config/plugin/webman/redis-queue/redis.php，内容类似如下：
+&amp;lt;?php
+return [
+    'default' =&amp;gt; [
+        'host' =&amp;gt; </description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>MongoDB</title><link>https://wangmaolin.net/article/3dykq2myl0.html</link><pubDate>Thu, 22 May 2025 23:32:59 +0800</pubDate><description>&lt;img src=""&gt;webman默认使用 mongodb/laravel-mongodb 作为mongodb组件，它是从laravel项目中抽离出来的，用法与laravel相同。
+使用jenssegers/mongodb之前必须先给php-cli安装mongodb扩展。
+
+注意
+当前手册为 webman v2 版本，如果您使用的是webman v1版本，请查看 v1版本手册
+使用命令php -m | grep mon</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>Cache缓存</title><link>https://wangmaolin.net/article/2wy3l0xykm.html</link><pubDate>Thu, 22 May 2025 23:31:18 +0800</pubDate><description>&lt;img src=""&gt;webman/cache是基于symfony/cache开发的缓存组件，兼容协程和非协程环境，支持连接池。
+
+注意
+当前手册为 webman v2 版本，如果您使用的是webman v1版本，请查看 v1版本手册
+
+安装
+composer require -W webman/cache
+示例
+&amp;lt;?php
+namespace app\controller;
+
+use support\Reque</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>Redis</title><link>https://wangmaolin.net/article/xq9zre4vdo.html</link><pubDate>Thu, 22 May 2025 23:30:33 +0800</pubDate><description>&lt;img src=""&gt;webman/redis是在illuminate/redis的基础上添加了连接池功能，支持协程和非协程环境，用法与laravel相同。
+使用illuminate/redis之前必须先给php-cli安装redis扩展。
+
+注意
+当前手册为 webman v2 版本，如果您使用的是webman v1版本，请查看 v1版本手册
+此组件需要安装redis扩展，使用命令php -m | grep redi</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>数据库迁移</title><link>https://wangmaolin.net/article/e296oz69q7.html</link><pubDate>Thu, 22 May 2025 23:29:44 +0800</pubDate><description>&lt;img src=""&gt;Migration数据库迁移工具 Phinx
+说明
+Phinx 可以让开发者简洁的修改和维护数据库。 它避免了人为的手写 SQL 语句，它使用强大的 PHP API 去管理数据库迁移。开发者可以使用版本控制管理他们的数据库迁移。 Phinx 可以方便的进行不同数据库之间数据迁移。还可以追踪到哪些迁移脚本被执行，开发者可以不再担心数据库的状态从而更加关注如何编写出更好的系统。
+项目地址
+https:</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>分页</title><link>https://wangmaolin.net/article/2ev86kqyor.html</link><pubDate>Thu, 22 May 2025 23:28:44 +0800</pubDate><description>&lt;img src=""&gt;分页
+基于Laravel的ORM的分页方式
+Laravel的illuminate/database提供了方便的分页功能。
+安装
+composer require illuminate/pagination
+使用
+public function index(Request $request)
+{
+    $per_page = 10;
+    $users = Db::table('user')-&amp;</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>模型关联</title><link>https://wangmaolin.net/article/3oyjdomyp5.html</link><pubDate>Thu, 22 May 2025 23:27:44 +0800</pubDate><description>&lt;img src=""&gt;参考 https://learnku.com/docs/laravel/8.x/eloquent-relationships/9407</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>数据库模型</title><link>https://wangmaolin.net/article/ndvm3r393j.html</link><pubDate>Thu, 22 May 2025 23:26:29 +0800</pubDate><description>&lt;img src=""&gt;webman模型 基于 Eloquent ORM 。每个数据库表都有一个对应的「模型」用来与该表交互。你可以通过模型查询数据表中的数据，以及在数据表中插入新记录。
+在开始之前，请确保配置了 config/database.php 中配置数据库连接。
+
+注意：Eloquent ORM 要支持模型观察者需要额外导入composer require "illuminate/events" 例子
+
+数据库</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>查询构造器</title><link>https://wangmaolin.net/article/wevwm3n9l2.html</link><pubDate>Thu, 22 May 2025 23:25:26 +0800</pubDate><description>&lt;img src=""&gt;基于Laravel数据库组件
+获取所有行
+&amp;lt;?php
+namespace app\controller;
+
+use support\Request;
+use support\Db;
+
+class UserController
+{
+    public function all(Request $request)
+    {
+        $users = Db::table('users'</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>配置数据库</title><link>https://wangmaolin.net/article/m892g85y01.html</link><pubDate>Thu, 22 May 2025 23:24:01 +0800</pubDate><description>&lt;img src=""&gt;配置数据库(Laravel风格)
+webman/database 数据库及版本支持情况如下：
+
+MySQL 5.6+ 
+PostgreSQL 9.4+ 
+SQLite 3.8.8+
+
+SQL Server 2017+ 
+数据库配置文件位置为 config/database.php。
+return [
+ // 默认数据库
+ 'default' =&amp;gt; 'mysql',
+ // 各种数据库配置
+ </description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>快速入门</title><link>https://wangmaolin.net/article/2qvpxl493m.html</link><pubDate>Thu, 22 May 2025 23:22:56 +0800</pubDate><description>&lt;img src=""&gt;webman/database是基于illuminate/database开发的，并加入了连接池功能，支持协程和非协程环境，用法与laravel相同。
+开发者也可以参考使用其它数据库组件章节使用ThinkPHP或者其它数据库。
+
+注意
+当前手册为 webman-v2 版本，如果您使用的是webman-v1版本，请查看 v1版本手册
+
+数据库安装
+composer require -W webman</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>协程</title><link>https://wangmaolin.net/article/2ky042x9z8.html</link><pubDate>Wed, 21 May 2025 01:31:37 +0800</pubDate><description>&lt;img src=""&gt;webman是基于workerman开发的，所以webman可以使用workerman的协程特性。
+协程支持Swoole Swow和Fiber三种驱动。
+前提条件
+
+PHP &amp;gt;= 8.1
+Workerman &amp;gt;= 5.1.0 (composer require workerman/workerman ~v5.1)
+webman-framework &amp;gt;= 2.1 (composer</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>多应用</title><link>https://wangmaolin.net/article/d6vrolqv3g.html</link><pubDate>Wed, 21 May 2025 01:29:39 +0800</pubDate><description>&lt;img src=""&gt;有时一个项目可能分为多个子项目，例如一个商城可能分为商城主项目、商城api接口、商城管理后台3个子项目，他们都使用相同的数据库配置。
+webman允许你这样规划app目录：
+app
+├── shop
+│   ├── controller
+│   ├── model
+│   └── view
+├── api
+│   ├── controller
+│   └── model
+└── admin
+   </description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>配置文件</title><link>https://wangmaolin.net/article/kpv132q98w.html</link><pubDate>Wed, 21 May 2025 01:29:00 +0800</pubDate><description>&lt;img src=""&gt;位置
+webman的配置文件在config/目录下，项目中可以通过config()函数来获取对应的配置。
+获取配置
+获取所有配置
+config();
+获取config/app.php里的所有配置
+config('app');
+获取config/app.php里的debug配置
+config('app.debug');
+如果配置是数组，可以通过.来获取数组内部元素的值，例如
+config('file</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>日志</title><link>https://wangmaolin.net/article/rwyl2levz8.html</link><pubDate>Wed, 21 May 2025 01:28:20 +0800</pubDate><description>&lt;img src=""&gt;webman使用 monolog/monolog 处理日志。
+使用
+&amp;lt;?php
+namespace app\controller;
+
+use support\Request;
+use support\Log;
+
+class FooController
+{
+    public function index(Request $request)
+    {
+        Log::info('</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>异常处理</title><link>https://wangmaolin.net/article/dgy7xlkvw2.html</link><pubDate>Wed, 21 May 2025 01:26:22 +0800</pubDate><description>&lt;img src=""&gt;配置
+config/exception.php
+return [
+    // 这里配置异常处理类
+    '' =&amp;gt; support\exception\Handler::class,
+];
+多应用模式时，你可以为每个应用单独配置异常处理类，参见多应用
+默认异常处理类
+webman中异常默认由 support\exception\Handler 类来处理。可修改配置文件config/exc</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>session管理</title><link>https://wangmaolin.net/article/569x5e4yep.html</link><pubDate>Wed, 21 May 2025 01:25:34 +0800</pubDate><description>&lt;img src=""&gt;例子
+&amp;lt;?php
+namespace app\controller;
+
+use support\Request;
+
+class UserController
+{
+    public function hello(Request $request)
+    {
+        $name = $request-&amp;gt;get('name');
+        $session = $requ</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>静态文件</title><link>https://wangmaolin.net/article/qk942lgvw1.html</link><pubDate>Wed, 21 May 2025 01:24:56 +0800</pubDate><description>&lt;img src=""&gt;webman支持静态文件访问，静态文件都放置于public目录下，例如访问 http://127.0.0.8787/upload/avatar.png实际上是访问{主项目目录}/public/upload/avatar.png。
+
+注意
+以/app/xx/文件名开头的静态文件访问实际是访问应用插件的public目录，也就是说不支持 {主项目目录}/public/app/下的目录访问。
+更多请参考应</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>视图</title><link>https://wangmaolin.net/article/x3vo02kvm1.html</link><pubDate>Wed, 21 May 2025 01:24:09 +0800</pubDate><description>&lt;img src=""&gt;webman默认使用的是php原生语法作为模版，在打开opcache后具有最好的性能。除了php原生模版，webman还提供了Twig、 Blade、 think-template 模版引擎。
+开启opcache
+使用视图时，强烈建议开启php.ini中opcache.enable和opcache.enable_cli 两个选项，以便模版引擎达到最好性能。
+安装Twig
+1、composer安装
+</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>中间件</title><link>https://wangmaolin.net/article/3xyq4mjvmq.html</link><pubDate>Wed, 21 May 2025 01:23:17 +0800</pubDate><description>&lt;img src=""&gt;中间件一般用于拦截请求或者响应。例如执行控制器前统一验证用户身份，如用户未登录时跳转到登录页面，例如响应中增加某个header头。例如统计某个uri请求占比等等。
+中间件洋葱模型
+
+            ┌──────────────────────────────────────────────────────┐
+            │                     middle</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>路由</title><link>https://wangmaolin.net/article/xpv5281v86.html</link><pubDate>Wed, 21 May 2025 01:22:37 +0800</pubDate><description>&lt;img src=""&gt;默认路由规则
+webman默认路由规则是 http://127.0.0.1:8787/{控制器}/{动作}。
+默认控制器为app\controller\IndexController，默认动作为index。
+例如访问：
+
+http://127.0.0.1:8787 将默认访问app\controller\IndexController类的index方法
+http://127.0.0.1:8787/</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>控制器</title><link>https://wangmaolin.net/article/kl9nolwvz4.html</link><pubDate>Wed, 21 May 2025 01:21:28 +0800</pubDate><description>&lt;img src=""&gt;新建控制器文件 app/controller/FooController.php。
+&amp;lt;?php
+namespace app\controller;
+
+use support\Request;
+
+class FooController
+{
+    public function index(Request $request)
+    {
+        return response('hel</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>响应</title><link>https://wangmaolin.net/article/4rvgn47ydj.html</link><pubDate>Wed, 21 May 2025 01:20:41 +0800</pubDate><description>&lt;img src=""&gt;响应实际上是一个support\Response对象，为了方便创建这个对象，webman提供了一些助手函数。
+返回一个任意响应
+例子
+&amp;lt;?php
+namespace app\controller;
+
+use support\Request;
+
+class FooController
+{
+    public function hello(Request $request)
+    {
+   </description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>请求</title><link>https://wangmaolin.net/article/5dve28gv4x.html</link><pubDate>Wed, 21 May 2025 01:19:14 +0800</pubDate><description>&lt;img src=""&gt;获得请求对象
+webman会自动将请求对象注入到action方法第一个参数中，例如
+例子
+&amp;lt;?php
+namespace app\controller;
+
+use support\Request;
+
+class UserController
+{
+    public function hello(Request $request)
+    {
+        $default_name = </description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>简单示例</title><link>https://wangmaolin.net/article/enyd54897d.html</link><pubDate>Wed, 21 May 2025 01:17:46 +0800</pubDate><description>&lt;img src=""&gt;返回字符串
+新建控制器
+新建文件 app/controller/UserController.php 如下
+&amp;lt;?php
+namespace app\controller;
+
+use support\Request;
+
+class UserController
+{
+    public function hello(Request $request)
+    {
+        $defaul</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>目录结构</title><link>https://wangmaolin.net/article/3dykqmmyl0.html</link><pubDate>Wed, 21 May 2025 01:16:52 +0800</pubDate><description>&lt;img src=""&gt;.
+├── app                           应用目录
+│   ├── controller                控制器目录
+│   ├── model                     模型目录
+│   ├── view                      视图目录
+│   ├── middleware                中间件目录
+│</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>宝塔安装</title><link>https://wangmaolin.net/article/2wy3l5xykm.html</link><pubDate>Wed, 21 May 2025 01:15:38 +0800</pubDate><description>&lt;img src=""&gt;0. 环境要求
+
+PHP &amp;gt;= 8.1
+
+1. 创建项目
+
+cd /www/wwwroot
+composer create-project workerman/webman
+2. 设置网站
+
+
+注意：
+宝塔会自动守护进程，启动命令为 php /www/wwwroot/webman/start.php start，不加 -d 参数，否则无法启动
+
+3. 配置站点
+
+4. 设置运行目录
+
+
+注意</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>安装</title><link>https://wangmaolin.net/article/xq9zrq4vdo.html</link><pubDate>Wed, 21 May 2025 01:14:36 +0800</pubDate><description>&lt;img src=""&gt;
+PHP &amp;gt;= 8.1
+Composer &amp;gt;= 2.0
+
+安装PHP+Composer环境(已有环境则跳过)
+curl -sO https://www.workerman.net/install-php-and-composer &amp;amp;&amp;amp; sudo bash install-php-and-composer
+通过以上命令可以快速安装PHP+Composer环境，支持PHP8</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>社区帮助</title><link>https://wangmaolin.net/article/e296oj69q7.html</link><pubDate>Wed, 21 May 2025 01:13:17 +0800</pubDate><description>&lt;img src=""&gt;问答社区
+https://www.workerman.net/questions
+技术交流群
+</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>编程须知</title><link>https://wangmaolin.net/article/2ev86lqyor.html</link><pubDate>Wed, 21 May 2025 01:12:05 +0800</pubDate><description>&lt;img src=""&gt;操作系统
+webman同时支持linux系统和windows系统下运行。但是由于workerman在windows下无法支持多进程设置以及守护进程，因此windows系统仅仅建议用于开发环境开发调试使用，正式环境请使用linux系统。
+启动方式
+linux系统
+php start.php start
+此命令为调试模式，一般在开发时使用，文件更新monitor进程会自动检测reload，打印数据时在</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>webman是什么</title><link>https://wangmaolin.net/article/3oyjd5myp5.html</link><pubDate>Wed, 21 May 2025 01:08:21 +0800</pubDate><description>&lt;img src=""&gt;Webman是一款基于Workerman构建的高性能服务框架，集成了HTTP、WebSocket、TCP、UDP等多种模块。通过常驻内存、协程、连接池等先进技术，Webman不仅突破了传统PHP的性能瓶颈，还极大地扩展了其应用场景。
+此外，Webman还提供了强大的插件机制，使开发者能够快速集成和复用其他开发者开发的功能模块。无论是构建网站、开发HTTP接口、实现即时通讯、搭建物联网系统，还是开发</description><source url="//wangmaolin.net">木偶笔记</source></item><item><title>PHP 如何执行系统命令？</title><link>https://wangmaolin.net/article/ndvm3l393j.html</link><pubDate>Thu, 15 May 2025 23:57:33 +0800</pubDate><description>&lt;img src=""&gt;在 Linux 上，PHP 执行系统命令主要通过以下几种函数：
 
 ✅ PHP 在执行系统命令的常用方式：
 
