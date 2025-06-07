@@ -1,0 +1,668 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Laravel 事件系统使用说明 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="476dd8VPqlno3tKrJ2sgvTLvrXXd14RRolMMi7yY">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../webman/overview.html">webman</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>Laravel</h2>
+<ul>
+<li id="blog1"><a href="nxq9zrvdow.html#blog1">Laravel 请求的生命周期介绍</a>
+<li id="blog2"><a href="z64y96y5lg.html#blog2">Laravel blade 模板压缩、加速扩展 renatomarinho/Laravel-page-speed 介绍</a>
+<li id="blog7"><a href="m0wekxvp9k.html#blog7">Laravel 生成精美的项目使用文档扩展 overtrue/wisteria</a>
+<li id="blog8"><a href="7okv5nv1nw.html#blog8">Laravel 腾讯云 cos 存储扩展</a>
+<li id="blog16"><a href="nq5vrgy7p3.html#blog16">如何在 Laravel 中创建自定义辅助函数</a>
+<li id="blog17"><a href="1j6y0je2k8.html#blog17">如何在 Laravel 中创建自定义日志文件？</a>
+<li id="blog27"><a href="mx5e6dkv0r.html#blog27">使你的 Laravel 项目模块化</a>
+<li id="blog77"><a href="n2oegkzv73.html#blog77">Dcat Admin 扩展收集</a>
+<li id="blog78"><a href="7ndvd92eo2.html#blog78">使用 Octane 扩展加速您的 Laravel 项目</a>
+<li id="blog135"><a href="pwde4ldy6q.html#blog135">Laravel中使用group by报错的问题</a>
+<li id="blog152"><a href="rpnv3l0vwm.html#blog152">Laravel 项目加速</a>
+<li id="blog156"><a href="7okv521v1n.html#blog156">Laravel 代码提示工具 Laravel IDE Helper 介绍</a>
+<li id="blog229"><a href="n2oeg58v73.html#blog229">Laravel 常用扩展收集</a>
+<li id="blog322"><a href="71xyjjryd9.html#blog322">Larvale MySQL事务回退、悲观锁</a>
+<li id="blog422"><a href="71xyjpxyd9.html#blog422">Laravel octane 使用蓝绿部署方案实现0停机部署</a>
+<li id="blog434"><a href="54lvo52e6z.html#blog434">使用 AdapterMan 扩展加速您的 Laravel 项目</a>
+<li id="blog832"><a href="xpv523wv86.html#blog832">Laravel 事件系统使用说明</a>
+</ul>
+</li>
+<li>
+<h2>扩展</h2>
+<ul>
+<li id="blog7"><a href="m0wekxvp9k.html#blog7">Laravel 生成精美的项目使用文档扩展 overtrue/wisteria</a>
+<li id="blog127"><a href="k3dyk0m9l0.html#blog127">Laravel 文件和数据库备份工具 spatie/laravel-backup 介绍</a>
+<li id="blog155"><a href="wkl9nxwvz4.html#blog155">Laravel 、 PHP 二维码生成扩展 SimpleSoftwareIO/simple-qrcode</a>
+<li id="blog156"><a href="7okv521v1n.html#blog156">Laravel 代码提示工具 Laravel IDE Helper 介绍</a>
+<li id="blog158"><a href="4x3vomkym1.html#blog158">使用 Laravel Excel 实现 Excel/CSV 文件导入导出</a>
+<li id="blog159"><a href="3qk945gvw1.html#blog159">客户端 User Agent 解析扩展</a>
+<li id="blog229"><a href="n2oeg58v73.html#blog229">Laravel 常用扩展收集</a>
+</ul>
+</li>
+<li>
+<h2>DcatAdmin</h2>
+<ul>
+<li id="blog37"><a href="4oxy778y98.html#blog37">DcatAdmin 表格和表单各按钮显示控制方法汇总</a>
+<li id="blog49"><a href="kq1ez6kvrl.html#blog49">给 Dcat Admin 框架 Markdown 编辑器添加图片复制粘贴自动上传功能</a>
+<li id="blog77"><a href="n2oegkzv73.html#blog77">Dcat Admin 扩展收集</a>
+<li id="blog87"><a href="j25v1g6v1n.html#blog87">Dcat Admin 自定义 TinyMce 富文本编辑器设置</a>
+<li id="blog88"><a href="nq5vr3gv7p.html#blog88">Dcat Admin 关联模型字段翻译设置</a>
+<li id="blog89"><a href="1j6y0dje2k.html#blog89">Dcat Admin 实现 Excel 数据导入</a>
+<li id="blog90"><a href="xkdvp9qezo.html#blog90">Dcat Admin 数据表格工具栏添加后台交互按钮</a>
+<li id="blog178"><a href="7ndvdjpvo2.html#blog178">Dcat Admin 表格中每行添加异步加载数据表格按钮方法</a>
+</ul>
+</li>
+<li>
+<h2>editor.md</h2>
+<ul>
+<li id="blog49"><a href="kq1ez6kvrl.html#blog49">给 Dcat Admin 框架 Markdown 编辑器添加图片复制粘贴自动上传功能</a>
+</ul>
+</li>
+<li>
+<h2>Octane</h2>
+<ul>
+<li id="blog78"><a href="7ndvd92eo2.html#blog78">使用 Octane 扩展加速您的 Laravel 项目</a>
+<li id="blog422"><a href="71xyjpxyd9.html#blog422">Laravel octane 使用蓝绿部署方案实现0停机部署</a>
+</ul>
+</li>
+<li>
+<h2>swoole</h2>
+<ul>
+<li id="blog78"><a href="7ndvd92eo2.html#blog78">使用 Octane 扩展加速您的 Laravel 项目</a>
+</ul>
+</li>
+<li>
+<h2>TinyMce</h2>
+<ul>
+<li id="blog87"><a href="j25v1g6v1n.html#blog87">Dcat Admin 自定义 TinyMce 富文本编辑器设置</a>
+</ul>
+</li>
+<li>
+<h2>跨域</h2>
+<ul>
+<li id="blog130"><a href="7ndvd4pvo2.html#blog130">Lumen 框架解决非简单请求 cors 跨域问题</a>
+</ul>
+</li>
+<li>
+<h2>Lumen</h2>
+<ul>
+<li id="blog130"><a href="7ndvd4pvo2.html#blog130">Lumen 框架解决非简单请求 cors 跨域问题</a>
+</ul>
+</li>
+<li>
+<h2>MySQL</h2>
+<ul>
+<li id="blog135"><a href="pwde4ldy6q.html#blog135">Laravel中使用group by报错的问题</a>
+<li id="blog322"><a href="71xyjjryd9.html#blog322">Larvale MySQL事务回退、悲观锁</a>
+<li id="blog460"><a href="x569xd8vep.html#blog460">Laravel 动态创建 mysql 数据库表</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var cid = 'xpv523wv86.html';
+        if (!checkView(cid)) {
+            $.get('https://wangmaolin.net/api/blog/addView/article/xpv523wv86.html', function (data, status) {
+                addView('xpv523wv86.html')
+            });
+        }
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Laravel 事件系统使用说明</h1><ul>
+<li><a href="xpv523wv86.html#993b001403069a1838817d593000af24">👉 什么是事件系统？</a></li>
+<li><a href="xpv523wv86.html#4cafa3ebf5915176bf00c6d0b9bbecf7">事件系统的使用步骤</a>
+<ul>
+<li><a href="xpv523wv86.html#86a22c950394196632e048bae657884c">1、创建事件类</a></li>
+<li><a href="xpv523wv86.html#fe983a049552de1a336d0bf332566c0f">2、创建监听器类</a></li>
+<li><a href="xpv523wv86.html#7d1fe5f8dc09e3ef375e6474dde2624b">3、注册事件与监听器</a></li>
+<li><a href="xpv523wv86.html#25b6838e13c40059a07f881614e5d68c">4、触发事件</a></li>
+</ul></li>
+<li><a href="xpv523wv86.html#aa2145bff59d6b06568805b644073d34">监听器异步执行（可选）</a></li>
+<li><a href="xpv523wv86.html#0d9ed5882cfae56830a86c3401fc998b">总结流程图</a></li>
+<li><a href="xpv523wv86.html#f3bd37ff05f9d59b0fe046d622713b43">停止事件传播</a></li>
+<li><a href="xpv523wv86.html#73ef66e4ca7e624058a24553f1bb9174">事件和队列的区别</a></li>
+</ul><h2 id="993b001403069a1838817d593000af24">👉 什么是事件系统？</h2>
+<p>Laravel 的事件系统基于发布-订阅（Pub/Sub）模式，核心由两部分组成：</p>
+<p><code>事件（Event）</code>：发生了什么事情，例如 UserRegistered（用户注册了）</p>
+<p><code>监听器（Listener）</code>：监听并响应这个事件，例如 SendWelcomeEmail</p>
+<p>你定义事件类 → 触发事件 → 所有关联的监听器会被执行。</p>
+<h2 id="4cafa3ebf5915176bf00c6d0b9bbecf7">事件系统的使用步骤</h2>
+<p>本文以 laravel 11 为例讲解</p>
+<h3 id="86a22c950394196632e048bae657884c">1、创建事件类</h3>
+<pre><code class="language-bash">php artisan make:event UserRegistered</code></pre>
+<p>会生成文件：</p>
+<pre><code class="language-php">// app/Events/UserRegistered.php
+
+namespace App\Events;
+
+use App\Models\User;
+
+class UserRegistered
+{
+    public function __construct(public User $user) {}
+}</code></pre>
+<h3 id="fe983a049552de1a336d0bf332566c0f">2、创建监听器类</h3>
+<pre><code class="language-bash">php artisan make:listener SendWelcomeEmail --event=UserRegistered</code></pre>
+<p>会生成：</p>
+<pre><code class="language-php">&lt;?php
+// app/Listeners/SendWelcomeEmail.php
+
+namespace App\Listeners;
+
+use App\Events\UserRegistered;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+
+class SendWelcomeEmail
+{
+    /**
+     * Create the event listener.
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the event.
+     */
+    public function handle(UserRegistered $event): void
+    {
+        // 访问 $event-&gt;user，发送邮件或通知
+        \Log::info('Send welcome email to ' . $event-&gt;user-&gt;email);
+    }
+}
+</code></pre>
+<p>在 Laravel 11 中，事件触发后监听器默认是同步执行的，触发事件后 handle() 方法会在同一个请求内执行完毕，只有执行完成后，主程序才继续。</p>
+<p>你也可以实现 <code>ShouldQueue</code> 接口让其异步执行：</p>
+<pre><code class="language-php">class SendWelcomeEmail implements ShouldQueue</code></pre>
+<p>Laravel 会自动将该监听器推送到队列，事件触发后主请求立即返回，监听器稍后由队列 worker 执行。</p>
+<hr />
+<h3 id="7d1fe5f8dc09e3ef375e6474dde2624b">3、注册事件与监听器</h3>
+<p>默认情况下，Laravel 会扫描应用内的 Listeners 目录自动发现和注册事件监听器。不需要主动做事件和监听的绑定。当 Laravel 发现监听器的类里面有以 handle 或 __invoke 开头的方法，Laravel 会将这些方法注册为监听器，对应的事件为方法签名中的事件类, 如上面监听类中的 <code>public function handle(UserRegistered $event): void</code> 定义为这个监听类监听的事件是 <code>UserRegistered</code></p>
+<p>但若某个事件有多个监听类，我们可以主动注册事件监听，这样监听器会按照定义顺序执序，不需要考虑顺序的情况可以不定义。</p>
+<blockquote>
+<p>注意个点：若像下面文件一样主动注册监听，监听器中handle方法中不要声明要监听的事件(去掉 UserRegistered $event 传参)，否则这个监听器会执行两次；laravel 自动发现执行一次，主动注册又执行一次。shouldDiscoverEvents 设为 false 无效，不知道什么原因。</p>
+</blockquote>
+<p>使用 <code>EventServiceProvider</code> 类主动注册事件监听：</p>
+<pre><code class="language-php">// app/Providers/EventServiceProvider.php
+
+use App\Events\UserRegistered;
+use App\Listeners\SendWelcomeEmail;
+
+protected $listen = [
+    UserRegistered::class =&gt; [ # 事件
+        SendWelcomeEmail::class, # 可添加多个监听器，按从上到下的顺序执行
+    ],
+];</code></pre>
+<p>注意  Laravel 11 不会自动加载 <code>App\Providers\EventServiceProvider::class</code>, 需要在 <code>bootstrap/providers.php</code> 文件中手动引入</p>
+<pre><code class="language-php">&lt;?php
+
+// bootstrap/providers.php
+
+return [
+    App\Providers\AppServiceProvider::class,
+    App\Providers\EventServiceProvider::class,
+];</code></pre>
+<p>然后运行：</p>
+<pre><code class="language-bash">php artisan event:cache</code></pre>
+<blockquote>
+<p>📌 Laravel 会缓存事件监听映射，提高性能。开发时如果修改监听器注册，需要重新执行该命令。</p>
+</blockquote>
+<hr />
+<h3 id="25b6838e13c40059a07f881614e5d68c">4、触发事件</h3>
+<pre><code class="language-php">use App\Events\UserRegistered;
+
+event(new UserRegistered($user));</code></pre>
+<blockquote>
+<p><code>event()</code> 是 Laravel 全局助手函数，也可以用 <code>Event::dispatch()</code>。</p>
+</blockquote>
+<h2 id="aa2145bff59d6b06568805b644073d34">监听器异步执行（可选）</h2>
+<p>若监听器比较耗时（如发邮件），建议实现：</p>
+<pre><code class="language-php">use Illuminate\Contracts\Queue\ShouldQueue;
+
+class SendWelcomeEmail implements ShouldQueue</code></pre>
+<p>并确保你已启动队列监听器：</p>
+<pre><code class="language-bash">php artisan queue:work</code></pre>
+<h2 id="0d9ed5882cfae56830a86c3401fc998b">总结流程图</h2>
+<pre><code class="language-text">[ 用户注册 ]
+      ↓
+[ event(new UserRegistered($user)) ]
+      ↓
+[ UserRegistered Event ]
+      ↓
+[ SendWelcomeEmail Listener ]
+      ↓
+[ 邮件发送 / 记录日志 / 通知等 ]</code></pre>
+<h2 id="f3bd37ff05f9d59b0fe046d622713b43">停止事件传播</h2>
+<p>有时，当一个事件注册了多个监听器时，一个监听器执行后你可能希望停止将事件传播到其他监听器。你可以通过从监听器的 handle 方法中返回 false 来做到这一点。</p>
+<p>但注意，它<strong>只适用于你使用 <code>Event::until()</code>（或 <code>event()-&gt;until()</code>）方式触发事件</strong>的场景。</p>
+<p>Laravel 的两种触发方式对返回值的处理不同：</p>
+<table>
+<thead>
+<tr>
+<th>调用方式</th>
+<th>返回值</th>
+<th>是否中止监听器传播</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>event()</code></td>
+<td>所有返回值数组</td>
+<td>❌ 否（全部执行）</td>
+</tr>
+<tr>
+<td><code>Event::dispatch()</code></td>
+<td>同上</td>
+<td>❌ 否（全部执行）</td>
+</tr>
+<tr>
+<td><code>Event::until()</code></td>
+<td>首个非 null</td>
+<td>✅ 是（中止执行）</td>
+</tr>
+<tr>
+<td><code>event()-&gt;until()</code></td>
+<td>同上</td>
+<td>✅ 是</td>
+</tr>
+</tbody>
+</table>
+<p>在 <code>until()</code> 模式下，监听器返回 <code>false</code> 将停止后续监听器</p>
+<h2 id="73ef66e4ca7e624058a24553f1bb9174">事件和队列的区别</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Laravel 事件</th>
+<th>Laravel 队列</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模式</td>
+<td>发布-订阅</td>
+<td>生产者-消费者</td>
+</tr>
+<tr>
+<td>解耦</td>
+<td>✅ 非常适合</td>
+<td>❌ 不是目标</td>
+</tr>
+<tr>
+<td>异步</td>
+<td>❌ 默认同步（可配队列）</td>
+<td>✅ 默认异步</td>
+</tr>
+<tr>
+<td>多任务</td>
+<td>✅ 支持多个监听器</td>
+<td>✅ 但每个 Job 单一职责更好</td>
+</tr>
+<tr>
+<td>典型用途</td>
+<td>业务流程解耦（如：注册通知多个逻辑）</td>
+<td>长耗时逻辑（如：生成 PDF、发邮件）</td>
+</tr>
+<tr>
+<td>控制性</td>
+<td>❌ 无优先级、失败处理弱</td>
+<td>✅ 有 retry/delay/failure 等机制</td>
+</tr>
+</tbody>
+</table>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>
