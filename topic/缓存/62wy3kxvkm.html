@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="476dd8VPqlno3tKrJ2sgvTLvrXXd14RRolMMi7yY">
+        <meta name="csrf-token" content="CWmw9a24WvBZM1dQrJRZpJakjoslMcKxt2kPF060">
 
         
     </head>
@@ -326,6 +326,7 @@
 <li id="blog126"><a href="62wy3kxvkm.html#blog126">单节点 Redis 分布式锁介绍</a>
 <li id="blog182"><a href="4x3vo2k9m1.html#blog182">使用 redis 实时统计 QPS</a>
 <li id="blog346"><a href="j3oyjxrvp5.html#blog346">单线程的 Redis 为什么这么快？</a>
+<li id="blog833"><a href="3xyq43pvmq.html#blog833">基于 Redis 的访问限流方法</a>
 </ul>
 </li>
 </ul>
@@ -371,12 +372,11 @@ var _hmt = _hmt || [];
 <li><a href="62wy3kxvkm.html#9e9cb346f3a83ad2b516629d6c17e2e1">分布式锁的实现方式</a></li>
 <li><a href="62wy3kxvkm.html#ffa060bc8cd42bff2eb0f9d9f075f988">加解锁实例代码</a></li>
 <li><a href="62wy3kxvkm.html#46edfa2eb9047ccb544380772422cb2e">加解锁过程注意点</a></li>
-<li><a href="62wy3kxvkm.html#902695b4ed7aace73b39ec13bb712655">github 项目地址</a></li>
 <li><a href="62wy3kxvkm.html#374076186765634743e3b51e608d8014">单节点方式的缺点</a></li>
 <li><a href="62wy3kxvkm.html#010727e5654e7018835807f4d36ea923">分布式锁使用注意事项</a></li>
-</ul><h3 id="334aa49eb1bc7757b7ded4581dba27eb">分布式锁</h3>
+</ul><h2 id="334aa49eb1bc7757b7ded4581dba27eb">分布式锁</h2>
 <p>分布式锁是控制分布式系统或不同系统之间共同访问共享资源的一种锁实现，如果不同的系统或同一个系统的不同主机之间共享了某个资源时，往往需要互斥来防止彼此干扰来保证一致性。</p>
-<h3 id="5b611860aa956b6f5155758630b979e0">分布式锁需要具备的特性</h3>
+<h2 id="5b611860aa956b6f5155758630b979e0">分布式锁需要具备的特性</h2>
 <pre><code class="   language-php">互斥性：在任意一个时刻，只有一个客户端可以获取锁。
 
 无死锁：即使有一个客户端在持有锁的期间崩溃而没有主动解锁，也能保证后续客户端能加锁，加一个有效时间。
@@ -384,31 +384,29 @@ var _hmt = _hmt || [];
 持锁人解锁：加锁和解锁必须是同一个客户端，客户端不能把别人加的锁给解了。
 
 容错：只要大部分Redis节点都活着，客户端就可以获取和释放锁</code></pre>
-<h3 id="9e9cb346f3a83ad2b516629d6c17e2e1">分布式锁的实现方式</h3>
+<h2 id="9e9cb346f3a83ad2b516629d6c17e2e1">分布式锁的实现方式</h2>
 <pre><code class="   language-php">数据库
 Memcached（add命令）
 Redis（setnx命令）
 Zookeeper（临时节点）</code></pre>
-<h3 id="ffa060bc8cd42bff2eb0f9d9f075f988">加解锁实例代码</h3>
+<h2 id="ffa060bc8cd42bff2eb0f9d9f075f988">加解锁实例代码</h2>
 <pre><code class="language-php">/**
  * 加锁
  * @param $key        string 上锁key
  * @param $value      string 锁对应的唯一值 uniqid() 或 UUID+threadId
  * @param $lockExpire int 过期时间，单位毫秒
- * @return int
+ * @throws Exception
  */
-function lock($key, $value, $lockExpire)
+function lock(string $key, string $value, int $lockExpire): bool
 {
     // key不能为空
     if (empty($key)) {
-        throw new Exception('Key can not be empty string.', '1004');
+        throw new Exception('key不能是空字符串.');
     }
 
     # 加锁
-    # SET lock_key random_value NX PX 5000
-
-    $result = Redis::connection()-&gt;set($key, $value, 'NX', 'PX', $lockExpire);
-    return is_null($result) ? 0 : 1;
+    $result = Redis::connection()-&gt;set($key, $value, 'PX', $lockExpire, 'NX');
+    return !is_null($result);
 }
 
 /**
@@ -417,29 +415,40 @@ function lock($key, $value, $lockExpire)
  * @param $value string 锁对应的唯一值
  * @return bool
  */
-function unlock($key, $value)
+function unlock(string $key, string $value): bool
 {
     $lua = "if redis.call('get', KEYS[1]) == ARGV[1]
-        then
-            return redis.call('del', KEYS[1]) 
-        else 
-            return 0 
-        end";
+    then
+        return redis.call('del', KEYS[1]) 
+    else 
+        return 0 
+    end";
     return (bool)Redis::connection()-&gt;eval($lua, 1, $key, $value);
+}
+
+/**
+ * 锁使用案例
+ */
+$key = 'key';
+$value = Str::uuid();
+$lock = RedisHelper::lock($key, $value, 1000);
+if ($lock) {
+    try {
+        # 处理业务逻辑
+    } finally {
+        RedisHelper::unlock($key, $value);
+    }
 }</code></pre>
-<h3 id="46edfa2eb9047ccb544380772422cb2e">加解锁过程注意点</h3>
-<p>1、加锁即在redis中设置(<code>set</code>)一个key,注意只有在该key不存在时设置，存在时不设置（存在即说明已经被加锁了），使用 <code>NX</code>;不能用setnx()和expire()因为这样不具有原子性；</p>
-<p>2、加锁设置key时，给key设置一个唯一不重复的<code>value</code>，避免解锁时解除了其他进程/线程设置的锁；</p>
+<h2 id="46edfa2eb9047ccb544380772422cb2e">加解锁过程注意点</h2>
+<p>1、加锁即在redis中设置(<code>set</code>)一个key,注意只有在该key不存在时设置，存在时不设置（存在即说明已经被加锁了），使用 <code>NX</code>；不能用setnx()和expire()因为这样不具有原子性；</p>
+<p>2、加锁设置key时，给key设置一个唯一不重复的value，避免解锁时解除了其他进程/线程设置的锁；</p>
 <p>3、加锁时给key设置一个过期时间，用<code>PX</code>毫秒级，防止进程中断导致永远无法解锁；这个过期时间要设置的合理，大于代码运行时间，也不要太长；</p>
 <p>4、解锁时用<code>lua脚本</code>，因为解锁需要判断key是否存在，且key中value是否相等再删除，要保证原子性操作才行，防止删除了其他进程的锁；</p>
-<h3 id="902695b4ed7aace73b39ec13bb712655">github 项目地址</h3>
-<p><a href="https://github.com/xiaorenaishu/laravel-redislock">地址一</a></p>
-<p><a href="https://github.com/Mitirrli/redis-lock">地址二</a></p>
-<h3 id="374076186765634743e3b51e608d8014">单节点方式的缺点</h3>
+<h2 id="374076186765634743e3b51e608d8014">单节点方式的缺点</h2>
 <p>加锁时只作用在一个Redis节点上，即使Redis通过sentinel保证高可用，如果这个master节点由于某些原因发生了主从切换，那么就会出现锁丢失的情况：</p>
 <p>在Redis的master节点上拿到了锁；但是这个加锁的key还没有同步到slave节点；master故障，发生故障转移，slave节点升级为master节点；导致锁丢失。</p>
-<h3 id="010727e5654e7018835807f4d36ea923">分布式锁使用注意事项</h3>
-<p>1、加锁失败，即认为已有其他进程获得了锁，此时当前进程根据场景可以进行如下操作：接口返回错误码，请等待等；死循环获取锁，直到获取成功，每次循环之间加等待时间间隔；</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 地址一: <i><a href="https://github.com/xiaorenaishu/laravel-redislock" target="_blank">https://github.com/xiaorenaishu/laravel-redislock</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 地址二: <i><a href="https://github.com/Mitirrli/redis-lock" target="_blank">https://github.com/Mitirrli/redis-lock</a></i><br></p>
+<h2 id="010727e5654e7018835807f4d36ea923">分布式锁使用注意事项</h2>
+<p>1、加锁失败，即认为已有其他进程获得了锁，此时当前进程根据场景可以进行如下操作：接口返回错误码，请等待等；死循环获取锁，直到获取成功，每次循环之间加等待时间间隔；</p>
 			</div>
 </div>
 

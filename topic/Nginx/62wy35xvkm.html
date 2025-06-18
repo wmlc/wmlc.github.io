@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="476dd8VPqlno3tKrJ2sgvTLvrXXd14RRolMMi7yY">
+        <meta name="csrf-token" content="CWmw9a24WvBZM1dQrJRZpJakjoslMcKxt2kPF060">
 
         
     </head>
@@ -424,7 +424,7 @@ server
         listen 80; #  负载均衡入口 listen 对应外部访问的端口
         server_name api.test.com ; # 负载均衡入口server_name 对应外部访问的域名
         location / {
-                proxy_pass   http://apiServer;
+                proxy_pass   http://apiServer; 
                 proxy_set_header        Host    $host; # 这是必要设置，传递域名。
                 proxy_set_header        X-Real-IP       $remote_addr;
                 proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;  # 即将后面变量赋值给前面字段，代理将此字段添加到http头部
@@ -546,6 +546,7 @@ server
 <p>做完上面的设置，简单的nginx负载均衡就算是配置完成了。可通过在A、B 服务器同路径下放不同内容，不断刷新请求会展示的内容的不同来验证负载均衡是否配置成功。</p>
 <blockquote>
 <p>对于一台服务器即作为负载均衡的主服务器，又作为应用服务器时要注意不要将请求分发到了请求入口的server,  造成死循环,此时会导致报错“400 Bad Request Request Header Or Cookie Too Large”</p>
+<p>注意若转发到的是 https 服务，proxy_pass   <a href="http://apiServer">http://apiServer</a>;  配置需要改为 proxy_pass   <a href="https://apiServer">https://apiServer</a>; </p>
 </blockquote>
 <h2 id="f515195aa155e01711ede5439a569d71">负载均衡策略</h2>
 <h3 id="fe4508e8996aadfc3ac2c59fd5442744">轮询</h3>
