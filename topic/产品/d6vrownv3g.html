@@ -1,0 +1,451 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>表单实时验证的技术与行为模型 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="TYbMPRca0ESLnW9nh51On5dfXQaxvMkkUJfwL23W">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    产品 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux%20服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue%20教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王%20-%20逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>产品</h2>
+<ul>
+<li id="blog454"><a href="34rvg639dj.html#blog454">盲盒模式 8 大适用法则</a>
+<li id="blog830"><a href="4rvgn7qydj.html#blog830">系统的交互设计怎么做</a>
+<li id="blog837"><a href="dgy7xd2vw2.html#blog837">常见图片格式介绍</a>
+<li id="blog840"><a href="d6vrownv3g.html#blog840">表单实时验证的技术与行为模型</a>
+<li id="blog847"><a href="2ev86glyor.html#blog847">APP 账号切换功能设计</a>
+<li id="blog848"><a href="e296odz9q7.html#blog848">干扰较少的环境下，文字能让用户更好的理解</a>
+<li id="blog851"><a href="3dykqwwyl0.html#blog851">产品拾遗</a>
+<li id="blog852"><a href="enyd57097d.html#blog852">APP 消息提醒方式汇总</a>
+<li id="blog862"><a href="rwyl2wnvz8.html#blog862">常见动画文件格式介绍</a>
+<li id="blog864"><a href="d6vro8nv3g.html#blog864">APP 如何正确向用户申请权限</a>
+<li id="blog878"><a href="4rvgnlqydj.html#blog878">需求很合理，为什么不做？</a>
+<li id="blog928"><a href="enyd5gn97d.html#blog928">社交产品</a>
+<li id="blog931"><a href="kl9no38vz4.html#blog931">千万不要在 B 端网页里引入多页签</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/d6vrownv3g.html', function (data, status) {
+            addView('d6vrownv3g.html')
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>表单实时验证的技术与行为模型</h1><ul>
+<li><a href="d6vrownv3g.html#9d670291a304b25d1612f648f8961a0f">一、验证触发机制详解</a></li>
+<li><a href="d6vrownv3g.html#116841922c3a7ece4734f0148a72971d">二、验证节奏与输入行为</a>
+<ul>
+<li><a href="d6vrownv3g.html#0d64b79934aafed69e077d325d804932">2.1 用户输入节奏</a></li>
+<li><a href="d6vrownv3g.html#0f4d21df9b3bb1cfa4cc5a4b2110a971">2.2 可接受的反馈延迟范围</a></li>
+<li><a href="d6vrownv3g.html#b8e4a105023a255b93515885bde15973">2.3 合理做法</a></li>
+</ul></li>
+<li><a href="d6vrownv3g.html#e4088a65d0d9609e2c0abf070ca3a0a1">三、客户端 vs 服务端</a>
+<ul>
+<li><a href="d6vrownv3g.html#58475b01200ed8eb4792eb6bc5ae7cdc">一致性机制：双重验证是标配，不是多余</a></li>
+</ul></li>
+</ul><blockquote>
+<p>在数字化时代，表单作为用户与系统交互的重要桥梁，其验证机制直接影响用户体验与数据质量。本文深入探讨了表单实时验证的技术细节与行为模型，从验证触发机制、节奏与输入行为，到客户端与服务端的协同配合，全方位解析了如何打造高效、友好且安全的表单验证流程。通过科学策略与优化技巧，助力开发者提升用户满意度，确保数据准确性与系统安全性。</p>
+</blockquote>
+<p><img src="../../storage/images/2025/07/CykGkRQ1XdkZjjVUhbcqJHKMnRRyMpaoqFTxNfFw.png" alt="" /></p>
+<h2 id="9d670291a304b25d1612f648f8961a0f">一、验证触发机制详解</h2>
+<p>实时验证，顾名思义，就是边填边检查。但“边填”到底是指什么时候呢？系统到底该在用户做什么操作时跳出来说话？这就是触发机制的问题。我们先来看看几个常见的触发点，它们虽然看起来只是一行事件绑定，其实背后都藏着不同的“沟通语境”</p>
+<p><code>onInput</code>：这是最激进的方式，用户每输入一个字符就触发验证。这种方式容易让用户感到被监视，体验上非常打断式，如用户输入邮箱时刚打完一个字母就提示格式错误，会让人觉得添堵。</p>
+<p>案例：用户想输入邮箱 james@example.com，刚打完 j 系统就提示“格式错误”……这不是在帮忙，是在添堵。</p>
+<p><code>onChange</code>：在用户每次改完输入框的内容时触发验证，节奏比 onInput 慢一些。搭配节流/防抖机制，如等用户停下输入 300 毫秒后再验证，既不会太打扰，又能保持反应迅速。</p>
+<p>案例：帮助用户创建高安全性密码，实时反馈强度，避免提交后因密码太弱被驳回。</p>
+<p><code>onBlur</code>：用户离开输入框时才触发验证，不会边输边打扰，但反馈延迟较大，可能会错过及时提示的机会，如电商网站让用户输入手机号后按 Tab 跳到下一个字段才提示号码格式错误，会给用户带来不便。</p>
+<p>案例：有些电商网站就喜欢 onBlur，你输入手机号，填完按 Tab 跳到下一个字段，系统才告诉你“号码格式错了”——这时候你已经开始填地址了，来回跳不累吗？</p>
+<p><code>onSubmit</code>：所有字段在用户点击“提交”时一起验证，属于事后型处理，体验上类似于“你都交卷了才告诉你填错了名字”，无法及时发现并纠正错误。</p>
+<blockquote>
+<p>患者在线提交预约表单，比如填写了姓名、身份证号、手机号、症状描述、预约科室、就诊时间。点击提交后，系统瞬间完成验证：例如身份证号格式、手机号有效性验证、症状描述是否≥20字…</p>
+</blockquote>
+<p>触发机制的选择并非单纯的技术问题，而是人机沟通策略。不同的用户有不同的输入习惯和需求，如打字飞快的用户可能会觉得onInput太唠叨，新手用户可能会觉得onBlur太迟钝。因此，一个<code>聪明的验证机制往往是混合策略加上防抖优化，懂得在合适的时机“说话”或“闭嘴”</code>。</p>
+<h2 id="116841922c3a7ece4734f0148a72971d">二、验证节奏与输入行为</h2>
+<h3 id="0d64b79934aafed69e077d325d804932">2.1 用户输入节奏</h3>
+<p>用户打字是有速度和停顿节奏的，而反馈系统如果“插话”节奏不对，就会打断用户认知流程。用户输入节奏呈“波浪型”，有些字段是连续输入节奏快，有些字段需要思考中间有停顿，还有些字段习惯输完直接按 Tab 跳下一项。这些行为决定了验证系统不该“一刀切”，而应根据字段类型、用户行为自动调整反馈时机。</p>
+<p>用户打字节奏呈“波浪型”：</p>
+<ul>
+<li>有些字段是连续输入（如手机号），节奏很快；</li>
+<li>有些字段需要思考（如密码、地址），中间会有停顿；</li>
+<li>有些字段习惯输完直接按Tab跳下一项。</li>
+</ul>
+<p>这些行为决定了验证系统不该“一刀切”，而应根据字段类型、用户行为自动调整反馈时机。</p>
+<h3 id="0f4d21df9b3bb1cfa4cc5a4b2110a971">2.2 可接受的反馈延迟范围</h3>
+<p><code>反馈延迟控制在 200ms~800ms 是最合适的区间。少于 200ms 容易给人“边打边挑错”的压力，多于 800ms 用户可能已经在看别的字段，提示被忽略或觉得反应迟钝。</code></p>
+<p>优秀的实时验证会结合用户输入节奏做防抖处理，如在用户停止输入 300ms 后再触发验证，这样既不打断输入节奏，又能及时给出反馈。原理是在频繁触发的事件中延迟执行函数，等待设定的时间间隔后执行最后一次触发的操作，若期间重复触发则重新计时。</p>
+<p>典型应用如搜索框输入实时查询优化，避免每次输入都请求接口，以及表单提交按钮多次点击合并为一次有效操作。</p>
+<ul>
+<li>少于200ms：容易给人“边打边挑错”的压力；</li>
+<li>多于800ms：用户已经在看别的字段，提示被忽略或觉得反应迟钝。</li>
+</ul>
+<h3 id="b8e4a105023a255b93515885bde15973">2.3 合理做法</h3>
+<p><code>结合用户输入节奏做防抖处理（debounce）。比如在用户停止输入300ms后再触发验证，这样既不打断输入节奏，又能及时给出反馈。</code></p>
+<p>原理：延迟执行函数，在频繁触发的事件（如输入、点击）中，等待设定的时间间隔后执行最后一次触发的操作。若期间重复触发则重新计时。</p>
+<p>典型应用：搜索框输入实时查询优化，避免每次输入都请求接口。表单提交按钮多次点击合并为一次有效操作。</p>
+<h2 id="e4088a65d0d9609e2c0abf070ca3a0a1">三、客户端 vs 服务端</h2>
+<p>客户端验证和服务端验证，职责完全不同。客户端验证主要负责即时反馈和格式校验，如邮箱格式是否正确、密码长度是否足够、电话号是否为纯数字等，这部分验证轻巧快捷，适合边输边查，给用户一个“安全感预览”。而服务端验证则是安全兜底和数据校验，如用户名是否重复、邀请码是否合法、地址是否合法合规等，这些需要访问数据库、第三方接口甚至风控系统判断，只能由后端完成，是真正的“最终裁判”。</p>
+<h3 id="58475b01200ed8eb4792eb6bc5ae7cdc">一致性机制：双重验证是标配，不是多余</h3>
+<p>很多开发者一开始觉得“前端已经验证过了，后端就别重复了”。但真这样做，就等于机场安检只查了一次身份证——太冒险了。<code>双重验证是标配，不是多余。</code>客户端先排除格式错误，提高体验；服务端再兜底核查，确保数据安全。例如，注册账号时，前端提示用户名可用，但若两个用户几乎同时提交，服务端需再做“唯一性检查”来避免冲突，这就是双重验证的意义所在。</p>
+<p>最稳妥的做法是：</p>
+<ul>
+<li>客户端先帮你排除格式错误，提高体验；</li>
+<li>服务端再兜底核查，确保数据安全。</li>
+</ul>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

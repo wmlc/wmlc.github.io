@@ -1,0 +1,745 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Git 通过清除大文件的历史提交纪录缩小仓库大小 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="TYbMPRca0ESLnW9nh51On5dfXQaxvMkkUJfwL23W">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Git <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux%20服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue%20教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王%20-%20逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>GitHub</h2>
+<ul>
+<li id="blog61"><a href="mdgy768vw2.html#blog61">如何给你的 GitHub 仓库添加精美的数据统计卡片</a>
+</ul>
+</li>
+<li>
+<h2>Git</h2>
+<ul>
+<li id="blog147"><a href="wjkv8znv62.html#blog147">如何搭建自己的 git 服务</a>
+<li id="blog299"><a href="mx5e613v0r.html#blog299">git x分支强制覆盖master分支方法</a>
+<li id="blog312"><a href="jwnexdrvxd.html#blog312">Git 工作流程以及常用命令</a>
+<li id="blog313"><a href="mdgy78x9w2.html#blog313">一台电脑上不同的Git仓库账号使用不同的公私钥设置</a>
+<li id="blog327"><a href="k3dykjzvl0.html#blog327">Git分支管理策略</a>
+<li id="blog335"><a href="pwde4pxe6q.html#blog335">Git 将其他分支文件或提交合并到当前分支</a>
+<li id="blog348"><a href="de296019q7.html#blog348">PhpStorm 取消创建或删除一个文件就自动 add 到git</a>
+<li id="blog349"><a href="kq1ezn5erl.html#blog349">Git 如何修改远程仓库地址？</a>
+<li id="blog350"><a href="z64y922v5l.html#blog350">Git 连接远程仓库方法</a>
+<li id="blog376"><a href="rpnv3gwywm.html#blog376">如何使用 .gitignore 文件</a>
+<li id="blog420"><a href="4wevwjz9l2.html#blog420">Git 如何忽略已提交过的文件</a>
+<li id="blog670"><a href="3oyjd48yp5.html#blog670">Git 重新添加已被忽略过文件(夹)</a>
+<li id="blog735"><a href="qk9425gvw1.html#blog735">Git 清理不再存在于远程仓库中的分支的本地引用</a>
+<li id="blog927"><a href="3dykq7zyl0.html#blog927">Git 通过清除大文件的历史提交纪录缩小仓库大小</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/3dykq7zyl0.html', function (data, status) {
+            addView('3dykq7zyl0.html')
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Git 通过清除大文件的历史提交纪录缩小仓库大小</h1><ul>
+<li><a href="3dykq7zyl0.html#dd4601718c264f7087739e3a07a14aa6">1、查找仓库中的大文件</a></li>
+<li><a href="3dykq7zyl0.html#1335a9d188696e4ae4b27f9267c53cd7">2、清理 Git 历史</a>
+<ul>
+<li><a href="3dykq7zyl0.html#881779ade3688521d508606b5a26b33e">2.1、安装 git-filter-repo</a></li>
+<li><a href="3dykq7zyl0.html#22ee29cff820ed91b1e419f8006ca464">2.2、验证仓库大小</a></li>
+<li><a href="3dykq7zyl0.html#1fc693636a1b2eed7db77f8ec6f92780">2.3、执行删除目录历史的命令</a></li>
+<li><a href="3dykq7zyl0.html#5e3d77aec99515c1ef53f31553ac83b0">2.4、重新添加远程仓库</a></li>
+<li><a href="3dykq7zyl0.html#d828639beea03215a65f86dc1bccd7d3">2.5、强制推送回远程</a></li>
+<li><a href="3dykq7zyl0.html#5e08f9d5764c075cda30a16deacc4654">2.6、命令整合成bash脚本</a></li>
+<li><a href="3dykq7zyl0.html#4446570cd7941a5dd142d53cceec4537">2.7 只清除某个分支场景</a></li>
+</ul></li>
+<li><a href="3dykq7zyl0.html#53506c531c73ab4f9a6e893b72c21a1a">3、避免git仓库的快速膨胀</a>
+<ul>
+<li><a href="3dykq7zyl0.html#d411f6147e56caf35ae39ebb5a4b298e">3.1、大文件问题</a></li>
+<li><a href="3dykq7zyl0.html#34e392478644ac6e7798d563fd85f2e3">3.2、方案一：Git LFS</a></li>
+<li><a href="3dykq7zyl0.html#2d28244dce6ddac9a2dbb4da0eaa1dae">3.3、方案二：外部文件存储 + 自动下载</a>
+<ul>
+<li><a href="3dykq7zyl0.html#380cf2b509d2393ad10c847f74cccf82">具体实现</a></li>
+</ul></li>
+</ul></li>
+</ul><p>最近遇到了一个项目的 Git 仓库太大了导致无法提交到码云的远程 git 仓库中，因此想到可以通过删除某些大的或已不再使用的文件的历史提交纪录来缩小仓库。操作步骤：</p>
+<h2 id="dd4601718c264f7087739e3a07a14aa6">1、查找仓库中的大文件</h2>
+<pre><code class="language-bash"># 列出前十个最大文件
+
+git rev-list --objects --all |   git cat-file --batch-check='%(objecttype) %(objectsize) %(rest)' |   grep '^blob' |   sort -k2 -n |   tail -10 |   awk '{printf "%.2f MB\t%s\n", $2/1024/1024, $3}'
+
+# 输出
+8.80 MB tool_scripts/app_distribution
+9.30 MB tool_scripts/app_distribution.exe</code></pre>
+<p>找到大文件后就可以考虑是否进行删除，若大文件在最新版本中已经删除可以直接清理；若大文件还在使用可以清理后将大文件的引入改为 Git LFS（Large File Storage）方案或「外部文件存储 + 自动下载」的方案。</p>
+<h2 id="1335a9d188696e4ae4b27f9267c53cd7">2、清理 Git 历史</h2>
+<h3 id="881779ade3688521d508606b5a26b33e">2.1、安装 git-filter-repo</h3>
+<pre><code class="language-bash"># macOS (Homebrew)
+brew install git-filter-repo
+
+# 或者通过 Python 安装
+pip install git-filter-repo
+</code></pre>
+<h3 id="22ee29cff820ed91b1e419f8006ca464">2.2、验证仓库大小</h3>
+<p>清理前后执行以下命令，查看当前仓库大小，验证清理是否生效</p>
+<pre><code class="language-bash">git count-objects -vH</code></pre>
+<h3 id="1fc693636a1b2eed7db77f8ec6f92780">2.3、执行删除目录历史的命令</h3>
+<p>前提其他用户那边所有修改已提交，执行命令的用户拉取最新的代码。</p>
+<pre><code class="   language-php"># 删除目录 secret_folder/
+git filter-repo --path secret_folder/ --invert-paths
+
+# 删除文件 os/libeffect-sdk.a
+git filter-repo --path ios/libeffect-sdk.a --invert-paths
+
+# 解释：
+
+--path secret_folder/：指定要处理的路径
+
+--invert-paths：表示“删除这些路径，而不是保留它们”</code></pre>
+<p>这个命令会：</p>
+<ul>
+<li>
+<p>从所有提交中移除该目录及其文件</p>
+</li>
+<li>
+<p>重写整个历史</p>
+</li>
+<li>
+<p>让该目录看起来从未存在过</p>
+</li>
+</ul>
+<h3 id="5e3d77aec99515c1ef53f31553ac83b0">2.4、重新添加远程仓库</h3>
+<p><code>git filter-repo</code> 默认会清理掉旧的远程配置，以防误推改写历史, 因此要想将处理后的内容推送到远程仓库需要重新添加远程仓库地址。</p>
+<pre><code class="language-bash">git remote add origin {远程仓库地址}</code></pre>
+<blockquote>
+<p>注意：若清理后明明本地的已明显缩小，但还是推送不到原git地址，提示仓库太大，可以新建仓库，将远程仓库地址改为新的仓库进行推送，后续就用这个新的仓库了</p>
+</blockquote>
+<h3 id="d828639beea03215a65f86dc1bccd7d3">2.5、强制推送回远程</h3>
+<blockquote>
+<p>git filter-repo 执行过程中会拉取所有分支，全部处理， 因此执行完成后直接推送全部分支标签即可</p>
+</blockquote>
+<pre><code class="language-bash"># 注意要推送全部分支和标签
+
+git push origin --force --all
+
+git push origin --force --tags</code></pre>
+<blockquote>
+<p><strong>警告：这会重写远程仓库的历史！其他协作者需要重新克隆仓库。</strong></p>
+</blockquote>
+<h3 id="5e08f9d5764c075cda30a16deacc4654">2.6、命令整合成bash脚本</h3>
+<pre><code class="language-bash">#!/bin/bash
+
+# 执行该脚本清理大文件历史，缩小仓库体积
+
+if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then
+  echo "你有未添加的修改，请先添加。"
+  exit 1
+fi
+
+git count-objects -vH
+
+git filter-repo --path {要删除的文件} --invert-paths
+
+git remote add origin {远程仓库地址}
+
+git push origin --force --all
+
+git push origin --force --tags
+
+git count-objects -vH
+</code></pre>
+<h3 id="4446570cd7941a5dd142d53cceec4537">2.7 只清除某个分支场景</h3>
+<p><strong>【测试无效，暂不考虑】</strong></p>
+<p>以上步骤中是清除所有分支中的某个文件或目录，此时所有分支、标签的历史都被重写，commit hash 全部改变。</p>
+<p>其他用户那边本地仓库与远程仓库完全“脱节”，因此其他用户那边需要完全删除仓库，重新 clone。</p>
+<p>但有时我们确定要删除的文件只存在于某个分支中，可以执行命令只删除这个分支上的文件，这样其他用户不需要删除仓库重新克隆，只需要pull下指定分支即可。</p>
+<p>前提：要保证其他用户那边这个分支的修改已提交再做处理</p>
+<pre><code class="language-bash"># 重写指定分支历史
+git filter-repo --path secret_folder/ --invert-paths --refs refs/heads/{分支名}
+
+git push -f
+
+// 其他用户那边
+
+git pull --force
+
+git reset --hard origin/{分支名}</code></pre>
+<h2 id="53506c531c73ab4f9a6e893b72c21a1a">3、避免git仓库的快速膨胀</h2>
+<h3 id="d411f6147e56caf35ae39ebb5a4b298e">3.1、大文件问题</h3>
+<p>Git 本质上是快照存储系统，每次提交都会保存文件的完整版本（即使只改了一点点）。</p>
+<p>因此：</p>
+<p>频繁更新的大文件会快速膨胀仓库体积。</p>
+<p>即使后来删除了文件，历史中仍保留副本。</p>
+<p>平台（如 码云）通常限制仓库 ≤ 1GB，单文件 ≤ 100MB。</p>
+<p>因此若将大文件放入 git 中，很快就占满了。</p>
+<h3 id="34e392478644ac6e7798d563fd85f2e3">3.2、方案一：Git LFS</h3>
+<p>🧠 原理</p>
+<p>Git LFS 把大文件（如 .mp4, .zip, .psd, .model）替换为一个「小指针文件」，而真正的大文件被存放到一个独立的 LFS 服务端（可自建或托管）。</p>
+<p>Git 版本历史只记录指针，不再保存文件本体。拉取时 Git 自动下载对应的 LFS 文件。</p>
+<p>因为用的远程服务 Git LFS 空间也有限，未使用该方案，此处不做具体介绍。</p>
+<h3 id="2d28244dce6ddac9a2dbb4da0eaa1dae">3.3、方案二：外部文件存储 + 自动下载</h3>
+<p>在仓库中只保留文件的下载链接（如从 OSS/CDN 下载）：</p>
+<pre><code class="   language-php">/assets/
+  model_v1.txt  # 内容：s3://my-bucket/models/model_v1.zip</code></pre>
+<p>配合脚本在构建时自动下载：</p>
+<pre><code class="   language-php">python3 scripts/download_assets.py</code></pre>
+<p>✅ 优点：</p>
+<p>无需改 Git 配置</p>
+<p>仓库超轻量</p>
+<p>可复用对象存储（如阿里云 OSS、AWS S3、七牛云）, 空间无限量</p>
+<h4 id="380cf2b509d2393ad10c847f74cccf82">具体实现</h4>
+<p><strong>1、目录结构示例</strong></p>
+<pre><code class="   language-php">project/
+├── assets/download/ # 脚本会自动扫描该目录下的 txt 文件
+│   ├── model_v1.txt        # 存放模型下载地址（或元信息）
+│   ├── texture_pack.txt    # 存放大纹理包链接
+│
+├── scripts/
+│   └── download_assets.py  # 下载脚本
+│
+├── .gitignore
+├── README.md
+└── ...
+</code></pre>
+<p><strong>2、assets 文件示例</strong></p>
+<p><code>assets/download/models.txt</code></p>
+<pre><code class="   language-php"># 要下载到本地的远程文件
+# 格式: &lt;目标子目录&gt; &lt;URL&gt; [unzip]
+models https://cdn.example.com/models/model_v1.zip unzip
+models https://cdn.example.com/models/config.json
+textures https://cdn.example.com/textures/wood.zip unzip</code></pre>
+<p><strong>3、download_assets.py 脚本</strong></p>
+<p>新建：scripts/download_assets.py</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+"""
+下载 assets/download/*.txt 中定义的资源文件，并支持可选解压与清理。有 unzip 标识需要解压
+
+格式:
+&lt;目标目录&gt; &lt;URL&gt; [unzip]
+
+例如:
+models https://cdn.example.com/models/model_v1.zip unzip
+textures https://cdn.example.com/textures/wood.png
+"""
+
+import os
+import sys
+import shutil
+import requests
+import zipfile
+import tarfile
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
+
+# === 配置 ===
+ROOT_DIR = Path(__file__).resolve().parent.parent
+ASSETS_DIR = ROOT_DIR / "assets/download"
+DOWNLOAD_BASE = ROOT_DIR
+MAX_WORKERS = 4
+
+def download_file(url: str, target_path: Path):
+    """下载单个文件，带断点续传"""
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    headers = {}
+    if target_path.exists():
+        local_size = target_path.stat().st_size
+        headers["Range"] = f"bytes={local_size}-"
+    else:
+        local_size = 0
+
+    try:
+        r = requests.get(url, stream=True, headers=headers, timeout=30)
+        r.raise_for_status()
+    except Exception as e:
+        print(f"❌ 下载失败: {url} ({e})")
+        return False
+
+    total_size = int(r.headers.get("Content-Length", 0)) + local_size
+    mode = "ab" if local_size &gt; 0 else "wb"
+
+    with open(target_path, mode) as f:
+        for chunk in r.iter_content(chunk_size=8192):
+            if chunk:
+                f.write(chunk)
+
+    print(f"✅ 下载完成: {target_path.relative_to(ROOT_DIR)} ({total_size/1024:.1f} KB)")
+    return True
+
+def cleanup_macosx_files(dest_dir: Path):
+    """删除 __MACOSX 文件夹"""
+    for root, dirs, _ in os.walk(dest_dir):
+        for d in dirs:
+            if d == "__MACOSX":
+                mac_path = Path(root) / d
+                try:
+                    shutil.rmtree(mac_path)
+                    print(f"🧹 已删除冗余目录: {mac_path.relative_to(ROOT_DIR)}")
+                except Exception as e:
+                    print(f"⚠️ 删除 __MACOSX 失败: {e}")
+
+def extract_file(file_path: Path, dest_dir: Path):
+    """根据文件类型自动解压并清理"""
+    try:
+        if zipfile.is_zipfile(file_path):
+            with zipfile.ZipFile(file_path, "r") as zf:
+                zf.extractall(dest_dir)
+            print(f"📦 已解压 ZIP: {file_path.relative_to(ROOT_DIR)} → {dest_dir.relative_to(ROOT_DIR)}")
+        elif tarfile.is_tarfile(file_path):
+            with tarfile.open(file_path, "r:*") as tf:
+                tf.extractall(dest_dir)
+            print(f"📦 已解压 TAR: {file_path.relative_to(ROOT_DIR)} → {dest_dir.relative_to(ROOT_DIR)}")
+        else:
+            print(f"⚠️ 文件不是压缩包: {file_path.name}")
+            return
+
+        # 清理压缩包
+        try:
+            file_path.unlink()
+            print(f"🗑️ 已删除压缩包: {file_path.relative_to(ROOT_DIR)}")
+        except Exception as e:
+            print(f"⚠️ 删除压缩包失败: {e}")
+
+        # 清理 __MACOSX
+        cleanup_macosx_files(dest_dir)
+
+    except Exception as e:
+        print(f"❌ 解压失败: {file_path.name} ({e})")
+
+def process_meta_file(meta_path: Path, tasks: list):
+    """解析 assets 文件"""
+    print(f"📦 处理资源清单: {meta_path.relative_to(ROOT_DIR)}")
+    with open(meta_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("/topic/Git/3dykq7zyl0.html#"):
+                continue
+
+            parts = line.split()
+            if len(parts) &lt; 2:
+                print(f"⚠️ 格式错误: {line}")
+                continue
+
+            target_dir, url = parts[:2]
+            need_unzip = len(parts) &gt;= 3 and parts[2].lower() == "unzip"
+            filename = os.path.basename(url)
+            target_path = DOWNLOAD_BASE / target_dir / filename
+            tasks.append((url, target_path, need_unzip))
+
+def main():
+    DOWNLOAD_BASE.mkdir(exist_ok=True)
+
+    meta_files = list(ASSETS_DIR.glob("*.txt"))
+    if not meta_files:
+        print("❌ 未找到任何 assets/*.txt 文件")
+        sys.exit(1)
+
+    download_tasks = []
+    for meta in meta_files:
+        process_meta_file(meta, download_tasks)
+
+    if not download_tasks:
+        print("✨ 无下载任务。")
+        return
+
+    print(f"⬇️ 共需下载 {len(download_tasks)} 个文件...")
+
+    def worker(task):
+        url, target_path, need_unzip = task
+        if target_path.exists():
+            print(f"✅ 已存在: {target_path.relative_to(ROOT_DIR)}")
+        else:
+            ok = download_file(url, target_path)
+            if not ok:
+                return
+        if need_unzip:
+            extract_file(target_path, target_path.parent)
+
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        executor.map(worker, download_tasks)
+
+    print(f"\n✅ 所有任务完成，资源已保存至 {DOWNLOAD_BASE.relative_to(ROOT_DIR)}/")
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+<p><strong>4、.gitignore 配置</strong></p>
+<p>在 .gitignore 中添加以下内容，确保大文件不入库：</p>
+<pre><code class="   language-php"># 忽略下载后的资源文件
+*.zip
+*.tar.gz
+*.mp4
+*.onnx
+*.pth</code></pre>
+<p><strong>5、运行示例</strong></p>
+<pre><code class="   language-php">python3 scripts/download_assets.py</code></pre>
+<p>输出</p>
+<pre><code class="   language-php">📦 处理资源清单: assets/download/models.txt
+⬇️ 共需下载 3 个文件...
+✅ 下载完成: models/model_v1.zip (1024.0 KB)
+📦 已解压 ZIP: models/model_v1.zip → models
+🗑️ 已删除压缩包: models/model_v1.zip
+🧹 已删除冗余目录: models/__MACOSX
+✅ 下载完成: models/config.json (3.2 KB)
+✅ 下载完成: textures/wood.zip (520.0 KB)
+📦 已解压 ZIP: textures/wood.zip → textures
+🗑️ 已删除压缩包: textures/wood.zip
+
+✅ 所有任务完成，资源已保存至 /
+</code></pre>
+<p><strong>6、自动化执行</strong></p>
+<p>后续可以将这个脚本的执行放到 CI/CD 工具中，打包构建时自动执行即可</p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

@@ -1,0 +1,511 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>苹果登录 Sign In with Apple 服务端验证流程 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="TYbMPRca0ESLnW9nh51On5dfXQaxvMkkUJfwL23W">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    APP <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux%20服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue%20教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王%20-%20逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>APP</h2>
+<ul>
+<li id="blog213"><a href="mdgy732vw2.html#blog213">各应用市场图片尺寸要求</a>
+<li id="blog355"><a href="wkl9n38vz4.html#blog355">如何查看并分析 App 使用的第三方库、使用到的技术、应用权限等信息</a>
+<li id="blog707"><a href="kl9no0wvz4.html#blog707">APP版本号、公共header规则</a>
+<li id="blog853"><a href="5dve2xjv4x.html#blog853">使用应用宝在 Windows 上安装 Android 软件</a>
+</ul>
+</li>
+<li>
+<h2>ios</h2>
+<ul>
+<li id="blog242"><a href="n2qvpz8y3m.html#blog242">iOS证书(.p12)和描述文件(.mobileprovision)申请方法</a>
+<li id="blog455"><a href="wkl9nn79z4.html#blog455">App Store 上架注意事项</a>
+<li id="blog469"><a href="1ndvmxj93j.html#blog469">App Store 上架错误：缺少出口合规证明</a>
+<li id="blog736"><a href="569x5w4yep.html#blog736">IOS 设备唯一标识符</a>
+<li id="blog839"><a href="kpv135g98w.html#blog839">苹果登录 Sign In with Apple 服务端验证流程</a>
+</ul>
+</li>
+<li>
+<h2>Flutter</h2>
+<ul>
+<li id="blog357"><a href="n3xyqelymq.html#blog357">使用 Flutter 编写 macOS 应用</a>
+<li id="blog369"><a href="1ndvmkey3j.html#blog369">Flutter 初学者应该知道的 6 个技巧</a>
+<li id="blog430"><a href="34rvgw3ydj.html#blog430">Flutter 应用程序如何组织可扩展的文件夹结构</a>
+<li id="blog431"><a href="wkl9np7yz4.html#blog431">Flutter 如何与原生平台通信</a>
+<li id="blog435"><a href="3qk94kovw1.html#blog435">Flutter 和 React-Native 的比较与选择</a>
+<li id="blog462"><a href="xrwyl4x9z8.html#blog462">Flutter 开发环境</a>
+<li id="blog463"><a href="ekpv1q2y8w.html#blog463">Flutter 国内加速</a>
+<li id="blog470"><a href="j3oyjqx9p5.html#blog470">Flutter doctor 突然出现 Unable to find bundled Java version . 的解决方法</a>
+<li id="blog668"><a href="wevwm0l9l2.html#blog668">Flutter 新建项目运行报错 Exception in thread &quot;main&quot; java.net.ConnectException: Connection timed out: connect</a>
+<li id="blog669"><a href="ndvm3qo93j.html#blog669">使用 Gradle 构建 Android 应用程序时优雅的动态删除第三方 SDK 的权限</a>
+</ul>
+</li>
+<li>
+<h2>Android</h2>
+<ul>
+<li id="blog714"><a href="rwyl25evz8.html#blog714">通知栏应用小图标不展示APP Logo 而展示 android 默认图标</a>
+<li id="blog743"><a href="m892gm5y01.html#blog743">Android 设备唯一标识符</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/kpv135g98w.html', function (data, status) {
+            addView('kpv135g98w.html')
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>苹果登录 Sign In with Apple 服务端验证流程</h1><ul>
+<li><a href="kpv135g98w.html#51ae9800c71266cb1d911fd0a8fde173">时序图</a></li>
+<li><a href="kpv135g98w.html#1d5a7fa82dfb37a42cfb805d31c52815">验证流程相关</a></li>
+<li><a href="kpv135g98w.html#138a676635c31bde1e2c8b2c62432936">注意</a></li>
+</ul><h2 id="51ae9800c71266cb1d911fd0a8fde173">时序图</h2>
+<p><img src="../../storage/images/2025/06/9ozfFubrUyZOrJbiW3ZIdPemsGitxBGy2BM2nqtQ.png" alt="" /></p>
+<p>整体流程与普通的第三方登录十分相似，同样需要获取用户ID与token，交给后台验证本次登录的有效性。</p>
+<h2 id="1d5a7fa82dfb37a42cfb805d31c52815">验证流程相关</h2>
+<ol>
+<li>步骤1与2在客户端内完成，客户端选择使用<code>ASAuthorizationAppleIDProvider</code>来完成登录，如果登录成功，苹果将会返回如下数据：</li>
+</ol>
+<blockquote>
+<ul>
+<li><strong>User ID</strong>: 苹果用户唯一标识符，它在同一个开发者账号下的所有 App 下是一样的，我们可以用它来与后台的账号体系绑定起来（类似于微信的<code>OpenID</code>）。</li>
+<li><strong>Verification Data</strong>: 包括<code>identityToken</code>, <code>authorizationCode</code>。用于传给开发者后台服务器，然后开发者服务器再向苹果的身份验证服务端验证本次授权登录请求数据的有效性和真实性。</li>
+<li><strong>Account Information</strong>: 苹果用户信息，包括全名、邮箱等，登录时用户可以选择隐藏真实的邮件地址和随意修改姓名。</li>
+<li><strong>Real User Indicator</strong>: 用于判断当前登录的苹果账号是否是一个真实用户，取值有：<code>unsupported</code>、<code>unknown</code>、<code>likelyReal</code>。</li>
+</ul>
+</blockquote>
+<ol start="2">
+<li>步骤3与4中，客户端会把<code>identityToken</code>, <code>authorizationCode</code>, <code>userID</code>这三个参数传给服务器，用于验证本次登录的有效性。</li>
+</ol>
+<p>其中<code>identityToken</code>是一个经过签名的JSON Web Token(JWT)，它包含了：</p>
+<p><img src="../../storage/images/2025/06/JoAtnSWJ3LAX6Yig7GFds1zr5Yp8wamnLdVwvPJu.png" alt="" /></p>
+<p>它分为了三个部分：</p>
+<blockquote>
+<ul>
+<li>header: 包括了key id 与加密算法</li>
+<li>payload:
+<ul>
+<li>iss: 签发机构，苹果</li>
+<li>aud: 接收者，目标app</li>
+<li>exp: 过期时间</li>
+<li>iat: 签发时间</li>
+<li>sub: 用户id</li>
+<li>c_hash: 一个哈希数列，作用未知</li>
+<li>auth_time: 签名时间</li>
+</ul></li>
+<li>signature: 用于验证JWT的签名</li>
+</ul>
+</blockquote>
+<p>服务端在获取客户端发出的<code>identityToken</code>后，需要进行如下步骤：</p>
+<p><code>支持 基于授权码的后端验证 和 基于 JWT 算法的验证 两种方式，此处以基于 JWT 算法的验证方法说明</code></p>
+<ol>
+<li>需要逆向构造过程，decode出JWT的三个部分</li>
+<li>从<a href="https://appleid.apple.com/auth/keys">appleid.apple.com/auth/keys</a>中获取公钥，并将公钥<a href="https://8gwifi.org/jwkconvertfunctions.jsp">转换</a>为<code>pem</code>对JWT进行验证</li>
+<li>如<code>identityToken</code>通过验证，则可以根据其payload中的内容进行验证等操作</li>
+</ol>
+<p>代码实例：</p>
+<pre><code class="language-php">/**
+ * 解析苹果jwt token
+ * 参考地址：https://developer.apple.com/documentation/signinwithapplerestapi/fetch_apple_s_public_key_for_verifying_token_signature
+ * @param $identityToken
+ * @return array
+ */
+public function decodeJWT($identityToken): array
+{
+    try {
+        $jwks = Http::get('https://appleid.apple.com/auth/keys')-&gt;json();
+        if (!is_array($jwks) || empty($jwks)) {
+            return [];
+        }
+
+        # 将jwks数据解析成jwt的公钥
+        $pub_keys = JWK::parseKeySet($jwks);
+
+        # 解析token
+        $payload = (array)JWT::decode($identityToken, $pub_keys);
+        if (empty($payload)) {
+            return [];
+        }
+
+        # 获取ios包名
+        $bundle_id = 'com.example.app';
+        # 验证 签发者为 https://appleid.apple.com，接收者是应用包名，JWT的过期时间大于当前时间
+        if ($payload['iss'] != 'https://appleid.apple.com' || $payload['aud'] != $bundle_id || $payload['exp'] &lt; time()) {
+            return [];
+        }
+
+        return $payload;
+    } catch (\Exception $e) {
+        dp('apple登录异常', $e-&gt;getMessage(), $e-&gt;getTraceAsString());
+        return [];
+    }
+}</code></pre>
+<p><strong>token验证原理：</strong></p>
+<blockquote>
+<p>因为<code>idnetityToken</code>使用非对称加密 RSASSA【RSA签名算法】 和 ECDSA【椭圆曲线数据签名算法】，当验证签名的时候，利用公钥来解密 Singature，当解密内容与<code>base64UrlEncode(header) + "." + base64UrlEncode(payload)</code>的内容完全一样的时候，表示验证通过。</p>
+</blockquote>
+<p><strong>防止中间人攻击原理：</strong></p>
+<blockquote>
+<p>该token是苹果利用私钥生成的一段JWT，并给出公钥我们对token进行验证，由于中间人并没有苹果的私钥，所以它生成出来的token是没有办法利用苹果给出的公钥进行验证的，确保的token的安全性。</p>
+</blockquote>
+<h2 id="138a676635c31bde1e2c8b2c62432936">注意</h2>
+<blockquote>
+<p>苹果审核要求，但凡包含了第三方登录的应用，则同样需要适配Sign In with Apple，否则审核不通过。</p>
+</blockquote><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> appleid.apple.com/auth/keys: <i><a href="https://appleid.apple.com/auth/keys" target="_blank">https://appleid.apple.com/auth/keys</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 转换: <i><a href="https://8gwifi.org/jwkconvertfunctions.jsp" target="_blank">https://8gwifi.org/jwkconvertfunctions.jsp</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

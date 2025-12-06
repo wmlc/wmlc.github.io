@@ -1,0 +1,538 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>使用 fs_usage 查看 macOS 进程的文件访问行为 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="TYbMPRca0ESLnW9nh51On5dfXQaxvMkkUJfwL23W">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Mac <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux%20服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue%20教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王%20-%20逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>Mac</h2>
+<ul>
+<li id="blog75"><a href="k3dyk44vl0.html#blog75">如何给 Mac 上 brew 命令国内加速？</a>
+<li id="blog114"><a href="xrwylge9z8.html#blog114">Mac 上实现 alt-tab 组合键切换桌面功能</a>
+<li id="blog183"><a href="3qk94lgyw1.html#blog183">Mac 上软件推荐</a>
+<li id="blog244"><a href="jrqvw81v8p.html#blog244">Mac钥匙串中的证书无法导出.p12文件解决方法</a>
+<li id="blog399"><a href="mx5e6w5y0r.html#blog399">Mac 上简易的ssh快捷菜单工具： shuttle</a>
+<li id="blog400"><a href="8loynzzyz3.html#blog400">Mac上制作Linux U盘启动盘</a>
+<li id="blog402"><a href="z64y9w5v5l.html#blog402">Mac 上编译安装nginx</a>
+<li id="blog403"><a href="mx5e6wly0r.html#blog403">Mac上卸载AnyConnect后无法再重新安装问题解决</a>
+<li id="blog404"><a href="rpnv3wdewm.html#blog404">Mac 终端安装配置 Oh My ZSH</a>
+</ul>
+</li>
+<li>
+<h2>命令</h2>
+<ul>
+<li id="blog893"><a href="ndvm3jn93j.html#blog893">使用 fs_usage 查看 macOS 进程的文件访问行为</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/ndvm3jn93j.html', function (data, status) {
+            addView('ndvm3jn93j.html')
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>使用 fs_usage 查看 macOS 进程的文件访问行为</h1><ul>
+<li><a href="ndvm3jn93j.html#ee8ed44bb5f7a00134e4b670750e5462">✅ fs_usage 是什么？</a></li>
+<li><a href="ndvm3jn93j.html#6d6dae8a5c11d8f940d6c50b7641f791">✅ 用法</a>
+<ul>
+<li><a href="ndvm3jn93j.html#098bb0a77efb2e3ee040395d11588e09">✅ 常见事件类型（在 pathname 模式下）</a></li>
+</ul></li>
+<li><a href="ndvm3jn93j.html#338df4c46e39645e9a8cc9c9fbfd6299">✅ 适用场景</a>
+<ul>
+<li><a href="ndvm3jn93j.html#d2a508b055789a74575000af5491a99d">🎯 场景示例：查找 Vercel CLI 的认证令牌位置</a>
+<ul>
+<li><a href="ndvm3jn93j.html#a567690dd92e94d7d085ffa9b22fba1e">第一步：启动目标进程</a></li>
+<li><a href="ndvm3jn93j.html#6d9a21d9af104d7cdcc4a692abc403f8">第二步：获取进程 PID</a></li>
+<li><a href="ndvm3jn93j.html#dbcb908102e23eb75199680e704afc64">第三步：使用 fs_usage 监控文件访问</a></li>
+<li><a href="ndvm3jn93j.html#2ffad57853f051096fe7c232e7c63e04">第四步：定位关键文件</a></li>
+</ul></li>
+</ul></li>
+<li><a href="ndvm3jn93j.html#af2f709df7673af0a5c475f24574e0a5">⚠️ 注意事项</a></li>
+<li><a href="ndvm3jn93j.html#48b09fa373773e793de90b4f93eb589e">🧩 对比其他工具</a></li>
+<li><a href="ndvm3jn93j.html#ea2403160f270d126183661080544be1">📌 结语</a></li>
+</ul><p>在 macOS 系统中，如果你想知道某个程序正在读写哪些文件（比如配置文件、缓存、日志等），有一个非常实用但鲜为人知的命令行工具：<strong><code>fs_usage</code></strong>。本文将通过一个真实案例，带你了解如何使用它来追踪进程的文件系统活动。</p>
+<h2 id="ee8ed44bb5f7a00134e4b670750e5462">✅ fs_usage 是什么？</h2>
+<ul>
+<li>macOS 自带的<strong>实时文件系统监控工具</strong>。</li>
+<li>可监控<strong>所有进程</strong>或<strong>指定 PID</strong>的文件、网络、磁盘 I/O 活动。</li>
+</ul>
+<h2 id="6d6dae8a5c11d8f940d6c50b7641f791">✅ 用法</h2>
+<pre><code class="language-bash">sudo fs_usage -f pathname &lt;PID&gt;  
+
+**`-f pathname`** 是最推荐的过滤器，输出包含完整文件路径，可读性强。
+
+用法：
+fs_usage [-e] [-w] [-f 模式] [-b] [-t 秒数] [-R 原始文件 [-S 起始时间] [-E 结束时间]] [进程ID | 命令名 [进程ID | 命令名] ...]
+
+选项说明：
+  -e    从采样中排除指定的进程 ID 列表，并默认排除 fs_usage 自身
+  -w    强制输出更宽、更详细的格式
+  -f    根据指定的模式筛选输出内容：
+          "network"   显示与网络相关的事件
+          "filesys"   显示与文件系统相关的事件
+          "pathname"  仅显示与路径名相关的事件
+          "exec"      仅显示 exec 和 spawn（执行与派生）事件
+          "diskio"    仅显示磁盘 I/O 事件
+          "cachehit"  额外显示缓存命中（cache hit）事件
+  -b    为磁盘 I/O 事件添加 BootCache 信息（如果可用）
+  -t    指定超时时间（秒），适用于自动化工具
+  -R    指定要处理的原始跟踪文件（raw trace file）
+  -S    若使用了 -R，此选项指定跟踪的起始时间（单位：微秒）
+  -E    若使用了 -R，此选项指定跟踪的结束时间（单位：微秒）
+
+参数说明：
+  pid   指定要采样的进程 ID
+  cmd   指定要采样的命令名称（匹配进程命令行）
+
+默认行为（不带任何选项时）：
+以下进程将被自动排除在输出之外：
+fs_usage、Terminal（终端）、telnetd、sshd、rlogind、tcsh、csh、sh</code></pre>
+<h3 id="098bb0a77efb2e3ee040395d11588e09">✅ 常见事件类型（在 pathname 模式下）</h3>
+<ul>
+<li><code>open</code> / <code>close</code>：文件打开/关闭</li>
+<li><code>stat64</code> / <code>lstat64</code>：获取文件元信息</li>
+<li><code>readlink</code>：读取符号链接目标</li>
+</ul>
+<h2 id="338df4c46e39645e9a8cc9c9fbfd6299">✅ 适用场景</h2>
+<ul>
+<li>调试程序配置文件位置</li>
+<li>分析软件缓存/日志行为</li>
+<li>安全审计（查看敏感文件是否被访问）</li>
+<li>逆向工程（无需反编译，直接观察运行时行为）</li>
+</ul>
+<h3 id="d2a508b055789a74575000af5491a99d">🎯 场景示例：查找 Vercel CLI 的认证令牌位置</h3>
+<p>作者 Simon Willison 想知道 <a href="https://vercel.com/cli">Vercel CLI</a> 把它的认证令牌（token）存在哪里。他没有去翻文档，而是直接用系统工具“现场取证”。</p>
+<h4 id="a567690dd92e94d7d085ffa9b22fba1e">第一步：启动目标进程</h4>
+<pre><code class="language-bash">$ vercel login</code></pre>
+<p>Vercel CLI 会暂停并等待用户选择登录方式（比如 GitHub），此时进程仍在运行，为我们提供了追踪窗口。</p>
+<h4 id="6d9a21d9af104d7cdcc4a692abc403f8">第二步：获取进程 PID</h4>
+<p>在另一个终端窗口中，用 <code>ps</code> 查找进程 ID：</p>
+<pre><code class="language-bash">$ ps aux | grep vercel
+simon 87587 ... node /opt/homebrew/bin/vercel login</code></pre>
+<p>记下 PID：<strong>87587</strong></p>
+<h4 id="dbcb908102e23eb75199680e704afc64">第三步：使用 <code>fs_usage</code> 监控文件访问</h4>
+<p>运行以下命令（需要 <code>sudo</code> 权限）：</p>
+<pre><code class="language-bash">sudo fs_usage -f pathname 87587</code></pre>
+<ul>
+<li><code>-f pathname</code>：只显示与路径名相关的文件系统事件（如 <code>open</code>、<code>stat64</code>、<code>close</code> 等），输出清晰且包含完整路径。</li>
+<li><code>87587</code>：要监控的进程 ID。</li>
+</ul>
+<p>然后回到 Vercel 登录窗口，完成登录操作。<code>fs_usage</code> 会实时输出该进程访问的所有文件。</p>
+<h4 id="2ffad57853f051096fe7c232e7c63e04">第四步：定位关键文件</h4>
+<p>输出中出现了关键路径：</p>
+<pre><code class="   language-php">08:02:07.011124  lstat64  /Users/simon/Library/Application Support/com.vercel.cli/auth.json
+08:02:07.011716  open     /Users/simon/Library/Application Support/com.vercel.cli/auth.json.1284651536</code></pre>
+<p>这说明 Vercel 将认证信息写入了：</p>
+<pre><code class="   language-php">~/Library/Application Support/com.vercel.cli/auth.json</code></pre>
+<p>验证一下：</p>
+<pre><code class="language-bash">$ cat ~/Library/Application\ Support/com.vercel.cli/auth.json
+{
+  "// Note": "This is your Vercel credentials file. DO NOT SHARE!",
+  "token": "..."
+}</code></pre>
+<p>✅ 成功定位！</p>
+<h2 id="af2f709df7673af0a5c475f24574e0a5">⚠️ 注意事项</h2>
+<ul>
+<li>需要 <strong><code>sudo</code> 权限</strong>（因为涉及系统级监控）。</li>
+<li>不加 PID 会输出<strong>全系统所有活动</strong>，信息量极大，慎用！</li>
+<li>输出是实时流式数据，建议配合 <code>grep</code> 或重定向保存分析。</li>
+</ul>
+<hr />
+<h2 id="48b09fa373773e793de90b4f93eb589e">🧩 对比其他工具</h2>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fs_usage</code></td>
+<td>实时监控文件/网络 I/O</td>
+<td>系统级、需 root、支持按 PID 过滤</td>
+</tr>
+<tr>
+<td><code>lsof</code></td>
+<td>列出当前打开的文件</td>
+<td>快照式，不实时</td>
+</tr>
+<tr>
+<td><code>opensnoop</code> (via <code>dtrace</code>)</td>
+<td>跟踪文件打开事件</td>
+<td>更轻量，但需启用 SIP 或使用 <code>bpftrace</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>对于“<strong>我想知道这个程序刚才是不是读了某个文件？</strong>”这类问题，<code>fs_usage -f pathname PID</code> 往往是最直接的答案。</p>
+</blockquote>
+<hr />
+<h2 id="ea2403160f270d126183661080544be1">📌 结语</h2>
+<p><code>fs_usage</code> 是 macOS 下一个强大但低调的调试利器。下次当你好奇某个 App 把数据藏在哪，或者怀疑程序行为异常时，不妨试试它——只需一行命令，真相就在眼前。</p>
+<blockquote>
+<p><strong>小技巧</strong>：搭配 <code>grep</code> 使用更高效，例如：</p>
+</blockquote>
+<pre><code class="language-bash">sudo fs_usage -f pathname 87587 | grep '\.json'</code></pre>
+<p>Linux 下可以使用 <a href="../Linux/3oyjdxryp5.html#blog922">strace 命令</a> 查看进程正在做什么。</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Vercel CLI: <i><a href="https://vercel.com/cli" target="_blank">https://vercel.com/cli</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> strace 命令: <i><a href="../Linux/3oyjdxryp5.html#blog922" target="_blank">//wangmaolin.net/topic/Linux/3oyjdxryp5.html#blog922</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>
