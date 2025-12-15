@@ -53,7 +53,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -500,69 +500,18 @@ var _hmt = _hmt || [];
 <li><a href="d6vro2qv3g.html#59055deb64312a9ed454935af01dc05c">7. 注意事项</a></li>
 <li><a href="d6vro2qv3g.html#5b4c5cba573d336d2db104c2e02cb33c">8. 安装</a></li>
 <li><a href="d6vro2qv3g.html#25f9c7fa3b50aebe5125112ac1187777">总结</a></li>
-</ul><p><code>ipset</code> 是 Linux 内核提供的一个高效工具，用于管理和存储多个 IP 地址、网络、端口或 MAC 地址等元素的集合。它与 <code>iptables</code> 配合使用，可以显著提高大规模 IP 地址管理的效率，尤其是在需要处理大量规则时。</p>
-<p>在仅使用 iptables 的时候我们想封禁多条 IP 需要在 iptables 中配置多条规则，而配合 ipset 我们则只需要配置一条规则就能够与IP集中的多个IP地址进行匹配。并且性能更好。</p>
-<p>以下是 <code>ipset</code> 的详细解析：</p>
-<h2 id="fd6646017de6a233e0f850d9d92898bc">1. 核心概念</h2>
-<p>• <strong>集合（Set）</strong>：<code>ipset</code> 的核心是集合，它是一个容器，可以存储 IP 地址、网络、端口或 MAC 地址等元素。</p>
-<p>• <strong>高性能</strong>：<code>ipset</code> 通过哈希表或位图实现，查询和操作的时间复杂度接近 O(1)，远优于逐条遍历的 <code>iptables</code> 的 O(n)。</p>
-<h2 id="11c371053419b32923d4030bdf695082">2. 主要优势</h2>
-<p>• <strong>高效性</strong>：<code>ipset</code> 在内核中实现，查询速度极快，尤其适合大规模规则场景。</p>
-<p>• <strong>动态性</strong>：无需重新加载 <code>iptables</code> 规则即可动态修改集合内容。</p>
-<p>• <strong>灵活性</strong>：支持多种数据格式，如单个 IP 地址、子网、IP 与端口组合等。</p>
-<p>• <strong>简化规则</strong>：一个 <code>iptables</code> 规则可以引用整个集合，减少规则复杂度。</p>
-<h2 id="a80edd421246f8db49b44861879dcd77">3. 集合类型</h2>
-<p><code>ipset</code> 支持多种集合类型，常见的有：</p>
-<p>• <code>hash:ip</code>：存储单个 IP 地址。</p>
-<p>• <code>hash:net</code>：存储子网。</p>
-<p>• <code>hash:ip,port</code>：存储 IP 和端口组合。</p>
-<p>• <code>hash:mac</code>：存储 MAC 地址。</p>
-<p>• <code>list:set</code>：存储其他 <code>ipset</code> 集合的名称（嵌套集合）。</p>
-<h2 id="a2b83d269cd055ff54eef64dcefc1d29">4. 基本操作</h2>
-<p>以下是一些常用的 <code>ipset</code> 操作：</p>
-<p>• <strong>创建集合</strong>：</p>
-<pre><code class="language-bash">  sudo ipset create my_blacklist hash:ip</code></pre>
-<p>• <strong>添加 IP 地址</strong>：</p>
-<pre><code class="language-bash">  sudo ipset add my_blacklist 192.168.1.100</code></pre>
-<p>• <strong>查看集合内容</strong>：</p>
-<pre><code class="language-bash">  sudo ipset list my_blacklist</code></pre>
-<p>• <strong>删除 IP 地址</strong>：</p>
-<pre><code class="language-bash">  sudo ipset del my_blacklist 192.168.1.100</code></pre>
-<p>• <strong>销毁集合</strong>：</p>
-<pre><code class="language-bash">  sudo ipset destroy my_blacklist</code></pre>
-<h2 id="d1866404d0a651fe07467b1679406d5b">5. 与 iptables 结合使用</h2>
-<p><code>ipset</code> 需要与 <code>iptables</code> 配合才能生效。例如，屏蔽特定 IP 地址的访问：</p>
-<ol>
-<li>创建黑名单集合：</li>
-</ol>
-<pre><code class="language-bash">   sudo ipset create my_blacklist hash:ip</code></pre>
-<ol start="2">
-<li>添加 IP 到黑名单：</li>
-</ol>
-<pre><code class="language-bash">   sudo ipset add my_blacklist 203.0.113.1</code></pre>
-<ol start="3">
-<li>配置 <code>iptables</code> 规则：</li>
-</ol>
-<pre><code class="language-bash">   sudo iptables -I INPUT -m set --match-set my_blacklist src -j DROP</code></pre>
-<h2 id="f2fac5cc90f95ebabaa6309113ebbc56">6. 适用场景</h2>
-<p>• <strong>黑名单管理</strong>：快速屏蔽恶意 IP 地址。</p>
-<p>• <strong>白名单管理</strong>：允许一组 IP 地址访问敏感服务。</p>
-<p>• <strong>动态防护</strong>：配合工具（如 <code>fail2ban</code>）动态封禁异常 IP。</p>
-<p>• <strong>大规模规则场景</strong>：管理上千条规则时，<code>ipset</code> 是必备工具。</p>
-<h2 id="59055deb64312a9ed454935af01dc05c">7. 注意事项</h2>
-<p>• <strong>内核支持</strong>：确保内核加载了 <code>ipset</code> 模块，可通过 <code>lsmod | grep ip_set</code> 检查。</p>
-<p>• <strong>集合大小</strong>：大量 IP 地址时，建议设置合适的哈希大小，避免性能下降。</p>
-<p>• <strong>持久化配置</strong>：默认情况下，<code>ipset</code> 规则在系统重启后会丢失，可通过以下方式保存和恢复：</p>
-<pre><code class="language-bash">  sudo ipset save &gt; /etc/ipset.conf
+</ul><?xml encoding="UTF-8"><p><code>ipset</code> &#26159; Linux &#20869;&#26680;&#25552;&#20379;&#30340;&#19968;&#20010;&#39640;&#25928;&#24037;&#20855;&#65292;&#29992;&#20110;&#31649;&#29702;&#21644;&#23384;&#20648;&#22810;&#20010; IP &#22320;&#22336;&#12289;&#32593;&#32476;&#12289;&#31471;&#21475;&#25110; MAC &#22320;&#22336;&#31561;&#20803;&#32032;&#30340;&#38598;&#21512;&#12290;&#23427;&#19982; <code>iptables</code> &#37197;&#21512;&#20351;&#29992;&#65292;&#21487;&#20197;&#26174;&#33879;&#25552;&#39640;&#22823;&#35268;&#27169; IP &#22320;&#22336;&#31649;&#29702;&#30340;&#25928;&#29575;&#65292;&#23588;&#20854;&#26159;&#22312;&#38656;&#35201;&#22788;&#29702;&#22823;&#37327;&#35268;&#21017;&#26102;&#12290;</p><p>&#22312;&#20165;&#20351;&#29992; iptables &#30340;&#26102;&#20505;&#25105;&#20204;&#24819;&#23553;&#31105;&#22810;&#26465; IP &#38656;&#35201;&#22312; iptables &#20013;&#37197;&#32622;&#22810;&#26465;&#35268;&#21017;&#65292;&#32780;&#37197;&#21512; ipset &#25105;&#20204;&#21017;&#21482;&#38656;&#35201;&#37197;&#32622;&#19968;&#26465;&#35268;&#21017;&#23601;&#33021;&#22815;&#19982;IP&#38598;&#20013;&#30340;&#22810;&#20010;IP&#22320;&#22336;&#36827;&#34892;&#21305;&#37197;&#12290;&#24182;&#19988;&#24615;&#33021;&#26356;&#22909;&#12290;</p><p>&#20197;&#19979;&#26159; <code>ipset</code> &#30340;&#35814;&#32454;&#35299;&#26512;&#65306;</p><h2 id="fd6646017de6a233e0f850d9d92898bc">1. &#26680;&#24515;&#27010;&#24565;</h2><p>&bull; <strong>&#38598;&#21512;&#65288;Set&#65289;</strong>&#65306;<code>ipset</code> &#30340;&#26680;&#24515;&#26159;&#38598;&#21512;&#65292;&#23427;&#26159;&#19968;&#20010;&#23481;&#22120;&#65292;&#21487;&#20197;&#23384;&#20648; IP &#22320;&#22336;&#12289;&#32593;&#32476;&#12289;&#31471;&#21475;&#25110; MAC &#22320;&#22336;&#31561;&#20803;&#32032;&#12290;</p><p>&bull; <strong>&#39640;&#24615;&#33021;</strong>&#65306;<code>ipset</code> &#36890;&#36807;&#21704;&#24076;&#34920;&#25110;&#20301;&#22270;&#23454;&#29616;&#65292;&#26597;&#35810;&#21644;&#25805;&#20316;&#30340;&#26102;&#38388;&#22797;&#26434;&#24230;&#25509;&#36817; O(1)&#65292;&#36828;&#20248;&#20110;&#36880;&#26465;&#36941;&#21382;&#30340; <code>iptables</code> &#30340; O(n)&#12290;</p><h2 id="11c371053419b32923d4030bdf695082">2. &#20027;&#35201;&#20248;&#21183;</h2><p>&bull; <strong>&#39640;&#25928;&#24615;</strong>&#65306;<code>ipset</code> &#22312;&#20869;&#26680;&#20013;&#23454;&#29616;&#65292;&#26597;&#35810;&#36895;&#24230;&#26497;&#24555;&#65292;&#23588;&#20854;&#36866;&#21512;&#22823;&#35268;&#27169;&#35268;&#21017;&#22330;&#26223;&#12290;</p><p>&bull; <strong>&#21160;&#24577;&#24615;</strong>&#65306;&#26080;&#38656;&#37325;&#26032;&#21152;&#36733; <code>iptables</code> &#35268;&#21017;&#21363;&#21487;&#21160;&#24577;&#20462;&#25913;&#38598;&#21512;&#20869;&#23481;&#12290;</p><p>&bull; <strong>&#28789;&#27963;&#24615;</strong>&#65306;&#25903;&#25345;&#22810;&#31181;&#25968;&#25454;&#26684;&#24335;&#65292;&#22914;&#21333;&#20010; IP &#22320;&#22336;&#12289;&#23376;&#32593;&#12289;IP &#19982;&#31471;&#21475;&#32452;&#21512;&#31561;&#12290;</p><p>&bull; <strong>&#31616;&#21270;&#35268;&#21017;</strong>&#65306;&#19968;&#20010; <code>iptables</code> &#35268;&#21017;&#21487;&#20197;&#24341;&#29992;&#25972;&#20010;&#38598;&#21512;&#65292;&#20943;&#23569;&#35268;&#21017;&#22797;&#26434;&#24230;&#12290;</p><h2 id="a80edd421246f8db49b44861879dcd77">3. &#38598;&#21512;&#31867;&#22411;</h2><p><code>ipset</code> &#25903;&#25345;&#22810;&#31181;&#38598;&#21512;&#31867;&#22411;&#65292;&#24120;&#35265;&#30340;&#26377;&#65306;</p><p>&bull; <code>hash:ip</code>&#65306;&#23384;&#20648;&#21333;&#20010; IP &#22320;&#22336;&#12290;</p><p>&bull; <code>hash:net</code>&#65306;&#23384;&#20648;&#23376;&#32593;&#12290;</p><p>&bull; <code>hash:ip,port</code>&#65306;&#23384;&#20648; IP &#21644;&#31471;&#21475;&#32452;&#21512;&#12290;</p><p>&bull; <code>hash:mac</code>&#65306;&#23384;&#20648; MAC &#22320;&#22336;&#12290;</p><p>&bull; <code>list:set</code>&#65306;&#23384;&#20648;&#20854;&#20182; <code>ipset</code> &#38598;&#21512;&#30340;&#21517;&#31216;&#65288;&#23884;&#22871;&#38598;&#21512;&#65289;&#12290;</p><h2 id="a2b83d269cd055ff54eef64dcefc1d29">4. &#22522;&#26412;&#25805;&#20316;</h2><p>&#20197;&#19979;&#26159;&#19968;&#20123;&#24120;&#29992;&#30340; <code>ipset</code> &#25805;&#20316;&#65306;</p><p>&bull; <strong>&#21019;&#24314;&#38598;&#21512;</strong>&#65306;</p><pre><code class="language-bash">  sudo ipset create my_blacklist hash:ip</code></pre><p>&bull; <strong>&#28155;&#21152; IP &#22320;&#22336;</strong>&#65306;</p><pre><code class="language-bash">  sudo ipset add my_blacklist 192.168.1.100</code></pre><p>&bull; <strong>&#26597;&#30475;&#38598;&#21512;&#20869;&#23481;</strong>&#65306;</p><pre><code class="language-bash">  sudo ipset list my_blacklist</code></pre><p>&bull; <strong>&#21024;&#38500; IP &#22320;&#22336;</strong>&#65306;</p><pre><code class="language-bash">  sudo ipset del my_blacklist 192.168.1.100</code></pre><p>&bull; <strong>&#38144;&#27585;&#38598;&#21512;</strong>&#65306;</p><pre><code class="language-bash">  sudo ipset destroy my_blacklist</code></pre><h2 id="d1866404d0a651fe07467b1679406d5b">5. &#19982; iptables &#32467;&#21512;&#20351;&#29992;</h2><p><code>ipset</code> &#38656;&#35201;&#19982; <code>iptables</code> &#37197;&#21512;&#25165;&#33021;&#29983;&#25928;&#12290;&#20363;&#22914;&#65292;&#23631;&#34109;&#29305;&#23450; IP &#22320;&#22336;&#30340;&#35775;&#38382;&#65306;</p><ol>
+<li>&#21019;&#24314;&#40657;&#21517;&#21333;&#38598;&#21512;&#65306;</li>
+</ol><pre><code class="language-bash">   sudo ipset create my_blacklist hash:ip</code></pre><ol start="2">
+<li>&#28155;&#21152; IP &#21040;&#40657;&#21517;&#21333;&#65306;</li>
+</ol><pre><code class="language-bash">   sudo ipset add my_blacklist 203.0.113.1</code></pre><ol start="3">
+<li>&#37197;&#32622; <code>iptables</code> &#35268;&#21017;&#65306;</li>
+</ol><pre><code class="language-bash">   sudo iptables -I INPUT -m set --match-set my_blacklist src -j DROP</code></pre><h2 id="f2fac5cc90f95ebabaa6309113ebbc56">6. &#36866;&#29992;&#22330;&#26223;</h2><p>&bull; <strong>&#40657;&#21517;&#21333;&#31649;&#29702;</strong>&#65306;&#24555;&#36895;&#23631;&#34109;&#24694;&#24847; IP &#22320;&#22336;&#12290;</p><p>&bull; <strong>&#30333;&#21517;&#21333;&#31649;&#29702;</strong>&#65306;&#20801;&#35768;&#19968;&#32452; IP &#22320;&#22336;&#35775;&#38382;&#25935;&#24863;&#26381;&#21153;&#12290;</p><p>&bull; <strong>&#21160;&#24577;&#38450;&#25252;</strong>&#65306;&#37197;&#21512;&#24037;&#20855;&#65288;&#22914; <code>fail2ban</code>&#65289;&#21160;&#24577;&#23553;&#31105;&#24322;&#24120; IP&#12290;</p><p>&bull; <strong>&#22823;&#35268;&#27169;&#35268;&#21017;&#22330;&#26223;</strong>&#65306;&#31649;&#29702;&#19978;&#21315;&#26465;&#35268;&#21017;&#26102;&#65292;<code>ipset</code> &#26159;&#24517;&#22791;&#24037;&#20855;&#12290;</p><h2 id="59055deb64312a9ed454935af01dc05c">7. &#27880;&#24847;&#20107;&#39033;</h2><p>&bull; <strong>&#20869;&#26680;&#25903;&#25345;</strong>&#65306;&#30830;&#20445;&#20869;&#26680;&#21152;&#36733;&#20102; <code>ipset</code> &#27169;&#22359;&#65292;&#21487;&#36890;&#36807; <code>lsmod | grep ip_set</code> &#26816;&#26597;&#12290;</p><p>&bull; <strong>&#38598;&#21512;&#22823;&#23567;</strong>&#65306;&#22823;&#37327; IP &#22320;&#22336;&#26102;&#65292;&#24314;&#35758;&#35774;&#32622;&#21512;&#36866;&#30340;&#21704;&#24076;&#22823;&#23567;&#65292;&#36991;&#20813;&#24615;&#33021;&#19979;&#38477;&#12290;</p><p>&bull; <strong>&#25345;&#20037;&#21270;&#37197;&#32622;</strong>&#65306;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>ipset</code> &#35268;&#21017;&#22312;&#31995;&#32479;&#37325;&#21551;&#21518;&#20250;&#20002;&#22833;&#65292;&#21487;&#36890;&#36807;&#20197;&#19979;&#26041;&#24335;&#20445;&#23384;&#21644;&#24674;&#22797;&#65306;</p><pre><code class="language-bash">  sudo ipset save &gt; /etc/ipset.conf
 
-  sudo ipset restore &lt; /etc/ipset.conf</code></pre>
-<h2 id="5b4c5cba573d336d2db104c2e02cb33c">8. 安装</h2>
-<pre><code class="language-bash">sudo apt-get install ipset  # Debian/Ubuntu
+  sudo ipset restore &lt; /etc/ipset.conf</code></pre><h2 id="5b4c5cba573d336d2db104c2e02cb33c">8. &#23433;&#35013;</h2><pre><code class="language-bash">sudo apt-get install ipset  # Debian/Ubuntu
 
-sudo yum install ipset      # CentOS/RHEL</code></pre>
-<h2 id="25f9c7fa3b50aebe5125112ac1187777">总结</h2>
-<p><code>ipset</code> 是一个简单高效的工具，专为解决大规模 IP 地址管理而生。它在性能和易用性上的优势，使其成为服务器运维中不可或缺的一部分。通过动态管理黑白名单、优化 <code>iptables</code> 规则，可以轻松应对复杂的网络管理需求。</p>
-<p>如果你在使用过程中遇到问题，可以参考 <a href="http://ipset.netfilter.org/">ipset 官方文档</a> 或查阅相关教程。</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> ipset 官方文档: <i><a href="http://ipset.netfilter.org/" target="_blank">http://ipset.netfilter.org/</a></i><br></p>
+sudo yum install ipset      # CentOS/RHEL</code></pre><h2 id="25f9c7fa3b50aebe5125112ac1187777">&#24635;&#32467;</h2><p><code>ipset</code> &#26159;&#19968;&#20010;&#31616;&#21333;&#39640;&#25928;&#30340;&#24037;&#20855;&#65292;&#19987;&#20026;&#35299;&#20915;&#22823;&#35268;&#27169; IP &#22320;&#22336;&#31649;&#29702;&#32780;&#29983;&#12290;&#23427;&#22312;&#24615;&#33021;&#21644;&#26131;&#29992;&#24615;&#19978;&#30340;&#20248;&#21183;&#65292;&#20351;&#20854;&#25104;&#20026;&#26381;&#21153;&#22120;&#36816;&#32500;&#20013;&#19981;&#21487;&#25110;&#32570;&#30340;&#19968;&#37096;&#20998;&#12290;&#36890;&#36807;&#21160;&#24577;&#31649;&#29702;&#40657;&#30333;&#21517;&#21333;&#12289;&#20248;&#21270; <code>iptables</code> &#35268;&#21017;&#65292;&#21487;&#20197;&#36731;&#26494;&#24212;&#23545;&#22797;&#26434;&#30340;&#32593;&#32476;&#31649;&#29702;&#38656;&#27714;&#12290;</p><p>&#22914;&#26524;&#20320;&#22312;&#20351;&#29992;&#36807;&#31243;&#20013;&#36935;&#21040;&#38382;&#39064;&#65292;&#21487;&#20197;&#21442;&#32771; <a href="http://ipset.netfilter.org/" target="_blank" rel="noopener noreferrer">ipset &#23448;&#26041;&#25991;&#26723;</a> &#25110;&#26597;&#38405;&#30456;&#20851;&#25945;&#31243;&#12290;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> ipset 官方文档: <i><a href="http://ipset.netfilter.org/" target="_blank">http://ipset.netfilter.org/</a></i><br></p>
 			</div>
 </div>
 

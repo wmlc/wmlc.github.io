@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -413,25 +413,24 @@ var _hmt = _hmt || [];
 		<h1>Larvale MySQL事务回退、悲观锁</h1><ul>
 <li><a href="71xyjjryd9.html#feafc690b1b05c669a1abccf063ed123">加锁代码</a></li>
 <li><a href="71xyjjryd9.html#1bbbb204023e59eba03319c7c5848fd1">注意事项</a></li>
-</ul><h2 id="feafc690b1b05c669a1abccf063ed123">加锁代码</h2>
-<pre><code class="language-php"> use Illuminate\Support\Facades\DB;
+</ul><?xml encoding="UTF-8"><h2 id="feafc690b1b05c669a1abccf063ed123">&#21152;&#38145;&#20195;&#30721;</h2><pre><code class="language-php"> use Illuminate\Support\Facades\DB;
 
 try{
   DB::transaction(function () use ($data) {
-    # 获取用户信息，加悲观锁，其他的不可读写
+    # &#33719;&#21462;&#29992;&#25143;&#20449;&#24687;&#65292;&#21152;&#24754;&#35266;&#38145;&#65292;&#20854;&#20182;&#30340;&#19981;&#21487;&#35835;&#20889;
     $userInfo = UserProfile::query()-&gt;where(['uid' =&gt; $data['apprentice_uid']])-&gt;lockForUpdate()-&gt;first(); 
 
-    # 第一个sql操作
+    # &#31532;&#19968;&#20010;sql&#25805;&#20316;
     User::query()-&gt;where(['id' =&gt; 1])-&gt;increment('exchange_coupon', 10);
 
-    throw new \Exception('异常，回退');
+    throw new \Exception('&#24322;&#24120;&#65292;&#22238;&#36864;');
 
-    # 第二个sql操作
+    # &#31532;&#20108;&#20010;sql&#25805;&#20316;
     $TradeHistory = new TradeHistory();
     $TradeHistory-&gt;is_pay = Config::$TRUE;
     $TradeHistory-&gt;save();
 
-    # 第三个sql操作
+    # &#31532;&#19977;&#20010;sql&#25805;&#20316;
     $Apprentice = new Apprentice();
     $Apprentice-&gt;is_send = $data['is_send'];
     $Apprentice-&gt;save();
@@ -440,14 +439,10 @@ try{
 }catch (\Throwable $ex){
   return false;
 }
-</code></pre>
-<h2 id="1bbbb204023e59eba03319c7c5848fd1">注意事项</h2>
-<p>lockForUpdate() 只会对存在的记录行加排它锁（X 锁）。</p>
-<p>如果你查不到记录，MySQL 根本不知道你要锁哪一行，只能靠后续 insert 加意图锁来解决冲突。</p>
-<p>但如果多个事务都查不到这条记录，都去插入，就变成了“同时加锁”，产生了死锁。</p>
-<blockquote>
-<p>所以：悲观锁只对已存在的记录有效，对不存在的记录无能为力。</p>
+</code></pre><h2 id="1bbbb204023e59eba03319c7c5848fd1">&#27880;&#24847;&#20107;&#39033;</h2><p>lockForUpdate() &#21482;&#20250;&#23545;&#23384;&#22312;&#30340;&#35760;&#24405;&#34892;&#21152;&#25490;&#23427;&#38145;&#65288;X &#38145;&#65289;&#12290;</p><p>&#22914;&#26524;&#20320;&#26597;&#19981;&#21040;&#35760;&#24405;&#65292;MySQL &#26681;&#26412;&#19981;&#30693;&#36947;&#20320;&#35201;&#38145;&#21738;&#19968;&#34892;&#65292;&#21482;&#33021;&#38752;&#21518;&#32493; insert &#21152;&#24847;&#22270;&#38145;&#26469;&#35299;&#20915;&#20914;&#31361;&#12290;</p><p>&#20294;&#22914;&#26524;&#22810;&#20010;&#20107;&#21153;&#37117;&#26597;&#19981;&#21040;&#36825;&#26465;&#35760;&#24405;&#65292;&#37117;&#21435;&#25554;&#20837;&#65292;&#23601;&#21464;&#25104;&#20102;&ldquo;&#21516;&#26102;&#21152;&#38145;&rdquo;&#65292;&#20135;&#29983;&#20102;&#27515;&#38145;&#12290;</p><blockquote>
+<p>&#25152;&#20197;&#65306;&#24754;&#35266;&#38145;&#21482;&#23545;&#24050;&#23384;&#22312;&#30340;&#35760;&#24405;&#26377;&#25928;&#65292;&#23545;&#19981;&#23384;&#22312;&#30340;&#35760;&#24405;&#26080;&#33021;&#20026;&#21147;&#12290;</p>
 </blockquote>
+
 			</div>
 </div>
 

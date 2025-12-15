@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -380,59 +380,36 @@ var _hmt = _hmt || [];
 <li><a href="k3dyk3n9l0.html#d6595b47e858aa55434463bedcf6cd72">第一步 将 linux 容器导出为镜像</a></li>
 <li><a href="k3dyk3n9l0.html#ff550da6ff8b3a7be570ed9475b5c879">第二步 将导出的镜像保存为归档文件</a></li>
 </ul></li>
-</ul><h2 id="a4a6b20df89c7cc1118d07fd6b2e4667">创建初始 lInux 容器</h2>
-<pre><code class="language-bash">docker run --restart=always --name linux \
+</ul><?xml encoding="UTF-8"><h2 id="a4a6b20df89c7cc1118d07fd6b2e4667">&#21019;&#24314;&#21021;&#22987; lInux &#23481;&#22120;</h2><pre><code class="language-bash">docker run --restart=always --name linux \
 -p 80:80 -p 12922:22 \
 -v /Users/wml/alidata:/Users/wml/alidata \
 -v /Users/wml/alidata/data/docker/linux/alidata:/alidata \
 -h docker-lnmp \
--dit  ubuntu:latest</code></pre>
-<h2 id="c9f2c676118fffd68977b08ccb2d2946">安装配置基础服务</h2>
-<p>1、安装 ssh 服务</p>
-<pre><code class="language-bash">apt update &amp;&amp; apt install -y openssh-server</code></pre>
-<p>2、新增部署用户</p>
-<pre><code class="language-bash">useradd -m wml
+-dit  ubuntu:latest</code></pre><h2 id="c9f2c676118fffd68977b08ccb2d2946">&#23433;&#35013;&#37197;&#32622;&#22522;&#30784;&#26381;&#21153;</h2><p>1&#12289;&#23433;&#35013; ssh &#26381;&#21153;</p><pre><code class="language-bash">apt update &amp;&amp; apt install -y openssh-server</code></pre><p>2&#12289;&#26032;&#22686;&#37096;&#32626;&#29992;&#25143;</p><pre><code class="language-bash">useradd -m wml
 
-passwd wml</code></pre>
-<p>3、新用户授予root权限</p>
-<pre><code class="language-bash">
+passwd wml</code></pre><p>3&#12289;&#26032;&#29992;&#25143;&#25480;&#20104;root&#26435;&#38480;</p><pre><code class="language-bash">
 apt-get install -y sudo
 
 apt install -y vim
 
 sudo visudo
 
-# 在文件最后新增这一行
-wml ALL=(ALL) ALL</code></pre>
-<p>4、创建秘钥</p>
-<pre><code class="language-plain&amp;#x20;text">su wml
+# &#22312;&#25991;&#20214;&#26368;&#21518;&#26032;&#22686;&#36825;&#19968;&#34892;
+wml ALL=(ALL) ALL</code></pre><p>4&#12289;&#21019;&#24314;&#31192;&#38053;</p><pre><code class="language-plain&amp;#x20;text">su wml
 
-ssh-keygen -t rsa</code></pre>
-<p>5、配置 ssh 公钥登录</p>
-<pre><code class="language-plain&amp;#x20;text">vim ~/.ssh/authorized_keys
+ssh-keygen -t rsa</code></pre><p>5&#12289;&#37197;&#32622; ssh &#20844;&#38053;&#30331;&#24405;</p><pre><code class="language-plain&amp;#x20;text">vim ~/.ssh/authorized_keys
 
-# 将 .ssh 文件夹 内容复制到宿主机
+# &#23558; .ssh &#25991;&#20214;&#22841; &#20869;&#23481;&#22797;&#21046;&#21040;&#23487;&#20027;&#26426;
 
-docker cp  linux:/home/wml/.ssh /Users/wml/alidata/data/docker/linux/home/wml/ssh</code></pre>
-<p>6、安装 logrotate、supervisor 服务</p>
-<pre><code class="language-plain&amp;#x20;text">logrotate 默认应该已安装
+docker cp  linux:/home/wml/.ssh /Users/wml/alidata/data/docker/linux/home/wml/ssh</code></pre><p>6&#12289;&#23433;&#35013; logrotate&#12289;supervisor &#26381;&#21153;</p><pre><code class="language-plain&amp;#x20;text">logrotate &#40664;&#35748;&#24212;&#35813;&#24050;&#23433;&#35013;
 
 sudo apt-get install -y supervisor
 
-# 将容器整个 etc 目录内容复制到宿主机
+# &#23558;&#23481;&#22120;&#25972;&#20010; etc &#30446;&#24405;&#20869;&#23481;&#22797;&#21046;&#21040;&#23487;&#20027;&#26426;
 
-docker cp  linux:/etc /Users/wml/alidata/data/docker/linux/etc</code></pre>
-<h2 id="9e12cc91544f0897873297d00021bcdb">安装 Nginx、php 开发环境</h2>
-<p>1、利用 lnmp 安装 php、nginx 服务</p>
-<p>2、复制以上服务的配置文件到宿主机</p>
-<pre><code class="language-bash">docker cp  linux:/usr/local/php/etc /Users/wml/alidata/data/docker/linux/usr/local/php/etc
+docker cp  linux:/etc /Users/wml/alidata/data/docker/linux/etc</code></pre><h2 id="9e12cc91544f0897873297d00021bcdb">&#23433;&#35013; Nginx&#12289;php &#24320;&#21457;&#29615;&#22659;</h2><p>1&#12289;&#21033;&#29992; lnmp &#23433;&#35013; php&#12289;nginx &#26381;&#21153;</p><p>2&#12289;&#22797;&#21046;&#20197;&#19978;&#26381;&#21153;&#30340;&#37197;&#32622;&#25991;&#20214;&#21040;&#23487;&#20027;&#26426;</p><pre><code class="language-bash">docker cp  linux:/usr/local/php/etc /Users/wml/alidata/data/docker/linux/usr/local/php/etc
 
-docker cp  linux:/usr/local/nginx/conf /Users/wml/alidata/data/docker/linux/usr/local/nginx/conf</code></pre>
-<p>3、利用初始 linux 容器创建自定义镜像</p>
-<pre><code class="language-bash">docker commit linux linux:105</code></pre>
-<p>4、利用上述自定义镜像挂载宿主机以上服务配置文件所在目录创建新的镜像</p>
-<p>注意需要开机重启的服务都配置到 supervisord 中</p>
-<pre><code class="language-bash">docker run --privileged --restart=always --name linux116 \
+docker cp  linux:/usr/local/nginx/conf /Users/wml/alidata/data/docker/linux/usr/local/nginx/conf</code></pre><p>3&#12289;&#21033;&#29992;&#21021;&#22987; linux &#23481;&#22120;&#21019;&#24314;&#33258;&#23450;&#20041;&#38236;&#20687;</p><pre><code class="language-bash">docker commit linux linux:105</code></pre><p>4&#12289;&#21033;&#29992;&#19978;&#36848;&#33258;&#23450;&#20041;&#38236;&#20687;&#25346;&#36733;&#23487;&#20027;&#26426;&#20197;&#19978;&#26381;&#21153;&#37197;&#32622;&#25991;&#20214;&#25152;&#22312;&#30446;&#24405;&#21019;&#24314;&#26032;&#30340;&#38236;&#20687;</p><p>&#27880;&#24847;&#38656;&#35201;&#24320;&#26426;&#37325;&#21551;&#30340;&#26381;&#21153;&#37117;&#37197;&#32622;&#21040; supervisord &#20013;</p><pre><code class="language-bash">docker run --privileged --restart=always --name linux116 \
 -p 443:443 -p 80:80 -p 12922:22 -p 8000:8000 -p 8001:8001 -p 8002:8002 -p 8003:8003 -p 8787:8787 -p 8788:8788 \
 -v /Users/wml/alidata:/Users/wml/alidata \
 -v /Users/wml/alidata/data/docker/linux/alidata:/alidata \
@@ -441,31 +418,19 @@ docker cp  linux:/usr/local/nginx/conf /Users/wml/alidata/data/docker/linux/usr/
 -v /Users/wml/alidata/data/docker/linux/usr/local/nginx/conf:/usr/local/nginx/conf  \
 -h docker-lnmp --user root --network lnmp002 --ip=172.25.0.3 \
 -dit  linux:116 \
-/usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf</code></pre>
-<h2 id="00f69f071cc72f96d2d5d1c0c16a72dd">进入容器, 启动必要服务</h2>
-<pre><code class="language-bash"># 进入容器
+/usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf</code></pre><h2 id="00f69f071cc72f96d2d5d1c0c16a72dd">&#36827;&#20837;&#23481;&#22120;, &#21551;&#21160;&#24517;&#35201;&#26381;&#21153;</h2><pre><code class="language-bash"># &#36827;&#20837;&#23481;&#22120;
 docker attach linux
 
-# 启动 supervisor 服务
+# &#21551;&#21160; supervisor &#26381;&#21153;
 
-sudo supervisord -c /etc/supervisor/supervisord.conf </code></pre>
-<h2 id="dc144f4402d30c15bcc669e58df70a27">Linux 容器备份</h2>
-<p>创建 Linux 容器后若进行了修改我们想备份该容器可以使用如下方法</p>
-<h3 id="d6595b47e858aa55434463bedcf6cd72">第一步 将 linux 容器导出为镜像</h3>
-<p><code>docker commit</code> 命令可以将一个容器的当前状态提交为一个新的镜像。基本语法如下：</p>
-<pre><code class="language-bash">docker commit [OPTIONS] {容器的 ID 或名称} {新镜像的仓库名称:标签}</code></pre>
-<p>例如，假设你有一个运行中的容器 <code>my_container</code>，你想将它制作成一个名为 <code>my_image</code> 的新镜像，你可以执行：</p>
-<pre><code class="language-bash">docker commit linux linux:114</code></pre>
-<h3 id="ff550da6ff8b3a7be570ed9475b5c879">第二步 将导出的镜像保存为归档文件</h3>
-<p>使用 <code>docker save</code> 命令可以将镜像保存为归档文件。</p>
-<pre><code class="language-bash"># gzip 表示导出时对归档文件进行压缩
+sudo supervisord -c /etc/supervisor/supervisord.conf </code></pre><h2 id="dc144f4402d30c15bcc669e58df70a27">Linux &#23481;&#22120;&#22791;&#20221;</h2><p>&#21019;&#24314; Linux &#23481;&#22120;&#21518;&#33509;&#36827;&#34892;&#20102;&#20462;&#25913;&#25105;&#20204;&#24819;&#22791;&#20221;&#35813;&#23481;&#22120;&#21487;&#20197;&#20351;&#29992;&#22914;&#19979;&#26041;&#27861;</p><h3 id="d6595b47e858aa55434463bedcf6cd72">&#31532;&#19968;&#27493; &#23558; linux &#23481;&#22120;&#23548;&#20986;&#20026;&#38236;&#20687;</h3><p><code>docker commit</code> &#21629;&#20196;&#21487;&#20197;&#23558;&#19968;&#20010;&#23481;&#22120;&#30340;&#24403;&#21069;&#29366;&#24577;&#25552;&#20132;&#20026;&#19968;&#20010;&#26032;&#30340;&#38236;&#20687;&#12290;&#22522;&#26412;&#35821;&#27861;&#22914;&#19979;&#65306;</p><pre><code class="language-bash">docker commit [OPTIONS] {&#23481;&#22120;&#30340; ID &#25110;&#21517;&#31216;} {&#26032;&#38236;&#20687;&#30340;&#20179;&#24211;&#21517;&#31216;:&#26631;&#31614;}</code></pre><p>&#20363;&#22914;&#65292;&#20551;&#35774;&#20320;&#26377;&#19968;&#20010;&#36816;&#34892;&#20013;&#30340;&#23481;&#22120; <code>my_container</code>&#65292;&#20320;&#24819;&#23558;&#23427;&#21046;&#20316;&#25104;&#19968;&#20010;&#21517;&#20026; <code>my_image</code> &#30340;&#26032;&#38236;&#20687;&#65292;&#20320;&#21487;&#20197;&#25191;&#34892;&#65306;</p><pre><code class="language-bash">docker commit linux linux:114</code></pre><h3 id="ff550da6ff8b3a7be570ed9475b5c879">&#31532;&#20108;&#27493; &#23558;&#23548;&#20986;&#30340;&#38236;&#20687;&#20445;&#23384;&#20026;&#24402;&#26723;&#25991;&#20214;</h3><p>&#20351;&#29992; <code>docker save</code> &#21629;&#20196;&#21487;&#20197;&#23558;&#38236;&#20687;&#20445;&#23384;&#20026;&#24402;&#26723;&#25991;&#20214;&#12290;</p><pre><code class="language-bash"># gzip &#34920;&#31034;&#23548;&#20986;&#26102;&#23545;&#24402;&#26723;&#25991;&#20214;&#36827;&#34892;&#21387;&#32553;
 
-$ docker save {镜像名} | gzip &gt; {归档文件名}.tar.gz
+$ docker save {&#38236;&#20687;&#21517;} | gzip &gt; {&#24402;&#26723;&#25991;&#20214;&#21517;}.tar.gz
 
-# 备份 linux 镜像
+# &#22791;&#20221; linux &#38236;&#20687;
 
-docker save linux:114 | gzip &gt; linux114.tar.gz</code></pre>
-<p>然后我们将 {归档文件名}.tar.gz 文件复制到要存储的位置</p>
+docker save linux:114 | gzip &gt; linux114.tar.gz</code></pre><p>&#28982;&#21518;&#25105;&#20204;&#23558; {&#24402;&#26723;&#25991;&#20214;&#21517;}.tar.gz &#25991;&#20214;&#22797;&#21046;&#21040;&#35201;&#23384;&#20648;&#30340;&#20301;&#32622;</p>
+
 			</div>
 </div>
 

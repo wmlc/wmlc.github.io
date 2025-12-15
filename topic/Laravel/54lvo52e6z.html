@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -414,11 +414,7 @@ var _hmt = _hmt || [];
 <li><a href="54lvo52e6z.html#895e732767e61ec2a610dc9f1b0d74fd">1、server.php</a></li>
 <li><a href="54lvo52e6z.html#29f6b0aea84dbe580040a9c433caf392">2、start.php</a></li>
 <li><a href="54lvo52e6z.html#4331412dda83c19e1c382541f8b1a215">3、服务命令</a></li>
-</ul><p>项目地址 <a href="https://github.com/joanhey/AdapterMan">https://github.com/joanhey/AdapterMan</a></p>
-<p>测试有问题，主要集中于 session 上，暂不可用，此处仅记录下代码修改点</p>
-<p>在项目根目录下新增 server.php 和 start.php</p>
-<h2 id="895e732767e61ec2a610dc9f1b0d74fd">1、server.php</h2>
-<pre><code class="language-php"> &lt;?php
+</ul><?xml encoding="UTF-8"><p>&#39033;&#30446;&#22320;&#22336; <a href="https://github.com/joanhey/AdapterMan" target="_blank" rel="noopener noreferrer">https://github.com/joanhey/AdapterMan</a></p><p>&#27979;&#35797;&#26377;&#38382;&#39064;&#65292;&#20027;&#35201;&#38598;&#20013;&#20110; session &#19978;&#65292;&#26242;&#19981;&#21487;&#29992;&#65292;&#27492;&#22788;&#20165;&#35760;&#24405;&#19979;&#20195;&#30721;&#20462;&#25913;&#28857;</p><p>&#22312;&#39033;&#30446;&#26681;&#30446;&#24405;&#19979;&#26032;&#22686; server.php &#21644; start.php</p><h2 id="895e732767e61ec2a610dc9f1b0d74fd">1&#12289;server.php</h2><pre><code class="language-php"> &lt;?php
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -428,7 +424,7 @@ use \Workerman\Events\EventInterface;
 
 Adapterman::init();
 
-# 命令传参解析
+# &#21629;&#20196;&#20256;&#21442;&#35299;&#26512;
 $config = paramsAnalysis();
 
 $http_worker = new Worker('http://' . $config['host'] . ':' . $config['port']);
@@ -444,8 +440,8 @@ $http_worker-&gt;onWorkerStart = static function($http_worker) use ($config){
     require __DIR__ . '/start.php';
 
     /*********************************************
-     * 监控文件更新并自动 reload workerman
-     * 安装inotify扩展
+     * &#30417;&#25511;&#25991;&#20214;&#26356;&#26032;&#24182;&#33258;&#21160; reload workerman
+     * &#23433;&#35013;inotify&#25193;&#23637;
      *********************************************/
     if (!Worker::$daemonize &amp;&amp; $config['port'] == '8020') {
         if (!extension_loaded('inotify')) {
@@ -454,7 +450,7 @@ $http_worker-&gt;onWorkerStart = static function($http_worker) use ($config){
         }
         global $monitor_dir, $monitor_files;
 
-        // 监控的目录，默认是Applications
+        // &#30417;&#25511;&#30340;&#30446;&#24405;&#65292;&#40664;&#35748;&#26159;Applications
         $monitor_dir = [
             realpath(__DIR__ . '/Modules/'),
             realpath(__DIR__ . '/app/'),
@@ -464,27 +460,27 @@ $http_worker-&gt;onWorkerStart = static function($http_worker) use ($config){
             realpath(__DIR__ . '/resources/'),
             realpath(__DIR__ . '/routes/'),
         ];
-        // 所有被监控的文件，key为inotify id
+        // &#25152;&#26377;&#34987;&#30417;&#25511;&#30340;&#25991;&#20214;&#65292;key&#20026;inotify id
         $monitor_files = [realpath(__DIR__ . '/.env')];
-        // 初始化inotify句柄
+        // &#21021;&#22987;&#21270;inotify&#21477;&#26564;
         $http_worker-&gt;inotifyFd = inotify_init();
-        // 设置为非阻塞
+        // &#35774;&#32622;&#20026;&#38750;&#38459;&#22622;
         stream_set_blocking($http_worker-&gt;inotifyFd, 0);
-        // 递归遍历目录里面的文件
+        // &#36882;&#24402;&#36941;&#21382;&#30446;&#24405;&#37324;&#38754;&#30340;&#25991;&#20214;
         foreach ($monitor_dir as $val) {
             $dir_iterator = new RecursiveDirectoryIterator($val);
             $iterator = new RecursiveIteratorIterator($dir_iterator);
             foreach ($iterator as $file) {
-                // 只监控php文件
+                // &#21482;&#30417;&#25511;php&#25991;&#20214;
                 if (pathinfo($file, PATHINFO_EXTENSION) != 'php') {
                     continue;
                 }
-                // 把文件加入inotify监控，这里只监控了IN_MODIFY文件更新事件
+                // &#25226;&#25991;&#20214;&#21152;&#20837;inotify&#30417;&#25511;&#65292;&#36825;&#37324;&#21482;&#30417;&#25511;&#20102;IN_MODIFY&#25991;&#20214;&#26356;&#26032;&#20107;&#20214;
                 $wd = inotify_add_watch($http_worker-&gt;inotifyFd, $file, IN_MODIFY);
                 $monitor_files[$wd] = $file;
             }
         }
-        // 监控inotify句柄可读事件
+        // &#30417;&#25511;inotify&#21477;&#26564;&#21487;&#35835;&#20107;&#20214;
         Worker::$globalEvent-&gt;add($http_worker-&gt;inotifyFd, EventInterface::EV_READ, 'check_files_change');
     }
 };
@@ -497,7 +493,7 @@ $http_worker-&gt;onMessage = static function($connection, $request){
 Worker::runAll();
 
 /**
- * 命令参数解析
+ * &#21629;&#20196;&#21442;&#25968;&#35299;&#26512;
  * User: wangmaolin
  * DateTime: 2023/8/22 16:57
  * @return array
@@ -509,7 +505,7 @@ function paramsAnalysis(): array
         'port' =&gt; 8020,
         'host' =&gt; '127.0.0.1',
         'workers' =&gt; cpu_count() * 3,
-        'name' =&gt; '默认项目名',
+        'name' =&gt; '&#40664;&#35748;&#39033;&#30446;&#21517;',
     ];
     foreach ($args as $arg) {
         if (str_starts_with($arg, '--port=')) {
@@ -529,7 +525,7 @@ function paramsAnalysis(): array
 }
 
 /**
- * 监听文件变化，重启服务
+ * &#30417;&#21548;&#25991;&#20214;&#21464;&#21270;&#65292;&#37325;&#21551;&#26381;&#21153;
  * User: wangmaolin
  * DateTime: 2023/8/22 17:46
  * @param $inotify_fd
@@ -537,26 +533,24 @@ function paramsAnalysis(): array
 function check_files_change($inotify_fd)
 {
     global $monitor_files;
-    // 读取有哪些文件事件
+    // &#35835;&#21462;&#26377;&#21738;&#20123;&#25991;&#20214;&#20107;&#20214;
     $events = inotify_read($inotify_fd);
     if ($events) {
-        // 检查哪些文件被更新了
+        // &#26816;&#26597;&#21738;&#20123;&#25991;&#20214;&#34987;&#26356;&#26032;&#20102;
         foreach ($events as $ev) {
-            // 更新的文件
+            // &#26356;&#26032;&#30340;&#25991;&#20214;
             $file = $monitor_files[$ev['wd']];
             //          echo $file . " update and reload\n";
             unset($monitor_files[$ev['wd']]);
-            // 需要把文件重新加入监控
+            // &#38656;&#35201;&#25226;&#25991;&#20214;&#37325;&#26032;&#21152;&#20837;&#30417;&#25511;
             $wd = inotify_add_watch($inotify_fd, $file, IN_MODIFY);
             $monitor_files[$wd] = $file;
         }
-        // 给父进程也就是主进程发送reload信号
+        // &#32473;&#29238;&#36827;&#31243;&#20063;&#23601;&#26159;&#20027;&#36827;&#31243;&#21457;&#36865;reload&#20449;&#21495;
         posix_kill(posix_getppid(), SIGUSR1);
     }
 }
-</code></pre>
-<h2 id="29f6b0aea84dbe580040a9c433caf392">2、start.php</h2>
-<pre><code class="language-php"> &lt;?php
+</code></pre><h2 id="29f6b0aea84dbe580040a9c433caf392">2&#12289;start.php</h2><pre><code class="language-php"> &lt;?php
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
@@ -620,14 +614,13 @@ function run()
 
     return ob_get_clean();
 }
-</code></pre>
-<h2 id="4331412dda83c19e1c382541f8b1a215">3、服务命令</h2>
-<pre><code class="language-bash"> # 启动
- /usr/local/php/bin/php /www/test/current/server.php  start --port=8020 --name=项目名
+</code></pre><h2 id="4331412dda83c19e1c382541f8b1a215">3&#12289;&#26381;&#21153;&#21629;&#20196;</h2><pre><code class="language-bash"> # &#21551;&#21160;
+ /usr/local/php/bin/php /www/test/current/server.php  start --port=8020 --name=&#39033;&#30446;&#21517;
 
- # 查看状态
+ # &#26597;&#30475;&#29366;&#24577;
   /usr/local/php/bin/php /www/test/current/server.php  status --port=8020
-</code></pre><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> https://github.com/joanhey/AdapterMan: <i><a href="https://github.com/joanhey/AdapterMan" target="_blank">https://github.com/joanhey/AdapterMan</a></i><br></p>
+</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> https://github.com/joanhey/AdapterMan: <i><a href="https://github.com/joanhey/AdapterMan" target="_blank">https://github.com/joanhey/AdapterMan</a></i><br></p>
 			</div>
 </div>
 

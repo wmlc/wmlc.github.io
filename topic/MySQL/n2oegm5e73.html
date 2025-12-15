@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -389,17 +389,20 @@ var _hmt = _hmt || [];
 	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
 		<h1>MySQL 查询中 where in 如何保持顺序</h1><ul>
 <li><a href="n2oegm5e73.html#863c81928cd1b28823cb59c8eb915d88">Laravel 实例</a></li>
-</ul><pre><code class="language-mysql">select * from table_name where id in ()</code></pre>
-<p>如上sql语句，MySQL会自动按主键自增排序，要是按IN中给定的顺序排序，写法如下：</p>
-<pre><code class="language-mysql">SELECT * from `models` where `id` in (26612,26611,26610) order by field(id,26612,26611,26610);</code></pre>
-<h2 id="863c81928cd1b28823cb59c8eb915d88">Laravel 实例</h2>
-<pre><code class="language-php">$saves = VisitHistory::where('user_id', $user-&gt;id)
+</ul><?xml encoding="UTF-8"><pre><code class="language-sql">select * from table_name where id in ()</code></pre><p>&#22914;&#19978;sql&#35821;&#21477;&#65292;MySQL&#20250;&#33258;&#21160;&#25353;&#20027;&#38190;&#33258;&#22686;&#25490;&#24207;&#65292;&#35201;&#26159;&#25353;IN&#20013;&#32473;&#23450;&#30340;&#39034;&#24207;&#25490;&#24207;&#65292;&#20889;&#27861;&#22914;&#19979;&#65306;</p><pre><code class="language-sql">SELECT * from `models` where `id` in (26612,26611,26610) order by field(id,26612,26611,26610);
+
+SELECT * from `models` order by FIELD(`type`, 'common','password')&#65307;// &#23545;&#20110;&#23383;&#31526;&#20018;&#31867;&#22411;&#35201;&#29992;&#21333;&#24341;&#21495;&#21253;&#36215;&#26469;</code></pre><h2 id="863c81928cd1b28823cb59c8eb915d88">Laravel &#23454;&#20363;</h2><pre><code class="language-php">$saves = VisitHistory::where('user_id', $user-&gt;id)
     -&gt;orderBy('id', 'desc')
     -&gt;offset($offset)
     -&gt;limit($limit)
     -&gt;get();
 
 $ids = $saves-&gt;pluck('post_id')-&gt;toArray();
+
+// &#23545;&#20110;&#23383;&#31526;&#20018;&#31867;&#22411;&#30340;&#38656;&#35201;&#25191;&#34892;&#19979;&#38754;&#26041;&#27861;&#65292;&#23558;&#27599;&#20010;&#20540;&#29992;&#21333;&#24341;&#21495;&#21253;&#36215;&#26469;
+//$ids = array_map(function ($item) {
+//  return "'$item'";
+//}, ids);
 
 $ids_ordered = implode(',', $ids);
 
@@ -408,6 +411,7 @@ $items = Post::with('user:id,name,is_master,avatar_url')
     -&gt;where('status', 1)
     -&gt;orderByRaw(DB::raw("FIELD(id, $ids_ordered)"))
     -&gt;get();</code></pre>
+
 			</div>
 </div>
 

@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -390,33 +390,22 @@ var _hmt = _hmt || [];
 		<h1>MySql 5.7 报错 sql_mode=only_full_group_by 问题解决方法</h1><ul>
 <li><a href="54lvo36v6z.html#e85da0654a47e3d8417eb0076f2438c7">关闭方法如下</a></li>
 <li><a href="54lvo36v6z.html#43b48b0fe6799affd4fd2d05aced3e79">解决方法二</a></li>
-</ul><p>mysql 5.7 以上版本中sql_mode默认开启了 ONLY_FULL_GROUP_BY，ONLY_FULL_GROUP_BY的语义就是确定select target list中的所有列的值都是明确语义，简单的说来，在此模式下，target list中的值要么是来自于聚合函数（sum、avg、max等）的结果，要么是来自于group by list中的表达式的值；但在老代码中有很多group by 查询所有字段的，所以需要关闭该模式</p>
-<h2 id="e85da0654a47e3d8417eb0076f2438c7">关闭方法如下</h2>
-<p>1、查看sql_mode</p>
-<pre><code class="language-mysql">
+</ul><?xml encoding="UTF-8"><p>mysql 5.7 &#20197;&#19978;&#29256;&#26412;&#20013;sql_mode&#40664;&#35748;&#24320;&#21551;&#20102; ONLY_FULL_GROUP_BY&#65292;ONLY_FULL_GROUP_BY&#30340;&#35821;&#20041;&#23601;&#26159;&#30830;&#23450;select target list&#20013;&#30340;&#25152;&#26377;&#21015;&#30340;&#20540;&#37117;&#26159;&#26126;&#30830;&#35821;&#20041;&#65292;&#31616;&#21333;&#30340;&#35828;&#26469;&#65292;&#22312;&#27492;&#27169;&#24335;&#19979;&#65292;target list&#20013;&#30340;&#20540;&#35201;&#20040;&#26159;&#26469;&#33258;&#20110;&#32858;&#21512;&#20989;&#25968;&#65288;sum&#12289;avg&#12289;max&#31561;&#65289;&#30340;&#32467;&#26524;&#65292;&#35201;&#20040;&#26159;&#26469;&#33258;&#20110;group by list&#20013;&#30340;&#34920;&#36798;&#24335;&#30340;&#20540;&#65307;&#20294;&#22312;&#32769;&#20195;&#30721;&#20013;&#26377;&#24456;&#22810;group by &#26597;&#35810;&#25152;&#26377;&#23383;&#27573;&#30340;&#65292;&#25152;&#20197;&#38656;&#35201;&#20851;&#38381;&#35813;&#27169;&#24335;</p><h2 id="e85da0654a47e3d8417eb0076f2438c7">&#20851;&#38381;&#26041;&#27861;&#22914;&#19979;</h2><p>1&#12289;&#26597;&#30475;sql_mode</p><pre><code class="language-mysql">
 select @@global.sql_mode
 
-# 得到结果
+# &#24471;&#21040;&#32467;&#26524;
 ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER
-,NO_ENGINE_SUBSTITUTION</code></pre>
-<p>2、去掉ONLY_FULL_GROUP_BY，重新设置值。</p>
-<pre><code class="   language-php"># 将上面结果中 `ONLY_FULL_GROUP_BY,` 去掉，配置到mysql配置文件中，配置方式如下
+,NO_ENGINE_SUBSTITUTION</code></pre><p>2&#12289;&#21435;&#25481;ONLY_FULL_GROUP_BY&#65292;&#37325;&#26032;&#35774;&#32622;&#20540;&#12290;</p><pre><code class="   language-php"># &#23558;&#19978;&#38754;&#32467;&#26524;&#20013; `ONLY_FULL_GROUP_BY,` &#21435;&#25481;&#65292;&#37197;&#32622;&#21040;mysql&#37197;&#32622;&#25991;&#20214;&#20013;&#65292;&#37197;&#32622;&#26041;&#24335;&#22914;&#19979;
 vim /etc/my.cnf
 
 [mysqld]
 sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER
 ,NO_ENGINE_SUBSTITUTION
-</code></pre>
-<p>3、重启数据库即可</p>
-<h2 id="43b48b0fe6799affd4fd2d05aced3e79">解决方法二</h2>
-<p>MySQL提供了any_value()函数来抑制ONLY_FULL_GROUP_BY值被拒绝</p>
-<p>在sql查询语句中不需要group by的字段上使用any_value()函数</p>
-<p>实例：</p>
-<pre><code class="language-sql"># 在不在GROUP BY中的字段上添加any_value方法
+</code></pre><p>3&#12289;&#37325;&#21551;&#25968;&#25454;&#24211;&#21363;&#21487;</p><h2 id="43b48b0fe6799affd4fd2d05aced3e79">&#35299;&#20915;&#26041;&#27861;&#20108;</h2><p>MySQL&#25552;&#20379;&#20102;any_value()&#20989;&#25968;&#26469;&#25233;&#21046;ONLY_FULL_GROUP_BY&#20540;&#34987;&#25298;&#32477;</p><p>&#22312;sql&#26597;&#35810;&#35821;&#21477;&#20013;&#19981;&#38656;&#35201;group by&#30340;&#23383;&#27573;&#19978;&#20351;&#29992;any_value()&#20989;&#25968;</p><p>&#23454;&#20363;&#65306;</p><pre><code class="language-sql"># &#22312;&#19981;&#22312;GROUP BY&#20013;&#30340;&#23383;&#27573;&#19978;&#28155;&#21152;any_value&#26041;&#27861;
 
 SELECT cust_id, ANY_VALUE(cust_last_name), SUM(amount_sold) FROM customers GROUP BY cust_id;
-</code></pre>
-<p>any_value()会选择被分到同一组的数据里第一条数据的指定列值作为返回数据</p>
+</code></pre><p>any_value()&#20250;&#36873;&#25321;&#34987;&#20998;&#21040;&#21516;&#19968;&#32452;&#30340;&#25968;&#25454;&#37324;&#31532;&#19968;&#26465;&#25968;&#25454;&#30340;&#25351;&#23450;&#21015;&#20540;&#20316;&#20026;&#36820;&#22238;&#25968;&#25454;</p>
+
 			</div>
 </div>
 

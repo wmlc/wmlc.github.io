@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -396,102 +396,63 @@ var _hmt = _hmt || [];
 <li><a href="k3dyk7zvl0.html#1704624d8b41b8e5fd59b26a057b4259">关于show profile的结论</a></li>
 </ul></li>
 <li><a href="k3dyk7zvl0.html#25f9c7fa3b50aebe5125112ac1187777">总结</a></li>
-</ul><h2 id="5199cbb3ae6b602d1e9f61bd5795051c">1、通过慢查询日志 slow.log 定位执行效率低的SQL</h2>
-<p><a href="https://wangmaolin.net/article/8loynxoez3.html#mysql-%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97">MySQL开启慢查询日志</a>，跑一段时间后拿日志中的慢查询语句进行 explain 分析。</p>
-<h2 id="4ed4abf77ab86b1505c21c1b06a077ef">2、通过 explain 分析低效 SQL 语句的执行计划</h2>
-<p>查询到效率低的 sql 语句后，可以通过 explain 分析低效 SQL 的执行计划。看是否可以基于索引查询。</p>
-<pre><code class="language-sql">mysql&gt; explain select * from testtb ;
+</ul><?xml encoding="UTF-8"><h2 id="5199cbb3ae6b602d1e9f61bd5795051c">1&#12289;&#36890;&#36807;&#24930;&#26597;&#35810;&#26085;&#24535; slow.log &#23450;&#20301;&#25191;&#34892;&#25928;&#29575;&#20302;&#30340;SQL</h2><p><a href="https://wangmaolin.net/article/8loynxoez3.html#mysql-%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97" target="_blank">MySQL&#24320;&#21551;&#24930;&#26597;&#35810;&#26085;&#24535;</a>&#65292;&#36305;&#19968;&#27573;&#26102;&#38388;&#21518;&#25343;&#26085;&#24535;&#20013;&#30340;&#24930;&#26597;&#35810;&#35821;&#21477;&#36827;&#34892; explain &#20998;&#26512;&#12290;</p><h2 id="4ed4abf77ab86b1505c21c1b06a077ef">2&#12289;&#36890;&#36807; explain &#20998;&#26512;&#20302;&#25928; SQL &#35821;&#21477;&#30340;&#25191;&#34892;&#35745;&#21010;</h2><p>&#26597;&#35810;&#21040;&#25928;&#29575;&#20302;&#30340; sql &#35821;&#21477;&#21518;&#65292;&#21487;&#20197;&#36890;&#36807; explain &#20998;&#26512;&#20302;&#25928; SQL &#30340;&#25191;&#34892;&#35745;&#21010;&#12290;&#30475;&#26159;&#21542;&#21487;&#20197;&#22522;&#20110;&#32034;&#24341;&#26597;&#35810;&#12290;</p><pre><code class="language-sql">mysql&gt; explain select * from testtb ;
 +----+-------------+---------+------------+------+---------------+------+---------+------+------+----------+-------+
 | id | select_type | table   | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra |
 +----+-------------+---------+------------+------+---------------+------+---------+------+------+----------+-------+
 |  1 | SIMPLE      | testtb | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   92 |      100 | NULL  |
 +----+-------------+---------+------------+------+---------------+------+---------+------+------+----------+-------+
 1 row in set
-</code></pre>
-<p>各字段说明：</p>
+</code></pre><p>&#21508;&#23383;&#27573;&#35828;&#26126;&#65306;</p><ul>
+<li>
+<p>select_type: &#34920;&#31034;select &#30340;&#31867;&#22411;&#65292;&#24120;&#35265;&#21462;&#20540;&#26377;SIMPLE(&#31616;&#21333;&#34920;&#65292;&#21363;&#19981;&#20351;&#29992;&#34920;&#36830;&#25509;&#25110;&#32773;&#23376;&#26597;&#35810;)&#12289;PRIMARY&#12289;UNION&#12289;SUBQUERY&#31561;&#12290;</p>
+</li>
+<li>
+<p>table: &#36755;&#20986;&#32467;&#26524;&#38598;&#30340;&#34920;</p>
+</li>
+<li>
+<p>type: &#34920;&#31034;Mysql &#30340;&#35775;&#38382;&#26041;&#24335;(&#20174;&#19978;&#21040;&#19979;&#20381;&#27425;&#21464;&#24555;)</p>
 <ul>
 <li>
-<p>select_type: 表示select 的类型，常见取值有SIMPLE(简单表，即不使用表连接或者子查询)、PRIMARY、UNION、SUBQUERY等。</p>
+<p>type=all&#65292;&#20840;&#34920;&#25195;&#25551;&#65292;Mysql &#36941;&#21382;&#20840;&#34920;&#26469;&#25214;&#21040;&#21305;&#37197;&#30340;&#34892;</p>
 </li>
 <li>
-<p>table: 输出结果集的表</p>
+<p>type=index&#65292;Mysql &#36941;&#21382;&#25972;&#20010;&#32034;&#24341;&#26469;&#25214;&#21040;&#21305;&#37197;&#30340;&#34892;</p>
 </li>
 <li>
-<p>type: 表示Mysql 的访问方式(从上到下依次变快)</p>
-<ul>
-<li>
-<p>type=all，全表扫描，Mysql 遍历全表来找到匹配的行</p>
+<p>type=range&#65292;&#32034;&#24341;&#33539;&#22260;&#25195;&#25551;</p>
 </li>
 <li>
-<p>type=index，Mysql 遍历整个索引来找到匹配的行</p>
+<p>type=ref&#65292;&#20351;&#29992;&#38750;&#21807;&#19968;&#32034;&#24341;&#25195;&#25551;&#25110;&#21807;&#19968;&#32034;&#24341;&#30340;&#21069;&#32512;&#25195;&#25551;</p>
 </li>
 <li>
-<p>type=range，索引范围扫描</p>
+<p>type=eq_ref&#65292;&#20351;&#29992;&#21807;&#19968;&#32034;&#24341;</p>
 </li>
 <li>
-<p>type=ref，使用非唯一索引扫描或唯一索引的前缀扫描</p>
+<p>type=const/system&#65292;&#21333;&#34920;&#20013;&#26368;&#22810;&#21482;&#26377;&#19968;&#20010;&#21305;&#37197;&#34892;</p>
 </li>
 <li>
-<p>type=eq_ref，使用唯一索引</p>
-</li>
-<li>
-<p>type=const/system，单表中最多只有一个匹配行</p>
-</li>
-<li>
-<p>type=NUll，MySQL 不用访问表或者索引就能直接得到结果</p>
+<p>type=NUll&#65292;MySQL &#19981;&#29992;&#35775;&#38382;&#34920;&#25110;&#32773;&#32034;&#24341;&#23601;&#33021;&#30452;&#25509;&#24471;&#21040;&#32467;&#26524;</p>
 </li>
 </ul>
 </li>
 <li>
-<p>possible_keys: 表示查询时可能用到的索引</p>
+<p>possible_keys: &#34920;&#31034;&#26597;&#35810;&#26102;&#21487;&#33021;&#29992;&#21040;&#30340;&#32034;&#24341;</p>
 </li>
 <li>
-<p>key: 表示实际用到的索引</p>
+<p>key: &#34920;&#31034;&#23454;&#38469;&#29992;&#21040;&#30340;&#32034;&#24341;</p>
 </li>
 <li>
-<p>key_len: 使用到索引字段的长度</p>
+<p>key_len: &#20351;&#29992;&#21040;&#32034;&#24341;&#23383;&#27573;&#30340;&#38271;&#24230;</p>
 </li>
 <li>
-<p>rows: 扫描行的数量</p>
+<p>rows: &#25195;&#25551;&#34892;&#30340;&#25968;&#37327;</p>
 </li>
 <li>
-<p>Extra: 执行情况的说明和描述。</p>
+<p>Extra: &#25191;&#34892;&#24773;&#20917;&#30340;&#35828;&#26126;&#21644;&#25551;&#36848;&#12290;</p>
 </li>
-</ul>
-<h2 id="ccaf37d723a1e2628db1894746f86c9d">3、通过 show profile 对慢 sql 进行更详细的分析</h2>
-<p>show profile 是 mysql 提供的可以用来分析当前回话中语句执行的资源消耗情况的工具，提供了比 explain 更加细粒度的 sql 执行计划分析和sql优化；</p>
-<p>可以让我们了解到SQL到底慢在哪个环节。</p>
-<p>默认情况下，profile 参数处于关闭状态，并保持最近15次的运行结果；</p>
-<h3 id="867ac76e09b83923b7388dfd5b60c86b">使用步骤</h3>
-<p>1、首先查看是否支持show profile，如果支持，开启profiling,如下是否支持使用</p>
-<pre><code class="language-sql">show variables like 'profiling';</code></pre>
-<p><img src="../../storage/images/2023/02/22/mUwmI91sXMW054gl3RNygIvMz5eLzNbhjju2mgv5.png" alt="" /></p>
-<p>2、开启功能，默认是关闭，使用前需要开启；</p>
-<pre><code class="language-sql">set profiling = 1;</code></pre>
-<p><img src="../../storage/images/2023/02/22/FUAHkzPJgqxBQmCGHO5tmQojXgayvGXQonbDrgKB.png" alt="" /></p>
-<p>3、运行要分析的慢 sql</p>
-<p>4、查看结果</p>
-<pre><code class="language-sql">show profiles;</code></pre>
-<p><img src="../../storage/images/2023/02/22/D9VwHO3B5feMmOkjgwKU9N8CLV0Sh73VK9fNterx.png" alt="最近15条执行的 sql 语句" /></p>
-<p>5、诊断sql， show profile cpu, block io for query 上一步前面的问题sql数字号码； </p>
-<p>查看一条sql的完整生命周期 </p>
-<pre><code class="language-sql">show profile cpu, block io for query 28;</code></pre>
-<p><img src="../../storage/images/2023/02/22/Uj9jaTAbWbmk4NyQ0xIVys4sY1lpvNd9PjhAJBr4.png" alt="" /></p>
-<p>补充： 不仅仅可以查看 cpu, block io ， 还可以查看如下类型的信息；</p>
-<p><img src="../../storage/images/2023/02/22/sCosYOK86OPypAadIy7fiBEATSaq2iGpTLmzDo4k.png" alt="" /></p>
-<h3 id="1704624d8b41b8e5fd59b26a057b4259">关于show profile的结论</h3>
-<p><code>show profile cpu, block io for query 3;</code> 中的 <code>status</code> 中出现以下4种中的一种或几种，则sql执行效率较差，需要优化； </p>
-<p>1、<code>converting heap to myisam</code> 查询结果太大， 内存都不够用了，往磁盘上搬；</p>
-<p>2、<code>creating tmp table</code> 创建临时表： 拷贝数据到临时表，用完再删除；</p>
-<p>3、<code>copying to tmp table on disk</code>， 把内存中临时表复制到磁盘，危险</p>
-<p>4、<code>locked</code> ：锁住；</p>
-<h2 id="25f9c7fa3b50aebe5125112ac1187777">总结</h2>
-<p>通过以上三步基本就可以很好的定位和分析 SQL 执行效率方法。</p>
-<p>除以上三种之外还可以：</p>
-<p>1、通过show status查询SQL执行频率</p>
-<p>2、使用参数 show processlist：查询MySQL线程状态、是否锁表</p>
-<p>3、使用 trace 查看优化器如何选择执行计划</p>
-<p>这三种很少用，不再说明</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> MySQL开启慢查询日志: <i><a href="https://wangmaolin.net/article/8loynxoez3.html#mysql-%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97" target="_blank">//wangmaolin.net/article/8loynxoez3.html#mysql-%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97</a></i><br></p>
+</ul><h2 id="ccaf37d723a1e2628db1894746f86c9d">3&#12289;&#36890;&#36807; show profile &#23545;&#24930; sql &#36827;&#34892;&#26356;&#35814;&#32454;&#30340;&#20998;&#26512;</h2><p>show profile &#26159; mysql &#25552;&#20379;&#30340;&#21487;&#20197;&#29992;&#26469;&#20998;&#26512;&#24403;&#21069;&#22238;&#35805;&#20013;&#35821;&#21477;&#25191;&#34892;&#30340;&#36164;&#28304;&#28040;&#32791;&#24773;&#20917;&#30340;&#24037;&#20855;&#65292;&#25552;&#20379;&#20102;&#27604; explain &#26356;&#21152;&#32454;&#31890;&#24230;&#30340; sql &#25191;&#34892;&#35745;&#21010;&#20998;&#26512;&#21644;sql&#20248;&#21270;&#65307;</p><p>&#21487;&#20197;&#35753;&#25105;&#20204;&#20102;&#35299;&#21040;SQL&#21040;&#24213;&#24930;&#22312;&#21738;&#20010;&#29615;&#33410;&#12290;</p><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;profile &#21442;&#25968;&#22788;&#20110;&#20851;&#38381;&#29366;&#24577;&#65292;&#24182;&#20445;&#25345;&#26368;&#36817;15&#27425;&#30340;&#36816;&#34892;&#32467;&#26524;&#65307;</p><h3 id="867ac76e09b83923b7388dfd5b60c86b">&#20351;&#29992;&#27493;&#39588;</h3><p>1&#12289;&#39318;&#20808;&#26597;&#30475;&#26159;&#21542;&#25903;&#25345;show profile&#65292;&#22914;&#26524;&#25903;&#25345;&#65292;&#24320;&#21551;profiling,&#22914;&#19979;&#26159;&#21542;&#25903;&#25345;&#20351;&#29992;</p><pre><code class="language-sql">show variables like 'profiling';</code></pre><p><img src="../../storage/images/2023/02/22/mUwmI91sXMW054gl3RNygIvMz5eLzNbhjju2mgv5.png" alt=""></p><p>2&#12289;&#24320;&#21551;&#21151;&#33021;&#65292;&#40664;&#35748;&#26159;&#20851;&#38381;&#65292;&#20351;&#29992;&#21069;&#38656;&#35201;&#24320;&#21551;&#65307;</p><pre><code class="language-sql">set profiling = 1;</code></pre><p><img src="../../storage/images/2023/02/22/FUAHkzPJgqxBQmCGHO5tmQojXgayvGXQonbDrgKB.png" alt=""></p><p>3&#12289;&#36816;&#34892;&#35201;&#20998;&#26512;&#30340;&#24930; sql</p><p>4&#12289;&#26597;&#30475;&#32467;&#26524;</p><pre><code class="language-sql">show profiles;</code></pre><p><img src="../../storage/images/2023/02/22/D9VwHO3B5feMmOkjgwKU9N8CLV0Sh73VK9fNterx.png" alt="&#26368;&#36817;15&#26465;&#25191;&#34892;&#30340; sql &#35821;&#21477;"></p><p>5&#12289;&#35786;&#26029;sql&#65292; show profile cpu, block io for query &#19978;&#19968;&#27493;&#21069;&#38754;&#30340;&#38382;&#39064;sql&#25968;&#23383;&#21495;&#30721;&#65307; </p><p>&#26597;&#30475;&#19968;&#26465;sql&#30340;&#23436;&#25972;&#29983;&#21629;&#21608;&#26399; </p><pre><code class="language-sql">show profile cpu, block io for query 28;</code></pre><p><img src="../../storage/images/2023/02/22/Uj9jaTAbWbmk4NyQ0xIVys4sY1lpvNd9PjhAJBr4.png" alt=""></p><p>&#34917;&#20805;&#65306; &#19981;&#20165;&#20165;&#21487;&#20197;&#26597;&#30475; cpu, block io &#65292; &#36824;&#21487;&#20197;&#26597;&#30475;&#22914;&#19979;&#31867;&#22411;&#30340;&#20449;&#24687;&#65307;</p><p><img src="../../storage/images/2023/02/22/sCosYOK86OPypAadIy7fiBEATSaq2iGpTLmzDo4k.png" alt=""></p><h3 id="1704624d8b41b8e5fd59b26a057b4259">&#20851;&#20110;show profile&#30340;&#32467;&#35770;</h3><p><code>show profile cpu, block io for query 3;</code> &#20013;&#30340; <code>status</code> &#20013;&#20986;&#29616;&#20197;&#19979;4&#31181;&#20013;&#30340;&#19968;&#31181;&#25110;&#20960;&#31181;&#65292;&#21017;sql&#25191;&#34892;&#25928;&#29575;&#36739;&#24046;&#65292;&#38656;&#35201;&#20248;&#21270;&#65307; </p><p>1&#12289;<code>converting heap to myisam</code> &#26597;&#35810;&#32467;&#26524;&#22826;&#22823;&#65292; &#20869;&#23384;&#37117;&#19981;&#22815;&#29992;&#20102;&#65292;&#24448;&#30913;&#30424;&#19978;&#25644;&#65307;</p><p>2&#12289;<code>creating tmp table</code> &#21019;&#24314;&#20020;&#26102;&#34920;&#65306; &#25335;&#36125;&#25968;&#25454;&#21040;&#20020;&#26102;&#34920;&#65292;&#29992;&#23436;&#20877;&#21024;&#38500;&#65307;</p><p>3&#12289;<code>copying to tmp table on disk</code>&#65292; &#25226;&#20869;&#23384;&#20013;&#20020;&#26102;&#34920;&#22797;&#21046;&#21040;&#30913;&#30424;&#65292;&#21361;&#38505;</p><p>4&#12289;<code>locked</code> &#65306;&#38145;&#20303;&#65307;</p><h2 id="25f9c7fa3b50aebe5125112ac1187777">&#24635;&#32467;</h2><p>&#36890;&#36807;&#20197;&#19978;&#19977;&#27493;&#22522;&#26412;&#23601;&#21487;&#20197;&#24456;&#22909;&#30340;&#23450;&#20301;&#21644;&#20998;&#26512; SQL &#25191;&#34892;&#25928;&#29575;&#26041;&#27861;&#12290;</p><p>&#38500;&#20197;&#19978;&#19977;&#31181;&#20043;&#22806;&#36824;&#21487;&#20197;&#65306;</p><p>1&#12289;&#36890;&#36807;show status&#26597;&#35810;SQL&#25191;&#34892;&#39057;&#29575;</p><p>2&#12289;&#20351;&#29992;&#21442;&#25968; show processlist&#65306;&#26597;&#35810;MySQL&#32447;&#31243;&#29366;&#24577;&#12289;&#26159;&#21542;&#38145;&#34920;</p><p>3&#12289;&#20351;&#29992; trace &#26597;&#30475;&#20248;&#21270;&#22120;&#22914;&#20309;&#36873;&#25321;&#25191;&#34892;&#35745;&#21010;</p><p>&#36825;&#19977;&#31181;&#24456;&#23569;&#29992;&#65292;&#19981;&#20877;&#35828;&#26126;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> MySQL开启慢查询日志: <i><a href="https://wangmaolin.net/article/8loynxoez3.html#mysql-%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97" target="_blank">//wangmaolin.net/article/8loynxoez3.html#mysql-%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97</a></i><br></p>
 			</div>
 </div>
 

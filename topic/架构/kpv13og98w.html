@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -360,6 +360,7 @@
 <li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
 <li id="blog710"><a href="x3vo0qkvm1.html#blog710">服务器漏洞</a>
 <li id="blog859"><a href="qk94238vw1.html#blog859">项目服务隔离思路</a>
+<li id="blog932"><a href="xpv52m5v86.html#blog932">基于 Unicode 双向控制字符的 XSS 攻击</a>
 </ul>
 </li>
 <li>
@@ -419,13 +420,8 @@ var _hmt = _hmt || [];
 		<h1>基于文件前 N 个字节判断文件类型</h1><ul>
 <li><a href="kpv13og98w.html#b6724cffe9b1e39a5652a348831a4e0d">原理</a></li>
 <li><a href="kpv13og98w.html#b5ea48ffa7bb2fb652411427bd170557">代码示例</a></li>
-</ul><h2 id="b6724cffe9b1e39a5652a348831a4e0d">原理</h2>
-<p>有一些类型的文件，起始的几个字节内容都是固定的，根据这几个字节的内容就可以判断文件的类型，这几个字节也被称为&quot;魔数&quot;(magic number)，比如class文件的魔数就是&quot;CAFEBABE&quot;。</p>
-<p>因此可通过文件的魔数（前几个字节的特征码）推断 MIME 类型。</p>
-<p><a href="https://tool.lu/magicbytes/">常见文件魔术映射表</a></p>
-<h2 id="b5ea48ffa7bb2fb652411427bd170557">代码示例</h2>
-<pre><code class="language-php">/**
- * 获取文件格式（优先读取文件头）
+</ul><?xml encoding="UTF-8"><h2 id="b6724cffe9b1e39a5652a348831a4e0d">&#21407;&#29702;</h2><p>&#26377;&#19968;&#20123;&#31867;&#22411;&#30340;&#25991;&#20214;&#65292;&#36215;&#22987;&#30340;&#20960;&#20010;&#23383;&#33410;&#20869;&#23481;&#37117;&#26159;&#22266;&#23450;&#30340;&#65292;&#26681;&#25454;&#36825;&#20960;&#20010;&#23383;&#33410;&#30340;&#20869;&#23481;&#23601;&#21487;&#20197;&#21028;&#26029;&#25991;&#20214;&#30340;&#31867;&#22411;&#65292;&#36825;&#20960;&#20010;&#23383;&#33410;&#20063;&#34987;&#31216;&#20026;"&#39764;&#25968;"(magic number)&#65292;&#27604;&#22914;class&#25991;&#20214;&#30340;&#39764;&#25968;&#23601;&#26159;"CAFEBABE"&#12290;</p><p>&#22240;&#27492;&#21487;&#36890;&#36807;&#25991;&#20214;&#30340;&#39764;&#25968;&#65288;&#21069;&#20960;&#20010;&#23383;&#33410;&#30340;&#29305;&#24449;&#30721;&#65289;&#25512;&#26029; MIME &#31867;&#22411;&#12290;</p><p><a href="https://tool.lu/magicbytes/" target="_blank" rel="noopener noreferrer">&#24120;&#35265;&#25991;&#20214;&#39764;&#26415;&#26144;&#23556;&#34920;</a></p><h2 id="b5ea48ffa7bb2fb652411427bd170557">&#20195;&#30721;&#31034;&#20363;</h2><pre><code class="language-php">/**
+ * &#33719;&#21462;&#25991;&#20214;&#26684;&#24335;&#65288;&#20248;&#20808;&#35835;&#21462;&#25991;&#20214;&#22836;&#65289;
  * @param string $filePath
  * @param int $readBytes
  * @return string
@@ -435,20 +431,20 @@ public function getFileFormatByHead(string $filePath, int $readBytes = 256): str
     try {
         $header = null;
 
-        // 判断是否远程文件
+        // &#21028;&#26029;&#26159;&#21542;&#36828;&#31243;&#25991;&#20214;
         if (preg_match('/^https?:\/\//i', $filePath)) {
-            // 远程文件，使用 Range 请求
+            // &#36828;&#31243;&#25991;&#20214;&#65292;&#20351;&#29992; Range &#35831;&#27714;
             $opts = [
                 "http" =&gt; [
                     "method" =&gt; "GET",
                     "header" =&gt; "Range: bytes=0-" . ($readBytes - 1) . "\r\n",
-                    "timeout" =&gt; 5, // 超时时间，避免卡死
+                    "timeout" =&gt; 5, // &#36229;&#26102;&#26102;&#38388;&#65292;&#36991;&#20813;&#21345;&#27515;
                 ]
             ];
             $context = stream_context_create($opts);
             $header = @file_get_contents($filePath, false, $context);
         } else {
-            // 本地文件，直接读取
+            // &#26412;&#22320;&#25991;&#20214;&#65292;&#30452;&#25509;&#35835;&#21462;
             $fp = @fopen($filePath, 'rb');
             if ($fp) {
                 $header = fread($fp, $readBytes);
@@ -457,7 +453,7 @@ public function getFileFormatByHead(string $filePath, int $readBytes = 256): str
         }
 
         if ($header) {
-            // MIME 检测
+            // MIME &#26816;&#27979;
             $fInfo = finfo_open(FILEINFO_MIME_TYPE);
             $mimeType = finfo_buffer($fInfo, $header);
             finfo_close($fInfo);
@@ -468,14 +464,15 @@ public function getFileFormatByHead(string $filePath, int $readBytes = 256): str
         }
 
     } catch (Throwable $e) {
-        // 打印调试日志
+        // &#25171;&#21360;&#35843;&#35797;&#26085;&#24535;
         dp($e-&gt;getMessage(), $e-&gt;getTraceAsString());
     }
 
-    // 兜底：用扩展名推测
+    // &#20828;&#24213;&#65306;&#29992;&#25193;&#23637;&#21517;&#25512;&#27979;
     return strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 }
-</code></pre><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 常见文件魔术映射表: <i><a href="https://tool.lu/magicbytes/" target="_blank">https://tool.lu/magicbytes/</a></i><br></p>
+</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 常见文件魔术映射表: <i><a href="https://tool.lu/magicbytes/" target="_blank">https://tool.lu/magicbytes/</a></i><br></p>
 			</div>
 </div>
 

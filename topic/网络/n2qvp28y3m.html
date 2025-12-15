@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -370,57 +370,22 @@ var _hmt = _hmt || [];
 <li><a href="n2qvp28y3m.html#3f284d6077dfd085a83944d3c7df0c9a">5、配置到NGINX</a></li>
 <li><a href="n2qvp28y3m.html#2b05d7c0e4dbfee0c2d2e86a460b7dcb">6、删除对某个域名证书的自动续期</a></li>
 <li><a href="n2qvp28y3m.html#5307e9d351087e288350c93ca5c6829d">7、注意</a></li>
-</ul><p>注意：对于重要的线上服务不要用自动续期了；可靠性不敢保证，遇到过几次执行续期脚本导致证书出问题的情况，服务突然就不能用了。</p>
-<p>自动续期只用在不重要的服务商，省了事，就算出问题也影响不大。</p>
-<hr />
-<p>当前 FreeSSL.cn开始提供自动续期的HTTPS证书，利用HACME 脚本实现，操作方法如下：</p>
-<h2 id="1432666780d8b06d485c069a74bf7f09">1、安装 acme.sh</h2>
-<p>建议切换到root模式，可以减少证书安装时的问题</p>
-<p><code>sudo su</code></p>
-<p>注意：MacOS 不用切换到root更简单。</p>
-<pre><code class="language-bash">git clone https://gitee.com/neilpang/acme.sh.git
+</ul><?xml encoding="UTF-8"><p>&#27880;&#24847;&#65306;&#23545;&#20110;&#37325;&#35201;&#30340;&#32447;&#19978;&#26381;&#21153;&#19981;&#35201;&#29992;&#33258;&#21160;&#32493;&#26399;&#20102;&#65307;&#21487;&#38752;&#24615;&#19981;&#25954;&#20445;&#35777;&#65292;&#36935;&#21040;&#36807;&#20960;&#27425;&#25191;&#34892;&#32493;&#26399;&#33050;&#26412;&#23548;&#33268;&#35777;&#20070;&#20986;&#38382;&#39064;&#30340;&#24773;&#20917;&#65292;&#26381;&#21153;&#31361;&#28982;&#23601;&#19981;&#33021;&#29992;&#20102;&#12290;</p><p>&#33258;&#21160;&#32493;&#26399;&#21482;&#29992;&#22312;&#19981;&#37325;&#35201;&#30340;&#26381;&#21153;&#21830;&#65292;&#30465;&#20102;&#20107;&#65292;&#23601;&#31639;&#20986;&#38382;&#39064;&#20063;&#24433;&#21709;&#19981;&#22823;&#12290;</p><hr><p>&#24403;&#21069; FreeSSL.cn&#24320;&#22987;&#25552;&#20379;&#33258;&#21160;&#32493;&#26399;&#30340;HTTPS&#35777;&#20070;&#65292;&#21033;&#29992;HACME &#33050;&#26412;&#23454;&#29616;&#65292;&#25805;&#20316;&#26041;&#27861;&#22914;&#19979;&#65306;</p><h2 id="1432666780d8b06d485c069a74bf7f09">1&#12289;&#23433;&#35013; acme.sh</h2><p>&#24314;&#35758;&#20999;&#25442;&#21040;root&#27169;&#24335;&#65292;&#21487;&#20197;&#20943;&#23569;&#35777;&#20070;&#23433;&#35013;&#26102;&#30340;&#38382;&#39064;</p><p><code>sudo su</code></p><p>&#27880;&#24847;&#65306;MacOS &#19981;&#29992;&#20999;&#25442;&#21040;root&#26356;&#31616;&#21333;&#12290;</p><pre><code class="language-bash">git clone https://gitee.com/neilpang/acme.sh.git
 
 cd acme.sh
 
 ./acme.sh --install -m my@example.com
-</code></pre>
-<p>注意：安装完成后，再重新打开命令行（如果是 SSH，选择重新连接），以使 <code>acme.sh</code> 命令生效。</p>
-<h2 id="51486c63ae35633ce4aa8107a6e2aa32">2、添加域名</h2>
-<p>在 <a href="https://freessl.cn/">FreeSSL</a> 站点申请证书，选择自动续期模式</p>
-<p><img src="../../storage/images/2022/07/04/Wlvl0Hc63mIQmtfn90sVxCOQsJhzonr9704hywrh.png" alt="" /></p>
-<h2 id="18698783cdcb43b9bf66edc11ba4e3df">3、对域名进行授权</h2>
-<p><img src="../../storage/images/2022/07/04/BNgeXRyFjVRjgefJfIhNqQQvxD8UFAGAfhZZIwKi.png" alt="" /></p>
-<p>获得域名验证（DCV）授权信息</p>
-<p><img src="../../storage/images/2022/07/04/DzMZutBifhgoFjBY0ojazdvD3s31yMuWsBB9fupz.png" alt="" /></p>
-<p>到您的域名解析服务商添加解析记录</p>
-<h2 id="5c66270da98159afaa92ed80a9c6d761">4、安装证书</h2>
-<p>点击【配置完成，立即检测】后获得证书申请命令</p>
-<p><img src="../../storage/images/2022/07/04/1xfbbkqeGeUlVNKcouSs8Ic3DKpqCwz2RX6ijQKZ.png" alt="" /></p>
-<p>以 Nginx 部署为例，对上面命令 1 进行如下修改：</p>
-<pre><code class="language-bash">/root/.acme.sh/acme.sh --issue -d 域名   --dns dns_dp \
---server {你的专属 ACME 地址} \
+</code></pre><p>&#27880;&#24847;&#65306;&#23433;&#35013;&#23436;&#25104;&#21518;&#65292;&#20877;&#37325;&#26032;&#25171;&#24320;&#21629;&#20196;&#34892;&#65288;&#22914;&#26524;&#26159; SSH&#65292;&#36873;&#25321;&#37325;&#26032;&#36830;&#25509;&#65289;&#65292;&#20197;&#20351; <code>acme.sh</code> &#21629;&#20196;&#29983;&#25928;&#12290;</p><h2 id="51486c63ae35633ce4aa8107a6e2aa32">2&#12289;&#28155;&#21152;&#22495;&#21517;</h2><p>&#22312; <a href="https://freessl.cn/" target="_blank" rel="noopener noreferrer">FreeSSL</a> &#31449;&#28857;&#30003;&#35831;&#35777;&#20070;&#65292;&#36873;&#25321;&#33258;&#21160;&#32493;&#26399;&#27169;&#24335;</p><p><img src="../../storage/images/2022/07/04/Wlvl0Hc63mIQmtfn90sVxCOQsJhzonr9704hywrh.png" alt=""></p><h2 id="18698783cdcb43b9bf66edc11ba4e3df">3&#12289;&#23545;&#22495;&#21517;&#36827;&#34892;&#25480;&#26435;</h2><p><img src="../../storage/images/2022/07/04/BNgeXRyFjVRjgefJfIhNqQQvxD8UFAGAfhZZIwKi.png" alt=""></p><p>&#33719;&#24471;&#22495;&#21517;&#39564;&#35777;&#65288;DCV&#65289;&#25480;&#26435;&#20449;&#24687;</p><p><img src="../../storage/images/2022/07/04/DzMZutBifhgoFjBY0ojazdvD3s31yMuWsBB9fupz.png" alt=""></p><p>&#21040;&#24744;&#30340;&#22495;&#21517;&#35299;&#26512;&#26381;&#21153;&#21830;&#28155;&#21152;&#35299;&#26512;&#35760;&#24405;</p><h2 id="5c66270da98159afaa92ed80a9c6d761">4&#12289;&#23433;&#35013;&#35777;&#20070;</h2><p>&#28857;&#20987;&#12304;&#37197;&#32622;&#23436;&#25104;&#65292;&#31435;&#21363;&#26816;&#27979;&#12305;&#21518;&#33719;&#24471;&#35777;&#20070;&#30003;&#35831;&#21629;&#20196;</p><p><img src="../../storage/images/2022/07/04/1xfbbkqeGeUlVNKcouSs8Ic3DKpqCwz2RX6ijQKZ.png" alt=""></p><p>&#20197; Nginx &#37096;&#32626;&#20026;&#20363;&#65292;&#23545;&#19978;&#38754;&#21629;&#20196; 1 &#36827;&#34892;&#22914;&#19979;&#20462;&#25913;&#65306;</p><pre><code class="language-bash">/root/.acme.sh/acme.sh --issue -d &#22495;&#21517;   --dns dns_dp \
+--server {&#20320;&#30340;&#19987;&#23646; ACME &#22320;&#22336;} \
 --key-file /alidata/data/ssl/test.com/private.key \
 --fullchain-file /alidata/data/ssl/test.com/full_chain.pem \
---reloadcmd     "/bin/lnmp nginx reload"</code></pre>
-<p>运行命令申请证书</p>
-<p>执行上述命令后会自动将续期脚本添加到crontab定时任务，当证书还有一个月到期时会自动续期。</p>
-<pre><code class="language-bash">"/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" </code></pre>
-<h2 id="3f284d6077dfd085a83944d3c7df0c9a">5、配置到NGINX</h2>
-<pre><code class="language-nginx">listen 443 ssl;
+--reloadcmd     "/bin/lnmp nginx reload"</code></pre><p>&#36816;&#34892;&#21629;&#20196;&#30003;&#35831;&#35777;&#20070;</p><p>&#25191;&#34892;&#19978;&#36848;&#21629;&#20196;&#21518;&#20250;&#33258;&#21160;&#23558;&#32493;&#26399;&#33050;&#26412;&#28155;&#21152;&#21040;crontab&#23450;&#26102;&#20219;&#21153;&#65292;&#24403;&#35777;&#20070;&#36824;&#26377;&#19968;&#20010;&#26376;&#21040;&#26399;&#26102;&#20250;&#33258;&#21160;&#32493;&#26399;&#12290;</p><pre><code class="language-bash">"/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" </code></pre><h2 id="3f284d6077dfd085a83944d3c7df0c9a">5&#12289;&#37197;&#32622;&#21040;NGINX</h2><pre><code class="language-nginx">listen 443 ssl;
 ssl_certificate /alidata/data/ssl/test.com/full_chain.pem;
-ssl_certificate_key /alidata/data/ssl/test.com/private.key;</code></pre>
-<p>官方文档：<a href="https://blog.freessl.cn/acme-quick-start/">ACME v2证书自动化快速入门</a></p>
-<h2 id="2b05d7c0e4dbfee0c2d2e86a460b7dcb">6、删除对某个域名证书的自动续期</h2>
-<p>若某个域名不再使用，我们想把该域名在服务器定时任务中的自动续期关闭，可以执行以下命令</p>
-<pre><code class="language-bash">"/root/.acme.sh"/acme.sh --remove --domain {具体的域名}
+ssl_certificate_key /alidata/data/ssl/test.com/private.key;</code></pre><p>&#23448;&#26041;&#25991;&#26723;&#65306;<a href="https://blog.freessl.cn/acme-quick-start/" target="_blank" rel="noopener noreferrer">ACME v2&#35777;&#20070;&#33258;&#21160;&#21270;&#24555;&#36895;&#20837;&#38376;</a></p><h2 id="2b05d7c0e4dbfee0c2d2e86a460b7dcb">6&#12289;&#21024;&#38500;&#23545;&#26576;&#20010;&#22495;&#21517;&#35777;&#20070;&#30340;&#33258;&#21160;&#32493;&#26399;</h2><p>&#33509;&#26576;&#20010;&#22495;&#21517;&#19981;&#20877;&#20351;&#29992;&#65292;&#25105;&#20204;&#24819;&#25226;&#35813;&#22495;&#21517;&#22312;&#26381;&#21153;&#22120;&#23450;&#26102;&#20219;&#21153;&#20013;&#30340;&#33258;&#21160;&#32493;&#26399;&#20851;&#38381;&#65292;&#21487;&#20197;&#25191;&#34892;&#20197;&#19979;&#21629;&#20196;</p><pre><code class="language-bash">"/root/.acme.sh"/acme.sh --remove --domain {&#20855;&#20307;&#30340;&#22495;&#21517;}
 
-[Thu 28 Sep 2023 09:34:39 AM CST] {具体的域名} is removed, the key and cert files are in /root/.acme.sh/{具体的域名}
-[Thu 28 Sep 2023 09:34:39 AM CST] You can remove them by yourself.</code></pre>
-<p>删除自动续期后你也可以选择删除原来生成的证书文件， 位于目录 <code>/root/.acme.sh/{具体的域名}</code> 下.</p>
-<p>注意 <code>--remove</code>参数只是停止续期，并未吊销证书。</p>
-<h2 id="5307e9d351087e288350c93ca5c6829d">7、注意</h2>
-<p>通配符域名证书的标识范围：</p>
-<p>如设置通配符域名证书 *.test.com ，a.test.com 域名可以使用该证书，但 a.b.test.com 则不行</p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> FreeSSL: <i><a href="https://freessl.cn/" target="_blank">https://freessl.cn/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> ACME v2证书自动化快速入门: <i><a href="https://blog.freessl.cn/acme-quick-start/" target="_blank">https://blog.freessl.cn/acme-quick-start/</a></i><br></p>
+[Thu 28 Sep 2023 09:34:39 AM CST] {&#20855;&#20307;&#30340;&#22495;&#21517;} is removed, the key and cert files are in /root/.acme.sh/{&#20855;&#20307;&#30340;&#22495;&#21517;}
+[Thu 28 Sep 2023 09:34:39 AM CST] You can remove them by yourself.</code></pre><p>&#21024;&#38500;&#33258;&#21160;&#32493;&#26399;&#21518;&#20320;&#20063;&#21487;&#20197;&#36873;&#25321;&#21024;&#38500;&#21407;&#26469;&#29983;&#25104;&#30340;&#35777;&#20070;&#25991;&#20214;&#65292; &#20301;&#20110;&#30446;&#24405; <code>/root/.acme.sh/{&#20855;&#20307;&#30340;&#22495;&#21517;}</code> &#19979;.</p><p>&#27880;&#24847; <code>--remove</code>&#21442;&#25968;&#21482;&#26159;&#20572;&#27490;&#32493;&#26399;&#65292;&#24182;&#26410;&#21514;&#38144;&#35777;&#20070;&#12290;</p><h2 id="5307e9d351087e288350c93ca5c6829d">7&#12289;&#27880;&#24847;</h2><p>&#36890;&#37197;&#31526;&#22495;&#21517;&#35777;&#20070;&#30340;&#26631;&#35782;&#33539;&#22260;&#65306;</p><p>&#22914;&#35774;&#32622;&#36890;&#37197;&#31526;&#22495;&#21517;&#35777;&#20070; *.test.com &#65292;a.test.com &#22495;&#21517;&#21487;&#20197;&#20351;&#29992;&#35813;&#35777;&#20070;&#65292;&#20294; a.b.test.com &#21017;&#19981;&#34892;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> FreeSSL: <i><a href="https://freessl.cn/" target="_blank">https://freessl.cn/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> ACME v2证书自动化快速入门: <i><a href="https://blog.freessl.cn/acme-quick-start/" target="_blank">https://blog.freessl.cn/acme-quick-start/</a></i><br></p>
 			</div>
 </div>
 

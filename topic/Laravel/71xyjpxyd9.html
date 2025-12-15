@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -422,24 +422,9 @@ var _hmt = _hmt || [];
 <li><a href="71xyjpxyd9.html#d289534495ba5d0656ee84de15bfeba6">1.4、服务部署流程</a></li>
 </ul></li>
 </ul></li>
-</ul><p>最近在尝试使用 octane swoole 驱动的 Laravel 项目时出现了一个问题：在更新代码后使用 <code>octane:reload</code> 重新启动 <code>workers</code> 时新代码不生效。</p>
-<p>我的项目是通过 <a href="https://deployer.org/"> deployer </a> 部署的，通过符号链接的形式将项目目录指向新的代码，但 <code>octane:reload</code>  后新代码并没有生效。</p>
-<p>之后发现通过符号链接指向新目录、<code>composer</code>引入新的库、<code>.env</code> 在重启后都不生效，服务运行过程中动态加载的文件支持 reload，在服务执行前就载入的文件代码不支持reload。</p>
-<p>之后我们部署代码后通过执行 <code>octane::stop</code> 和 <code>octane::start</code> 启动服务，这样代码是生效的，但这样并非热部署，每次执行上述命令服务都会中断几秒，导致此时进来的请求 502 报错。</p>
-<h1 id="957a228f87aaf86e436762129485625a">解决方法</h1>
-<h2 id="67e17e48b888e186604b39fc27434369">参考蓝绿部署形式</h2>
-<p>对于同一个项目（同一个代码目录）启动两套 <code>octane swoole</code> 服务，通过 nginx 指向新的服务的形式实现 <code>0 downtime</code> 部署。</p>
-<p>启动 服务1、服务2 ，首次将 nginx 指向 服务1，在更新代码后通过<code>stop&amp;start</code>重启服务2，将nginx指向服务2，reload nginx即实现热部署；在下次更新代码后重启服务1，将 nginx 指向 服务1 并 reload。</p>
-<h3 id="7f539a3dd810ec2e0d0d99e18835e0b3">解决步骤</h3>
-<h4 id="2c8ea476e527c079c3052481ffc4d802">1.1、修改 octane 启动代码，使 octane 可以通过不同端口启动两套服务</h4>
-<blockquote>
-<p>当然你也可以在服务器上部署两套代码，这样就不需要该脚本了</p>
-</blockquote>
-<p>新增 Artisan 命令行，自定义 octane 启动脚本</p>
-<pre><code class="language-bash">php artisan make:command Octane/StartOctane</code></pre>
-<p>修改脚本：</p>
-<p>在原有 octane 服务启动脚本基础上修改不同端口对应不用的状态文件，这样就可以启动多个服务了</p>
-<pre><code class="language-php">&lt;?php
+</ul><?xml encoding="UTF-8"><p>&#26368;&#36817;&#22312;&#23581;&#35797;&#20351;&#29992; octane swoole &#39537;&#21160;&#30340; Laravel &#39033;&#30446;&#26102;&#20986;&#29616;&#20102;&#19968;&#20010;&#38382;&#39064;&#65306;&#22312;&#26356;&#26032;&#20195;&#30721;&#21518;&#20351;&#29992; <code>octane:reload</code> &#37325;&#26032;&#21551;&#21160; <code>workers</code> &#26102;&#26032;&#20195;&#30721;&#19981;&#29983;&#25928;&#12290;</p><p>&#25105;&#30340;&#39033;&#30446;&#26159;&#36890;&#36807; <a href="https://deployer.org/" target="_blank" rel="noopener noreferrer"> deployer </a> &#37096;&#32626;&#30340;&#65292;&#36890;&#36807;&#31526;&#21495;&#38142;&#25509;&#30340;&#24418;&#24335;&#23558;&#39033;&#30446;&#30446;&#24405;&#25351;&#21521;&#26032;&#30340;&#20195;&#30721;&#65292;&#20294; <code>octane:reload</code>  &#21518;&#26032;&#20195;&#30721;&#24182;&#27809;&#26377;&#29983;&#25928;&#12290;</p><p>&#20043;&#21518;&#21457;&#29616;&#36890;&#36807;&#31526;&#21495;&#38142;&#25509;&#25351;&#21521;&#26032;&#30446;&#24405;&#12289;<code>composer</code>&#24341;&#20837;&#26032;&#30340;&#24211;&#12289;<code>.env</code> &#22312;&#37325;&#21551;&#21518;&#37117;&#19981;&#29983;&#25928;&#65292;&#26381;&#21153;&#36816;&#34892;&#36807;&#31243;&#20013;&#21160;&#24577;&#21152;&#36733;&#30340;&#25991;&#20214;&#25903;&#25345; reload&#65292;&#22312;&#26381;&#21153;&#25191;&#34892;&#21069;&#23601;&#36733;&#20837;&#30340;&#25991;&#20214;&#20195;&#30721;&#19981;&#25903;&#25345;reload&#12290;</p><p>&#20043;&#21518;&#25105;&#20204;&#37096;&#32626;&#20195;&#30721;&#21518;&#36890;&#36807;&#25191;&#34892; <code>octane::stop</code> &#21644; <code>octane::start</code> &#21551;&#21160;&#26381;&#21153;&#65292;&#36825;&#26679;&#20195;&#30721;&#26159;&#29983;&#25928;&#30340;&#65292;&#20294;&#36825;&#26679;&#24182;&#38750;&#28909;&#37096;&#32626;&#65292;&#27599;&#27425;&#25191;&#34892;&#19978;&#36848;&#21629;&#20196;&#26381;&#21153;&#37117;&#20250;&#20013;&#26029;&#20960;&#31186;&#65292;&#23548;&#33268;&#27492;&#26102;&#36827;&#26469;&#30340;&#35831;&#27714; 502 &#25253;&#38169;&#12290;</p><h1 id="957a228f87aaf86e436762129485625a">&#35299;&#20915;&#26041;&#27861;</h1><h2 id="67e17e48b888e186604b39fc27434369">&#21442;&#32771;&#34013;&#32511;&#37096;&#32626;&#24418;&#24335;</h2><p>&#23545;&#20110;&#21516;&#19968;&#20010;&#39033;&#30446;&#65288;&#21516;&#19968;&#20010;&#20195;&#30721;&#30446;&#24405;&#65289;&#21551;&#21160;&#20004;&#22871; <code>octane swoole</code> &#26381;&#21153;&#65292;&#36890;&#36807; nginx &#25351;&#21521;&#26032;&#30340;&#26381;&#21153;&#30340;&#24418;&#24335;&#23454;&#29616; <code>0 downtime</code> &#37096;&#32626;&#12290;</p><p>&#21551;&#21160; &#26381;&#21153;1&#12289;&#26381;&#21153;2 &#65292;&#39318;&#27425;&#23558; nginx &#25351;&#21521; &#26381;&#21153;1&#65292;&#22312;&#26356;&#26032;&#20195;&#30721;&#21518;&#36890;&#36807;<code>stop&amp;start</code>&#37325;&#21551;&#26381;&#21153;2&#65292;&#23558;nginx&#25351;&#21521;&#26381;&#21153;2&#65292;reload nginx&#21363;&#23454;&#29616;&#28909;&#37096;&#32626;&#65307;&#22312;&#19979;&#27425;&#26356;&#26032;&#20195;&#30721;&#21518;&#37325;&#21551;&#26381;&#21153;1&#65292;&#23558; nginx &#25351;&#21521; &#26381;&#21153;1 &#24182; reload&#12290;</p><h3 id="7f539a3dd810ec2e0d0d99e18835e0b3">&#35299;&#20915;&#27493;&#39588;</h3><h4 id="2c8ea476e527c079c3052481ffc4d802">1.1&#12289;&#20462;&#25913; octane &#21551;&#21160;&#20195;&#30721;&#65292;&#20351; octane &#21487;&#20197;&#36890;&#36807;&#19981;&#21516;&#31471;&#21475;&#21551;&#21160;&#20004;&#22871;&#26381;&#21153;</h4><blockquote>
+<p>&#24403;&#28982;&#20320;&#20063;&#21487;&#20197;&#22312;&#26381;&#21153;&#22120;&#19978;&#37096;&#32626;&#20004;&#22871;&#20195;&#30721;&#65292;&#36825;&#26679;&#23601;&#19981;&#38656;&#35201;&#35813;&#33050;&#26412;&#20102;</p>
+</blockquote><p>&#26032;&#22686; Artisan &#21629;&#20196;&#34892;&#65292;&#33258;&#23450;&#20041; octane &#21551;&#21160;&#33050;&#26412;</p><pre><code class="language-bash">php artisan make:command Octane/StartOctane</code></pre><p>&#20462;&#25913;&#33050;&#26412;&#65306;</p><p>&#22312;&#21407;&#26377; octane &#26381;&#21153;&#21551;&#21160;&#33050;&#26412;&#22522;&#30784;&#19978;&#20462;&#25913;&#19981;&#21516;&#31471;&#21475;&#23545;&#24212;&#19981;&#29992;&#30340;&#29366;&#24577;&#25991;&#20214;&#65292;&#36825;&#26679;&#23601;&#21487;&#20197;&#21551;&#21160;&#22810;&#20010;&#26381;&#21153;&#20102;</p><pre><code class="language-php">&lt;?php
 
 namespace App\Console\Commands\Octane;
 
@@ -471,7 +456,7 @@ class StartOctane extends StartCommand
      *
      * @var string
      */
-    public $description = '无停机部署 Octane server';
+    public $description = '&#26080;&#20572;&#26426;&#37096;&#32626; Octane server';
 
     /**
      * Handle the command.
@@ -480,8 +465,8 @@ class StartOctane extends StartCommand
      */
     public function handle()
     {
-        //  在原有octane 服务启动脚本基础上新增如下代码 start
-        // 修改不同端口对应不用的状态文件，这样就可以启动多个服务了
+        //  &#22312;&#21407;&#26377;octane &#26381;&#21153;&#21551;&#21160;&#33050;&#26412;&#22522;&#30784;&#19978;&#26032;&#22686;&#22914;&#19979;&#20195;&#30721; start
+        // &#20462;&#25913;&#19981;&#21516;&#31471;&#21475;&#23545;&#24212;&#19981;&#29992;&#30340;&#29366;&#24577;&#25991;&#20214;&#65292;&#36825;&#26679;&#23601;&#21487;&#20197;&#21551;&#21160;&#22810;&#20010;&#26381;&#21153;&#20102;
         $port = $this-&gt;option('port') ?: 8012;
 
         app()-&gt;bind(SwooleServerStateFile::class, function($app) use ($port){
@@ -500,12 +485,7 @@ class StartOctane extends StartCommand
             default =&gt; $this-&gt;invalidServer($server),
         };
     }
-}</code></pre>
-<h4 id="e8b16229f5a4f43ee3506cffa3ac690f">1.2、服务启动脚本</h4>
-<p>若我们想启动两套服务，端口分别是 8012、8013</p>
-<p>我们的服务使用 supervisorctl 管理：</p>
-<p>将 <code>octane:start</code>  换为我们上一步创建的脚本 <code>Octane:StartOctane</code> </p>
-<pre><code class="language-conf">[program:server_8012]
+}</code></pre><h4 id="e8b16229f5a4f43ee3506cffa3ac690f">1.2&#12289;&#26381;&#21153;&#21551;&#21160;&#33050;&#26412;</h4><p>&#33509;&#25105;&#20204;&#24819;&#21551;&#21160;&#20004;&#22871;&#26381;&#21153;&#65292;&#31471;&#21475;&#20998;&#21035;&#26159; 8012&#12289;8013</p><p>&#25105;&#20204;&#30340;&#26381;&#21153;&#20351;&#29992; supervisorctl &#31649;&#29702;&#65306;</p><p>&#23558; <code>octane:start</code>  &#25442;&#20026;&#25105;&#20204;&#19978;&#19968;&#27493;&#21019;&#24314;&#30340;&#33050;&#26412; <code>Octane:StartOctane</code> </p><pre><code class="language-conf">[program:server_8012]
 command =   /bin/php -d variables_order=EGPCS /www/server/current/artisan Octane:StartOctane --max-requests=5000 --workers=4 --task-workers=4 --port=8012
 user=www
 process_name            = %(program_name)s_%(process_num)s
@@ -527,9 +507,7 @@ autorestart             = true
 startretries            = 1000
 stdout_logfile          = /log/supervisor/server.log
 stdout_logfile_maxbytes = 1000MB
-redirect_stderr=true</code></pre>
-<h4 id="f592dd5495d11b0ab21385f2ad2591d8">1.3、nginx 配置</h4>
-<pre><code class="   language-php">map $http_upgrade $connection_upgrade {
+redirect_stderr=true</code></pre><h4 id="f592dd5495d11b0ab21385f2ad2591d8">1.3&#12289;nginx &#37197;&#32622;</h4><pre><code class="   language-php">map $http_upgrade $connection_upgrade {
     default upgrade;
     ''      close;
 }
@@ -577,11 +555,9 @@ server {
         deny all;
     }
 
-    # 在此处引入配置文件，部署脚本通过修改配置文件设置 nginx 指向的服务
+    # &#22312;&#27492;&#22788;&#24341;&#20837;&#37197;&#32622;&#25991;&#20214;&#65292;&#37096;&#32626;&#33050;&#26412;&#36890;&#36807;&#20462;&#25913;&#37197;&#32622;&#25991;&#20214;&#35774;&#32622; nginx &#25351;&#21521;&#30340;&#26381;&#21153;
     include /www/server/current/nginx_octane.conf;
-}</code></pre>
-<p>nginx_octane_8012.conf</p>
-<pre><code class="language-conf">    location @octane {
+}</code></pre><p>nginx_octane_8012.conf</p><pre><code class="language-conf">    location @octane {
         set $suffix "";
 
         if ($uri = /index.php) {
@@ -599,9 +575,7 @@ server {
 
         proxy_pass http://127.0.0.1:8012$suffix;
     }
-</code></pre>
-<p>nginx_octane_8013.conf</p>
-<pre><code class="   language-php">
+</code></pre><p>nginx_octane_8013.conf</p><pre><code class="   language-php">
     location @octane {
         set $suffix "";
 
@@ -619,29 +593,24 @@ server {
         proxy_set_header Connection $connection_upgrade;
 
         proxy_pass http://127.0.0.1:8013$suffix;
-    }</code></pre>
-<h4 id="d289534495ba5d0656ee84de15bfeba6">1.4、服务部署流程</h4>
-<p>我们是通过 deployer 脚本部署的代码，如上次部署用的 8012 端口的服务，本次部署用 8013 端口服务，服务重启脚本如下：</p>
-<p>这样在 8013 端口重启后，在将 nginx 指向8013 即可实现0停机部署</p>
-<pre><code class="language-php">task('supervisor:reload', function(){
+    }</code></pre><h4 id="d289534495ba5d0656ee84de15bfeba6">1.4&#12289;&#26381;&#21153;&#37096;&#32626;&#27969;&#31243;</h4><p>&#25105;&#20204;&#26159;&#36890;&#36807; deployer &#33050;&#26412;&#37096;&#32626;&#30340;&#20195;&#30721;&#65292;&#22914;&#19978;&#27425;&#37096;&#32626;&#29992;&#30340; 8012 &#31471;&#21475;&#30340;&#26381;&#21153;&#65292;&#26412;&#27425;&#37096;&#32626;&#29992; 8013 &#31471;&#21475;&#26381;&#21153;&#65292;&#26381;&#21153;&#37325;&#21551;&#33050;&#26412;&#22914;&#19979;&#65306;</p><p>&#36825;&#26679;&#22312; 8013 &#31471;&#21475;&#37325;&#21551;&#21518;&#65292;&#22312;&#23558; nginx &#25351;&#21521;8013 &#21363;&#21487;&#23454;&#29616;0&#20572;&#26426;&#37096;&#32626;</p><pre><code class="language-php">task('supervisor:reload', function(){
     $env = get('labels')['env'];
-    if ($env == 'pre8012’) {
-        # 重启8012端口服务
+    if ($env == 'pre8012&rsquo;) {
+        # &#37325;&#21551;8012&#31471;&#21475;&#26381;&#21153;
         run('sudo /usr/bin/supervisorctl restart server_8012:');
-        # 将 nginx 指向 8012 端口
+        # &#23558; nginx &#25351;&#21521; 8012 &#31471;&#21475;
         run('cd {{release_path}} &amp;&amp; /usr/bin/cp ./nginx_octane_8012.conf ../../shared/nginx_octane.conf');
     }
     if ($env == 'pre8013') {
-        # 重启8013端口服务
+        # &#37325;&#21551;8013&#31471;&#21475;&#26381;&#21153;
         run('sudo /usr/bin/supervisorctl restart server_8013:');
-        # 将 nginx 指向 8013 端口
+        # &#23558; nginx &#25351;&#21521; 8013 &#31471;&#21475;
         run('cd {{release_path}} &amp;&amp; /usr/bin/cp ./nginx_octane_8013.conf ../../shared/nginx_octane.conf');
     }
-    # 热重启 nginx
+    # &#28909;&#37325;&#21551; nginx
     run('sudo /usr/bin/lnmp nginx reload');
-});</code></pre>
-<p>本次执行命令：</p>
-<pre><code class="language-bash">dep deploy pre8013 -vvv</code></pre><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code>  deployer : <i><a href="https://deployer.org/" target="_blank">https://deployer.org/</a></i><br></p>
+});</code></pre><p>&#26412;&#27425;&#25191;&#34892;&#21629;&#20196;&#65306;</p><pre><code class="language-bash">dep deploy pre8013 -vvv</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code>  deployer : <i><a href="https://deployer.org/" target="_blank">https://deployer.org/</a></i><br></p>
 			</div>
 </div>
 

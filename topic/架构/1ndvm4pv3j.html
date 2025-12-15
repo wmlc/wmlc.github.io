@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -360,6 +360,7 @@
 <li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
 <li id="blog710"><a href="x3vo0qkvm1.html#blog710">服务器漏洞</a>
 <li id="blog859"><a href="qk94238vw1.html#blog859">项目服务隔离思路</a>
+<li id="blog932"><a href="xpv52m5v86.html#blog932">基于 Unicode 双向控制字符的 XSS 攻击</a>
 </ul>
 </li>
 <li>
@@ -428,40 +429,30 @@ var _hmt = _hmt || [];
 <li><a href="1ndvm4pv3j.html#c13f7879b3b08b5086839cdaf61282f9">9、在局部声明变量</a></li>
 <li><a href="1ndvm4pv3j.html#9120ead32e525b632e041fa2a9317da3">10、使用缓存来避免昂贵的计算</a></li>
 <li><a href="1ndvm4pv3j.html#45ac06be95b687d63b93e45600437b01">11、使用映射和字典来避免过度迭代</a></li>
-</ul><h2 id="52df208ed3bdce540468f29dc635be91">1、受保护的 If</h2>
-<p>受保护的if 模式是一种技术，其中特殊情况立即得到处理，从而使主逻辑可以不进行不必要的检查。</p>
-<p>这种方法还有助于避免函数的进一步执行，从而引导我们找到下一个提示。</p>
-<p>修改前</p>
-<pre><code class="language-python">def process_customer_data(user):
+</ul><?xml encoding="UTF-8"><h2 id="52df208ed3bdce540468f29dc635be91">1&#12289;&#21463;&#20445;&#25252;&#30340; If</h2><p>&#21463;&#20445;&#25252;&#30340;if &#27169;&#24335;&#26159;&#19968;&#31181;&#25216;&#26415;&#65292;&#20854;&#20013;&#29305;&#27530;&#24773;&#20917;&#31435;&#21363;&#24471;&#21040;&#22788;&#29702;&#65292;&#20174;&#32780;&#20351;&#20027;&#36923;&#36753;&#21487;&#20197;&#19981;&#36827;&#34892;&#19981;&#24517;&#35201;&#30340;&#26816;&#26597;&#12290;</p><p>&#36825;&#31181;&#26041;&#27861;&#36824;&#26377;&#21161;&#20110;&#36991;&#20813;&#20989;&#25968;&#30340;&#36827;&#19968;&#27493;&#25191;&#34892;&#65292;&#20174;&#32780;&#24341;&#23548;&#25105;&#20204;&#25214;&#21040;&#19979;&#19968;&#20010;&#25552;&#31034;&#12290;</p><p>&#20462;&#25913;&#21069;</p><pre><code class="language-python">def process_customer_data(user):
     if user is not None:
         if user['customer']:
             print("Processing customer data.")
-            # 更多处理逻辑在这里
+            # &#26356;&#22810;&#22788;&#29702;&#36923;&#36753;&#22312;&#36825;&#37324;
         else:
             print("User is not a customer.")
             return
-            # 边缘情况
+            # &#36793;&#32536;&#24773;&#20917;
     else:
         print("No user data provided.")
-         # 边缘情况</code></pre>
-<p>修改后</p>
-<pre><code class="language-python">def process_customer_data(user):
-    if user is None:  # 这是受保护的if，它“保护”着函数的其余部分免受边缘情况的影响。
+         # &#36793;&#32536;&#24773;&#20917;</code></pre><p>&#20462;&#25913;&#21518;</p><pre><code class="language-python">def process_customer_data(user):
+    if user is None:  # &#36825;&#26159;&#21463;&#20445;&#25252;&#30340;if&#65292;&#23427;&ldquo;&#20445;&#25252;&rdquo;&#30528;&#20989;&#25968;&#30340;&#20854;&#20313;&#37096;&#20998;&#20813;&#21463;&#36793;&#32536;&#24773;&#20917;&#30340;&#24433;&#21709;&#12290;
         print("No user data provided.")
-         # 边缘情况
+         # &#36793;&#32536;&#24773;&#20917;
         return
 
     if not user['customer']:
         print("User is not a customer.")
-         # 边缘情况
+         # &#36793;&#32536;&#24773;&#20917;
         return
 
     print("Processing customer data.")
-    # 更多处理逻辑在这里</code></pre>
-<h2 id="3d33a350fd56da115152b8c826eb7589">2、提前退出</h2>
-<p>如果我们可以停止函数的进一步执行，我们将提高效率。一个常见的例子是在find函数中遍历列表。一旦找到所需的元素，我们应该立即从函数返回。无需迭代其余元素。</p>
-<p>前</p>
-<pre><code class="language-python">def find_user(users, username):
+    # &#26356;&#22810;&#22788;&#29702;&#36923;&#36753;&#22312;&#36825;&#37324;</code></pre><h2 id="3d33a350fd56da115152b8c826eb7589">2&#12289;&#25552;&#21069;&#36864;&#20986;</h2><p>&#22914;&#26524;&#25105;&#20204;&#21487;&#20197;&#20572;&#27490;&#20989;&#25968;&#30340;&#36827;&#19968;&#27493;&#25191;&#34892;&#65292;&#25105;&#20204;&#23558;&#25552;&#39640;&#25928;&#29575;&#12290;&#19968;&#20010;&#24120;&#35265;&#30340;&#20363;&#23376;&#26159;&#22312;find&#20989;&#25968;&#20013;&#36941;&#21382;&#21015;&#34920;&#12290;&#19968;&#26086;&#25214;&#21040;&#25152;&#38656;&#30340;&#20803;&#32032;&#65292;&#25105;&#20204;&#24212;&#35813;&#31435;&#21363;&#20174;&#20989;&#25968;&#36820;&#22238;&#12290;&#26080;&#38656;&#36845;&#20195;&#20854;&#20313;&#20803;&#32032;&#12290;</p><p>&#21069;</p><pre><code class="language-python">def find_user(users, username):
     result = None
     for user in users:
         if user['username'] == username:
@@ -469,21 +460,15 @@ var _hmt = _hmt || [];
     return result
 
 users = [{'username': 'alice'}, {'username': 'bob'}]
-print(find_user(users, 'bob'))  # Output: {'username': 'bob'}</code></pre>
-<p>后</p>
-<pre><code class="language-python">def find_user(users, username):
+print(find_user(users, 'bob'))  # Output: {'username': 'bob'}</code></pre><p>&#21518;</p><pre><code class="language-python">def find_user(users, username):
     for user in users:
         if user['username'] == username:
-            return user # 找到我们要找的东西后，就退出函数吧！
+            return user # &#25214;&#21040;&#25105;&#20204;&#35201;&#25214;&#30340;&#19996;&#35199;&#21518;&#65292;&#23601;&#36864;&#20986;&#20989;&#25968;&#21543;&#65281;
     return None
 
 users = [{'username': 'alice'}, {'username': 'bob'}]
 print(find_user(users, 'bob'))  # Output: {'username': 'bob'}
-</code></pre>
-<h2 id="2033c8e6429f293b2eb507565438da3d">3、避免不必要的迭代</h2>
-<p>与提前退出类似，我们可以使用 break 来防止不必要的迭代，或者使用 continue 来停止当前迭代并继续下一次迭代。</p>
-<p>前</p>
-<pre><code class="language-python">def process_transactions(transactions, limit):
+</code></pre><h2 id="2033c8e6429f293b2eb507565438da3d">3&#12289;&#36991;&#20813;&#19981;&#24517;&#35201;&#30340;&#36845;&#20195;</h2><p>&#19982;&#25552;&#21069;&#36864;&#20986;&#31867;&#20284;&#65292;&#25105;&#20204;&#21487;&#20197;&#20351;&#29992; break &#26469;&#38450;&#27490;&#19981;&#24517;&#35201;&#30340;&#36845;&#20195;&#65292;&#25110;&#32773;&#20351;&#29992; continue &#26469;&#20572;&#27490;&#24403;&#21069;&#36845;&#20195;&#24182;&#32487;&#32493;&#19979;&#19968;&#27425;&#36845;&#20195;&#12290;</p><p>&#21069;</p><pre><code class="language-python">def process_transactions(transactions, limit):
     for transaction in transactions:
         if transaction['status'] == 'invalid':
             print(f"Skipping invalid transaction: {transaction['id']}")
@@ -492,7 +477,7 @@ print(find_user(users, 'bob'))  # Output: {'username': 'bob'}
                 print(f"Alert! Transaction {transaction['id']} exceeds the limit.")
             else:
                 print(f"Processing transaction: {transaction['id']} with amount {transaction['amount']}")
-            # 即使找到大额交易，也要继续检查
+            # &#21363;&#20351;&#25214;&#21040;&#22823;&#39069;&#20132;&#26131;&#65292;&#20063;&#35201;&#32487;&#32493;&#26816;&#26597;
 
 # Usage
 transactions = [
@@ -503,19 +488,17 @@ transactions = [
     {'id': 5, 'amount': 150, 'status': 'valid'},
 ]
 limit = 400
-process_transactions(transactions, limit)</code></pre>
-<p>后</p>
-<pre><code class="language-python">def process_transactions(transactions, limit):
+process_transactions(transactions, limit)</code></pre><p>&#21518;</p><pre><code class="language-python">def process_transactions(transactions, limit):
     for transaction in transactions:
         if transaction['status'] == 'invalid':
             print(f"Skipping invalid transaction: {transaction['id']}")
-            continue  # 跳过处理这笔交易
+            continue  # &#36339;&#36807;&#22788;&#29702;&#36825;&#31508;&#20132;&#26131;
 
         if transaction['amount'] &gt; limit:
             print(f"Alert! Transaction {transaction['id']} exceeds the limit.")
-            break  # 停止处理更多交易
+            break  # &#20572;&#27490;&#22788;&#29702;&#26356;&#22810;&#20132;&#26131;
 
-        # 处理限额内的有效交易
+        # &#22788;&#29702;&#38480;&#39069;&#20869;&#30340;&#26377;&#25928;&#20132;&#26131;
         print(f"Processing transaction: {transaction['id']} with amount {transaction['amount']}")
 
 # Usage
@@ -528,11 +511,7 @@ transactions = [
 ]
 limit = 400
 process_transactions(transactions, limit)
-</code></pre>
-<h2 id="7c30107d5c75e1043d2bfd5ed3c0ec31">4、 使用否定条件</h2>
-<p>使用否定条件可以帮助避免“毁灭金字塔”，这种情况发生在你在if语句的True或False（else）块中编写了大量逻辑。当你首先检查否定条件时，可以尽早捕捉边缘情况，保持“快乐路径”尽可能左对齐，并提高整体可读性。<code>如果你开始看到许多else语句，考虑否定条件以简化代码</code>。</p>
-<p>前</p>
-<pre><code class="language-python">def process_files_in_directory(directory):
+</code></pre><h2 id="7c30107d5c75e1043d2bfd5ed3c0ec31">4&#12289; &#20351;&#29992;&#21542;&#23450;&#26465;&#20214;</h2><p>&#20351;&#29992;&#21542;&#23450;&#26465;&#20214;&#21487;&#20197;&#24110;&#21161;&#36991;&#20813;&ldquo;&#27585;&#28781;&#37329;&#23383;&#22612;&rdquo;&#65292;&#36825;&#31181;&#24773;&#20917;&#21457;&#29983;&#22312;&#20320;&#22312;if&#35821;&#21477;&#30340;True&#25110;False&#65288;else&#65289;&#22359;&#20013;&#32534;&#20889;&#20102;&#22823;&#37327;&#36923;&#36753;&#12290;&#24403;&#20320;&#39318;&#20808;&#26816;&#26597;&#21542;&#23450;&#26465;&#20214;&#26102;&#65292;&#21487;&#20197;&#23613;&#26089;&#25429;&#25417;&#36793;&#32536;&#24773;&#20917;&#65292;&#20445;&#25345;&ldquo;&#24555;&#20048;&#36335;&#24452;&rdquo;&#23613;&#21487;&#33021;&#24038;&#23545;&#40784;&#65292;&#24182;&#25552;&#39640;&#25972;&#20307;&#21487;&#35835;&#24615;&#12290;<code>&#22914;&#26524;&#20320;&#24320;&#22987;&#30475;&#21040;&#35768;&#22810;else&#35821;&#21477;&#65292;&#32771;&#34385;&#21542;&#23450;&#26465;&#20214;&#20197;&#31616;&#21270;&#20195;&#30721;</code>&#12290;</p><p>&#21069;</p><pre><code class="language-python">def process_files_in_directory(directory):
     if os.path.exists(directory):
         files = os.listdir(directory)
         if len(files) &gt; 0:
@@ -548,9 +527,7 @@ process_transactions(transactions, limit)
         else:
             print("No files to process in the directory.")
     else:
-        print("Directory does not exist.")</code></pre>
-<p>后</p>
-<pre><code class="   language-php">def process_files_in_directory(directory):
+        print("Directory does not exist.")</code></pre><p>&#21518;</p><pre><code class="   language-php">def process_files_in_directory(directory):
     if not os.path.exists(directory):
         print("Directory does not exist.")
         return
@@ -569,79 +546,49 @@ process_transactions(transactions, limit)
         # Using negated conditions helps us keep the "Happy Path" of our code
         # as far left as possible
         print(f"Processing file: {file}")
-        process_file(file)</code></pre>
-<h2 id="531e6edfef3734c81b207452f19ff9c9">5、解释变量</h2>
-<p>如果某些值具有重要含义，例如众所周知的数字或传递给函数的标志，则可以通过引入解释变量来提高可读性。该变量的唯一目的是阐明该值的含义。</p>
-<p>前</p>
-<pre><code class="   language-php">def convert_mb_to_gb(megabytes):
-    return megabytes / 1024</code></pre>
-<p>后</p>
-<pre><code class="   language-php">def convert_mb_to_gb(megabytes):
+        process_file(file)</code></pre><h2 id="531e6edfef3734c81b207452f19ff9c9">5&#12289;&#35299;&#37322;&#21464;&#37327;</h2><p>&#22914;&#26524;&#26576;&#20123;&#20540;&#20855;&#26377;&#37325;&#35201;&#21547;&#20041;&#65292;&#20363;&#22914;&#20247;&#25152;&#21608;&#30693;&#30340;&#25968;&#23383;&#25110;&#20256;&#36882;&#32473;&#20989;&#25968;&#30340;&#26631;&#24535;&#65292;&#21017;&#21487;&#20197;&#36890;&#36807;&#24341;&#20837;&#35299;&#37322;&#21464;&#37327;&#26469;&#25552;&#39640;&#21487;&#35835;&#24615;&#12290;&#35813;&#21464;&#37327;&#30340;&#21807;&#19968;&#30446;&#30340;&#26159;&#38416;&#26126;&#35813;&#20540;&#30340;&#21547;&#20041;&#12290;</p><p>&#21069;</p><pre><code class="   language-php">def convert_mb_to_gb(megabytes):
+    return megabytes / 1024</code></pre><p>&#21518;</p><pre><code class="   language-php">def convert_mb_to_gb(megabytes):
     num_mb_in_gb = 1024
     gigabytes = megabytes / num_mb_in_gb
-    return gigabytes</code></pre>
-<h2 id="64ffa7363a4c2aebc707c39f3a73292b">6、使用有意义的变量名</h2>
-<p>遵循可读性的主题，优先使用有意义的名称而不是简洁的名称。您的代码被读取的次数比编写的次数要多，通过使用描述性名称，您和其他人在重新阅读代码时可以更轻松。</p>
-<p>前</p>
-<pre><code class="   language-php">for k, v in {"apple", 10, "pear": 5, "orange": 6}.items():
-  print(k, v)</code></pre>
-<p>后</p>
-<pre><code class="   language-php">for fruit, qty in {"apple", 10, "pear": 5, "orange": 6}.items():
-  print(fruit, qty)</code></pre>
-<h2 id="5028c78a782d40cc59b8a8a2f1f75610">7、不要重复自己，但重复一点也没关系（DRY原则）</h2>
-<p>下一个技术有些争议，所以我将提供我和其他人遵循的一般规则：如果您看到代码块重复大约三次或更多，请考虑将其转换为函数。</p>
-<p>但是，请注意不要过度遵循 DRY（不要重复自己）原则。过度抽象和过度设计会让你的代码更难理解和维护，因为你很难记住算法的上下文。</p>
-<p>保持代码的DRY原则不仅适用于函数，也适用于循环。如果您发现重复，请考虑使用循环来简化代码。</p>
-<p>前</p>
-<pre><code class="   language-php"># 计算矩形1的面积和周长
+    return gigabytes</code></pre><h2 id="64ffa7363a4c2aebc707c39f3a73292b">6&#12289;&#20351;&#29992;&#26377;&#24847;&#20041;&#30340;&#21464;&#37327;&#21517;</h2><p>&#36981;&#24490;&#21487;&#35835;&#24615;&#30340;&#20027;&#39064;&#65292;&#20248;&#20808;&#20351;&#29992;&#26377;&#24847;&#20041;&#30340;&#21517;&#31216;&#32780;&#19981;&#26159;&#31616;&#27905;&#30340;&#21517;&#31216;&#12290;&#24744;&#30340;&#20195;&#30721;&#34987;&#35835;&#21462;&#30340;&#27425;&#25968;&#27604;&#32534;&#20889;&#30340;&#27425;&#25968;&#35201;&#22810;&#65292;&#36890;&#36807;&#20351;&#29992;&#25551;&#36848;&#24615;&#21517;&#31216;&#65292;&#24744;&#21644;&#20854;&#20182;&#20154;&#22312;&#37325;&#26032;&#38405;&#35835;&#20195;&#30721;&#26102;&#21487;&#20197;&#26356;&#36731;&#26494;&#12290;</p><p>&#21069;</p><pre><code class="   language-php">for k, v in {"apple", 10, "pear": 5, "orange": 6}.items():
+  print(k, v)</code></pre><p>&#21518;</p><pre><code class="   language-php">for fruit, qty in {"apple", 10, "pear": 5, "orange": 6}.items():
+  print(fruit, qty)</code></pre><h2 id="5028c78a782d40cc59b8a8a2f1f75610">7&#12289;&#19981;&#35201;&#37325;&#22797;&#33258;&#24049;&#65292;&#20294;&#37325;&#22797;&#19968;&#28857;&#20063;&#27809;&#20851;&#31995;&#65288;DRY&#21407;&#21017;&#65289;</h2><p>&#19979;&#19968;&#20010;&#25216;&#26415;&#26377;&#20123;&#20105;&#35758;&#65292;&#25152;&#20197;&#25105;&#23558;&#25552;&#20379;&#25105;&#21644;&#20854;&#20182;&#20154;&#36981;&#24490;&#30340;&#19968;&#33324;&#35268;&#21017;&#65306;&#22914;&#26524;&#24744;&#30475;&#21040;&#20195;&#30721;&#22359;&#37325;&#22797;&#22823;&#32422;&#19977;&#27425;&#25110;&#26356;&#22810;&#65292;&#35831;&#32771;&#34385;&#23558;&#20854;&#36716;&#25442;&#20026;&#20989;&#25968;&#12290;</p><p>&#20294;&#26159;&#65292;&#35831;&#27880;&#24847;&#19981;&#35201;&#36807;&#24230;&#36981;&#24490; DRY&#65288;&#19981;&#35201;&#37325;&#22797;&#33258;&#24049;&#65289;&#21407;&#21017;&#12290;&#36807;&#24230;&#25277;&#35937;&#21644;&#36807;&#24230;&#35774;&#35745;&#20250;&#35753;&#20320;&#30340;&#20195;&#30721;&#26356;&#38590;&#29702;&#35299;&#21644;&#32500;&#25252;&#65292;&#22240;&#20026;&#20320;&#24456;&#38590;&#35760;&#20303;&#31639;&#27861;&#30340;&#19978;&#19979;&#25991;&#12290;</p><p>&#20445;&#25345;&#20195;&#30721;&#30340;DRY&#21407;&#21017;&#19981;&#20165;&#36866;&#29992;&#20110;&#20989;&#25968;&#65292;&#20063;&#36866;&#29992;&#20110;&#24490;&#29615;&#12290;&#22914;&#26524;&#24744;&#21457;&#29616;&#37325;&#22797;&#65292;&#35831;&#32771;&#34385;&#20351;&#29992;&#24490;&#29615;&#26469;&#31616;&#21270;&#20195;&#30721;&#12290;</p><p>&#21069;</p><pre><code class="   language-php"># &#35745;&#31639;&#30697;&#24418;1&#30340;&#38754;&#31215;&#21644;&#21608;&#38271;
 length1 = 5
 width1 = 3
 area1 = length1 * width1
 perimeter1 = 2 * (length1 + width1)
 print(f"Rectangle 1 - Area: {area1}, Perimeter: {perimeter1}")
 
-# 计算矩形2的面积和周长
+# &#35745;&#31639;&#30697;&#24418;2&#30340;&#38754;&#31215;&#21644;&#21608;&#38271;
 length2 = 8
 width2 = 6
 area2 = length2 * width2
 perimeter2 = 2 * (length2 + width2)
 print(f"Rectangle 2 - Area: {area2}, Perimeter: {perimeter2}")
 
-# 计算矩形3的面积和周长
+# &#35745;&#31639;&#30697;&#24418;3&#30340;&#38754;&#31215;&#21644;&#21608;&#38271;
 length3 = 7
 width3 = 4
 area3 = length3 * width3
 perimeter3 = 2 * (length3 + width3)
-print(f"Rectangle 3 - Area: {area3}, Perimeter: {perimeter3}")</code></pre>
-<p>后</p>
-<pre><code class="   language-php">def calculate_area_and_perimeter(length, width):
+print(f"Rectangle 3 - Area: {area3}, Perimeter: {perimeter3}")</code></pre><p>&#21518;</p><pre><code class="   language-php">def calculate_area_and_perimeter(length, width):
     area = length * width
     perimeter = 2 * (length + width)
     return area, perimeter
 
-# 具有各自长度和宽度的矩形列表
+# &#20855;&#26377;&#21508;&#33258;&#38271;&#24230;&#21644;&#23485;&#24230;&#30340;&#30697;&#24418;&#21015;&#34920;
 rectangles = [(5, 3),(8, 6),(7, 4),]
 
-# 循环遍历每个矩形并计算面积和周长
+# &#24490;&#29615;&#36941;&#21382;&#27599;&#20010;&#30697;&#24418;&#24182;&#35745;&#31639;&#38754;&#31215;&#21644;&#21608;&#38271;
 for i, (length, width) in enumerate(rectangles, start=1):
     area, perimeter = calculate_area_and_perimeter(length, width)
     print(f"Rectangle {i} - Area: {area}, Perimeter: {perimeter}")
-</code></pre>
-<h2 id="d8606785302c91827708c86f4b19eca8">8、使用布尔条件进行赋值</h2>
-<p>条件句不仅适用于 if 语句；它们经常出现在 while 循环中，也可以单独用作布尔表达式。与其在 if 语句中使用标志变量，不如考虑直接使用布尔表达式。</p>
-<p>前</p>
-<pre><code class="   language-php">def has_access(role, is_active):
-    access = False # 标志变量
+</code></pre><h2 id="d8606785302c91827708c86f4b19eca8">8&#12289;&#20351;&#29992;&#24067;&#23572;&#26465;&#20214;&#36827;&#34892;&#36171;&#20540;</h2><p>&#26465;&#20214;&#21477;&#19981;&#20165;&#36866;&#29992;&#20110; if &#35821;&#21477;&#65307;&#23427;&#20204;&#32463;&#24120;&#20986;&#29616;&#22312; while &#24490;&#29615;&#20013;&#65292;&#20063;&#21487;&#20197;&#21333;&#29420;&#29992;&#20316;&#24067;&#23572;&#34920;&#36798;&#24335;&#12290;&#19982;&#20854;&#22312; if &#35821;&#21477;&#20013;&#20351;&#29992;&#26631;&#24535;&#21464;&#37327;&#65292;&#19981;&#22914;&#32771;&#34385;&#30452;&#25509;&#20351;&#29992;&#24067;&#23572;&#34920;&#36798;&#24335;&#12290;</p><p>&#21069;</p><pre><code class="   language-php">def has_access(role, is_active):
+    access = False # &#26631;&#24535;&#21464;&#37327;
     if role == 'admin' and is_active:
         access = True
-    return access</code></pre>
-<p>后</p>
-<pre><code class="   language-php">def has_access(role, is_active):
-    return role == 'admin' and is_active  # 无需标记，直接使用条件表达式即可。</code></pre>
-<h2 id="c13f7879b3b08b5086839cdaf61282f9">9、在局部声明变量</h2>
-<p>当您第一次学习编程时，您可能会养成将所有变量放在顶部的习惯。虽然这在C等语言中很好，但大多数较新语言的风格是在靠近使用变量的位置声明变量，也称为局部变量。这种方法提高了可读性并有助于保持代码的组织性。</p>
-<p>前</p>
-<pre><code class="   language-php"># 在顶部声明的变量
+    return access</code></pre><p>&#21518;</p><pre><code class="   language-php">def has_access(role, is_active):
+    return role == 'admin' and is_active  # &#26080;&#38656;&#26631;&#35760;&#65292;&#30452;&#25509;&#20351;&#29992;&#26465;&#20214;&#34920;&#36798;&#24335;&#21363;&#21487;&#12290;</code></pre><h2 id="c13f7879b3b08b5086839cdaf61282f9">9&#12289;&#22312;&#23616;&#37096;&#22768;&#26126;&#21464;&#37327;</h2><p>&#24403;&#24744;&#31532;&#19968;&#27425;&#23398;&#20064;&#32534;&#31243;&#26102;&#65292;&#24744;&#21487;&#33021;&#20250;&#20859;&#25104;&#23558;&#25152;&#26377;&#21464;&#37327;&#25918;&#22312;&#39030;&#37096;&#30340;&#20064;&#24815;&#12290;&#34429;&#28982;&#36825;&#22312;C&#31561;&#35821;&#35328;&#20013;&#24456;&#22909;&#65292;&#20294;&#22823;&#22810;&#25968;&#36739;&#26032;&#35821;&#35328;&#30340;&#39118;&#26684;&#26159;&#22312;&#38752;&#36817;&#20351;&#29992;&#21464;&#37327;&#30340;&#20301;&#32622;&#22768;&#26126;&#21464;&#37327;&#65292;&#20063;&#31216;&#20026;&#23616;&#37096;&#21464;&#37327;&#12290;&#36825;&#31181;&#26041;&#27861;&#25552;&#39640;&#20102;&#21487;&#35835;&#24615;&#24182;&#26377;&#21161;&#20110;&#20445;&#25345;&#20195;&#30721;&#30340;&#32452;&#32455;&#24615;&#12290;</p><p>&#21069;</p><pre><code class="   language-php"># &#22312;&#39030;&#37096;&#22768;&#26126;&#30340;&#21464;&#37327;
 min_number = 1
 max_number = 100
 target_number = random.randint(min_number, max_number)
@@ -669,13 +616,11 @@ while attempts &lt; max_attempts and not game_won:
         print("Please enter a valid number.")
 
 if not game_won:
-    print(f"Sorry, you've used all {max_attempts} attempts. The number was {target_number}. Better luck next time!")</code></pre>
-<p>后</p>
-<pre><code class="   language-php">import random
+    print(f"Sorry, you've used all {max_attempts} attempts. The number was {target_number}. Better luck next time!")</code></pre><p>&#21518;</p><pre><code class="   language-php">import random
 
 print("Welcome to the Number Guessing Game!")
 
-# 这些将在接下来的两个语句中使用
+# &#36825;&#20123;&#23558;&#22312;&#25509;&#19979;&#26469;&#30340;&#20004;&#20010;&#35821;&#21477;&#20013;&#20351;&#29992;
 min_number = 1
 max_number = 100
 print(f"Try to guess the number I'm thinking of between {min_number} and {max_number}.")
@@ -688,7 +633,7 @@ game_won = False
 
 while attempts &lt; max_attempts and not game_won:
     try:
-        # 只有在需要时才声明它。
+        # &#21482;&#26377;&#22312;&#38656;&#35201;&#26102;&#25165;&#22768;&#26126;&#23427;&#12290;
         guess = int(input("Enter your guess: "))
         attempts += 1
 
@@ -703,60 +648,50 @@ while attempts &lt; max_attempts and not game_won:
         print("Please enter a valid number.")
 
 if not game_won:
-    print(f"Sorry, you've used all {max_attempts} attempts. The number was {target_number}. Better luck next time!")</code></pre>
-<h2 id="9120ead32e525b632e041fa2a9317da3">10、使用缓存来避免昂贵的计算</h2>
-<p>使用此技术不仅可以避免不必要的执行，还可以避免昂贵的执行。初始化一个缓存或变量来保存计算结果或已被函数“看到”的输入和请求的资源可以极大地提高性能。</p>
-<p>前</p>
-<pre><code class="   language-php">def is_prime(n):
-    # 处理数字小于或等于 1 的边缘情况
+    print(f"Sorry, you've used all {max_attempts} attempts. The number was {target_number}. Better luck next time!")</code></pre><h2 id="9120ead32e525b632e041fa2a9317da3">10&#12289;&#20351;&#29992;&#32531;&#23384;&#26469;&#36991;&#20813;&#26114;&#36149;&#30340;&#35745;&#31639;</h2><p>&#20351;&#29992;&#27492;&#25216;&#26415;&#19981;&#20165;&#21487;&#20197;&#36991;&#20813;&#19981;&#24517;&#35201;&#30340;&#25191;&#34892;&#65292;&#36824;&#21487;&#20197;&#36991;&#20813;&#26114;&#36149;&#30340;&#25191;&#34892;&#12290;&#21021;&#22987;&#21270;&#19968;&#20010;&#32531;&#23384;&#25110;&#21464;&#37327;&#26469;&#20445;&#23384;&#35745;&#31639;&#32467;&#26524;&#25110;&#24050;&#34987;&#20989;&#25968;&ldquo;&#30475;&#21040;&rdquo;&#30340;&#36755;&#20837;&#21644;&#35831;&#27714;&#30340;&#36164;&#28304;&#21487;&#20197;&#26497;&#22823;&#22320;&#25552;&#39640;&#24615;&#33021;&#12290;</p><p>&#21069;</p><pre><code class="   language-php">def is_prime(n):
+    # &#22788;&#29702;&#25968;&#23383;&#23567;&#20110;&#25110;&#31561;&#20110; 1 &#30340;&#36793;&#32536;&#24773;&#20917;
     if n &lt;= 1:
         return False
 
-    # 检查不超过 n 的平方根的潜在因数的可除性
+    # &#26816;&#26597;&#19981;&#36229;&#36807; n &#30340;&#24179;&#26041;&#26681;&#30340;&#28508;&#22312;&#22240;&#25968;&#30340;&#21487;&#38500;&#24615;
     for i in range(2, int(n**0.5) + 1):
         if n % i == 0:
             return False
 
-    # 如果找不到被除数，则该数为质数
+    # &#22914;&#26524;&#25214;&#19981;&#21040;&#34987;&#38500;&#25968;&#65292;&#21017;&#35813;&#25968;&#20026;&#36136;&#25968;
     return True
 
-# 检查数字是否为质数
+# &#26816;&#26597;&#25968;&#23383;&#26159;&#21542;&#20026;&#36136;&#25968;
 print(is_prime(29))  # True
 print(is_prime(15))  # False
-print(is_prime(29))  # True (Recalculated)</code></pre>
-<p>后</p>
-<pre><code class="   language-php"># 定义全局缓存字典
+print(is_prime(29))  # True (Recalculated)</code></pre><p>&#21518;</p><pre><code class="   language-php"># &#23450;&#20041;&#20840;&#23616;&#32531;&#23384;&#23383;&#20856;
 prime_cache = {}
 
 def is_prime(n):
-    # 检查结果是否已缓存，避免计算
+    # &#26816;&#26597;&#32467;&#26524;&#26159;&#21542;&#24050;&#32531;&#23384;&#65292;&#36991;&#20813;&#35745;&#31639;
     if n in prime_cache:
         return prime_cache[n]
 
-    # 处理小于或等于 1 的数字的边缘情况
+    # &#22788;&#29702;&#23567;&#20110;&#25110;&#31561;&#20110; 1 &#30340;&#25968;&#23383;&#30340;&#36793;&#32536;&#24773;&#20917;
     if n &lt;= 1:
         prime_cache[n] = False
         return False
 
-    # 检查不超过 n 的平方根的潜在因数的可除性
+    # &#26816;&#26597;&#19981;&#36229;&#36807; n &#30340;&#24179;&#26041;&#26681;&#30340;&#28508;&#22312;&#22240;&#25968;&#30340;&#21487;&#38500;&#24615;
     for i in range(2, int(n**0.5) + 1):
         if n % i == 0:
             prime_cache[n] = False
             return False
 
-    # 如果没有找到约数，则该数字是质数
+    # &#22914;&#26524;&#27809;&#26377;&#25214;&#21040;&#32422;&#25968;&#65292;&#21017;&#35813;&#25968;&#23383;&#26159;&#36136;&#25968;
     prime_cache[n] = True
     return True
 
-# 使用缓存测试 is_prime 函数
+# &#20351;&#29992;&#32531;&#23384;&#27979;&#35797; is_prime &#20989;&#25968;
 print(is_prime(29))  # True, calculated and stored
 print(is_prime(15))  # False, calculated and stored
 print(is_prime(29))  # True, retrieved from cache
-print(is_prime(15))  # False, retrieved from cache</code></pre>
-<h2 id="45ac06be95b687d63b93e45600437b01">11、使用映射和字典来避免过度迭代</h2>
-<p>继续避免过度迭代的主题，有时，你可以通过改变算法使用的数据结构类型来提高效率。例如，通过使用映射或字典，您可以通过执行直接查找来完全避免迭代。</p>
-<p>前</p>
-<pre><code class="   language-php">students_list = [
+print(is_prime(15))  # False, retrieved from cache</code></pre><h2 id="45ac06be95b687d63b93e45600437b01">11&#12289;&#20351;&#29992;&#26144;&#23556;&#21644;&#23383;&#20856;&#26469;&#36991;&#20813;&#36807;&#24230;&#36845;&#20195;</h2><p>&#32487;&#32493;&#36991;&#20813;&#36807;&#24230;&#36845;&#20195;&#30340;&#20027;&#39064;&#65292;&#26377;&#26102;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#25913;&#21464;&#31639;&#27861;&#20351;&#29992;&#30340;&#25968;&#25454;&#32467;&#26500;&#31867;&#22411;&#26469;&#25552;&#39640;&#25928;&#29575;&#12290;&#20363;&#22914;&#65292;&#36890;&#36807;&#20351;&#29992;&#26144;&#23556;&#25110;&#23383;&#20856;&#65292;&#24744;&#21487;&#20197;&#36890;&#36807;&#25191;&#34892;&#30452;&#25509;&#26597;&#25214;&#26469;&#23436;&#20840;&#36991;&#20813;&#36845;&#20195;&#12290;</p><p>&#21069;</p><pre><code class="   language-php">students_list = [
     {"id": 101, "name": "Alice", "grade": "A"},
     {"id": 102, "name": "Bob", "grade": "B"},
     {"id": 103, "name": "Charlie", "grade": "C"},
@@ -770,9 +705,7 @@ def find_student_by_id_list(student_id, students):
 
 # Find student with ID 102
 student = find_student_by_id_list(102, students_list)
-print(student)  # Output: {'id': 102, 'name': 'Bob', 'grade': 'B'}</code></pre>
-<p>后</p>
-<pre><code class="   language-php">students_dict = {
+print(student)  # Output: {'id': 102, 'name': 'Bob', 'grade': 'B'}</code></pre><p>&#21518;</p><pre><code class="   language-php">students_dict = {
     101: {"name": "Alice", "grade": "A"},
     102: {"name": "Bob", "grade": "B"},
     103: {"name": "Charlie", "grade": "C"},
@@ -784,6 +717,7 @@ def find_student_by_id_dict(student_id, students):
 # Find student with ID 102
 student = find_student_by_id_dict(102, students_dict)
 print(student)  # Output: {'name': 'Bob', 'grade': 'B'}</code></pre>
+
 			</div>
 </div>
 

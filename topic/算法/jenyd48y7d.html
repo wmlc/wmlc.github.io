@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -362,30 +362,16 @@ var _hmt = _hmt || [];
 <li><a href="jenyd48y7d.html#bdf402ca7183f10b6dfc232b84c05aae">SQL 语句</a></li>
 <li><a href="jenyd48y7d.html#b43632b1fc051e45763d6d8474dc2a26">Laravel 中</a></li>
 <li><a href="jenyd48y7d.html#e3fa71c63b83bea589f9fc849b54803e">Redis Geo 方式</a></li>
-</ul><p>已知数据库中有很多位置经纬度坐标 lng 、 lat，将这些位置按照距已知位置A(坐标 $lng 、$lat)的距离升序排序</p>
-<h2 id="bdf402ca7183f10b6dfc232b84c05aae">SQL 语句</h2>
-<p>数据量小直接用SQL查询即可</p>
-<p>升序排序示例：distance 是计算出来的距离单位是公里</p>
-<pre><code class="language-php"> $sql = "select *, ACOS(SIN(( $lat * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS(( $lat * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS(( $lng * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6380 as distance from `store` where (`status` = '1') and `type_id` = '1'  order by `distance` asc limit 30 offset 30";</code></pre>
-<h2 id="b43632b1fc051e45763d6d8474dc2a26">Laravel 中</h2>
-<p>升序排序示例：distance 是计算出来的距离单位是公里</p>
-<pre><code class="language-php">
+</ul><?xml encoding="UTF-8"><p>&#24050;&#30693;&#25968;&#25454;&#24211;&#20013;&#26377;&#24456;&#22810;&#20301;&#32622;&#32463;&#32428;&#24230;&#22352;&#26631; lng &#12289; lat&#65292;&#23558;&#36825;&#20123;&#20301;&#32622;&#25353;&#29031;&#36317;&#24050;&#30693;&#20301;&#32622;A(&#22352;&#26631; $lng &#12289;$lat)&#30340;&#36317;&#31163;&#21319;&#24207;&#25490;&#24207;</p><h2 id="bdf402ca7183f10b6dfc232b84c05aae">SQL &#35821;&#21477;</h2><p>&#25968;&#25454;&#37327;&#23567;&#30452;&#25509;&#29992;SQL&#26597;&#35810;&#21363;&#21487;</p><p>&#21319;&#24207;&#25490;&#24207;&#31034;&#20363;&#65306;distance &#26159;&#35745;&#31639;&#20986;&#26469;&#30340;&#36317;&#31163;&#21333;&#20301;&#26159;&#20844;&#37324;</p><pre><code class="language-php"> $sql = "select *, ACOS(SIN(( $lat * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS(( $lat * 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS(( $lng * 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6380 as distance from `store` where (`status` = '1') and `type_id` = '1'  order by `distance` asc limit 30 offset 30";</code></pre><h2 id="b43632b1fc051e45763d6d8474dc2a26">Laravel &#20013;</h2><p>&#21319;&#24207;&#25490;&#24207;&#31034;&#20363;&#65306;distance &#26159;&#35745;&#31639;&#20986;&#26469;&#30340;&#36317;&#31163;&#21333;&#20301;&#26159;&#20844;&#37324;</p><pre><code class="language-php">
  $distance = "ACOS(SIN(( $lat * 3.1415) / 180 ) *SIN((lat * 3.1415) / 180 ) +COS(( $lat* 3.1415) / 180 ) * COS((lat * 3.1415) / 180 ) *COS(( $lng* 3.1415) / 180 - (lng * 3.1415) / 180 ) ) * 6380";
 
 $list     = $this-&gt;model-&gt;select('*')-&gt;addSelect(\DB::raw($distance . ' as distance'))-&gt;orderBy('distance', 'ASC')-&gt;get()-&gt;toArray();
 
-dd($list);</code></pre>
-<h2 id="e3fa71c63b83bea589f9fc849b54803e">Redis Geo 方式</h2>
-<p>数据量大的情况下要考虑elasticssearch、Redis、MongoDB 等第三方存储，性能更佳。</p>
-<p>1、创建Redis数据源：通过 geoAdd 方法将数据库中的位置坐标存储到redis中</p>
-<p>geoadd 方法：用于存储指定的地理空间位置，可以将一个或多个经度(longitude)、纬度(latitude)、位置名称(member)添加到指定的 key 中。</p>
-<pre><code class="language-php">Redis::geoAdd($key, $lng, $lat, $member);</code></pre>
-<p>2、获取排序好的位置列表</p>
-<p>georadius 方法：以给定的经纬度为中心， 返回键包含的位置元素当中， 与中心的距离不超过给定最大距离的所有位置元素。</p>
-<pre><code class="language-php">public static function geoRadius($key, $lng, $lat, int $distance = 500, string $unit = 'km', array $options = ['WITHDIST', 'ASC'])
+dd($list);</code></pre><h2 id="e3fa71c63b83bea589f9fc849b54803e">Redis Geo &#26041;&#24335;</h2><p>&#25968;&#25454;&#37327;&#22823;&#30340;&#24773;&#20917;&#19979;&#35201;&#32771;&#34385;elasticssearch&#12289;Redis&#12289;MongoDB &#31561;&#31532;&#19977;&#26041;&#23384;&#20648;&#65292;&#24615;&#33021;&#26356;&#20339;&#12290;</p><p>1&#12289;&#21019;&#24314;Redis&#25968;&#25454;&#28304;&#65306;&#36890;&#36807; geoAdd &#26041;&#27861;&#23558;&#25968;&#25454;&#24211;&#20013;&#30340;&#20301;&#32622;&#22352;&#26631;&#23384;&#20648;&#21040;redis&#20013;</p><p>geoadd &#26041;&#27861;&#65306;&#29992;&#20110;&#23384;&#20648;&#25351;&#23450;&#30340;&#22320;&#29702;&#31354;&#38388;&#20301;&#32622;&#65292;&#21487;&#20197;&#23558;&#19968;&#20010;&#25110;&#22810;&#20010;&#32463;&#24230;(longitude)&#12289;&#32428;&#24230;(latitude)&#12289;&#20301;&#32622;&#21517;&#31216;(member)&#28155;&#21152;&#21040;&#25351;&#23450;&#30340; key &#20013;&#12290;</p><pre><code class="language-php">Redis::geoAdd($key, $lng, $lat, $member);</code></pre><p>2&#12289;&#33719;&#21462;&#25490;&#24207;&#22909;&#30340;&#20301;&#32622;&#21015;&#34920;</p><p>georadius &#26041;&#27861;&#65306;&#20197;&#32473;&#23450;&#30340;&#32463;&#32428;&#24230;&#20026;&#20013;&#24515;&#65292; &#36820;&#22238;&#38190;&#21253;&#21547;&#30340;&#20301;&#32622;&#20803;&#32032;&#24403;&#20013;&#65292; &#19982;&#20013;&#24515;&#30340;&#36317;&#31163;&#19981;&#36229;&#36807;&#32473;&#23450;&#26368;&#22823;&#36317;&#31163;&#30340;&#25152;&#26377;&#20301;&#32622;&#20803;&#32032;&#12290;</p><pre><code class="language-php">public static function geoRadius($key, $lng, $lat, int $distance = 500, string $unit = 'km', array $options = ['WITHDIST', 'ASC'])
 {
     return Redis::geoRadius($key, $lng, $lat, $distance, $unit, $options);
 }</code></pre>
+
 			</div>
 </div>
 

@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -381,93 +381,62 @@ var _hmt = _hmt || [];
 <li><a href="jenyd0nv7d.html#23f97c8ab2be5abf1d66a3cfc215ce30">以配置文件方式封禁ip</a></li>
 </ul></li>
 <li><a href="jenyd0nv7d.html#4770dc90e42dd80acbc17f2186e8ef30">3、创建高频 IP 监控脚本</a></li>
-</ul><h2 id="28047adead86f4076b52695bbf5137b6">1、查找服务器所有访问者ip方法：</h2>
-<pre><code class="language-bash">awk '{print \$1}' nginx_access.log |sort |uniq -c|sort -n</code></pre>
-<p>nginx.access.log 为nginx访问日志文件所在路径</p>
-<p>会到如下结果，前面是ip的访问次数，后面是ip，很明显我们需要把访问次数多的ip并且不是蜘蛛的ip屏蔽掉，如下面结果，<br />
-若 66.249.79.84 不为蜘蛛则需要屏蔽：</p>
-<pre><code class="   language-php">     89 106.75.133.167
+</ul><?xml encoding="UTF-8"><h2 id="28047adead86f4076b52695bbf5137b6">1&#12289;&#26597;&#25214;&#26381;&#21153;&#22120;&#25152;&#26377;&#35775;&#38382;&#32773;ip&#26041;&#27861;&#65306;</h2><pre><code class="language-bash">awk '{print \$1}' nginx_access.log |sort |uniq -c|sort -n</code></pre><p>nginx.access.log &#20026;nginx&#35775;&#38382;&#26085;&#24535;&#25991;&#20214;&#25152;&#22312;&#36335;&#24452;</p><p>&#20250;&#21040;&#22914;&#19979;&#32467;&#26524;&#65292;&#21069;&#38754;&#26159;ip&#30340;&#35775;&#38382;&#27425;&#25968;&#65292;&#21518;&#38754;&#26159;ip&#65292;&#24456;&#26126;&#26174;&#25105;&#20204;&#38656;&#35201;&#25226;&#35775;&#38382;&#27425;&#25968;&#22810;&#30340;ip&#24182;&#19988;&#19981;&#26159;&#34584;&#34523;&#30340;ip&#23631;&#34109;&#25481;&#65292;&#22914;&#19979;&#38754;&#32467;&#26524;&#65292;<br>
+&#33509; 66.249.79.84 &#19981;&#20026;&#34584;&#34523;&#21017;&#38656;&#35201;&#23631;&#34109;&#65306;</p><pre><code class="   language-php">     89 106.75.133.167
      90 118.123.114.57
      91 101.78.0.210
      92 116.113.124.59
      92 119.90.24.73
      92 124.119.87.204
     119 173.242.117.145
-   4320 66.249.79.84</code></pre>
-<h2 id="6967ea9b61840a17cc962e2bca3e2791">2、屏蔽IP的方法：</h2>
-<h3 id="65021a34ee08cc64ff147f3972355c5c">deny与allow</h3>
-<p>Nginx的<code>deny</code>和<code>allow</code>指令是由ngx_http_access_module模块提供，Nginx安装默认内置了该模块。<br />
-在nginx中，allow和deny的规则是按顺序执行的。</p>
-<p><strong>示例1</strong>：</p>
-<pre><code class="language-nginx">location /
+   4320 66.249.79.84</code></pre><h2 id="6967ea9b61840a17cc962e2bca3e2791">2&#12289;&#23631;&#34109;IP&#30340;&#26041;&#27861;&#65306;</h2><h3 id="65021a34ee08cc64ff147f3972355c5c">deny&#19982;allow</h3><p>Nginx&#30340;<code>deny</code>&#21644;<code>allow</code>&#25351;&#20196;&#26159;&#30001;ngx_http_access_module&#27169;&#22359;&#25552;&#20379;&#65292;Nginx&#23433;&#35013;&#40664;&#35748;&#20869;&#32622;&#20102;&#35813;&#27169;&#22359;&#12290;<br>
+&#22312;nginx&#20013;&#65292;allow&#21644;deny&#30340;&#35268;&#21017;&#26159;&#25353;&#39034;&#24207;&#25191;&#34892;&#30340;&#12290;</p><p><strong>&#31034;&#20363;1</strong>&#65306;</p><pre><code class="language-nginx">location /
 {
     allow 192.168.0.0/24;
     allow 127.0.0.1;
     deny all;
-}</code></pre>
-<p>说明：这段配置只允许192.168.0.0/24网段和127.0.0.1的请求，其他来源IP全部拒绝。</p>
-<p><strong>示例2：</strong></p>
-<pre><code class="language-nginx">location ~ "admin"
+}</code></pre><p>&#35828;&#26126;&#65306;&#36825;&#27573;&#37197;&#32622;&#21482;&#20801;&#35768;192.168.0.0/24&#32593;&#27573;&#21644;127.0.0.1&#30340;&#35831;&#27714;&#65292;&#20854;&#20182;&#26469;&#28304;IP&#20840;&#37096;&#25298;&#32477;&#12290;</p><p><strong>&#31034;&#20363;2&#65306;</strong></p><pre><code class="language-nginx">location ~ "admin"
 {
     allow 192.168.30.7;
     deny all
-}</code></pre>
-<p>说明：访问的uri中包含admin的请求，只允许192.168.30.7这个IP的请求。</p>
-<h3 id="23f97c8ab2be5abf1d66a3cfc215ce30">以配置文件方式封禁ip</h3>
-<p>在nginx的安装目录下面,新建屏蔽ip文件，命名为 <code>/usr/local/nginx/conf/deny_ip/{项目名}_deny_ip.conf</code>，以后新增加屏蔽ip只需编辑这个文件即可。<br />
-加入如下内容并保存：</p>
-<pre><code class="   language-php">deny 66.249.79.84 ;</code></pre>
-<p>在nginx的配置文件nginx.conf中加入如下配置，可以放到http, server, location, limit_except语句块，需要注意相对路径，本例当中nginx.conf，guolv_ip.conf在同一个目录中。</p>
-<pre><code class="   language-php">include deny_ip/{项目名}_deny_ip.conf ;</code></pre>
-<p>保存nginx.conf文件，然后测试现在的nginx配置文件是否是合法的：</p>
-<pre><code class="   language-php"> nginx -t</code></pre>
-<p>如果配置没有问题，就会输出：</p>
-<pre><code class="   language-php">the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok
-configuration file /usr/local/nginx/conf/nginx.conf test is successful</code></pre>
-<p>如果配置有问题就需要检查下哪儿有语法问题，如果没有问题，需要执行下面命令，重载 nginx 配置文件：</p>
-<pre><code class="   language-php">service nginx  reload</code></pre>
-<p><strong>3、注意：</strong></p>
-<p>屏蔽ip的配置文件既可以屏蔽单个ip，也可以屏蔽ip段，或者只允许某个ip或者某个ip段访问。</p>
-<pre><code class="   language-php">//屏蔽单个ip访问
+}</code></pre><p>&#35828;&#26126;&#65306;&#35775;&#38382;&#30340;uri&#20013;&#21253;&#21547;admin&#30340;&#35831;&#27714;&#65292;&#21482;&#20801;&#35768;192.168.30.7&#36825;&#20010;IP&#30340;&#35831;&#27714;&#12290;</p><h3 id="23f97c8ab2be5abf1d66a3cfc215ce30">&#20197;&#37197;&#32622;&#25991;&#20214;&#26041;&#24335;&#23553;&#31105;ip</h3><p>&#22312;nginx&#30340;&#23433;&#35013;&#30446;&#24405;&#19979;&#38754;,&#26032;&#24314;&#23631;&#34109;ip&#25991;&#20214;&#65292;&#21629;&#21517;&#20026; <code>/usr/local/nginx/conf/deny_ip/{&#39033;&#30446;&#21517;}_deny_ip.conf</code>&#65292;&#20197;&#21518;&#26032;&#22686;&#21152;&#23631;&#34109;ip&#21482;&#38656;&#32534;&#36753;&#36825;&#20010;&#25991;&#20214;&#21363;&#21487;&#12290;<br>
+&#21152;&#20837;&#22914;&#19979;&#20869;&#23481;&#24182;&#20445;&#23384;&#65306;</p><pre><code class="   language-php">deny 66.249.79.84 ;</code></pre><p>&#22312;nginx&#30340;&#37197;&#32622;&#25991;&#20214;nginx.conf&#20013;&#21152;&#20837;&#22914;&#19979;&#37197;&#32622;&#65292;&#21487;&#20197;&#25918;&#21040;http, server, location, limit_except&#35821;&#21477;&#22359;&#65292;&#38656;&#35201;&#27880;&#24847;&#30456;&#23545;&#36335;&#24452;&#65292;&#26412;&#20363;&#24403;&#20013;nginx.conf&#65292;guolv_ip.conf&#22312;&#21516;&#19968;&#20010;&#30446;&#24405;&#20013;&#12290;</p><pre><code class="   language-php">include deny_ip/{&#39033;&#30446;&#21517;}_deny_ip.conf ;</code></pre><p>&#20445;&#23384;nginx.conf&#25991;&#20214;&#65292;&#28982;&#21518;&#27979;&#35797;&#29616;&#22312;&#30340;nginx&#37197;&#32622;&#25991;&#20214;&#26159;&#21542;&#26159;&#21512;&#27861;&#30340;&#65306;</p><pre><code class="   language-php"> nginx -t</code></pre><p>&#22914;&#26524;&#37197;&#32622;&#27809;&#26377;&#38382;&#39064;&#65292;&#23601;&#20250;&#36755;&#20986;&#65306;</p><pre><code class="   language-php">the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok
+configuration file /usr/local/nginx/conf/nginx.conf test is successful</code></pre><p>&#22914;&#26524;&#37197;&#32622;&#26377;&#38382;&#39064;&#23601;&#38656;&#35201;&#26816;&#26597;&#19979;&#21738;&#20799;&#26377;&#35821;&#27861;&#38382;&#39064;&#65292;&#22914;&#26524;&#27809;&#26377;&#38382;&#39064;&#65292;&#38656;&#35201;&#25191;&#34892;&#19979;&#38754;&#21629;&#20196;&#65292;&#37325;&#36733; nginx &#37197;&#32622;&#25991;&#20214;&#65306;</p><pre><code class="   language-php">service nginx  reload</code></pre><p><strong>3&#12289;&#27880;&#24847;&#65306;</strong></p><p>&#23631;&#34109;ip&#30340;&#37197;&#32622;&#25991;&#20214;&#26082;&#21487;&#20197;&#23631;&#34109;&#21333;&#20010;ip&#65292;&#20063;&#21487;&#20197;&#23631;&#34109;ip&#27573;&#65292;&#25110;&#32773;&#21482;&#20801;&#35768;&#26576;&#20010;ip&#25110;&#32773;&#26576;&#20010;ip&#27573;&#35775;&#38382;&#12290;</p><pre><code class="   language-php">//&#23631;&#34109;&#21333;&#20010;ip&#35775;&#38382;
 
 deny IP; 
 
-//允许单个ip访问
+//&#20801;&#35768;&#21333;&#20010;ip&#35775;&#38382;
 
 allow IP; 
 
-//屏蔽所有ip访问
+//&#23631;&#34109;&#25152;&#26377;ip&#35775;&#38382;
 
 deny all; 
 
-//允许所有ip访问
+//&#20801;&#35768;&#25152;&#26377;ip&#35775;&#38382;
 
 allow all; 
 
-//屏蔽整个段即从123.0.0.1到123.255.255.254访问的命令
+//&#23631;&#34109;&#25972;&#20010;&#27573;&#21363;&#20174;123.0.0.1&#21040;123.255.255.254&#35775;&#38382;&#30340;&#21629;&#20196;
 
 deny 123.0.0.0/8
 
-//屏蔽IP段即从123.45.0.1到123.45.255.254访问的命令
+//&#23631;&#34109;IP&#27573;&#21363;&#20174;123.45.0.1&#21040;123.45.255.254&#35775;&#38382;&#30340;&#21629;&#20196;
 
 deny 124.45.0.0/16
 
-//屏蔽IP段即从123.45.6.1到123.45.6.254访问的命令
+//&#23631;&#34109;IP&#27573;&#21363;&#20174;123.45.6.1&#21040;123.45.6.254&#35775;&#38382;&#30340;&#21629;&#20196;
 
 deny 123.45.6.0/24
 
-//如果你想实现这样的应用，除了几个IP外，其他全部拒绝，
-//那需要你在guolv_ip.conf中这样写
+//&#22914;&#26524;&#20320;&#24819;&#23454;&#29616;&#36825;&#26679;&#30340;&#24212;&#29992;&#65292;&#38500;&#20102;&#20960;&#20010;IP&#22806;&#65292;&#20854;&#20182;&#20840;&#37096;&#25298;&#32477;&#65292;
+//&#37027;&#38656;&#35201;&#20320;&#22312;guolv_ip.conf&#20013;&#36825;&#26679;&#20889;
 
 allow 1.1.1.1; 
 allow 1.1.1.2;
-deny all;</code></pre>
-<pre><code class="   language-php">单独网站屏蔽IP的方法，把include deny_ip/{项目名}_deny_ip.conf ; 放到网址对应的在server{}语句块，
-所有网站屏蔽IP的方法，把include deny_ip/deny_ip.conf ; 放到http {}语句块。</code></pre>
-<h2 id="4770dc90e42dd80acbc17f2186e8ef30">3、创建高频 IP 监控脚本</h2>
-<p>以 PHP 脚本为例</p>
-<pre><code class="language-php">try {
-    # IP请求频率限制数
+deny all;</code></pre><pre><code class="   language-php">&#21333;&#29420;&#32593;&#31449;&#23631;&#34109;IP&#30340;&#26041;&#27861;&#65292;&#25226;include deny_ip/{&#39033;&#30446;&#21517;}_deny_ip.conf ; &#25918;&#21040;&#32593;&#22336;&#23545;&#24212;&#30340;&#22312;server{}&#35821;&#21477;&#22359;&#65292;
+&#25152;&#26377;&#32593;&#31449;&#23631;&#34109;IP&#30340;&#26041;&#27861;&#65292;&#25226;include deny_ip/deny_ip.conf ; &#25918;&#21040;http {}&#35821;&#21477;&#22359;&#12290;</code></pre><h2 id="4770dc90e42dd80acbc17f2186e8ef30">3&#12289;&#21019;&#24314;&#39640;&#39057; IP &#30417;&#25511;&#33050;&#26412;</h2><p>&#20197; PHP &#33050;&#26412;&#20026;&#20363;</p><pre><code class="language-php">try {
+    # IP&#35831;&#27714;&#39057;&#29575;&#38480;&#21046;&#25968;
     $ipLimit = 200;
     $log = '/alidata/log/nginx/test.log';
     $time = date('H:i:', strtotime('-1 minute'));
@@ -482,18 +451,18 @@ deny all;</code></pre>
         }
     }
     if (!empty($data)) {
-        # 发送报警
+        # &#21457;&#36865;&#25253;&#35686;
         dp($data);
     }
-    # 收到报警后去检查ip,若确定这个ip是攻击ip,将其加到nginx封禁ip配置中
-    # sudo vim /usr/local/nginx/conf/deny_ip/{项目}_deny_ip.conf
+    # &#25910;&#21040;&#25253;&#35686;&#21518;&#21435;&#26816;&#26597;ip,&#33509;&#30830;&#23450;&#36825;&#20010;ip&#26159;&#25915;&#20987;ip,&#23558;&#20854;&#21152;&#21040;nginx&#23553;&#31105;ip&#37197;&#32622;&#20013;
+    # sudo vim /usr/local/nginx/conf/deny_ip/{&#39033;&#30446;}_deny_ip.conf
     # deny {ip};
 
 } catch (\Throwable $e) {
     dp($e-&gt;getMessage());
     dp($e-&gt;getTraceAsString());
-}</code></pre>
-<p>参考：<a href="http://www.nginx.cn/2487.html">http://www.nginx.cn/2487.html</a></p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> http://www.nginx.cn/2487.html: <i><a href="http://www.nginx.cn/2487.html" target="_blank">http://www.nginx.cn/2487.html</a></i><br></p>
+}</code></pre><p>&#21442;&#32771;&#65306;<a href="http://www.nginx.cn/2487.html" target="_blank" rel="noopener noreferrer">http://www.nginx.cn/2487.html</a></p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> http://www.nginx.cn/2487.html: <i><a href="http://www.nginx.cn/2487.html" target="_blank">http://www.nginx.cn/2487.html</a></i><br></p>
 			</div>
 </div>
 

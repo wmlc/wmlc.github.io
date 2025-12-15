@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -386,111 +386,47 @@ var _hmt = _hmt || [];
 <li><a href="nxq9z03vdo.html#9df4f21b596436ff15371b9a629a0b28">Docker Compose</a></li>
 </ul></li>
 <li><a href="nxq9z03vdo.html#33da3562df698c5c2733cc86b92a135e">配置 DNS</a></li>
-</ul><h2 id="c2f0c6f5dfba14a727e1aacf7b542e52">Docker 中的网络功能介绍</h2>
-<p>Docker 允许通过外部访问容器或容器互联的方式来提供网络服务。</p>
-<h2 id="fe6bb93e4d01fd9317947eef46670807">外部访问容器</h2>
-<p>容器中可以运行一些网络应用，要让外部也可以访问这些应用，可以通过 <code>-P</code> 或 <code>-p</code> 参数来指定端口映射。</p>
-<p>当使用 <code>-P</code> 标记时，Docker 会随机映射一个端口到内部容器开放的网络端口。</p>
-<p>使用 <code>docker container ls</code> 可以看到，本地主机的 32768 被映射到了容器的 80 端口。此时访问本机的 32768 端口即可访问容器内 NGINX 默认页面。</p>
-<pre><code class="language-bash">$ docker run -d -P nginx:alpine
+</ul><?xml encoding="UTF-8"><h2 id="c2f0c6f5dfba14a727e1aacf7b542e52">Docker &#20013;&#30340;&#32593;&#32476;&#21151;&#33021;&#20171;&#32461;</h2><p>Docker &#20801;&#35768;&#36890;&#36807;&#22806;&#37096;&#35775;&#38382;&#23481;&#22120;&#25110;&#23481;&#22120;&#20114;&#32852;&#30340;&#26041;&#24335;&#26469;&#25552;&#20379;&#32593;&#32476;&#26381;&#21153;&#12290;</p><h2 id="fe6bb93e4d01fd9317947eef46670807">&#22806;&#37096;&#35775;&#38382;&#23481;&#22120;</h2><p>&#23481;&#22120;&#20013;&#21487;&#20197;&#36816;&#34892;&#19968;&#20123;&#32593;&#32476;&#24212;&#29992;&#65292;&#35201;&#35753;&#22806;&#37096;&#20063;&#21487;&#20197;&#35775;&#38382;&#36825;&#20123;&#24212;&#29992;&#65292;&#21487;&#20197;&#36890;&#36807; <code>-P</code> &#25110; <code>-p</code> &#21442;&#25968;&#26469;&#25351;&#23450;&#31471;&#21475;&#26144;&#23556;&#12290;</p><p>&#24403;&#20351;&#29992; <code>-P</code> &#26631;&#35760;&#26102;&#65292;Docker &#20250;&#38543;&#26426;&#26144;&#23556;&#19968;&#20010;&#31471;&#21475;&#21040;&#20869;&#37096;&#23481;&#22120;&#24320;&#25918;&#30340;&#32593;&#32476;&#31471;&#21475;&#12290;</p><p>&#20351;&#29992; <code>docker container ls</code> &#21487;&#20197;&#30475;&#21040;&#65292;&#26412;&#22320;&#20027;&#26426;&#30340; 32768 &#34987;&#26144;&#23556;&#21040;&#20102;&#23481;&#22120;&#30340; 80 &#31471;&#21475;&#12290;&#27492;&#26102;&#35775;&#38382;&#26412;&#26426;&#30340; 32768 &#31471;&#21475;&#21363;&#21487;&#35775;&#38382;&#23481;&#22120;&#20869; NGINX &#40664;&#35748;&#39029;&#38754;&#12290;</p><pre><code class="language-bash">$ docker run -d -P nginx:alpine
 
 $ docker container ls -l
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                   NAMES
-fae320d08268        nginx:alpine        "/docker-entrypoint.…"   24 seconds ago      Up 20 seconds       0.0.0.0:32768-&gt;80/tcp   bold_mcnulty</code></pre>
-<p>同样的，可以通过 <code>docker logs</code> 命令来查看访问记录。</p>
-<pre><code class="language-bash">$ docker logs fa
-172.17.0.1 - - [25/Aug/2020:08:34:04 +0000] "GET / HTTP/1.1" 200 612 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0" "-"</code></pre>
-<p><code>-p</code> 则可以指定要映射的端口，并且，在一个指定端口上只可以绑定一个容器。支持的格式有 <code>ip:hostPort:containerPort | ip::containerPort | hostPort:containerPort</code>。</p>
-<h3 id="cc4add018dea50c5c26e286522ecaa9f">映射所有接口地址</h3>
-<p>使用 <code>hostPort:containerPort</code> 格式本地的 80 端口映射到容器的 80 端口，可以执行</p>
-<pre><code class="language-bash">$ docker run -d -p 80:80 nginx:alpine</code></pre>
-<p>此时默认会绑定本地所有接口上的所有地址。</p>
-<h3 id="7a9d7a6fd9999d4c50012bf194a0d5f8">映射到指定地址的指定端口</h3>
-<p>可以使用 <code>ip:hostPort:containerPort</code> 格式指定映射使用一个特定地址，比如 localhost 地址 127.0.0.1</p>
-<pre><code class="language-bash">$ docker run -d -p 127.0.0.1:80:80 nginx:alpine</code></pre>
-<h3 id="5bfc1ca85e80abb7f382b15b0d1e05ae">映射到指定地址的任意端口</h3>
-<p>使用 <code>ip::containerPort</code> 绑定 localhost 的任意端口到容器的 80 端口，本地主机会自动分配一个端口。</p>
-<pre><code class="language-bash">$ docker run -d -p 127.0.0.1::80 nginx:alpine</code></pre>
-<p>还可以使用 <code>udp</code> 标记来指定 <code>udp</code> 端口</p>
-<pre><code class="language-bash">$ docker run -d -p 127.0.0.1:80:80/udp nginx:alpine</code></pre>
-<h3 id="2689da8e24fd82172b01f89e377c0081">查看映射端口配置</h3>
-<p>使用 <code>docker port</code> 来查看当前映射的端口配置，也可以查看到绑定的地址</p>
-<pre><code class="language-bash">$ docker port fa 80
-0.0.0.0:32768</code></pre>
-<p>注意：</p>
-<ul>
+fae320d08268        nginx:alpine        "/docker-entrypoint.&hellip;"   24 seconds ago      Up 20 seconds       0.0.0.0:32768-&gt;80/tcp   bold_mcnulty</code></pre><p>&#21516;&#26679;&#30340;&#65292;&#21487;&#20197;&#36890;&#36807; <code>docker logs</code> &#21629;&#20196;&#26469;&#26597;&#30475;&#35775;&#38382;&#35760;&#24405;&#12290;</p><pre><code class="language-bash">$ docker logs fa
+172.17.0.1 - - [25/Aug/2020:08:34:04 +0000] "GET / HTTP/1.1" 200 612 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0" "-"</code></pre><p><code>-p</code> &#21017;&#21487;&#20197;&#25351;&#23450;&#35201;&#26144;&#23556;&#30340;&#31471;&#21475;&#65292;&#24182;&#19988;&#65292;&#22312;&#19968;&#20010;&#25351;&#23450;&#31471;&#21475;&#19978;&#21482;&#21487;&#20197;&#32465;&#23450;&#19968;&#20010;&#23481;&#22120;&#12290;&#25903;&#25345;&#30340;&#26684;&#24335;&#26377; <code>ip:hostPort:containerPort | ip::containerPort | hostPort:containerPort</code>&#12290;</p><h3 id="cc4add018dea50c5c26e286522ecaa9f">&#26144;&#23556;&#25152;&#26377;&#25509;&#21475;&#22320;&#22336;</h3><p>&#20351;&#29992; <code>hostPort:containerPort</code> &#26684;&#24335;&#26412;&#22320;&#30340; 80 &#31471;&#21475;&#26144;&#23556;&#21040;&#23481;&#22120;&#30340; 80 &#31471;&#21475;&#65292;&#21487;&#20197;&#25191;&#34892;</p><pre><code class="language-bash">$ docker run -d -p 80:80 nginx:alpine</code></pre><p>&#27492;&#26102;&#40664;&#35748;&#20250;&#32465;&#23450;&#26412;&#22320;&#25152;&#26377;&#25509;&#21475;&#19978;&#30340;&#25152;&#26377;&#22320;&#22336;&#12290;</p><h3 id="7a9d7a6fd9999d4c50012bf194a0d5f8">&#26144;&#23556;&#21040;&#25351;&#23450;&#22320;&#22336;&#30340;&#25351;&#23450;&#31471;&#21475;</h3><p>&#21487;&#20197;&#20351;&#29992; <code>ip:hostPort:containerPort</code> &#26684;&#24335;&#25351;&#23450;&#26144;&#23556;&#20351;&#29992;&#19968;&#20010;&#29305;&#23450;&#22320;&#22336;&#65292;&#27604;&#22914; localhost &#22320;&#22336; 127.0.0.1</p><pre><code class="language-bash">$ docker run -d -p 127.0.0.1:80:80 nginx:alpine</code></pre><h3 id="5bfc1ca85e80abb7f382b15b0d1e05ae">&#26144;&#23556;&#21040;&#25351;&#23450;&#22320;&#22336;&#30340;&#20219;&#24847;&#31471;&#21475;</h3><p>&#20351;&#29992; <code>ip::containerPort</code> &#32465;&#23450; localhost &#30340;&#20219;&#24847;&#31471;&#21475;&#21040;&#23481;&#22120;&#30340; 80 &#31471;&#21475;&#65292;&#26412;&#22320;&#20027;&#26426;&#20250;&#33258;&#21160;&#20998;&#37197;&#19968;&#20010;&#31471;&#21475;&#12290;</p><pre><code class="language-bash">$ docker run -d -p 127.0.0.1::80 nginx:alpine</code></pre><p>&#36824;&#21487;&#20197;&#20351;&#29992; <code>udp</code> &#26631;&#35760;&#26469;&#25351;&#23450; <code>udp</code> &#31471;&#21475;</p><pre><code class="language-bash">$ docker run -d -p 127.0.0.1:80:80/udp nginx:alpine</code></pre><h3 id="2689da8e24fd82172b01f89e377c0081">&#26597;&#30475;&#26144;&#23556;&#31471;&#21475;&#37197;&#32622;</h3><p>&#20351;&#29992; <code>docker port</code> &#26469;&#26597;&#30475;&#24403;&#21069;&#26144;&#23556;&#30340;&#31471;&#21475;&#37197;&#32622;&#65292;&#20063;&#21487;&#20197;&#26597;&#30475;&#21040;&#32465;&#23450;&#30340;&#22320;&#22336;</p><pre><code class="language-bash">$ docker port fa 80
+0.0.0.0:32768</code></pre><p>&#27880;&#24847;&#65306;</p><ul>
 <li>
-<p>容器有自己的内部网络和 ip 地址（使用 <code>docker inspect</code> 查看，Docker 还可以有一个可变的网络配置。）</p>
+<p>&#23481;&#22120;&#26377;&#33258;&#24049;&#30340;&#20869;&#37096;&#32593;&#32476;&#21644; ip &#22320;&#22336;&#65288;&#20351;&#29992; <code>docker inspect</code> &#26597;&#30475;&#65292;Docker &#36824;&#21487;&#20197;&#26377;&#19968;&#20010;&#21487;&#21464;&#30340;&#32593;&#32476;&#37197;&#32622;&#12290;&#65289;</p>
 </li>
 <li>
-<p><code>-p</code> 标记可以多次使用来绑定多个端口</p>
+<p><code>-p</code> &#26631;&#35760;&#21487;&#20197;&#22810;&#27425;&#20351;&#29992;&#26469;&#32465;&#23450;&#22810;&#20010;&#31471;&#21475;</p>
 </li>
-</ul>
-<p>例如</p>
-<pre><code class="language-bash">$ docker run -d \
+</ul><p>&#20363;&#22914;</p><pre><code class="language-bash">$ docker run -d \
     -p 80:80 \
     -p 443:443 \
-    nginx:alpine</code></pre>
-<h2 id="06dc7504152a3981b873a938686fbb62">容器互联</h2>
-<p>如果你之前有 <code>Docker</code> 使用经验，你可能已经习惯了使用 <code>--link</code> 参数来使容器互联。</p>
-<p>随着 Docker 网络的完善，强烈建议大家将容器加入自定义的 Docker 网络来连接多个容器，而不是使用 <code>--link</code> 参数。</p>
-<h3 id="a343ef9462b235f558ea0f82684e371d">新建网络</h3>
-<p>下面先创建一个新的 Docker 网络。</p>
-<pre><code class="language-bash">$ docker network create -d bridge my-net</code></pre>
-<p><code>-d</code> 参数指定 Docker 网络类型，有 <code>bridge</code> <code>overlay</code>。其中 <code>overlay</code> 网络类型用于 <a href="https://wangmaolin.net/topic/swarm_mode/">Swarm mode</a>，在本小节中你可以忽略它。</p>
-<h3 id="c23e877839fdae2977af965ee453ae91">连接容器</h3>
-<p>运行一个容器并连接到新建的 <code>my-net</code> 网络</p>
-<pre><code class="language-bash">$ docker run -it --rm --name busybox1 --network my-net busybox sh</code></pre>
-<p>打开新的终端，再运行一个容器并加入到 <code>my-net</code> 网络</p>
-<pre><code class="language-bash">$ docker run -it --rm --name busybox2 --network my-net busybox sh</code></pre>
-<p>再打开一个新的终端查看容器信息</p>
-<pre><code class="language-bash">$ docker container ls
+    nginx:alpine</code></pre><h2 id="06dc7504152a3981b873a938686fbb62">&#23481;&#22120;&#20114;&#32852;</h2><p>&#22914;&#26524;&#20320;&#20043;&#21069;&#26377; <code>Docker</code> &#20351;&#29992;&#32463;&#39564;&#65292;&#20320;&#21487;&#33021;&#24050;&#32463;&#20064;&#24815;&#20102;&#20351;&#29992; <code>--link</code> &#21442;&#25968;&#26469;&#20351;&#23481;&#22120;&#20114;&#32852;&#12290;</p><p>&#38543;&#30528; Docker &#32593;&#32476;&#30340;&#23436;&#21892;&#65292;&#24378;&#28872;&#24314;&#35758;&#22823;&#23478;&#23558;&#23481;&#22120;&#21152;&#20837;&#33258;&#23450;&#20041;&#30340; Docker &#32593;&#32476;&#26469;&#36830;&#25509;&#22810;&#20010;&#23481;&#22120;&#65292;&#32780;&#19981;&#26159;&#20351;&#29992; <code>--link</code> &#21442;&#25968;&#12290;</p><h3 id="a343ef9462b235f558ea0f82684e371d">&#26032;&#24314;&#32593;&#32476;</h3><p>&#19979;&#38754;&#20808;&#21019;&#24314;&#19968;&#20010;&#26032;&#30340; Docker &#32593;&#32476;&#12290;</p><pre><code class="language-bash">$ docker network create -d bridge my-net</code></pre><p><code>-d</code> &#21442;&#25968;&#25351;&#23450; Docker &#32593;&#32476;&#31867;&#22411;&#65292;&#26377; <code>bridge</code> <code>overlay</code>&#12290;&#20854;&#20013; <code>overlay</code> &#32593;&#32476;&#31867;&#22411;&#29992;&#20110; <a href="https://wangmaolin.net/topic/swarm_mode/" target="_blank">Swarm mode</a>&#65292;&#22312;&#26412;&#23567;&#33410;&#20013;&#20320;&#21487;&#20197;&#24573;&#30053;&#23427;&#12290;</p><h3 id="c23e877839fdae2977af965ee453ae91">&#36830;&#25509;&#23481;&#22120;</h3><p>&#36816;&#34892;&#19968;&#20010;&#23481;&#22120;&#24182;&#36830;&#25509;&#21040;&#26032;&#24314;&#30340; <code>my-net</code> &#32593;&#32476;</p><pre><code class="language-bash">$ docker run -it --rm --name busybox1 --network my-net busybox sh</code></pre><p>&#25171;&#24320;&#26032;&#30340;&#32456;&#31471;&#65292;&#20877;&#36816;&#34892;&#19968;&#20010;&#23481;&#22120;&#24182;&#21152;&#20837;&#21040; <code>my-net</code> &#32593;&#32476;</p><pre><code class="language-bash">$ docker run -it --rm --name busybox2 --network my-net busybox sh</code></pre><p>&#20877;&#25171;&#24320;&#19968;&#20010;&#26032;&#30340;&#32456;&#31471;&#26597;&#30475;&#23481;&#22120;&#20449;&#24687;</p><pre><code class="language-bash">$ docker container ls
 
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 b47060aca56b        busybox             "sh"                11 minutes ago      Up 11 minutes                           busybox2
-8720575823ec        busybox             "sh"                16 minutes ago      Up 16 minutes                           busybox1</code></pre>
-<p>下面通过 <code>ping</code> 来证明 <code>busybox1</code> 容器和 <code>busybox2</code> 容器建立了互联关系。</p>
-<p>在 <code>busybox1</code> 容器输入以下命令</p>
-<pre><code class="language-bash">/ # ping busybox2
+8720575823ec        busybox             "sh"                16 minutes ago      Up 16 minutes                           busybox1</code></pre><p>&#19979;&#38754;&#36890;&#36807; <code>ping</code> &#26469;&#35777;&#26126; <code>busybox1</code> &#23481;&#22120;&#21644; <code>busybox2</code> &#23481;&#22120;&#24314;&#31435;&#20102;&#20114;&#32852;&#20851;&#31995;&#12290;</p><p>&#22312; <code>busybox1</code> &#23481;&#22120;&#36755;&#20837;&#20197;&#19979;&#21629;&#20196;</p><pre><code class="language-bash">/ # ping busybox2
 PING busybox2 (172.19.0.3): 56 data bytes
 64 bytes from 172.19.0.3: seq=0 ttl=64 time=0.072 ms
-64 bytes from 172.19.0.3: seq=1 ttl=64 time=0.118 ms</code></pre>
-<p>用 ping 来测试连接 <code>busybox2</code> 容器，它会解析成 <code>172.19.0.3</code>。</p>
-<p>同理在 <code>busybox2</code> 容器执行 <code>ping busybox1</code>，也会成功连接到。</p>
-<pre><code class="language-bash">/ # ping busybox1
+64 bytes from 172.19.0.3: seq=1 ttl=64 time=0.118 ms</code></pre><p>&#29992; ping &#26469;&#27979;&#35797;&#36830;&#25509; <code>busybox2</code> &#23481;&#22120;&#65292;&#23427;&#20250;&#35299;&#26512;&#25104; <code>172.19.0.3</code>&#12290;</p><p>&#21516;&#29702;&#22312; <code>busybox2</code> &#23481;&#22120;&#25191;&#34892; <code>ping busybox1</code>&#65292;&#20063;&#20250;&#25104;&#21151;&#36830;&#25509;&#21040;&#12290;</p><pre><code class="language-bash">/ # ping busybox1
 PING busybox1 (172.19.0.2): 56 data bytes
 64 bytes from 172.19.0.2: seq=0 ttl=64 time=0.064 ms
-64 bytes from 172.19.0.2: seq=1 ttl=64 time=0.143 ms</code></pre>
-<p>这样，<code>busybox1</code> 容器和 <code>busybox2</code> 容器建立了互联关系。</p>
-<h3 id="9df4f21b596436ff15371b9a629a0b28">Docker Compose</h3>
-<p>如果你有多个容器之间需要互相连接，推荐使用 <a href="https://wangmaolin.net/topic/compose">Docker Compose</a>。</p>
-<h2 id="33da3562df698c5c2733cc86b92a135e">配置 DNS</h2>
-<p>如何自定义配置容器的主机名和 DNS 呢？秘诀就是 Docker 利用虚拟文件来挂载容器的 3 个相关配置文件。</p>
-<p>在容器中使用 <code>mount</code> 命令可以看到挂载信息：</p>
-<pre><code class="language-bash">$ mount
+64 bytes from 172.19.0.2: seq=1 ttl=64 time=0.143 ms</code></pre><p>&#36825;&#26679;&#65292;<code>busybox1</code> &#23481;&#22120;&#21644; <code>busybox2</code> &#23481;&#22120;&#24314;&#31435;&#20102;&#20114;&#32852;&#20851;&#31995;&#12290;</p><h3 id="9df4f21b596436ff15371b9a629a0b28">Docker Compose</h3><p>&#22914;&#26524;&#20320;&#26377;&#22810;&#20010;&#23481;&#22120;&#20043;&#38388;&#38656;&#35201;&#20114;&#30456;&#36830;&#25509;&#65292;&#25512;&#33616;&#20351;&#29992; <a href="https://wangmaolin.net/topic/compose" target="_blank">Docker Compose</a>&#12290;</p><h2 id="33da3562df698c5c2733cc86b92a135e">&#37197;&#32622; DNS</h2><p>&#22914;&#20309;&#33258;&#23450;&#20041;&#37197;&#32622;&#23481;&#22120;&#30340;&#20027;&#26426;&#21517;&#21644; DNS &#21602;&#65311;&#31192;&#35776;&#23601;&#26159; Docker &#21033;&#29992;&#34394;&#25311;&#25991;&#20214;&#26469;&#25346;&#36733;&#23481;&#22120;&#30340; 3 &#20010;&#30456;&#20851;&#37197;&#32622;&#25991;&#20214;&#12290;</p><p>&#22312;&#23481;&#22120;&#20013;&#20351;&#29992; <code>mount</code> &#21629;&#20196;&#21487;&#20197;&#30475;&#21040;&#25346;&#36733;&#20449;&#24687;&#65306;</p><pre><code class="language-bash">$ mount
 /dev/disk/by-uuid/1fec...ebdf on /etc/hostname type ext4 ...
 /dev/disk/by-uuid/1fec...ebdf on /etc/hosts type ext4 ...
-tmpfs on /etc/resolv.conf type tmpfs ...</code></pre>
-<p>这种机制可以让宿主主机 DNS 信息发生更新后，所有 Docker 容器的 DNS 配置通过 <code>/etc/resolv.conf</code> 文件立刻得到更新。</p>
-<p>配置全部容器的 DNS ，也可以在 <code>/etc/docker/daemon.json</code> 文件中增加以下内容来设置。</p>
-<pre><code class="language-json">{
+tmpfs on /etc/resolv.conf type tmpfs ...</code></pre><p>&#36825;&#31181;&#26426;&#21046;&#21487;&#20197;&#35753;&#23487;&#20027;&#20027;&#26426; DNS &#20449;&#24687;&#21457;&#29983;&#26356;&#26032;&#21518;&#65292;&#25152;&#26377; Docker &#23481;&#22120;&#30340; DNS &#37197;&#32622;&#36890;&#36807; <code>/etc/resolv.conf</code> &#25991;&#20214;&#31435;&#21051;&#24471;&#21040;&#26356;&#26032;&#12290;</p><p>&#37197;&#32622;&#20840;&#37096;&#23481;&#22120;&#30340; DNS &#65292;&#20063;&#21487;&#20197;&#22312; <code>/etc/docker/daemon.json</code> &#25991;&#20214;&#20013;&#22686;&#21152;&#20197;&#19979;&#20869;&#23481;&#26469;&#35774;&#32622;&#12290;</p><pre><code class="language-json">{
   "dns" : [
     "114.114.114.114",
     "8.8.8.8"
   ]
-}</code></pre>
-<p>这样每次启动的容器 DNS 自动配置为 <code>114.114.114.114</code> 和 <code>8.8.8.8</code>。使用以下命令来证明其已经生效。</p>
-<pre><code class="language-bash">$ docker run -it --rm ubuntu:18.04  cat etc/resolv.conf
+}</code></pre><p>&#36825;&#26679;&#27599;&#27425;&#21551;&#21160;&#30340;&#23481;&#22120; DNS &#33258;&#21160;&#37197;&#32622;&#20026; <code>114.114.114.114</code> &#21644; <code>8.8.8.8</code>&#12290;&#20351;&#29992;&#20197;&#19979;&#21629;&#20196;&#26469;&#35777;&#26126;&#20854;&#24050;&#32463;&#29983;&#25928;&#12290;</p><pre><code class="language-bash">$ docker run -it --rm ubuntu:18.04  cat etc/resolv.conf
 
 nameserver 114.114.114.114
-nameserver 8.8.8.8</code></pre>
-<p>如果用户想要手动指定容器的配置，可以在使用 <code>docker run</code> 命令启动容器时加入如下参数：</p>
-<p><code>-h HOSTNAME</code> 或者 <code>--hostname=HOSTNAME</code> 设定容器的主机名，它会被写到容器内的 <code>/etc/hostname</code> 和 <code>/etc/hosts</code>。但它在容器外部看不到，既不会在 <code>docker container ls</code> 中显示，也不会在其他的容器的 <code>/etc/hosts</code> 看到。</p>
-<p><code>--dns=IP_ADDRESS</code> 添加 DNS 服务器到容器的 <code>/etc/resolv.conf</code> 中，让容器用这个服务器来解析所有不在 <code>/etc/hosts</code> 中的主机名。</p>
-<p><code>--dns-search=DOMAIN</code> 设定容器的搜索域，当设定搜索域为 <code>.example.com</code> 时，在搜索一个名为 host 的主机时，DNS 不仅搜索 host，还会搜索 <code>host.example.com</code>。</p>
-<blockquote>
-<p>注意：如果在容器启动时没有指定最后两个参数，Docker 会默认用主机上的 <code>/etc/resolv.conf</code> 来配置容器。</p>
-</blockquote><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Swarm mode: <i><a href="https://wangmaolin.net/topic/swarm_mode/" target="_blank">../swarm_mode/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Docker Compose: <i><a href="https://wangmaolin.net/topic/compose" target="_blank">../compose</a></i><br></p>
+nameserver 8.8.8.8</code></pre><p>&#22914;&#26524;&#29992;&#25143;&#24819;&#35201;&#25163;&#21160;&#25351;&#23450;&#23481;&#22120;&#30340;&#37197;&#32622;&#65292;&#21487;&#20197;&#22312;&#20351;&#29992; <code>docker run</code> &#21629;&#20196;&#21551;&#21160;&#23481;&#22120;&#26102;&#21152;&#20837;&#22914;&#19979;&#21442;&#25968;&#65306;</p><p><code>-h HOSTNAME</code> &#25110;&#32773; <code>--hostname=HOSTNAME</code> &#35774;&#23450;&#23481;&#22120;&#30340;&#20027;&#26426;&#21517;&#65292;&#23427;&#20250;&#34987;&#20889;&#21040;&#23481;&#22120;&#20869;&#30340; <code>/etc/hostname</code> &#21644; <code>/etc/hosts</code>&#12290;&#20294;&#23427;&#22312;&#23481;&#22120;&#22806;&#37096;&#30475;&#19981;&#21040;&#65292;&#26082;&#19981;&#20250;&#22312; <code>docker container ls</code> &#20013;&#26174;&#31034;&#65292;&#20063;&#19981;&#20250;&#22312;&#20854;&#20182;&#30340;&#23481;&#22120;&#30340; <code>/etc/hosts</code> &#30475;&#21040;&#12290;</p><p><code>--dns=IP_ADDRESS</code> &#28155;&#21152; DNS &#26381;&#21153;&#22120;&#21040;&#23481;&#22120;&#30340; <code>/etc/resolv.conf</code> &#20013;&#65292;&#35753;&#23481;&#22120;&#29992;&#36825;&#20010;&#26381;&#21153;&#22120;&#26469;&#35299;&#26512;&#25152;&#26377;&#19981;&#22312; <code>/etc/hosts</code> &#20013;&#30340;&#20027;&#26426;&#21517;&#12290;</p><p><code>--dns-search=DOMAIN</code> &#35774;&#23450;&#23481;&#22120;&#30340;&#25628;&#32034;&#22495;&#65292;&#24403;&#35774;&#23450;&#25628;&#32034;&#22495;&#20026; <code>.example.com</code> &#26102;&#65292;&#22312;&#25628;&#32034;&#19968;&#20010;&#21517;&#20026; host &#30340;&#20027;&#26426;&#26102;&#65292;DNS &#19981;&#20165;&#25628;&#32034; host&#65292;&#36824;&#20250;&#25628;&#32034; <code>host.example.com</code>&#12290;</p><blockquote>
+<p>&#27880;&#24847;&#65306;&#22914;&#26524;&#22312;&#23481;&#22120;&#21551;&#21160;&#26102;&#27809;&#26377;&#25351;&#23450;&#26368;&#21518;&#20004;&#20010;&#21442;&#25968;&#65292;Docker &#20250;&#40664;&#35748;&#29992;&#20027;&#26426;&#19978;&#30340; <code>/etc/resolv.conf</code> &#26469;&#37197;&#32622;&#23481;&#22120;&#12290;</p>
+</blockquote>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Swarm mode: <i><a href="https://wangmaolin.net/topic/swarm_mode/" target="_blank">../swarm_mode/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Docker Compose: <i><a href="https://wangmaolin.net/topic/compose" target="_blank">../compose</a></i><br></p>
 			</div>
 </div>
 

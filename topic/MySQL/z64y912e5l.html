@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -400,78 +400,26 @@ var _hmt = _hmt || [];
 <li><a href="z64y912e5l.html#8373de58d92553b9fd26e8ac5784ca68">排他锁事务之间的修改</a></li>
 <li><a href="z64y912e5l.html#25f9c7fa3b50aebe5125112ac1187777">总结</a></li>
 </ul></li>
-</ul><h2 id="2b3515cc769200fe2d83afc7a32e0223">共享锁(lock in share mode)</h2>
-<p>允许不同事务之间共享加锁读取，但不允许其它事务修改或者加入排他锁;如果有修改必须等待一个事务提交完成，才可以执行，容易出现死锁</p>
-<h3 id="34f873669959698c27eaaa5132950a24">共享锁事务之间的读取</h3>
-<p>session1:</p>
-<pre><code class="language-sql">start transaction;
-select * from test where id = 1 lock in share mode;</code></pre>
-<p>session2:</p>
-<pre><code class="language-sql">start transaction;
-select * from test where id = 1 lock in share mode;</code></pre>
-<p>此时session1和session2都可以正常获取结果，那么再加入session3 排他锁读取尝试</p>
-<p>session3:</p>
-<pre><code class="language-sql">start transaction;
-select * from test where id = 1 for update;</code></pre>
-<p>在session3中则无法获取数据，直到超时或其它事物commit</p>
-<pre><code class="language-sql">Lock wait timeout exceeded; try restarting transaction</code></pre>
-<h3 id="b14193fbf3044d7bbcced2f3606cd246">共享锁之间的更新</h3>
-<p>当session1执行了修改语句：<br />
-session1:</p>
-<pre><code class="language-sql">update test set name = 'kkkk' where id = 1;</code></pre>
-<p>可以很多获取执行结果。<br />
-当session2再次执行修改id=1的语句时：<br />
-session2:</p>
-<pre><code class="language-sql">update test set name = 'zzz' where id = 1;</code></pre>
-<p>就会出现死锁或者锁超时，错误如下：</p>
-<pre><code class="language-sql">Deadlock found when trying to get lock; try restarting transaction</code></pre>
-<p>或者：</p>
-<pre><code class="language-sql">Lock wait timeout exceeded; try restarting transaction</code></pre>
-<p>必须等到session1完成commit动作后，session2才会正常执行，如果此时多个session并发执行，可想而知出现死锁的几率将会大增。</p>
-<p>session3则更不可能</p>
-<h3 id="ce327ce33024c7de9008194745cc522b">结论：</h3>
-<p>mysql共享锁(lock in share mode)</p>
-<pre><code class="   language-php">允许其它事务也增加共享锁读取
-不允许其它事物增加排他锁(for update)
-当事务同时增加共享锁时候，事务的更新必须等待先执行的事务commit后才行，
-如果同时并发太大可能很容易造成死锁
-共享锁，事务都加，都能读。修改是惟一的，必须等待前一个事务commit，才可</code></pre>
-<h2 id="7bac59c92b1340ae985bfb10edc05b28">排他锁(for update)</h2>
-<p>当一个事物加入排他锁后，不允许其他事务加共享锁或者排它锁读取，更加不允许其他事务修改加锁的行。</p>
-<p>对于避免高并发下的超卖问题可以加排他锁。</p>
-<h3 id="7e24b4890ad73ae4e099f77b81d03313">排他锁不同事务之间的读取</h3>
-<p>同样以不同的session来举例<br />
-session1:</p>
-<pre><code class="language-sql">start transaction;
-select * from test where id = 1 for update;</code></pre>
-<blockquote>
-<p>注意：加锁时当查询的数据不存在时，加锁无效</p>
-</blockquote>
-<p>session2:</p>
-<pre><code class="language-sql">start transaction;
-select * from test where id = 1 for update;</code></pre>
-<p>当session1执行完成后，再次执行session2，此时session2也会卡住，无法立刻获取查询的数据。直到出现超时</p>
-<pre><code class="   language-php">Lock wait timeout exceeded; try restarting transaction</code></pre>
-<p>或session1 commit才会执行</p>
-<p>那么再使用session3 加入共享锁尝试</p>
-<pre><code class="language-sql">select * from test where id = 1 lock in share mode;</code></pre>
-<p>结果也是如此，和session2一样，超时或等待session1 commit</p>
-<pre><code class="   language-php">Lock wait timeout exceeded; try restarting transaction</code></pre>
-<h3 id="8373de58d92553b9fd26e8ac5784ca68">排他锁事务之间的修改</h3>
-<p>当在session1中执行update语句：</p>
-<pre><code class="language-sql">update test set name = 123 where id = 1;</code></pre>
-<p>可以正常获取结果</p>
-<pre><code class="   language-php">Query OK, 1 row affected (0.00 sec)
-Rows matched: 1  Changed: 1  Warnings: 0</code></pre>
-<p>此时在session2中执行修改</p>
-<pre><code class="language-sql">update test set name = 's2' where id = 1;</code></pre>
-<p>则会卡住直接超时或session1 commit,才会正常吐出结果</p>
-<p>session3也很明显和session2一样的结果，这里就不多赘述</p>
-<h3 id="25f9c7fa3b50aebe5125112ac1187777">总结</h3>
-<pre><code class="   language-php">事务之间不允许其它排他锁或共享锁读取，修改更不可能
-一次只能有一个排他锁执行commit之后，其它事务才可执行
-不允许其它事务增加共享或排他锁读取。修改是惟一的，必须等待前一个事务commit，才可</code></pre>
-<p>转自：<a href="https://laravel-china.org/index.php/articles/12800/lock-in-share-mode-mysql-shared-lock-exclusive-lock-for-update">https://laravel-china.org/index.php/articles/12800/lock-in-share-mode-mysql-shared-lock-exclusive-lock-for-update</a></p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> https://laravel-china.org/index.php/articles/12800/lock-in-share-mode-mysql-shared-lock-exclusive-lock-for-update: <i><a href="https://laravel-china.org/index.php/articles/12800/lock-in-share-mode-mysql-shared-lock-exclusive-lock-for-update" target="_blank">https://laravel-china.org/index.php/articles/12800/lock-in-share-mode-mysql-shared-lock-exclusive-lock-for-update</a></i><br></p>
+</ul><?xml encoding="UTF-8"><h2 id="2b3515cc769200fe2d83afc7a32e0223">&#20849;&#20139;&#38145;(lock in share mode)</h2><p>&#20801;&#35768;&#19981;&#21516;&#20107;&#21153;&#20043;&#38388;&#20849;&#20139;&#21152;&#38145;&#35835;&#21462;&#65292;&#20294;&#19981;&#20801;&#35768;&#20854;&#23427;&#20107;&#21153;&#20462;&#25913;&#25110;&#32773;&#21152;&#20837;&#25490;&#20182;&#38145;;&#22914;&#26524;&#26377;&#20462;&#25913;&#24517;&#39035;&#31561;&#24453;&#19968;&#20010;&#20107;&#21153;&#25552;&#20132;&#23436;&#25104;&#65292;&#25165;&#21487;&#20197;&#25191;&#34892;&#65292;&#23481;&#26131;&#20986;&#29616;&#27515;&#38145;</p><h3 id="34f873669959698c27eaaa5132950a24">&#20849;&#20139;&#38145;&#20107;&#21153;&#20043;&#38388;&#30340;&#35835;&#21462;</h3><p>session1:</p><pre><code class="language-sql">start transaction;
+select * from test where id = 1 lock in share mode;</code></pre><p>session2:</p><pre><code class="language-sql">start transaction;
+select * from test where id = 1 lock in share mode;</code></pre><p>&#27492;&#26102;session1&#21644;session2&#37117;&#21487;&#20197;&#27491;&#24120;&#33719;&#21462;&#32467;&#26524;&#65292;&#37027;&#20040;&#20877;&#21152;&#20837;session3 &#25490;&#20182;&#38145;&#35835;&#21462;&#23581;&#35797;</p><p>session3:</p><pre><code class="language-sql">start transaction;
+select * from test where id = 1 for update;</code></pre><p>&#22312;session3&#20013;&#21017;&#26080;&#27861;&#33719;&#21462;&#25968;&#25454;&#65292;&#30452;&#21040;&#36229;&#26102;&#25110;&#20854;&#23427;&#20107;&#29289;commit</p><pre><code class="language-sql">Lock wait timeout exceeded; try restarting transaction</code></pre><h3 id="b14193fbf3044d7bbcced2f3606cd246">&#20849;&#20139;&#38145;&#20043;&#38388;&#30340;&#26356;&#26032;</h3><p>&#24403;session1&#25191;&#34892;&#20102;&#20462;&#25913;&#35821;&#21477;&#65306;<br>
+session1:</p><pre><code class="language-sql">update test set name = 'kkkk' where id = 1;</code></pre><p>&#21487;&#20197;&#24456;&#22810;&#33719;&#21462;&#25191;&#34892;&#32467;&#26524;&#12290;<br>
+&#24403;session2&#20877;&#27425;&#25191;&#34892;&#20462;&#25913;id=1&#30340;&#35821;&#21477;&#26102;&#65306;<br>
+session2:</p><pre><code class="language-sql">update test set name = 'zzz' where id = 1;</code></pre><p>&#23601;&#20250;&#20986;&#29616;&#27515;&#38145;&#25110;&#32773;&#38145;&#36229;&#26102;&#65292;&#38169;&#35823;&#22914;&#19979;&#65306;</p><pre><code class="language-sql">Deadlock found when trying to get lock; try restarting transaction</code></pre><p>&#25110;&#32773;&#65306;</p><pre><code class="language-sql">Lock wait timeout exceeded; try restarting transaction</code></pre><p>&#24517;&#39035;&#31561;&#21040;session1&#23436;&#25104;commit&#21160;&#20316;&#21518;&#65292;session2&#25165;&#20250;&#27491;&#24120;&#25191;&#34892;&#65292;&#22914;&#26524;&#27492;&#26102;&#22810;&#20010;session&#24182;&#21457;&#25191;&#34892;&#65292;&#21487;&#24819;&#32780;&#30693;&#20986;&#29616;&#27515;&#38145;&#30340;&#20960;&#29575;&#23558;&#20250;&#22823;&#22686;&#12290;</p><p>session3&#21017;&#26356;&#19981;&#21487;&#33021;</p><h3 id="ce327ce33024c7de9008194745cc522b">&#32467;&#35770;&#65306;</h3><p>mysql&#20849;&#20139;&#38145;(lock in share mode)</p><pre><code class="   language-php">&#20801;&#35768;&#20854;&#23427;&#20107;&#21153;&#20063;&#22686;&#21152;&#20849;&#20139;&#38145;&#35835;&#21462;
+&#19981;&#20801;&#35768;&#20854;&#23427;&#20107;&#29289;&#22686;&#21152;&#25490;&#20182;&#38145;(for update)
+&#24403;&#20107;&#21153;&#21516;&#26102;&#22686;&#21152;&#20849;&#20139;&#38145;&#26102;&#20505;&#65292;&#20107;&#21153;&#30340;&#26356;&#26032;&#24517;&#39035;&#31561;&#24453;&#20808;&#25191;&#34892;&#30340;&#20107;&#21153;commit&#21518;&#25165;&#34892;&#65292;
+&#22914;&#26524;&#21516;&#26102;&#24182;&#21457;&#22826;&#22823;&#21487;&#33021;&#24456;&#23481;&#26131;&#36896;&#25104;&#27515;&#38145;
+&#20849;&#20139;&#38145;&#65292;&#20107;&#21153;&#37117;&#21152;&#65292;&#37117;&#33021;&#35835;&#12290;&#20462;&#25913;&#26159;&#24799;&#19968;&#30340;&#65292;&#24517;&#39035;&#31561;&#24453;&#21069;&#19968;&#20010;&#20107;&#21153;commit&#65292;&#25165;&#21487;</code></pre><h2 id="7bac59c92b1340ae985bfb10edc05b28">&#25490;&#20182;&#38145;(for update)</h2><p>&#24403;&#19968;&#20010;&#20107;&#29289;&#21152;&#20837;&#25490;&#20182;&#38145;&#21518;&#65292;&#19981;&#20801;&#35768;&#20854;&#20182;&#20107;&#21153;&#21152;&#20849;&#20139;&#38145;&#25110;&#32773;&#25490;&#23427;&#38145;&#35835;&#21462;&#65292;&#26356;&#21152;&#19981;&#20801;&#35768;&#20854;&#20182;&#20107;&#21153;&#20462;&#25913;&#21152;&#38145;&#30340;&#34892;&#12290;</p><p>&#23545;&#20110;&#36991;&#20813;&#39640;&#24182;&#21457;&#19979;&#30340;&#36229;&#21334;&#38382;&#39064;&#21487;&#20197;&#21152;&#25490;&#20182;&#38145;&#12290;</p><h3 id="7e24b4890ad73ae4e099f77b81d03313">&#25490;&#20182;&#38145;&#19981;&#21516;&#20107;&#21153;&#20043;&#38388;&#30340;&#35835;&#21462;</h3><p>&#21516;&#26679;&#20197;&#19981;&#21516;&#30340;session&#26469;&#20030;&#20363;<br>
+session1:</p><pre><code class="language-sql">start transaction;
+select * from test where id = 1 for update;</code></pre><blockquote>
+<p>&#27880;&#24847;&#65306;&#21152;&#38145;&#26102;&#24403;&#26597;&#35810;&#30340;&#25968;&#25454;&#19981;&#23384;&#22312;&#26102;&#65292;&#21152;&#38145;&#26080;&#25928;</p>
+</blockquote><p>session2:</p><pre><code class="language-sql">start transaction;
+select * from test where id = 1 for update;</code></pre><p>&#24403;session1&#25191;&#34892;&#23436;&#25104;&#21518;&#65292;&#20877;&#27425;&#25191;&#34892;session2&#65292;&#27492;&#26102;session2&#20063;&#20250;&#21345;&#20303;&#65292;&#26080;&#27861;&#31435;&#21051;&#33719;&#21462;&#26597;&#35810;&#30340;&#25968;&#25454;&#12290;&#30452;&#21040;&#20986;&#29616;&#36229;&#26102;</p><pre><code class="   language-php">Lock wait timeout exceeded; try restarting transaction</code></pre><p>&#25110;session1 commit&#25165;&#20250;&#25191;&#34892;</p><p>&#37027;&#20040;&#20877;&#20351;&#29992;session3 &#21152;&#20837;&#20849;&#20139;&#38145;&#23581;&#35797;</p><pre><code class="language-sql">select * from test where id = 1 lock in share mode;</code></pre><p>&#32467;&#26524;&#20063;&#26159;&#22914;&#27492;&#65292;&#21644;session2&#19968;&#26679;&#65292;&#36229;&#26102;&#25110;&#31561;&#24453;session1 commit</p><pre><code class="   language-php">Lock wait timeout exceeded; try restarting transaction</code></pre><h3 id="8373de58d92553b9fd26e8ac5784ca68">&#25490;&#20182;&#38145;&#20107;&#21153;&#20043;&#38388;&#30340;&#20462;&#25913;</h3><p>&#24403;&#22312;session1&#20013;&#25191;&#34892;update&#35821;&#21477;&#65306;</p><pre><code class="language-sql">update test set name = 123 where id = 1;</code></pre><p>&#21487;&#20197;&#27491;&#24120;&#33719;&#21462;&#32467;&#26524;</p><pre><code class="   language-php">Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0</code></pre><p>&#27492;&#26102;&#22312;session2&#20013;&#25191;&#34892;&#20462;&#25913;</p><pre><code class="language-sql">update test set name = 's2' where id = 1;</code></pre><p>&#21017;&#20250;&#21345;&#20303;&#30452;&#25509;&#36229;&#26102;&#25110;session1 commit,&#25165;&#20250;&#27491;&#24120;&#21520;&#20986;&#32467;&#26524;</p><p>session3&#20063;&#24456;&#26126;&#26174;&#21644;session2&#19968;&#26679;&#30340;&#32467;&#26524;&#65292;&#36825;&#37324;&#23601;&#19981;&#22810;&#36184;&#36848;</p><h3 id="25f9c7fa3b50aebe5125112ac1187777">&#24635;&#32467;</h3><pre><code class="   language-php">&#20107;&#21153;&#20043;&#38388;&#19981;&#20801;&#35768;&#20854;&#23427;&#25490;&#20182;&#38145;&#25110;&#20849;&#20139;&#38145;&#35835;&#21462;&#65292;&#20462;&#25913;&#26356;&#19981;&#21487;&#33021;
+&#19968;&#27425;&#21482;&#33021;&#26377;&#19968;&#20010;&#25490;&#20182;&#38145;&#25191;&#34892;commit&#20043;&#21518;&#65292;&#20854;&#23427;&#20107;&#21153;&#25165;&#21487;&#25191;&#34892;
+&#19981;&#20801;&#35768;&#20854;&#23427;&#20107;&#21153;&#22686;&#21152;&#20849;&#20139;&#25110;&#25490;&#20182;&#38145;&#35835;&#21462;&#12290;&#20462;&#25913;&#26159;&#24799;&#19968;&#30340;&#65292;&#24517;&#39035;&#31561;&#24453;&#21069;&#19968;&#20010;&#20107;&#21153;commit&#65292;&#25165;&#21487;</code></pre><p>&#36716;&#33258;&#65306;<a href="https://laravel-china.org/index.php/articles/12800/lock-in-share-mode-mysql-shared-lock-exclusive-lock-for-update" target="_blank" rel="noopener noreferrer">https://laravel-china.org/index.php/articles/12800/lock-in-share-mode-mysql-shared-lock-exclusive-lock-for-update</a></p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> https://laravel-china.org/index.php/articles/12800/lock-in-share-mode-mysql-shared-lock-exclusive-lock-for-update: <i><a href="https://laravel-china.org/index.php/articles/12800/lock-in-share-mode-mysql-shared-lock-exclusive-lock-for-update" target="_blank">https://laravel-china.org/index.php/articles/12800/lock-in-share-mode-mysql-shared-lock-exclusive-lock-for-update</a></i><br></p>
 			</div>
 </div>
 

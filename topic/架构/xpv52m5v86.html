@@ -1,0 +1,650 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>基于 Unicode 双向控制字符的 XSS 攻击 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    架构 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux%20服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue%20教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王%20-%20逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>分布式</h2>
+<ul>
+<li id="blog76"><a href="jenydjoy7d.html#blog76">TCC 分布式事务的实现原理</a>
+</ul>
+</li>
+<li>
+<h2>Redis</h2>
+<ul>
+<li id="blog126"><a href="62wy3kxvkm.html#blog126">单节点 Redis 分布式锁介绍</a>
+<li id="blog833"><a href="3xyq43pvmq.html#blog833">基于 Redis 的访问限流方法</a>
+</ul>
+</li>
+<li>
+<h2>架构</h2>
+<ul>
+<li id="blog216"><a href="od6vrzn93g.html#blog216">后台管理系统如何给具体地址添加经纬度坐标？</a>
+<li id="blog316"><a href="nq5vrnke7p.html#blog316">直播间状态变更通知所有用户方案</a>
+<li id="blog324"><a href="8loynj1vz3.html#blog324">系统注销用户的逻辑</a>
+<li id="blog363"><a href="j25v16ge1n.html#blog363">设计无密码登录指南</a>
+<li id="blog383"><a href="3qk94gx9w1.html#blog383">系统负载介绍</a>
+<li id="blog452"><a href="rpnv39dvwm.html#blog452">下云 - 什么情况下不能离开云计算</a>
+<li id="blog487"><a href="ekpv1d2v8w.html#blog487">广告系统架构介绍</a>
+<li id="blog570"><a href="j3oyjek9p5.html#blog570">地图红绿灯倒计时功能是如何实现的？</a>
+<li id="blog676"><a href="enyd5oo97d.html#blog676">单点登录的实现</a>
+<li id="blog677"><a href="5dve2ekv4x.html#blog677">如何防止订单重复支付</a>
+<li id="blog694"><a href="3oyjdg8yp5.html#blog694">抢红包系统设计</a>
+<li id="blog857"><a href="3xyq4wpvmq.html#blog857">负载均衡详解</a>
+<li id="blog861"><a href="dgy7xe2vw2.html#blog861">百度地图替代方案 - 天地图</a>
+<li id="blog863"><a href="kpv13og98w.html#blog863">基于文件前 N 个字节判断文件类型</a>
+<li id="blog865"><a href="2ky04149z8.html#blog865">软件工程的最大难题</a>
+</ul>
+</li>
+<li>
+<h2>微服务</h2>
+<ul>
+<li id="blog269"><a href="1ndvmwny3j.html#blog269">微服务是什么?</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog317"><a href="02ky0m69z8.html#blog317">Cloudflare 推出 Turnstile — 一款用户友好且保护隐私的 CAPTCHA 替代方案</a>
+<li id="blog379"><a href="wkl9nd8yz4.html#blog379">JWT 认证和授权：详细介绍</a>
+<li id="blog380"><a href="gxpv5n5v86.html#blog380">浏览器同源政策及其规避方法</a>
+<li id="blog381"><a href="n3xyqnlymq.html#blog381">跨域资源共享 CORS 详解</a>
+<li id="blog382"><a href="4x3voeo9m1.html#blog382">XSS 跨站脚本攻击介绍</a>
+<li id="blog444"><a href="4wevwrzyl2.html#blog444">双因素认证（2FA）教程</a>
+<li id="blog477"><a href="15dved394x.html#blog477">开发安全的 API 所需要核对的清单</a>
+<li id="blog667"><a href="m892gnoy01.html#blog667">target=&quot;_blank” 属性的安全漏洞</a>
+<li id="blog678"><a href="4rvgnzkydj.html#blog678">CSRF跨站请求伪造攻击</a>
+<li id="blog708"><a href="xpv52r1v86.html#blog708">文件上传安全注意事项</a>
+<li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
+<li id="blog710"><a href="x3vo0qkvm1.html#blog710">服务器漏洞</a>
+<li id="blog859"><a href="qk94238vw1.html#blog859">项目服务隔离思路</a>
+<li id="blog932"><a href="xpv52m5v86.html#blog932">基于 Unicode 双向控制字符的 XSS 攻击</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog338"><a href="xrwyl6zyz8.html#blog338">关于系统性能的认知</a>
+<li id="blog436"><a href="x569x089ep.html#blog436">提高前端代码性能的最佳实践</a>
+<li id="blog720"><a href="wevwmxn9l2.html#blog720">高并发相关技巧(待完善)</a>
+</ul>
+</li>
+<li>
+<h2>编程</h2>
+<ul>
+<li id="blog569"><a href="1ndvm4pv3j.html#blog569">提高代码可读性和效率的 11 个技巧</a>
+</ul>
+</li>
+<li>
+<h2>队列</h2>
+<ul>
+<li id="blog892"><a href="wevwme19l2.html#blog892">告别“吵闹的邻居”：公平队列拯救多租户系统</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/xpv52m5v86.html', function (data, status) {
+            addView('xpv52m5v86.html')
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>基于 Unicode 双向控制字符的 XSS 攻击</h1><ul>
+<li><a href="xpv52m5v86.html#00210800dd15e7066dc8a9059736250f">一、什么是 Unicode 双向控制字符？</a></li>
+<li><a href="xpv52m5v86.html#08d8842605ebd5b865b5142521761f8e">二、如何利用 RLO/LRO 发起 XSS 攻击？</a>
+<ul>
+<li><a href="xpv52m5v86.html#f87a49663015f42d278498374b07505e">攻击原理</a></li>
+<li><a href="xpv52m5v86.html#ac920134341f9e529b4b1968959d0ec6">示例：伪装成图片文件名</a></li>
+<li><a href="xpv52m5v86.html#16304b577ba803beda3e73b5d39a9725">示例：绕过 WAF / 黑名单 XSS 检测</a></li>
+</ul></li>
+<li><a href="xpv52m5v86.html#bcf1e06e862a24e1f03782003c37cdca">三、为什么传统过滤容易失效？</a></li>
+<li><a href="xpv52m5v86.html#c357515722582f3bf4e61585adab3634">四、PHP 防御策略</a>
+<ul>
+<li><a href="xpv52m5v86.html#25ad483c2fa1c76327aa754c0031c0aa">✅ 1. 输入阶段：移除或拒绝双向控制字符</a></li>
+<li><a href="xpv52m5v86.html#76dc1e60c571e2cfe3cf4d3481893029">✅ 2. 输出阶段：始终进行上下文相关的 HTML 转义</a></li>
+<li><a href="xpv52m5v86.html#37710c15d63d9237d517489ea0c7ec0a">✅ 3. 内容安全策略（CSP）</a></li>
+<li><a href="xpv52m5v86.html#3857554b459f5eb112c9c509960fec69">✅ 4. 示例：针对文件上传场景</a></li>
+</ul></li>
+<li><a href="xpv52m5v86.html#f5e882ad329476356f54e18cd21fa5d3">五、总结</a></li>
+</ul><?xml encoding="UTF-8"><blockquote>
+<p>Unicode &#21452;&#21521;&#25511;&#21046;&#23383;&#31526;&#65288;&#22914; LRO&#12289;RLO&#65289;&#21487;&#34987;&#28389;&#29992;&#20110;&#26500;&#36896;&#35270;&#35273;&#27450;&#39575;&#22411; XSS &#25915;&#20987;&#65292;&#32469;&#36807;&#24120;&#35268;&#36807;&#28388;&#65307;&#38450;&#24481;&#38656;&#32467;&#21512;&#36755;&#20837;&#20928;&#21270;&#12289;&#36755;&#20986;&#32534;&#30721;&#19982;&#19978;&#19979;&#25991;&#24863;&#30693;&#31574;&#30053;&#12290;</p>
+</blockquote><hr><h2 id="00210800dd15e7066dc8a9059736250f">&#19968;&#12289;&#20160;&#20040;&#26159; Unicode &#21452;&#21521;&#25511;&#21046;&#23383;&#31526;&#65311;</h2><p>Unicode &#26631;&#20934;&#20013;&#23450;&#20041;&#20102;&#19968;&#32452;<strong>&#21452;&#21521;&#25511;&#21046;&#23383;&#31526;&#65288;Bidirectional Control Characters&#65289;</strong>&#65292;&#29992;&#20110;&#25511;&#21046;&#25991;&#26412;&#22312;&#28151;&#21512;&#20070;&#20889;&#26041;&#21521;&#65288;&#22914;&#38463;&#25289;&#20271;&#35821;&#20174;&#21491;&#21040;&#24038; + &#33521;&#25991;&#20174;&#24038;&#21040;&#21491;&#65289;&#29615;&#22659;&#20013;&#30340;&#26174;&#31034;&#39034;&#24207;&#12290;</p><p>&#24120;&#35265;&#30456;&#20851;&#23383;&#31526;&#21253;&#25324;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#21517;&#31216;</th>
+<th>&#32553;&#20889;</th>
+<th>Unicode</th>
+<th>&#26041;&#21521;</th>
+<th>&#20316;&#29992;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#24038;&#33267;&#21491;&#26631;&#35760;</td>
+<td>LRM</td>
+<td>U+200E</td>
+<td>LTR</td>
+<td>&#25554;&#20837;&#19968;&#20010;&#24038;&rarr;&#21491;&#30340;&#26041;&#21521;&#24615;</td>
+</tr>
+<tr>
+<td>&#21491;&#33267;&#24038;&#26631;&#35760;</td>
+<td>RLM</td>
+<td>U+200F</td>
+<td>RTL</td>
+<td>&#25554;&#20837;&#19968;&#20010;&#21491;&rarr;&#24038;&#30340;&#26041;&#21521;&#24615;</td>
+</tr>
+<tr>
+<td>&#24038;&#33267;&#21491;&#23884;&#20837;</td>
+<td>LRE</td>
+<td>U+202A</td>
+<td>LTR</td>
+<td>&#24378;&#21046;&#21518;&#32493;&#25991;&#26412;&#24038;&rarr;&#21491;&#26174;&#31034;</td>
+</tr>
+<tr>
+<td>&#21491;&#33267;&#24038;&#23884;&#20837;</td>
+<td>RLE</td>
+<td>U+202B</td>
+<td>RTL</td>
+<td>&#24378;&#21046;&#21518;&#32493;&#25991;&#26412;&#21491;&rarr;&#24038;&#26174;&#31034;</td>
+</tr>
+<tr>
+<td>&#24038;&#33267;&#21491;&#35206;&#30422;</td>
+<td>LRO</td>
+<td>U+202D</td>
+<td>LTR</td>
+<td>&#24378;&#21046;&#21518;&#32493;&#23383;&#31526;&#25353; LTR &#25490;&#21015;&#65288;&#35206;&#30422;&#21407;&#26041;&#21521;&#65289;</td>
+</tr>
+<tr>
+<td>&#21491;&#33267;&#24038;&#35206;&#30422;</td>
+<td>RLO</td>
+<td>U+202E</td>
+<td>RTL</td>
+<td>&#24378;&#21046;&#21518;&#32493;&#23383;&#31526;&#25353; RTL &#25490;&#21015;&#65288;&#35206;&#30422;&#21407;&#26041;&#21521;&#65289;</td>
+</tr>
+<tr>
+<td>PDF &#32456;&#27490;&#26684;&#24335;&#21270;</td>
+<td>PDF</td>
+<td>U+202C</td>
+<td>-</td>
+<td>&#32467;&#26463; LRE/RLE/LRO/RLO &#25928;&#26524;</td>
+</tr>
+<tr>
+<td>&#24038;&#33267;&#21491;&#38548;&#31163;</td>
+<td>LRI</td>
+<td>U+2066</td>
+<td>LTR</td>
+<td>&#38548;&#31163;&#24182;&#35774;&#32622;&#23376;&#27573; LTR</td>
+</tr>
+<tr>
+<td>&#21491;&#33267;&#24038;&#38548;&#31163;</td>
+<td>RLI</td>
+<td>U+2067</td>
+<td>RTL</td>
+<td>&#38548;&#31163;&#24182;&#35774;&#32622;&#23376;&#27573; RTL</td>
+</tr>
+<tr>
+<td>&#39318;&#24378;&#38548;&#31163;</td>
+<td>FSI</td>
+<td>U+2068</td>
+<td>auto</td>
+<td>&#26681;&#25454;&#31532;&#19968;&#23383;&#31526;&#21028;&#26029;&#26041;&#21521;</td>
+</tr>
+<tr>
+<td>PDI&#65288;&#32467;&#26463;&#38548;&#31163;&#65289;</td>
+<td>PDI</td>
+<td>U+2069</td>
+<td>-</td>
+<td>&#32467;&#26463;&#38548;&#31163;&#65288;LRI/RLI/FSI&#65289;</td>
+</tr>
+</tbody>
+</table><p>&#36825;&#20123;&#23383;&#31526;<strong>&#19981;&#21487;&#35265;</strong>&#65292;&#20294;&#20250;&#25913;&#21464;&#25991;&#26412;&#30340;<strong>&#35270;&#35273;&#21576;&#29616;&#39034;&#24207;</strong>&#65292;&#20174;&#32780;&#21046;&#36896;&ldquo;&#35270;&#35273;&#27450;&#39575;&rdquo;&#12290;&#22797;&#21046;&#21518;&#20173;&#23384;&#22312;&#12290;</p><hr><h2 id="08d8842605ebd5b865b5142521761f8e">&#20108;&#12289;&#22914;&#20309;&#21033;&#29992; RLO/LRO &#21457;&#36215; XSS &#25915;&#20987;&#65311;</h2><h3 id="f87a49663015f42d278498374b07505e">&#25915;&#20987;&#21407;&#29702;</h3><p>&#25915;&#20987;&#32773;&#21033;&#29992; RLO&#65288;U+202E&#65289;&#23558;&#24694;&#24847;&#20195;&#30721;&ldquo;&#21453;&#36716;&rdquo;&#26174;&#31034;&#65292;&#20351;&#20854;&#30475;&#36215;&#26469;&#20687;&#21512;&#27861;&#20869;&#23481;&#65292;&#20174;&#32780;&#32469;&#36807;&#20154;&#24037;&#23457;&#26680;&#25110;&#31616;&#21333;&#20851;&#38190;&#35789;&#36807;&#28388;&#12290;</p><h3 id="ac920134341f9e529b4b1968959d0ec6">&#31034;&#20363;&#65306;&#20266;&#35013;&#25104;&#22270;&#29255;&#25991;&#20214;&#21517;</h3><p>&#27491;&#24120;&#29992;&#25143;&#30475;&#21040;&#65306;</p><pre><code class="   language-php">report.pdf</code></pre><p>&#20294;&#23454;&#38469;&#23383;&#31526;&#20018;&#26159;&#65306;</p><pre><code class="language-text">"x\"\u{202E}fdp. gnirts\"=crs \"1(trela\"=rorreno "</code></pre><p>&#20294;&#25554;&#20837;&#21040; HTML &#20013;&#21364;&#21464;&#25104;&#65306;</p><pre><code class="language-html">&lt;img src="x" onerror="alert(1)" src="x&#8238;fdp. gnirts"=crs "1(trela"=rorreno "&gt;</code></pre><p>&#30001;&#20110; \u{202E} &#30340;&#23384;&#22312;&#65292;&#27983;&#35272;&#22120;&#23558; fdp. &#21453;&#21521;&#26174;&#31034;&#20026; .pdf&#65292;&#36896;&#25104;&ldquo;&#36825;&#26159;&#19968;&#20010; PDF &#25991;&#20214;&rdquo;&#30340;&#38169;&#35273;&#65292;&#32780; onerror &#23646;&#24615;&#21364;&#30495;&#23454;&#23384;&#22312;</p><h3 id="16304b577ba803beda3e73b5d39a9725">&#31034;&#20363;&#65306;&#32469;&#36807; WAF / &#40657;&#21517;&#21333; XSS &#26816;&#27979;</h3><p>&#25915;&#20987;&#32773;&#21487;&#33021;&#21457;&#36865;&#36825;&#26679;&#30340; payload&#65288;&#20869;&#37096;&#21547; RLO&#65289;&#65306;</p><p>&#30475;&#36215;&#26469;&#65306;</p><pre><code class="   language-php">"&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></pre><p>&#23454;&#38469;&#26159;&#65306;</p><pre><code class="   language-php">"&gt;&lt;\u202E tpircs&gt;&lt;\u202E tpircs&gt;alert(1)</code></pre><p>&#27983;&#35272;&#22120;&#28210;&#26579;&#26102;&#24674;&#22797;&#39034;&#24207; &rarr; <strong>&#32469;&#36807; WAF / &#40657;&#21517;&#21333; XSS &#26816;&#27979;</strong>&#12290;</p><hr><h2 id="bcf1e06e862a24e1f03782003c37cdca">&#19977;&#12289;&#20026;&#20160;&#20040;&#20256;&#32479;&#36807;&#28388;&#23481;&#26131;&#22833;&#25928;&#65311;</h2><ol>
+<li>
+<p><strong>&#20851;&#38190;&#35789;&#36807;&#28388;&#32469;&#36807;</strong>&#65306;<br>
+&#33509;&#20165;&#36807;&#28388; <code>onerror</code>&#12289;<code>&lt;script&gt;</code>&#65292;&#20294;&#25915;&#20987;&#36733;&#33655;&#36890;&#36807; RLO &#34987;&ldquo;&#38544;&#34255;&rdquo;&#65292;&#36807;&#28388;&#22120;&#21487;&#33021;&#30475;&#19981;&#21040;&#21407;&#22987;&#20851;&#38190;&#35789;&#12290;</p>
+</li>
+<li>
+<p><strong>&#35270;&#35273;&#27450;&#39575;&#32469;&#36807;&#20154;&#24037;&#23457;&#26680;</strong>&#65306;<br>
+&#31649;&#29702;&#21592;&#30475;&#21040;&#30340;&#26159; <code>invoice.pdf</code>&#65292;&#23454;&#38469;&#21364;&#26159;&#24694;&#24847;&#33050;&#26412;&#12290;</p>
+</li>
+<li>
+<p><strong>&#32534;&#30721;&#28151;&#28102;</strong>&#65306;<br>
+&#25915;&#20987;&#32773;&#21487;&#29992; <code>\u202e</code>&#12289;<code>&amp;#8238;</code>&#12289;<code>%E2%80%AE</code> &#31561;&#22810;&#31181;&#24418;&#24335;&#32534;&#30721; RLO&#65292;&#22686;&#21152;&#26816;&#27979;&#38590;&#24230;&#12290;</p>
+</li>
+</ol><hr><h2 id="c357515722582f3bf4e61585adab3634">&#22235;&#12289;PHP &#38450;&#24481;&#31574;&#30053;</h2><h3 id="25ad483c2fa1c76327aa754c0031c0aa">&#9989; 1. &#36755;&#20837;&#38454;&#27573;&#65306;&#31227;&#38500;&#25110;&#25298;&#32477;&#21452;&#21521;&#25511;&#21046;&#23383;&#31526;</h3><p>&#22312;&#25509;&#25910;&#29992;&#25143;&#36755;&#20837;&#26102;&#65292;&#20027;&#21160;&#28165;&#29702;&#25110;&#25298;&#32477;&#21253;&#21547;&#21452;&#21521;&#25511;&#21046;&#23383;&#31526;&#30340;&#25968;&#25454;&#12290;</p><pre><code class="language-php">/**
+ * &#31227;&#38500;&#36755;&#20837;&#20013;&#30340; Unicode &#25511;&#21046;&#23383;&#31526;
+ * User: wml
+ * DateTime: 2025/12/8 10:41
+ * @param $input
+ * @return array|string|string[]|null
+ */
+public function removeControlCharacters($input): array|string|null
+{
+    if (is_string($input)) {
+        // &#21305;&#37197;&#24182;&#31227;&#38500;&#24120;&#35265;&#30340; Unicode &#21452;&#21521;&#25511;&#21046;&#23383;&#31526;&#31561;
+        return preg_replace('/[\x{200E}\x{200F}\x{202A}-\x{202E}\x{2066}-\x{2069}]/u', '', $input);
+    }
+
+    if (is_array($input)) {
+        return array_map(function ($value) {
+            return $this-&gt;removeControlCharacters($value);
+        }, $input);
+    }
+
+    return $input;
+}
+
+// &#20351;&#29992;&#31034;&#20363;
+$filename = removeControlCharacters($_GET['filename'] ?? '');</code></pre><blockquote>
+<p>&#9888;&#65039; &#27880;&#24847;&#65306;&#20351;&#29992; <code>u</code> &#20462;&#39280;&#31526;&#30830;&#20445; UTF-8 &#27491;&#30830;&#22788;&#29702;&#12290;</p>
+</blockquote><h3 id="76dc1e60c571e2cfe3cf4d3481893029">&#9989; 2. &#36755;&#20986;&#38454;&#27573;&#65306;&#22987;&#32456;&#36827;&#34892;&#19978;&#19979;&#25991;&#30456;&#20851;&#30340; HTML &#36716;&#20041;</h3><p>&#21363;&#20351;&#36755;&#20837;&#24050;&#28165;&#29702;&#65292;&#36755;&#20986;&#26102;&#20173;&#38656;&#36716;&#20041;&#65306;</p><pre><code class="language-php">use function htmlspecialchars;
+
+$filename = removeControlCharacters($_GET['filename'] ?? '');
+$safeFilename = htmlspecialchars($filename, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+echo "&lt;img src='/uploads/{$safeFilename}' alt='{$safeFilename}'&gt;";</code></pre><p>&#36825;&#26679;&#21363;&#20351;&#26377;&#36951;&#28431;&#65292;<code>"</code> &#20063;&#20250;&#34987;&#36716;&#20026; <code>&amp;quot;</code>&#65292;&#30772;&#22351; HTML &#23646;&#24615;&#27880;&#20837;&#12290;</p><h3 id="37710c15d63d9237d517489ea0c7ec0a">&#9989; 3. &#20869;&#23481;&#23433;&#20840;&#31574;&#30053;&#65288;CSP&#65289;</h3><p>&#36890;&#36807; HTTP &#22836;&#38480;&#21046;&#33050;&#26412;&#25191;&#34892;&#65306;</p><pre><code class="language-php">header("Content-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none';");</code></pre><p>&#21363;&#20351; XSS &#27880;&#20837;&#25104;&#21151;&#65292;&#29616;&#20195;&#27983;&#35272;&#22120;&#20063;&#20250;&#38459;&#27490; <code>onerror</code> &#20013;&#30340;&#33050;&#26412;&#25191;&#34892;&#65288;&#38500;&#38750;&#26174;&#24335;&#20801;&#35768; <code>'unsafe-inline'</code>&#65289;&#12290;</p><h3 id="3857554b459f5eb112c9c509960fec69">&#9989; 4. &#31034;&#20363;&#65306;&#38024;&#23545;&#25991;&#20214;&#19978;&#20256;&#22330;&#26223;</h3><p>&#19981;&#35201;&#20449;&#20219;&#29992;&#25143;&#25552;&#20379;&#30340;&#25991;&#20214;&#21517;&#65306;</p><pre><code class="language-php">// &#29983;&#25104;&#23433;&#20840;&#25991;&#20214;&#21517;
+$originalName = $_FILES['file']['name'];
+$extension = pathinfo($originalName, PATHINFO_EXTENSION);
+$allowedExtensions = ['jpg', 'png', 'pdf'];
+
+if (!in_array(strtolower($extension), $allowedExtensions)) {
+    die('&#38750;&#27861;&#25991;&#20214;&#31867;&#22411;');
+}
+
+// &#20351;&#29992;&#38543;&#26426;&#21517;&#23384;&#20648;
+$safeFileName = bin2hex(random_bytes(16)) . '.' . $extension;
+move_uploaded_file($_FILES['file']['tmp_name'], '/uploads/' . $safeFileName);
+
+// &#26174;&#31034;&#26102;&#20063;&#29992;&#23433;&#20840;&#21517;&#65292;&#19981;&#22238;&#26174;&#21407;&#22987;&#21517;
+echo "&#25991;&#20214;&#24050;&#20445;&#23384;&#20026;: " . htmlspecialchars($safeFileName);</code></pre><h2 id="f5e882ad329476356f54e18cd21fa5d3">&#20116;&#12289;&#24635;&#32467;</h2><table>
+<thead>
+<tr>
+<th>&#38450;&#24481;&#23618;&#32423;</th>
+<th>&#25514;&#26045;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>&#36755;&#20837;</strong></td>
+<td>&#28165;&#29702;&#25110;&#25298;&#32477;&#21452;&#21521;&#25511;&#21046;&#23383;&#31526;</td>
+</tr>
+<tr>
+<td><strong>&#23384;&#20648;</strong></td>
+<td>&#19981;&#23384;&#20648;&#21407;&#22987;&#21361;&#38505;&#36755;&#20837;&#65292;&#20351;&#29992;&#23433;&#20840;&#26631;&#35782;&#31526;</td>
+</tr>
+<tr>
+<td><strong>&#36755;&#20986;</strong></td>
+<td>&#19978;&#19979;&#25991;&#30456;&#20851;&#30340; HTML &#36716;&#20041;&#65288;<code>htmlspecialchars</code>&#65289;</td>
+</tr>
+<tr>
+<td><strong>&#36816;&#34892;&#26102;</strong></td>
+<td>&#21551;&#29992; CSP&#65292;&#38480;&#21046;&#33050;&#26412;&#25191;&#34892;</td>
+</tr>
+<tr>
+<td><strong>&#35774;&#35745;</strong></td>
+<td>&#36991;&#20813;&#30452;&#25509;&#22238;&#26174;&#29992;&#25143;&#21487;&#25511;&#20869;&#23481;&#21040; HTML &#23646;&#24615;&#20013;</td>
+</tr>
+</tbody>
+</table><blockquote>
+<p>&#128274; <strong>&#26680;&#24515;&#21407;&#21017;&#65306;&#27704;&#36828;&#19981;&#35201;&#20449;&#20219;&#29992;&#25143;&#36755;&#20837;&#65292;&#26080;&#35770;&#23427;&#30475;&#36215;&#26469;&#22810;&ldquo;&#26080;&#23475;&rdquo;&#12290;</strong></p>
+</blockquote><p>Unicode &#21452;&#21521;&#23383;&#31526;&#25915;&#20987;&#23646;&#20110;&ldquo;&#36923;&#36753;&#23618;&#27450;&#39575;&rdquo;&#65292;&#23427;&#19981;&#20381;&#36182; <code>&lt;script&gt;</code> &#26631;&#31614;&#65292;&#32780;&#26159;&#21033;&#29992;<strong>&#20154;&#31867;&#19982;&#26426;&#22120;&#23545;&#25991;&#26412;&#29702;&#35299;&#30340;&#24046;&#24322;</strong>&#12290;&#21807;&#26377;&#36890;&#36807;<strong>&#32437;&#28145;&#38450;&#24481;&#65288;Defense in Depth&#65289;</strong>&#65292;&#25165;&#33021;&#26377;&#25928;&#25269;&#24481;&#27492;&#31867;&#39640;&#32423; XSS &#21464;&#31181;&#12290;</p>
+
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>

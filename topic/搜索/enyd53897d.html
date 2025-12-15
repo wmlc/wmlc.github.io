@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -367,19 +367,13 @@ var _hmt = _hmt || [];
      crossorigin="anonymous"></script>
 	
 	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
-		<h1>MeiliSearch 索引创建</h1><p>以PHP代码为例</p>
-<p>1、引入 PHP SDK</p>
-<pre><code class="language-bash">composer require meilisearch/meilisearch-php http-interop/http-factory-guzzle</code></pre>
-<p>2、<a href="https://www.meilisearch.com/docs/reference/api/indexes">创建索引</a></p>
-<pre><code class="language-php">&lt;?php
+		<h1>MeiliSearch 索引创建</h1><?xml encoding="UTF-8"><p>&#20197;PHP&#20195;&#30721;&#20026;&#20363;</p><p>1&#12289;&#24341;&#20837; PHP SDK</p><pre><code class="language-bash">composer require meilisearch/meilisearch-php http-interop/http-factory-guzzle</code></pre><p>2&#12289;<a href="https://www.meilisearch.com/docs/reference/api/indexes" target="_blank" rel="noopener noreferrer">&#21019;&#24314;&#32034;&#24341;</a></p><pre><code class="language-php">&lt;?php
 
 use Meilisearch\Client;
 
 $client = new Client('http://localhost:7700', 'masterKey');
 
-$client-&gt;createIndex('movies', ['primaryKey' =&gt; 'id']);</code></pre>
-<p>3、<a href="https://www.meilisearch.com/docs/reference/api/documents#add-or-replace-documents">导入文档</a></p>
-<pre><code class="language-php">&lt;?php
+$client-&gt;createIndex('movies', ['primaryKey' =&gt; 'id']);</code></pre><p>3&#12289;<a href="https://www.meilisearch.com/docs/reference/api/documents#add-or-replace-documents" target="_blank" rel="noopener noreferrer">&#23548;&#20837;&#25991;&#26723;</a></p><pre><code class="language-php">&lt;?php
 
 $client-&gt;index('movies')-&gt;addDocuments([
   [
@@ -389,25 +383,19 @@ $client-&gt;index('movies')-&gt;addDocuments([
     'overview' =&gt; 'A boy is given the ability to become an adult superhero in times of need with a single magic word.',
     'release_date' =&gt; '2019-03-23'
   ]
-]);</code></pre>
-<p>4、<a href="https://www.meilisearch.com/docs/reference/api/search">搜索</a></p>
-<pre><code class="language-php">&lt;?php
+]);</code></pre><p>4&#12289;<a href="https://www.meilisearch.com/docs/reference/api/search" target="_blank" rel="noopener noreferrer">&#25628;&#32034;</a></p><pre><code class="language-php">&lt;?php
 
 $client-&gt;index('movies')-&gt;search('american ninja', [
-    'hitsPerPage' =&gt; 20, # 每页数据量
-    'page' =&gt; 1, # 页码
-    'matchingStrategy' =&gt; 'all', # 匹配策略 last, all, or frequency
-    'attributesToSearchOn' =&gt; ['title', 'overview']  # 限制只将这两个字段作为搜索字段
+    'hitsPerPage' =&gt; 20, # &#27599;&#39029;&#25968;&#25454;&#37327;
+    'page' =&gt; 1, # &#39029;&#30721;
+    'matchingStrategy' =&gt; 'all', # &#21305;&#37197;&#31574;&#30053; last, all, or frequency
+    'attributesToSearchOn' =&gt; ['title', 'overview']  # &#38480;&#21046;&#21482;&#23558;&#36825;&#20004;&#20010;&#23383;&#27573;&#20316;&#20026;&#25628;&#32034;&#23383;&#27573;
 ]);
-</code></pre>
-<p>6、索引重建方法</p>
-<p>索引创建后，因为一些后台操作可能导致索引未及时更新，可以采用定时重建索引的方式使索引保持最新的状态</p>
-<p>利用交换索引的方式实现以上功能</p>
-<pre><code class="language-php">&lt;?php
+</code></pre><p>6&#12289;&#32034;&#24341;&#37325;&#24314;&#26041;&#27861;</p><p>&#32034;&#24341;&#21019;&#24314;&#21518;&#65292;&#22240;&#20026;&#19968;&#20123;&#21518;&#21488;&#25805;&#20316;&#21487;&#33021;&#23548;&#33268;&#32034;&#24341;&#26410;&#21450;&#26102;&#26356;&#26032;&#65292;&#21487;&#20197;&#37319;&#29992;&#23450;&#26102;&#37325;&#24314;&#32034;&#24341;&#30340;&#26041;&#24335;&#20351;&#32034;&#24341;&#20445;&#25345;&#26368;&#26032;&#30340;&#29366;&#24577;</p><p>&#21033;&#29992;&#20132;&#25442;&#32034;&#24341;&#30340;&#26041;&#24335;&#23454;&#29616;&#20197;&#19978;&#21151;&#33021;</p><pre><code class="language-php">&lt;?php
 
 use Meilisearch\Client;
 
-# 检查索引是否存在，若不存在创建之；若存在创建新的索引，数据导入后执行交换索引操作，再删除新的索引
+# &#26816;&#26597;&#32034;&#24341;&#26159;&#21542;&#23384;&#22312;&#65292;&#33509;&#19981;&#23384;&#22312;&#21019;&#24314;&#20043;&#65307;&#33509;&#23384;&#22312;&#21019;&#24314;&#26032;&#30340;&#32034;&#24341;&#65292;&#25968;&#25454;&#23548;&#20837;&#21518;&#25191;&#34892;&#20132;&#25442;&#32034;&#24341;&#25805;&#20316;&#65292;&#20877;&#21024;&#38500;&#26032;&#30340;&#32034;&#24341;
 
 $client = new Client('http://localhost:7700', 'masterKey');
 
@@ -423,7 +411,7 @@ if (!empty($indexInfo)) {
     $indexName = 'movies_new';
 }
 $client-&gt;createIndex($indexName, ['primaryKey' =&gt; 'id']);
-# 数据导入操作
+# &#25968;&#25454;&#23548;&#20837;&#25805;&#20316;
 Movies::query()-&gt;where(['status' =&gt; 1])
     -&gt;select(['id', 'name', 'desc'])
     -&gt;chunkById(100, function ($musics) use ($client, $indexName) {
@@ -432,12 +420,12 @@ Movies::query()-&gt;where(['status' =&gt; 1])
     });
 
 if ($needSwap) {
-    # 交换索引
+    # &#20132;&#25442;&#32034;&#24341;
     $client-&gt;swapIndexes([['movies', $indexName]]);
-    # 删除刚才新建的索引
+    # &#21024;&#38500;&#21018;&#25165;&#26032;&#24314;&#30340;&#32034;&#24341;
     $client-&gt;deleteIndex($indexName);
-}</code></pre>
-<p>参考文档：<a href="https://www.meilisearch.com/docs/reference/api/overview">www.meilisearch.com</a></p><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 创建索引: <i><a href="https://www.meilisearch.com/docs/reference/api/indexes" target="_blank">https://www.meilisearch.com/docs/reference/api/indexes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 导入文档: <i><a href="https://www.meilisearch.com/docs/reference/api/documents#add-or-replace-documents" target="_blank">https://www.meilisearch.com/docs/reference/api/documents#add-or-replace-documents</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 搜索: <i><a href="https://www.meilisearch.com/docs/reference/api/search" target="_blank">https://www.meilisearch.com/docs/reference/api/search</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> www.meilisearch.com: <i><a href="https://www.meilisearch.com/docs/reference/api/overview" target="_blank">https://www.meilisearch.com/docs/reference/api/overview</a></i><br></p>
+}</code></pre><p>&#21442;&#32771;&#25991;&#26723;&#65306;<a href="https://www.meilisearch.com/docs/reference/api/overview" target="_blank" rel="noopener noreferrer">www.meilisearch.com</a></p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 创建索引: <i><a href="https://www.meilisearch.com/docs/reference/api/indexes" target="_blank">https://www.meilisearch.com/docs/reference/api/indexes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 导入文档: <i><a href="https://www.meilisearch.com/docs/reference/api/documents#add-or-replace-documents" target="_blank">https://www.meilisearch.com/docs/reference/api/documents#add-or-replace-documents</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 搜索: <i><a href="https://www.meilisearch.com/docs/reference/api/search" target="_blank">https://www.meilisearch.com/docs/reference/api/search</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> www.meilisearch.com: <i><a href="https://www.meilisearch.com/docs/reference/api/overview" target="_blank">https://www.meilisearch.com/docs/reference/api/overview</a></i><br></p>
 			</div>
 </div>
 

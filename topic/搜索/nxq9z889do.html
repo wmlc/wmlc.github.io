@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -367,9 +367,7 @@ var _hmt = _hmt || [];
      crossorigin="anonymous"></script>
 	
 	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
-		<h1>ubuntu 安装sphinx报错解决方法</h1><p><strong>错误一： coreseek无法生成configure文件</strong></p>
-<p>错误信息如下：</p>
-<pre><code class="language-bash">libstemmer_c/mkinc.mak:10: warning: source file 'runtime/utilities.c' is in a subdirectory,  
+		<h1>ubuntu 安装sphinx报错解决方法</h1><?xml encoding="UTF-8"><p><strong>&#38169;&#35823;&#19968;&#65306; coreseek&#26080;&#27861;&#29983;&#25104;configure&#25991;&#20214;</strong></p><p>&#38169;&#35823;&#20449;&#24687;&#22914;&#19979;&#65306;</p><pre><code class="language-bash">libstemmer_c/mkinc.mak:10: warning: source file 'runtime/utilities.c' is in a subdirectory,  
 libstemmer_c/mkinc.mak:10: but option 'subdir-objects' is disabled  
 libstemmer_c/Makefile.am:3: 'libstemmer_c/mkinc.mak' included from here  
 libstemmer_c/mkinc.mak:10: warning: source file 'libstemmer/libstemmer.c' is in a subdirectory,  
@@ -380,46 +378,18 @@ libstemmer_c/Makefile.am:3: 'libstemmer_c/mkinc.mak' included from here
 libstemmer_c/Makefile.am:2: while processing library 'libstemmer.a'  
 /usr/local/share/automake-1.14/am/library.am: warning: 'libsphinx.a': linking libraries using a non-POSIX  
 /usr/local/share/automake-1.14/am/library.am: archiver requires 'AM_PROG_AR' in 'configure.ac'  
-src/Makefile.am:14: while processing library 'libsphinx.a'</code></pre>
-<p>看起来非常多其实就是两个：</p>
-<pre><code class="language-bash">1、but option 'subdir-objects' is disabled    
-2、archiver requires 'AM_PROG_AR' in 'configure.ac'</code></pre>
-<p>解决方案：</p>
-<p>1、在 csft-4.1/buildconf.sh 文件中，查找</p>
-<pre><code class="language-bash">&amp;&amp; aclocal \</code></pre>
-<p>后加上</p>
-<pre><code class="language-bash">&amp;&amp; automake --add-missing \</code></pre>
-<p>2、在 csft-4.1/configure.ac 文件中，查找：</p>
-<pre><code class="language-bash">AM_INIT_AUTOMAKE([-Wall -Werror foreign])</code></pre>
-<p>改为：</p>
-<pre><code class="language-bash">AM_INIT_AUTOMAKE([-Wall foreign])</code></pre>
-<p>查找：</p>
-<pre><code class="language-bash">AC_PROG_RANLIB</code></pre>
-<p>后面加上</p>
-<pre><code class="language-bash">AM_PROG_AR</code></pre>
-<p>3、最后，在 csft-4.1/src/sphinxexpr.cpp 文件中， 替换所有：</p>
-<pre><code class="language-bash">T val = ExprEval ( this-&gt;m_pArg, tMatch );</code></pre>
-<p>成为：</p>
-<pre><code class="language-bash">T val = this-&gt;ExprEval ( this-&gt;m_pArg, tMatch );</code></pre>
-<p><strong>错误二： make &amp;&amp; make install出错</strong></p>
-<p>错误现象：执行 buildconf.sh 报错，无法生成configure文件</p>
-<p>提示的主要错误为：</p>
-<pre><code class="language-bash">/setup/coreseek-3.2.14/csft-3.2.14/src/sphinx.cpp:20719: undefined reference to `libiconv_open' 
+src/Makefile.am:14: while processing library 'libsphinx.a'</code></pre><p>&#30475;&#36215;&#26469;&#38750;&#24120;&#22810;&#20854;&#23454;&#23601;&#26159;&#20004;&#20010;&#65306;</p><pre><code class="language-bash">1&#12289;but option 'subdir-objects' is disabled    
+2&#12289;archiver requires 'AM_PROG_AR' in 'configure.ac'</code></pre><p>&#35299;&#20915;&#26041;&#26696;&#65306;</p><p>1&#12289;&#22312; csft-4.1/buildconf.sh &#25991;&#20214;&#20013;&#65292;&#26597;&#25214;</p><pre><code class="language-bash">&amp;&amp; aclocal \</code></pre><p>&#21518;&#21152;&#19978;</p><pre><code class="language-bash">&amp;&amp; automake --add-missing \</code></pre><p>2&#12289;&#22312; csft-4.1/configure.ac &#25991;&#20214;&#20013;&#65292;&#26597;&#25214;&#65306;</p><pre><code class="language-bash">AM_INIT_AUTOMAKE([-Wall -Werror foreign])</code></pre><p>&#25913;&#20026;&#65306;</p><pre><code class="language-bash">AM_INIT_AUTOMAKE([-Wall foreign])</code></pre><p>&#26597;&#25214;&#65306;</p><pre><code class="language-bash">AC_PROG_RANLIB</code></pre><p>&#21518;&#38754;&#21152;&#19978;</p><pre><code class="language-bash">AM_PROG_AR</code></pre><p>3&#12289;&#26368;&#21518;&#65292;&#22312; csft-4.1/src/sphinxexpr.cpp &#25991;&#20214;&#20013;&#65292; &#26367;&#25442;&#25152;&#26377;&#65306;</p><pre><code class="language-bash">T val = ExprEval ( this-&gt;m_pArg, tMatch );</code></pre><p>&#25104;&#20026;&#65306;</p><pre><code class="language-bash">T val = this-&gt;ExprEval ( this-&gt;m_pArg, tMatch );</code></pre><p><strong>&#38169;&#35823;&#20108;&#65306; make &amp;&amp; make install&#20986;&#38169;</strong></p><p>&#38169;&#35823;&#29616;&#35937;&#65306;&#25191;&#34892; buildconf.sh &#25253;&#38169;&#65292;&#26080;&#27861;&#29983;&#25104;configure&#25991;&#20214;</p><p>&#25552;&#31034;&#30340;&#20027;&#35201;&#38169;&#35823;&#20026;&#65306;</p><pre><code class="language-bash">/setup/coreseek-3.2.14/csft-3.2.14/src/sphinx.cpp:20719: undefined reference to `libiconv_open' 
 /setup/coreseek-3.2.14/csft-3.2.14/src/sphinx.cpp:20737: undefined reference to `libiconv' 
 /setup/coreseek-3.2.14/csft-3.2.14/src/sphinx.cpp:20743: undefined reference to `libiconv_close' 
-collect2: ld 返回 1 
-make[2]: *** [indexer] 错误 1 
+collect2: ld &#36820;&#22238; 1 
+make[2]: *** [indexer] &#38169;&#35823; 1 
 make[2]: Leaving directory `/setup/coreseek-3.2.14/csft-3.2.14/src' 
-make[1]: *** [all] 错误 2 
+make[1]: *** [all] &#38169;&#35823; 2 
 make[1]: Leaving directory `/setup/coreseek-3.2.14/csft-3.2.14/src' 
-make: *** [all-recursive] 错误 1</code></pre>
-<p>解决方法<br />
-编辑：</p>
-<pre><code class="language-bash">./src/MakeFile文件</code></pre>
-<p>将</p>
-<pre><code class="language-bash">LIBS = -ldl -lm -lz -lexpat -L/usr/local/lib -lrt -lpthread</code></pre>
-<p>改成</p>
-<pre><code class="language-bash">LIBS = -ldl -lm -lz -lexpat  -liconv  -L/usr/local/lib -lrt -lpthread</code></pre>
+make: *** [all-recursive] &#38169;&#35823; 1</code></pre><p>&#35299;&#20915;&#26041;&#27861;<br>
+&#32534;&#36753;&#65306;</p><pre><code class="language-bash">./src/MakeFile&#25991;&#20214;</code></pre><p>&#23558;</p><pre><code class="language-bash">LIBS = -ldl -lm -lz -lexpat -L/usr/local/lib -lrt -lpthread</code></pre><p>&#25913;&#25104;</p><pre><code class="language-bash">LIBS = -ldl -lm -lz -lexpat  -liconv  -L/usr/local/lib -lrt -lpthread</code></pre>
+
 			</div>
 </div>
 

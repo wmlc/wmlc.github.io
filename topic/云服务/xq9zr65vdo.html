@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -365,64 +365,44 @@ var _hmt = _hmt || [];
 <li><a href="xq9zr65vdo.html#64aa78e21e591ce5612aaa16c6ec8337">🔒 .dev 域名被强制启用 HTTPS</a></li>
 <li><a href="xq9zr65vdo.html#fe353e3262f42b405b9d61d58f18be2f">.xyz、.test、.local</a></li>
 </ul></li>
-</ul><blockquote>
+</ul><?xml encoding="UTF-8"><blockquote>
 <ul>
-<li><strong>公网测试环境</strong>请使用正规的 <code>.com</code> / <code>.net</code> 子域名。</li>
-<li><strong>不要在测试环境中使用 <code>.dev</code> 域名</strong>，除非你已配置好有效的 TLS 证书并强制使用 HTTPS。</li>
-<li><strong>避免使用冷门或免费 TLD</strong>（如 <code>.xyz</code>、<code>.ga</code>、<code>.ml</code>），它们可能被邮件系统、短信网关或防火墙拦截。</li>
-<li><strong>本地开发</strong>用 <code>.test</code> 或 <code>localhost</code>；</li>
+<li><strong>&#20844;&#32593;&#27979;&#35797;&#29615;&#22659;</strong>&#35831;&#20351;&#29992;&#27491;&#35268;&#30340; <code>.com</code> / <code>.net</code> &#23376;&#22495;&#21517;&#12290;</li>
+<li><strong>&#19981;&#35201;&#22312;&#27979;&#35797;&#29615;&#22659;&#20013;&#20351;&#29992; <code>.dev</code> &#22495;&#21517;</strong>&#65292;&#38500;&#38750;&#20320;&#24050;&#37197;&#32622;&#22909;&#26377;&#25928;&#30340; TLS &#35777;&#20070;&#24182;&#24378;&#21046;&#20351;&#29992; HTTPS&#12290;</li>
+<li><strong>&#36991;&#20813;&#20351;&#29992;&#20919;&#38376;&#25110;&#20813;&#36153; TLD</strong>&#65288;&#22914; <code>.xyz</code>&#12289;<code>.ga</code>&#12289;<code>.ml</code>&#65289;&#65292;&#23427;&#20204;&#21487;&#33021;&#34987;&#37038;&#20214;&#31995;&#32479;&#12289;&#30701;&#20449;&#32593;&#20851;&#25110;&#38450;&#28779;&#22681;&#25318;&#25130;&#12290;</li>
+<li><strong>&#26412;&#22320;&#24320;&#21457;</strong>&#29992; <code>.test</code> &#25110; <code>localhost</code>&#65307;</li>
 </ul>
-</blockquote>
-<hr />
-<p>在开发和测试阶段，很多开发者习惯使用 <code>.dev</code> 作为本地或测试环境的域名后缀，比如 <code>myapp.dev</code> 或 <code>staging.myproject.dev</code>。毕竟，“dev” 就是 “development” 的缩写，看起来再合适不过了。然而，这种做法在现代浏览器环境下可能会带来意想不到的问题——<strong>根本无法通过 HTTP 访问</strong>。</p>
-<h2 id="acef3e1c71de6ed4ead72de034f495fa">各种小众域名的坑</h2>
-<h3 id="64aa78e21e591ce5612aaa16c6ec8337">🔒 .dev 域名被强制启用 HTTPS</h3>
-<p>自 2019 年起，Google 将 <code>.dev</code> 顶级域名（TLD）<strong>加入到 HSTS 预加载列表（HSTS Preload List）</strong> 中。这意味着：</p>
-<blockquote>
-<p>所有以 <code>.dev</code> 结尾的域名，<strong>浏览器会强制使用 HTTPS</strong>，即使你手动输入 <code>http://xxx.dev</code>，也会被自动重定向到 <code>https://xxx.dev</code>。</p>
-</blockquote>
-<p>这是 Google 在 <a href="https://get.dev">get.dev</a> 官网上明确说明的：</p>
-<blockquote>
-<p>“The .dev top-level domain is included on the HSTS preload list, making HTTPS required on all connections to .dev websites and pages without needing individual HSTS registration or configuration.”</p>
-</blockquote>
-<p>换句话说，<strong>浏览器在发起请求前就已经决定：必须走 HTTPS</strong>，根本不会尝试 HTTP 连接。</p>
-<hr />
-<p>假设你在 AWS Elastic Beanstalk 上部署了一个测试应用，并配置了 CNAME 记录指向 <code>myapp.dev</code>。当你在浏览器中访问 <code>http://myapp.dev</code> 时，页面可能直接<strong>超时或显示连接失败</strong>。</p>
-<p>你可能会以为是 DNS 配置错误，但如果你在终端执行：</p>
-<pre><code class="language-bash">curl -I http://myapp.dev</code></pre>
-<p>却能正常返回 <code>200 OK</code>！</p>
-<ul>
-<li><strong><code>curl</code> 不受 HSTS 影响</strong>：它不会读取浏览器的 HSTS 预加载列表，也不会自动跳转 HTTPS。</li>
-<li><strong>浏览器会强制跳转</strong>：Chrome、Firefox、Safari 等现代浏览器看到 <code>.dev</code> 域名，会<strong>在本地直接内部重定向到 HTTPS</strong>（状态码 307），根本不会发出 HTTP 请求。</li>
-</ul>
-<p>如果你的测试服务器<strong>没有配置 SSL 证书或未监听 443 端口</strong>，HTTPS 请求就会失败，导致“连接超时”或“SSL 错误”。</p>
-<hr />
-<h3 id="fe353e3262f42b405b9d61d58f18be2f">.xyz、.test、.local</h3>
-<p>你可能会想：那我换一个冷门后缀，比如 <code>.xyz</code>、<code>.online</code> 或 <code>.fun</code>？</p>
-<p>但这些域名也有隐患：</p>
-<ol>
+</blockquote><hr><p>&#22312;&#24320;&#21457;&#21644;&#27979;&#35797;&#38454;&#27573;&#65292;&#24456;&#22810;&#24320;&#21457;&#32773;&#20064;&#24815;&#20351;&#29992; <code>.dev</code> &#20316;&#20026;&#26412;&#22320;&#25110;&#27979;&#35797;&#29615;&#22659;&#30340;&#22495;&#21517;&#21518;&#32512;&#65292;&#27604;&#22914; <code>myapp.dev</code> &#25110; <code>staging.myproject.dev</code>&#12290;&#27605;&#31455;&#65292;&ldquo;dev&rdquo; &#23601;&#26159; &ldquo;development&rdquo; &#30340;&#32553;&#20889;&#65292;&#30475;&#36215;&#26469;&#20877;&#21512;&#36866;&#19981;&#36807;&#20102;&#12290;&#28982;&#32780;&#65292;&#36825;&#31181;&#20570;&#27861;&#22312;&#29616;&#20195;&#27983;&#35272;&#22120;&#29615;&#22659;&#19979;&#21487;&#33021;&#20250;&#24102;&#26469;&#24847;&#24819;&#19981;&#21040;&#30340;&#38382;&#39064;&mdash;&mdash;<strong>&#26681;&#26412;&#26080;&#27861;&#36890;&#36807; HTTP &#35775;&#38382;</strong>&#12290;</p><h2 id="acef3e1c71de6ed4ead72de034f495fa">&#21508;&#31181;&#23567;&#20247;&#22495;&#21517;&#30340;&#22353;</h2><h3 id="64aa78e21e591ce5612aaa16c6ec8337">&#128274; .dev &#22495;&#21517;&#34987;&#24378;&#21046;&#21551;&#29992; HTTPS</h3><p>&#33258; 2019 &#24180;&#36215;&#65292;Google &#23558; <code>.dev</code> &#39030;&#32423;&#22495;&#21517;&#65288;TLD&#65289;<strong>&#21152;&#20837;&#21040; HSTS &#39044;&#21152;&#36733;&#21015;&#34920;&#65288;HSTS Preload List&#65289;</strong> &#20013;&#12290;&#36825;&#24847;&#21619;&#30528;&#65306;</p><blockquote>
+<p>&#25152;&#26377;&#20197; <code>.dev</code> &#32467;&#23614;&#30340;&#22495;&#21517;&#65292;<strong>&#27983;&#35272;&#22120;&#20250;&#24378;&#21046;&#20351;&#29992; HTTPS</strong>&#65292;&#21363;&#20351;&#20320;&#25163;&#21160;&#36755;&#20837; <code>http://xxx.dev</code>&#65292;&#20063;&#20250;&#34987;&#33258;&#21160;&#37325;&#23450;&#21521;&#21040; <code>https://xxx.dev</code>&#12290;</p>
+</blockquote><p>&#36825;&#26159; Google &#22312; <a href="https://get.dev" target="_blank" rel="noopener noreferrer">get.dev</a> &#23448;&#32593;&#19978;&#26126;&#30830;&#35828;&#26126;&#30340;&#65306;</p><blockquote>
+<p>&ldquo;The .dev top-level domain is included on the HSTS preload list, making HTTPS required on all connections to .dev websites and pages without needing individual HSTS registration or configuration.&rdquo;</p>
+</blockquote><p>&#25442;&#21477;&#35805;&#35828;&#65292;<strong>&#27983;&#35272;&#22120;&#22312;&#21457;&#36215;&#35831;&#27714;&#21069;&#23601;&#24050;&#32463;&#20915;&#23450;&#65306;&#24517;&#39035;&#36208; HTTPS</strong>&#65292;&#26681;&#26412;&#19981;&#20250;&#23581;&#35797; HTTP &#36830;&#25509;&#12290;</p><hr><p>&#20551;&#35774;&#20320;&#22312; AWS Elastic Beanstalk &#19978;&#37096;&#32626;&#20102;&#19968;&#20010;&#27979;&#35797;&#24212;&#29992;&#65292;&#24182;&#37197;&#32622;&#20102; CNAME &#35760;&#24405;&#25351;&#21521; <code>myapp.dev</code>&#12290;&#24403;&#20320;&#22312;&#27983;&#35272;&#22120;&#20013;&#35775;&#38382; <code>http://myapp.dev</code> &#26102;&#65292;&#39029;&#38754;&#21487;&#33021;&#30452;&#25509;<strong>&#36229;&#26102;&#25110;&#26174;&#31034;&#36830;&#25509;&#22833;&#36133;</strong>&#12290;</p><p>&#20320;&#21487;&#33021;&#20250;&#20197;&#20026;&#26159; DNS &#37197;&#32622;&#38169;&#35823;&#65292;&#20294;&#22914;&#26524;&#20320;&#22312;&#32456;&#31471;&#25191;&#34892;&#65306;</p><pre><code class="language-bash">curl -I http://myapp.dev</code></pre><p>&#21364;&#33021;&#27491;&#24120;&#36820;&#22238; <code>200 OK</code>&#65281;</p><ul>
+<li><strong><code>curl</code> &#19981;&#21463; HSTS &#24433;&#21709;</strong>&#65306;&#23427;&#19981;&#20250;&#35835;&#21462;&#27983;&#35272;&#22120;&#30340; HSTS &#39044;&#21152;&#36733;&#21015;&#34920;&#65292;&#20063;&#19981;&#20250;&#33258;&#21160;&#36339;&#36716; HTTPS&#12290;</li>
+<li><strong>&#27983;&#35272;&#22120;&#20250;&#24378;&#21046;&#36339;&#36716;</strong>&#65306;Chrome&#12289;Firefox&#12289;Safari &#31561;&#29616;&#20195;&#27983;&#35272;&#22120;&#30475;&#21040; <code>.dev</code> &#22495;&#21517;&#65292;&#20250;<strong>&#22312;&#26412;&#22320;&#30452;&#25509;&#20869;&#37096;&#37325;&#23450;&#21521;&#21040; HTTPS</strong>&#65288;&#29366;&#24577;&#30721; 307&#65289;&#65292;&#26681;&#26412;&#19981;&#20250;&#21457;&#20986; HTTP &#35831;&#27714;&#12290;</li>
+</ul><p>&#22914;&#26524;&#20320;&#30340;&#27979;&#35797;&#26381;&#21153;&#22120;<strong>&#27809;&#26377;&#37197;&#32622; SSL &#35777;&#20070;&#25110;&#26410;&#30417;&#21548; 443 &#31471;&#21475;</strong>&#65292;HTTPS &#35831;&#27714;&#23601;&#20250;&#22833;&#36133;&#65292;&#23548;&#33268;&ldquo;&#36830;&#25509;&#36229;&#26102;&rdquo;&#25110;&ldquo;SSL &#38169;&#35823;&rdquo;&#12290;</p><hr><h3 id="fe353e3262f42b405b9d61d58f18be2f">.xyz&#12289;.test&#12289;.local</h3><p>&#20320;&#21487;&#33021;&#20250;&#24819;&#65306;&#37027;&#25105;&#25442;&#19968;&#20010;&#20919;&#38376;&#21518;&#32512;&#65292;&#27604;&#22914; <code>.xyz</code>&#12289;<code>.online</code> &#25110; <code>.fun</code>&#65311;</p><p>&#20294;&#36825;&#20123;&#22495;&#21517;&#20063;&#26377;&#38544;&#24739;&#65306;</p><ol>
 <li>
-<p><strong>邮件和短信 deliverability 问题</strong></p>
+<p><strong>&#37038;&#20214;&#21644;&#30701;&#20449; deliverability &#38382;&#39064;</strong></p>
 <ul>
-<li>某些邮件服务商（如 Gmail、Outlook）会将包含 <code>.xyz</code> 链接的邮件标记为垃圾邮件；</li>
-<li>有开发者反馈：<strong>仅在短信中包含 <code>.xyz</code> 域名，就会导致消息静默失败</strong>（用户收不到）。</li>
+<li>&#26576;&#20123;&#37038;&#20214;&#26381;&#21153;&#21830;&#65288;&#22914; Gmail&#12289;Outlook&#65289;&#20250;&#23558;&#21253;&#21547; <code>.xyz</code> &#38142;&#25509;&#30340;&#37038;&#20214;&#26631;&#35760;&#20026;&#22403;&#22334;&#37038;&#20214;&#65307;</li>
+<li>&#26377;&#24320;&#21457;&#32773;&#21453;&#39304;&#65306;<strong>&#20165;&#22312;&#30701;&#20449;&#20013;&#21253;&#21547; <code>.xyz</code> &#22495;&#21517;&#65292;&#23601;&#20250;&#23548;&#33268;&#28040;&#24687;&#38745;&#40664;&#22833;&#36133;</strong>&#65288;&#29992;&#25143;&#25910;&#19981;&#21040;&#65289;&#12290;</li>
 </ul>
 </li>
 <li>
-<p><strong>防火墙或安全软件拦截</strong></p>
+<p><strong>&#38450;&#28779;&#22681;&#25110;&#23433;&#20840;&#36719;&#20214;&#25318;&#25130;</strong></p>
 <ul>
-<li>很多企业防火墙会主动屏蔽 <code>.xyz</code>、<code>.top</code> 等“高风险”TLD；</li>
-<li>即使你的服务完全合规，也可能因域名后缀被误判为恶意网站。</li>
+<li>&#24456;&#22810;&#20225;&#19994;&#38450;&#28779;&#22681;&#20250;&#20027;&#21160;&#23631;&#34109; <code>.xyz</code>&#12289;<code>.top</code> &#31561;&ldquo;&#39640;&#39118;&#38505;&rdquo;TLD&#65307;</li>
+<li>&#21363;&#20351;&#20320;&#30340;&#26381;&#21153;&#23436;&#20840;&#21512;&#35268;&#65292;&#20063;&#21487;&#33021;&#22240;&#22495;&#21517;&#21518;&#32512;&#34987;&#35823;&#21028;&#20026;&#24694;&#24847;&#32593;&#31449;&#12290;</li>
 </ul>
 </li>
 <li>
-<p><strong>.test 和 .localhost 是保留域名</strong></p>
+<p><strong>.test &#21644; .localhost &#26159;&#20445;&#30041;&#22495;&#21517;</strong></p>
 <ul>
-<li><code>.test</code>、<code>.example</code>、<code>.localhost</code>、<code>.invalid</code> 是 <a href="https://datatracker.ietf.org/doc/html/rfc6761">RFC 6761</a> <strong>官方保留用于测试的域名</strong>，<strong>不会被公共 DNS 解析</strong>，适合本地开发。</li>
-<li>但它们<strong>不适合公开测试环境</strong>（如 staging 服务器），因为无法通过公网 DNS 解析。</li>
+<li><code>.test</code>&#12289;<code>.example</code>&#12289;<code>.localhost</code>&#12289;<code>.invalid</code> &#26159; <a href="https://datatracker.ietf.org/doc/html/rfc6761" target="_blank" rel="noopener noreferrer">RFC 6761</a> <strong>&#23448;&#26041;&#20445;&#30041;&#29992;&#20110;&#27979;&#35797;&#30340;&#22495;&#21517;</strong>&#65292;<strong>&#19981;&#20250;&#34987;&#20844;&#20849; DNS &#35299;&#26512;</strong>&#65292;&#36866;&#21512;&#26412;&#22320;&#24320;&#21457;&#12290;</li>
+<li>&#20294;&#23427;&#20204;<strong>&#19981;&#36866;&#21512;&#20844;&#24320;&#27979;&#35797;&#29615;&#22659;</strong>&#65288;&#22914; staging &#26381;&#21153;&#22120;&#65289;&#65292;&#22240;&#20026;&#26080;&#27861;&#36890;&#36807;&#20844;&#32593; DNS &#35299;&#26512;&#12290;</li>
 </ul>
 </li>
-</ol><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> get.dev: <i><a href="https://get.dev" target="_blank">https://get.dev</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> RFC 6761: <i><a href="https://datatracker.ietf.org/doc/html/rfc6761" target="_blank">https://datatracker.ietf.org/doc/html/rfc6761</a></i><br></p>
+</ol>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> get.dev: <i><a href="https://get.dev" target="_blank">https://get.dev</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> RFC 6761: <i><a href="https://datatracker.ietf.org/doc/html/rfc6761" target="_blank">https://datatracker.ietf.org/doc/html/rfc6761</a></i><br></p>
 			</div>
 </div>
 

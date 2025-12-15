@@ -52,7 +52,7 @@
     }
 </style>
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="aI7NfWBorMRWFPIMGJRBQ2UGbAuD7Jr9XdpIlKZI">
+        <meta name="csrf-token" content="AW55Tp40GKQY8qyO8LdN2pjUTdycsKNYPjxIeuLI">
 
         
     </head>
@@ -432,16 +432,11 @@ var _hmt = _hmt || [];
 	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
 		<h1>如何使用 JavaScript 将 localStorage 空间填满？</h1><ul>
 <li><a href="j25v1ode1n.html#b09bd7fc30d0262929c151d123e0131a">示例用法：</a></li>
-</ul><p>本周我需要测试js将数据存储到空间已满的localStorage中的表现，为此，我想找到一种使用 JavaScript 将 localStorage 空间填满的方法。  </p>
-<p>我们知道检测 localStorage 何时已满的唯一方法是在调用 <code>localStorage.setItem</code> 时捕获 <code>QuotaExceededError</code> ，我最初的想法是编写一个循环，逐字节增加 localStorage 大小直到它已满，例如：</p>
-<pre><code class="language-js">try {
+</ul><?xml encoding="UTF-8"><p>&#26412;&#21608;&#25105;&#38656;&#35201;&#27979;&#35797;js&#23558;&#25968;&#25454;&#23384;&#20648;&#21040;&#31354;&#38388;&#24050;&#28385;&#30340;localStorage&#20013;&#30340;&#34920;&#29616;&#65292;&#20026;&#27492;&#65292;&#25105;&#24819;&#25214;&#21040;&#19968;&#31181;&#20351;&#29992; JavaScript &#23558; localStorage &#31354;&#38388;&#22635;&#28385;&#30340;&#26041;&#27861;&#12290;  </p><p>&#25105;&#20204;&#30693;&#36947;&#26816;&#27979; localStorage &#20309;&#26102;&#24050;&#28385;&#30340;&#21807;&#19968;&#26041;&#27861;&#26159;&#22312;&#35843;&#29992; <code>localStorage.setItem</code> &#26102;&#25429;&#33719; <code>QuotaExceededError</code> &#65292;&#25105;&#26368;&#21021;&#30340;&#24819;&#27861;&#26159;&#32534;&#20889;&#19968;&#20010;&#24490;&#29615;&#65292;&#36880;&#23383;&#33410;&#22686;&#21152; localStorage &#22823;&#23567;&#30452;&#21040;&#23427;&#24050;&#28385;&#65292;&#20363;&#22914;&#65306;</p><pre><code class="language-js">try {
   for (let i = 1; i &lt; Infinity; i++) {
     localStorage.setItem("__test__", "x".repeat(i));
   }
-} catch (err) {}</code></pre>
-<p>但是，逐字节写入并不是一个好的选择。它的效率非常低，很容易使浏览器崩溃。</p>
-<p>因此，受这个 <a href="https://stackoverflow.com/a/45760532">StackOverflow 答案</a>的启发，我选择先存储较大的字符串，然后回退到较小的字符串，直到 localStorage 已满：</p>
-<pre><code class="language-ts">/**
+} catch (err) {}</code></pre><p>&#20294;&#26159;&#65292;&#36880;&#23383;&#33410;&#20889;&#20837;&#24182;&#19981;&#26159;&#19968;&#20010;&#22909;&#30340;&#36873;&#25321;&#12290;&#23427;&#30340;&#25928;&#29575;&#38750;&#24120;&#20302;&#65292;&#24456;&#23481;&#26131;&#20351;&#27983;&#35272;&#22120;&#23849;&#28291;&#12290;</p><p>&#22240;&#27492;&#65292;&#21463;&#36825;&#20010; <a href="https://stackoverflow.com/a/45760532" target="_blank" rel="noopener noreferrer">StackOverflow &#31572;&#26696;</a>&#30340;&#21551;&#21457;&#65292;&#25105;&#36873;&#25321;&#20808;&#23384;&#20648;&#36739;&#22823;&#30340;&#23383;&#31526;&#20018;&#65292;&#28982;&#21518;&#22238;&#36864;&#21040;&#36739;&#23567;&#30340;&#23383;&#31526;&#20018;&#65292;&#30452;&#21040; localStorage &#24050;&#28385;&#65306;</p><pre><code class="language-ts">/**
  * Fill localStorage to its maximum capacity.
  *
  * First, we fill localStorage in chunks of 100.000 characters until it
@@ -476,7 +471,7 @@ function fillLocalStorage(): () =&gt; void {
       try {
         storeIncreasinglyBigItem("__3", 1);
       } catch (_err3) {
-        // Storage is now completely full 🍟
+        // Storage is now completely full &#127839;
       }
     }
   }
@@ -485,13 +480,9 @@ function fillLocalStorage(): () =&gt; void {
     localStorage.removeItem("__2");
     localStorage.removeItem("__3");
   };
-}</code></pre>
-<blockquote>
-<p>请注意，这个解决方案有一个很小的边缘情况，其中 <code>fillLocalStorage</code> 没有 100% 填充 localStorage：由于浏览器包含确定 localStorage 大小的值和键，在极少数情况下，可能会报告存储空间已满但可能还剩下大约 3 个字节。</p>
-</blockquote>
-<p>上面的片段肯定可以被优化，但效果还行，这就是我最初在这篇文章中建议的。到我在 Reddit 上分享了它，其中 <a href="https://old.reddit.com/user/kyle1320">u/kyle1320</a>和<a href="https://old.reddit.com/user/palparepa">/u/palparepa</a>提出了一种更优雅的方法：先找到最高阶的位，然后以递减的方式测试每个位，直到localStorage满了为止。</p>
-<p>这种方法比我上面建议的方法性能更高，因为它涉及更少的分配和迭代，它使用单个 localStorage 项，并且还解决了我刚才提到的边缘情况。</p>
-<pre><code class="language-ts">/**
+}</code></pre><blockquote>
+<p>&#35831;&#27880;&#24847;&#65292;&#36825;&#20010;&#35299;&#20915;&#26041;&#26696;&#26377;&#19968;&#20010;&#24456;&#23567;&#30340;&#36793;&#32536;&#24773;&#20917;&#65292;&#20854;&#20013; <code>fillLocalStorage</code> &#27809;&#26377; 100% &#22635;&#20805; localStorage&#65306;&#30001;&#20110;&#27983;&#35272;&#22120;&#21253;&#21547;&#30830;&#23450; localStorage &#22823;&#23567;&#30340;&#20540;&#21644;&#38190;&#65292;&#22312;&#26497;&#23569;&#25968;&#24773;&#20917;&#19979;&#65292;&#21487;&#33021;&#20250;&#25253;&#21578;&#23384;&#20648;&#31354;&#38388;&#24050;&#28385;&#20294;&#21487;&#33021;&#36824;&#21097;&#19979;&#22823;&#32422; 3 &#20010;&#23383;&#33410;&#12290;</p>
+</blockquote><p>&#19978;&#38754;&#30340;&#29255;&#27573;&#32943;&#23450;&#21487;&#20197;&#34987;&#20248;&#21270;&#65292;&#20294;&#25928;&#26524;&#36824;&#34892;&#65292;&#36825;&#23601;&#26159;&#25105;&#26368;&#21021;&#22312;&#36825;&#31687;&#25991;&#31456;&#20013;&#24314;&#35758;&#30340;&#12290;&#21040;&#25105;&#22312; Reddit &#19978;&#20998;&#20139;&#20102;&#23427;&#65292;&#20854;&#20013; <a href="https://old.reddit.com/user/kyle1320" target="_blank" rel="noopener noreferrer">u/kyle1320</a>&#21644;<a href="https://old.reddit.com/user/palparepa" target="_blank" rel="noopener noreferrer">/u/palparepa</a>&#25552;&#20986;&#20102;&#19968;&#31181;&#26356;&#20248;&#38597;&#30340;&#26041;&#27861;&#65306;&#20808;&#25214;&#21040;&#26368;&#39640;&#38454;&#30340;&#20301;&#65292;&#28982;&#21518;&#20197;&#36882;&#20943;&#30340;&#26041;&#24335;&#27979;&#35797;&#27599;&#20010;&#20301;&#65292;&#30452;&#21040;localStorage&#28385;&#20102;&#20026;&#27490;&#12290;</p><p>&#36825;&#31181;&#26041;&#27861;&#27604;&#25105;&#19978;&#38754;&#24314;&#35758;&#30340;&#26041;&#27861;&#24615;&#33021;&#26356;&#39640;&#65292;&#22240;&#20026;&#23427;&#28041;&#21450;&#26356;&#23569;&#30340;&#20998;&#37197;&#21644;&#36845;&#20195;&#65292;&#23427;&#20351;&#29992;&#21333;&#20010; localStorage &#39033;&#65292;&#24182;&#19988;&#36824;&#35299;&#20915;&#20102;&#25105;&#21018;&#25165;&#25552;&#21040;&#30340;&#36793;&#32536;&#24773;&#20917;&#12290;</p><pre><code class="language-ts">/**
  * Fill localStorage to its maximum capacity.
  *
  * First, we find the highest order bit (the bit with the highest place value)
@@ -503,7 +494,7 @@ function fillLocalStorage(): () =&gt; void {
  *
  * By working in iterations, starting with very long strings, and storing data
  * in different items, we can keep a low memory profile and reduce the number of
- * writes — making this process pretty fast.
+ * writes &mdash; making this process pretty fast.
  *
  * To cleanup localStorage you can use localStorage.clear(). Still, just in case
  * you wanted to clean up only the data stored by this function (maybe because
@@ -534,7 +525,7 @@ function fillLocalStorage(): () =&gt; void {
       localStorage.setItem(key, data.substring(0, max | bit));
       max |= bit;
     } catch {
-      // Storage is now completely full 🍟
+      // Storage is now completely full &#127839;
     }
   }
 
@@ -542,16 +533,12 @@ function fillLocalStorage(): () =&gt; void {
   return function cleanup() {
     localStorage.removeItem(key);
   };
-}</code></pre>
-<h2 id="b09bd7fc30d0262929c151d123e0131a">示例用法：</h2>
-<pre><code class="language-ts">// Fill localStorage.
+}</code></pre><h2 id="b09bd7fc30d0262929c151d123e0131a">&#31034;&#20363;&#29992;&#27861;&#65306;</h2><pre><code class="language-ts">// Fill localStorage.
 const cleanupLocalStorage = fillLocalStorage();
 // The localStorage is full now. Do whatever you need to.
 doSomething();
 // Finally, delete the dummy data we used to fill localStorage.
-cleanupLocalStorage();</code></pre>
-<p><a href="https://github.com/puppeteer/puppeteer">Puppeteer</a> 和 <a href="https://github.com/microsoft/playwright">Playwright</a> 中的示例用法：</p>
-<pre><code class="language-ts">test.afterEach(async ({ page }) =&gt; {
+cleanupLocalStorage();</code></pre><p><a href="https://github.com/puppeteer/puppeteer" target="_blank" rel="noopener noreferrer">Puppeteer</a> &#21644; <a href="https://github.com/microsoft/playwright" target="_blank" rel="noopener noreferrer">Playwright</a> &#20013;&#30340;&#31034;&#20363;&#29992;&#27861;&#65306;</p><pre><code class="language-ts">test.afterEach(async ({ page }) =&gt; {
   await page.evaluate(() =&gt; window.localStorage.clear());
 });
 
@@ -564,10 +551,10 @@ test("Do something when localStorage is full", async ({ page }) =&gt; {
 
   // The localStorage is full now. Do whatever you need to.
   doSomething();
-});</code></pre>
-<blockquote>
-<p>我用 chrome 测试了下，他的 localStorage 空间是5M。</p>
-</blockquote><h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> StackOverflow 答案: <i><a href="https://stackoverflow.com/a/45760532" target="_blank">https://stackoverflow.com/a/45760532</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> u/kyle1320: <i><a href="https://old.reddit.com/user/kyle1320" target="_blank">https://old.reddit.com/user/kyle1320</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> /u/palparepa: <i><a href="https://old.reddit.com/user/palparepa" target="_blank">https://old.reddit.com/user/palparepa</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Puppeteer: <i><a href="https://github.com/puppeteer/puppeteer" target="_blank">https://github.com/puppeteer/puppeteer</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> Playwright: <i><a href="https://github.com/microsoft/playwright" target="_blank">https://github.com/microsoft/playwright</a></i><br></p>
+});</code></pre><blockquote>
+<p>&#25105;&#29992; chrome &#27979;&#35797;&#20102;&#19979;&#65292;&#20182;&#30340; localStorage &#31354;&#38388;&#26159;5M&#12290;</p>
+</blockquote>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> StackOverflow 答案: <i><a href="https://stackoverflow.com/a/45760532" target="_blank">https://stackoverflow.com/a/45760532</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> u/kyle1320: <i><a href="https://old.reddit.com/user/kyle1320" target="_blank">https://old.reddit.com/user/kyle1320</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> /u/palparepa: <i><a href="https://old.reddit.com/user/palparepa" target="_blank">https://old.reddit.com/user/palparepa</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Puppeteer: <i><a href="https://github.com/puppeteer/puppeteer" target="_blank">https://github.com/puppeteer/puppeteer</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> Playwright: <i><a href="https://github.com/microsoft/playwright" target="_blank">https://github.com/microsoft/playwright</a></i><br></p>
 			</div>
 </div>
 
