@@ -1,0 +1,493 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META Tags -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>前端模糊图处理，BlurHash 占位图 | 风中的木偶</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- SEO -->
+        <meta name="author" content="风中的木偶">
+        <meta name="description" content="">
+        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+        <meta name="twitter:card" value="summary">
+                                                                <meta property="og:title" content="风中的木偶个人博客" />
+                                                                <meta property="og:type" content="article" />
+                                                                <meta property="og:url" content="https://wangmaolin.net" />
+                                                                                            
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+        
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+        
+        <!-- Dynamic Colors -->
+        <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+</style>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="KleMrDr6ffj0O5RRYQG7zfnQrlTIDEvQyPTF5iVA">
+
+        
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    前端 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+            
+            <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>VUE</h2>
+<ul>
+<li id="blog4"><a href="jenydov7d5.html#blog4">vue 项目中通过监听 localStorage 的变化进行父子页面传参</a>
+<li id="blog24"><a href="de296og9q7.html#blog24">VUE this.$forceUpdate () 强制页面刷新问题</a>
+<li id="blog41"><a href="02ky04j9z8.html#blog41">vue 打包网页项目 nginx 配置注意点</a>
+<li id="blog44"><a href="jrqvwmle8p.html#blog44">Vue 数组操作方法</a>
+</ul>
+</li>
+<li>
+<h2>前端</h2>
+<ul>
+<li id="blog10"><a href="4x3vo6vm15.html#blog10">前端本地存储 cookie、localStorage、sessionStorage</a>
+<li id="blog30"><a href="7ndvd32eo2.html#blog30">img 标签图片不存在时显示默认图如何设置？</a>
+<li id="blog36"><a href="x569x53yep.html#blog36">给 TinyMce 富文本编辑器图片和视频上传插件添加本地文件上传按钮</a>
+<li id="blog42"><a href="n2qvpxq93m.html#blog42">前端模板引擎 artTemplate 介绍</a>
+<li id="blog356"><a href="7okv5m5e1n.html#blog356">JavaScript 调试常用的工具和技术介绍</a>
+<li id="blog411"><a href="y6r9kpkqpv.html#blog411">客户端oss直传方式</a>
+<li id="blog860"><a href="569x5j1yep.html#blog860">前端 SnapDom 库将 html dom 元素捕获为图像</a>
+<li id="blog934"><a href="x3vo0kovm1.html#blog934">前端模糊图处理，BlurHash 占位图</a>
+</ul>
+</li>
+<li>
+<h2>Node.js</h2>
+<ul>
+<li id="blog38"><a href="xrwyl26vz8.html#blog38">Node 多版本切换工具 nvm 的安装和使用</a>
+<li id="blog39"><a href="ekpv13k98w.html#blog39">使用 pm2 远程部署前端项目</a>
+</ul>
+</li>
+<li>
+<h2>npm</h2>
+<ul>
+<li id="blog40"><a href="nq5vrlgv7p.html#blog40">NPM 国内加速方法</a>
+<li id="blog109"><a href="qd7yq7jv2w.html#blog109">将 node_modules 目录放入 Git 仓库的优点</a>
+<li id="blog372"><a href="8loyn31ez3.html#blog372">NPM 的 5 种替代方案</a>
+</ul>
+</li>
+<li>
+<h2>uniapp</h2>
+<ul>
+<li id="blog43"><a href="2dne29ov5q.html#blog43">uniapp 打包 H5 方法</a>
+<li id="blog45"><a href="qk2vm8oyp0.html#blog45">uniapp 长按保存图片代码</a>
+<li id="blog46"><a href="71xyjd8yd9.html#blog46">uniapp 点击复制文本</a>
+<li id="blog57"><a href="qd7yqmnv2w.html#blog57">uniapp 获取设置的 App 版本号</a>
+<li id="blog129"><a href="15dvekgv4x.html#blog129">Uniapp 之 h5 使用 jsonp 跨域调用地图 API</a>
+<li id="blog243"><a href="2dne2qke5q.html#blog243">HBuilderX  iOS云打包如何设置通用链接等Capabilities配置</a>
+<li id="blog282"><a href="4x3vow59m1.html#blog282">uniad 激励视频广告如何进行服务端回调，下发奖励？</a>
+</ul>
+</li>
+<li>
+<h2>Markdown</h2>
+<ul>
+<li id="blog48"><a href="de2967gvq7.html#blog48">给 Markdown 编辑器 Editor.md 添加图片复制粘贴自动上传功能</a>
+<li id="blog95"><a href="wjkv8nwv62.html#blog95">MarkDown 内容网页展示美化方法</a>
+<li id="blog255"><a href="wkl9n2d9z4.html#blog255">Markdown 嵌入视频语法</a>
+</ul>
+</li>
+<li>
+<h2>CloudFlare</h2>
+<ul>
+<li id="blog58"><a href="4x3vo46ym1.html#blog58">如何使用 Cloudflare Pages 托管静态网站</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog98"><a href="62wy3qnvkm.html#blog98">instant.page 一个通过网页预加载提升页面加载速度的 js 脚本</a>
+<li id="blog436"><a href="x569x089ep.html#blog436">提高前端代码性能的最佳实践</a>
+</ul>
+</li>
+<li>
+<h2>JavaScript</h2>
+<ul>
+<li id="blog113"><a href="mdgy7zk9w2.html#blog113">自动为网页上选中的文本生成锚点的 js 库 deeplinks.js</a>
+<li id="blog248"><a href="8loyn2ryz3.html#blog248">10 个 JavaScript 单行代码 - 提高你的工作效率</a>
+<li id="blog287"><a href="j25v1ode1n.html#blog287">如何使用 JavaScript 将 localStorage 空间填满？</a>
+<li id="blog371"><a href="wjkv8ody62.html#blog371">如何在网页中源码中隐藏 JavaScript 代码？</a>
+</ul>
+</li>
+<li>
+<h2>localStorage</h2>
+<ul>
+<li id="blog287"><a href="j25v1ode1n.html#blog287">如何使用 JavaScript 将 localStorage 空间填满？</a>
+<li id="blog288"><a href="nq5vr8oe7p.html#blog288">如何处理 localStorage 使用中的错误（如空间超出错误）</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog667"><a href="m892gnoy01.html#blog667">target=&quot;_blank” 属性的安全漏洞</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/x3vo0kovm1.html', function (data, status) {
+            addView('x3vo0kovm1.html')
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>前端模糊图处理，BlurHash 占位图</h1><ul>
+<li><a href="x3vo0kovm1.html#dd0eaa3aa0608e28ad61f27115f5bec4">BlurHash 占位图</a></li>
+<li><a href="x3vo0kovm1.html#b6724cffe9b1e39a5652a348831a4e0d">原理</a></li>
+<li><a href="x3vo0kovm1.html#f7dae850fc8cef4c48ff9db5010098f5">编码和解码速度如何？</a></li>
+<li><a href="x3vo0kovm1.html#e95998c4bd1825fd004f837f5c8072b7">BlurHash 用途</a></li>
+<li><a href="x3vo0kovm1.html#5ee788b46b40f2605c33dc958a5820be">如何传递解码尺寸</a></li>
+</ul><?xml encoding="UTF-8"><h3 id="dd0eaa3aa0608e28ad61f27115f5bec4">BlurHash &#21344;&#20301;&#22270;</h3><p>&#27599;&#24403;&#21069;&#31471;&#20174;&#25509;&#21475;&#33719;&#21462;&#25968;&#25454;&#23637;&#31034;&#65292;&#24403;&#22270;&#29255;&#26410;&#19979;&#36733;&#23436;&#25104;&#21069;&#65292;&#20250;&#30475;&#21040;&#28385;&#23631;&#30340;&#31354;&#30333;&#26041;&#26694;&#65292;&#24182;&#19981;&#32654;&#35266;&#65292;&#24403;&#28982;&#25105;&#20204;&#21487;&#20197;&#29992;&#25042;&#21152;&#36733;&#22270;&#21344;&#20301;&#12290;</p><p>&#20294;&#26377;&#26102;&#21516;&#37197;&#33394;&#30340;&#27169;&#31946;&#22270;&#21344;&#20301;(<a href="https://github.com/woltapp/blurhash" target="_blank" rel="noopener noreferrer">BlurHash &#21344;&#20301;&#22270;&#26041;&#26696;</a>)&#21487;&#33021;&#26159;&#26356;&#22909;&#30340;&#36873;&#25321;&#12290;</p><p><figure>
+<img src="../../storage/images/2025/12/MdNATSTI8AmWPIjmXNi3qkyjZLT9LoOLRXP2w11c.png" alt="&#22270;&#29255;&#26410;&#21152;&#36733;&#20986;&#26469;&#21069;&#20351;&#29992;&#21516;&#37197;&#33394;&#30340;&#27169;&#31946;&#22270;&#21344;&#20301;">
+<figcaption>&#22270;&#29255;&#26410;&#21152;&#36733;&#20986;&#26469;&#21069;&#20351;&#29992;&#21516;&#37197;&#33394;&#30340;&#27169;&#31946;&#22270;&#21344;&#20301;</figcaption>
+</figure></p><h3 id="b6724cffe9b1e39a5652a348831a4e0d">&#21407;&#29702;</h3><p>BlurHash &#33021;&#23558;&#19968;&#24352;&#22270;&#29255;&#36716;&#25442;&#25104;&#19968;&#20010;&#24456;&#30701;&#30340;&#23383;&#31526;&#20018;&#65288;&#20165; 20&ndash;30 &#20010;&#23383;&#31526;&#65281;&#65289;&#65292;&#29992;&#20316;&#35813;&#22270;&#29255;&#30340;&#21344;&#20301;&#31526;&#12290;&#20320;&#21487;&#20197;&#22312;&#26381;&#21153;&#31471;&#23436;&#25104;&#36825;&#19968;&#36716;&#25442;&#65292;&#24182;&#23558;&#36825;&#20010;&#23383;&#31526;&#20018;&#19982;&#22270;&#29255;&#19968;&#36215;&#23384;&#20648;&#12290;&#24403;&#20320;&#21521;&#23458;&#25143;&#31471;&#21457;&#36865;&#25968;&#25454;&#26102;&#65292;&#21516;&#26102;&#25552;&#20379;&#22270;&#29255;&#30340; URL &#21644; BlurHash &#23383;&#31526;&#20018;&#12290;&#23458;&#25143;&#31471;&#25910;&#21040;&#21518;&#65292;&#20250;&#23558;&#35813;&#23383;&#31526;&#20018;&#35299;&#30721;&#25104;&#19968;&#24352;&#27169;&#31946;&#30340;&#21344;&#20301;&#22270;&#65292;&#22312;&#30495;&#23454;&#22270;&#29255;&#36890;&#36807;&#32593;&#32476;&#21152;&#36733;&#23436;&#25104;&#21069;&#20808;&#26174;&#31034;&#20986;&#26469;&#12290;&#36825;&#20010;&#23383;&#31526;&#20018;&#38750;&#24120;&#30701;&#65292;&#21487;&#20197;&#36731;&#26494;&#23884;&#20837;&#20320;&#20351;&#29992;&#30340;&#20219;&#20309;&#25968;&#25454;&#26684;&#24335;&#20013;&mdash;&mdash;&#20363;&#22914;&#65292;&#30452;&#25509;&#20316;&#20026; JSON &#23545;&#35937;&#20013;&#30340;&#19968;&#20010;&#23383;&#27573;&#12290;</p><p><img src="../../storage/images/2025/12/ibeZyn2V00ENrmOZ0Nmob5X56jWjBgAlLyBYhvv7.png" alt=""></p><p>&#35813;&#39033;&#30446;&#25552;&#20379;&#20102;&#21508;&#31181;&#35821;&#35328;&#30340;&#32534;&#30721;&#21644;&#35299;&#30721;&#26041;&#26696;&#20379;&#21442;&#32771;&#65292;&#20351;&#29992;&#24456;&#26041;&#20415;&#12290;</p><h3 id="f7dae850fc8cef4c48ff9db5010098f5">&#32534;&#30721;&#21644;&#35299;&#30721;&#36895;&#24230;&#22914;&#20309;&#65311;</h3><p>&#36825;&#20123;&#23454;&#29616;&#24182;&#27809;&#26377;&#20570;&#22826;&#22810;&#20248;&#21270;&#12290;&#22312;&#22788;&#29702;&#38750;&#24120;&#22823;&#30340;&#22270;&#20687;&#26102;&#65292;&#21487;&#33021;&#20250;&#26377;&#28857;&#24930;&#12290;&#23545;&#20110;&#30456;&#21516;&#36755;&#20837;&#25110;&#36755;&#20986;&#23610;&#23544;&#65292;&#32534;&#30721;&#22120;&#21644;&#35299;&#30721;&#22120;&#30340;&#24615;&#33021;&#22823;&#33268;&#30456;&#24403;&#65292;&#22240;&#27492;&#22312; UI &#32447;&#31243;&#19978;&#35299;&#30721;&#38750;&#24120;&#22823;&#30340;&#21344;&#20301;&#22270;&#20063;&#21487;&#33021;&#31245;&#26174;&#32531;&#24930;&#12290;</p><p>&#19981;&#36807;&#65281;&#39640;&#25928;&#20351;&#29992;&#35813;&#31639;&#27861;&#30340;&#20851;&#38190;&#22312;&#20110;<strong>&#19981;&#35201;&#23545;&#20840;&#23610;&#23544;&#22270;&#20687;&#30452;&#25509;&#36816;&#34892; BlurHash</strong>&#12290;&#22240;&#20026;&#22270;&#20687;&#30340;&#31934;&#32454;&#32454;&#33410;&#37117;&#20250;&#34987;&#20002;&#24323;&#65292;&#25152;&#20197;&#20320;&#24212;&#35813;&#20808;&#23558;&#22270;&#20687;&#32553;&#23567;&#21518;&#20877;&#36827;&#34892; BlurHash &#22788;&#29702;&#12290;&#22914;&#26524;&#20320;&#27491;&#22312;&#29983;&#25104;&#32553;&#30053;&#22270;&#65292;&#37027;&#23601;&#30452;&#25509;&#23545;&#32553;&#30053;&#22270;&#36816;&#34892; BlurHash&#65292;&#32780;&#19981;&#26159;&#21407;&#22987;&#22823;&#22270;&#12290;</p><p>&#21516;&#26679;&#22320;&#65292;&#22312;&#26174;&#31034;&#21344;&#20301;&#22270;&#26102;&#65292;&#20351;&#29992;&#38750;&#24120;&#23567;&#30340;&#22270;&#20687;&#65288;&#27604;&#22914;&#23485;&#24230;&#20165;&#20026; 32 &#20687;&#32032;&#29978;&#33267; 20 &#20687;&#32032;&#65289;&#25928;&#26524;&#23601;&#38750;&#24120;&#22909;&mdash;&mdash;&#21482;&#38656;&#35753; UI &#23618;&#23558;&#20854;&#25918;&#22823;&#21363;&#21487;&#65292;&#35270;&#35273;&#25928;&#26524;&#19982;&#30452;&#25509;&#35299;&#30721;&#25104;&#23436;&#25972;&#23610;&#23544;&#20960;&#20046;&#26080;&#27861;&#21306;&#20998;&#12290;</p><hr><p><strong>&#22914;&#20309;&#36873;&#25321; X &#21644; Y &#26041;&#21521;&#30340;&#20998;&#37327;&#25968;&#37327;&#65311;</strong><br>
+&#36825;&#22312;&#19968;&#23450;&#31243;&#24230;&#19978;&#21462;&#20915;&#20110;&#20010;&#20154;&#20559;&#22909;&#12290;&#20998;&#37327;&#36234;&#22810;&#65292;&#21344;&#20301;&#22270;&#20445;&#30041;&#30340;&#20449;&#24687;&#23601;&#36234;&#22810;&#65292;&#20294; BlurHash &#23383;&#31526;&#20018;&#20063;&#20250;&#36234;&#38271;&#12290;&#32780;&#19988;&#65292;&#24182;&#38750;&#20998;&#37327;&#36234;&#22810;&#30475;&#36215;&#26469;&#23601;&#36234;&#22909;&#12290;&#25105;&#20204;&#36890;&#24120;&#20351;&#29992; 4&times;3&#65288;X=4&#65292;Y=3&#65289;&#65292;&#36825;&#20010;&#37197;&#32622;&#22312;&#25928;&#26524;&#21644;&#38271;&#24230;&#20043;&#38388;&#21462;&#24471;&#20102;&#19981;&#38169;&#30340;&#24179;&#34913;&#12290;</p><p>&#19981;&#36807;&#65292;&#20320;&#24212;&#35813;&#26681;&#25454;&#22270;&#20687;&#30340;&#23485;&#39640;&#27604;&#26469;&#35843;&#25972;&#20998;&#37327;&#25968;&#37327;&#12290;&#20363;&#22914;&#65292;&#38750;&#24120;&#23485;&#30340;&#22270;&#20687;&#24212;&#20351;&#29992;&#26356;&#22810;&#30340; X &#20998;&#37327;&#12289;&#26356;&#23569;&#30340; Y &#20998;&#37327;&#12290;</p><p>Swift &#31034;&#20363;&#39033;&#30446;&#20013;&#21253;&#21547;&#19968;&#20010;&#27979;&#35797;&#24212;&#29992;&#65292;&#20320;&#21487;&#20197;&#23454;&#26102;&#35843;&#25972;&#21442;&#25968;&#24182;&#26597;&#30475;&#25928;&#26524;&#12290;</p><hr><p><strong>&#26576;&#20123;&#23454;&#29616;&#20013;&#30340; &ldquo;punch&rdquo; &#21442;&#25968;&#26159;&#20160;&#20040;&#65311;</strong><br>
+&#36825;&#26159;&#19968;&#20010;&#29992;&#20110;&#35843;&#25972;&#35299;&#30721;&#21518;&#22270;&#20687;&#23545;&#27604;&#24230;&#30340;&#21442;&#25968;&#12290;  </p><ul>
+<li><code>1</code> &#34920;&#31034;&#27491;&#24120;&#65307;  </li>
+<li>&#23567;&#20110; 1 &#30340;&#20540;&#20250;&#35753;&#25928;&#26524;&#26356;&#26580;&#21644;&#65307;  </li>
+<li>&#22823;&#20110; 1 &#30340;&#20540;&#21017;&#20250;&#35753;&#27169;&#31946;&#21344;&#20301;&#22270;&#30340;&#23545;&#27604;&#26356;&#24378;&#28872;&#12290;  </li>
+</ul><p>&#26412;&#36136;&#19978;&#65292;&#36825;&#26159;&#19968;&#20010;&#35774;&#35745;&#21442;&#25968;&#65292;&#35753;&#20320;&#33021;&#24494;&#35843;&#35270;&#35273;&#39118;&#26684;&#12290;<br>
+&#20174;&#25216;&#26415;&#35282;&#24230;&#30475;&#65292;&#23427;&#36890;&#36807;&#32553;&#25918; AC &#20998;&#37327;&#65288;&#20132;&#27969;&#20998;&#37327;&#65289;&#30340;&#22823;&#23567;&#26469;&#23454;&#29616;&#36825;&#19968;&#25928;&#26524;&#12290;</p><hr><h3 id="e95998c4bd1825fd004f837f5c8072b7">BlurHash &#29992;&#36884;</h3><ul>
+<li>&#29992;&#20316;&#22270;&#29255;&#21152;&#36733;&#21344;&#20301;&#31526;</li>
+<li><strong>&#26080;&#38656;&#26114;&#36149;&#27169;&#31946;&#25805;&#20316;&#21363;&#21487;&#36974;&#34109;&#22270;&#20687;</strong>&#65306;Mastodon &#23601;&#29992;&#23427;&#26469;&#20570;&#20869;&#23481;&#35686;&#21578;&#36974;&#32617;&#12290;</li>
+<li><strong>&#25552;&#21462;&#22270;&#20687;&#21306;&#22495;&#30340;&#24179;&#22343;&#39068;&#33394;&#38750;&#24120;&#23481;&#26131;</strong>&#65306;&#25968;&#25454;&#34920;&#31034;&#26041;&#24335;&#20351;&#24471;&#20320;&#21487;&#20197;&#36731;&#26494;&#20272;&#31639;&#22270;&#20687;&#39030;&#37096;&#36793;&#32536;&#12289;&#35282;&#33853;&#31561;&#21306;&#22495;&#30340;&#24179;&#22343;&#33394;&#12290;Swift &#30340; BlurHashKit &#23454;&#29616;&#20013;&#23601;&#26377;&#30456;&#20851;&#23454;&#39564;&#20195;&#30721;&#12290;&#27492;&#22806;&#65292;&#25972;&#24352;&#22270;&#30340;&#24179;&#22343;&#39068;&#33394;&#20854;&#23454;&#23601;&#26159; DC &#20998;&#37327;&#65288;&#30452;&#27969;&#20998;&#37327;&#65289;&#65292;&#29978;&#33267;&#26080;&#38656;&#23454;&#29616;&#22797;&#26434;&#30340; DCT &#35299;&#30721;&#36923;&#36753;&#23601;&#33021;&#33719;&#21462;&#12290;</li>
+<li><strong>&#23581;&#35797;&#23454;&#29616;&#24102;&#33394;&#35843;&#30340;&#25237;&#24433;&#25928;&#26524;</strong>&#65306;&#25105;&#20204;&#26366;&#35774;&#24819;&#21033;&#29992; BlurHash &#25193;&#23637; UI &#20803;&#32032;&#30340;&#36793;&#30028;&#26469;&#29983;&#25104;&#26377;&#33394;&#25237;&#24433;&#65292;&#20294;&#30446;&#21069;&#36824;&#27809;&#26102;&#38388;&#30495;&#27491;&#23454;&#29616;&#12290;</li>
+</ul><h3 id="5ee788b46b40f2605c33dc958a5820be">&#22914;&#20309;&#20256;&#36882;&#35299;&#30721;&#23610;&#23544;</h3><p>BlurHash &#26412;&#36523;&#30340;&#35774;&#35745;&#20013;&#19981;&#30452;&#25509;&#22312;&#23383;&#31526;&#20018;&#37324;&#25658;&#24102;&#22270;&#20687;&#30340;&#21407;&#22987;&#23610;&#23544;&#65288;&#22914; width / height&#65289;&#65292;&#23448;&#26041;&#25512;&#33616;&#20570;&#27861;&#65306;&#23558;&#23610;&#23544;&#20316;&#20026;&#39069;&#22806;&#23383;&#27573;&#19982; BlurHash &#23383;&#31526;&#20018;&#19968;&#36215;&#20256;&#36755;</p><p>BlurHash &#30340;&#26680;&#24515;&#29702;&#24565;&#26159;&#26497;&#31616;&#12289;&#30701;&#23567;&#12289;&#36890;&#29992;&#12290;&#23427;&#30340;&#23383;&#31526;&#20018;&#21482;&#32534;&#30721;&#39068;&#33394;&#21644;&#27169;&#31946;&#32467;&#26500;&#20449;&#24687;&#65292;&#19981;&#21253;&#21547;&#20803;&#25968;&#25454;&#65288;&#22914;&#23610;&#23544;&#12289;&#26684;&#24335;&#31561;&#65289;&#12290;&#22240;&#27492;&#65292;&#26368;&#20339;&#23454;&#36341;&#26159;&#22312;&#20320;&#30340;&#25968;&#25454;&#32467;&#26500;&#20013;&#21333;&#29420;&#20256;&#36882;&#23610;&#23544;&#20449;&#24687;&#12290;</p><p>&#20363;&#22914;&#65292;&#22312; JSON &#20013;&#65306;</p><pre><code class="language-json">{
+  "image_url": "https://example.com/photo.jpg",
+  "blurhash": "LKO2?U%2Tw=w]~RBVZRi};RPxuwH",
+  "width": 1200,
+  "height": 800
+}</code></pre><p>&#23458;&#25143;&#31471;&#25343;&#21040; blurhash &#21644; width/height &#21518;&#65292;&#21487;&#20197;&#65306;</p><p>&#25353;&#27604;&#20363;&#26174;&#31034;&#21344;&#20301;&#22270;&#65288;&#36991;&#20813;&#24067;&#23616;&#20559;&#31227;&#65289;</p><p>&#29992;&#23485;&#39640;&#27604;&#35774;&#32622;&#23481;&#22120;&#23610;&#23544;&#65292;&#20877;&#23558;&#35299;&#30721;&#21518;&#30340; BlurHash &#22270;&#20687;&#25289;&#20280;&#22635;&#20805;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> BlurHash 占位图方案: <i><a href="https://github.com/woltapp/blurhash" target="_blank">https://github.com/woltapp/blurhash</a></i><br></p>
+			</div>
+</div>
+
+            <larecipe-back-to-top></larecipe-back-to-top>
+        </div>
+
+
+        <script>
+            window.config = [];
+        </script>
+
+        <script type="text/javascript">
+            if(localStorage.getItem('larecipeSidebar') == null) {
+                localStorage.setItem('larecipeSidebar', !! 1);
+            }
+        </script>
+
+        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+        <script>
+            window.LaRecipe = new CreateLarecipe(config)
+        </script>
+
+        <!-- Google Analytics -->
+                <!-- /Google Analytics -->
+
+        
+        <script>
+            LaRecipe.run()
+        </script>
+    </body>
+</html>
