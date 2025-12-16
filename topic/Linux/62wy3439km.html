@@ -1,32 +1,32 @@
 <!doctype html>
 <html>
-    <head>
-        <!-- META Tags -->
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>OpenVPN 服务器搭建与使用 | 风中的木偶</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>OpenVPN 服务器搭建与使用 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- SEO -->
-        <meta name="author" content="风中的木偶">
-        <meta name="description" content="">
-        <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
-        <meta name="twitter:card" value="summary">
-                    <link rel="canonical" href="62wy3439km.html" />
-                                                                <meta property="og:title" content="风中的木偶个人博客" />
-                                                                <meta property="og:type" content="article" />
-                                                                <meta property="og:url" content="https://wangmaolin.net" />
-                                                                                            
-        <!-- CSS -->
-        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+            <link rel="canonical" href="62wy3439km.html"/>
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
 
-        
-        <!-- FontAwesome -->
-        <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
-                    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
-        
-        <!-- Dynamic Colors -->
-        <style>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
     :root {
         --primary: #787AF6;
         --secondary: #2b9cf2;
@@ -51,15 +51,42 @@
         height: 100%;
         background-color: #F2F6FA;
     }
-</style>
-        <!-- CSRF Token -->
-        <meta name="csrf-token" content="KleMrDr6ffj0O5RRYQG7zfnQrlTIDEvQyPTF5iVA">
 
-        
-    </head>
-    <body>
-        <div id="app" v-cloak>
-            <div class="fixed pin-t pin-x z-40">
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="gSzGiTmrUQNBUETkKxuSItbzeLtzccP7sFJ0svV7">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<div id="passwordModal" style="display: none">
+    <h3>请输入访问密码</h3>
+    <input type="password" id="pwdInput" placeholder="Password"/>
+    <button onclick="checkPassword()">进入</button>
+    <p id="errorMsg" style="color:red; min-height:1.2em;"></p>
+</div>
+
+<div id="app" v-cloak style="display: none">
+    <div class="fixed pin-t pin-x z-40">
     <div class="bg-gradient-primary text-white h-1"></div>
 
     <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
@@ -302,8 +329,8 @@
     </nav>
 </div>
 
-            
-            <div>
+    
+    <div>
 	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
     <ul>
 <li>
@@ -495,43 +522,84 @@ var _hmt = _hmt || [];
 <li><a href="62wy3439km.html#48ab146a76268c9321a48478b357cb4f">功能特性</a></li>
 <li><a href="62wy3439km.html#afaa4d84869467a93c7dd4a1295311b1">安装说明</a></li>
 <li><a href="62wy3439km.html#390715c357db37dbed74294911f1522b">配置 OpenVPN 客户端</a></li>
+<li><a href="62wy3439km.html#785107ea0bc2977cf36df1c3a8edada9">直连问题</a>
+<ul>
+<li><a href="62wy3439km.html#4e638a666815a81347f66db3202d2626">修改 hosts 方案 【暂时推荐】</a></li>
+</ul></li>
 </ul><?xml encoding="UTF-8"><h2 id="f7579f335596b631b0d4b9741b2057d2">&#19968;&#38190;&#23433;&#35013;&#33050;&#26412;</h2><p><a href="https://github.com/hwdsl2/openvpn-install" target="_blank" rel="noopener noreferrer">&#39033;&#30446;&#22320;&#22336;</a></p><p>&#20351;&#29992; Linux &#33050;&#26412;&#19968;&#38190;&#24555;&#36895;&#25645;&#24314;&#33258;&#24049;&#30340; OpenVPN &#26381;&#21153;&#22120;&#12290;&#25903;&#25345; Ubuntu, Debian, AlmaLinux, Rocky Linux, CentOS, Fedora, openSUSE, Amazon Linux 2 &#21644; Raspberry Pi OS&#12290;</p><p>&#35813;&#33050;&#26412;&#21487;&#35753;&#20320;&#22312;&#20960;&#20998;&#38047;&#20869;&#24314;&#31435;&#33258;&#24049;&#30340; VPN &#26381;&#21153;&#22120;&#65292;&#21363;&#20351;&#20320;&#20197;&#21069;&#27809;&#26377;&#20351;&#29992;&#36807; OpenVPN&#12290;<a href="https://openvpn.net/community-resources/reference-manual-for-openvpn-2-6/" target="_blank" rel="noopener noreferrer">OpenVPN</a> &#26159;&#19968;&#31181;&#24320;&#28304;&#12289;&#24378;&#22823;&#19988;&#39640;&#24230;&#28789;&#27963;&#30340; VPN &#21327;&#35758;&#12290;</p><h2 id="48ab146a76268c9321a48478b357cb4f">&#21151;&#33021;&#29305;&#24615;</h2><ul>
 <li>&#20840;&#33258;&#21160;&#30340; OpenVPN &#26381;&#21153;&#22120;&#37197;&#32622;&#65292;&#26080;&#38656;&#29992;&#25143;&#36755;&#20837;</li>
 <li>&#25903;&#25345;&#20351;&#29992;&#33258;&#23450;&#20041;&#36873;&#39033;&#36827;&#34892;&#20132;&#20114;&#24335;&#23433;&#35013;</li>
 <li>&#29983;&#25104; VPN &#37197;&#32622;&#25991;&#20214;&#20197;&#33258;&#21160;&#37197;&#32622; Windows, macOS, iOS &#21644; Android &#35774;&#22791;</li>
 <li>&#25903;&#25345;&#31649;&#29702; OpenVPN &#29992;&#25143;&#21644;&#35777;&#20070;</li>
 <li>&#20248;&#21270; <code>sysctl</code> &#35774;&#32622;&#20197;&#25552;&#39640; VPN &#24615;&#33021;</li>
-</ul><h2 id="afaa4d84869467a93c7dd4a1295311b1">&#23433;&#35013;&#35828;&#26126;</h2><p>&#39318;&#20808;&#22312;&#20320;&#30340; Linux &#26381;&#21153;&#22120;&#19978;&#19979;&#36733;&#33050;&#26412;&#65306;</p><pre><code class="language-bash">wget -O openvpn.sh https://get.vpnsetup.net/ovpn</code></pre><p><strong>&#36873;&#39033; 1:</strong> &#20351;&#29992;&#40664;&#35748;&#36873;&#39033;&#33258;&#21160;&#23433;&#35013; OpenVPN&#12290;</p><pre><code class="language-bash">sudo bash openvpn.sh --auto</code></pre><p>&#23545;&#20110;&#26377;&#22806;&#37096;&#38450;&#28779;&#22681;&#30340;&#26381;&#21153;&#22120;&#65288;&#27604;&#22914; <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html" target="_blank" rel="noopener noreferrer">EC2</a>/<a href="https://cloud.google.com/firewall/docs/firewalls" target="_blank" rel="noopener noreferrer">GCE</a>&#65289;&#65292;&#35831;&#20026; VPN &#25171;&#24320; UDP &#31471;&#21475; 1194&#12290;</p><p><strong>&#36873;&#39033; 2:</strong> &#20351;&#29992;&#33258;&#23450;&#20041;&#36873;&#39033;&#36827;&#34892;&#20132;&#20114;&#24335;&#23433;&#35013;&#12290;</p><pre><code class="language-bash">sudo bash openvpn.sh</code></pre><p>&#20320;&#21487;&#20197;&#33258;&#23450;&#20041;&#20197;&#19979;&#36873;&#39033;&#65306;VPN &#26381;&#21153;&#22120;&#30340;&#22495;&#21517;&#65292;&#21327;&#35758; (TCP/UDP) &#21644;&#31471;&#21475;&#65292;VPN &#23458;&#25143;&#31471;&#30340; DNS &#26381;&#21153;&#22120;&#20197;&#21450;&#31532;&#19968;&#20010;&#23458;&#25143;&#31471;&#30340;&#21517;&#31216;&#12290;</p><p>&#23545;&#20110;&#26377;&#22806;&#37096;&#38450;&#28779;&#22681;&#30340;&#26381;&#21153;&#22120;&#65292;&#35831;&#20026; VPN &#25171;&#24320;&#25152;&#36873;&#30340; TCP &#25110; UDP &#31471;&#21475;&#12290;</p><p>&#23433;&#35013;&#23436;&#25104;&#21518;&#65292;&#20320;&#21487;&#20197;&#20877;&#27425;&#36816;&#34892;&#33050;&#26412; <code>sudo bash openvpn.sh</code> &#26469;&#31649;&#29702;&#29992;&#25143;&#25110;&#32773;&#21368;&#36733; OpenVPN&#12290;</p><h2 id="390715c357db37dbed74294911f1522b">&#37197;&#32622; OpenVPN &#23458;&#25143;&#31471;</h2><p><a href="https://openvpn.net/vpn-client/" target="_blank" rel="noopener noreferrer">OpenVPN &#23458;&#25143;&#31471;</a> &#22312; Windows, macOS, iOS, Android &#21644; Linux &#19978;&#21487;&#29992;&#12290;macOS &#29992;&#25143;&#20063;&#21487;&#20197;&#20351;&#29992; <a href="https://tunnelblick.net" target="_blank" rel="noopener noreferrer">Tunnelblick</a>&#12290;</p><p>&#35201;&#28155;&#21152; VPN &#36830;&#25509;&#65292;&#39318;&#20808;&#23558;&#29983;&#25104;&#30340; <code>.ovpn</code> &#25991;&#20214;&#23433;&#20840;&#22320;&#20256;&#36865;&#21040;&#20320;&#30340;&#35774;&#22791;&#65292;&#28982;&#21518;&#25171;&#24320; OpenVPN &#24212;&#29992;&#31243;&#24207;&#24182;&#23548;&#20837; VPN &#37197;&#32622;&#25991;&#20214;&#12290;</p><p>&#35201;&#31649;&#29702; OpenVPN &#23458;&#25143;&#31471;&#65292;&#35831;&#20877;&#27425;&#36816;&#34892;&#23433;&#35013;&#33050;&#26412;&#65306;<code>sudo bash openvpn.sh</code>&#12290;</p><p>&#24320;&#22987;&#20351;&#29992;&#33258;&#24049;&#30340;&#19987;&#23646; VPN!</p>
+</ul><h2 id="afaa4d84869467a93c7dd4a1295311b1">&#23433;&#35013;&#35828;&#26126;</h2><p>&#39318;&#20808;&#22312;&#20320;&#30340; Linux &#26381;&#21153;&#22120;&#19978;&#19979;&#36733;&#33050;&#26412;&#65306;</p><pre><code class="language-bash">wget -O openvpn.sh https://get.vpnsetup.net/ovpn</code></pre><p><strong>&#36873;&#39033; 1:</strong> &#20351;&#29992;&#40664;&#35748;&#36873;&#39033;&#33258;&#21160;&#23433;&#35013; OpenVPN&#12290;</p><pre><code class="language-bash">sudo bash openvpn.sh --auto</code></pre><p>&#23545;&#20110;&#26377;&#22806;&#37096;&#38450;&#28779;&#22681;&#30340;&#26381;&#21153;&#22120;&#65288;&#27604;&#22914; <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html" target="_blank" rel="noopener noreferrer">EC2</a>/<a href="https://cloud.google.com/firewall/docs/firewalls" target="_blank" rel="noopener noreferrer">GCE</a>&#65289;&#65292;&#35831;&#20026; VPN &#25171;&#24320; UDP &#31471;&#21475; 1194&#12290;</p><p><strong>&#36873;&#39033; 2:</strong> &#20351;&#29992;&#33258;&#23450;&#20041;&#36873;&#39033;&#36827;&#34892;&#20132;&#20114;&#24335;&#23433;&#35013;&#12290;</p><pre><code class="language-bash">sudo bash openvpn.sh</code></pre><p>&#20320;&#21487;&#20197;&#33258;&#23450;&#20041;&#20197;&#19979;&#36873;&#39033;&#65306;VPN &#26381;&#21153;&#22120;&#30340;&#22495;&#21517;&#65292;&#21327;&#35758; (TCP/UDP) &#21644;&#31471;&#21475;&#65292;VPN &#23458;&#25143;&#31471;&#30340; DNS &#26381;&#21153;&#22120;&#20197;&#21450;&#31532;&#19968;&#20010;&#23458;&#25143;&#31471;&#30340;&#21517;&#31216;&#12290;</p><p>&#23545;&#20110;&#26377;&#22806;&#37096;&#38450;&#28779;&#22681;&#30340;&#26381;&#21153;&#22120;&#65292;&#35831;&#20026; VPN &#25171;&#24320;&#25152;&#36873;&#30340; TCP &#25110; UDP &#31471;&#21475;&#12290;</p><p>&#23433;&#35013;&#23436;&#25104;&#21518;&#65292;&#20320;&#21487;&#20197;&#20877;&#27425;&#36816;&#34892;&#33050;&#26412; <code>sudo bash openvpn.sh</code> &#26469;&#31649;&#29702;&#29992;&#25143;&#25110;&#32773;&#21368;&#36733; OpenVPN&#12290;</p><h2 id="390715c357db37dbed74294911f1522b">&#37197;&#32622; OpenVPN &#23458;&#25143;&#31471;</h2><p><a href="https://openvpn.net/vpn-client/" target="_blank" rel="noopener noreferrer">OpenVPN &#23458;&#25143;&#31471;</a> &#22312; Windows, macOS, iOS, Android &#21644; Linux &#19978;&#21487;&#29992;&#12290;macOS &#29992;&#25143;&#20063;&#21487;&#20197;&#20351;&#29992; <a href="https://tunnelblick.net" target="_blank" rel="noopener noreferrer">Tunnelblick</a>&#12290;</p><p>&#35201;&#28155;&#21152; VPN &#36830;&#25509;&#65292;&#39318;&#20808;&#23558;&#29983;&#25104;&#30340; <code>.ovpn</code> &#25991;&#20214;&#23433;&#20840;&#22320;&#20256;&#36865;&#21040;&#20320;&#30340;&#35774;&#22791;&#65292;&#28982;&#21518;&#25171;&#24320; OpenVPN &#24212;&#29992;&#31243;&#24207;&#24182;&#23548;&#20837; VPN &#37197;&#32622;&#25991;&#20214;&#12290;</p><p>&#35201;&#31649;&#29702; OpenVPN &#23458;&#25143;&#31471;&#65292;&#35831;&#20877;&#27425;&#36816;&#34892;&#23433;&#35013;&#33050;&#26412;&#65306;<code>sudo bash openvpn.sh</code>&#12290;</p><p>&#24320;&#22987;&#20351;&#29992;&#33258;&#24049;&#30340;&#19987;&#23646; VPN!</p><h2 id="785107ea0bc2977cf36df1c3a8edada9">&#30452;&#36830;&#38382;&#39064;</h2><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#24403;&#34987;&#35775;&#38382;&#30340;&#26381;&#21153;&#20301;&#20110; openvpn &#25152;&#22312;&#30340;&#26381;&#21153;&#22120;&#26102;&#65292;&#21363;&#20351;&#25346;&#20102;&#20195;&#29702;&#20063;&#20250;&#36208;&#30452;&#36830;&#27169;&#24335;&#65292;&#27809;&#26377;&#36208;&#20195;&#29702;&#12290;&#26080;&#35770;&#26159;&#29992;IP&#35775;&#38382;&#36824;&#26159;&#22495;&#21517;&#35775;&#38382;&#65292;&#21482;&#35201;&#26144;&#23556;&#30340;IP&#21644;vpn IP &#19968;&#33268;&#21017;&#30452;&#36830;&#65292;&#19981;&#36208;&#20195;&#29702;&#12290;</p><p>&#33509;openvpn &#26381;&#21153;&#22120;&#30340;IP&#26159; 12.45.36.220</p><p>&#32593;&#19978;&#32473;&#30340;&#26041;&#26696;&#26159;&#32473; OpenVPN &#23458;&#25143;&#31471; &#25512;&#36865;&#30446;&#26631;&#36335;&#30001;&#65292;&#26126;&#30830;&#21578;&#35785;&#23458;&#25143;&#31471;&#65306;&#35775;&#38382; 12.45.36.220 &#24517;&#39035;&#36208; tun0</p><ul>
+<li>&#26381;&#21153;&#31471;&#28155;&#21152;&#37197;&#32622;&#65288;openvpn.conf&#65289;
+<pre><code class="   language-php">push "route 12.45.36.220 255.255.255.255"</code></pre></li>
+</ul><p>&#36825;&#26465;&#35268;&#21017;&#30340;&#21547;&#20041;&#26159;&#65306;</p><p>&#35775;&#38382; 12.45.36.220/32 &#26102;&#36208; VPN</p><p>&#20043;&#21518;&#37325;&#21551;&#26381;&#21153;&#31471;&#21644;&#23458;&#25143;&#31471;&#21363;&#21487;&#65292;&#20294;&#25105;&#36825;&#36793;&#27979;&#35797;&#19968;&#30452;&#19981;&#29983;&#25928;&#65292;&#26410;&#25214;&#21040;&#21407;&#22240;&#12290;&#26242;&#19981;&#32771;&#34385;&#27492;&#26041;&#26696;&#12290;</p><h3 id="4e638a666815a81347f66db3202d2626">&#20462;&#25913; hosts &#26041;&#26696; &#12304;&#26242;&#26102;&#25512;&#33616;&#12305;</h3><p>&#27492;&#22788;&#25105;&#20351;&#29992;&#30340;&#20462;&#25913;&#26412;&#22320; hosts &#25991;&#20214;&#30340;&#26041;&#26696;&#65292;&#23558;&#35201;&#35775;&#38382;&#30340;&#22495;&#21517;&#25351;&#21521; openvpn &#26381;&#21153;&#31471;&#30340;&#34394;&#25311;&#25509;&#21475; IP 10.8.0.1 &#12304;&#25226;&#22495;&#21517;&#35299;&#26512;&#25104; VPN &#20869;&#32593; IP&#12305;</p><p>&#36825;&#26679;&#21363;&#24378;&#21046;&#32593;&#32476;&#36208;&#20102;vpn</p><p>&#20363;1&#12289;&#22914;&#25105;&#21407;&#26469;&#35775;&#38382; <code>12.45.36.220:5244</code> &#26080;&#27861;&#35775;&#38382;&#65292;&#25105;&#35774;&#32622;hosts  <code>10.8.0.1 alist.example.com</code></p><p>&#27492;&#26102;&#35775;&#38382; <code>alist.example.com:5244</code> &#21363;&#21487;&#27491;&#24120;&#35775;&#38382;&#65292;&#27880;&#24847;&#27492;&#22788;&#19981;&#38656;&#35201;&#28155;&#21152;&#36825;&#20010;&#22495;&#21517;&#35299;&#26512;&#65292;&#21482;&#38656;&#35201;&#20462;&#25913;&#26412;&#22320; hosts &#26144;&#23556;&#21363;&#21487;</p><p>&#20363;2&#12289;&#22914;&#25105;&#21407;&#26469;&#36830;&#25509;&#36828;&#31243;&#26381;&#21153;&#22120; <code>ssh  -o ServerAliveInterval=15 test@12.45.36.220</code> &#36830;&#25509;&#22833;&#36133;&#65292;&#25105;&#35774;&#32622;hosts  <code>10.8.0.1 ssh.example.com</code></p><p>&#27492;&#26102;&#35775;&#38382; <code>ssh  -o ServerAliveInterval=15 test@ssh.example.com</code> &#21363;&#21487;&#27491;&#24120;&#35775;&#38382;</p><p><code>&#27880;&#24847;</code> : &#20197;&#19978;&#35775;&#38382;&#22833;&#36133;&#30340;&#21407;&#22240;&#26159;&#38480;&#21046;&#20102;&#23458;&#25143;&#31471;IP&#65292;&#21482;&#33021;&#20195;&#29702;&#26381;&#21153;&#22120;IP&#25165;&#33021;&#35775;&#38382;</p><p>&#36825;&#20010;&#26041;&#26696; &#35777;&#20070; / SNI / CDN / &#26410;&#26469;&#25193;&#23637;&#37117;&#23481;&#26131;&#28856;&#65292;&#19981;&#20248;&#38597;&#65292;&#31561;&#21518;&#32493;&#20877;&#32771;&#34385;&#19979;&#25512;&#33616;&#26041;&#26696;&#21543;&#65281;</p>
 <h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 项目地址: <i><a href="https://github.com/hwdsl2/openvpn-install" target="_blank">https://github.com/hwdsl2/openvpn-install</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> OpenVPN: <i><a href="https://openvpn.net/community-resources/reference-manual-for-openvpn-2-6/" target="_blank">https://openvpn.net/community-resources/reference-manual-for-openvpn-2-6/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> EC2: <i><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html" target="_blank">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> GCE: <i><a href="https://cloud.google.com/firewall/docs/firewalls" target="_blank">https://cloud.google.com/firewall/docs/firewalls</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> OpenVPN 客户端: <i><a href="https://openvpn.net/vpn-client/" target="_blank">https://openvpn.net/vpn-client/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Tunnelblick: <i><a href="https://tunnelblick.net" target="_blank">https://tunnelblick.net</a></i><br></p>
 			</div>
 </div>
 
-            <larecipe-back-to-top></larecipe-back-to-top>
-        </div>
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
 
 
-        <script>
-            window.config = [];
-        </script>
+<script>
+    window.config = [];
+</script>
 
-        <script type="text/javascript">
-            if(localStorage.getItem('larecipeSidebar') == null) {
-                localStorage.setItem('larecipeSidebar', !! 1);
-            }
-        </script>
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
 
-        <script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
 
-        <script>
-            window.LaRecipe = new CreateLarecipe(config)
-        </script>
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
 
-        <!-- Google Analytics -->
-                <!-- /Google Analytics -->
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
 
-        
-        <script>
-            LaRecipe.run()
-        </script>
-    </body>
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('NFJzbXFrS0pKcHIxTHhKbA==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+            document.getElementById('passwordModal').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+        } else {
+            errorMsg.textContent = '密码错误，请重试';
+            document.getElementById('pwdInput').value = '';
+        }
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        const unlockTime = localStorage.getItem('unlock_time');
+        if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+            document.getElementById('app').style.display = 'block';
+        } else {
+            document.getElementById('passwordModal').style.display = 'flex';
+        }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+</body>
 </html>
