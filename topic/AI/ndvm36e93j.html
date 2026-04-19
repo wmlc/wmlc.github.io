@@ -1,0 +1,858 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>AI 编程的经济学与成本优化指南 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="LjwWxbOCAwzKlhujOj8BjAXVA1H82PnVzvqZIpan">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    AI <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>ChatGPT</h2>
+<ul>
+<li id="blog443"><a href="5m892z6901.html#blog443">自建 ChatGpt 站点开源项目</a>
+<li id="blog450"><a href="62wy333ykm.html#blog450">ChatGpt 提示词收集</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog556"><a href="gxpv5lqy86.html#blog556">AI工具收集</a>
+</ul>
+</li>
+<li>
+<h2>VibeCoding</h2>
+<ul>
+<li id="blog969"><a href="ndvm36e93j.html#blog969">AI 编程的经济学与成本优化指南</a>
+<li id="blog970"><a href="3oyjd7ryp5.html#blog970">VibeCoding 工作流</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/ndvm36e93j.html', function (data, status) {
+            addView('ndvm36e93j.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>AI 编程的经济学与成本优化指南</h1><ul>
+<li><a href="ndvm36e93j.html#04ddc11f1a79bd85531ef979ef4a2340">前置知识</a>
+<ul>
+<li><a href="ndvm36e93j.html#7a7b5d4abf2e725e2d44866c08264a88">什么是 LLM</a></li>
+<li><a href="ndvm36e93j.html#8b1d4c3578db4eaae16039a1b62ee5df">什么是 Token</a></li>
+<li><a href="ndvm36e93j.html#ebc78921893d07a0a8d2f2e7fed39960">什么是 输入/输出 Token</a></li>
+<li><a href="ndvm36e93j.html#7bef4e39b3d3e4330773e3f015068db8">什么是 Context Window</a></li>
+</ul></li>
+<li><a href="ndvm36e93j.html#2af444818f5230c8c93b48bbc952cce4">核心概念</a>
+<ul>
+<li><a href="ndvm36e93j.html#0def5a2587e76b324f16a8cfa44576d2">花费从哪里来</a></li>
+<li><a href="ndvm36e93j.html#adb8b26dcde9dbdb560226677a32ec10">如何控制花费</a></li>
+</ul></li>
+<li><a href="ndvm36e93j.html#576e66d6b243274fa70b36831bb97062">成本与质量优化策略</a>
+<ul>
+<li><a href="ndvm36e93j.html#43b03e7752fb0c89ba8f1df9d2fbced8">优化原则</a></li>
+<li><a href="ndvm36e93j.html#2d69d1544bc9bf462f4b84eba6cb4bbe">示例对比</a></li>
+</ul></li>
+<li><a href="ndvm36e93j.html#1b2d11414b9f3c1cc126230f4e4b5a93">实战建议</a>
+<ul>
+<li><a href="ndvm36e93j.html#970f4693a92afa98b1241d7c98aadbd5">关注使用情况</a></li>
+<li><a href="ndvm36e93j.html#4b807195155588f2ce3c4267be07bb1b">成本意识检查清单</a></li>
+</ul></li>
+<li><a href="ndvm36e93j.html#50d52dd929a75bb9b0f4afb0b7d879e1">常见问题</a>
+<ul>
+<li><a href="ndvm36e93j.html#914b3c9f72144506c9680d29210a4adf">Q1: Token 超限怎么办？</a></li>
+<li><a href="ndvm36e93j.html#56ee5511b52a53cf11c94a24a565d824">Q2: 为什么有时候模型会瞎编？</a></li>
+<li><a href="ndvm36e93j.html#a4b31d3792d8260a20b70461492a5493">Q3: GLM 能力够用吗？</a></li>
+</ul></li>
+<li><a href="ndvm36e93j.html#dcbb67cd8b02d9ecf6cf0334c6e8e89e">核心理念</a></li>
+</ul><?xml encoding="UTF-8"><blockquote>
+<p><strong>&#38405;&#35835;&#23436;&#26412;&#33410;&#21518;&#65292;&#20320;&#23558;&#20250;&#25910;&#33719;&#65306;</strong></p>
+<ul>
+<li>&#29702;&#35299; Token &#26159; AI &#27169;&#22411;&#30340;&#35745;&#20215;&#21333;&#20301;&#65292;&#25484;&#25569;&#36755;&#20837;/&#36755;&#20986; Token &#30340;&#35745;&#36153;&#26426;&#21046;</li>
+<li>&#24314;&#31435;&#25104;&#26412;&#24847;&#35782;&#65292;&#23398;&#20250;&#36890;&#36807;&#31934;&#20934;&#25552;&#31034;&#35789;&#25511;&#21046; AI &#19978;&#19979;&#25991;&#33539;&#22260;&#26469;&#20248;&#21270;&#25104;&#26412;</li>
+<li>&#25484;&#25569;&#25552;&#31034;&#35789;&#20248;&#21270;&#30340;&#26680;&#24515;&#21407;&#21017;&#65306;&#25351;&#23450;&#36335;&#24452;&#12289;&#26126;&#30830;&#33539;&#22260;&#12289;&#21024;&#38500;&#23458;&#22871;&#35805;</li>
+<li>&#29702;&#35299;&#19978;&#19979;&#25991;&#22823;&#23567;&#19982;&#33457;&#36153;&#30340;&#20851;&#31995;&#65292;&#23398;&#20250;&#36991;&#20813;&#19981;&#24517;&#35201;&#30340; Token &#28040;&#32791;</li>
+</ul>
+<p>&#24207;&#35328;&#20013;&#25552;&#21040;&#30340;"&#27169;&#22411;&#20915;&#23450;&#20195;&#30721;&#33021;&#21147;&#30340;&#36895;&#24230;&#21644;&#19978;&#38480;"&#65292;&#20197;&#21450;&#25104;&#26412;&#24847;&#35782;&#22312; AI &#24320;&#21457;&#20013;&#30340;&#37325;&#35201;&#24615;&#12290;<strong>Token &#23601;&#26159;&#38065;</strong>&#65292;&#27599;&#27425;&#35843;&#29992;&#27169;&#22411;&#37117;&#22312;&#28040;&#32791;&#30495;&#23454;&#30340;&#36153;&#29992;&#12290;</p>
+</blockquote><h2 id="04ddc11f1a79bd85531ef979ef4a2340">&#21069;&#32622;&#30693;&#35782;</h2><h3 id="7a7b5d4abf2e725e2d44866c08264a88">&#20160;&#20040;&#26159; LLM</h3><p>LLM&#65288;Large Language Model&#65292;&#22823;&#35821;&#35328;&#27169;&#22411;&#65289;&#26159;&#22522;&#20110;&#28023;&#37327;&#25991;&#26412;&#35757;&#32451;&#30340; AI &#27169;&#22411;&#65292;&#33021;&#22815;&#29702;&#35299;&#21644;&#29983;&#25104;&#20154;&#31867;&#35821;&#35328;&#12289;&#20195;&#30721;&#31561;&#12290;</p><h3 id="8b1d4c3578db4eaae16039a1b62ee5df">&#20160;&#20040;&#26159; Token</h3><p>Token &#26159; AI &#27169;&#22411;&#30340;&#35745;&#20215;&#21333;&#20301;&#65292;&#20063;&#26159;&#27169;&#22411;&#22788;&#29702;&#25991;&#26412;&#30340;&#22522;&#26412;&#21333;&#20803;&#12290;</p><p><strong>&#25442;&#31639;&#20851;&#31995;</strong>&#65306;</p><ul>
+<li>1 &#20010;&#27721;&#23383; &asymp; 1 Token</li>
+<li>1 &#20010;&#33521;&#25991;&#21333;&#35789; &asymp; 0.75 Token</li>
+<li>1 &#34892;&#20195;&#30721; &asymp; 5-15 Token</li>
+</ul><p>&#27169;&#22411;&#25353;&#29031;&#36755;&#20837;&#65288;Prompt&#65289;&#21644;&#36755;&#20986;&#65288;Completion&#65289;&#30340; Token &#25968;&#37327;&#35745;&#36153;&#12290;</p><h3 id="ebc78921893d07a0a8d2f2e7fed39960">&#20160;&#20040;&#26159; &#36755;&#20837;/&#36755;&#20986; Token</h3><p><strong>&#36755;&#20837; Token&#65288;Input&#65289;</strong>&#65306;&#20320;&#21457;&#36865;&#32473;&#27169;&#22411;&#30340;&#20869;&#23481;&#65288;&#25552;&#31034;&#35789;&#12289;&#20195;&#30721;&#12289;&#19978;&#19979;&#25991;&#65289;</p><p><strong>&#36755;&#20986; Token&#65288;Output&#65289;</strong>&#65306;&#27169;&#22411;&#29983;&#25104;&#30340;&#20869;&#23481;&#65288;&#20195;&#30721;&#12289;&#35299;&#37322;&#12289;&#22238;&#31572;&#65289;</p><p><strong>&#33457;&#36153;&#24590;&#20040;&#31639;</strong>&#65306;&#36755;&#20837;&#21644;&#36755;&#20986;&#30340; Token &#25968;&#37327;&#37117;&#20250;&#35745;&#36153;&#65292;&#36755;&#20986;&#36890;&#24120;&#27604;&#36755;&#20837;&#36149;&#19968;&#20123;&#12290;</p><p><strong>&#128161; &#36153;&#29992;&#35745;&#31639;&#20844;&#24335;&#65306;</strong><br>
+<code>&#24635;&#33457;&#36153; = (&#36755;&#20837; Token &#25968; &times; &#36755;&#20837;&#21333;&#20215;) + (&#36755;&#20986; Token &#25968; &times; &#36755;&#20986;&#21333;&#20215;)</code></p><p>&#20294;&#20316;&#20026;&#29992;&#25143;&#65292;&#20320;&#19981;&#38656;&#35201;&#35760;&#20303;&#20855;&#20307;&#21333;&#20215;&mdash;&mdash;&#24037;&#20855;&#20250;&#26174;&#31034;&#27599;&#27425;&#35843;&#29992;&#30340;&#33457;&#36153;&#65292;&#29992;&#23436;&#20102;&#20805;&#20540;&#21363;&#21487;&#12290;&#37325;&#35201;&#30340;&#26159;&#29702;&#35299;&#65306;<strong>&#19978;&#19979;&#25991;&#36234;&#22823;&#65292;&#33457;&#36153;&#36234;&#39640;</strong>&#12290;</p><p><strong>&#30495;&#27491;&#28040;&#32791; Token &#30340;&#26159;&#19978;&#19979;&#25991;&#65288;Context&#65289;&#12290;</strong></p><p>&#24403;&#20320;&#21521; AI &#25552;&#38382;&#26102;&#65292;&#23427;&#19981;&#20165;&#35835;&#21462;&#20102;&#20320;&#21018;&#21018;&#25171;&#30340;&#37027;&#20960;&#20010;&#23383;&#65292;&#36824;&#35835;&#21462;&#20102;&#20026;&#20102;&#29702;&#35299;&#20320;&#30340;&#38656;&#27714;&#32780;&#21152;&#36733;&#30340;&#24222;&#22823;&#32972;&#26223;&#20449;&#24687;&#12290;&#36825;&#21253;&#25324;&#65306;</p><ul>
+<li><strong>&#39033;&#30446;&#25991;&#20214;&#65306;</strong> &#25972;&#20010;&#24037;&#31243;&#30340;&#20195;&#30721;&#32467;&#26500;&#12290;</li>
+<li><strong>&#20195;&#30721;&#29255;&#27573;&#65306;</strong> &#30456;&#20851;&#30340;&#31867;&#25110;&#20989;&#25968;&#12290;</li>
+<li><strong>&#21382;&#21490;&#23545;&#35805;&#65306;</strong> &#20320;&#20204;&#20043;&#21069;&#38271;&#36798;&#25968;&#23567;&#26102;&#30340;&#20132;&#27969;&#35760;&#24405;&#12290;</li>
+</ul><h3 id="7bef4e39b3d3e4330773e3f015068db8">&#20160;&#20040;&#26159; Context Window</h3><p>Context Window &#26159;&#27169;&#22411;&#33021;&#22788;&#29702;&#30340;&#19978;&#19979;&#25991;&#38271;&#24230;&#19978;&#38480;&#65292;&#20197; Token &#20026;&#21333;&#20301;&#12290;GLM &#25903;&#25345; 200K &#19978;&#19979;&#25991;&#65292;&#36275;&#22815;&#22788;&#29702;&#23436;&#25972;&#30340;&#22823;&#22411;&#25991;&#20214;&#21644;&#38271;&#23545;&#35805;&#12290;</p><p><strong>&#36229;&#20986;&#19978;&#38480;&#20250;&#33258;&#21160;&#21387;&#32553;</strong>&#65306;&#24403;&#19978;&#19979;&#25991;&#25509;&#36817;&#25110;&#36229;&#20986;&#38480;&#21046;&#26102;&#65292;&#27169;&#22411;&#20250;&#33258;&#21160;&#21387;&#32553;&#26089;&#26399;&#30340;&#23545;&#35805;&#20869;&#23481;&#65292;&#20445;&#30041;&#26368;&#26032;&#21644;&#26368;&#30456;&#20851;&#30340;&#20449;&#24687;&#12290;&#36825;&#21487;&#33021;&#23548;&#33268;&#37096;&#20998;&#21382;&#21490;&#32454;&#33410;&#34987;&#31616;&#21270;&#25110;&#24573;&#30053;&#12290;</p><h2 id="2af444818f5230c8c93b48bbc952cce4">&#26680;&#24515;&#27010;&#24565;</h2><h3 id="0def5a2587e76b324f16a8cfa44576d2">&#33457;&#36153;&#20174;&#21738;&#37324;&#26469;</h3><pre><code class="language-mermaid">graph LR
+    A[&#20320;&#30340;&#35831;&#27714;] --&gt; B[AI &#35835;&#21462;&#19978;&#19979;&#25991;]
+    B --&gt; C[&#27169;&#22411;&#22788;&#29702;]
+    C --&gt; D[&#29983;&#25104;&#22238;&#31572;]
+
+    B --&gt; E[&#36755;&#20837; Token&lt;br/&gt;&#39033;&#30446;&#25991;&#20214; + &#20195;&#30721; + &#21382;&#21490;&#23545;&#35805;]
+    D --&gt; F[&#36755;&#20986; Token&lt;br/&gt;&#29983;&#25104;&#30340;&#20195;&#30721; + &#35299;&#37322;]
+
+    style E fill:#e1f5fe
+    style F fill:#fff3e0</code></pre><p><strong>&#26680;&#24515;&#29702;&#35299;</strong>&#65306;</p><ul>
+<li>&#21333;&#27425;&#35843;&#29992;&#24456;&#20415;&#23452;&#65292;&#20294;&#32047;&#31215;&#36215;&#26469;&#20063;&#26159;&#38065;</li>
+<li><strong>&#19978;&#19979;&#25991;&#36234;&#22823; = &#33457;&#36153;&#36234;&#39640;</strong>&#65306;&#35835;&#21462;&#25972;&#20010;&#39033;&#30446; vs &#21482;&#35835;&#19968;&#20010;&#25991;&#20214;&#65292;&#24046;&#24322;&#26159;&#25968;&#37327;&#32423;&#30340;</li>
+<li>&#39057;&#32321;&#35843;&#35797;&#26102;&#35201;&#27880;&#24847;&#65306;&#24490;&#29615;&#20462;&#25913;&#20250;&#19981;&#26029;&#32047;&#31215; Token</li>
+</ul><h3 id="adb8b26dcde9dbdb560226677a32ec10">&#22914;&#20309;&#25511;&#21046;&#33457;&#36153;</h3><p>&#22823;&#22810;&#25968; AI &#32534;&#31243;&#24037;&#20855;&#37117;&#20250;&#65306;</p><ul>
+<li>&#26174;&#31034;&#27599;&#27425;&#35843;&#29992;&#30340; Token &#25968;&#21644;&#33457;&#36153;</li>
+<li>&#25552;&#20379;&#22871;&#39184;&#25110;&#20351;&#29992;&#39069;&#24230;</li>
+<li>&#39069;&#24230;&#29992;&#23436;&#21518;&#25552;&#37266;&#20320;&#20805;&#20540;</li>
+</ul><dl>
+<dt><strong>&#20320;&#19981;&#38656;&#35201;&#35760;&#20303;&#20855;&#20307;&#21333;&#20215;</strong>&#65292;&#20294;&#38656;&#35201;&#20859;&#25104;&#22909;&#20064;&#24815;&#65288;&#35265;&#19979;&#19968;&#33410;&#65289;&#26469;&#20943;&#23569;&#19981;&#24517;&#35201;&#30340;&#28040;&#32791;&#12290;</dt>
+<dd><p>::</p></dd>
+</dl><h2 id="576e66d6b243274fa70b36831bb97062">&#25104;&#26412;&#19982;&#36136;&#37327;&#20248;&#21270;&#31574;&#30053;</h2><p><strong>&#20851;&#38190;&#35748;&#30693;</strong>&#65306;&#25552;&#31034;&#35789;&#26412;&#36523;&#36890;&#24120;&#24456;&#23569;&#65292;<strong>&#30495;&#27491;&#28040;&#32791; Token &#30340;&#26159; AI &#35835;&#21462;&#30340;&#19978;&#19979;&#25991;</strong>&mdash;&mdash;&#20063;&#23601;&#26159;&#20026;&#20102;&#35753; AI &#29702;&#35299;&#20320;&#30340;&#38656;&#27714;&#32780;&#24517;&#39035;&#21152;&#36733;&#30340;&#39033;&#30446;&#25991;&#20214;&#12289;&#20195;&#30721;&#12289;&#21382;&#21490;&#23545;&#35805;&#31561;&#12290;</p><p>&#22240;&#27492;&#65292;&#25552;&#31034;&#35789;&#20248;&#21270;&#19981;&#26159;&#22312;"&#25171;&#30952;&#35805;&#26415;"&#65292;&#32780;&#26159;<strong>&#20943;&#23569; AI &#38656;&#35201;&#35835;&#21462;&#30340;&#19978;&#19979;&#25991;&#33539;&#22260;</strong>&#65292;&#21516;&#26102;<strong>&#25511;&#21046;&#36755;&#20986;&#38271;&#24230;</strong>&#12290;</p><p><strong>&#19978;&#19979;&#25991;&#33539;&#22260;&#26082;&#24433;&#21709;&#25104;&#26412;&#65292;&#20063;&#24433;&#21709;&#36136;&#37327;</strong>&#65306;&#31934;&#20934;&#30340;&#19978;&#19979;&#25991;&#35753; AI &#32858;&#28966;&#38382;&#39064;&#65292;&#36755;&#20986;&#26356;&#20934;&#30830;&#65307;&#26080;&#20851;&#30340;&#19978;&#19979;&#25991;&#20250;&#20998;&#25955;&#27880;&#24847;&#21147;&#65292;&#22686;&#21152;&#38169;&#35823;&#27010;&#29575;&#12290;</p><h3 id="43b03e7752fb0c89ba8f1df9d2fbced8">&#20248;&#21270;&#21407;&#21017;</h3><table>
+<thead>
+<tr>
+<th>&#21407;&#21017;</th>
+<th>&#35828;&#26126;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>&#25351;&#23450;&#36335;&#24452;</strong></td>
+<td>&#25351;&#23450;&#25991;&#20214;/&#25991;&#20214;&#22841;&#36335;&#24452;&#65292;&#32553;&#23567; AI &#25628;&#32034;&#33539;&#22260;</td>
+</tr>
+<tr>
+<td><strong>&#26126;&#30830;&#33539;&#22260;</strong></td>
+<td>"&#30331;&#24405;&#21151;&#33021;&#26377;&#38382;&#39064;"&#27604;"&#39033;&#30446;&#26377;&#38382;&#39064;"&#26356;&#32858;&#28966;</td>
+</tr>
+<tr>
+<td><strong>&#21024;&#38500;&#23458;&#22871;</strong></td>
+<td>&#26080;&#38656;"&#35831;"&#12289;"&#35874;&#35874;"&#12289;"&#22914;&#26524;&#21487;&#33021;&#30340;&#35805;"</td>
+</tr>
+<tr>
+<td><strong>&#30452;&#25509;&#35828;&#20107;</strong></td>
+<td>&#30452;&#25509;&#25551;&#36848;&#20219;&#21153;&#65292;&#26080;&#38656;&#23458;&#22871;&#21644;&#38138;&#22443;</td>
+</tr>
+</tbody>
+</table><h3 id="2d69d1544bc9bf462f4b84eba6cb4bbe">&#31034;&#20363;&#23545;&#27604;</h3><pre><code class="   language-php">&#10060; &#27169;&#31946;&#25552;&#31034;&#65288;AI &#35835;&#21462;&#26356;&#22810;&#19978;&#19979;&#25991;&#65289;&#65306;
+"&#24110;&#25105;&#30475;&#30475;&#39033;&#30446;&#37324;&#26377;&#27809;&#26377;&#20160;&#20040;&#38382;&#39064;&#65292;&#28982;&#21518;&#20462;&#22797;&#23427;"
+&rarr; AI &#19981;&#30830;&#23450;&#20174;&#21738;&#37324;&#24320;&#22987;&#65292;&#21487;&#33021;&#35835;&#21462;&#22823;&#37327;&#26080;&#20851;&#25991;&#20214;
+
+&#9989; &#31934;&#20934;&#25552;&#31034;&#65288;AI &#32858;&#28966;&#30456;&#20851;&#21306;&#22495;&#65289;&#65306;
+"&#24110;&#25105;&#30475;&#30475;&#30331;&#24405;&#21151;&#33021;&#26377;&#20160;&#20040;&#38382;&#39064;&#65292;&#28982;&#21518;&#20462;&#22797;&#23427;"
+&rarr; AI &#33258;&#24049;&#23450;&#20301;&#30331;&#24405;&#30456;&#20851;&#25991;&#20214;&#65292;&#21482;&#35835;&#21462;&#24517;&#35201;&#19978;&#19979;&#25991;
+&rarr; &#25110;&#32773;&#26356;&#30452;&#25509;&#65306;"&#20462;&#22797; src/auth/login.ts &#31532;42&#34892;&#30340;&#31867;&#22411;&#38169;&#35823;&#65306;user&#21487;&#33021;&#20026;null"</code></pre><h2 id="1b2d11414b9f3c1cc126230f4e4b5a93">&#23454;&#25112;&#24314;&#35758;</h2><h3 id="970f4693a92afa98b1241d7c98aadbd5">&#20851;&#27880;&#20351;&#29992;&#24773;&#20917;</h3><p>AI &#32534;&#31243;&#24037;&#20855;&#36890;&#24120;&#20250;&#26174;&#31034;&#27599;&#27425;&#35843;&#29992;&#30340; Token &#25968;&#21644;&#33457;&#36153;&#12290;&#20320;&#20063;&#21487;&#20197;&#22312;&#23545;&#24212;&#27169;&#22411;&#30340;&#24320;&#25918;&#24179;&#21488;&#26597;&#30475;&#35814;&#32454;&#20351;&#29992;&#24773;&#20917;&#12290;</p><p><strong>&#39069;&#24230;&#29992;&#23436;&#23601;&#20805;&#20540;</strong>&mdash;&mdash;&#23601;&#20687;&#35805;&#36153;&#27969;&#37327;&#19968;&#26679;&#65292;&#19981;&#38656;&#35201;&#36807;&#24230;&#28966;&#34385;&#65292;&#20294;&#35201;&#26377;&#24847;&#35782;&#22320;&#36991;&#20813;&#28010;&#36153;&#12290;</p><h3 id="4b807195155588f2ce3c4267be07bb1b">&#25104;&#26412;&#24847;&#35782;&#26816;&#26597;&#28165;&#21333;</h3><ul>
+<li>&#25351;&#23450;&#25991;&#20214;/&#25991;&#20214;&#22841;&#36335;&#24452;</li>
+<li>&#25351;&#26126;&#21151;&#33021;&#33539;&#22260;</li>
+<li>&#21024;&#38500;&#23458;&#22871;&#35805;</li>
+<li>&#23450;&#26399;&#28165;&#29702;&#23545;&#35805;&#21382;&#21490;</li>
+</ul><h2 id="50d52dd929a75bb9b0f4afb0b7d879e1">&#24120;&#35265;&#38382;&#39064;</h2><h3 id="914b3c9f72144506c9680d29210a4adf">Q1: Token &#36229;&#38480;&#24590;&#20040;&#21150;&#65311;</h3><p>&#36890;&#24120;&#19981;&#20250;&#36229;&#38480; &mdash;&mdash; AI &#20250;&#33258;&#21160;&#20999;&#20998;&#35835;&#21462;&#22823;&#25991;&#20214;&#12290;&#20294;&#22914;&#26524;&#36935;&#21040;&#36229;&#38480;&#38169;&#35823;&#65292;&#35828;&#26126;&#39033;&#30446;&#35268;&#27169;&#24050;&#32463;&#38656;&#35201;&#24037;&#31243;&#21270;&#20102;&#65306;</p><ul>
+<li>&#32771;&#34385;&#25286;&#20998;&#39033;&#30446;&#65288;monorepo &#25110;&#24494;&#26381;&#21153;&#65289;</li>
+<li>&#28165;&#29702;&#23545;&#35805;&#21382;&#21490;&#65292;&#24320;&#21551;&#26032;&#20250;&#35805;</li>
+<li>&#20351;&#29992; <code>.gitignore</code> &#25490;&#38500;&#19981;&#38656;&#35201; AI &#35835;&#21462;&#30340;&#25991;&#20214;</li>
+</ul><h3 id="56ee5511b52a53cf11c94a24a565d824">Q2: &#20026;&#20160;&#20040;&#26377;&#26102;&#20505;&#27169;&#22411;&#20250;&#30606;&#32534;&#65311;</h3><p>&#36825;&#26159;"&#24187;&#35273;"&#38382;&#39064;&#65292;&#25152;&#26377;&#27169;&#22411;&#37117;&#26377;&#12290;&#35299;&#20915;&#26041;&#27861;&#65306;&#25552;&#20379;&#26126;&#30830;&#30340;&#19978;&#19979;&#25991;&#65292;&#35753; AI &#19981;&#30830;&#23450;&#26102;&#26126;&#30830;&#35828;&#20986;&#26469;&#65292;&#31561;&#24453;&#20320;&#30340;&#30830;&#35748;&#65292;&#32780;&#19981;&#26159;&#24378;&#34892;&#32534;&#36896;&#12290;</p><h3 id="a4b31d3792d8260a20b70461492a5493">Q3: GLM &#33021;&#21147;&#22815;&#29992;&#21527;&#65311;</h3><p>&#22815;&#29992;&#12290;</p><h2 id="dcbb67cd8b02d9ecf6cf0334c6e8e89e">&#26680;&#24515;&#29702;&#24565;</h2><p><strong>&#19978;&#19979;&#25991;&#20915;&#23450;&#33457;&#36153;&#21644;&#36136;&#37327;&#65292;&#30452;&#25509;&#27604;&#23458;&#22871;&#26356;&#37325;&#35201;&#12290;</strong></p><p>&#25351;&#23450;&#36335;&#24452;&#25110;&#21151;&#33021;&#33539;&#22260;&#65292;&#35753; AI &#21482;&#35835;&#21462;&#24517;&#35201;&#19978;&#19979;&#25991;&#12290;&#31934;&#20934;&#19978;&#19979;&#25991;&#26082;&#30465;&#38065;&#65292;&#21448;&#35753;&#36755;&#20986;&#26356;&#20934;&#30830;&#12290;</p>
+
+			</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

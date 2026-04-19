@@ -1,0 +1,2449 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>VibeCoding 工作流 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="LjwWxbOCAwzKlhujOj8BjAXVA1H82PnVzvqZIpan">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    AI <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>ChatGPT</h2>
+<ul>
+<li id="blog443"><a href="5m892z6901.html#blog443">自建 ChatGpt 站点开源项目</a>
+<li id="blog450"><a href="62wy333ykm.html#blog450">ChatGpt 提示词收集</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog556"><a href="gxpv5lqy86.html#blog556">AI工具收集</a>
+</ul>
+</li>
+<li>
+<h2>VibeCoding</h2>
+<ul>
+<li id="blog969"><a href="ndvm36e93j.html#blog969">AI 编程的经济学与成本优化指南</a>
+<li id="blog970"><a href="3oyjd7ryp5.html#blog970">VibeCoding 工作流</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/3oyjd7ryp5.html', function (data, status) {
+            addView('3oyjd7ryp5.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>VibeCoding 工作流</h1><ul>
+<li><a href="3oyjd7ryp5.html#04ddc11f1a79bd85531ef979ef4a2340">前置知识</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#be287c82b4aec1fc75857282b369fd06">什么是 Claude Code</a></li>
+<li><a href="3oyjd7ryp5.html#94c2c9725d1f76c232e86cab6eea288a">什么是 工作流</a></li>
+<li><a href="3oyjd7ryp5.html#23aef7e4fca3703ca14ba148064d7aa6">什么是 提示词</a></li>
+</ul></li>
+<li><a href="3oyjd7ryp5.html#47868fa35ea346277f1cfb2f0ea21c52">Agent Native 开发思维</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#59ee03ccaed289b85b8d9f18935200b2">传统思维 vs Agent Native</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#d15fdc3ad5e62c9e3e8815ebc5a5a762">VibeCoding 的核心哲学：你是导演，AI 是演员</a></li>
+<li><a href="3oyjd7ryp5.html#61c234ef390a0ab8e5304094c68f4769">AI 与人的分工：预测与判断</a></li>
+</ul></li>
+<li><a href="3oyjd7ryp5.html#88301f07429a15517ade8a8f39f990dd">Agent Native 的三大原则</a></li>
+<li><a href="3oyjd7ryp5.html#d7c61d10c1cefeba2aba0c455adf189e">从开发者到编排者</a></li>
+</ul></li>
+<li><a href="3oyjd7ryp5.html#2af444818f5230c8c93b48bbc952cce4">核心概念</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#1729a167efc276f88d5f5e0d1dbdcd97">Vibecoding 的核心理念</a></li>
+<li><a href="3oyjd7ryp5.html#c03a3bf434563d973fc1a7ee66c95d58">提示词的核心原则</a></li>
+</ul></li>
+<li><a href="3oyjd7ryp5.html#4cb48233e767c30dc3495fbd12e3446d">提示词原则</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#ef5dada9c06013173e477e5f2933d77b">好提示词的特征</a></li>
+<li><a href="3oyjd7ryp5.html#be1ac234fe3f9b9e89552d8bfa4e8dfe">提示词对比：欠佳 vs 推荐</a></li>
+<li><a href="3oyjd7ryp5.html#7be2f3373ac52b9b4b206300c6d81dcf">让 AI 反复提问</a></li>
+<li><a href="3oyjd7ryp5.html#57838d74fb4c6b699d3ae7a720bfd972">提示词模板</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#f45c21d0ea0d38f38e7aa85ae1d78326">代码生成模板</a></li>
+<li><a href="3oyjd7ryp5.html#fd18b7982297ff941b3743418a29cf67">Bug 修复模板</a></li>
+</ul></li>
+</ul></li>
+<li><a href="3oyjd7ryp5.html#c1a50fc9d4562a13ff3ac42350c15657">标准工作流</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#635340fdf049a32d45d6cc63a4af2709">AI 的自动化能力</a></li>
+<li><a href="3oyjd7ryp5.html#86791d5a2d0254bc0919daaa48f25d0c">权限模式</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#34a8c03ad1a4c2922ed7b98c282f4e59">三种权限模式</a></li>
+<li><a href="3oyjd7ryp5.html#15c1736192815fb3b7e7ab6331906c19">Default 模式（推荐）</a></li>
+<li><a href="3oyjd7ryp5.html#9b0979798785d56c9001c16a61a5357d">Plan 模式（代码审查）</a></li>
+<li><a href="3oyjd7ryp5.html#925af40ea89df9abc1dc4575a8836c59">模式切换</a></li>
+</ul></li>
+<li><a href="3oyjd7ryp5.html#f7d2996639d97b4a03fc0e40e2eb853a">快捷键</a></li>
+<li><a href="3oyjd7ryp5.html#7780c6935affd55fc5b72982ea51b3df">常用交互命令</a></li>
+<li><a href="3oyjd7ryp5.html#cb83b4e6036340f24e11efa66cc16494">CLI 命令与启动选项</a></li>
+<li><a href="3oyjd7ryp5.html#21240d005b848e99746d85c7fa28b66f">五步工作流</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#2e334916cca2d602b587ff95d379ca5c">1. 探索项目结构</a></li>
+<li><a href="3oyjd7ryp5.html#33b8ee68cb696983118ab4c5ef3aa138">2. 规划实现步骤</a></li>
+<li><a href="3oyjd7ryp5.html#d9b2bdbda2afef5d1476547f53ce98c7">3. 编写代码</a></li>
+<li><a href="3oyjd7ryp5.html#30b68ec0c5d29693bc4da57f64958191">4. 测试验证</a></li>
+<li><a href="3oyjd7ryp5.html#47566dce9494f1f903cc9a4dccf3313e">5. 提交代码</a></li>
+<li><a href="3oyjd7ryp5.html#c44f7320e5e90df3f9d81aec64ff47bf">6. 检查点功能</a></li>
+</ul></li>
+</ul></li>
+<li><a href="3oyjd7ryp5.html#fe363ae5e871692b3ee4097ab98a1513">理解 Agent</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#48e240c26fc9395f7fcf0b150835bc4b">什么是 Agent</a></li>
+<li><a href="3oyjd7ryp5.html#b6cbcd95ddf0411b62bf81ee9c409152">什么是自定义 Agent</a></li>
+<li><a href="3oyjd7ryp5.html#2c47cacdc8dd4683e2389f34cfc48ea7">创建自定义 Agent</a></li>
+</ul></li>
+<li><a href="3oyjd7ryp5.html#2985a324ee65e55f815f75a59f1be227">多 Agent 并行协作</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#1e97683531cd0c33f36d7745d2aaad30">自动启用</a></li>
+<li><a href="3oyjd7ryp5.html#695dd0b08317ba70d15b26e16b514927">多个并行 Agent</a></li>
+<li><a href="3oyjd7ryp5.html#4a532e1436fa33479f4fba67f70113b3">使用示例</a></li>
+<li><a href="3oyjd7ryp5.html#7f7c7b3b1fe7d9c53924c03b5392526c">人在环路</a></li>
+</ul></li>
+<li><a href="3oyjd7ryp5.html#8861a62e0ea224f37d6ddc24fda542f5">Hooks 自动化</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#5ec11b52d5553f46a3c182c04713b98d">使用 Hooks</a></li>
+<li><a href="3oyjd7ryp5.html#fc2f24518fef06f83762f2a661dc3d3c">常用场景</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#7c4e18b85002a2929fddb03681d6fe86">自动格式化</a></li>
+<li><a href="3oyjd7ryp5.html#0ca759b833a43e15a15648a17a80300d">敏感文件保护</a></li>
+</ul></li>
+</ul></li>
+<li><a href="3oyjd7ryp5.html#4c09dbc6d696414b7cf7d4050dbaa9ab">安全注意事项</a></li>
+<li><a href="3oyjd7ryp5.html#dcbb67cd8b02d9ecf6cf0334c6e8e89e">核心理念</a></li>
+<li><a href="3oyjd7ryp5.html#3d28e7e37f9501454e52a17d2f1dce54">提示词自检清单</a></li>
+<li><a href="3oyjd7ryp5.html#50d52dd929a75bb9b0f4afb0b7d879e1">常见问题</a>
+<ul>
+<li><a href="3oyjd7ryp5.html#ddee7f710e09ae6475e0252d0112e8b0">Q1: 提示词越长越好吗？</a></li>
+<li><a href="3oyjd7ryp5.html#ee698781243a85776f3f213297b13ca3">Q2: AI 还是会编造答案怎么办？</a></li>
+<li><a href="3oyjd7ryp5.html#ba3ef29a898c7fbc0492715a26fbc30e">Q3: 为什么不直接让 AI 写代码？</a></li>
+<li><a href="3oyjd7ryp5.html#aad68191e59e70e336d81f9c410581be">Q4: 工作流会不会太慢？</a></li>
+<li><a href="3oyjd7ryp5.html#ff428ad0a904d254b656f52d7796729c">Q5: 什么时候该停止对话？</a></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><blockquote>
+<p><strong>&#38405;&#35835;&#23436;&#26412;&#33410;&#21518;&#65292;&#20320;&#23558;&#20250;&#25910;&#33719;&#65306;</strong></p>
+<ul>
+<li>&#25484;&#25569; VibeCoding &#26631;&#20934;&#20116;&#27493;&#24037;&#20316;&#27969;&#65306;&#25506;&#32034; &rarr; &#35268;&#21010; &rarr; &#25191;&#34892; &rarr; &#39564;&#35777; &rarr; &#25552;&#20132;</li>
+<li>&#29702;&#35299; Agent Native &#24320;&#21457;&#24605;&#32500;&#65292;&#23398;&#20250;&#20174;"&#24590;&#20040;&#20570;"&#36716;&#21521;"&#20570;&#20160;&#20040;"&#30340;&#20135;&#21697;&#23548;&#21521;&#24605;&#32500;</li>
+<li>&#23398;&#20250;&#32534;&#20889;&#39640;&#36136;&#37327;&#25552;&#31034;&#35789;&#65306;&#30452;&#25509;&#25551;&#36848;&#20219;&#21153;&#12289;&#25552;&#20379;&#19978;&#19979;&#25991;&#12289;&#32473;&#20986;&#20855;&#20307;&#32422;&#26463;</li>
+<li>&#25484;&#25569;&#26435;&#38480;&#27169;&#24335;&#12289;&#26012;&#26464;&#21629;&#20196;&#12289;&#26816;&#26597;&#28857;&#21151;&#33021;&#31561; Claude Code &#26680;&#24515;&#20132;&#20114;&#26041;&#24335;</li>
+<li>&#20102;&#35299;&#22810; Agent &#24182;&#34892;&#21327;&#20316;&#26426;&#21046;&#65292;&#23398;&#20250;&#21033;&#29992; AI &#33258;&#21160;&#21270;&#33021;&#21147;&#25552;&#21319;&#24320;&#21457;&#25928;&#29575;</li>
+</ul>
+<p>&#24207;&#35328;&#20013;&#25552;&#21040;&#30340;"Workflow&#65288;&#24037;&#20855;&#27969;&#65289;"&#26159; Vibecoding &#30340;&#26680;&#24515;&#65292;&#20197;&#21450; VibeCoding &#30340;&#26631;&#20934;&#24320;&#21457;&#27969;&#31243;&#12290;</p>
+</blockquote><h2 id="04ddc11f1a79bd85531ef979ef4a2340">&#21069;&#32622;&#30693;&#35782;</h2><h3 id="be287c82b4aec1fc75857282b369fd06">&#20160;&#20040;&#26159; Claude Code</h3><p>Claude Code &#26159;&#19968;&#20010; AI &#21629;&#20196;&#34892;&#24037;&#20855;&#65292;&#33021;&#30452;&#25509;&#35835;&#21462;&#39033;&#30446;&#25991;&#20214;&#12289;&#25191;&#34892;&#21629;&#20196;&#12289;&#33258;&#21160;&#20462;&#25913;&#20195;&#30721;&#21644;&#23436;&#25104;&#20219;&#21153;&#12290;</p><h3 id="94c2c9725d1f76c232e86cab6eea288a">&#20160;&#20040;&#26159; &#24037;&#20316;&#27969;</h3><p>&#24037;&#20316;&#27969;&#65288;Workflow&#65289;&#26159;&#23436;&#25104;&#20219;&#21153;&#30340;&#26631;&#20934;&#21270;&#27969;&#31243;&#12290;AI &#24320;&#21457;&#30340;&#24037;&#20316;&#27969;&#21253;&#21547;&#25506;&#32034;&#12289;&#35268;&#21010;&#12289;&#32534;&#30721;&#12289;&#25552;&#20132;&#31561;&#29615;&#33410;&#12290;</p><h3 id="23aef7e4fca3703ca14ba148064d7aa6">&#20160;&#20040;&#26159; &#25552;&#31034;&#35789;</h3><p>&#25552;&#31034;&#35789;&#65288;Prompt&#65289;&#26159;&#21457;&#36865;&#32473; AI &#30340;&#25991;&#26412;&#25351;&#20196;&#65292;&#25551;&#36848;&#20320;&#24076;&#26395; AI &#23436;&#25104;&#30340;&#20219;&#21153;&#12290;<strong>&#22909;&#30340;&#25552;&#31034;&#35789;&#26159;&#24037;&#20316;&#27969;&#30340;&#19968;&#37096;&#20998;</strong>&#12290;</p><h2 id="47868fa35ea346277f1cfb2f0ea21c52">Agent Native &#24320;&#21457;&#24605;&#32500;</h2><p><strong>Agent Native</strong> = &#20197; AI Agent &#20026;&#20013;&#24515;&#30340;&#24320;&#21457;&#24605;&#32500;</p><p>&#20256;&#32479;&#24320;&#21457;&#20013;&#65292;AI &#26159;&#36741;&#21161;&#24037;&#20855;&#65288;Copilot&#65289;&#65307;Agent Native &#20013;&#65292;AI &#26159;&#33258;&#20027;&#25191;&#34892;&#32773;&#65288;Autopilot&#65289;&#12290;</p><h4 id="59ee03ccaed289b85b8d9f18935200b2">&#20256;&#32479;&#24605;&#32500; vs Agent Native</h4><table>
+<thead>
+<tr>
+<th>&#32500;&#24230;</th>
+<th>&#20256;&#32479; AI &#36741;&#21161;&#24320;&#21457;</th>
+<th>Agent Native &#24320;&#21457;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>&#26680;&#24515;&#35282;&#33394;</strong></td>
+<td>&#20154;&#20889;&#20195;&#30721;&#65292;AI &#24110;&#24537;</td>
+<td>AI &#20026;&#20027;&#65292;&#20195;&#30721;&#26159; AI &#30340;&#23454;&#29616;&#32454;&#33410;</td>
+</tr>
+<tr>
+<td><strong>&#24037;&#20316;&#26041;&#24335;</strong></td>
+<td>AI &#26159; Copilot</td>
+<td>AI &#26159; Autopilot</td>
+</tr>
+<tr>
+<td><strong>&#20132;&#20114;&#27169;&#24335;</strong></td>
+<td>&#20154;&#20889; Prompt &#25351;&#25381; AI</td>
+<td>AI &#20027;&#21160;&#25552;&#38382;&#12289;&#35268;&#21010;&#12289;&#25191;&#34892;</td>
+</tr>
+<tr>
+<td><strong>&#36755;&#20986;&#24418;&#24577;</strong></td>
+<td>AI &#29983;&#25104;&#20195;&#30721;&#29255;&#27573;&#65292;&#20154;&#26469;&#25972;&#21512;</td>
+<td>AI &#33258;&#20027;&#23436;&#25104;&#23436;&#25972;&#20219;&#21153;</td>
+</tr>
+<tr>
+<td><strong>&#20320;&#30340;&#20851;&#27880;&#28857;</strong></td>
+<td>&#24590;&#20040;&#20889;&#20195;&#30721;</td>
+<td>&#20889;&#20160;&#20040;&#20135;&#21697;</td>
+</tr>
+</tbody>
+</table><h3 id="d15fdc3ad5e62c9e3e8815ebc5a5a762">VibeCoding &#30340;&#26680;&#24515;&#21746;&#23398;&#65306;&#20320;&#26159;&#23548;&#28436;&#65292;AI &#26159;&#28436;&#21592;</h3><p>VibeCoding &#30340;&#26680;&#24515;&#19981;&#26159;"&#35753; AI &#26367;&#20320;&#20889;&#20195;&#30721;"&#65292;&#32780;&#26159;"&#20320;&#39550;&#39533; AI &#20889;&#20195;&#30721;"&#12290;&#36825;&#20010;&#21306;&#21035;&#33267;&#20851;&#37325;&#35201;&#12290;&#22914;&#26524;&#20320;&#25226; AI &#24403;&#25104;&#26367;&#20195;&#21697;&#65292;&#20320;&#20250;&#36880;&#28176;&#22833;&#21435;&#23545;&#20135;&#21697;&#30340;&#25511;&#21046;&#26435;&#65292;&#26368;&#32456;&#20570;&#20986;&#30340;&#19996;&#35199;&#21487;&#33021;&#25216;&#26415;&#19978;&#23436;&#32654;&#65292;&#20294;&#20135;&#21697;&#19978;&#24179;&#24248;&#12290;&#30495;&#27491;&#24378;&#22823;&#30340;&#29992;&#27861;&#26159;"&#19968;&#25918;&#19968;&#25910;"&#65306;&#25918;&#65292;&#26159;&#35753; AI &#22312;&#28023;&#37327;&#25216;&#26415;&#26041;&#26696;&#20013;&#33258;&#30001;&#25506;&#32034;&#65292;&#29983;&#25104;&#22810;&#31181;&#23454;&#29616;&#36335;&#24452;&#65292;&#24110;&#20320;&#30475;&#21040;&#20320;&#21407;&#26412;&#30475;&#19981;&#21040;&#30340;&#21487;&#33021;&#24615;&#65307;&#25910;&#65292;&#26159;&#20320;&#22312;&#20851;&#38190;&#33410;&#28857;&#36873;&#23450;&#26041;&#21521;&#12289;&#25293;&#26495;&#20915;&#31574;&#12289;&#25215;&#25285;&#36131;&#20219;&#12290;</p><p>&#20320;&#30340;&#20316;&#21697;&#20215;&#20540;&#19981;&#22312;&#20110;&#20195;&#30721;&#37327;&#26377;&#22810;&#22823;&#12289;&#25216;&#26415;&#26632;&#26377;&#22810;&#26032;&#65292;&#32780;&#22312;&#20110;&#23427;&#20307;&#29616;&#20102;&#20320;&#36873;&#23450;&#30340;&#20135;&#21697;&#26041;&#21521;&#12289;&#20320;&#20570;&#20986;&#30340;&#26550;&#26500;&#21028;&#26029;&#12289;&#20320;&#24895;&#24847;&#20026;&#27492;&#25215;&#25285;&#30340;&#36131;&#20219;&#12290;AI &#21487;&#20197;&#24110;&#20320;&#20889;&#20986;&#19968;&#19975;&#34892;&#20195;&#30721;&#65292;&#20294;&#21482;&#26377;&#20320;&#33021;&#20915;&#23450;&#36825;&#19968;&#19975;&#34892;&#20195;&#30721;&#24212;&#35813;&#35299;&#20915;&#20160;&#20040;&#38382;&#39064;&#12290;&#36825;&#23601;&#26159;&#20026;&#20160;&#20040; PRD &#22914;&#27492;&#37325;&#35201;&mdash;&mdash;PRD &#23601;&#26159;&#20320;&#23545; AI &#30340;"&#25511;&#21046;&#26435;"&#12290;&#27809;&#26377; PRD&#65292;AI &#26159;&#33073;&#32560;&#30340;&#37326;&#39532;&#65292;&#21487;&#33021;&#36305;&#24471;&#24456;&#24555;&#20294;&#26041;&#21521;&#19981;&#23545;&#65307;&#26377;&#20102; PRD&#65292;AI &#26159;&#21548;&#35805;&#30340;&#25191;&#34892;&#32773;&#65292;&#23427;&#30340;&#27599;&#19968;&#27493;&#37117;&#22312;&#20320;&#30340;&#25484;&#25511;&#20043;&#20013;&#12290;</p><h3 id="61c234ef390a0ab8e5304094c68f4769">AI &#19982;&#20154;&#30340;&#20998;&#24037;&#65306;&#39044;&#27979;&#19982;&#21028;&#26029;</h3><p>&#22312; VibeCoding &#24037;&#20316;&#27969;&#20013;&#65292;&#29702;&#35299; AI &#21644;&#20154;&#30340;&#20998;&#24037;&#33267;&#20851;&#37325;&#35201;&#12290;AI &#36127;&#36131;&#30340;&#26159;"&#39044;&#27979;"&mdash;&mdash;&#23427;&#20250;&#22522;&#20110;&#28023;&#37327;&#30340;&#35757;&#32451;&#25968;&#25454;&#65292;&#29983;&#25104;&#22810;&#31181;&#20195;&#30721;&#26041;&#26696;&#12289;&#25552;&#20379;&#26550;&#26500;&#24314;&#35758;&#12289;&#25512;&#33616;&#25216;&#26415;&#36873;&#22411;&#12290;&#36825;&#20123;&#26041;&#26696;&#36890;&#24120;&#26159;&#27010;&#29575;&#26368;&#39640;&#30340;&#12289;&#26368;&#31526;&#21512;&#26368;&#20339;&#23454;&#36341;&#30340;&#36873;&#25321;&#12290;&#20294; AI &#19981;&#30693;&#36947;&#20320;&#30340;&#19994;&#21153;&#22330;&#26223;&#12289;&#19981;&#20102;&#35299;&#20320;&#30340;&#29992;&#25143;&#38656;&#27714;&#12289;&#20063;&#26080;&#27861;&#20026;&#20135;&#21697;&#26041;&#21521;&#36127;&#36131;&#12290;</p><p>&#36825;&#23601;&#26159;&#20320;&#30340;&#20215;&#20540;&#25152;&#22312;&#12290;&#20320;&#36127;&#36131;&#30340;&#26159;"&#21028;&#26029;"&mdash;&mdash;&#22312; AI &#32473;&#20986;&#30340;&#22810;&#20010;&#26041;&#26696;&#20013;&#36873;&#25321;&#26368;&#36866;&#21512;&#30340;&#37027;&#20010;&#65292;&#22522;&#20110;&#20320;&#23545;&#19994;&#21153;&#30340;&#29702;&#35299;&#20915;&#23450;&#26159;&#21542;&#25509;&#21463;&#26576;&#27573;&#20195;&#30721;&#65292;&#22522;&#20110;&#20320;&#23545;&#29992;&#25143;&#38656;&#27714;&#30340;&#27934;&#23519;&#20915;&#23450;&#20135;&#21697;&#24448;&#21738;&#20010;&#26041;&#21521;&#36208;&#12290;&#36825;&#19981;&#26159;&#22240;&#20026; AI &#33021;&#21147;&#19981;&#36275;&#65292;&#32780;&#26159;&#22240;&#20026;&#20998;&#24037;&#26412;&#23601;&#22914;&#27492;&#65306;AI &#25797;&#38271;&#22522;&#20110;&#25968;&#25454;&#20570;&#39044;&#27979;&#65292;&#20320;&#25797;&#38271;&#22522;&#20110;&#29702;&#35299;&#20570;&#21028;&#26029;&#12290;</p><p>&#26435;&#38480;&#27169;&#24335;&#65288;Default/Plan/Accept Edits&#65289;&#26412;&#36136;&#19978;&#23601;&#26159;&#22312;&#35843;&#33410;"&#39044;&#27979;&#19982;&#21028;&#26029;&#30340;&#33073;&#38057;&#31243;&#24230;"&#12290;Default &#27169;&#24335;&#19979;&#65292;AI &#30340;&#21482;&#35835;&#25506;&#32034;&#33258;&#21160;&#25191;&#34892;&#65292;&#20294;&#20462;&#25913;&#20195;&#30721;&#26102;&#38656;&#35201;&#20320;&#21028;&#26029;&#65307;Plan &#27169;&#24335;&#19979;&#65292;AI &#21482;&#33021;&#25506;&#32034;&#21644;&#20998;&#26512;&#65292;&#25152;&#26377;&#21028;&#26029;&#37117;&#30001;&#20320;&#20570;&#65307;Accept Edits &#27169;&#24335;&#19979;&#65292;AI &#21487;&#20197;&#33258;&#20027;&#36816;&#34892;&#21629;&#20196;&#21644;&#27979;&#35797;&#65292;&#20294;&#20462;&#25913;&#20195;&#30721;&#26102;&#20173;&#38656;&#20320;&#21028;&#26029;&#12290;&#36873;&#25321;&#21738;&#31181;&#27169;&#24335;&#65292;&#21462;&#20915;&#20110;&#20320;&#23545;&#24403;&#21069;&#20219;&#21153;&#30340;&#29087;&#24713;&#31243;&#24230;&#21644;&#39118;&#38505;&#25215;&#21463;&#33021;&#21147;&#12290;</p><h4 id="88301f07429a15517ade8a8f39f990dd">Agent Native &#30340;&#19977;&#22823;&#21407;&#21017;</h4><pre><code class="language-mermaid">graph TB
+    A[Agent Native] --&gt; B["&#24847;&#22270;&#39537;&#21160;&#65306;&#21578;&#35785; AI '&#20570;&#20160;&#20040;'"]
+    A --&gt; C["&#24322;&#27493;&#21327;&#20316;&#65306;AI &#25345;&#32493;&#24037;&#20316;"]
+    A --&gt; D["&#20449;&#20219;&#20294;&#39564;&#35777;&#65306;&#24555;&#36895;&#39564;&#35777;&#26426;&#21046;"]
+
+    B --&gt; E["&#19981;&#35201;&#31649; '&#24590;&#20040;&#20570;'"]
+    C --&gt; F["&#35774;&#23450;&#30446;&#26631;&#21518;&#21487;&#31163;&#32447;"]
+    D --&gt; G["&#40664;&#35748;&#20449;&#20219;&#65292;&#21457;&#29616;&#38382;&#39064;&#20877;&#20462;&#27491;"]</code></pre><p><strong>1. &#24847;&#22270;&#39537;&#21160;</strong></p><p>&#21578;&#35785; AI &#30446;&#26631;&#65292;&#35753;&#23427;&#33258;&#24049;&#20915;&#23450;&#23454;&#29616;&#26041;&#24335;&#65306;</p><pre><code class="language-bash">&#10060; &#20256;&#32479;&#24605;&#32500;&#65306;
+"&#24110;&#25105;&#20889;&#19968;&#20010;&#20989;&#25968;&#65292;&#25509;&#25910;&#25968;&#32452;&#21442;&#25968;&#65292;&#29992; for &#24490;&#29615;&#36941;&#21382;&#65292;
+&#36935;&#21040;&#22823;&#20110; 10 &#30340;&#23601; push &#21040;&#26032;&#25968;&#32452;&#37324;..."
+
+&#9989; Agent Native&#65306;
+"&#36807;&#28388;&#25968;&#32452;&#20013;&#22823;&#20110; 10 &#30340;&#20803;&#32032;&#65292;&#36820;&#22238;&#26032;&#25968;&#32452;"</code></pre><p><strong>2. &#24322;&#27493;&#21327;&#20316;</strong></p><p>AI &#21487;&#20197;&#22312;&#20320;&#30561;&#35273;&#26102;&#24037;&#20316;&#65306;</p><pre><code class="language-bash"># &#20320;&#35774;&#23450;&#30446;&#26631;&#65292;AI &#33258;&#20027;&#25191;&#34892;
+"&#23454;&#29616;&#29992;&#25143;&#35780;&#35770;&#21151;&#33021;&#65292;&#21253;&#25324;&#65306;
+1. &#25968;&#25454;&#24211; schema&#65288;Comment &#27169;&#22411;&#65289;
+2. CRUD API
+3. &#21069;&#31471;&#35780;&#35770;&#34920;&#21333;
+4. &#35780;&#35770;&#21015;&#34920;&#23637;&#31034;
+
+&#23436;&#25104;&#21518;&#21578;&#35785;&#25105;&#65292;&#25105;&#20808;&#21435;&#24537;&#21035;&#30340;&#12290;"</code></pre><p><strong>3. &#20449;&#20219;&#20294;&#39564;&#35777;</strong></p><p>&#19981;&#35201;&#36880;&#34892;&#26816;&#26597; AI &#30340;&#20195;&#30721;&#65292;&#32780;&#26159;&#65306;</p><pre><code class="language-mermaid">graph LR
+    A[AI &#29983;&#25104;] --&gt; B{&#21151;&#33021;&#27491;&#24120;?}
+    B --&gt;|&#26159;| C[&#25509;&#21463;]
+    B --&gt;|&#21542;| D[&#21578;&#35785; AI &#38382;&#39064;]
+    D --&gt; A</code></pre><p><strong>&#39564;&#35777;&#26041;&#24335;</strong>&#65306;</p><ul>
+<li>&#21151;&#33021;&#27979;&#35797;&#65306;&#36305;&#19968;&#19979;&#30475;&#30475;&#33021;&#19981;&#33021;&#29992;</li>
+<li>&#31867;&#22411;&#26816;&#26597;&#65306;<code>tsc</code> &#26377;&#27809;&#26377;&#25253;&#38169;</li>
+<li>&#20195;&#30721;&#23457;&#26597;&#65306;&#21482;&#30475;&#20851;&#38190;&#36923;&#36753;&#65292;&#19981;&#30475;&#23454;&#29616;&#32454;&#33410;</li>
+</ul><h4 id="d7c61d10c1cefeba2aba0c455adf189e">&#20174;&#24320;&#21457;&#32773;&#21040;&#32534;&#25490;&#32773;</h4><p>Agent Native &#26102;&#20195;&#65292;&#20320;&#30340;&#35282;&#33394;&#36716;&#21464;&#65306;</p><pre><code class="language-mermaid">graph TD
+    A[&#20256;&#32479;&#24320;&#21457;&#32773;] --&gt; B[&#20146;&#33258;&#21160;&#25163;]
+    B --&gt; C[&#20889;&#27599;&#19968;&#34892;&#20195;&#30721;]
+    C --&gt; D[&#35843;&#35797;&#27599;&#20010; Bug]
+
+    E[Agent Native] --&gt; F[&#32534;&#25490; Agent]
+    F --&gt; G[&#23450;&#20041;&#30446;&#26631;]
+    G --&gt; H[&#39564;&#35777;&#32467;&#26524;]</code></pre><table>
+<thead>
+<tr>
+<th>&#20256;&#32479;&#24320;&#21457;&#32773;</th>
+<th>Agent Native &#32534;&#25490;&#32773;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#25163;&#20889;&#20195;&#30721;</td>
+<td>&#25551;&#36848;&#38656;&#27714;</td>
+</tr>
+<tr>
+<td>&#36880;&#20010;&#20462;&#22797;</td>
+<td>&#21453;&#39304;&#38382;&#39064;</td>
+</tr>
+<tr>
+<td>&#20851;&#27880;&#35821;&#27861;</td>
+<td>&#20851;&#27880;&#20135;&#21697;</td>
+</tr>
+<tr>
+<td>&#26159;&#24037;&#21280;</td>
+<td>&#26159;&#25351;&#25381;&#23448;</td>
+</tr>
+</tbody>
+</table><p><strong>&#35760;&#20303;</strong>&#65306;&#20195;&#30721;&#26159;&#23454;&#29616;&#32454;&#33410;&#65292;&#20135;&#21697;&#25165;&#26159;&#30446;&#30340;&#12290;Agent Native &#35753;&#20320;&#20174;"&#24590;&#20040;&#20570;"&#20013;&#35299;&#25918;&#20986;&#26469;&#65292;&#19987;&#27880;&#20110;"&#20570;&#20160;&#20040;"&#12290;</p><h2 id="2af444818f5230c8c93b48bbc952cce4">&#26680;&#24515;&#27010;&#24565;</h2><h3 id="1729a167efc276f88d5f5e0d1dbdcd97">Vibecoding &#30340;&#26680;&#24515;&#29702;&#24565;</h3><pre><code class="   language-php">Vibecoding = Prompt&#65288;&#25552;&#31034;&#35789;&#65289; + Workflow&#65288;&#24037;&#20855;&#27969;&#65289;</code></pre><p><strong>Prompt &#21578;&#35785; AI &#20570;&#20160;&#20040;</strong><br>
+<strong>Workflow &#20915;&#23450;&#24590;&#20040;&#20570;</strong></p><pre><code class="language-mermaid">graph TB
+    A[&#20219;&#21153;] --&gt; B["Prompt: &#38656;&#27714;&#25551;&#36848;"]
+    B --&gt; C["Workflow: &#25191;&#34892;&#27969;&#31243;"]
+
+    C --&gt; D[&#25506;&#32034;&#39033;&#30446;&#32467;&#26500;]
+    C --&gt; E[&#35268;&#21010;&#23454;&#29616;&#27493;&#39588;]
+    C --&gt; F[&#32534;&#20889;&#20195;&#30721;]
+    C --&gt; G[&#27979;&#35797;&#39564;&#35777;]
+    C --&gt; H[&#25552;&#20132;&#20195;&#30721;]
+
+    D --&gt; I[&#39640;&#36136;&#37327;&#36755;&#20986;]
+    E --&gt; I
+    F --&gt; I
+    G --&gt; I
+    H --&gt; I</code></pre><h3 id="c03a3bf434563d973fc1a7ee66c95d58">&#25552;&#31034;&#35789;&#30340;&#26680;&#24515;&#21407;&#21017;</h3><p>AI &#26159;&#19968;&#20010;&#24378;&#22823;&#30340;&#32534;&#31243;&#21161;&#25163;&#65292;&#23427;&#29702;&#35299;&#25216;&#26415;&#26415;&#35821;&#12289;&#29087;&#24713;&#21508;&#31181;&#26694;&#26550;&#12289;&#33021;&#24555;&#36895;&#20998;&#26512;&#20195;&#30721;&#12290;</p><p><strong>&#27807;&#36890;&#30340;&#20851;&#38190;&#26159;&#65306;&#30452;&#25509;&#12289;&#20855;&#20307;&#12289;&#26377;&#19978;&#19979;&#25991;&#12290;</strong></p><p>&#10060; <strong>&#32469;&#24367;&#23376;</strong>&#65306;</p><pre><code class="   language-php">"&#20320;&#26159;&#19968;&#20301;&#36164;&#28145;&#30340;&#20840;&#26632;&#24037;&#31243;&#24072;&#65292;&#31934;&#36890;&#21508;&#31181;&#25216;&#26415;&#26632;..."</code></pre><p>&rarr; AI &#19981;&#38656;&#35201;&#35282;&#33394;&#25198;&#28436;&#65292;&#23427;&#30693;&#36947;&#33258;&#24049;&#33021;&#20570;&#20160;&#20040;</p><p>&#9989; <strong>&#30452;&#25509;&#35828;&#20107;</strong>&#65306;</p><pre><code class="   language-php">"&#26816;&#27979;&#36825;&#20010; React &#32452;&#20214;&#30340;&#31867;&#22411;&#23433;&#20840;&#38382;&#39064;"</code></pre><p>&rarr; &#19968;&#21477;&#35805;&#35762;&#28165;&#26970;&#35201;&#20570;&#20160;&#20040;</p><p>&#10060; <strong>&#27169;&#31946;&#25551;&#36848;</strong>&#65306;</p><pre><code class="   language-php">"&#24110;&#25105;&#20248;&#21270;&#19968;&#19979;&#20195;&#30721;"</code></pre><p>&rarr; AI &#19981;&#30693;&#36947;&#20248;&#21270;&#20160;&#20040;&#26041;&#21521;</p><p>&#9989; <strong>&#20855;&#20307;&#38656;&#27714;</strong>&#65306;</p><pre><code class="   language-php">"&#20248;&#21270;&#30331;&#24405;&#39029;&#38754;&#30340;&#21152;&#36733;&#24615;&#33021;&#65306;
+1. &#28155;&#21152;&#22270;&#29255;&#25042;&#21152;&#36733;
+2. &#24310;&#36831;&#21152;&#36733;&#38750;&#20851;&#38190;&#36164;&#28304;
+3. &#20351;&#29992; Next.js &#30340;&#21160;&#24577;&#23548;&#20837;"</code></pre><p>&rarr; &#26126;&#30830;&#20248;&#21270;&#30446;&#26631;&#21644;&#23454;&#29616;&#26041;&#24335;</p><h2 id="4cb48233e767c30dc3495fbd12e3446d">&#25552;&#31034;&#35789;&#21407;&#21017;</h2><h3 id="ef5dada9c06013173e477e5f2933d77b">&#22909;&#25552;&#31034;&#35789;&#30340;&#29305;&#24449;</h3><pre><code class="language-mermaid">graph TB
+    A[&#22909;&#25552;&#31034;&#35789;] --&gt; B["&#26126;&#30830;&#20219;&#21153;&#19978;&#19979;&#25991;"]
+    A --&gt; C["&#20855;&#20307;&#36755;&#20986;&#35201;&#27714;"]
+    A --&gt; D[&#25552;&#20379;&#20986;&#21475;]
+
+    B --&gt; E["&#19981;&#35201;&#35753; AI &#29468;"]
+    C --&gt; F["&#19981;&#35201;&#21547;&#31946;&#20854;&#36766;"]
+    D --&gt; G["&#19981;&#35201;&#24378;&#34892;&#32534;&#36896;"]</code></pre><h3 id="be1ac234fe3f9b9e89552d8bfa4e8dfe">&#25552;&#31034;&#35789;&#23545;&#27604;&#65306;&#27424;&#20339; vs &#25512;&#33616;</h3><table>
+<thead>
+<tr>
+<th>&#31867;&#22411;</th>
+<th>&#27424;&#20339;</th>
+<th>&#25512;&#33616;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>&#35282;&#33394;&#25198;&#28436;</strong></td>
+<td>"&#20320;&#26159;&#19968;&#20301;&#25317;&#26377; 20 &#24180;&#32463;&#39564;&#30340;&#20840;&#26632;&#24037;&#31243;&#24072;&#65292;&#31934;&#36890; React&#12289;Vue&#12289;Angular&#12289;Node.js&#12289;Python..."</td>
+<td>&#30452;&#25509;&#35828;&#20219;&#21153;&#65306;"&#23454;&#29616;&#29992;&#25143;&#30331;&#24405;&#21151;&#33021;"</td>
+</tr>
+<tr>
+<td><strong>&#27169;&#31946;&#25351;&#20196;</strong></td>
+<td>"&#24110;&#25105;&#20248;&#21270;&#19968;&#19979;&#20195;&#30721;"</td>
+<td>"&#20248;&#21270;&#30331;&#24405;&#39029;&#38754;&#30340;&#21152;&#36733;&#24615;&#33021;&#65306;&#28155;&#21152;&#22270;&#29255;&#25042;&#21152;&#36733;&#12289;&#24310;&#36831;&#21152;&#36733;&#38750;&#20851;&#38190;&#36164;&#28304;"</td>
+</tr>
+<tr>
+<td><strong>&#26080;&#36793;&#30028;&#38480;&#21046;</strong></td>
+<td>"&#20889;&#19968;&#20010;&#23436;&#25972;&#30340;&#30005;&#21830;&#31995;&#32479;"</td>
+<td>"&#23454;&#29616;&#29992;&#25143;&#35780;&#35770;&#21151;&#33021;&#65292;&#21253;&#25324;&#65306;&#35780;&#35770;&#34920;&#21333;&#12289;&#21015;&#34920;&#23637;&#31034;&#12289;&#25968;&#25454;&#25345;&#20037;&#21270;"</td>
+</tr>
+<tr>
+<td><strong>&#24378;&#34892;&#35201;&#27714;</strong></td>
+<td>"&#20320;&#24517;&#39035;&#32473;&#20986;&#27491;&#30830;&#31572;&#26696;&#65292;&#19981;&#33021;&#35828;&#19981;&#30693;&#36947;"</td>
+<td>"&#22914;&#26524;&#19981;&#30830;&#23450;&#65292;&#35831;&#26126;&#30830;&#35828;'&#25105;&#19981;&#30830;&#23450;'&#65292;&#32780;&#19981;&#26159;&#32534;&#36896;&#31572;&#26696;"</td>
+</tr>
+<tr>
+<td><strong>&#20855;&#20307;&#20219;&#21153;</strong></td>
+<td>"&#24110;&#25105;&#20889;&#19968;&#20010;&#30331;&#24405;&#21151;&#33021;"</td>
+<td>"&#23454;&#29616;&#29992;&#25143;&#30331;&#24405;&#21151;&#33021;&#65306;&#29992;&#25143;&#21517;+&#23494;&#30721;&#30331;&#24405;&#65292;&#20351;&#29992; Next.js 16 App Router&#65292;Drizzle ORM + PostgreSQL&#65292;&#21253;&#21547;&#34920;&#21333;&#39564;&#35777;&#21644;&#38169;&#35823;&#22788;&#29702;"</td>
+</tr>
+<tr>
+<td><strong>&#25552;&#20379;&#19978;&#19979;&#25991;</strong></td>
+<td>"&#20462;&#22797;&#36825;&#20010; Bug"</td>
+<td>"&#20462;&#22797; Bug&#65306;&#25991;&#20214; app/login/page.tsx&#65292;&#38382;&#39064;&#65306;&#29992;&#25143;&#30331;&#24405;&#21518;&#27809;&#26377;&#36339;&#36716;&#21040;&#39318;&#39029;&#65292;&#39044;&#26399;&#65306;&#36339;&#36716;&#21040; /dashboard"</td>
+</tr>
+<tr>
+<td><strong>&#25351;&#20196;&#35201;&#20855;&#20307;</strong></td>
+<td>"&#28155;&#21152;&#27979;&#35797;"</td>
+<td>"&#20026; app/login/page.tsx &#32534;&#20889;&#27979;&#35797;&#29992;&#20363;&#65292;&#26694;&#26550;&#65306;Playwright&#65292;&#35206;&#30422;&#22330;&#26223;&#65306;&#23494;&#30721;&#38169;&#35823;&#12289;&#36134;&#21495;&#19981;&#23384;&#22312;&#12289;&#32593;&#32476;&#38169;&#35823;"</td>
+</tr>
+</tbody>
+</table><p><strong>&#26680;&#24515;&#21407;&#21017;</strong>&#65306;</p><ul>
+<li>&#19981;&#35201;&#35753; AI &#29468; &rarr; &#25552;&#20379;&#26126;&#30830;&#19978;&#19979;&#25991;</li>
+<li>&#19981;&#35201;&#21547;&#31946;&#20854;&#36766; &rarr; &#32473;&#20986;&#20855;&#20307;&#35201;&#27714;</li>
+<li>&#19981;&#35201;&#24378;&#34892;&#32534;&#36896; &rarr; &#32473; AI &#19968;&#20010;"&#19981;&#30830;&#23450;"&#30340;&#20986;&#21475;</li>
+</ul><h3 id="7be2f3373ac52b9b4b206300c6d81dcf">&#35753; AI &#21453;&#22797;&#25552;&#38382;</h3><pre><code class="   language-php">"&#25105;&#35201;&#24320;&#21457;&#19968;&#20010;&#20219;&#21153;&#31649;&#29702;&#24212;&#29992;&#12290;
+&#35831;&#21453;&#22797;&#38382;&#25105;&#38382;&#39064;&#65292;&#30452;&#21040;&#20320;&#23436;&#20840;&#29702;&#35299;&#25105;&#30340;&#38656;&#27714;&#12290;
+&#19981;&#35201;&#29468;&#27979;&#65292;&#30452;&#25509;&#38382;&#12290;"</code></pre><h3 id="57838d74fb4c6b699d3ae7a720bfd972">&#25552;&#31034;&#35789;&#27169;&#26495;</h3><h4 id="f45c21d0ea0d38f38e7aa85ae1d78326">&#20195;&#30721;&#29983;&#25104;&#27169;&#26495;</h4><pre><code class="   language-php">"&#23454;&#29616; [&#21151;&#33021;&#21517;&#31216;]
+
+&#25216;&#26415;&#26632;&#65306;
+- Next.js [&#29256;&#26412;]
+- TypeScript
+- Drizzle ORM
+- [&#20854;&#20182;&#25216;&#26415;]
+
+&#38656;&#27714;&#65306;
+1. [&#20855;&#20307;&#38656;&#27714;1]
+2. [&#20855;&#20307;&#38656;&#27714;2]
+3. [&#20855;&#20307;&#38656;&#27714;3]
+
+&#27880;&#24847;&#20107;&#39033;&#65306;
+- &#36981;&#24490;&#39033;&#30446;&#29616;&#26377;&#20195;&#30721;&#39118;&#26684;
+- &#19981;&#35201;&#24341;&#20837;&#26032;&#20381;&#36182;&#65292;&#38500;&#38750;&#24517;&#35201;
+- &#21253;&#21547;&#38169;&#35823;&#22788;&#29702;"</code></pre><h4 id="fd18b7982297ff941b3743418a29cf67">Bug &#20462;&#22797;&#27169;&#26495;</h4><pre><code class="   language-php">"&#20462;&#22797; Bug
+
+&#25991;&#20214;&#36335;&#24452;: [&#23436;&#25972;&#36335;&#24452;]
+&#38169;&#35823;&#20449;&#24687;:
+[&#23436;&#25972;&#25253;&#38169;&#26085;&#24535;]
+
+&#24403;&#21069;&#20195;&#30721;:
+[&#30456;&#20851;&#20195;&#30721;&#29255;&#27573;]
+
+&#26399;&#26395;&#34892;&#20026;: [&#25551;&#36848;]
+&#23454;&#38469;&#34892;&#20026;: [&#25551;&#36848;]
+
+&#35831;&#20998;&#26512;&#21407;&#22240;&#24182;&#25552;&#20379;&#20462;&#22797;&#26041;&#26696;"</code></pre><h2 id="c1a50fc9d4562a13ff3ac42350c15657">&#26631;&#20934;&#24037;&#20316;&#27969;</h2><h3 id="635340fdf049a32d45d6cc63a4af2709">AI &#30340;&#33258;&#21160;&#21270;&#33021;&#21147;</h3><dl>
+<dt>&#22312;&#24320;&#22987;&#24037;&#20316;&#27969;&#20043;&#21069;&#65292;&#35760;&#20303;&#65306;<strong>AI &#33021;&#33258;&#21160;&#22788;&#29702;&#24456;&#22810;&#20219;&#21153;</strong>&#12290;</dt>
+<dd><p>:: info Claude Code vs &#20854;&#20182; AI &#24037;&#20855;</p></dd>
+</dl><p><strong>&#20851;&#38190;&#21306;&#21035;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#29305;&#24615;</th>
+<th>Claude Code</th>
+<th>Cursor/Windsurf</th>
+<th>ChatGPT &#32593;&#39029;&#29256;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>&#39033;&#30446;&#19978;&#19979;&#25991;</strong></td>
+<td>&#9989; &#33258;&#21160;&#35835;&#21462;&#25972;&#20010;&#39033;&#30446;</td>
+<td>&#9989; &#33258;&#21160;&#35835;&#21462;</td>
+<td>&#10060; &#25163;&#21160;&#31896;&#36148;</td>
+</tr>
+<tr>
+<td><strong>&#21629;&#20196;&#25191;&#34892;</strong></td>
+<td>&#9989; &#30452;&#25509;&#36816;&#34892; bash</td>
+<td>&#9989; &#38598;&#25104;&#32456;&#31471;</td>
+<td>&#10060; &#22797;&#21046;&#21040;&#32456;&#31471;</td>
+</tr>
+<tr>
+<td><strong>&#25991;&#20214;&#20462;&#25913;</strong></td>
+<td>&#9989; &#33258;&#21160;&#32534;&#36753;&#22810;&#20010;&#25991;&#20214;</td>
+<td>&#9989; &#22810;&#25991;&#20214;&#32534;&#36753;</td>
+<td>&#9888;&#65039; &#36880;&#20010;&#22797;&#21046;</td>
+</tr>
+<tr>
+<td><strong>&#29256;&#26412;&#25511;&#21046;</strong></td>
+<td>&#9989; &#33258;&#21160;&#25552;&#20132;</td>
+<td>&#9989; Git &#38598;&#25104;</td>
+<td>&#10060; &#25163;&#21160;&#25805;&#20316;</td>
+</tr>
+<tr>
+<td><strong>&#24037;&#20316;&#27969;</strong></td>
+<td>&#9989; &#26631;&#20934;&#21270;&#27969;&#31243;</td>
+<td>&#9888;&#65039; &#38656;&#35201;&#25163;&#21160;</td>
+<td>&#10060; &#38543;&#24847;&#23545;&#35805;</td>
+</tr>
+</tbody>
+</table><p><strong>&#20026;&#20160;&#20040; Claude Code &#26356;&#36866;&#21512; Vibecoding</strong>&#65306;</p><ol>
+<li>CLI &#21407;&#29983;&#65306;&#21629;&#20196;&#34892;&#26159;&#24320;&#21457;&#32773;&#30340;&#21407;&#29983;&#29615;&#22659;</li>
+<li>&#33258;&#21160;&#21270;&#31243;&#24230;&#39640;&#65306;&#20943;&#23569;&#25163;&#21160;&#25805;&#20316;</li>
+<li>&#26631;&#20934;&#21270;&#27969;&#31243;&#65306;&#25506;&#32034; &rarr; &#35268;&#21010; &rarr; &#23454;&#29616; &rarr; &#39564;&#35777; &rarr; &#25552;&#20132;</li>
+<li>&#23436;&#25972;&#19978;&#19979;&#25991;&#65306;&#29702;&#35299;&#25972;&#20010;&#39033;&#30446;&#32467;&#26500;</li>
+</ol><pre><code class="language-mermaid">graph TB
+    A["&#20320;&#38656;&#35201;&#20570;&#30340;"] --&gt; B["&#25551;&#36848;&#20219;&#21153;&#30446;&#26631;"]
+    A --&gt; C["&#25552;&#20379;&#24517;&#35201;&#19978;&#19979;&#25991;"]
+    A --&gt; D["&#39564;&#35777;&#32467;&#26524;&#24182;&#21453;&#39304;"]
+
+    E["AI &#33258;&#21160;&#20570;&#30340;"] --&gt; F[&#25506;&#32034;&#39033;&#30446;&#32467;&#26500;]
+    E --&gt; G["&#36873;&#25321;&#21512;&#36866;&#24037;&#20855;"]
+    E --&gt; H["&#22788;&#29702;&#38169;&#35823;&#37325;&#35797;"]
+    E --&gt; I["&#29983;&#25104;&#25552;&#20132;&#20449;&#24687;"]</code></pre><p><strong>AI &#30340;&#33258;&#21160;&#21270;&#33021;&#21147;</strong>&#65306;</p><ul>
+<li>&#9989; &#33258;&#21160;&#25506;&#32034;&#39033;&#30446;&#32467;&#26500;&#65288;&#20320;&#19981;&#38656;&#35201;&#21578;&#35785;&#23427;&#30475;&#21738;&#20123;&#25991;&#20214;&#65289;</li>
+<li>&#9989; &#33258;&#21160;&#36873;&#25321;&#21512;&#36866;&#30340;&#24037;&#20855;&#65288;Read&#12289;Edit&#12289;Bash&#65289;</li>
+<li>&#9989; &#33258;&#21160;&#22788;&#29702;&#38169;&#35823;&#65288;&#22833;&#36133;&#20250;&#37325;&#35797;&#25110;&#25442;&#26041;&#26696;&#65289;</li>
+<li>&#9989; &#33258;&#21160;&#29983;&#25104;&#25552;&#20132;&#20449;&#24687;&#65288;&#26681;&#25454;&#20462;&#25913;&#20869;&#23481;&#65289;</li>
+<li>&#9989; &#33258;&#21160;&#35782;&#21035;&#20381;&#36182;&#20851;&#31995;&#65288;&#30693;&#36947;&#20462;&#25913;&#20250;&#24433;&#21709;&#21738;&#20123;&#25991;&#20214;&#65289;</li>
+</ul><p><strong>&#20320;&#38656;&#35201;&#20570;&#30340;</strong>&#65306;</p><ul>
+<li>&#28165;&#26970;&#25551;&#36848;&#20219;&#21153;&#30446;&#26631;</li>
+<li>&#25552;&#20379;&#24517;&#35201;&#30340;&#19978;&#19979;&#25991;</li>
+<li>&#39564;&#35777;&#32467;&#26524;&#24182;&#21453;&#39304;</li>
+</ul><p><strong>&#19981;&#38656;&#35201;&#20570;</strong>&#65306;</p><ul>
+<li>&#10060; &#25351;&#23450;&#20855;&#20307;&#27493;&#39588;&#65288;"&#20808;&#35835;&#25991;&#20214;A&#65292;&#20877;&#35835;&#25991;&#20214;B"&#65289;</li>
+<li>&#10060; &#21578;&#35785;&#23427;&#29992;&#21738;&#20010;&#24037;&#20855;&#65288;"&#29992; Read &#24037;&#20855;&#35835;&#21462;"&#65289;</li>
+<li>&#10060; &#25163;&#21160;&#32452;&#21512;&#21629;&#20196;&#65288;"&#36816;&#34892; git add &#28982;&#21518; git commit"&#65289;</li>
+<li>&#10060; &#25163;&#21160;&#22788;&#29702;&#38169;&#35823;&#65288;"&#22914;&#26524;&#22833;&#36133;&#23601;&#37325;&#35797;"&#65289;</li>
+</ul><h3 id="86791d5a2d0254bc0919daaa48f25d0c">&#26435;&#38480;&#27169;&#24335;</h3><p>::: tip &#22330;&#26223;&#65306;&#20026;&#20160;&#20040;&#38656;&#35201;&#20999;&#25442;&#27169;&#24335;</p><p>&#20320;&#27491;&#22312;&#35843;&#35797;&#19968;&#20010;&#21151;&#33021;&#65292;&#27599;&#27425;&#36816;&#34892;&#27979;&#35797;&#37117;&#35201;&#28857;"&#30830;&#35748;"&#65292;&#19968;&#20998;&#38047;&#20869;&#28857;&#20102; 5 &#27425;&#12290;&#25928;&#29575;&#24456;&#20302;&#12290;</p><p>&#20320;&#35797;&#30528;&#25353; <strong>Shift+Tab</strong> &#20999;&#25442;&#21040; <strong>Accept Edits &#27169;&#24335;</strong>&#65292;&#27979;&#35797;&#21629;&#20196;&#33258;&#21160;&#25191;&#34892;&#65292;&#21482;&#26377;&#20462;&#25913;&#20195;&#30721;&#26102;&#25165;&#35810;&#38382;&#12290;&#30636;&#38388;&#28165;&#20928;&#20102;&#12290;</p><p>&#36825;&#23601;&#26159;<strong>&#26435;&#38480;&#27169;&#24335;</strong>&#30340;&#20316;&#29992;&#65306;&#22312;&#19981;&#21516;&#22330;&#26223;&#19979;&#65292;&#24179;&#34913;&#25928;&#29575;&#21644;&#23433;&#20840;&#12290;</p><h4 id="34a8c03ad1a4c2922ed7b98c282f4e59">&#19977;&#31181;&#26435;&#38480;&#27169;&#24335;</h4><table>
+<thead>
+<tr>
+<th>&#27169;&#24335;</th>
+<th>&#24555;&#25463;&#38190;</th>
+<th>&#29305;&#28857;</th>
+<th>&#20309;&#26102;&#20351;&#29992;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Default</strong></td>
+<td>Shift+Tab</td>
+<td>&#35835;&#33258;&#21160;&#65292;&#20889;&#35810;&#38382;</td>
+<td>&#26085;&#24120;&#24320;&#21457;&#65288;&#25512;&#33616;&#65289;</td>
+</tr>
+<tr>
+<td><strong>Plan</strong></td>
+<td>Shift+Tab</td>
+<td>&#21482;&#35835;&#19981;&#20889;</td>
+<td>&#24819;&#20808;&#20102;&#35299;&#20195;&#30721;&#65292;&#24597;&#35823;&#25913;</td>
+</tr>
+<tr>
+<td><strong>Accept Edits</strong></td>
+<td>Shift+Tab</td>
+<td>&#20889;&#38656;&#30830;&#35748;&#65292;&#20854;&#20182;&#33258;&#21160;</td>
+<td>&#39057;&#32321;&#27979;&#35797;/&#36816;&#34892;&#21629;&#20196;</td>
+</tr>
+</tbody>
+</table><p><strong>&#24555;&#36895;&#20915;&#31574;</strong>&#65306;</p><ul>
+<li>&#19981;&#30830;&#23450;&#26102; &rarr; Default</li>
+<li>&#21482;&#24819;&#30475;&#20195;&#30721; &rarr; Plan</li>
+<li>&#39057;&#32321;&#36305;&#21629;&#20196; &rarr; Accept Edits</li>
+</ul><h4 id="15c1736192815fb3b7e7ab6331906c19">Default &#27169;&#24335;&#65288;&#25512;&#33616;&#65289;</h4><p>&#21482;&#35835;&#25805;&#20316;&#65288;&#35835;&#21462;&#25991;&#20214;&#12289;&#25628;&#32034;&#20195;&#30721;&#12289;&#26597;&#30475;&#29366;&#24577;&#12289;&#21015;&#20986;&#25991;&#20214;&#65289;&#33258;&#21160;&#25209;&#20934;&#65292;&#20462;&#25913;&#25805;&#20316;&#65288;&#32534;&#36753;&#25991;&#20214;&#12289;&#21024;&#38500;&#25991;&#20214;&#12289;&#36816;&#34892;&#21629;&#20196;&#12289;&#32593;&#32476;&#35831;&#27714;&#12289;Git push&#65289;&#38656;&#35201;&#30830;&#35748;&#12290;</p><p><strong>&#26435;&#38480;&#24377;&#31383;&#36873;&#39033;</strong>&#65306;</p><ul>
+<li><strong>Yes</strong>&#65306;&#21516;&#24847;&#26412;&#27425;&#25805;&#20316;</li>
+<li><strong>Yes, don't ask again for this tool</strong>&#65306;&#21516;&#24847;&#26412;&#27425;&#65292;&#19988;&#21518;&#32493;&#21516;&#31867;&#25805;&#20316;&#19981;&#20877;&#35810;&#38382;</li>
+<li><strong>No, and tell AI what to do differently</strong>&#65306;&#25298;&#32477;&#24182;&#21578;&#35785; AI &#25442;&#20010;&#26041;&#24335;</li>
+</ul><h4 id="9b0979798785d56c9001c16a61a5357d">Plan &#27169;&#24335;&#65288;&#20195;&#30721;&#23457;&#26597;&#65289;</h4><p>&#20165;&#20801;&#35768;&#21482;&#35835;&#25805;&#20316;&#65292;&#25152;&#26377;&#20462;&#25913;&#25805;&#20316;&#37117;&#20250;&#34987;&#38459;&#27490;&#12290;</p><p><strong>&#36866;&#29992;&#22330;&#26223;</strong>&#65306;</p><ul>
+<li>&#20195;&#30721;&#23457;&#26597;</li>
+<li>&#20102;&#35299;&#20195;&#30721;&#24211;&#32467;&#26500;</li>
+<li>&#25506;&#32034;&#24615;&#20998;&#26512;</li>
+</ul><p>::: tip Plan &#27169;&#24335;&#28145;&#24230;&#35299;&#26512;</p><p>Plan &#27169;&#24335;&#19981;&#21482;&#26159;"&#21482;&#35835;"&mdash;&mdash;&#23427;&#26159; Claude Code &#20869;&#32622;&#30340;<strong>&#32467;&#26500;&#21270;&#35268;&#21010;&#27969;&#31243;</strong>&#65292;&#35753; AI &#22312;&#21160;&#25163;&#20043;&#21069;&#20808;&#20805;&#20998;&#29702;&#35299;&#20195;&#30721;&#24211;&#12290;</p><p><strong>&#20869;&#37096;&#26426;&#21046;</strong>&#65306;</p><pre><code class="language-mermaid">graph LR
+    A[&#29992;&#25143;&#20999;&#25442; Plan &#27169;&#24335;] --&gt; B[AI &#36827;&#20837;&#21482;&#35835;&#25506;&#32034;]
+    B --&gt; C[&#20998;&#26512;&#20195;&#30721;&#32467;&#26500;&#21644;&#20381;&#36182;]
+    C --&gt; D[&#29983;&#25104;&#23454;&#26045;&#26041;&#26696;]
+    D --&gt; E[&#29992;&#25143;&#23457;&#25209;&#26041;&#26696;]
+    E --&gt;|&#25209;&#20934;| F[&#20999;&#22238;&#27491;&#24120;&#27169;&#24335;&#25191;&#34892;]
+    E --&gt;|&#20462;&#25913;| B</code></pre><p>&#24403;&#20320;&#20999;&#25442;&#21040; Plan &#27169;&#24335;&#26102;&#65292;Claude Code &#20250;&#65306;</p><ol>
+<li><strong>&#38480;&#21046;&#20026;&#21482;&#35835;&#24037;&#20855;</strong>&mdash;&mdash;&#21482;&#33021;&#35835;&#21462;&#25991;&#20214;&#12289;&#25628;&#32034;&#20195;&#30721;&#12289;&#27983;&#35272;&#30446;&#24405;&#65292;&#19981;&#33021;&#32534;&#36753;&#25110;&#25191;&#34892;&#21629;&#20196;</li>
+<li><strong>&#28145;&#24230;&#25506;&#32034;&#20195;&#30721;&#24211;</strong>&mdash;&mdash;&#33258;&#21160;&#36941;&#21382;&#30456;&#20851;&#25991;&#20214;&#65292;&#29702;&#35299;&#26550;&#26500;&#21644;&#20381;&#36182;&#20851;&#31995;</li>
+<li><strong>&#36755;&#20986;&#32467;&#26500;&#21270;&#26041;&#26696;</strong>&mdash;&mdash;&#21253;&#21547;&#20462;&#25913;&#21738;&#20123;&#25991;&#20214;&#12289;&#27599;&#20010;&#25991;&#20214;&#25913;&#20160;&#20040;&#12289;&#25191;&#34892;&#39034;&#24207;</li>
+</ol><p><strong>&#20309;&#26102;&#20351;&#29992; Plan &#27169;&#24335;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#22330;&#26223;</th>
+<th>&#26159;&#21542;&#25512;&#33616;</th>
+<th>&#21407;&#22240;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#26032;&#21151;&#33021;&#28041;&#21450; 3+ &#25991;&#20214;</td>
+<td>&#9989; &#24378;&#28872;&#25512;&#33616;</td>
+<td>&#36991;&#20813;&#25913;&#21040;&#19968;&#21322;&#21457;&#29616;&#36951;&#28431;</td>
+</tr>
+<tr>
+<td>&#22823;&#35268;&#27169;&#37325;&#26500;</td>
+<td>&#9989; &#24378;&#28872;&#25512;&#33616;</td>
+<td>&#38656;&#35201;&#20840;&#23616;&#35270;&#35282;</td>
+</tr>
+<tr>
+<td>&#19981;&#29087;&#24713;&#30340;&#20195;&#30721;&#24211;</td>
+<td>&#9989; &#25512;&#33616;</td>
+<td>&#20808;&#29702;&#35299;&#20877;&#21160;&#25163;</td>
+</tr>
+<tr>
+<td>&#26550;&#26500;&#20915;&#31574;&#65288;&#36873;&#22411;&#65289;</td>
+<td>&#9989; &#25512;&#33616;</td>
+<td>&#38656;&#35201;&#23545;&#27604;&#20998;&#26512;</td>
+</tr>
+<tr>
+<td>&#21333;&#25991;&#20214; bug &#20462;&#22797;</td>
+<td>&#10060; &#19981;&#38656;&#35201;</td>
+<td>&#30452;&#25509;&#20462;&#23601;&#34892;</td>
+</tr>
+<tr>
+<td>&#31616;&#21333;&#25991;&#26696;&#20462;&#25913;</td>
+<td>&#10060; &#19981;&#38656;&#35201;</td>
+<td>&#36807;&#24230;&#27969;&#31243;&#21270;</td>
+</tr>
+</tbody>
+</table><p><strong>&#23454;&#25112;&#31034;&#20363;</strong>&#65306;&#35748;&#35777;&#27169;&#22359;&#20174; Session &#36801;&#31227;&#21040; JWT</p><pre><code class="   language-php"># &#20808;&#20999;&#25442;&#21040; Plan &#27169;&#24335;&#65288;Shift+Tab &#20999;&#25442;&#65289;
+"&#24110;&#25105;&#25226;&#29992;&#25143;&#35748;&#35777;&#20174; express-session &#36801;&#31227;&#21040; JWT"
+
+# AI &#20250;&#33258;&#21160;&#65306;
+# 1. &#35835;&#21462;&#24403;&#21069; auth &#30456;&#20851;&#25991;&#20214;
+# 2. &#20998;&#26512; session &#30340;&#20351;&#29992;&#20301;&#32622;
+# 3. &#36755;&#20986;&#36801;&#31227;&#26041;&#26696;&#65288;&#21738;&#20123;&#25991;&#20214;&#35201;&#25913;&#12289;&#25913;&#20160;&#20040;&#12289;&#39034;&#24207;&#65289;
+# 4. &#31561;&#20320;&#30830;&#35748;&#21518;&#65292;&#20999;&#22238;&#27491;&#24120;&#27169;&#24335;&#25191;&#34892;</code></pre><p><strong>Plan &#27169;&#24335; vs &#21475;&#22836;&#35828;"&#20808;&#35268;&#21010;"</strong>&#65306;</p><p>&#21475;&#22836;&#35828;"&#20808;&#24110;&#25105;&#35268;&#21010;&#19968;&#19979;"&#20063;&#33021;&#35753; AI &#36755;&#20986;&#26041;&#26696;&#65292;&#20294; Plan &#27169;&#24335;&#26377;&#26412;&#36136;&#21306;&#21035;&#65306;</p><ul>
+<li><strong>&#24037;&#20855;&#32423;&#21035;&#30340;&#38480;&#21046;</strong>&#65306;Plan &#27169;&#24335;&#19979; AI &#21482;&#33021;&#20351;&#29992;&#21482;&#35835;&#24037;&#20855;&#65292;&#30830;&#20445;&#35268;&#21010;&#38454;&#27573;&#19987;&#27880;&#20110;&#20998;&#26512;</li>
+<li><strong>&#32467;&#26500;&#21270;&#23457;&#25209;</strong>&#65306;&#26041;&#26696;&#36755;&#20986;&#21518;&#30001;&#20320;&#23457;&#25209;&#30830;&#35748;&#65292;&#20877;&#20999;&#22238;&#27491;&#24120;&#27169;&#24335;&#25191;&#34892;</li>
+<li><strong>&#25506;&#32034;&#26356;&#20805;&#20998;</strong>&#65306;&#22240;&#20026;&#19981;&#33021;&#20889;&#65292;AI &#20250;&#25226;&#26356;&#22810; token &#33457;&#22312;&#29702;&#35299;&#20195;&#30721;&#19978;</li>
+</ul><p>&#32534;&#36753;&#25805;&#20316;&#38656;&#35201;&#30830;&#35748;&#65292;&#20854;&#20182;&#25805;&#20316;&#33258;&#21160;&#25209;&#20934;&#12290;</p><pre><code class="language-bash"># &#31034;&#20363;&#34892;&#20026;
+"&#35835;&#21462;&#37197;&#32622;&#25991;&#20214;"
+"&#36816;&#34892;&#27979;&#35797;"
+# AI &#30452;&#25509;&#25191;&#34892;&#65288;&#38750;&#32534;&#36753;&#25805;&#20316;&#65289;
+
+"&#20462;&#25913;&#20989;&#25968;&#31614;&#21517;"
+"&#21024;&#38500;&#36825;&#20010;&#25991;&#20214;"
+# AI &#20250;&#35810;&#38382;&#65288;&#32534;&#36753;&#25805;&#20316;&#38656;&#30830;&#35748;&#65289;</code></pre><p><strong>&#36866;&#29992;&#22330;&#26223;</strong>&#65306;</p><ul>
+<li>&#38656;&#35201;&#39057;&#32321;&#36816;&#34892;&#21629;&#20196;/&#27979;&#35797;</li>
+<li>&#23545;&#25991;&#20214;&#20462;&#25913;&#35201;&#35880;&#24910;</li>
+<li>&#39640;&#24230;&#20449;&#20219;&#30340;&#33258;&#21160;&#21270;&#24037;&#20316;&#27969;</li>
+</ul><h4 id="925af40ea89df9abc1dc4575a8836c59">&#27169;&#24335;&#20999;&#25442;</h4><h1 id="f7d2996639d97b4a03fc0e40e2eb853a">&#24555;&#25463;&#38190;</h1><p>Shift+Tab  # &#22312;&#19977;&#31181;&#27169;&#24335;&#38388;&#24490;&#29615;&#20999;&#25442;</p><h3 id="7780c6935affd55fc5b72982ea51b3df">&#24120;&#29992;&#20132;&#20114;&#21629;&#20196;</h3><p>&#22312; Claude Code &#20013;&#65292;&#20197; <code>/</code> &#24320;&#22836;&#30340;&#21629;&#20196;&#31216;&#20026;&#26012;&#26464;&#21629;&#20196;&#65292;&#29992;&#20110;&#24555;&#36895;&#25191;&#34892;&#29305;&#23450;&#25805;&#20316;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#21629;&#20196;</th>
+<th>&#21151;&#33021;</th>
+<th>&#20351;&#29992;&#22330;&#26223;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>/clear</strong></td>
+<td>&#28165;&#31354;&#23545;&#35805;&#19978;&#19979;&#25991;</td>
+<td>&#24320;&#22987;&#26032;&#20219;&#21153;&#26102;</td>
+</tr>
+<tr>
+<td><strong>/model</strong></td>
+<td>&#20999;&#25442; AI &#27169;&#22411;</td>
+<td>&#38656;&#35201;&#26356;&#24378;&#33021;&#21147;&#26102;&#20999;&#25442;&#21040; Opus</td>
+</tr>
+<tr>
+<td><strong>/status</strong></td>
+<td>&#26597;&#30475;&#20351;&#29992;&#39069;&#24230;&#21644;&#35745;&#36153;</td>
+<td>&#26816;&#26597;&#21097;&#20313;&#39069;&#24230;</td>
+</tr>
+<tr>
+<td><strong>/config</strong></td>
+<td>&#25171;&#24320;&#37197;&#32622;&#30028;&#38754;</td>
+<td>&#20462;&#25913;&#35774;&#32622;</td>
+</tr>
+<tr>
+<td><strong>/resume</strong></td>
+<td>&#24674;&#22797;&#26368;&#36817;&#30340;&#20250;&#35805;</td>
+<td>&#37325;&#21551;&#21518;&#32487;&#32493;&#20043;&#21069;&#30340;&#24037;&#20316;</td>
+</tr>
+<tr>
+<td><strong>/rewind</strong></td>
+<td>&#24674;&#22797;&#21040;&#19978;&#19968;&#20010;&#26816;&#26597;&#28857;</td>
+<td>&#20195;&#30721;&#25913;&#38169;&#38656;&#35201;&#22238;&#36864;</td>
+</tr>
+<tr>
+<td><strong>/agents</strong></td>
+<td>&#31649;&#29702; Agent</td>
+<td>&#21019;&#24314;/&#26597;&#30475;&#33258;&#23450;&#20041; Agent</td>
+</tr>
+<tr>
+<td><strong>/init</strong></td>
+<td>&#29983;&#25104; CLAUDE.md &#27169;&#26495;</td>
+<td>&#26032;&#39033;&#30446;&#24555;&#36895;&#37197;&#32622;</td>
+</tr>
+<tr>
+<td><strong>/compact</strong></td>
+<td>&#21387;&#32553;&#23545;&#35805;&#19978;&#19979;&#25991;</td>
+<td>&#19978;&#19979;&#25991;&#22826;&#22810;&#26102;&#31934;&#31616;</td>
+</tr>
+<tr>
+<td><strong>/export</strong></td>
+<td>&#23548;&#20986;&#23545;&#35805;&#35760;&#24405;</td>
+<td>&#20998;&#20139;&#25110;&#20445;&#23384;&#23545;&#35805;</td>
+</tr>
+<tr>
+<td><strong>/statusline</strong></td>
+<td>&#33258;&#23450;&#20041;&#29366;&#24577;&#26639;&#26174;&#31034;</td>
+<td>&#38544;&#34255;/&#26174;&#31034;&#29366;&#24577;&#20449;&#24687;</td>
+</tr>
+<tr>
+<td><strong>/vim</strong></td>
+<td>&#21551;&#29992; Vim &#38190;&#32465;&#23450;</td>
+<td>&#29087;&#24713; Vim &#30340;&#29992;&#25143;</td>
+</tr>
+</tbody>
+</table><p><strong>&#24120;&#29992;&#22330;&#26223;</strong>&#65306;</p><pre><code class="language-bash"># &#24320;&#26032;&#20219;&#21153;&#26102;&#28165;&#31354;&#19978;&#19979;&#25991;
+/clear
+
+# &#26597;&#30475;&#21097;&#20313;&#39069;&#24230;
+/status
+
+# &#20999;&#25442;&#21040;&#26356;&#24378;&#27169;&#22411;
+/model opus
+
+# &#24674;&#22797;&#21040;&#20043;&#21069;&#30340;&#29366;&#24577;
+/rewind</code></pre><h3 id="cb83b4e6036340f24e11efa66cc16494">CLI &#21629;&#20196;&#19982;&#21551;&#21160;&#36873;&#39033;</h3><p>::: details &#22522;&#26412;&#21629;&#20196;&#65288;&#24517;&#35835;&#65289;</p><table>
+<thead>
+<tr>
+<th>&#21629;&#20196;</th>
+<th>&#25551;&#36848;</th>
+<th>&#31034;&#20363;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>claude</strong></td>
+<td>&#21551;&#21160;&#20132;&#20114;&#24335; REPL</td>
+<td><code>claude</code></td>
+</tr>
+<tr>
+<td><strong>claude "query"</strong></td>
+<td>&#20351;&#29992;&#21021;&#22987;&#25552;&#31034;&#21551;&#21160; REPL</td>
+<td><code>claude "&#35299;&#37322;&#36825;&#20010;&#39033;&#30446;"</code></td>
+</tr>
+<tr>
+<td><strong>claude -p "query"</strong></td>
+<td>&#26597;&#35810;&#21518;&#36864;&#20986;&#65288;&#26080;&#22836;&#27169;&#24335;&#65289;</td>
+<td><code>claude -p "&#26816;&#26597;&#20195;&#30721;&#31867;&#22411;&#38169;&#35823;"</code></td>
+</tr>
+<tr>
+<td><strong>claude -c</strong></td>
+<td>&#32487;&#32493;&#19978;&#19968;&#27425;&#23545;&#35805;</td>
+<td><code>claude -c</code></td>
+</tr>
+<tr>
+<td><strong>claude -r "id"</strong></td>
+<td>&#24674;&#22797;&#25351;&#23450;&#20250;&#35805;</td>
+<td><code>claude -r "abc123"</code></td>
+</tr>
+<tr>
+<td><strong>claude --continue</strong></td>
+<td>&#21152;&#36733;&#26368;&#36817;&#30340;&#23545;&#35805;</td>
+<td><code>claude --continue</code></td>
+</tr>
+<tr>
+<td><strong>claude --resume</strong></td>
+<td>&#26174;&#31034;&#20250;&#35805;&#36873;&#25321;&#22120;</td>
+<td><code>claude --resume</code></td>
+</tr>
+</tbody>
+</table><p>::: details &#24120;&#29992;&#21551;&#21160;&#36873;&#39033;</p><table>
+<thead>
+<tr>
+<th>&#36873;&#39033;</th>
+<th>&#21151;&#33021;</th>
+<th>&#31034;&#20363;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>-p "query"</strong></td>
+<td>&#25191;&#34892;&#26597;&#35810;&#21518;&#36864;&#20986;</td>
+<td><code>claude -p "&#36816;&#34892;&#27979;&#35797;"</code></td>
+</tr>
+<tr>
+<td><strong>--model</strong></td>
+<td>&#25351;&#23450;&#27169;&#22411;</td>
+<td><code>claude --model opus</code></td>
+</tr>
+<tr>
+<td><strong>--permission-mode</strong></td>
+<td>&#35774;&#32622;&#26435;&#38480;&#27169;&#24335;</td>
+<td><code>claude --permission-mode plan</code></td>
+</tr>
+<tr>
+<td><strong>--add-dir</strong></td>
+<td>&#28155;&#21152;&#24037;&#20316;&#30446;&#24405;</td>
+<td><code>claude --add-dir ../shared</code></td>
+</tr>
+</tbody>
+</table><p>::: details &#24555;&#25463;&#38190;&#19982;&#36755;&#20837;&#25511;&#21046;&#65288;&#24517;&#35835;&#65289;</p><table>
+<thead>
+<tr>
+<th>&#24555;&#25463;&#38190;</th>
+<th>&#21151;&#33021;</th>
+<th>&#19978;&#19979;&#25991;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ctrl+C</strong></td>
+<td>&#21462;&#28040;&#24403;&#21069;&#36755;&#20837;&#25110;&#29983;&#25104;</td>
+<td>&#26631;&#20934;&#20013;&#26029;</td>
+</tr>
+<tr>
+<td><strong>Ctrl+D</strong></td>
+<td>&#36864;&#20986;&#20250;&#35805;</td>
+<td>EOF &#20449;&#21495;</td>
+</tr>
+<tr>
+<td><strong>Ctrl+L</strong></td>
+<td>&#28165;&#38500;&#32456;&#31471;&#23631;&#24149;</td>
+<td>&#20445;&#30041;&#23545;&#35805;&#21382;&#21490;</td>
+</tr>
+<tr>
+<td><strong>Ctrl+R</strong></td>
+<td>&#21453;&#21521;&#25628;&#32034;&#21629;&#20196;&#21382;&#21490;</td>
+<td>&#25628;&#32034;&#20197;&#21069;&#30340;&#21629;&#20196;</td>
+</tr>
+<tr>
+<td><strong>Esc+Esc</strong></td>
+<td>&#22238;&#36864;&#20195;&#30721;/&#23545;&#35805;</td>
+<td>&#24674;&#22797;&#21040;&#20043;&#21069;&#29366;&#24577;</td>
+</tr>
+<tr>
+<td><strong>Tab</strong></td>
+<td>&#20999;&#25442;&#25193;&#23637;&#24605;&#32771;</td>
+<td>&#24320;&#21551;/&#20851;&#38381;&#24605;&#32771;&#27169;&#24335;</td>
+</tr>
+<tr>
+<td><strong>Shift+Tab</strong></td>
+<td>&#20999;&#25442;&#26435;&#38480;&#27169;&#24335;</td>
+<td>&#24490;&#29615;&#20999;&#25442;&#26435;&#38480;&#27169;&#24335;</td>
+</tr>
+</tbody>
+</table><p><strong>&#22810;&#34892;&#36755;&#20837;&#26041;&#27861;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#24555;&#25463;&#38190;</th>
+<th>&#19978;&#19979;&#25991;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>\ + Enter</strong></td>
+<td>&#36866;&#29992;&#20110;&#25152;&#26377;&#32456;&#31471;</td>
+</tr>
+<tr>
+<td><strong>Option+Enter</strong> (macOS)</td>
+<td>macOS &#40664;&#35748;&#35774;&#32622;</td>
+</tr>
+<tr>
+<td><strong>Shift+Enter</strong></td>
+<td>&#37197;&#32622;&#21518;&#21487;&#29992;</td>
+</tr>
+</tbody>
+</table><p><strong>&#24555;&#36895;&#21629;&#20196;&#21069;&#32512;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#21069;&#32512;</th>
+<th>&#21151;&#33021;</th>
+<th>&#31034;&#20363;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>#</strong></td>
+<td>&#20869;&#23384;&#24555;&#25463;&#26041;&#24335;&#65292;&#28155;&#21152;&#21040; CLAUDE.md</td>
+<td><code># &#28155;&#21152;&#39033;&#30446;&#19978;&#19979;&#25991;</code></td>
+</tr>
+<tr>
+<td><strong>/</strong></td>
+<td>&#26012;&#26464;&#21629;&#20196;</td>
+<td><code>/clear</code></td>
+</tr>
+<tr>
+<td><strong>!</strong></td>
+<td>Bash &#27169;&#24335;&#65292;&#30452;&#25509;&#36816;&#34892;&#21629;&#20196;</td>
+<td><code>! npm test</code></td>
+</tr>
+<tr>
+<td><strong>@</strong></td>
+<td>&#25991;&#20214;&#36335;&#24452;&#24341;&#29992;</td>
+<td><code>@src/app/page.tsx</code></td>
+</tr>
+</tbody>
+</table><p>::: details &#36827;&#38454;&#65306;&#39640;&#32423; CLI &#26631;&#24535;</p><p><strong>&#23436;&#25972; CLI &#26631;&#24535;&#21015;&#34920;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#26631;&#24535;</th>
+<th>&#25551;&#36848;</th>
+<th>&#31034;&#20363;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--add-dir</code></td>
+<td>&#28155;&#21152;&#39069;&#22806;&#24037;&#20316;&#30446;&#24405;</td>
+<td><code>claude --add-dir ../apps</code></td>
+</tr>
+<tr>
+<td><code>--agents</code></td>
+<td>JSON &#26684;&#24335;&#23450;&#20041; Agent</td>
+<td><code>claude --agents '{...}'</code></td>
+</tr>
+<tr>
+<td><code>--allowedTools</code></td>
+<td>&#20801;&#35768;&#30340;&#24037;&#20855;&#21015;&#34920;</td>
+<td><code>claude --allowedTools "Read,Bash"</code></td>
+</tr>
+<tr>
+<td><code>--disallowedTools</code></td>
+<td>&#31105;&#27490;&#30340;&#24037;&#20855;&#21015;&#34920;</td>
+<td><code>claude --disallowedTools "Edit"</code></td>
+</tr>
+<tr>
+<td><code>--system-prompt</code></td>
+<td>&#26367;&#25442;&#25972;&#20010;&#31995;&#32479;&#25552;&#31034;</td>
+<td><code>claude --system-prompt "..."</code></td>
+</tr>
+<tr>
+<td><code>--system-prompt-file</code></td>
+<td>&#20174;&#25991;&#20214;&#21152;&#36733;&#31995;&#32479;&#25552;&#31034;</td>
+<td><code>claude -p --system-prompt-file ./prompt.txt</code></td>
+</tr>
+<tr>
+<td><code>--append-system-prompt</code></td>
+<td>&#38468;&#21152;&#21040;&#40664;&#35748;&#25552;&#31034;</td>
+<td><code>claude --append-system-prompt "..."</code></td>
+</tr>
+<tr>
+<td><code>--output-format</code></td>
+<td>&#36755;&#20986;&#26684;&#24335;&#65288;text/json/stream-json&#65289;</td>
+<td><code>claude -p --output-format json</code></td>
+</tr>
+<tr>
+<td><code>--input-format</code></td>
+<td>&#36755;&#20837;&#26684;&#24335;&#65288;text/stream-json&#65289;</td>
+<td><code>claude -p --input-format stream-json</code></td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td>&#21551;&#29992;&#35814;&#32454;&#26085;&#24535;</td>
+<td><code>claude --verbose</code></td>
+</tr>
+<tr>
+<td><code>--max-turns</code></td>
+<td>&#38480;&#21046;&#36718;&#25968;</td>
+<td><code>claude -p --max-turns 3</code></td>
+</tr>
+<tr>
+<td><code>--dangerously-skip-permissions</code></td>
+<td>&#36339;&#36807;&#26435;&#38480;&#25552;&#31034;</td>
+<td><code>claude --dangerously-skip-permissions</code></td>
+</tr>
+</tbody>
+</table><p><strong>&#31995;&#32479;&#25552;&#31034;&#26631;&#24535;&#21306;&#21035;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#26631;&#24535;</th>
+<th>&#34892;&#20026;</th>
+<th>&#27169;&#24335;</th>
+<th>&#29992;&#20363;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--system-prompt</code></td>
+<td><strong>&#26367;&#25442;</strong>&#25972;&#20010;&#40664;&#35748;&#25552;&#31034;</td>
+<td>&#20132;&#20114; + &#25171;&#21360;</td>
+<td>&#23436;&#20840;&#25511;&#21046;&#34892;&#20026;</td>
+</tr>
+<tr>
+<td><code>--system-prompt-file</code></td>
+<td><strong>&#26367;&#25442;</strong>&#20026;&#25991;&#20214;&#20869;&#23481;</td>
+<td>&#20165;&#25171;&#21360;</td>
+<td>&#20174;&#25991;&#20214;&#21152;&#36733;</td>
+</tr>
+<tr>
+<td><code>--append-system-prompt</code></td>
+<td><strong>&#38468;&#21152;</strong>&#21040;&#40664;&#35748;&#25552;&#31034;</td>
+<td>&#20132;&#20114; + &#25171;&#21360;</td>
+<td>&#28155;&#21152;&#29305;&#23450;&#25351;&#20196;</td>
+</tr>
+</tbody>
+</table><p>::: details &#36827;&#38454;&#65306;Vim &#27169;&#24335;</p><p>&#20351;&#29992; <code>/vim</code> &#21551;&#29992;&#25110;&#36890;&#36807; <code>/config</code> &#27704;&#20037;&#37197;&#32622;&#12290;</p><p><strong>&#27169;&#24335;&#20999;&#25442;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#21629;&#20196;</th>
+<th>&#25805;&#20316;</th>
+<th>&#26469;&#33258;&#27169;&#24335;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Esc</code></td>
+<td>&#36827;&#20837; NORMAL &#27169;&#24335;</td>
+<td>INSERT</td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td>&#22312;&#20809;&#26631;&#21069;&#25554;&#20837;</td>
+<td>NORMAL</td>
+</tr>
+<tr>
+<td><code>a</code></td>
+<td>&#22312;&#20809;&#26631;&#21518;&#25554;&#20837;</td>
+<td>NORMAL</td>
+</tr>
+<tr>
+<td><code>o</code></td>
+<td>&#22312;&#19979;&#26041;&#25171;&#24320;&#34892;</td>
+<td>NORMAL</td>
+</tr>
+</tbody>
+</table><p><strong>&#23548;&#33322;&#65288;NORMAL &#27169;&#24335;&#65289;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#21629;&#20196;</th>
+<th>&#25805;&#20316;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>h/j/k/l</code></td>
+<td>&#24038;/&#19979;/&#19978;/&#21491;&#31227;&#21160;</td>
+</tr>
+<tr>
+<td><code>w</code></td>
+<td>&#19979;&#19968;&#20010;&#21333;&#35789;</td>
+</tr>
+<tr>
+<td><code>b</code></td>
+<td>&#19978;&#19968;&#20010;&#21333;&#35789;</td>
+</tr>
+<tr>
+<td><code>0/$</code></td>
+<td>&#34892;&#39318;/&#34892;&#23614;</td>
+</tr>
+<tr>
+<td><code>gg/G</code></td>
+<td>&#36755;&#20837;&#24320;&#22987;/&#32467;&#26463;</td>
+</tr>
+</tbody>
+</table><p>::: details &#36827;&#38454;&#65306;&#21518;&#21488; Bash &#21629;&#20196;</p><p><strong>&#21518;&#21488;&#36816;&#34892;&#30340;&#24037;&#20316;&#21407;&#29702;</strong>&#65306;</p><ul>
+<li>&#24322;&#27493;&#36816;&#34892;&#21629;&#20196;&#65292;&#31435;&#21363;&#36820;&#22238;&#20219;&#21153; ID</li>
+<li>&#36755;&#20986;&#34987;&#32531;&#20914;&#65292;&#21487;&#29992; BashOutput &#24037;&#20855;&#26816;&#32034;</li>
+<li>Claude Code &#36864;&#20986;&#26102;&#33258;&#21160;&#28165;&#29702;</li>
+</ul><p><strong>&#24120;&#35265;&#21518;&#21488;&#21629;&#20196;</strong>&#65306;</p><ul>
+<li>&#26500;&#24314;&#24037;&#20855;&#65288;webpack, vite, make&#65289;</li>
+<li>&#21253;&#31649;&#29702;&#22120;&#65288;npm, yarn, pnpm&#65289;</li>
+<li>&#27979;&#35797;&#36816;&#34892;&#22120;&#65288;jest, pytest&#65289;</li>
+<li>&#24320;&#21457;&#26381;&#21153;&#22120;</li>
+</ul><p><strong>&#25353; Ctrl+B</strong> &#23558;&#24120;&#35268; Bash &#35843;&#29992;&#31227;&#21040;&#21518;&#21488;&#12290;</p><p><strong>Bash &#27169;&#24335;&#65288;! &#21069;&#32512;&#65289;</strong>&#65306;</p><pre><code class="language-bash">! npm test
+! git status
+! ls -la</code></pre><ul>
+<li>&#23558;&#21629;&#20196;&#21644;&#36755;&#20986;&#28155;&#21152;&#21040;&#23545;&#35805;&#19978;&#19979;&#25991;</li>
+<li>&#26174;&#31034;&#23454;&#26102;&#36827;&#24230;</li>
+<li>&#25903;&#25345; Ctrl+B &#21518;&#21488;&#36816;&#34892;</li>
+</ul><p>::: details &#36827;&#38454;&#65306;Agent &#37197;&#32622;&#26684;&#24335;</p><p><strong><code>--agents</code> &#26631;&#24535;&#25509;&#21463; JSON</strong>&#65288;&#36890;&#24120;&#19981;&#38656;&#35201;&#25163;&#21160;&#20351;&#29992;&#65292;<code>/agents</code> &#21629;&#20196;&#20250;&#33258;&#21160;&#22788;&#29702;&#65289;&#65306;</p><pre><code class="language-bash">claude --agents '{
+  "code-reviewer": {
+    "description": "Expert code reviewer",
+    "prompt": "You are a senior code reviewer",
+    "tools": ["Read", "Grep", "Glob", "Bash"],
+    "model": "sonnet"
+  }
+}'</code></pre><p><strong>&#24517;&#38656;&#23383;&#27573;</strong>&#65306;</p><ul>
+<li><code>description</code>&#65306;&#20309;&#26102;&#35843;&#29992;&#65288;&#33258;&#28982;&#35821;&#35328;&#65289;</li>
+<li><code>prompt</code>&#65306;&#31995;&#32479;&#25552;&#31034;</li>
+</ul><p><strong>&#21487;&#36873;&#23383;&#27573;</strong>&#65306;</p><ul>
+<li><code>tools</code>&#65306;&#21487;&#29992;&#24037;&#20855;&#25968;&#32452;</li>
+<li><code>model</code>&#65306;&#27169;&#22411;&#21035;&#21517;&#65288;sonnet/opus/haiku&#65289;</li>
+</ul><h3 id="21240d005b848e99746d85c7fa28b66f">&#20116;&#27493;&#24037;&#20316;&#27969;</h3><p>::: tip &#24037;&#20316;&#27969;&#26159;&#24314;&#35758;&#32780;&#38750;&#24378;&#21046;</p><p>VibeCoding &#20116;&#27493;&#24037;&#20316;&#27969;&#26159;&#19968;&#20010;<strong>&#25512;&#33616;&#30340;&#23454;&#36341;&#27169;&#24335;</strong>&#65292;&#36866;&#21512;&#22823;&#22810;&#25968;&#24320;&#21457;&#22330;&#26223;&#12290;&#20294;&#20320;&#21487;&#20197;&#26681;&#25454;&#23454;&#38469;&#24773;&#20917;&#28789;&#27963;&#35843;&#25972;&#65306;</p><ul>
+<li>&#9989; <strong>&#25512;&#33616;&#36981;&#24490;</strong>&#65306;&#22797;&#26434;&#21151;&#33021;&#12289;&#19981;&#29087;&#24713;&#30340;&#39033;&#30446;&#12289;&#22242;&#38431;&#21327;&#20316;</li>
+<li>&#128260; <strong>&#21487;&#20197;&#31616;&#21270;</strong>&#65306;&#31616;&#21333;&#20462;&#25913;&#12289;&#29087;&#24713;&#30340;&#39033;&#30446;&#12289;&#20010;&#20154;&#24320;&#21457;</li>
+<li>&#9889; <strong>&#21487;&#20197;&#36339;&#36807;</strong>&#65306;&#24494;&#23567;&#25913;&#21160;&#12289;&#26126;&#26174;&#30340;&#38382;&#39064;&#20462;&#22797;</li>
+</ul><p><strong>&#26680;&#24515;&#21407;&#21017;</strong>&#65306;&#29702;&#35299;&#27599;&#27493;&#30340;&#30446;&#30340;&#21518;&#65292;&#26681;&#25454;&#23454;&#38469;&#24773;&#20917;&#28789;&#27963;&#24212;&#29992;&#65292;&#32780;&#38750;&#26426;&#26800;&#25191;&#34892;&#12290;</p><h4 id="2e334916cca2d602b587ff95d379ca5c">1. &#25506;&#32034;&#39033;&#30446;&#32467;&#26500;</h4><p>&#20808;&#20102;&#35299;&#39033;&#30446;&#29616;&#29366;&#65292;&#33021;&#22312; prompt &#20013;&#32473;&#20986;&#26356;&#31934;&#20934;&#30340;&#19978;&#19979;&#25991;&mdash;&mdash;&#27604;&#22914;"&#39033;&#30446;&#24050;&#26377; Comment &#34920;&#65292;&#35831;&#22797;&#29992;"&#12289;"&#20195;&#30721;&#39118;&#26684;&#21442;&#32771; src/modules/posts"&#12290;&#19978;&#19979;&#25991;&#36234;&#26126;&#30830;&#65292;AI &#30340;&#36755;&#20986;&#36234;&#36148;&#21512;&#20320;&#30340;&#39033;&#30446;&#12290;</p><p><strong>&#20808;&#25506;&#32034;&#65292;&#20877;&#21160;&#25163;</strong>&#65306;</p><pre><code class="language-bash">"&#25506;&#32034;&#36825;&#20010;&#39033;&#30446;&#30340;&#32467;&#26500;&#65292;&#21578;&#35785;&#25105;:
+1. &#20351;&#29992;&#30340;&#25216;&#26415;&#26632;
+2. &#25991;&#20214;&#32452;&#32455;&#26041;&#24335;
+3. &#29616;&#26377;&#30340;&#21151;&#33021;&#27169;&#22359;
+4. &#37197;&#32622;&#25991;&#20214;&#30340;&#20316;&#29992;"</code></pre><p><strong>&#20320;&#20250;&#24471;&#21040;</strong>&#65306;</p><pre><code class="   language-php">&#39033;&#30446;&#20351;&#29992; Next.js 16 + TypeScript + Drizzle
+- app/: &#39029;&#38754;&#21644; API
+- components/: &#21487;&#22797;&#29992;&#32452;&#20214;
+- src/db/: &#25968;&#25454;&#24211;&#27169;&#22411;&#65288;&#24050;&#26377; User &#34920;&#65292;&#21487;&#20851;&#32852;&#65289;</code></pre><p><strong>&#20851;&#38190;&#20449;&#24687;</strong>&#65306;&#24050;&#26377; User &#34920; &rarr; &#30452;&#25509;&#20851;&#32852;&#65292;&#30465;&#21435;&#24314;&#34920; + 10 &#20998;&#38047;&#12290;</p><h4 id="33b8ee68cb696983118ab4c5ef3aa138">2. &#35268;&#21010;&#23454;&#29616;&#27493;&#39588;</h4><p><strong>&#30446;&#30340;</strong>: &#20808;&#24819;&#28165;&#26970;&#20877;&#21160;&#25163;&#65292;&#20943;&#23569;&#36820;&#24037;</p><pre><code class="language-bash">"&#25105;&#35201;&#28155;&#21152;&#29992;&#25143;&#35780;&#35770;&#21151;&#33021;&#12290;
+&#35831;&#35268;&#21010;&#23454;&#29616;&#27493;&#39588;&#65292;&#21253;&#25324;:
+1. &#38656;&#35201;&#21019;&#24314;&#21738;&#20123;&#25991;&#20214;
+2. &#38656;&#35201;&#20462;&#25913;&#21738;&#20123;&#29616;&#26377;&#25991;&#20214;
+3. &#25968;&#25454;&#24211; schema &#21464;&#26356;
+4. &#23454;&#29616;&#39034;&#24207;"</code></pre><p><strong>&#36755;&#20986;&#31034;&#20363;</strong>:</p><pre><code class="   language-php">&#27493;&#39588;:
+1. &#26356;&#26032; Drizzle schema (&#28155;&#21152; Comment &#27169;&#22411;)
+2. &#36816;&#34892; npx drizzle-kit push
+3. &#21019;&#24314; API route (app/api/comments/route.ts)
+4. &#21019;&#24314;&#35780;&#35770;&#32452;&#20214; (components/CommentForm.tsx)
+5. &#38598;&#25104;&#21040;&#35814;&#24773;&#39029;</code></pre><h4 id="d9b2bdbda2afef5d1476547f53ce98c7">3. &#32534;&#20889;&#20195;&#30721;</h4><p><strong>&#30446;&#30340;</strong>&#65306;&#25353;&#35745;&#21010;&#23454;&#29616;&#21151;&#33021;</p><p><strong>AI &#30340;&#33258;&#21160;&#25286;&#20998;&#33021;&#21147;</strong>&#65306;</p><p>&#22797;&#26434;&#20219;&#21153;&#20250;&#34987;&#33258;&#21160;&#25286;&#35299;&#65306;</p><pre><code class="language-bash"># &#20320;&#21482;&#38656;&#35201;&#35828;
+"&#23454;&#29616;&#29992;&#25143;&#35780;&#35770;&#21151;&#33021;"
+
+# AI &#20250;&#33258;&#21160;&#25286;&#20998;&#20026;&#65306;
+1. &#26356;&#26032; Drizzle schema
+2. &#36816;&#34892;&#25968;&#25454;&#24211;&#36801;&#31227;
+3. &#21019;&#24314; API &#31471;&#28857;
+4. &#32534;&#20889;&#21069;&#31471;&#32452;&#20214;
+5. &#38598;&#25104;&#21040;&#39029;&#38754;
+6. &#27979;&#35797;&#39564;&#35777;</code></pre><p>&#20320;&#19981;&#38656;&#35201;&#25163;&#21160;&#25351;&#23450;&#27599;&#20010;&#27493;&#39588;&#65292;AI &#20250;&#65306;</p><ul>
+<li>&#35782;&#21035;&#20219;&#21153;&#20381;&#36182;&#20851;&#31995;</li>
+<li>&#30830;&#23450;&#25191;&#34892;&#39034;&#24207;</li>
+<li>&#24182;&#34892;&#22788;&#29702;&#29420;&#31435;&#37096;&#20998;</li>
+<li>&#39564;&#35777;&#27599;&#20010;&#27493;&#39588;&#30340;&#32467;&#26524;</li>
+</ul><p><strong>&#24403;&#28982;&#65292;&#20320;&#20063;&#21487;&#20197;&#20998;&#27493;&#25191;&#34892;</strong>&#65306;</p><pre><code class="language-bash">"&#25353;&#29031;&#27493;&#39588; 1&#65292;&#26356;&#26032; Drizzle schema"</code></pre><pre><code class="language-bash">"&#25353;&#29031;&#27493;&#39588; 2&#65292;&#29983;&#25104;&#24182;&#36816;&#34892;&#36801;&#31227;"</code></pre><pre><code class="language-bash">"&#25353;&#29031;&#27493;&#39588; 3&#65292;&#21019;&#24314;&#35780;&#35770; API"</code></pre><h4 id="30b68ec0c5d29693bc4da57f64958191">4. &#27979;&#35797;&#39564;&#35777;</h4><p><strong>&#30446;&#30340;</strong>&#65306;&#30830;&#20445;&#21151;&#33021;&#27491;&#24120;</p><pre><code class="language-bash">"&#27979;&#35797;&#35780;&#35770;&#21151;&#33021;:
+1. &#39564;&#35777; API &#33021;&#27491;&#24120;&#21019;&#24314;&#35780;&#35770;
+2. &#39564;&#35777;&#35780;&#35770;&#33021;&#27491;&#30830;&#26174;&#31034;
+3. &#39564;&#35777;&#38169;&#35823;&#22788;&#29702;"</code></pre><h4 id="47566dce9494f1f903cc9a4dccf3313e">5. &#25552;&#20132;&#20195;&#30721;</h4><p><strong>&#22330;&#26223;&#65306;AI &#25913;&#23849;&#20102;&#20195;&#30721;&#65292;&#24819;&#22238;&#36864;</strong></p><p>AI &#20026;&#20102;&#20462;&#19968;&#20010; Bug&#65292;&#25913;&#20102; 10 &#20010;&#25991;&#20214;&#65292;&#32467;&#26524;&#21151;&#33021;&#20840;&#20081;&#20102;&#12290;&#20320;&#24819;&#22238;&#36864;&#65292;&#20294;&#21457;&#29616;&#27809;&#26377;&#23384;&#26723;&#28857;&#12290;</p><p><strong>&#35299;&#20915;&#26041;&#26696;</strong>&#65306;&#35753; AI <strong>&#33258;&#21160;&#25552;&#20132;&#20195;&#30721;</strong>&#12290;</p><p><strong>&#37197;&#32622;&#26041;&#27861;</strong>&#65306;&#22312; CLAUDE.md &#20013;&#28155;&#21152;&#65306;</p><blockquote>
+<p>"&#27599;&#24403;&#20320;&#23436;&#25104;&#19968;&#20010;&#29420;&#31435;&#21151;&#33021;&#30340;&#24320;&#21457;&#65292;&#25110;&#20462;&#22797;&#23436;&#19968;&#20010; Bug &#24182;&#39564;&#35777;&#36890;&#36807;&#21518;&#65292;&#35831;&#33258;&#21160;&#36816;&#34892; git commit &#25552;&#20132;&#20195;&#30721;&#65292;&#24182;&#29983;&#25104;&#19968;&#21477;&#31616;&#27905;&#30340;&#20013;&#25991; commit message&#12290;"</p>
+</blockquote><p><strong>&#25928;&#26524;</strong>&#65306;</p><ul>
+<li>AI &#20889;&#23436;&#30331;&#24405;&#21151;&#33021; &rarr; &#33258;&#21160; <code>git commit -m "feat: &#23454;&#29616;&#30331;&#24405;"</code></li>
+<li>AI &#20889;&#23436;&#39318;&#39029; &rarr; &#33258;&#21160; <code>git commit -m "feat: &#28155;&#21152;&#39318;&#39029;"</code></li>
+<li>AI &#25630;&#23849;&#20102;&#20195;&#30721; &rarr; <code>git log</code> &#25214;&#21040;&#19978;&#19968;&#20010;&#29256;&#26412;&#65292;<code>git reset</code> &#22238;&#36864;</li>
+</ul><p><strong>&#33258;&#21160;&#25552;&#20132; vs &#26816;&#26597;&#28857;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#26041;&#24335;</th>
+<th>&#33021;&#22238;&#28378;&#20160;&#20040;</th>
+<th>&#19981;&#33021;&#22238;&#28378;&#20160;&#20040;</th>
+<th>&#36866;&#29992;&#22330;&#26223;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#26816;&#26597;&#28857;</td>
+<td>AI &#20889;&#20837;&#30340;&#25991;&#20214;</td>
+<td>&#32456;&#31471;&#21629;&#20196;&#20135;&#29983;&#30340;&#21464;&#26356;</td>
+<td>&#24555;&#36895;&#22238;&#36864;</td>
+</tr>
+<tr>
+<td>Git &#25552;&#20132;</td>
+<td>&#25152;&#26377;&#24050;&#36319;&#36394;&#25991;&#20214;</td>
+<td>&#26410;&#36319;&#36394;&#25991;&#20214;</td>
+<td>&#37325;&#35201;&#37324;&#31243;&#30865;</td>
+</tr>
+</tbody>
+</table><p><strong>&#24314;&#35758;</strong>&#65306;&#20004;&#32773;&#37117;&#29992;&#12290;&#26816;&#26597;&#28857;&#29992;&#20110;&#24555;&#36895;&#35797;&#38169;&#65292;Git &#25552;&#20132;&#29992;&#20110;&#37325;&#35201;&#33410;&#28857;&#12290;</p><h4 id="c44f7320e5e90df3f9d81aec64ff47bf">6. &#26816;&#26597;&#28857;&#21151;&#33021;</h4><p><strong>&#22330;&#26223;&#65306;&#20195;&#30721;&#25913;&#23849;&#20102;&#65292;&#24819;&#22238;&#28378;</strong></p><p>&#20320;&#35753; AI &#37325;&#26500;&#20195;&#30721;&#65292;&#32467;&#26524;&#21151;&#33021;&#20840;&#20081;&#20102;&#12290;&#25353; <code>Esc+Esc</code>&#65292;&#36873;&#25321;&#20043;&#21069;&#30340;&#26816;&#26597;&#28857;&#65292;&#20195;&#30721;&#24674;&#22797;&#12290;&#26494;&#20102;&#21475;&#27668;&#12290;</p><p><strong>&#20294;&#27880;&#24847;&#26816;&#26597;&#28857;&#30340;&#23616;&#38480;</strong>&#65306;</p><p>&#20320;&#29992; <code>/rewind</code> &#22238;&#28378;&#21040;&#26089;&#26399;&#29256;&#26412;&#65292;&#28982;&#21518; <code>ls</code> &#19968;&#30475;&mdash;&mdash;</p><ul>
+<li><code>index.html</code> &#24674;&#22797;&#20102; &#10003;</li>
+<li><code>node_modules/</code> &#36824;&#22312;&#65288;AI &#21024;&#19981;&#20102;&#65289;</li>
+<li>&#25968;&#25454;&#24211;&#34920;&#20063;&#36824;&#22312;&#65288;AI &#21160;&#19981;&#20102;&#65289;</li>
+</ul><p><strong>&#21407;&#22240;</strong>&#65306;&#26816;&#26597;&#28857;&#21482;&#22238;&#28378; AI <strong>&#20889;&#20837;&#30340;&#25991;&#20214;</strong>&#65292;&#32456;&#31471;&#21629;&#20196;&#65288;<code>npm install</code>&#12289;<code>mkdir</code>&#65289;&#20135;&#29983;&#30340;&#21464;&#26356;&#26080;&#27861;&#22238;&#28378;&#12290;</p><p><strong>&#27491;&#30830;&#23039;&#21183;</strong>&#65306;</p><ul>
+<li>&#23567;&#25913;&#21160; &rarr; &#26816;&#26597;&#28857;&#24555;&#36895;&#22238;&#28378;</li>
+<li>&#22823;&#25913;&#21160; &rarr; <code>git commit</code> &#21518;&#20877;&#35753; AI &#21160;&#25163;</li>
+</ul><p><strong>&#20351;&#29992;&#26041;&#27861;</strong>&#65306;<br>
+&#25353; <code>Esc+Esc</code> &#25110; <code>/rewind</code>&#65292;&#36873;&#25321;&#65306;</p><ul>
+<li>&#20165;&#23545;&#35805;&#65306;&#22238;&#36864;&#28040;&#24687;&#65292;&#20445;&#30041;&#20195;&#30721;</li>
+<li>&#20165;&#20195;&#30721;&#65306;&#24674;&#22797;&#25991;&#20214;&#65292;&#20445;&#30041;&#23545;&#35805;</li>
+<li>&#20004;&#32773;&#37117;&#24674;&#22797;</li>
+</ul><p>::: details &#36827;&#38454;&#65306;&#26816;&#26597;&#28857;&#24037;&#20316;&#21407;&#29702;</p><p><strong>&#33258;&#21160;&#36319;&#36394;</strong>&#65306;</p><ul>
+<li>&#27599;&#20010;&#29992;&#25143;&#25552;&#31034;&#21019;&#24314;&#26032;&#26816;&#26597;&#28857;</li>
+<li>&#26816;&#26597;&#28857;&#22312;&#20250;&#35805;&#38388;&#25345;&#20037;&#23384;&#22312;</li>
+<li>30 &#22825;&#21518;&#33258;&#21160;&#28165;&#29702;&#65288;&#21487;&#37197;&#32622;&#65289;</li>
+</ul><p><strong>&#38480;&#21046;</strong>&#65306;</p><ul>
+<li>Bash &#21629;&#20196;&#26356;&#25913;&#65288;rm&#12289;mv&#12289;cp&#65289;&#26080;&#27861;&#22238;&#36864;</li>
+<li>&#22806;&#37096;&#32534;&#36753;&#26080;&#27861;&#22238;&#36864;</li>
+<li>&#26816;&#26597;&#28857;&#29992;&#20110;&#24555;&#36895;&#24674;&#22797;&#65292;Git &#29992;&#20110;&#27704;&#20037;&#21382;&#21490;</li>
+</ul><h2 id="fe363ae5e871692b3ee4097ab98a1513">&#29702;&#35299; Agent</h2><h3 id="48e240c26fc9395f7fcf0b150835bc4b">&#20160;&#20040;&#26159; Agent</h3><p><strong>Agent</strong> = AI &#26412;&#36523;</p><p>AI &#26412;&#36523;&#23601;&#26159;&#19968;&#20010; <strong>Agent</strong>&#65292;&#23427;&#30340;&#24037;&#20316;&#26159;&#65306;</p><ul>
+<li>&#29702;&#35299;&#20320;&#30340;&#24847;&#22270;&#21644;&#38656;&#27714;</li>
+<li>&#20570;&#20915;&#31574;&#65288;&#29992;&#20160;&#20040;&#24037;&#20855;&#12289;&#20808;&#20570;&#20160;&#20040;&#21518;&#20570;&#20160;&#20040;&#65289;</li>
+<li>&#21327;&#35843;&#21508;&#31181;&#24037;&#20855;&#23436;&#25104;&#20219;&#21153;</li>
+</ul><p>&#21487;&#20197;&#25226; Agent &#29702;&#35299;&#20026;&#19968;&#20010;<strong>&#20219;&#21153;&#25191;&#34892;&#22120;</strong>&#65306;</p><ul>
+<li>&#25509;&#25910;&#20320;&#30340;&#25351;&#20196;&#65288;&#25552;&#31034;&#35789;&#65289;</li>
+<li>&#35843;&#29992;&#21508;&#31181;&#24037;&#20855;&#23436;&#25104;&#20219;&#21153;</li>
+<li>&#36820;&#22238;&#25191;&#34892;&#32467;&#26524;</li>
+</ul><p><strong>&#19982;&#26222;&#36890; AI &#23545;&#35805;&#30340;&#21306;&#21035;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#26222;&#36890; AI &#23545;&#35805;</th>
+<th>Agent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#21482;&#33021;&#32842;&#22825;</td>
+<td>&#33021;&#35843;&#29992;&#24037;&#20855;</td>
+</tr>
+<tr>
+<td>&#34987;&#21160;&#22238;&#31572;</td>
+<td>&#20027;&#21160;&#20915;&#31574;</td>
+</tr>
+<tr>
+<td>&#21333;&#36718;&#20132;&#20114;</td>
+<td>&#25345;&#32493;&#25191;&#34892;</td>
+</tr>
+</tbody>
+</table><h3 id="b6cbcd95ddf0411b62bf81ee9c409152">&#20160;&#20040;&#26159;&#33258;&#23450;&#20041; Agent</h3><p><strong>&#33258;&#23450;&#20041; Agent</strong> = &#20320;&#21019;&#24314;&#30340;&#19987;&#38376; Agent</p><p>&#33258;&#23450;&#20041; Agent &#26159;&#20027; Agent &#21487;&#20197;&#35843;&#29992;&#30340;"&#19987;&#38376;&#21161;&#25163;"&#12290;&#27599;&#20010;&#33258;&#23450;&#20041; Agent&#65306;</p><ul>
+<li>&#26377;&#29305;&#23450;&#30340;&#29992;&#36884;&#21644;&#19987;&#19994;&#39046;&#22495;</li>
+<li>&#26377;&#29420;&#31435;&#30340;&#19978;&#19979;&#25991;&#31383;&#21475;&#65288;&#19981;&#27745;&#26579;&#20027;&#23545;&#35805;&#65289;</li>
+<li>&#26377;&#33258;&#23450;&#20041;&#30340;&#31995;&#32479;&#25552;&#31034;&#65288;&#19987;&#38376;&#35757;&#32451;&#65289;</li>
+<li>&#21487;&#20197;&#38480;&#21046;&#24037;&#20855;&#35775;&#38382;&#26435;&#38480;</li>
+</ul><p><strong>&#20351;&#29992;&#33258;&#23450;&#20041; Agent &#30340;&#20248;&#21183;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#20248;&#21183;</th>
+<th>&#35828;&#26126;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>&#19978;&#19979;&#25991;&#20445;&#30041;</strong></td>
+<td>&#20027;&#23545;&#35805;&#20445;&#25345;&#31616;&#27905;&#65292;&#33258;&#23450;&#20041; Agent &#29420;&#31435;&#22788;&#29702;&#22797;&#26434;&#20219;&#21153;</td>
+</tr>
+<tr>
+<td><strong>&#19987;&#19994;&#20998;&#24037;</strong></td>
+<td>&#38024;&#23545;&#29305;&#23450;&#20219;&#21153;&#20248;&#21270;&#65288;&#22914;&#20195;&#30721;&#23457;&#26597;&#12289;&#35843;&#35797;&#65289;</td>
+</tr>
+<tr>
+<td><strong>&#24182;&#34892;&#22788;&#29702;</strong></td>
+<td>&#22810;&#20010; Agent &#21487;&#21516;&#26102;&#24037;&#20316;&#65292;&#25552;&#39640;&#25928;&#29575;</td>
+</tr>
+<tr>
+<td><strong>&#28789;&#27963;&#26435;&#38480;</strong></td>
+<td>&#21487;&#38480;&#21046; Agent &#21482;&#33021;&#29992;&#29305;&#23450;&#24037;&#20855;&#65292;&#25552;&#39640;&#23433;&#20840;&#24615;</td>
+</tr>
+</tbody>
+</table><p><strong>Agent &#31867;&#22411;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#31867;&#22411;</th>
+<th>&#35828;&#26126;</th>
+<th>&#31034;&#20363;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>&#23448;&#26041;&#20869;&#32622;</strong></td>
+<td>&#31995;&#32479;&#33258;&#24102;&#65292;&#33258;&#21160;&#35843;&#29992;</td>
+<td>Plan&#65288;&#35745;&#21010;&#27169;&#24335;&#19987;&#29992;&#65289;</td>
+</tr>
+<tr>
+<td><strong>&#29992;&#25143;&#33258;&#23450;&#20041;</strong></td>
+<td>&#20320;&#21019;&#24314;&#30340;&#19987;&#38376; Agent</td>
+<td>code-reviewer&#12289;debugger</td>
+</tr>
+<tr>
+<td><strong>&#36890;&#29992; Agent</strong></td>
+<td>Task &#24037;&#20855;&#35843;&#29992;&#30340;&#36890;&#29992; Agent</td>
+<td>general-purpose&#12289;Explore</td>
+</tr>
+</tbody>
+</table><p>::: tip &#23448;&#26041;&#20869;&#32622; Agent&#65306;Plan</p><p><strong>Plan Agent</strong> &#26159; Claude Code &#33258;&#24102;&#30340;&#19987;&#38376; Agent&#65292;&#19987;&#38376;&#29992;&#20110;<strong>&#35745;&#21010;&#27169;&#24335;</strong>&#65306;</p><ul>
+<li><strong>&#27169;&#22411;</strong>&#65306;&#20351;&#29992; Sonnet &#36827;&#34892;&#26356;&#24378;&#22823;&#30340;&#20998;&#26512;</li>
+<li><strong>&#24037;&#20855;</strong>&#65306;Read&#12289;Glob&#12289;Grep&#12289;Bash&#65288;&#20195;&#30721;&#24211;&#25506;&#32034;&#65289;</li>
+<li><strong>&#30446;&#30340;</strong>&#65306;&#25628;&#32034;&#25991;&#20214;&#12289;&#20998;&#26512;&#20195;&#30721;&#32467;&#26500;&#12289;&#25910;&#38598;&#19978;&#19979;&#25991;</li>
+<li><strong>&#33258;&#21160;&#35843;&#29992;</strong>&#65306;&#22312;&#35745;&#21010;&#27169;&#24335;&#20013;&#30740;&#31350;&#20195;&#30721;&#24211;&#26102;&#33258;&#21160;&#20351;&#29992;</li>
+</ul><p><strong>&#24037;&#20316;&#21407;&#29702;</strong>&#65306;</p><pre><code class="   language-php">&#20320;&#65306;[&#22312;&#35745;&#21010;&#27169;&#24335;] &#24110;&#25105;&#37325;&#26500;&#35748;&#35777;&#27169;&#22359;
+&#25105;&#65306;&#35753;&#25105;&#20808;&#30740;&#31350;&#19968;&#19979;&#20320;&#30340;&#35748;&#35777;&#23454;&#29616;...
+[&#20869;&#37096;&#35843;&#29992; Plan Agent &#25506;&#32034;&#35748;&#35777;&#30456;&#20851;&#25991;&#20214;]
+[Plan Agent &#25628;&#32034;&#20195;&#30721;&#24211;&#24182;&#36820;&#22238;&#21457;&#29616;]
+&#25105;&#65306;&#22522;&#20110;&#30740;&#31350;&#65292;&#36825;&#26159;&#25105;&#30340;&#24314;&#35758;&#26041;&#26696;...</code></pre><h3 id="2c47cacdc8dd4683e2389f34cfc48ea7">&#21019;&#24314;&#33258;&#23450;&#20041; Agent</h3><p>&#20351;&#29992; <code>/agents</code> &#21629;&#20196;&#21019;&#24314;&#20320;&#33258;&#24049;&#30340;&#33258;&#23450;&#20041; Agent&#12290;</p><p><strong>&#31532;0&#27493;&#65306;&#22312; Claude &#20869;&#36755;&#20837; <code>/agents</code> &#22238;&#36710;</strong></p><hr><p><strong>&#31532;&#19968;&#27493;&#65306;&#36873;&#25321;&#21019;&#24314;&#26041;&#24335; (Creation Method)</strong></p><p>&#36825;&#37324;&#20915;&#23450;&#20102; Agent &#30340;"&#22823;&#33041;"&#65288;&#31995;&#32479;&#25552;&#31034;&#35789;&#65289;&#26159;&#22914;&#20309;&#29983;&#25104;&#30340;&#12290;</p><table>
+<thead>
+<tr>
+<th>&#36873;&#39033;</th>
+<th>&#21547;&#20041;</th>
+<th>&#36866;&#29992;&#22330;&#26223;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Generate with Claude</strong></td>
+<td>&#35753; Claude &#24110;&#20320;&#29983;&#25104;</td>
+<td>90% &#30340;&#24773;&#20917;&#25512;&#33616;&#12290;&#29992;&#33258;&#28982;&#35821;&#35328;&#25551;&#36848;&#38656;&#27714;&#65292;Claude &#33258;&#21160;&#36716;&#21270;&#20026;&#19987;&#19994; Prompt</td>
+</tr>
+<tr>
+<td><strong>Manual configuration</strong></td>
+<td>&#25163;&#21160;&#37197;&#32622;</td>
+<td>&#39640;&#32423;&#29992;&#25143;&#12290;&#24050;&#26377;&#20889;&#22909;&#30340; Prompt&#65292;&#25110;&#38656;&#35201;&#31934;&#30830;&#25511;&#21046;&#27599;&#20010;&#23383;&#31526;</td>
+</tr>
+</tbody>
+</table><p>::: tip &#24555;&#25463;&#26041;&#24335;&#65306;&#30452;&#25509;&#23545;&#35805;&#20462;&#25913;</p><p>&#21019;&#24314; Agent &#21518;&#65292;&#20320;&#21487;&#20197;&#30452;&#25509;&#22312;&#23545;&#35805;&#20013;&#29992; <code>@agent&#21517;&#23383;</code> &#26469;&#20462;&#25913;&#25110;&#32773;&#20351;&#29992;&#23427;&#65306;</p><pre><code class="language-bash"># &#30452;&#25509;&#21578;&#35785; AI &#20320;&#30340;&#38656;&#27714;
+"@code-reviewer &#20197;&#21518;&#26816;&#26597;&#20195;&#30721;&#26102;&#65292;&#29305;&#21035;&#20851;&#27880;&#23433;&#20840;&#24615;&#38382;&#39064;"
+
+@&#32763;&#35793;agent &#25226;&#36825;&#27573;&#32763;&#35793;&#25104;&#33521;&#25991;&#65292;&#20294;&#20445;&#25345;&#25216;&#26415;&#26415;&#35821;&#19981;&#21464;</code></pre><p>AI &#20250;&#33258;&#21160;&#26356;&#26032; Agent &#30340;&#37197;&#32622;&#65292;&#26080;&#38656;&#25163;&#21160;&#32534;&#36753;&#37197;&#32622;&#25991;&#20214;&#12290;</p><hr><p>::: details &#23436;&#25972;&#27969;&#31243;&#65288;&#31532;&#20108;&#27493;&#33267;&#26368;&#21518;&#19968;&#27493;&#65289;</p><p><strong>&#31532;&#20108;&#27493;&#65306;&#36873;&#25321;&#24213;&#23618;&#27169;&#22411; (Select Model)</strong></p><p>&#36825;&#37324;&#20915;&#23450;&#20102; Agent &#36816;&#34892;&#26102;&#30340;"&#26234;&#21830;"&#12289;&#36895;&#24230;&#21644;&#25104;&#26412;&#12290;</p><table>
+<thead>
+<tr>
+<th>&#36873;&#39033;</th>
+<th>&#35828;&#26126;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sonnet</strong></td>
+<td>&#24179;&#34913;&#24615;&#33021;&#21644;&#36895;&#24230;</td>
+</tr>
+<tr>
+<td><strong>Opus</strong></td>
+<td>&#26368;&#24378;&#33021;&#21147;&#65292;&#25104;&#26412;&#36739;&#39640;</td>
+</tr>
+<tr>
+<td><strong>Haiku</strong></td>
+<td>&#26368;&#24555;&#36895;&#24230;&#65292;&#31616;&#21333;&#20219;&#21153;</td>
+</tr>
+<tr>
+<td><strong>Inherit from parent</strong></td>
+<td>&#32487;&#25215;&#29238;&#32423;&#27169;&#22411;&#65292;&#36319;&#38543;&#20027;&#23545;&#35805;&#20999;&#25442;</td>
+</tr>
+</tbody>
+</table><hr><p><strong>&#31532;&#19977;&#27493;&#65306;&#36873;&#25321;&#24037;&#20855;&#26435;&#38480; (Select Tools)</strong></p><p>&#36825;&#37324;&#20915;&#23450;&#20102; Agent <strong>&#33021;&#24178;&#20160;&#20040;</strong>&#65288;&#23433;&#20840;&#31649;&#25511;&#30340;&#20851;&#38190;&#65289;&#12290;</p><table>
+<thead>
+<tr>
+<th>&#36873;&#39033;</th>
+<th>&#26435;&#38480;</th>
+<th>&#36866;&#29992;&#22330;&#26223;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>All tools</strong></td>
+<td>&#20840;&#26435;&#25480;&#26435;</td>
+<td>&#38656;&#35201;&#23436;&#25972;&#33021;&#21147;&#30340; Agent</td>
+</tr>
+<tr>
+<td><strong>Read-only tools</strong></td>
+<td>&#21482;&#35835;&#26435;&#38480;</td>
+<td>&#20195;&#30721;&#23457;&#26597;&#12289;&#25991;&#26723;&#20998;&#26512;</td>
+</tr>
+<tr>
+<td><strong>Edit tools</strong></td>
+<td>&#32534;&#36753;&#26435;&#38480;</td>
+<td>&#20462;&#25913;&#20195;&#30721;&#12289;&#21019;&#24314;&#25991;&#20214;</td>
+</tr>
+<tr>
+<td><strong>Execution tools</strong></td>
+<td>&#25191;&#34892;&#26435;&#38480;</td>
+<td>&#36816;&#34892;&#32456;&#31471;&#21629;&#20196;&#65288;&#39118;&#38505;&#26368;&#39640;&#65289;</td>
+</tr>
+<tr>
+<td><strong>MCP tools</strong></td>
+<td>&#22806;&#37096;&#24037;&#20855;</td>
+<td>&#35843;&#29992; MCP &#26381;&#21153;&#22120;&#36830;&#25509;&#30340;&#26381;&#21153;</td>
+</tr>
+</tbody>
+</table><hr><p><strong>&#31532;&#22235;&#27493;&#65306;&#36873;&#25321;&#23384;&#20648;&#20301;&#32622; (Choose Location)</strong></p><p>&#36825;&#37324;&#20915;&#23450;&#20102; Agent <strong>&#22312;&#21738;&#37324;</strong>&#21487;&#20197;&#34987;&#30475;&#35265;&#21644;&#20351;&#29992;&#12290;</p><table>
+<thead>
+<tr>
+<th>&#36873;&#39033;</th>
+<th>&#21547;&#20041;</th>
+<th>&#36866;&#29992;&#22330;&#26223;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Project (.claude/agents/)</strong></td>
+<td>&#39033;&#30446;&#32423;&#31169;&#26377;</td>
+<td>&#19987;&#38376;&#20026;&#24403;&#21069;&#39033;&#30446;&#26381;&#21153;&#30340; Agent</td>
+</tr>
+<tr>
+<td><strong>Personal (~/.claude/agents/)</strong></td>
+<td>&#29992;&#25143;&#32423;&#20840;&#23616;</td>
+<td>&#36890;&#29992;&#24037;&#20855;&#65288;&#32763;&#35793;&#12289;&#21457;&#37038;&#20214;&#31561;&#65289;&#65292;&#38543;&#22788;&#21487;&#29992;</td>
+</tr>
+</tbody>
+</table><hr><p><strong>&#31532;&#20116;&#27493;&#65306;&#36873;&#25321;&#32972;&#26223;&#39068;&#33394; (Choose background color)</strong></p><p>&#32431;&#35270;&#35273;&#35774;&#32622;&#65292;&#29992;&#20110;&#22312;&#32456;&#31471;&#37324;&#21306;&#20998;&#19981;&#21516;&#30340; Agent&#12290;&#24314;&#35758;&#25353;&#21151;&#33021;&#20998;&#31867;&#65306;</p><ul>
+<li><strong>&#32418;&#33394;</strong>&#65306;&#21361;&#38505;&#25805;&#20316;&#65288;&#21024;&#38500;&#25991;&#20214;&#65289;</li>
+<li><strong>&#34013;&#33394;</strong>&#65306;&#36741;&#21161;&#26597;&#35810;</li>
+<li><strong>&#31881;&#33394;/&#32043;&#33394;</strong>&#65306;&#21019;&#24847;&#20889;&#20316;</li>
+</ul><hr><p><strong>&#26368;&#21518;&#19968;&#27493;&#65306;&#30830;&#35748;&#24182;&#20445;&#23384; (Confirm and save)</strong></p><table>
+<thead>
+<tr>
+<th>&#25353;&#38190;</th>
+<th>&#25805;&#20316;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>s</code> &#25110; <code>Enter</code></td>
+<td>&#20445;&#23384;&#24182;&#21019;&#24314;</td>
+</tr>
+<tr>
+<td><code>e</code></td>
+<td>&#20445;&#23384;&#21518;&#31435;&#21051;&#36827;&#20837;&#32534;&#36753;&#22120;&#65288;&#24494;&#35843; Prompt&#65289;</td>
+</tr>
+<tr>
+<td><code>Esc</code></td>
+<td>&#25918;&#24323;&#21019;&#24314;</td>
+</tr>
+</tbody>
+</table><h2 id="2985a324ee65e55f815f75a59f1be227">&#22810; Agent &#24182;&#34892;&#21327;&#20316;</h2><p>::: tip &#20160;&#20040;&#26159;&#22810; Agent &#21327;&#20316;</p><p>Claude Code &#20250;<strong>&#33258;&#21160;&#21551;&#29992;&#22810; Agent</strong>&#26469;&#24182;&#34892;&#22788;&#29702;&#29420;&#31435;&#20219;&#21153;&#65292;&#27599;&#20010; Agent &#26377;&#29420;&#31435;&#30340;&#19978;&#19979;&#25991;&#31383;&#21475;&#65292;&#19987;&#27880;&#23436;&#25104;&#29305;&#23450;&#24037;&#20316;&#12290;</p><p><strong>&#20004;&#31181;&#26041;&#24335;</strong>&#65306;</p><ol>
+<li><strong>&#33258;&#21160;&#24182;&#34892;</strong>&#65306;&#25105;&#35782;&#21035;&#21040;&#29420;&#31435;&#20219;&#21153;&#65292;&#33258;&#21160;&#21019;&#24314;&#36890;&#29992; Agent &#24182;&#34892;&#22788;&#29702;</li>
+<li><strong>&#19987;&#38376;&#21327;&#20316;</strong>&#65306;&#35843;&#29992;&#20320;&#21019;&#24314;&#30340;&#33258;&#23450;&#20041; Agent&#65288;&#22914; code-reviewer&#65289;</li>
+</ol><h3 id="1e97683531cd0c33f36d7745d2aaad30">&#33258;&#21160;&#21551;&#29992;</h3><p>Claude Code &#26681;&#25454;&#20219;&#21153;&#25551;&#36848;<strong>&#20027;&#21160;&#22996;&#27966;&#20219;&#21153;</strong>&#65292;&#20351;&#29992; <strong>Task &#24037;&#20855;</strong>&#21019;&#24314;&#36890;&#29992; Agent &#24182;&#34892;&#22788;&#29702;&#65306;</p><ul>
+<li>&#20219;&#21153;&#25551;&#36848;&#20013;&#30340;&#20851;&#38190;&#35789;&#65306;<strong>"&#24182;&#34892;"&#12289;"&#21516;&#26102;"&#12289;"&#22810; Agent"</strong></li>
+<li>&#33258;&#23450;&#20041; Agent &#37197;&#32622;&#20013;&#30340; <code>description</code> &#23383;&#27573;</li>
+<li>&#24403;&#21069;&#19978;&#19979;&#25991;&#21644;&#21487;&#29992;&#24037;&#20855;</li>
+</ul><p>::: tip Task &#24037;&#20855;</p><p>&#24403; Claude Code &#35782;&#21035;&#21040;&#29420;&#31435;&#20219;&#21153;&#26102;&#65292;&#20250;&#33258;&#21160;&#20351;&#29992; <strong>Task &#24037;&#20855;</strong>&#21019;&#24314;&#36890;&#29992; Agent &#26469;&#24182;&#34892;&#22788;&#29702;&#12290;</p><p><strong>&#36890;&#29992; Agent vs &#33258;&#23450;&#20041; Agent</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#31867;&#22411;</th>
+<th>&#35843;&#29992;&#26041;&#24335;</th>
+<th>&#29992;&#36884;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>&#36890;&#29992; Agent</strong></td>
+<td>Task &#24037;&#20855;&#33258;&#21160;&#21019;&#24314;</td>
+<td>&#36890;&#29992;&#20219;&#21153;&#65288;&#25506;&#32034;&#12289;&#25628;&#32034;&#12289;&#35835;&#21462;&#25991;&#20214;&#65289;</td>
+</tr>
+<tr>
+<td><strong>&#33258;&#23450;&#20041; Agent</strong></td>
+<td><code>/agents</code> &#21629;&#20196;&#21019;&#24314;</td>
+<td>&#29305;&#23450;&#39046;&#22495;&#65288;&#20195;&#30721;&#23457;&#26597;&#12289;&#35843;&#35797;&#12289;&#27979;&#35797;&#65289;</td>
+</tr>
+</tbody>
+</table><p><strong>&#29305;&#28857;</strong>&#65306;</p><ul>
+<li>&#22788;&#29702;&#22823;&#37327;&#25991;&#20214;&#35835;&#21462;&#21644;&#25628;&#32034;&#26102;&#26356;&#39640;&#25928;</li>
+<li>&#22810;&#20010;&#36890;&#29992; Agent &#21487;&#20197;&#24182;&#34892;&#24037;&#20316;&#65292;&#21152;&#24555;&#36895;&#24230;</li>
+<li>&#19981;&#38656;&#35201;&#39044;&#20808;&#37197;&#32622;&#65292;Claude &#33258;&#21160;&#21019;&#24314;</li>
+</ul><h3 id="695dd0b08317ba70d15b26e16b514927">&#22810;&#20010;&#24182;&#34892; Agent</h3><table>
+<thead>
+<tr>
+<th>&#20851;&#38190;&#35789;</th>
+<th>&#25928;&#26524;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>"&#24182;&#34892;"</strong></td>
+<td>&#21516;&#26102;&#25191;&#34892;&#22810;&#20010;&#29420;&#31435;&#20219;&#21153;</td>
+</tr>
+<tr>
+<td><strong>"&#21516;&#26102;"</strong></td>
+<td>&#22810;&#20010; Agent &#19968;&#36215;&#24037;&#20316;</td>
+</tr>
+<tr>
+<td><strong>"&#22810; Agent"</strong></td>
+<td>&#26126;&#30830;&#20351;&#29992;&#22810;&#20010; Agent &#21327;&#20316;</td>
+</tr>
+</tbody>
+</table><p>::: info &#24182;&#34892;&#33021;&#21147;&#35828;&#26126;</p><p><strong>Claude &#30340;&#24182;&#34892;&#33021;&#21147;</strong>&#65306;</p><p>&#22312;&#21333;&#20010;&#21709;&#24212;&#20013;&#65292;Claude &#21487;&#20197;&#24182;&#34892;&#35843;&#29992;<strong>&#22810;&#20010;&#29420;&#31435;&#24037;&#20855;&#25110;&#23376;&#20195;&#29702;</strong>&#65288;&#20855;&#20307;&#25968;&#37327;&#21462;&#20915;&#20110;&#20219;&#21153;&#22797;&#26434;&#24230;&#21644;&#19978;&#19979;&#25991;&#31383;&#21475;&#21097;&#20313;&#31354;&#38388;&#65289;&#12290;</p><p>&#36825;&#24847;&#21619;&#30528;&#22914;&#26524;&#20320;&#26377;&#22810;&#20010;&#29420;&#31435;&#30340;&#20219;&#21153;&#65288;&#27604;&#22914;&#21516;&#26102;&#35835;&#21462;&#22810;&#20010;&#25991;&#20214;&#12289;&#25191;&#34892;&#22810;&#20010;&#29420;&#31435;&#30340;&#25628;&#32034;&#31561;&#65289;&#65292;Claude &#21487;&#20197;&#22312;&#19968;&#26465;&#28040;&#24687;&#37324;&#19968;&#27425;&#24615;&#21457;&#20986;&#25152;&#26377;&#35831;&#27714;&#65292;&#22823;&#22823;&#25552;&#39640;&#25928;&#29575;&#12290;</p><p><strong>&#20030;&#20363; 1</strong>&#65306;&#24182;&#34892;&#35843;&#30740;&#22810;&#20010;&#25216;&#26415;&#25991;&#26723;</p><pre><code class="   language-php">&#20219;&#21153;&#65306;&#20102;&#35299; Prisma&#12289;Drizzle&#12289;Supabase &#19977;&#31181;&#25968;&#25454;&#25345;&#20037;&#21270;&#26041;&#26696;
+
+&#20018;&#34892;&#26041;&#24335;&#65306;
+&#35835; Prisma &#25991;&#26723; &rarr; &#31561;&#24453; &rarr; &#35835; Drizzle &#25991;&#26723; &rarr; &#31561;&#24453; &rarr; &#35835; Supabase &#25991;&#26723; &rarr; &#31561;&#24453; &rarr; &#24635;&#32467;&#23545;&#27604;
+
+&#24182;&#34892;&#26041;&#24335;&#65306;
+1 &#20010;&#28040;&#24687; &rarr; &#21516;&#26102;&#21457;&#36215; 3 &#20010;&#25991;&#26723;&#35843;&#30740;&#35831;&#27714; &rarr; &#25910;&#38598;&#25152;&#26377;&#20449;&#24687; &rarr; &#29983;&#25104;&#23545;&#27604;&#25253;&#21578;</code></pre><p><strong>&#20030;&#20363; 2</strong>&#65306;&#24182;&#34892;&#32534;&#20889;&#22810;&#20010;&#30456;&#20851;&#32452;&#20214;</p><pre><code class="   language-php">&#20219;&#21153;&#65306;&#24320;&#21457;&#29992;&#25143;&#35774;&#32622;&#39029;&#38754;&#30340;&#22810;&#20010;&#21151;&#33021;&#27169;&#22359;
+
+&#20018;&#34892;&#26041;&#24335;&#65306;
+&#20889;&#22836;&#20687;&#19978;&#20256; &rarr; &#31561;&#24453; &rarr; &#20889;&#23494;&#30721;&#20462;&#25913; &rarr; &#31561;&#24453; &rarr; &#20889;&#36890;&#30693;&#20559;&#22909; &rarr; &#31561;&#24453; &rarr; &#38598;&#25104;&#27979;&#35797;
+
+&#24182;&#34892;&#26041;&#24335;&#65306;
+1 &#20010;&#28040;&#24687; &rarr; &#21516;&#26102;&#21551;&#21160; 3 &#20010; Agent &#20998;&#21035;&#32534;&#20889; 3 &#20010;&#27169;&#22359; &rarr; &#25910;&#38598;&#25152;&#26377;&#20195;&#30721; &rarr; &#32479;&#19968;&#38598;&#25104;&#27979;&#35797;</code></pre><p><strong>&#26368;&#20339;&#23454;&#36341;</strong>&#65306;</p><ul>
+<li>&#30830;&#20445;&#20219;&#21153;&#20043;&#38388;&#27809;&#26377;&#20381;&#36182;&#20851;&#31995;</li>
+<li>&#22312;&#25552;&#31034;&#35789;&#20013;&#20351;&#29992;"&#21516;&#26102;"&#12289;"&#24182;&#34892;"&#31561;&#20851;&#38190;&#35789;</li>
+<li>&#35753; Claude &#33258;&#21160;&#35782;&#21035;&#21738;&#20123;&#20219;&#21153;&#21487;&#20197;&#24182;&#34892;</li>
+</ul><h3 id="4a532e1436fa33479f4fba67f70113b3">&#20351;&#29992;&#31034;&#20363;</h3><pre><code class="language-bash"># &#33258;&#21160;&#24182;&#34892; - AI &#33258;&#21160;&#35782;&#21035;&#29420;&#31435;&#20219;&#21153;
+"&#21516;&#26102;&#20570;&#36825;&#19977;&#20214;&#20107;&#65306;
+1. &#32534;&#20889;&#21518;&#31471; API&#65288;&#29992;&#25143;&#35748;&#35777;&#65289;
+2. &#32534;&#20889;&#21069;&#31471; UI&#65288;&#30331;&#24405;&#34920;&#21333;&#65289;
+3. &#32534;&#20889;&#25968;&#25454;&#24211; schema&#65288;User &#34920;&#65289;"
+
+# &#26126;&#30830;&#20351;&#29992;&#22810; Agent
+"&#20351;&#29992;&#22810; Agent &#24182;&#34892;&#24320;&#21457;&#20219;&#21153;&#27169;&#22359;&#65306;
+- Agent 1 &#20570; CRUD API
+- Agent 2 &#20570;&#20219;&#21153;&#21015;&#34920;&#21644;&#34920;&#21333;
+- Agent 3 &#20570; Task &#25968;&#25454;&#27169;&#22411;"</code></pre><p>::: tip Agent &#22242;&#38431;&#19982;&#22810;&#35270;&#35282;&#20998;&#26512;</p><p>&#38500;&#20102;&#31616;&#21333;&#30340;&#24182;&#34892;&#20219;&#21153;&#65292;Claude Code &#36824;&#25903;&#25345;&#26356;&#39640;&#32423;&#30340; <strong>Agent &#22242;&#38431;&#27169;&#24335;</strong>&#21644;<strong>&#22810;&#35270;&#35282;&#20998;&#26512;&#27169;&#24335;</strong>&#12290;</p><p><strong>Agent &#22242;&#38431;&#27169;&#24335;</strong></p><p>&#35753;&#19981;&#21516;&#19987;&#19994;&#30340; Agent &#21327;&#20316;&#23436;&#25104;&#22797;&#26434;&#20219;&#21153;&#65292;&#27599;&#20010; Agent &#19987;&#27880;&#33258;&#24049;&#30340;&#39046;&#22495;&#65306;</p><pre><code class="language-mermaid">graph TD
+    A[&#29992;&#25143;&#38656;&#27714;] --&gt; B[&#20027; Agent &#25286;&#35299;&#20219;&#21153;]
+    B --&gt; C[&#26550;&#26500; Agent]
+    B --&gt; D[&#21069;&#31471; Agent]
+    B --&gt; E[&#23433;&#20840; Agent]
+    C --&gt; F[&#27719;&#24635;&#32467;&#26524;]
+    D --&gt; F
+    E --&gt; F
+    F --&gt; G[&#36755;&#20986;&#26368;&#32456;&#26041;&#26696;]</code></pre><p><strong>&#31616;&#21333;&#24182;&#34892; vs Agent &#22242;&#38431;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#32500;&#24230;</th>
+<th>&#31616;&#21333;&#24182;&#34892;</th>
+<th>Agent &#22242;&#38431;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#20219;&#21153;&#20851;&#31995;</td>
+<td>&#23436;&#20840;&#29420;&#31435;</td>
+<td>&#26377;&#21327;&#20316;&#20851;&#31995;</td>
+</tr>
+<tr>
+<td>&#20856;&#22411;&#22330;&#26223;</td>
+<td>&#21516;&#26102;&#35835; 5 &#20010;&#25991;&#20214;</td>
+<td>&#26550;&#26500;&#24072;+&#21069;&#31471;+&#23433;&#20840;&#32852;&#21512;&#35780;&#23457;</td>
+</tr>
+<tr>
+<td>&#32467;&#26524;&#22788;&#29702;</td>
+<td>&#21508;&#33258;&#36820;&#22238;</td>
+<td>&#27719;&#24635;&#25972;&#21512;</td>
+</tr>
+<tr>
+<td>&#25552;&#31034;&#35789;</td>
+<td>"&#21516;&#26102;&#20570; A&#12289;B&#12289;C"</td>
+<td>"&#20174; X&#12289;Y&#12289;Z &#35282;&#24230;&#20998;&#26512;"</td>
+</tr>
+</tbody>
+</table><p><strong>&#22810;&#35270;&#35282;&#20998;&#26512;&#27169;&#24335;</strong></p><p>&#23545;&#21516;&#19968;&#27573;&#20195;&#30721;&#25110;&#20915;&#31574;&#65292;&#20174;&#22810;&#20010;&#19987;&#19994;&#35282;&#24230;&#21516;&#26102;&#20998;&#26512;&#65306;</p><pre><code class="   language-php">"&#20174;&#20197;&#19979;&#35282;&#24230;&#20998;&#26512;&#36825;&#20010; API &#35774;&#35745;&#65306;
+1. &#23433;&#20840;&#24615;&#65306;&#26159;&#21542;&#26377;&#27880;&#20837;&#39118;&#38505;&#12289;&#35748;&#35777;&#28431;&#27934;
+2. &#24615;&#33021;&#65306;N+1 &#26597;&#35810;&#12289;&#32531;&#23384;&#31574;&#30053;
+3. &#21487;&#32500;&#25252;&#24615;&#65306;&#21629;&#21517;&#35268;&#33539;&#12289;&#32844;&#36131;&#21010;&#20998;
+4. &#21521;&#21518;&#20860;&#23481;&#65306;API &#29256;&#26412;&#31574;&#30053;"</code></pre><p><strong>&#36866;&#29992;&#22330;&#26223;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#22330;&#26223;</th>
+<th>&#25512;&#33616;&#35270;&#35282;&#32452;&#21512;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#20195;&#30721;&#23457;&#26597;</td>
+<td>&#23433;&#20840; + &#24615;&#33021; + &#21487;&#35835;&#24615;</td>
+</tr>
+<tr>
+<td>&#25216;&#26415;&#36873;&#22411;</td>
+<td>&#25104;&#26412; + &#29983;&#24577; + &#23398;&#20064;&#26354;&#32447; + &#25193;&#23637;&#24615;</td>
+</tr>
+<tr>
+<td>&#37325;&#26500;&#20915;&#31574;</td>
+<td>&#39118;&#38505; + &#25910;&#30410; + &#24037;&#20316;&#37327; + &#24433;&#21709;&#33539;&#22260;</td>
+</tr>
+<tr>
+<td>Bug &#25490;&#26597;</td>
+<td>&#22797;&#29616;&#36335;&#24452; + &#26681;&#22240; + &#24433;&#21709;&#38754; + &#20462;&#22797;&#26041;&#26696;</td>
+</tr>
+</tbody>
+</table><p><strong>&#33258;&#23450;&#20041; Agent &#37197;&#32622;</strong></p><p>&#20320;&#21487;&#20197;&#22312;&#39033;&#30446;&#20013;&#21019;&#24314;&#19987;&#23646; Agent&#65292;&#35753; Claude Code &#22312;&#29305;&#23450;&#22330;&#26223;&#33258;&#21160;&#35843;&#29992;&#65306;</p><pre><code class="language-bash"># &#21019;&#24314;&#33258;&#23450;&#20041; Agent&#65288;&#25918;&#22312; .claude/agents/ &#30446;&#24405;&#65289;
+# &#20363;&#22914;&#65306;security-reviewer.md
+---
+name: security-reviewer
+description: &#23433;&#20840;&#23457;&#26597;&#19987;&#23478;
+model: sonnet
+tools: [read, grep, glob]
+---
+
+&#20320;&#26159;&#19968;&#20010;&#23433;&#20840;&#23457;&#26597;&#19987;&#23478;&#12290;&#26816;&#26597;&#20195;&#30721;&#20013;&#30340;&#65306;
+- SQL &#27880;&#20837;
+- XSS &#28431;&#27934;
+- &#30828;&#32534;&#30721;&#23494;&#38053;
+- &#19981;&#23433;&#20840;&#30340;&#20381;&#36182;</code></pre><p>&#28982;&#21518;&#22312;&#23545;&#35805;&#20013;&#36890;&#36807; Task &#24037;&#20855;&#35843;&#29992;&#36825;&#20123; Agent&#65292;&#23454;&#29616;&#22242;&#38431;&#21270;&#21327;&#20316;&#12290;</p><p><strong>&#20004;&#20010;&#36873;&#39033;</strong>&#65306;</p><ul>
+<li><code>--continue</code>&#65306;&#33258;&#21160;&#32487;&#32493;&#26368;&#36817;&#30340;&#23545;&#35805;</li>
+<li><code>--resume</code>&#65306;&#26174;&#31034;&#23545;&#35805;&#36873;&#25321;&#22120;</li>
+</ul><p><strong>&#20351;&#29992;&#31034;&#20363;</strong>&#65306;</p><pre><code class="language-bash"># &#32487;&#32493;&#26368;&#36817;&#30340;&#23545;&#35805;
+claude --continue
+
+# &#20351;&#29992;&#29305;&#23450;&#25552;&#31034;&#32487;&#32493;
+claude --continue -p "&#26174;&#31034;&#25105;&#20204;&#30340;&#36827;&#24230;"
+
+# &#26174;&#31034;&#23545;&#35805;&#36873;&#25321;&#22120;
+claude --resume
+
+# &#38750;&#20132;&#20114;&#27169;&#24335;&#32487;&#32493;
+claude --continue -p "&#20877;&#27425;&#36816;&#34892;&#27979;&#35797;"</code></pre><p><strong>&#24037;&#20316;&#21407;&#29702;</strong>&#65306;</p><ol>
+<li>&#23545;&#35805;&#33258;&#21160;&#20445;&#23384;&#22312;&#26412;&#22320;</li>
+<li>&#24674;&#22797;&#26102;&#21152;&#36733;&#23436;&#25972;&#28040;&#24687;&#21382;&#21490;</li>
+<li>&#24037;&#20855;&#29366;&#24577;&#21644;&#32467;&#26524;&#34987;&#20445;&#30041;</li>
+<li>&#19978;&#19979;&#25991;&#23436;&#25972;&#24674;&#22797;</li>
+</ol><p>::: details &#36827;&#38454;&#65306;&#24182;&#34892;&#20250;&#35805;&#19982; Git Worktrees</p><p><strong>&#20351;&#29992;&#22330;&#26223;</strong>&#65306;&#21516;&#26102;&#22788;&#29702;&#22810;&#20010;&#20219;&#21153;&#65292;&#23436;&#20840;&#38548;&#31163;&#20195;&#30721;</p><p><strong>&#21019;&#24314; worktree</strong>&#65306;</p><pre><code class="language-bash"># &#20351;&#29992;&#26032;&#20998;&#25903;&#21019;&#24314;
+git worktree add ../project-feature-a -b feature-a
+
+# &#20351;&#29992;&#29616;&#26377;&#20998;&#25903;&#21019;&#24314;
+git worktree add ../project-bugfix bugfix-123</code></pre><p><strong>&#22312;&#27599;&#20010; worktree &#20013;&#36816;&#34892; AI</strong>&#65306;</p><pre><code class="language-bash">cd ../project-feature-a
+claude</code></pre><p><strong>&#31649;&#29702; worktrees</strong>&#65306;</p><pre><code class="language-bash"># &#21015;&#20986;&#25152;&#26377; worktrees
+git worktree list
+
+# &#21024;&#38500; worktree
+git worktree remove ../project-feature-a</code></pre><p><strong>&#20248;&#21183;</strong>&#65306;</p><ul>
+<li>&#27599;&#20010;&#24037;&#20316;&#30446;&#24405;&#23436;&#20840;&#38548;&#31163;</li>
+<li>&#26356;&#25913;&#19981;&#20250;&#30456;&#20114;&#24433;&#21709;</li>
+<li>&#20849;&#20139;&#30456;&#21516;&#30340; Git &#21382;&#21490;</li>
+</ul><p>::: details &#36827;&#38454;&#65306;Unix &#39118;&#26684;&#23454;&#29992;&#31243;&#24207;&#29992;&#27861;</p><p><strong>&#28155;&#21152;&#21040;&#39564;&#35777;&#27969;&#31243;</strong>&#65306;</p><pre><code class="language-json">// package.json
+{
+  "scripts": {
+    "lint:claude": "claude -p '&#20320;&#26159; linter&#12290;&#26816;&#26597; vs main &#30340;&#26356;&#25913;&#65292;&#25253;&#21578;&#25340;&#20889;&#38169;&#35823;&#12290;&#27599;&#34892;&#19968;&#20010;&#25991;&#20214;&#21517;&#21644;&#34892;&#21495;&#65292;&#31532;&#20108;&#34892;&#25551;&#36848;&#38382;&#39064;&#12290;&#19981;&#36820;&#22238;&#20854;&#20182;&#25991;&#26412;&#12290;'"
+  }
+}</code></pre><p><strong>&#31649;&#36947;&#36755;&#20837;&#36755;&#20986;</strong>&#65306;</p><pre><code class="language-bash"># &#31649;&#36947;&#25968;&#25454;
+cat build-error.txt | claude -p '&#31616;&#26126;&#35299;&#37322;&#26500;&#24314;&#38169;&#35823;&#30340;&#26681;&#26412;&#21407;&#22240;' &gt; output.txt
+
+# &#25511;&#21046;&#36755;&#20986;&#26684;&#24335;
+cat data.txt | claude -p '&#24635;&#32467;&#25968;&#25454;' --output-format text &gt; summary.txt
+cat code.py | claude -p '&#20998;&#26512;&#20195;&#30721; bug' --output-format json &gt; analysis.json
+cat log.txt | claude -p '&#35299;&#26512;&#26085;&#24535;&#38169;&#35823;' --output-format stream-json</code></pre><p><strong>&#36755;&#20986;&#26684;&#24335;</strong>&#65306;</p><ul>
+<li><code>text</code>&#65306;&#32431;&#25991;&#26412;&#21709;&#24212;&#65288;&#40664;&#35748;&#65289;</li>
+<li><code>json</code>&#65306;&#23436;&#25972;&#23545;&#35805;&#26085;&#24535;&#30340; JSON &#25968;&#32452;</li>
+<li><code>stream-json</code>&#65306;&#23454;&#26102; JSON &#23545;&#35937;&#27969;</li>
+</ul><h3 id="7f7c7b3b1fe7d9c53924c03b5392526c">&#20154;&#22312;&#29615;&#36335;</h3><p>AI &#33021;&#22815;&#33258;&#20027;&#23436;&#25104;&#24456;&#22810;&#20219;&#21153;&#65292;&#20294;&#20197;&#19979;&#22330;&#26223;<strong>&#24314;&#35758;&#20445;&#25345;&#20154;&#24037;&#23457;&#26597;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#22330;&#26223;</th>
+<th>&#21407;&#22240;</th>
+<th>&#24314;&#35758;&#20570;&#27861;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>&#29983;&#20135;&#29615;&#22659;&#37096;&#32626;</strong></td>
+<td>&#24433;&#21709;&#25152;&#26377;&#29992;&#25143;</td>
+<td>AI &#29983;&#25104;&#26041;&#26696;&#65292;&#20154;&#24037;&#23457;&#26680;&#21518;&#25191;&#34892;</td>
+</tr>
+<tr>
+<td><strong>&#25968;&#25454;&#24211;&#32467;&#26500;&#21464;&#26356;</strong></td>
+<td>&#38590;&#20197;&#22238;&#28378;&#65292;&#24433;&#21709;&#25968;&#25454;</td>
+<td>&#20808; review schema&#65292;&#20877;&#25191;&#34892;&#36801;&#31227;</td>
+</tr>
+<tr>
+<td><strong>&#23433;&#20840;&#30456;&#20851;&#20195;&#30721;</strong></td>
+<td>&#28431;&#27934;&#21518;&#26524;&#20005;&#37325;</td>
+<td>&#20195;&#30721;&#23457;&#26597;&#24517;&#19981;&#21487;&#23569;</td>
+</tr>
+<tr>
+<td><strong>&#25903;&#20184;/&#36130;&#21153;&#36923;&#36753;</strong></td>
+<td>&#28041;&#21450;&#36164;&#37329;&#23433;&#20840;</td>
+<td>&#27979;&#35797;+&#21452;&#20154;&#39564;&#35777;</td>
+</tr>
+<tr>
+<td><strong>&#24615;&#33021;&#20851;&#38190;&#36335;&#24452;</strong></td>
+<td>&#24433;&#21709;&#29992;&#25143;&#20307;&#39564;</td>
+<td>&#24615;&#33021;&#27979;&#35797;+&#22522;&#20934;&#23545;&#27604;</td>
+</tr>
+<tr>
+<td><strong>API &#20860;&#23481;&#24615;&#21464;&#26356;</strong></td>
+<td>&#24433;&#21709;&#31532;&#19977;&#26041;&#38598;&#25104;</td>
+<td>&#29256;&#26412;&#31649;&#29702;+&#36890;&#30693;&#26426;&#21046;</td>
+</tr>
+</tbody>
+</table><p>::: warning &#23567;&#30333;&#25552;&#31034;</p><p>&#22914;&#26524;&#20320;&#26159;&#32534;&#31243;&#26032;&#25163;&#65292;&#36935;&#21040;&#19978;&#36848;&#22330;&#26223;<strong>&#19981;&#30830;&#23450;&#22914;&#20309;&#22788;&#29702;</strong>&#65306;</p><ol>
+<li>
+<p><strong>&#19981;&#35201;&#29420;&#33258;&#25215;&#25285;&#39118;&#38505;</strong></p>
+<ul>
+<li>&#22312;&#27979;&#35797;&#29615;&#22659;&#20808;&#39564;&#35777;</li>
+<li>&#35753; AI &#35299;&#37322;&#39118;&#38505;&#28857;&#21644;&#27880;&#24847;&#20107;&#39033;</li>
+<li>&#22312;&#25216;&#26415;&#31038;&#21306;&#23547;&#27714;&#24110;&#21161;</li>
+</ul>
+</li>
+<li>
+<p><strong>&#28176;&#36827;&#24335;&#20449;&#20219;</strong></p>
+<ul>
+<li>&#20174;&#31616;&#21333;&#20219;&#21153;&#24320;&#22987;&#35753; AI &#33258;&#20027;&#23436;&#25104;</li>
+<li>&#22797;&#26434;/&#39640;&#39118;&#38505;&#20219;&#21153;&#36880;&#27493;&#22686;&#21152;&#20154;&#31867;&#23457;&#26597;</li>
+<li>&#24314;&#31435; checklist &#30830;&#20445;&#20851;&#38190;&#28857;&#37117;&#34987;&#26816;&#26597;</li>
+</ul>
+</li>
+<li>
+<p><strong>&#23547;&#25214;&#24110;&#21161;&#30340;&#36884;&#24452;</strong></p>
+<ul>
+<li>&#25216;&#26415;&#31038;&#21306;&#65288;Stack Overflow&#12289;GitHub Issues&#65289;</li>
+<li>&#35753; AI &#35299;&#37322;&#39118;&#38505;&#28857;&#65306;"&#36825;&#26679;&#20570;&#26377;&#20160;&#20040;&#39118;&#38505;&#65311;"</li>
+<li>&#20184;&#36153;&#21672;&#35810;&#26377;&#32463;&#39564;&#30340;&#24320;&#21457;&#32773;</li>
+</ul>
+</li>
+</ol><p>::: details &#38656;&#35201;&#20154;&#24037;&#23457;&#26597;&#30340;&#20449;&#21495;</p><p><strong>AI &#24314;&#35758;&#26102;&#20445;&#25345;&#35686;&#24789;</strong>&#65306;</p><ul>
+<li>AI &#35828;"&#21487;&#33021;&#30772;&#22351;XXX"</li>
+<li>AI &#24314;&#35758;&#21024;&#38500;&#22823;&#37327;&#20195;&#30721;</li>
+<li>AI &#20462;&#25913;&#26680;&#24515;&#37197;&#32622;&#25991;&#20214;</li>
+<li>AI &#24314;&#35758;&#37325;&#26500;&#26680;&#24515;&#27169;&#22359;</li>
+</ul><p><strong>&#25805;&#20316;&#24314;&#35758;</strong>&#65306;</p><ol>
+<li>&#35201;&#27714; AI &#35299;&#37322;&#25913;&#21160;&#21407;&#22240;</li>
+<li>&#26816;&#26597;&#21463;&#24433;&#21709;&#30340;&#25991;&#20214;&#21015;&#34920;</li>
+<li>&#32771;&#34385;&#20808;&#22312;&#20998;&#25903;&#27979;&#35797;</li>
+<li>&#24517;&#35201;&#26102;&#23547;&#27714;&#31532;&#20108;&#24847;&#35265;</li>
+</ol><h2 id="8861a62e0ea224f37d6ddc24fda542f5">Hooks &#33258;&#21160;&#21270;</h2><p>::: tip &#20160;&#20040;&#26159; Hooks</p><p><strong>Hooks</strong> = &#22312;&#29305;&#23450;&#20107;&#20214;&#26102;&#33258;&#21160;&#25191;&#34892;&#30340; Shell &#21629;&#20196;</p><p>&#24403; Claude Code &#35302;&#21457;&#26576;&#20123;&#20107;&#20214;&#65288;&#22914;&#24037;&#20855;&#35843;&#29992;&#12289;&#29992;&#25143;&#25552;&#20132;&#25552;&#31034;&#65289;&#26102;&#65292;&#21487;&#20197;&#33258;&#21160;&#25191;&#34892;&#20320;&#27880;&#20876;&#30340;&#33050;&#26412;&#21629;&#20196;&#12290;</p><p><strong>&#24120;&#35265;&#29992;&#36884;</strong>&#65306;</p><ul>
+<li>&#20195;&#30721;&#20889;&#23436;&#21518;&#33258;&#21160;&#26684;&#24335;&#21270;&#65288;&#36816;&#34892; prettier/eslint&#65289;</li>
+<li>AI &#35201;&#21024;&#38500;&#37325;&#35201;&#25991;&#20214;&#26102;&#20808;&#25318;&#25130;&#30830;&#35748;</li>
+<li>&#25552;&#20132;&#20195;&#30721;&#21069;&#33258;&#21160;&#36816;&#34892;&#27979;&#35797;</li>
+</ul><p>::: warning &#23433;&#20840;&#25552;&#31034;</p><p>Hooks &#20250;&#20197;&#20320;&#30340;&#29992;&#25143;&#26435;&#38480;&#25191;&#34892; Shell &#21629;&#20196;&#65292;<strong>&#37197;&#32622;&#21069;&#35831;&#29702;&#35299;&#23427;&#22312;&#20570;&#20160;&#20040;</strong>&#12290;</p><p><strong>&#26032;&#25163;&#24314;&#35758;</strong>&#65306;</p><ul>
+<li>&#128994; &#20174;&#31616;&#21333;&#22330;&#26223;&#24320;&#22987;&#65288;&#22914;&#33258;&#21160;&#26684;&#24335;&#21270;&#65289;</li>
+<li>&#128993; &#22797;&#26434;&#22330;&#26223;&#23547;&#27714;&#26377;&#32463;&#39564;&#30340;&#20154;&#24110;&#21161;</li>
+<li>&#128308; &#21482;&#20351;&#29992;&#21487;&#20449;&#26469;&#28304;&#30340; Hooks</li>
+</ul><h3 id="5ec11b52d5553f46a3c182c04713b98d">&#20351;&#29992; Hooks</h3><p><strong>&#36816;&#34892; <code>/hooks</code> &#25171;&#24320;&#20132;&#20114;&#24335;&#37197;&#32622;&#30028;&#38754;</strong>&#65292;&#36825;&#26159;&#26368;&#25512;&#33616;&#30340;&#21019;&#24314;&#26041;&#24335;&#12290;</p><p><strong>&#37197;&#32622;&#27969;&#31243;</strong>&#65306;</p><ol>
+<li>
+<p>&#36873;&#25321; Hook &#20107;&#20214;&#31867;&#22411;&#65306;</p>
+<ul>
+<li><code>PreToolUse</code> - &#24037;&#20855;&#35843;&#29992;&#21069;</li>
+<li><code>PostToolUse</code> - &#24037;&#20855;&#35843;&#29992;&#21518;</li>
+<li><code>PostToolUseFailure</code> - &#24037;&#20855;&#25191;&#34892;&#22833;&#36133;&#21518;</li>
+<li><code>Notification</code> - &#21457;&#36865;&#36890;&#30693;&#26102;</li>
+<li><code>UserPromptSubmit</code> - &#29992;&#25143;&#25552;&#20132;&#25552;&#31034;&#26102;&#65288;&#25512;&#33616;&#65289;</li>
+</ul>
+</li>
+<li>
+<p>&#37197;&#32622; Hook &#34892;&#20026;&#65306;</p>
+<ul>
+<li>&#36873;&#25321;&#35302;&#21457;&#26465;&#20214;&#65288;matcher&#65289;</li>
+<li>&#32534;&#20889;&#25191;&#34892;&#30340; Shell &#21629;&#20196;</li>
+<li>&#35774;&#32622;&#36229;&#26102;&#26102;&#38388;&#65288;&#40664;&#35748; 60 &#31186;&#65289;</li>
+</ul>
+</li>
+<li>
+<p>&#20445;&#23384;&#24182;&#29983;&#25928;</p>
+</li>
+</ol><p>::: info &#37325;&#35201;&#35828;&#26126;</p><ul>
+<li><strong>&#27599;&#20010;&#20107;&#20214;&#21487;&#27880;&#20876;&#22810;&#20010; Hooks</strong>&#65292;&#24182;&#34892;&#25191;&#34892;</li>
+<li><strong><code>/hooks</code> &#30446;&#24405;&#22806;&#30340;&#20462;&#25913;&#38656;&#35201;&#37325;&#21551;</strong>&#25165;&#33021;&#29983;&#25928;</li>
+<li><strong>&#36229;&#26102;&#26102;&#38388;</strong>&#65306;60 &#31186;</li>
+<li><strong>&#26435;&#38480;</strong>&#65306;&#20197;&#20320;&#30340;&#23436;&#25972;&#29992;&#25143;&#26435;&#38480;&#25191;&#34892;</li>
+</ul><h3 id="fc2f24518fef06f83762f2a661dc3d3c">&#24120;&#29992;&#22330;&#26223;</h3><table>
+<thead>
+<tr>
+<th>&#22330;&#26223;</th>
+<th>&#20107;&#20214;</th>
+<th>&#35302;&#21457;&#26102;&#26426;</th>
+<th>&#25191;&#34892;&#21629;&#20196;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#33258;&#21160;&#26684;&#24335;&#21270;</td>
+<td>PostToolUse</td>
+<td>Write/Edit &#21518;</td>
+<td><code>prettier --write $FILE</code></td>
+</tr>
+<tr>
+<td>&#20445;&#25252;&#25935;&#24863;&#25991;&#20214;</td>
+<td>PreToolUse</td>
+<td>&#35201;&#20462;&#25913; .env &#26102;</td>
+<td>&#25318;&#25130;&#24182;&#35686;&#21578;</td>
+</tr>
+<tr>
+<td>&#36816;&#34892;&#27979;&#35797;</td>
+<td>UserPromptSubmit</td>
+<td>&#25552;&#20132;&#21253;&#21547;"&#27979;&#35797;"&#30340;&#25552;&#31034;&#26102;</td>
+<td><code>npm test</code></td>
+</tr>
+<tr>
+<td>&#28155;&#21152;&#19978;&#19979;&#25991;</td>
+<td>UserPromptSubmit</td>
+<td>&#27599;&#27425;&#25552;&#20132;&#25552;&#31034;&#21069;</td>
+<td>&#33258;&#21160;&#21152;&#36733;&#39033;&#30446;&#20449;&#24687;</td>
+</tr>
+</tbody>
+</table><p>::: details &#36827;&#38454;&#65306;&#37197;&#32622;&#25991;&#20214;&#35828;&#26126;</p><p><strong>&#27880;&#24847;</strong>&#65306;&#20197;&#19979;&#20869;&#23481;&#20165;&#20379;&#21442;&#32771;&#65292;<strong>&#19968;&#33324;&#19981;&#38656;&#35201;&#25163;&#21160;&#32534;&#36753;&#37197;&#32622;&#25991;&#20214;</strong>&#12290;</p><p>&#37197;&#32622;&#20301;&#32622;&#65288;&#20248;&#20808;&#32423;&#20174;&#39640;&#21040;&#20302;&#65289;&#65306;</p><ul>
+<li><code>.claude/settings.local.json</code> - &#26412;&#22320;&#39033;&#30446;&#35774;&#32622;&#65288;&#19981;&#25552;&#20132;&#65289;</li>
+<li><code>.claude/settings.json</code> - &#39033;&#30446;&#35774;&#32622;</li>
+<li><code>~/.claude/settings.json</code> - &#29992;&#25143;&#20840;&#23616;&#35774;&#32622;</li>
+</ul><p><strong>&#24120;&#29992;&#20107;&#20214;&#23545;&#29031;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#20107;&#20214;</th>
+<th>&#35302;&#21457;&#26102;&#26426;</th>
+<th>&#20856;&#22411;&#29992;&#36884;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PreToolUse</code></td>
+<td>&#24037;&#20855;&#35843;&#29992;&#21069;</td>
+<td>&#39564;&#35777;&#12289;&#20462;&#25913;&#36755;&#20837;&#12289;&#26435;&#38480;&#25511;&#21046;</td>
+</tr>
+<tr>
+<td><code>PostToolUse</code></td>
+<td>&#24037;&#20855;&#35843;&#29992;&#21518;</td>
+<td>&#26684;&#24335;&#21270;&#12289;&#36890;&#30693;&#12289;&#39564;&#35777;&#32467;&#26524;</td>
+</tr>
+<tr>
+<td><code>PostToolUseFailure</code></td>
+<td>&#24037;&#20855;&#25191;&#34892;&#22833;&#36133;&#21518;</td>
+<td>&#38169;&#35823;&#22788;&#29702;&#12289;&#22238;&#28378;&#25805;&#20316;</td>
+</tr>
+<tr>
+<td><code>Notification</code></td>
+<td>&#21457;&#36865;&#36890;&#30693;&#26102;</td>
+<td>&#33258;&#23450;&#20041;&#36890;&#30693;&#28192;&#36947;&#12289;&#35760;&#24405;&#26085;&#24535;</td>
+</tr>
+<tr>
+<td><code>UserPromptSubmit</code></td>
+<td>&#29992;&#25143;&#25552;&#20132;&#25552;&#31034;&#26102;</td>
+<td>&#39564;&#35777;&#25552;&#31034;&#12289;&#28155;&#21152;&#19978;&#19979;&#25991;</td>
+</tr>
+<tr>
+<td><code>Stop</code></td>
+<td>&#20027;&#20195;&#29702;&#23436;&#25104;&#21709;&#24212;&#26102;</td>
+<td>&#26368;&#32456;&#26816;&#26597;&#12289;&#28165;&#29702;&#12289;&#35760;&#24405;&#32479;&#35745;</td>
+</tr>
+</tbody>
+</table><p>::: details &#23454;&#29992;&#31034;&#20363;</p><h4 id="7c4e18b85002a2929fddb03681d6fe86">&#33258;&#21160;&#26684;&#24335;&#21270;</h4><pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [{
+          "type": "command",
+          "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format-code.sh"
+        }]
+      }
+    ]
+  }
+}</code></pre><p>&#38500;&#20102;&#25191;&#34892;&#21629;&#20196;&#65288;<code>type: "command"</code>&#65289;&#65292;&#36824;&#21487;&#20197;&#29992; LLM &#20570;&#26234;&#33021;&#20915;&#31574;&#65288;<code>type: "prompt"</code>&#65289;&#12290;</p><p><strong>&#36866;&#29992;&#22330;&#26223;</strong>&#65306;&#38656;&#35201;&#29702;&#35299;&#20869;&#23481;&#21518;&#20877;&#20915;&#23450;&#26159;&#21542;&#25918;&#34892;&#12290;</p><h4 id="0ca759b833a43e15a15648a17a80300d">&#25935;&#24863;&#25991;&#20214;&#20445;&#25252;</h4><pre><code class="language-python">#!/usr/bin/env python3
+# .claude/hooks/protect-files.py
+
+import json, sys
+
+data = json.load(sys.stdin)
+path = data.get('tool_input', {}).get('file_path', '')
+
+# &#38459;&#27490;&#20889;&#20837;&#25935;&#24863;&#25991;&#20214;
+if any(p in path for p in ['.env', '.key', '.pem']):
+    print("&#21463;&#20445;&#25252;&#65306;&#19981;&#20801;&#35768;&#20889;&#20837;&#25935;&#24863;&#25991;&#20214;", file=sys.stderr)
+    sys.exit(2)</code></pre><p>::: details &#36827;&#38454;&#65306;Hook &#36755;&#20837;&#36755;&#20986;&#26684;&#24335;</p><p><strong>&#36755;&#20837;</strong>&#65288;&#36890;&#36807; stdin &#25509;&#25910; JSON&#65289;&#65306;</p><pre><code class="language-json">{
+  "session_id": "&#20250;&#35805;ID",
+  "cwd": "&#24403;&#21069;&#24037;&#20316;&#30446;&#24405;",
+  "hook_event_name": "&#20107;&#20214;&#21517;&#31216;",
+  "tool_name": "&#24037;&#20855;&#21517;&#31216;",
+  "tool_input": {...}
+}</code></pre><p><strong>&#36755;&#20986;&#26041;&#24335;</strong>&#65306;</p><ul>
+<li>&#36864;&#20986;&#20195;&#30721;&#65306;0=&#25104;&#21151;&#65292;2=&#38459;&#27490;&#25805;&#20316;</li>
+<li>JSON &#36755;&#20986;&#65306;&#21487;&#36820;&#22238; decision&#12289;reason &#31561;&#23383;&#27573;</li>
+</ul><h2 id="4c09dbc6d696414b7cf7d4050dbaa9ab">&#23433;&#20840;&#27880;&#24847;&#20107;&#39033;</h2><p>::: warning &#23433;&#20840;&#27880;&#24847;&#20107;&#39033;</p><p><strong>&#19981;&#35201;&#25226;&#25935;&#24863;&#20449;&#24687;&#21457;&#36865;&#32473; AI</strong>&#65306;</p><ul>
+<li>&#10060; API &#23494;&#38053;&#12289;&#23494;&#30721;</li>
+<li>&#10060; &#29983;&#20135;&#25968;&#25454;&#24211;&#36830;&#25509;&#23383;&#31526;&#20018;</li>
+<li>&#10060; &#29992;&#25143;&#38544;&#31169;&#25968;&#25454;</li>
+</ul><p><strong>&#20351;&#29992;&#29615;&#22659;&#21464;&#37327;</strong>&#65306;</p><pre><code class="language-bash"># .env &#25991;&#20214;&#65288;&#19981;&#35201;&#25552;&#20132;&#21040; Git&#65289;
+DATABASE_URL="postgresql://..."
+OPENAI_API_KEY="sk-..."
+
+# .gitignore
+.env</code></pre><p><strong>&#19981;&#35201;&#35753; AI &#20462;&#25913;&#25935;&#24863;&#37197;&#32622;&#25991;&#20214;</strong>&#65306;</p><ul>
+<li>&#39033;&#30446;&#26681;&#30446;&#24405;&#30340; .env</li>
+<li>SSH &#23494;&#38053;</li>
+<li>&#29983;&#20135;&#29615;&#22659;&#37197;&#32622;</li>
+</ul><h2 id="dcbb67cd8b02d9ecf6cf0334c6e8e89e">&#26680;&#24515;&#29702;&#24565;</h2><p><strong>Workflow &#35753; AI &#24320;&#21457;&#21487;&#39044;&#27979;&#12289;&#21487;&#22797;&#29616;</strong>&#12290;</p><pre><code class="language-mermaid">graph TB
+    A["&#26080; Workflow"] --&gt; B["&#24819;&#21040;&#21738;&#20570;&#21040;&#21738;"]
+    B --&gt; C["&#36820;&#24037;&#22810;"]
+    B --&gt; D["&#36136;&#37327;&#19981;&#31283;&#23450;"]
+
+    E["&#26377; Workflow"] --&gt; F["&#32467;&#26500;&#21270;&#24605;&#32771;"]
+    F --&gt; G["&#19968;&#27425;&#36890;&#36807;&#29575;&#39640;"]
+    F --&gt; H["&#36136;&#37327;&#31283;&#23450;"]</code></pre><dl>
+<dt><strong>&#35760;&#20303;&#24037;&#20316;&#27969;&#20116;&#27493;&#26354;</strong>&#65306;&#25506;&#32034; &rarr; &#35268;&#21010; &rarr; &#25191;&#34892; &rarr; &#39564;&#35777; &rarr; &#25552;&#20132;&#65288;&#26681;&#25454;&#24773;&#20917;&#28789;&#27963;&#24212;&#29992;&#65289;</dt>
+<dd><p>:: tip &#28789;&#27963;&#24212;&#29992;</p></dd>
+</dl><ul>
+<li><strong>&#22797;&#26434;&#20219;&#21153;</strong>&#65306;&#20005;&#26684;&#36981;&#24490;&#20116;&#27493;&#65292;&#20943;&#23569;&#36820;&#24037;</li>
+<li><strong>&#31616;&#21333;&#20462;&#25913;</strong>&#65306;&#21487;&#20197;&#36339;&#36807;&#25506;&#32034;&#65292;&#30452;&#25509;&#25191;&#34892;</li>
+<li><strong>&#32039;&#24613;&#20462;&#22797;</strong>&#65306;&#26368;&#23567;&#21270;&#27969;&#31243;&#65292;&#24555;&#36895;&#35299;&#20915;</li>
+</ul><p>&#20851;&#38190;&#26159;&#26377;&#24847;&#35782;&#22320;&#24605;&#32771;&#27599;&#19968;&#27493;&#26159;&#21542;&#38656;&#35201;&#65292;&#32780;&#19981;&#26159;&#26426;&#26800;&#25191;&#34892;&#12290;</p><h2 id="3d28e7e37f9501454e52a17d2f1dce54">&#25552;&#31034;&#35789;&#33258;&#26816;&#28165;&#21333;</h2><p>&#21457;&#36865;&#25552;&#31034;&#35789;&#21069;&#26816;&#26597;&#65306;</p><ul>
+<li>[ ] &#20219;&#21153;&#25551;&#36848;&#28165;&#26224;&#20855;&#20307;</li>
+<li>[ ] &#25552;&#20379;&#20102;&#24517;&#35201;&#30340;&#19978;&#19979;&#25991;</li>
+<li>[ ] &#26126;&#30830;&#20102;&#36755;&#20986;&#26684;&#24335;</li>
+<li>[ ] &#32473;&#20102; AI"&#19981;&#30830;&#23450;"&#30340;&#20986;&#21475;</li>
+<li>[ ] &#21253;&#21547;&#20102;&#24517;&#35201;&#30340;&#32422;&#26463;&#26465;&#20214;</li>
+<li>[ ] &#36991;&#20813;&#20102;&#20887;&#38271;&#30340;&#35282;&#33394;&#35774;&#23450;</li>
+<li>[ ] &#27809;&#26377;&#21253;&#21547;&#25935;&#24863;&#20449;&#24687;&#65288;API Key&#12289;&#23494;&#30721;&#31561;&#65289;</li>
+</ul><h2 id="50d52dd929a75bb9b0f4afb0b7d879e1">&#24120;&#35265;&#38382;&#39064;</h2><h3 id="ddee7f710e09ae6475e0252d0112e8b0">Q1: &#25552;&#31034;&#35789;&#36234;&#38271;&#36234;&#22909;&#21527;&#65311;</h3><p><strong>A</strong>: &#19981;&#26159;&#12290;</p><p>&#25552;&#31034;&#35789;&#30340;&#36136;&#37327;&#22312;&#20110;<strong>&#31934;&#30830;</strong>&#65292;&#19981;&#22312;&#20110;&#38271;&#24230;&#12290;</p><p><strong>&#31616;&#27905;&#20294;&#20855;&#20307;&#30340;&#25552;&#31034;&#35789;</strong> &gt; <strong>&#20887;&#38271;&#20294;&#27169;&#31946;&#30340;&#25552;&#31034;&#35789;</strong></p><h3 id="ee698781243a85776f3f213297b13ca3">Q2: AI &#36824;&#26159;&#20250;&#32534;&#36896;&#31572;&#26696;&#24590;&#20040;&#21150;&#65311;</h3><p><strong>A</strong>: &#21152;&#24378;&#32422;&#26463;&#65306;</p><pre><code class="   language-php">"&#21482;&#20351;&#29992;&#39033;&#30446;&#24050;&#26377;&#30340;&#20381;&#36182;&#12290;
+&#22914;&#26524;&#38656;&#35201;&#26032;&#21151;&#33021;&#65292;&#20808;&#21578;&#35785;&#25105;&#12290;
+&#19981;&#35201;&#32534;&#36896;&#19981;&#23384;&#22312;&#30340; API&#12290;"</code></pre><h3 id="ba3ef29a898c7fbc0492715a26fbc30e">Q3: &#20026;&#20160;&#20040;&#19981;&#30452;&#25509;&#35753; AI &#20889;&#20195;&#30721;&#65311;</h3><p><strong>A</strong>: &#30452;&#25509;&#20889;&#23481;&#26131;&#36820;&#24037;&#12290;</p><p>&#25506;&#32034; &rarr; &#35268;&#21010; &rarr; &#32534;&#20889;&#65292;&#36825;&#20010;&#27969;&#31243;&#33021;&#35753;&#20320;&#65306;</p><ul>
+<li>&#36991;&#20813;&#37325;&#22797;&#36896;&#36718;&#23376;</li>
+<li>&#21457;&#29616;&#28508;&#22312;&#38382;&#39064;</li>
+<li>&#20445;&#25345;&#20195;&#30721;&#39118;&#26684;&#19968;&#33268;</li>
+</ul><h3 id="aad68191e59e70e336d81f9c410581be">Q4: &#24037;&#20316;&#27969;&#20250;&#19981;&#20250;&#22826;&#24930;&#65311;</h3><p><strong>A</strong>: &#19981;&#20250;&#12290;</p><p>&#30475;&#20284;&#22810;&#20102;&#27493;&#39588;&#65292;&#23454;&#38469;&#19978;&#20943;&#23569;&#20102;&#36820;&#24037;&#26102;&#38388;&#12290;&#25972;&#20307;&#25928;&#29575;&#26356;&#39640;&#12290;</p><p><strong>&#23545;&#27604;</strong>&#65306;</p><ul>
+<li>&#30452;&#25509;&#20889;&#65306;10 &#20998;&#38047;&#65292;&#36820;&#24037; 30 &#20998;&#38047;</li>
+<li>&#25353;&#27969;&#31243;&#65306;15 &#20998;&#38047;&#65292;&#19968;&#27425;&#36890;&#36807;</li>
+</ul><h3 id="ff428ad0a904d254b656f52d7796729c">Q5: &#20160;&#20040;&#26102;&#20505;&#35813;&#20572;&#27490;&#23545;&#35805;&#65311;</h3><p><strong>A</strong>: &#20449;&#21495;&#65306;</p><ul>
+<li>&#36830;&#32493; 3 &#36718;&#27809;&#26377;&#36827;&#23637;</li>
+<li>AI &#24320;&#22987;&#37325;&#22797;&#30456;&#21516;&#30340;&#24314;&#35758;</li>
+<li>&#38382;&#39064;&#38656;&#35201;&#26356;&#22810;&#20449;&#24687;&#65288;&#22914;&#26597;&#30475;&#29983;&#20135;&#29615;&#22659;&#26085;&#24535;&#65289;</li>
+</ul><p><strong>&#31574;&#30053;</strong>&#65306;&#20999;&#25442;&#27169;&#22411;&#25110;&#25442;&#24605;&#36335;</p>
+
+			</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

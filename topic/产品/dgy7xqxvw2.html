@@ -1,0 +1,917 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>网址微信防封注意事项 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="LjwWxbOCAwzKlhujOj8BjAXVA1H82PnVzvqZIpan">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    产品 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>产品</h2>
+<ul>
+<li id="blog454"><a href="34rvg639dj.html#blog454">盲盒模式 8 大适用法则</a>
+<li id="blog830"><a href="4rvgn7qydj.html#blog830">系统的交互设计怎么做</a>
+<li id="blog837"><a href="dgy7xd2vw2.html#blog837">常见图片格式介绍</a>
+<li id="blog840"><a href="d6vrownv3g.html#blog840">表单实时验证的技术与行为模型</a>
+<li id="blog847"><a href="2ev86glyor.html#blog847">APP 账号切换功能设计</a>
+<li id="blog848"><a href="e296odz9q7.html#blog848">干扰较少的环境下，文字能让用户更好的理解</a>
+<li id="blog851"><a href="3dykqwwyl0.html#blog851">产品拾遗</a>
+<li id="blog852"><a href="enyd57097d.html#blog852">APP 消息提醒方式汇总</a>
+<li id="blog862"><a href="rwyl2wnvz8.html#blog862">常见动画文件格式介绍</a>
+<li id="blog864"><a href="d6vro8nv3g.html#blog864">APP 如何正确向用户申请权限</a>
+<li id="blog878"><a href="4rvgnlqydj.html#blog878">需求很合理，为什么不做？</a>
+<li id="blog928"><a href="enyd5gn97d.html#blog928">社交产品</a>
+<li id="blog931"><a href="kl9no38vz4.html#blog931">千万不要在 B 端网页里引入多页签</a>
+<li id="blog937"><a href="dgy7xqxvw2.html#blog937">网址微信防封注意事项</a>
+<li id="blog939"><a href="kpv13ke98w.html#blog939">数据模型是新产品的核心</a>
+<li id="blog946"><a href="3oyjd6ryp5.html#blog946">如何让用户养成使用习惯？</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/dgy7xqxvw2.html', function (data, status) {
+            addView('dgy7xqxvw2.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>网址微信防封注意事项</h1><ul>
+<li><a href="dgy7xqxvw2.html#b0ad5f51939ea702ea12831c15ad3e74">域名被封解读</a>
+<ul>
+<li><a href="dgy7xqxvw2.html#9002fe70e9865be3f538c58b1f648595">1️⃣ api.example.com/app/release/134</a></li>
+<li><a href="dgy7xqxvw2.html#d960599030fd8c95d0ef31ae2836e098">2️⃣ api.example.com/room/share?...</a></li>
+<li><a href="dgy7xqxvw2.html#882de412942dff4c9dadaed4171ea06a">人工审核</a></li>
+</ul></li>
+<li><a href="dgy7xqxvw2.html#59c1d28ffbf075894cb2684f702476c5">整改</a>
+<ul>
+<li><a href="dgy7xqxvw2.html#675cfe0d1fe6e5fa2f98c7d6bc485084">原 api 域名彻底禁止外部直接访问</a></li>
+<li><a href="dgy7xqxvw2.html#6f80fa9e36aae33dd3369489029cd6a9">不要用 api. 做分享链接</a></li>
+<li><a href="dgy7xqxvw2.html#e5349fc1eacae637ec30ab5c1898aaf1">URL 结构必须“去风控化”</a></li>
+</ul></li>
+<li><a href="dgy7xqxvw2.html#9ddcea974faa89cd1c19af3833965148">重新发起申诉</a></li>
+<li><a href="dgy7xqxvw2.html#89bfefde7bd4e739b73aff2b0bcb0f24">整改 Checklist（照单执行）</a>
+<ul>
+<li><a href="dgy7xqxvw2.html#c23edcb42a51afd929f8995944f4570a">✅ 域名与结构</a></li>
+<li><a href="dgy7xqxvw2.html#e3ce59c7347a1e7ccee07b733837b2ef">✅ 页面行为</a></li>
+<li><a href="dgy7xqxvw2.html#5f4bcf0c2d6f270057de80e966c7c3ea">✅ 接口安全</a></li>
+<li><a href="dgy7xqxvw2.html#63ec2b6ec862efe22d48113537cf3ba0">✅ 申诉准备</a></li>
+</ul></li>
+<li><a href="dgy7xqxvw2.html#3843965314bb1f5d737e4666c5d32199">多域名落地页方案</a></li>
+</ul><?xml encoding="UTF-8"><p>&#21069;&#20960;&#22825;APP&#20998;&#21457;&#32593;&#22336;&#21644;APP&#20998;&#20139;&#32593;&#22336;&#31361;&#28982;&#34987;&#24494;&#20449;&#23553;&#31105;&#65292;&#26080;&#27861;&#35775;&#38382;&#65292;&#30003;&#35785;&#21518;&#24494;&#20449;&#32473;&#22238;&#20102;&#22914;&#19979;&#37038;&#20214;&#20869;&#23481;</p><blockquote>
+<p>&#23562;&#25964;&#30340;&#29992;&#25143;&#65306; &#24456;&#25265;&#27465;&#65292;&#20320;&#22312;&#30003;&#35785;&#30340;&#32593;&#31449;api.example.com&#65292;&#32463;&#26816;&#27979;&#35782;&#21035;&#24744;&#30003;&#35785;&#30340;&#32593;&#22336;&#20173;&#28982;&#23384;&#22312;&#39118;&#38505;&#65288;&#20851;&#20110;&#32593;&#22336;&#35268;&#33539;&#35814;&#24773;&#35831;&#21442;&#32771; <a href="https://urlsec.qq.com/eviltype.html%EF%BC%89%EF%BC%8C%E6%89%80%E4%BB%A5%E6%88%91%E4%BB%AC%E5%B0%86%E5%AF%B9%E6%82%A8%E7%94%B3%E8%AF%89%E7%9A%84%E7%BD%91%E7%AB%99%E6%88%91%E4%BB%AC%E7%BB%A7%E7%BB%AD%E6%8F%90%E7%A4%BA%E9%A3%8E%E9%99%A9" target="_blank" rel="noopener noreferrer">https://urlsec.qq.com/eviltype.html&#65289;&#65292;&#25152;&#20197;&#25105;&#20204;&#23558;&#23545;&#24744;&#30003;&#35785;&#30340;&#32593;&#31449;&#25105;&#20204;&#32487;&#32493;&#25552;&#31034;&#39118;&#38505;</a>&#12290;<br>
+&#26412;&#27425;&#23457;&#26680;&#19981;&#36890;&#36807;&#30340;&#21407;&#22240;&#20026;&#65306;&#32593;&#31449;&#23384;&#22312;&#24694;&#24847;&#38142;&#25509;&#65292;&#21253;&#25324;&#20294;&#19981;&#38480;&#20110;&#36829;&#35268;&#38142;&#25509;&#22914;&#19979;&#65306;<br>
+<a href="https://api.example.com/app/release/134" target="_blank" rel="noopener noreferrer">https://api.example.com/app/release/134</a><br>
+<a href="https://api.example.com/app/share?uid=10243&amp;type=app_share" target="_blank" rel="noopener noreferrer">https://api.example.com/app/share?uid=10243&amp;type=app_share</a><br>
+&#35831;&#25353;&#29031;&#26631;&#20934;&#35299;&#20915;&#30456;&#20851;&#38382;&#39064;&#21518;&#20877;&#37325;&#26032;&#25552;&#20132;&#30003;&#35785;&#65292;&#23626;&#26102;&#25105;&#20204;&#23558;&#37325;&#26032;&#23457;&#26680;&#24744;&#30340;&#30003;&#35785;&#32593;&#31449;&#12290; </p>
+</blockquote><p>&#20197;&#19979;&#20026;&#24635;&#32467;&#30340;&#24494;&#20449;&#38450;&#23553;&#27880;&#24847;&#28857;&#65306;</p><h2 id="b0ad5f51939ea702ea12831c15ad3e74">&#22495;&#21517;&#34987;&#23553;&#35299;&#35835;</h2><p>&#128073; <strong>&#36825;&#20004;&#20010; URL &#26412;&#36523;&#24182;&#19981;&#26159;&ldquo;&#20256;&#32479;&#30149;&#27602;/&#26408;&#39532;&rdquo;&#37027;&#31181;&#24694;&#24847;</strong><br>
+&#128073; <strong>&#32780;&#26159;&#38750;&#24120;&#20856;&#22411;&#22320;&#35302;&#21457;&#20102;&#12300;&#25509;&#21475;&#22411;&#32593;&#22336; + &#21487;&#36339;&#36716; / &#21487;&#20256;&#25773; / &#21487;&#19979;&#36733;&#12301;&#30340;&#39118;&#25511;&#35268;&#21017;</strong><br>
+&#128073; &#22312;&#33150;&#35759;&#30340;&#35268;&#21017;&#37324;&#65292;&#36825;&#31867; URL <strong>&#40664;&#35748;&#23601;&#26159;&#39640;&#39118;&#38505;</strong></p><blockquote>
+<p>&#20320;&#25226;&#12300;API &#25509;&#21475;&#12301;&#30452;&#25509;&#26292;&#38706;&#25104;&#20102;&#12300;&#21487;&#34987;&#29992;&#25143;&#28857;&#20987;&#12289;&#20998;&#20139;&#12289;&#35775;&#38382;&#30340;&#32593;&#39029;&#38142;&#25509;&#12301;&#65292;&#36825;&#26159;&#33150;&#35759; URL &#23433;&#20840;&#38750;&#24120;&#26126;&#30830;&#30340;&#38647;&#21306;&#12290;<br>
+<strong>API &#22495;&#21517; = &#27704;&#36828;&#19981;&#35201;&#20986;&#29616;&#22312;&#29992;&#25143;&#21487;&#28857;&#20987;&#22330;&#26223;</strong></p>
+</blockquote><h3 id="9002fe70e9865be3f538c58b1f648595">1&#65039;&#8419; <code>api.example.com/app/release/134</code></h3><p>&#36825;&#20010; URL &#20855;&#26377;&#20197;&#19979; <strong>&#39640;&#21361;&#29305;&#24449;&#32452;&#21512;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#29305;&#24449;</th>
+<th>&#39118;&#25511;&#35270;&#35282;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>api.</code> &#23376;&#22495;</td>
+<td>&#25509;&#21475;&#22495;&#21517;</td>
+</tr>
+<tr>
+<td><code>/app/release/134</code></td>
+<td>&#20687;&ldquo;&#29256;&#26412; / &#21457;&#24067; / &#23433;&#35013;&#21253;&rdquo;</td>
+</tr>
+<tr>
+<td>&#30452;&#25509; HTTP GET &#21487;&#35775;&#38382;</td>
+<td>&#21487;&#34987;&#22806;&#37096;&#25195;&#25551; / &#35843;&#29992;</td>
+</tr>
+<tr>
+<td>&#26080;&#30331;&#24405; / &#26080;&#31614;&#21517;</td>
+<td>&#20219;&#24847;&#20154;&#21487;&#35775;&#38382;</td>
+</tr>
+</tbody>
+</table><p>&#22312;&#33150;&#35759;&#30340;&#35268;&#21017;&#20307;&#31995;&#20013;&#65292;&#36825;&#31867; URL <strong>&#26497;&#23481;&#26131;&#34987;&#21028;&#23450;&#20026;</strong>&#65306;</p><ul>
+<li>&#128204; <strong>&#30097;&#20284;&#24212;&#29992;&#20998;&#21457;&#25509;&#21475;</strong></li>
+<li>&#128204; <strong>&#30097;&#20284; APK / IPA / &#26356;&#26032;&#20837;&#21475;</strong></li>
+<li>&#128204; <strong>&#30097;&#20284;&#28784;&#20135; App &#25237;&#25918;&#36890;&#36947;</strong></li>
+</ul><blockquote>
+<p>&#21363;&#20351;&#20320;&#30495;&#23454;&#36820;&#22238;&#30340;&#26159; JSON&#65292;&#21482;&#35201; URL &#32467;&#26500;&ldquo;&#20687;&rdquo;&#65292;&#23601;&#20250;&#34987;&#39118;&#25511;&#21629;&#20013;&#12290;</p>
+</blockquote><hr><h3 id="d960599030fd8c95d0ef31ae2836e098">2&#65039;&#8419; <code>api.example.com/room/share?...</code></h3><p>&#36825;&#20010; URL <strong>&#21629;&#20013;&#20102;&#33150;&#35759;&#30340;&#22810;&#20010;&#39640;&#39118;&#38505;&#35268;&#21017;</strong>&#65306;</p><pre><code class="   language-php">/share
+?uid=1024
+&amp;type=app_share</code></pre><p>&#22312;&#33150;&#35759;&#35268;&#21017;&#20013;&#65292;&#36825;&#31181; URL = &#128680; <strong>&#37325;&#28857;&#25171;&#20987;&#23545;&#35937;</strong></p><table>
+<thead>
+<tr>
+<th>&#20851;&#38190;&#23383;</th>
+<th>&#39118;&#38505;&#21547;&#20041;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>share</code></td>
+<td>&#20998;&#20139;&#20256;&#25773;</td>
+</tr>
+<tr>
+<td><code>uid</code></td>
+<td>&#29992;&#25143;&#32500;&#24230;&#20256;&#25773;</td>
+</tr>
+<tr>
+<td><code>type=app_share</code></td>
+<td>App &#25289;&#26032; / &#35010;&#21464;</td>
+</tr>
+</tbody>
+</table><p>&#128073; <strong>&#36825;&#23601;&#26159;&#26631;&#20934;&#30340;&#12300;&#35010;&#21464; / &#36339;&#36716; / &#35825;&#23548;&#20256;&#25773; URL &#27169;&#26495;&#12301;</strong></p><p>&#33150;&#35759;&#30340; URL &#23433;&#20840;&#38750;&#24120;&#26126;&#30830;&#22320;&#25226;&#20197;&#19979;&#34892;&#20026;&#21015;&#20026;&#39640;&#39118;&#38505;&#65306;</p><ul>
+<li>App &#20998;&#20139;&#33853;&#22320;&#39029;</li>
+<li>&#24102;&#21442;&#25968;&#30340;&#36339;&#36716;&#38142;&#25509;</li>
+<li>&#29992;&#25143;&#32500;&#24230;&#30340;&#20256;&#25773; URL</li>
+<li>&#21487;&#22312; QQ / &#24494;&#20449;&#20013;&#34987;&#30452;&#25509;&#28857;&#20987;</li>
+</ul><p><strong>&#19981;&#31649;&#20320;&#20869;&#23481;&#26159;&#19981;&#26159;&#21512;&#35268;&#65292;&#21482;&#35201;&#32467;&#26500;&#20687;&#65292;&#23601;&#30452;&#25509;&#25318;&#12290;</strong></p><h3 id="882de412942dff4c9dadaed4171ea06a">&#20154;&#24037;&#23457;&#26680;</h3><p>&#20197;&#19978;&#35299;&#35835;&#26159;&#38024;&#23545;&#26426;&#23457;&#65292;&#24403;&ldquo;&#20030;&#25253;&#37327;&rdquo;&#21644;&ldquo;&#35775;&#38382;&#37327;&rdquo;&#36807;&#22823;&#26102;&#23601;&#20250;&#26377;&#20154;&#24037;&#26816;&#27979;&#20171;&#20837;&#65292;&#23601;&#35201;&#26681;&#25454;&#19994;&#21153;&#35268;&#21017;&#35843;&#25972;&#20102;&#12290;</p><p>&#24403;&#26377;&#29992;&#25143;&#23545;&#38142;&#25509;&#20869;&#23481;&#36827;&#34892;&#25237;&#35785;&#20030;&#25253;&#26102;&#65292;&#22312;&#19968;&#23450;&#26102;&#38388;&#20869;&#65292;&#24403;&#20030;&#25253;&#27425;&#25968;&#36798;&#21040;&#19968;&#23450;&#25968;&#37327;&#26102;&#65292;&#23601;&#26377;&#24037;&#20316;&#20154;&#21592;&#25509;&#20837;&#65292;&#24320;&#22987;&#20154;&#24037;&#26816;&#27979;&#12290;</p><p>&#24403;&#38142;&#25509;&#35775;&#38382;&#37327;&#36807;&#22823;&#65292;&#24182;&#36890;&#36807;&#31995;&#32479;&#33258;&#21160;&#26816;&#26597;&#20986;&#35813;&#22495;&#21517;&#24050;&#21152;&#20837;&#30333;&#21517;&#21333;&#26102;&#65292;&#22495;&#21517;&#23601;&#20250;&#34987;&#25552;&#20132;&#32473;&#24037;&#20316;&#20154;&#21592;&#36827;&#34892;&#26816;&#27979;&#12290;</p><p>&#24494;&#20449;&#23631;&#34109;&#22495;&#21517;&#21518;&#65292;&#25105;&#20204;&#23601;&#20250;&#22312;&#24494;&#20449;&#31471;&#30475;&#21040;&ldquo;&#24050;&#20572;&#27490;&#35775;&#38382;&#35813;&#32593;&#39029;&rdquo;&#30340;&#35686;&#31034;&#22270;&#29255;&#12290;&#21516;&#26102;&#65292;&#31995;&#32479;&#25110;&#20154;&#24037;&#23601;&#20250;&#23545;&#22495;&#21517;&#36827;&#34892;&#25289;&#40657;&#22788;&#29702;&#65292;&#24182;&#35760;&#24405;&#22495;&#21517;&#21450;&#20854;&#36335;&#24452;&#65292;&#36827;&#20837;black-list.&#20043;&#21518;&#65292;&#21363;&#20351;&#20026;&#35813;&#22495;&#21517;&#37325;&#26032;&#24314;&#31449;&#65292;&#20294;&#21482;&#35201;&#19968;&#29992;&#65292;&#23601;&#20250;&#34987;&#24494;&#20449;&#23553;&#38381;&#12290;</p><h2 id="59c1d28ffbf075894cb2684f702476c5">&#25972;&#25913;</h2><h3 id="675cfe0d1fe6e5fa2f98c7d6bc485084">&#21407; api &#22495;&#21517;&#24443;&#24213;&#31105;&#27490;&#22806;&#37096;&#30452;&#25509;&#35775;&#38382;</h3><p>api.example.com</p><p>&#10060; &#19981;&#20316;&#20026;&#20219;&#20309;&#21487;&#28857;&#20987; URL<br>
+&#10060; &#19981;&#20801;&#35768;&#27983;&#35272;&#22120;&#30452;&#25509;&#35775;&#38382;</p><p>&#25216;&#26415;&#25514;&#26045;&#65306;</p><ul>
+<li>
+<p>&#21482;&#20801;&#35768;&#65306;App &#20869;&#35843;&#29992;&#12289;&#26381;&#21153;&#31471;&#35843;&#29992;</p>
+</li>
+<li>
+<p>&#24517;&#39035;&#26657;&#39564;&#65306;token&#12289;sign&#12289;UA</p>
+</li>
+<li>
+<p>&#27983;&#35272;&#22120;&#35775;&#38382;&#30452;&#25509;&#36820;&#22238;&#65306;403 &#25110;&#22266;&#23450; JSON&#65288;&#26080;&#36339;&#36716;&#12289;&#26080;&#38142;&#25509;&#65289;</p>
+</li>
+</ul><h3 id="6f80fa9e36aae33dd3369489029cd6a9">&#19981;&#35201;&#29992; <code>api.</code> &#20570;&#20998;&#20139;&#38142;&#25509;</h3><p>&#27491;&#30830;&#20570;&#27861;&#65306;</p><pre><code class="language-text">share.example.com
+www.example.com
+m.example.com</code></pre><p>&#28982;&#21518;&#65306;</p><ul>
+<li>&#39029;&#38754; <strong>&#20801;&#35768;</strong> &#20570;&#30340;&#20107;</li>
+</ul><p>1&#12289;&#32431;&#20869;&#23481;&#23637;&#31034;<br>
+2&#12289;&#38745;&#24577;&#25991;&#26696;<br>
+3&#12289;&#22270;&#29255; / &#20171;&#32461;<br>
+4&#12289;&#26126;&#30830;&#30340;&#12300;&#29992;&#25143;&#20027;&#21160;&#28857;&#20987;&#12301;&#25353;&#38062;</p><ul>
+<li>&#39029;&#38754; <strong>&#31105;&#27490;</strong> &#20570;&#30340;&#20107;&#65288;&#24517;&#23553;&#65289;</li>
+</ul><p>1&#12289;&#39029;&#38754;&#25171;&#24320;&#21363;&#36339;&#36716;<br>
+2&#12289;&#33258;&#21160;&#25289;&#36215; App<br>
+3&#12289;&#33258;&#21160;&#36339;&#19979;&#36733;<br>
+4&#12289;&#36890;&#36807; JS &#21028;&#26029; UA &#24378;&#21046;&#36339;&#36716;<br>
+5&#12289;iframe &#20869;&#23884;&#19979;&#36733;&#39029;</p><p>&#128073; <strong>&#19968;&#23450;&#35201;&ldquo;&#29992;&#25143;&#28857;&#20987;&#21518;&#25165;&#21457;&#29983;&#34892;&#20026;&rdquo;</strong></p><hr><h3 id="e5349fc1eacae637ec30ab5c1898aaf1">URL &#32467;&#26500;&#24517;&#39035;&ldquo;&#21435;&#39118;&#25511;&#21270;&rdquo;</h3><ul>
+<li>&#10060; &#39640;&#21361;&#20889;&#27861;&#65292;&#24517;&#39035;&#36991;&#20813;&#30340;&#20851;&#38190;&#35789;&#65288;&#30452;&#25509;&#21629;&#20013;&#35268;&#21017;&#65289;</li>
+</ul><pre><code class="   language-php">/share
+/app_share
+/jump_from
+/release
+/jump
+/invite
+/download
+/install
+/openapp</code></pre><ul>
+<li>&#9989; &#20302;&#39118;&#38505;&#20889;&#27861;</li>
+</ul><pre><code class="   language-php">/page
+/info
+/detail
+/view</code></pre><p>&#21442;&#25968;&#20063;&#35201;&#25913;&#65306;</p><pre><code class="language-diff">- ?uid=1024&amp;type=app_share
++ ?id=10240
++ ?content_id=10240</code></pre><p>&#128204; &#21407;&#21017;&#65306;</p><ul>
+<li>&#19981;&#20307;&#29616;&#20256;&#25773;&#34892;&#20026;</li>
+<li>&#19981;&#20307;&#29616; App</li>
+<li>&#19981;&#20307;&#29616;&#36339;&#36716;</li>
+<li>&#19981;&#20307;&#29616;&#29992;&#25143;&#35010;&#21464;</li>
+</ul><hr><h2 id="9ddcea974faa89cd1c19af3833965148">&#37325;&#26032;&#21457;&#36215;&#30003;&#35785;</h2><p>&#20320;&#37325;&#26032;&#30003;&#35785;&#26102;&#65292;&#21487;&#20197;&#36825;&#26679;&#20889;&#65288;&#24314;&#35758;&#29031;&#25220;&#65289;&#65306;</p><blockquote>
+<p>&#25105;&#21496;&#24050;&#23436;&#25104;&#25972;&#25913;&#65306;</p>
+<ol>
+<li>api &#23376;&#22495;&#21517;&#24050;&#19981;&#20877;&#20316;&#20026;&#20219;&#20309;&#21487;&#28857;&#20987;&#35775;&#38382;&#30340;&#32593;&#22336;&#65292;&#20165;&#20379; App &#20869;&#37096;&#25509;&#21475;&#35843;&#29992;</li>
+<li>&#25152;&#26377;&#20998;&#20139;&#19982;&#33853;&#22320;&#39029;&#38754;&#24050;&#36801;&#31227;&#33267;&#29420;&#31435;&#23637;&#31034;&#22495;&#21517;&#65292;&#19981;&#21253;&#21547;&#33258;&#21160;&#36339;&#36716;&#12289;&#19979;&#36733;&#25110;&#35825;&#23548;&#34892;&#20026;</li>
+<li>&#24050;&#31227;&#38500; app_share&#12289;jump &#31561;&#39640;&#39118;&#38505;&#20256;&#25773;&#21442;&#25968;<br>
+&#35831;&#22797;&#23457;&#65292;&#35874;&#35874;&#12290;</li>
+</ol>
+</blockquote><p><a href="https://urlsec.qq.com/check.html" target="_blank" rel="noopener noreferrer">&#32593;&#22336;&#23433;&#20840;&#26816;&#27979;&#22320;&#22336;</a></p><p><a href="https://urlsec.qq.com/complain.html" target="_blank" rel="noopener noreferrer">&#32593;&#31449;&#25318;&#25130;&#30003;&#35785;&#22320;&#22336;</a></p><p><strong>&#36825;&#26679;&#36890;&#36807;&#29575;&#25165;&#20250;&#39640;&#12290;</strong></p><hr><h2 id="89bfefde7bd4e739b73aff2b0bcb0f24">&#25972;&#25913; Checklist&#65288;&#29031;&#21333;&#25191;&#34892;&#65289;</h2><p>&#20320;&#22312;<strong>&#20877;&#27425;&#30003;&#35785;&#21069;</strong>&#65292;&#19968;&#26465;&#26465;&#21246;&#25481;&#65306;</p><hr><h3 id="c23edcb42a51afd929f8995944f4570a">&#9989; &#22495;&#21517;&#19982;&#32467;&#26500;</h3><ul>
+<li>[ ] api &#23376;&#22495;&#21517;&#19981;&#20877;&#29992;&#20110;&#20998;&#20139; / &#23637;&#31034;</li>
+<li>[ ] &#20998;&#20139;&#39029;&#38754;&#20351;&#29992; www / share / m &#23376;&#22495;</li>
+<li>[ ] URL &#36335;&#24452;&#26080; share / jump / app_share &#31561;&#20851;&#38190;&#35789;</li>
+<li>[ ] &#21442;&#25968;&#20165;&#20445;&#30041; id &#31867;&#23383;&#27573;</li>
+</ul><hr><h3 id="e3ce59c7347a1e7ccee07b733837b2ef">&#9989; &#39029;&#38754;&#34892;&#20026;</h3><ul>
+<li>[ ] &#25171;&#24320;&#39029;&#38754;&#26080;&#20219;&#20309;&#33258;&#21160;&#36339;&#36716;</li>
+<li>[ ] &#19981;&#33258;&#21160;&#25289;&#36215; App</li>
+<li>[ ] &#19981;&#33258;&#21160;&#19979;&#36733;</li>
+<li>[ ] &#25152;&#26377;&#34892;&#20026;&#38656;&#29992;&#25143;&#20027;&#21160;&#28857;&#20987;</li>
+<li>[ ] &#39029;&#38754;&#20026;&#32431; HTML &#23637;&#31034;&#39029;</li>
+</ul><hr><h3 id="5f4bcf0c2d6f270057de80e966c7c3ea">&#9989; &#25509;&#21475;&#23433;&#20840;</h3><ul>
+<li>[ ] API &#36820;&#22238;&#32431; JSON</li>
+<li>[ ] &#26080;&#19979;&#36733; / schema / &#36339;&#36716;&#23383;&#27573;</li>
+<li>[ ] Content-Type &#27491;&#30830;</li>
+<li>[ ] &#27983;&#35272;&#22120;&#35775;&#38382;&#36820;&#22238; 403 &#25110;&#31354; JSON</li>
+</ul><hr><h3 id="63ec2b6ec862efe22d48113537cf3ba0">&#9989; &#30003;&#35785;&#20934;&#22791;</h3><ul>
+<li>[ ] &#21407;&#34987;&#25318;&#25130; URL &#24050;&#19981;&#21487;&#35775;&#38382;&#25110; 403</li>
+<li>[ ] &#26032;&#20998;&#20139; URL &#24050;&#19978;&#32447;</li>
+<li>[ ] &#21487;&#25130;&#22270;&#23637;&#31034;&#25972;&#25913;&#39029;&#38754;</li>
+<li>[ ] &#30003;&#35785;&#35828;&#26126;&#26126;&#30830;&#20889;&ldquo;&#24050;&#36801;&#31227;&#20998;&#20139;&#22495;&#21517; + &#31227;&#38500;&#20256;&#25773;&#34892;&#20026;&rdquo;</li>
+</ul><h2 id="3843965314bb1f5d737e4666c5d32199">&#22810;&#22495;&#21517;&#33853;&#22320;&#39029;&#26041;&#26696;</h2><p>&#20026;&#38450;&#27490;&#22495;&#21517;&#34987;&#23553;&#25105;&#20204;&#36824;&#21487;&#20197;&#37319;&#29992;&#33853;&#22320;&#39029;&#22495;&#21517;&#19981;&#22266;&#23450;&#30340;&#26041;&#26696;&#12290;</p><p>1&#12289;&#21487;&#38543;&#26102;&#26356;&#25442;&#20998;&#20139;&#22495;&#21517;</p><p>&#21457;&#36215;&#20998;&#20139;&#26102;&#20174;&#21518;&#21488;&#33719;&#21462;&#20998;&#20139;&#22320;&#22336;&#65292;&#21487;&#38543;&#26102;&#26356;&#25442;&#65292;&#19981;&#35201;&#25918;&#22312;&#21069;&#21488;&#25340;&#25509;&#65292;&#21518;&#21488;&#30452;&#25509;&#29983;&#25104;&#12290;&#36825;&#26679;&#23545;&#20110;&#32769;&#29256;&#26412;&#30340;APP&#21487;&#38543;&#26102;&#26356;&#25442;&#20998;&#20139;&#22495;&#21517;&#12290;</p><p>2&#12289;&#20998;&#20139;&#22495;&#21517;&#21644;&#33853;&#22320;&#39029;&#22495;&#21517;&#20998;&#31163;</p><p>&#25226;A&#22495;&#21517;&#65292;&#20316;&#20026;&#20998;&#20139;&#22495;&#21517;&#65307; &#25226;B&#22495;&#21517;&#65292;&#20316;&#20026;&#33853;&#22320;&#22495;&#21517;&#65288;&#20063;&#23601;&#26159;&#29992;&#25143;&#35775;&#38382;&#30475;&#21040;&#30340;&#22495;&#21517;&#65289;&#65307; &#21482;&#26377;&#20174;A&#22495;&#21517;&#36339;&#36716;&#21040;B&#22495;&#21517;&#65292;B&#22495;&#21517;&#26174;&#31034;&#30340;&#25165;&#26159;&#25105;&#20204;&#24819;&#23637;&#31034;&#32473;&#29992;&#25143;&#30340;&#20869;&#23481;&#65292;&#22914;&#26524;&#30452;&#25509;&#22797;&#21046;B&#30340;&#32593;&#22336;&#65292;&#25171;&#24320;&#30340;&#21482;&#26159;&#19968;&#20010;&#38169;&#35823;&#39029;&#38754;&#25110;&#32773;&#19981;&#36829;&#35268;&#30340;&#20869;&#23481;&#65292;&#20063;&#23601;&#26159;&#35828;&#22914;&#26524;TA&#28857;&#20987;&#21491;&#19978;&#35282;&#20030;&#25253;&#65292;&#20030;&#25253;&#30340;&#21644;&#35775;&#38382;&#30340;&#34429;&#28982;&#26159;&#21516;&#19968;&#20010;&#32593;&#22336;&#65292;&#21487;&#26159;&#26174;&#31034;&#30340;&#20869;&#23481;&#21364;&#19981;&#21516;&#12290;&#20174;&#32780;&#26368;&#22823;&#38480;&#24230;&#30340;&#38450;&#27490;&#22495;&#21517;&#34987;&#23553;&#26432;&#12290;</p><p>A &#24448; B &#36339;&#36716;&#26102;&#31105;&#25481; refer &#20803;&#32032;&#12290;</p><p>3&#12289;&#20351;&#29992;&#32769;&#31449;&#21644;&#30693;&#21517;&#31449;&#28857;&#30340;&#22495;&#21517;&#20316;&#20026;&#20998;&#20139;&#22495;&#21517;</p><p>&#20854;&#23454;&#26159;&#36339;&#26495;&#21407;&#29702;&#12290;&#24314;&#31449;&#26102;&#38388;&#20037;&#21644;&#34892;&#19994;&#20869;&#30456;&#23545;&#30693;&#21517;&#30340;&#22495;&#21517;&#26368;&#19981;&#23481;&#26131;&#34987;&#24494;&#20449;&#23553;&#26432;&#65292;&#24403;&#36339;&#36716;&#20195;&#30721;&#27880;&#20837;&#21040;&#19978;&#36848;&#32593;&#31449;&#20877;&#21033;&#29992;&#23433;&#38450;&#32593;&#22336;&#20570;&#36339;&#36716;&#65292;&#25351;&#21521;&#33853;&#22320;&#39029;&#65292;&#34987;&#24494;&#20449;&#23553;&#26432;&#30340;&#21487;&#33021;&#24615;&#24494;&#20046;&#20854;&#24494;&#12290;</p><p>4&#12289;&#24314;&#31435;&#33853;&#22320;&#39029;&#22495;&#21517;&#27744;</p><p>&#30001;&#20998;&#20139;&#39029;&#27599;&#27425;&#36339;&#36716;&#19981;&#21516;&#30340;&#33853;&#22320;&#39029;&#65292;&#38450;&#27490;&#34987;&#23553;&#12290;</p><p>5&#12289;&#23545;&#25509;&#24494;&#20449;&#22495;&#21517;&#26816;&#27979;&#25509;&#21475;</p><p>&#24494;&#20449;&#22495;&#21517;&#26816;&#27979;&#25509;&#21475;&#65292;&#20570;&#21040;&#38450;&#24739;&#20110;&#26410;&#28982;&#12290;&#36825;&#20010;&#21487;&#20197;&#33258;&#24049;&#24320;&#21457;&#20063;&#21487;&#20197;&#36141;&#20080;&#12290;</p><p>&#26816;&#27979;&#21040;&#26576;&#20010;&#22495;&#21517;&#34987;&#23553;&#23601;&#23558;&#20854;&#20174;&#22495;&#21517;&#27744;&#20013;&#31227;&#38500;&#12290;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 网址安全检测地址: <i><a href="https://urlsec.qq.com/check.html" target="_blank">https://urlsec.qq.com/check.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 网站拦截申诉地址: <i><a href="https://urlsec.qq.com/complain.html" target="_blank">https://urlsec.qq.com/complain.html</a></i><br></p>
+			</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

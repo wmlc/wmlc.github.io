@@ -70,21 +70,185 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="gSzGiTmrUQNBUETkKxuSItbzeLtzccP7sFJ0svV7">
+    <meta name="csrf-token" content="LjwWxbOCAwzKlhujOj8BjAXVA1H82PnVzvqZIpan">
 
     
 </head>
 <body>
 
 <!-- 密码输入层 -->
-<div id="passwordModal" style="display: none">
-    <h3>请输入访问密码</h3>
-    <input type="password" id="pwdInput" placeholder="Password"/>
-    <button onclick="checkPassword()">进入</button>
-    <p id="errorMsg" style="color:red; min-height:1.2em;"></p>
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
 </div>
 
-<div id="app" v-cloak style="display: none">
+<div id="app" v-cloak style="display: block;">
     <div class="fixed pin-t pin-x z-40">
     <div class="bg-gradient-primary text-white h-1"></div>
 
@@ -253,6 +417,10 @@
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
                                    href="../开源项目/overview.html">开源项目</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
@@ -358,6 +526,7 @@
 <li id="blog325"><a href="kq1ez55erl.html#blog325">微信中网页如何跳转到小程序？</a>
 <li id="blog326"><a href="z64y9p2e5l.html#blog326">overtrue/wechat 报错 Failed to cache access token 原因</a>
 <li id="blog457"><a href="n3xyqr49mq.html#blog457">微信支付注意点</a>
+<li id="blog937"><a href="dgy7xqxvw2.html#blog937">网址微信防封注意事项</a>
 </ul>
 </li>
 </ul>
@@ -379,6 +548,43 @@
             addView('n2qvpj6v3m.html')
         });
     });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
 </script>
 
 <script>
@@ -395,8 +601,6 @@ var _hmt = _hmt || [];
 	
 	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
 		<h1>APP 跳转微信小程序和回调</h1><ul>
-<li><a href="n2qvpj6v3m.html#4581684d24ee40e5cc4dec183b4b0b80">App跳转微信小程序和回调</a>
-<ul>
 <li><a href="n2qvpj6v3m.html#268885ab9846cc954e7c99f2fe7657c8">拉起</a></li>
 <li><a href="n2qvpj6v3m.html#0c7789feae96feb59a4f25eaa11c6ffb">回调</a>
 <ul>
@@ -405,8 +609,7 @@ var _hmt = _hmt || [];
 </ul></li>
 <li><a href="n2qvpj6v3m.html#e277759e5f5ecab2320d4e4fb05d2af0">扩展 </a></li>
 <li><a href="n2qvpj6v3m.html#7efcb0ce09e8842951c5cfd298b4e7ee">使用场景</a></li>
-</ul></li>
-</ul><?xml encoding="UTF-8"><h2 id="4581684d24ee40e5cc4dec183b4b0b80">App&#36339;&#36716;&#24494;&#20449;&#23567;&#31243;&#24207;&#21644;&#22238;&#35843;</h2><p>&#22312;&#21516;&#19968;&#24320;&#25918;&#24179;&#21488;&#36134;&#21495;&#19979;&#30340;&#31227;&#21160;&#24212;&#29992;&#21450;&#23567;&#31243;&#24207;&#26080;&#38656;&#20851;&#32852;&#21363;&#21487;&#23436;&#25104;&#36339;&#36716;&#65292;&#38750;&#21516;&#19968;&#24320;&#25918;&#24179;&#21488;&#36134;&#21495;&#19979;&#30340;&#23567;&#31243;&#24207;&#38656;&#19982;&#31227;&#21160;&#24212;&#29992;&#65288;APP&#65289;&#25104;&#21151;&#20851;&#32852;&#21518;&#25165;&#25903;&#25345;&#36339;&#36716;&#12290;</p><p>&#21487;&#22312;&ldquo;&#31649;&#29702;&#20013;&#24515;-&#31227;&#21160;&#24212;&#29992;-&#24212;&#29992;&#35814;&#24773;-&#20851;&#32852;&#23567;&#31243;&#24207;&#20449;&#24687;&rdquo;&#65292;&#20026;&#36890;&#36807;&#23457;&#26680;&#30340;&#31227;&#21160;&#24212;&#29992;&#21457;&#36215;&#20851;&#32852;&#23567;&#31243;&#24207;&#25805;&#20316;&#12290;</p><h3 id="268885ab9846cc954e7c99f2fe7657c8">&#25289;&#36215;</h3><p>App&#25171;&#24320;&#19979;&#31243;&#24207;&#26377;&#20004;&#31181;&#26041;&#24335;&#65306;</p><p>1&#12289;&#36890;&#36807;App&#20998;&#20139;&#23567;&#31243;&#24207;&#21345;&#29255;&#21040;&#24494;&#20449;&#65292;&#28982;&#21518;&#22312;&#24494;&#20449;&#19978;&#28857;&#20987;&#23567;&#31243;&#24207;&#21345;&#29255;&#25171;&#24320;&#23567;&#31243;&#24207;&#65292;&#36825;&#26102;&#23567;&#31243;&#24207;&#20063;&#21487;&#20197;&#25171;&#24320;App</p><ul>
+</ul><?xml encoding="UTF-8"><p>&#22312;&#21516;&#19968;&#24320;&#25918;&#24179;&#21488;&#36134;&#21495;&#19979;&#30340;&#31227;&#21160;&#24212;&#29992;&#21450;&#23567;&#31243;&#24207;&#26080;&#38656;&#20851;&#32852;&#21363;&#21487;&#23436;&#25104;&#36339;&#36716;&#65292;&#38750;&#21516;&#19968;&#24320;&#25918;&#24179;&#21488;&#36134;&#21495;&#19979;&#30340;&#23567;&#31243;&#24207;&#38656;&#19982;&#31227;&#21160;&#24212;&#29992;&#65288;APP&#65289;&#25104;&#21151;&#20851;&#32852;&#21518;&#25165;&#25903;&#25345;&#36339;&#36716;&#12290;</p><p>&#21487;&#22312;&ldquo;&#31649;&#29702;&#20013;&#24515;-&#31227;&#21160;&#24212;&#29992;-&#24212;&#29992;&#35814;&#24773;-&#20851;&#32852;&#23567;&#31243;&#24207;&#20449;&#24687;&rdquo;&#65292;&#20026;&#36890;&#36807;&#23457;&#26680;&#30340;&#31227;&#21160;&#24212;&#29992;&#21457;&#36215;&#20851;&#32852;&#23567;&#31243;&#24207;&#25805;&#20316;&#12290;</p><h3 id="268885ab9846cc954e7c99f2fe7657c8">&#25289;&#36215;</h3><p>App&#25171;&#24320;&#19979;&#31243;&#24207;&#26377;&#20004;&#31181;&#26041;&#24335;&#65306;</p><p>1&#12289;&#36890;&#36807;App&#20998;&#20139;&#23567;&#31243;&#24207;&#21345;&#29255;&#21040;&#24494;&#20449;&#65292;&#28982;&#21518;&#22312;&#24494;&#20449;&#19978;&#28857;&#20987;&#23567;&#31243;&#24207;&#21345;&#29255;&#25171;&#24320;&#23567;&#31243;&#24207;&#65292;&#36825;&#26102;&#23567;&#31243;&#24207;&#20063;&#21487;&#20197;&#25171;&#24320;App</p><ul>
 <li>&#31532;&#19968;&#27493;&#65306;&#20320;&#38656;&#35201;&#21040;&#24494;&#20449;&#24320;&#25918;&#24179;&#21488; &#23558;&#20320;&#30340;app &#20851;&#32852;&#19978;&#20320;&#30340;&#23567;&#31243;&#24207;&#65281;  </li>
 <li>&#31532;&#20108;&#27493;&#65306;&#20320;&#24037;&#31243;&#20013;&#38656;&#35201;&#23548;&#20837;&#26377; wechatOpenSDK  </li>
 <li>&#31532;&#19977;&#27493;&#65306; &#20998;&#20139;&#23567;&#31243;&#24207;&#21345;&#29255;&#31867;&#22411;  </li>
@@ -467,36 +670,124 @@ options.scene&#26159;1069&#65292;&#36825;&#20010;&#22330;&#26223;id&#34920;&#310
 </script>
 
 <script>
-    const CORRECT_PASSWORD = atob('NFJzbXFrS0pKcHIxTHhKbA==');
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
 
     function checkPassword() {
         const input = document.getElementById('pwdInput').value;
         const errorMsg = document.getElementById('errorMsg');
 
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
         if (input === CORRECT_PASSWORD) {
             // 验证成功，保存状态并显示内容
             localStorage.setItem('unlock_time', Date.now());
-            document.getElementById('passwordModal').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
         } else {
-            errorMsg.textContent = '密码错误，请重试';
-            document.getElementById('pwdInput').value = '';
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
         }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
     }
 
     // 页面加载时检查是否已解锁
     window.onload = function () {
-        const unlockTime = localStorage.getItem('unlock_time');
-        if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
-            document.getElementById('app').style.display = 'block';
-        } else {
-            document.getElementById('passwordModal').style.display = 'flex';
-        }
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
     };
 
     // 支持回车提交
     document.getElementById('pwdInput').addEventListener('keyup', function (e) {
         if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
     });
 </script>
 </body>

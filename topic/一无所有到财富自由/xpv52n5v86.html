@@ -1,0 +1,788 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>第十章 让项目变自动取款机之二——用情维系好关系 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="LjwWxbOCAwzKlhujOj8BjAXVA1H82PnVzvqZIpan">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    一无所有到财富自由 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>一无所有到财富自由</h2>
+<ul>
+<li id="blog682"><a href="x3vo0z6vm1.html#blog682">从一无所有到财富自由</a>
+</ul>
+</li>
+<li>
+<h2>第一篇 寻找项目</h2>
+<ul>
+<li id="blog683"><a href="qk942q3vw1.html#blog683">第一章 创业要像鳄鱼捕食一样</a>
+<li id="blog947"><a href="2ev86ogyor.html#blog947">第二章 第一个圈圈——量大且可重复消费</a>
+<li id="blog948"><a href="e296o519q7.html#blog948">第三章 第二个圈圈——批发为王</a>
+<li id="blog949"><a href="xq9zrp5vdo.html#blog949">第四章 第三个圈圈——项目需易复制粘贴</a>
+<li id="blog950"><a href="2wy3le7ykm.html#blog950">第五章 项目与个人能力孰重——找把机关枪</a>
+</ul>
+</li>
+<li>
+<h2>第二篇 项目执行</h2>
+<ul>
+<li id="blog951"><a href="3dykqzzyl0.html#blog951">财富积累中的术与道</a>
+<li id="blog952"><a href="enyd5qn97d.html#blog952">第六章 寻找合适的合伙人</a>
+<li id="blog953"><a href="5dve2o1v4x.html#blog953">第七章 项目运作——术与道</a>
+<li id="blog954"><a href="4rvgnx6ydj.html#blog954">第八章 如何防止人才流失</a>
+<li id="blog955"><a href="kl9nod8vz4.html#blog955">第九章 让项目变成自动取款机之一——做好项目群领袖</a>
+<li id="blog956"><a href="xpv52n5v86.html#blog956">第十章 让项目变自动取款机之二——用情维系好关系</a>
+</ul>
+</li>
+<li>
+<h2>第三篇 财务自由终极篇</h2>
+<ul>
+<li id="blog957"><a href="3xyq4nlvmq.html#blog957">第十一章 第三阶段干点啥财富才能迅速增长</a>
+<li id="blog958"><a href="x3vo0eovm1.html#blog958">第十二章 万物相通——股票的本质</a>
+<li id="blog959"><a href="qk942gxvw1.html#blog959">第十三章 潮哥的人生转折点有点高</a>
+<li id="blog960"><a href="569x54ryep.html#blog960">第十四章 无风险套利</a>
+</ul>
+</li>
+<li>
+<h2>专题篇</h2>
+<ul>
+<li id="blog961"><a href="dgy7xjxvw2.html#blog961">专题一至五</a>
+<li id="blog962"><a href="rwyl21zvz8.html#blog962">专题六：潮哥的下酒菜</a>
+<li id="blog963"><a href="kpv13we98w.html#blog963">专题七：有效沟通——大力金刚指</a>
+<li id="blog964"><a href="d6vroejv3g.html#blog964">专题八至十二</a>
+<li id="blog965"><a href="2ky04w69z8.html#blog965">专题十三至十六</a>
+</ul>
+</li>
+<li>
+<h2>案例篇</h2>
+<ul>
+<li id="blog966"><a href="2qvpxk693m.html#blog966">案例一至十</a>
+<li id="blog967"><a href="m892gw8y01.html#blog967">案例十一至二十</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/xpv52n5v86.html', function (data, status) {
+            addView('xpv52n5v86.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>第十章 让项目变自动取款机之二——用情维系好关系</h1><?xml encoding="UTF-8"><p>&#19978;&#27425;&#35762;&#21040;&#20102;&#33258;&#36523;&#30340;&#23450;&#20301;&#20197;&#21450;&#38656;&#35201;&#20855;&#22791;&#30340;&#19977;&#20010;&#37325;&#35201;&#32032;&#36136;&#65292;&#25509;&#19979;&#26469;&#25105;&#20204;&#35848;&#35848;&#24590;&#26679;</p><p>&#32500;&#31995;&#22909;&#36825;&#20123;&#20851;&#31995;&#12290;</p><p>&#20063;&#23601;&#26159;&#65292;&#20320;&#21644;&#21512;&#20249;&#20154;&#12289;&#21592;&#24037;&#12289;&#23458;&#25143;&#20043;&#38388;&#30340;&#20851;&#31995;&#12290;</p><p>&#35201;&#32500;&#31995;&#22909;&#36825;&#20123;&#20851;&#31995;&#65292;&#26377;&#20004;&#20010;&#22522;&#26412;&#21407;&#21017;&#65306;&#24773;&#12289;&#21033;&#12289;&#27861;&#21407;&#21017;&#21644;&#20108;&#20843;&#27861;&#21017;&#12290;</p><p>&#65288;&#25509;&#19979;&#26469;&#30340;&#20869;&#23481;&#24456;&#37325;&#35201;&#65292;&#25195;&#20852;&#30340;&#26159;&#27604;&#36739;&#32469;&#24367;&#65292;&#21487;&#33021;&#20250;&#25439;&#22833;&#19968;&#20123;&#33041;&#32454;&#32990;&#65292;&#26410;&#28385;</p><p>&#21313;&#20843;&#23681;&#35831;&#22312;&#29238;&#27597;&#38506;&#21516;&#19979;&#35266;&#30475;&#65289;</p><p>&#24773;&#23601;&#26159;&#24863;&#24773;&#65292;&#21033;&#23601;&#26159;&#21033;&#30410;&#65292;&#27861;&#23601;&#26159;&#28216;&#25103;&#35268;&#21017;&#12290;</p><p>&#30452;&#25509;&#12289;&#32463;&#24120;&#25509;&#35302;&#30340;&#20851;&#31995;&#20250;&#27604;&#36739;&#22797;&#26434;&#65292;&#38656;&#35201;&#24773;&#12289;&#21033;&#12289;&#27861;&#19977;&#32773;&#37197;&#21512;&#26469;&#36827;&#34892;&#32500;&#31995;&#12290;</p><p>&#21033;&#26159;&#24658;&#23450;&#30340;&#65292;&#20851;&#31995;&#36234;&#39640;&#23618;&#65292;&#24773;&#30340;&#27604;&#37325;&#36234;&#22823;&#65292;&#27861;&#30340;&#27604;&#37325;&#36234;&#23567;&#65307;&#20851;&#31995;&#36234;&#24213;&#23618;&#65292;</p><p>&#24773;&#30340;&#27604;&#37325;&#36234;&#23567;&#65292;&#27861;&#30340;&#27604;&#37325;&#36234;&#22823;&#12290;</p><p>&#27604;&#22914;&#20320;&#19982;&#21512;&#20249;&#20154;&#65292;&#39640;&#23618;&#19982;&#20013;&#23618;&#65292;&#20013;&#23618;&#19982;&#22522;&#23618;&#65292;&#20004;&#32773;&#20043;&#38388;&#37117;&#26159;&#38656;&#35201;&#24773;&#12289;&#21033;&#12289;&#27861;</p><p>&#19977;&#32773;&#37197;&#21512;&#26469;&#36827;&#34892;&#32500;&#31995;&#12290;&#20320;&#21487;&#20197;&#29992;&#21033;&#21644;&#27861;&#26469;&#35268;&#33539;&#20320;&#30340;&#21512;&#20249;&#20154;&#65292;&#20294;&#19981;&#33021;&#21521;&#19979;&#36234;&#32423;&#35268;&#33539;&#65292;</p><p>&#23613;&#31649;&#36825;&#26679;&#65292;&#22312;&#25105;&#30340;&#31995;&#32479;&#37324;&#65292;&#32500;&#31995;&#20320;&#20204;&#20851;&#31995;&#20013;&#26368;&#20026;&#37325;&#35201;&#30340;&#19996;&#35199;&#65292;&#36824;&#26159;&#24773;&#65307;</p><p>39</p><p>&#20294;&#20013;&#23618;&#21644;&#22522;&#23618;&#20043;&#38388;&#30340;&#32500;&#31995;&#23601;&#19981;&#19968;&#26679;&#20102;&#65292;&#34429;&#28982;&#20063;&#26159;&#24773;&#12289;&#21033;&#12289;&#27861;&#65292;&#20294;&#20559;&#37325;&#28857;&#21017;&#22312;</p><p>&#20110;&#27861;&#12290;</p><p>&#38388;&#25509;&#12289;&#19981;&#32463;&#24120;&#25509;&#35302;&#30340;&#20851;&#31995;&#23601;&#27604;&#36739;&#31616;&#21333;&#65292;&#22823;&#22810;&#21482;&#38656;&#35201;&#29992;&#24773;&#26469;&#36827;&#34892;&#32500;&#31995;&#12290;&#27604;&#22914;&#39640;</p><p>&#23618;&#19982;&#22522;&#23618;&#20004;&#32773;&#20043;&#38388;&#22823;&#22810;&#21482;&#38656;&#35201;&#36890;&#36807;&#24773;&#26469;&#36827;&#34892;&#32500;&#31995;&#12290;</p><p>&#39640;&#23618;&#30340;&#26174;&#24615;&#22522;&#22240;&#26159;&#24773;&#65292;&#22522;&#23618;&#30340;&#26174;&#24615;&#22522;&#22240;&#26159;&#21033;&#12289;&#27861;&#65292;&#20013;&#23618;&#21017;&#20860;&#32780;&#26377;&#20043;&#12290;</p><p>&#36824;&#26159;&#37027;&#21477;&#35805;&#65292;&#21315;&#19975;&#19981;&#35201;&#19968;&#26681;&#31563;&#65292;&#20197;&#19978;&#25552;&#20379;&#30340;&#21482;&#26159;&#19968;&#31181;&#24605;&#32500;&#65292;&#20855;&#20307;&#19977;&#32773;&#20043;&#38388;&#30340;</p><p>&#35843;&#21644;&#37197;&#27604;&#36824;&#38656;&#35201;&#20320;&#33258;&#24049;&#26681;&#25454;&#23454;&#38469;&#24773;&#20917;&#26469;&#21306;&#21035;&#21464;&#36890;&#12290;</p><p>&#35828;&#21040;&#23458;&#25143;&#21602;&#65292;&#36825;&#20010;&#20027;&#20307;&#26159;&#28216;&#31163;&#20110;&#20844;&#21496;&#20869;&#37096;&#32452;&#32455;&#20043;&#22806;&#65292;&#19982;&#20844;&#21496;&#26159;&#24179;&#31561;&#24179;&#34892;&#30340;&#12290;</p><p>&#32780;&#20844;&#21496;&#32452;&#32455;&#26377;&#19978;&#12289;&#26377;&#20013;&#12289;&#26377;&#19979;&#65292;&#25152;&#20197;&#23458;&#25143;&#19982;&#22522;&#23618;&#25509;&#35302;&#21017;&#20197;&#22522;&#23618;&#23646;&#24615;&#20026;&#26631;&#20934;&#65292;&#23458;&#25143;</p><p>&#19982;&#20013;&#23618;&#25509;&#35302;&#21017;&#20197;&#20013;&#23618;&#23646;&#24615;&#20026;&#26631;&#20934;&#65292;&#23458;&#25143;&#19982;&#39640;&#23618;&#25509;&#35302;&#21017;&#20197;&#39640;&#23618;&#23646;&#24615;&#20026;&#26631;&#20934;&#12290;</p><p>&#20063;&#23601;&#26159;&#35828;&#23458;&#25143;&#19982;&#22522;&#23618;&#22522;&#26412;&#19978;&#20197;&#21033;&#21644;&#27861;&#32500;&#31995;&#65292;&#23458;&#25143;&#19982;&#39640;&#23618;&#22823;&#22810;&#20197;&#24773;&#26469;&#32500;&#31995;&#12290;</p><p>&#20197;&#19978;&#26465;&#27454;&#21487;&#33021;&#19981;&#36866;&#21512;&#24456;&#22810;&#39033;&#30446;&#65292;&#25152;&#20197;&#24456;&#22810;&#20154;&#24182;&#19981;&#35748;&#21487;&#65292;&#29305;&#21035;&#26159;&#19968;&#20123;&#21463;&#36807;&#39640;&#31561;</p><p>&#25703;&#27531;&#30340;&#28023;&#40863;&#12289;MBA&#20043;&#27969;&#12290;&#20294;&#22312;&#25105;&#30340;&#39033;&#30446;&#31995;&#32479;&#37324;&#65292;&#36825;&#20123;&#21017;&#20026;&#22522;&#26412;&#21407;&#21017;&#12290;</p><p>&#26377;&#20154;&#20250;&#35828;&#65292;&#20961;&#20107;&#35201;&#26377;&#20010;&#24230;&#21644;&#26631;&#20934;&#65292;&#19981;&#28982;&#35828;&#20102;&#31561;&#20110;&#30333;&#35828;&#12290;&#30340;&#30830;&#26159;&#36825;&#26679;&#12290;</p><p>&#36825;&#20010;&#26631;&#20934;&#29992;&#20160;&#20040;&#26469;&#30028;&#23450;&#21602;&#65311;</p><p>&#25105;&#30340;&#31995;&#32479;&#37324;&#65292;&#29992;&#33879;&#21517;&#20108;&#20843;&#27861;&#21017;&#26469;&#30028;&#23450;&#12290;&#36825;&#20063;&#23601;&#26159;&#39033;&#30446;&#32676;&#20043;&#25152;&#20197;&#33021;&#22815;&#38271;&#27835;&#20037;&#23433;</p><p>&#30340;&#22522;&#26412;&#21407;&#21017;&#12290;</p><p>&#25105;&#31532;&#19968;&#27425;&#21548;&#35828;&#21040;&#20108;&#20843;&#27861;&#21017;&#26159;&#21313;&#20960;&#24180;&#21069;&#20102;&#65292;&#37027;&#26102;&#20505;&#35273;&#24471;&#24456;&#31232;&#22855;&#21834;&#65292;&#22810;&#21171;&#22810;&#24471;&#65292;</p><p>&#23569;&#21171;&#23569;&#24471;&#65292;&#19968;&#20998;&#32789;&#32792;&#19968;&#20998;&#25910;&#33719;&#26159;&#31062;&#31062;&#36744;&#36744;&#32463;&#24120;&#25945;&#32946;&#25105;&#20204;&#30340;&#35805;&#35821;&#21834;&#12290;</p><p>&#36825;&#20010;&#27861;&#21017;&#23682;&#19981;&#26159;&#35201;&#39072;&#35206;&#22810;&#23569;&#24180;&#24418;&#25104;&#30340;&#20215;&#20540;&#35266;&#21834;&#65311;&#25152;&#20197;&#24403;&#26102;&#21482;&#30693;&#36947;&#26377;&#36825;&#20040;&#20010;</p><p>&#22855;&#24618;&#30340;&#27861;&#21017;&#65292;&#24182;&#27809;&#26377;&#24403;&#22810;&#22823;&#22238;&#20107;&#65292;&#20294;&#26159;&#22810;&#23569;&#24180;&#36807;&#21435;&#20102;&#25105;&#21364;&#36234;&#26469;&#36234;&#35748;&#35782;&#21040;&#36825;&#20010;&#27861;&#21017;</p><p>&#30340;&#37325;&#35201;&#24615;&#12290;</p><p>&#30452;&#21040;&#25968;&#24180;&#21069;&#65292;&#19968;&#27425;&#26426;&#32536;&#24039;&#21512;&#25105;&#25265;&#30528;&#35797;&#19968;&#35797;&#30340;&#24515;&#24577;&#20080;&#20102;&#19968;&#20010;&#30103;&#31243;&#12290;&#12290;&#12290;&#12290;&#12290;&#12290;&#21734;&#65292;</p><p>&#19981;&#65292;&#26159;&#25265;&#30528;&#35797;&#19968;&#35797;&#30340;&#24515;&#24577;&#24320;&#22987;&#26377;&#24847;&#35782;&#22320;&#23558;&#36825;&#20010;&#27861;&#21017;&#36816;&#29992;&#21040;&#25105;&#30340;&#29983;&#24847;&#20013;&#26469;&#65292;&#33719;&#24471;&#20102;</p><p>&#25105;&#20174;&#26410;&#26377;&#36807;&#30340;&#24555;&#24863;&#65292;&#30452;&#33267;&#20170;&#22825;&#25105;&#23558;&#36825;&#20010;&#27861;&#21017;&#35270;&#20026;&#25105;&#33021;&#32500;&#25345;&#25152;&#26377;&#29983;&#24847;&#38271;&#20037;&#21457;&#23637;&#30340;&#31435;</p><p>&#36523;&#20043;&#26412;&#12290;</p><p>&#39318;&#20808;&#65292;&#26469;&#26222;&#21450;&#19968;&#19979;&#20108;&#20843;&#27861;&#21017;&#65292;&#30693;&#36947;&#36825;&#20010;&#27861;&#21017;&#30340;&#26379;&#21451;&#23601;&#28857;&#24555;&#36827;&#21543;&#12290;</p><p>&#20108;&#20843;&#23450;&#24459;&#20063;&#21483;&#24052;&#33713;&#22810;&#23450;&#24459;&#65292;&#26159;&#65297;&#65305;&#19990;&#32426;&#26411;&#65298;&#65296;&#19990;&#32426;&#21021;&#24847;&#22823;&#21033;&#32463;&#27982;&#23398;&#23478;&#24052;&#33713;&#22810;</p><p>&#21457;&#26126;&#30340;&#12290;&#20182;&#35748;&#20026;&#65292;&#22312;&#20219;&#20309;&#19968;&#32452;&#19996;&#35199;&#20013;&#65292;&#26368;&#37325;&#35201;&#30340;&#21482;&#21344;&#20854;&#20013;&#19968;&#23567;&#37096;&#20998;&#65292;&#32422;&#65298;&#65296;&#65285;&#65292;</p><p>&#20854;&#20313;&#65304;&#65296;&#65285;&#30340;&#23613;&#31649;&#26159;&#22810;&#25968;&#65292;&#21364;&#26159;&#27425;&#35201;&#30340;&#65292;&#22240;&#27492;&#21448;&#31216;&#20108;&#20843;&#27861;&#21017;&#12290;</p><p>&#36825;&#20010;&#31070;&#22855;&#30340;&#27861;&#21017;&#21487;&#20197;&#36816;&#29992;&#22312;&#24456;&#22810;&#24456;&#22810;&#22320;&#26041;&#65292;&#22810;&#24471;&#35753;&#20320;&#24778;&#35766;&#12290;</p><p>&#27604;&#22914;&#65306;&#26102;&#38388;&#31649;&#29702;&#38382;&#39064;&#12289;&#37325;&#28857;&#23458;&#25143;&#38382;&#39064;&#12289;&#36130;&#23500;&#20998;&#37197;&#38382;&#39064;&#12289;&#36164;&#28304;&#20998;&#37197;&#38382;&#39064;&#12289;&#26680;&#24515;</p><p>&#20135;&#21697;&#38382;&#39064;&#12289;&#20851;&#38190;&#20154;&#25165;&#38382;&#39064;&#12289;&#26680;&#24515;&#21033;&#28070;&#38382;&#39064;&#12290;&#31561;&#31561;&#31561;&#31561;&#12290;</p><p>&#20960;&#24180;&#21069;&#65292;&#25105;&#38590;&#24471;&#26377;&#19968;&#27573;&#26102;&#38388;&#27604;&#36739;&#26377;&#31354;&#65292;&#31361;&#28982;&#24515;&#34880;&#26469;&#28526;&#65292;&#23601;&#25226;&#25152;&#26377;&#29983;&#24847;&#30340;&#36134;&#26412;</p><p>40</p><p>&#20840;&#37096;&#32479;&#35745;&#20102;&#19968;&#36941;&#65292;&#32467;&#26524;&#21457;&#29616;&#20102;&#26032;&#22823;&#38470;&#65292;&#21407;&#26469;&#20256;&#35828;&#20013;&#30340;&#20108;&#20843;&#27861;&#21017;&#65292;&#26524;&#28982;&#21517;&#19981;&#34394;&#20256;&#12290;</p><p>&#25105;&#30340;&#32477;&#22823;&#22810;&#25968;&#39033;&#30446;&#20013;&#65292;20%&#30340;&#21592;&#24037;&#20026;&#39033;&#30446;&#24102;&#26469;&#30340;&#26159; 80%&#30340;&#36130;&#23500;&#65292;&#32780; 80%&#30340;&#25910;</p><p>&#20837;&#26469;&#28304;&#20110; 20%&#30340;&#37325;&#35201;&#23458;&#25143;&#25110;&#32773;&#32463;&#38144;&#21830;&#12290;</p><p>&#25152;&#20197;&#65292;&#21518;&#26469;&#36825;&#20010;&#27861;&#21017;&#20063;&#34987;&#25105;&#24191;&#27867;&#22320;&#24102;&#21040;&#23454;&#38469;&#30340;&#39033;&#30446;&#36816;&#33829;&#20013;&#26469;&#12290;</p><p>&#25105;&#35201;&#27714;&#25105;&#30340;&#21512;&#20249;&#20154;&#25226;&#37325;&#35201;&#31934;&#21147;&#25918;&#22312;&#25226;&#25569; 20%&#30340;&#20013;&#23618;&#24178;&#37096;&#65292;&#28982;&#21518;&#25105;&#30340;&#21512;&#20249;&#20154;&#21017;</p><p>&#21435;&#35201;&#27714;&#20013;&#23618;&#24178;&#37096;&#25226;&#37325;&#35201;&#31934;&#21147;&#25918;&#22312;&#25226;&#25569; 20%&#30340;&#22522;&#23618;&#21592;&#24037;&#65307;<br>
+&#25105;&#21516;&#26102;&#20063;&#35201;&#27714;&#21512;&#20249;&#20154;&#24517;&#39035;&#20146;&#33258;&#32500;&#31995; 20%&#30340;&#37325;&#35201;&#23458;&#25143;&#21644;&#32463;&#38144;&#21830;&#65307;<br>
+&#20063;&#23601;&#26159;&#35828;&#65292;&#23545;&#20110;&#19968;&#20010;&#39033;&#30446;&#26469;&#35828;&#65292;&#25226;&#25569;&#22909;&#20102; 20%&#30340;&#20248;&#31168;&#21592;&#24037;&#21644; 20%&#20248;&#36136;&#32463;&#38144;&#21830;</p><p>&#21644;&#23458;&#25143;&#65292;&#23601;&#31639;&#20844;&#21496;&#20869;&#37096;&#21457;&#29983;&#21160;&#33633;&#21644;&#20854;&#20182;&#21508;&#31181;&#28798;&#38590;&#65292;&#21482;&#35201;&#36825;&#20123;&#20027;&#20307;&#27809;&#26377;&#34987;&#20005;&#37325;&#27874;</p><p>&#21450;&#65292;&#37027;&#20040;&#39033;&#30446;&#30340;&#26680;&#24515;&#21644;&#26681;&#26412;&#23601;&#36824;&#23384;&#22312;&#12290;</p><p>&#26377;&#20102;&#36825;&#26465;&#24605;&#36335;&#65292;&#39033;&#30446;&#30340;&#36816;&#34892;&#23601;&#20250;&#39640;&#25928;&#35768;&#22810;&#65292;&#25239;&#39118;&#38505;&#33021;&#21147;&#20063;&#20250;&#22823;&#24133;&#25552;&#39640;&#12290;</p><p>&#32780;&#23545;&#24212;&#20320;&#22312;&#23616;&#22806;&#23545;&#39033;&#30446;&#30340;&#30417;&#30563;&#31649;&#29702;&#65292;&#20063;&#23601;&#24456;&#22909;&#29702;&#35299;&#20102;&#12290;</p><p>&#23601;&#26159;&#35828;&#65292;&#23613;&#31649;&#20320;&#24050;&#36864;&#20986;&#20102;&#39033;&#30446;&#30340;&#23454;&#38469;&#25805;&#20316;&#65292;&#36825;&#37117;&#19981;&#25104;&#20854;&#20026;&#38382;&#39064;&#12290;&#20320;&#19981;&#38656;&#35201;&#20570;</p><p>&#22823;&#37327;&#30340;&#20107;&#24773;&#65292;&#21482;&#38656;&#35201;&#25226;&#38750;&#24120;&#37325;&#35201;&#30340;&#19968;&#23567;&#37096;&#20998;&#20107;&#24773;&#20570;&#22909;&#65292;&#39033;&#30446;&#36824;&#26159;&#33021;&#22312;&#20320;&#30340;&#25484;&#25511;</p><p>&#20013;&#27491;&#24120;&#36816;&#34892;&#12290;</p><p>&#27492;&#26102;&#65292;&#20320;&#26368;&#20026;&#37325;&#35201;&#30340;&#20107;&#24773;&#65292;&#36824;&#26159;&#35201;&#25226;&#25569;&#22909;&#20320;&#30340;&#21512;&#20249;&#20154;&#12290;</p><p>&#22914;&#26524;&#31934;&#21147;&#20801;&#35768;&#65292;&#23601;&#23613;&#21487;&#33021;&#21435;&#24110;&#21161;&#21512;&#20249;&#20154;&#25226;&#25569;&#22909;&#23567;&#37096;&#20998;&#23545;&#29983;&#24847;&#20030;&#36275;&#36731;&#37325;&#30340;&#23458;</p><p>&#25143;&#25110;&#32773;&#32463;&#38144;&#21830;&#12290;&#22914;&#26524;&#20320;&#30340;&#31934;&#21147;&#36824;&#26377;&#21097;&#20313;&#65292;&#37027;&#23601;&#23613;&#21487;&#33021;&#21435;&#25226;&#25569;&#22909;&#23567;&#37096;&#20998;&#20248;&#31168;&#30340;&#12289;</p><p>&#23545;&#20107;&#19994;&#20307;&#20030;&#36275;&#36731;&#37325;&#30340;&#21592;&#24037;&#12290;</p><p>&#31532;&#19968;&#33410; &#35753;&#20182;&#20204;&#37117;&#20026;&#24773;&#25152;&#22256;<br>
+&#39318;&#20808;&#65292;&#20320;&#35201;&#26126;&#30333;&#65292;&#20320;&#29992;&#26469;&#25226;&#25569;&#20320;&#30340;&#21512;&#20316;&#20154;&#20063;&#22909;&#65292;&#25226;&#25569;&#20248;&#36136;&#30340;&#23458;&#25143;&#25110;&#32773;&#32463;&#38144;&#21830;</p><p>&#20063;&#22909;&#65292;&#25226;&#25569;&#20248;&#31168;&#30340;&#21592;&#24037;&#20063;&#22909;&#65292;&#20320;&#30340;&#27494;&#22120;&#26159;&#20160;&#20040;&#65311;</p><p>&#65288;&#34429;&#28982;&#19978;&#20010;&#37096;&#20998;&#35848;&#36807;&#20102;&#65292;&#20294;&#29616;&#22312;&#25105;&#20204;&#37325;&#26032;&#26803;&#29702;&#19968;&#36941;&#20197;&#21152;&#28145;&#21360;&#35937;&#12290;&#65289;</p><p>&#35201;&#26126;&#30333;&#36825;&#20010;&#36947;&#29702;&#65292;&#20320;&#23601;&#35201;&#20808;&#38382;&#38382;&#33258;&#24049;&#65292;&#20320;&#30340;&#21512;&#20249;&#20154;&#20026;&#20160;&#20040;&#35201;&#23545;&#20320;&#24544;&#35802;&#65311;&#20026;&#20160;</p><p>&#20040;&#19981;&#33073;&#31163;&#20320;&#28982;&#21518;&#33258;&#24049;&#21478;&#36215;&#28809;&#28790;&#65311;&#21453;&#27491;&#20182;&#22312;&#36825;&#20010;&#39033;&#30446;&#19978;&#38754;&#24050;&#32463;&#21487;&#20197;&#29420;&#25377;&#19968;&#38754;&#20102;&#12290;</p><p>&#20320;&#35748;&#20026;&#26159;&#20182;&#32570;&#36164;&#37329;&#21527;&#65311;&#20182;&#32570;&#25171;&#25163;&#21527;&#65311;&#20182;&#32570;&#23458;&#25143;&#65311;&#19981;&#32570;&#30340;&#65292;&#26174;&#28982;&#36825;&#20123;&#20182;&#37117;&#19981;</p><p>&#32570;&#12290;</p><p>&#20182;&#26159;&#26377;&#27861;&#24459;&#25110;&#32773;&#28216;&#25103;&#35268;&#21017;&#32422;&#26463;&#32780;&#19981;&#33021;&#21467;&#36867;&#21527;&#65311;&#26174;&#28982;&#20063;&#19981;&#20840;&#26159;&#12290;</p><p>&#37027;&#20320;&#29730;&#30952;&#19968;&#20250;&#20799;&#21518;&#65292;&#35828;&#65306;&#21487;&#33021;&#26159;&#20182;&#35273;&#24471;&#36319;&#30528;&#20320;&#26377;&#21069;&#36884;&#65292;&#20320;&#30340;&#20154;&#26684;&#39749;&#21147;&#24449;&#26381;&#20102;</p><p>&#20182;&#12290;&#35828;&#24471;&#26377;&#36947;&#29702;&#65292;&#36825;&#20123;&#37117;&#26159;&#22522;&#30784;&#65292;&#26159;&#21069;&#25552;&#12290;&#20294;&#19981;&#26159;&#38382;&#39064;&#30340;&#20851;&#38190;&#12290;</p><p>&#35760;&#20303;&#65292;&#26368;&#20026;&#37325;&#35201;&#30340;&#19968;&#28857;&#26159;&#65306;&#20182;&#19981;&#26159;&#34987;&#22256;&#20110;&#21033;&#65292;&#34987;&#22256;&#20110;&#27861;&#65292;&#20182;&#26159;&#20026;&#24773;&#25152;&#22256;&#12290;</p><p>&#24773;&#65311;&#20320;&#30529;&#22823;&#20102;&#30524;&#30555;&#65306;&#24773;&#33021;&#20540;&#22810;&#23569;&#38065;&#65311;&#36825;&#20010;&#23601;&#21487;&#22823;&#21487;&#23567;&#20102;&#12290;&#35201;&#30475;&#20320;&#30340;&#21151;&#21147;&#22914;&#20309;</p><p>41</p><p>&#20102;&#12290;</p><p>&#22914;&#26524;&#20182;&#33258;&#24049;&#24178;&#25110;&#32773;&#36319;&#30528;&#21035;&#20154;&#24178;&#21487;&#20197;&#19968;&#24180;&#36186; 100&#19975;&#65292;&#36319;&#30528;&#20320;&#24178;&#19968;&#24180;&#20063;&#33021;&#36186; 100</p><p>&#19975;&#65292;&#21482;&#35201;&#20182;&#19981;&#26159;&#29305;&#21035;&#35752;&#21388;&#20320;&#65292;&#37027;&#20182;&#32943;&#23450;&#19981;&#20250;&#31163;&#24320;&#20320;&#12290;</p><p>&#22914;&#26524;&#20182;&#33258;&#24049;&#24178;&#25110;&#32773;&#36319;&#30528;&#21035;&#20154;&#24178;&#19968;&#24180;&#21487;&#20197;&#36186; 1000&#19975;&#65292;&#32780;&#36319;&#30528;&#20320;&#24178;&#19968;&#24180;&#21482;&#33021;&#36186;</p><p>100&#19975;&#30340;&#35805;&#65292;&#37027;&#23601;&#35201;&#30475;&#22312;&#20182;&#24515;&#20013;&#20320;&#20540;&#22810;&#23569;&#31609;&#30721;&#20102;&#12290;</p><p>&#22914;&#26524;&#22312;&#20182;&#24515;&#20013;&#20320;&#26159;&#26080;&#20215;&#20043;&#23453;&#65292;&#37027;&#36319;&#30528;&#21035;&#20154;&#36186; 100&#20159;&#20182;&#37117;&#19981;&#20250;&#31163;&#24320;&#20320;&#65292;&#32780;&#22914;&#26524;</p><p>&#21644;&#20320;&#21482;&#26159;&#26222;&#36890;&#30340;&#26379;&#21451;&#12289;&#26222;&#36890;&#30340;&#21830;&#19994;&#20249;&#20276;&#30340;&#20851;&#31995;&#30340;&#35805;&#65292;&#37027;&#23601;&#30456;&#24403;&#26377;&#21487;&#33021;&#20250;&#34987; 900</p><p>&#19975;&#30340;&#24046;&#20215;&#20440;&#34383;&#12290;</p><p>&#32780;&#19968;&#33324;&#65292;&#22823;&#22810;&#25968;&#21512;&#20249;&#20154;&#24320;&#22987;&#20570;&#39033;&#30446;&#30340;&#26102;&#20505;&#65292;&#20851;&#31995;&#25110;&#32773;&#35828;&#24863;&#24773;&#19981;&#26159;&#29305;&#21035;&#30340;&#29282;&#22266;&#65292;</p><p>&#32780;&#26399;&#38388;&#20320;&#35201;&#20570;&#30340;&#23601;&#26159;&#24819;&#21150;&#27861;&#22914;&#20309;&#35753;&#20320;&#22312;&#20182;&#24515;&#20013;&#21319;&#20540;&#65292;&#32780;&#24448;&#24448;&#19968;&#33324;&#20154;&#26159;&#21643;&#20570;&#30340;&#21602;&#65311;</p><p>&#26159;&#22312;&#29983;&#24847;&#26399;&#38388;&#19981;&#26029;&#35753;&#33258;&#24049;&#22312;&#21512;&#20249;&#20154;&#24515;&#20013;&#20943;&#20540;&#65292;&#30495;&#26159;&#22826;&#24858;&#34850;&#20102;&#12290;&#25152;&#20197;&#24456;&#22810;&#20154;&#29983;</p><p>&#24847;&#20570;&#20102;&#19968;&#21322;&#34987;&#21512;&#20249;&#20154;&#20986;&#21334;&#20102;&#65292;&#36824;&#20182;&#22920;&#19968;&#22825;&#21040;&#26202;&#21741;&#29241;&#39554;&#23064;&#12289;&#24616;&#22825;&#23588;&#20154;&#65292;&#35201;&#24616;&#21482;&#33021;&#24616;</p><p>&#20320;&#33258;&#24049;&#65292;&#21069;&#26399;&#37027;&#20040;&#38271;&#30340;&#26102;&#38388;&#21644;&#31354;&#38388;&#32473;&#20320;&#21435;&#21319;&#20540;&#30340;&#65292;&#20320;&#37117;&#24178;&#22043;&#21435;&#20102;&#65311;</p><p>&#26377;&#20154;&#21487;&#35201;&#35828;&#20102;&#65292;&#25105;&#20182;&#23064;&#30340;&#36816;&#27668;&#24046;&#65292;&#25214;&#30340;&#20010;&#21512;&#20249;&#20154;&#26159;&#20010;&#31165;&#20861;&#65292;&#20026;&#20102;&#19968;&#21253;&#26106;&#26106;&#38634;</p><p>&#39292;&#36830;&#20146;&#29241;&#37117;&#21487;&#20197;&#20986;&#21334;&#65292;&#20309;&#20917;&#25105;&#21834;&#65311;</p><p>&#37027;&#21448;&#33021;&#24618;&#35841;&#21602;&#65311;&#35841;&#35753;&#20320;&#36873;&#25321;&#21512;&#20249;&#20154;&#30340;&#26102;&#20505;&#30524;&#30555;&#19981;&#30529;&#22823;&#28857;&#65311;&#24403;&#21021;&#24613;&#21151;&#36817;&#21033;&#12289;&#21807;</p><p>&#21033;&#26159;&#22270;&#20102;&#21543;&#65311;&#29616;&#22312;&#24403;&#28982;&#35201;&#33258;&#39135;&#20854;&#26524;&#12290;&#25105;&#23601;&#19981;&#30456;&#20449;&#20320;&#21644;&#37027;&#20010;&#20154;&#21574;&#19968;&#36215;&#37027;&#20040;&#38271;&#26102;&#38388;&#19981;</p><p>&#30693;&#36947;&#20182;&#30340;&#20154;&#21697;&#24590;&#20040;&#26679;&#12290;&#19981;&#28982;&#25105;&#24590;&#20040;&#35828;&#36873;&#25321;&#24456;&#37325;&#35201;&#21602;&#65311;&#36873;&#25321;&#21512;&#36866;&#30340;&#21512;&#20249;&#20154;&#20320;&#23601;&#25104;&#21151;</p><p>&#20102;&#19968;&#21322;&#65292;&#35201;&#36873;&#25321;&#21697;&#24503;&#22909;&#30340;&#21512;&#20249;&#20154;&#65292;&#23601;&#26159;&#36825;&#20010;&#36947;&#29702;&#12290;</p><p>&#22909;&#20102;&#65292;&#20877;&#26469;&#35828;&#35828;&#25226;&#25569;&#20320;&#30340;&#23458;&#25143;&#12290;</p><p>&#20320;&#21516;&#26679;&#35201;&#38382;&#38382;&#33258;&#24049;&#65292;&#20320;&#30340;&#23458;&#25143;&#20026;&#20160;&#20040;&#35201;&#25214;&#20320;&#20080;&#19996;&#35199;&#32780;&#19981;&#25214;&#20854;&#20182;&#20154;&#20080;&#19996;&#35199;&#65311;&#26159;</p><p>&#20320;&#21334;&#30340;&#19996;&#35199;&#24456;&#29305;&#21035;&#12289;&#20840;&#29699;&#29420;&#27492;&#19968;&#23478;&#21527;&#65311;&#24615;&#20215;&#27604;&#20840;&#29699;&#26368;&#39640;&#21527;&#65311;&#26159;&#26377;&#27861;&#24459;&#25110;&#32773;&#28216;&#25103;&#35268;</p><p>&#21017;&#35268;&#23450;&#20182;&#21482;&#35768;&#25214;&#20320;&#20080;&#19996;&#35199;&#21527;&#65311;</p><p>&#35828;&#20010;&#19975;&#19968;&#30340;&#35805;&#65292;&#22914;&#26524;&#20320;&#30340;&#21512;&#20249;&#20154;&#21333;&#39134;&#65292;&#20320;&#25343;&#20160;&#20040;&#20445;&#35777;&#20182;&#20204;&#19981;&#36319;&#30528;&#20320;&#30340;&#21512;&#20249;&#20154;</p><p>&#36305;&#25481;&#65311;&#26174;&#28982;&#65292;&#20320;&#33258;&#24049;&#37117;&#33021;&#22238;&#31572;&#20102;&#65292;&#19981;&#26159;&#21033;&#65292;&#20063;&#19981;&#26159;&#27861;&#65292;&#32780;&#26159;&#30475;&#20320;&#33021;&#19981;&#33021;&#24314;&#31435;&#19982;&#23458;</p><p>&#25143;&#20043;&#38388;&#30340;&#29282;&#22266;&#30340;&#24863;&#24773;&#12290;</p><p>&#37027;&#65292;&#32463;&#38144;&#21830;&#21602;&#65311;&#21516;&#19978;&#20998;&#26512;&#65292;&#20320;&#20250;&#24471;&#21040;&#21516;&#26679;&#30340;&#32467;&#26524;&#12290;</p><p>&#37027;&#65292;&#21592;&#24037;&#21602;&#65311;&#21592;&#24037;&#26159;&#20320;&#26377;&#22810;&#20313;&#31934;&#21147;&#30340;&#24773;&#20917;&#19979;&#38656;&#35201;&#21435;&#20105;&#21462;&#30340;&#65292;&#21516;&#26679;&#36890;&#36807;&#19978;&#38754;&#30340;</p><p>&#20998;&#26512;&#65292;&#20320;&#20250;&#21457;&#29616;&#65292;&#22312;&#21033;&#21644;&#27861;&#26041;&#38754;&#65292;&#20320;&#20063;&#23436;&#20840;&#27809;&#26377;&#20160;&#20040;&#20248;&#21183;&#21487;&#35328;&#65292;&#22240;&#20026;&#20320;&#22522;&#26412;&#19978;&#19981;</p><p>&#33021;&#20570;&#21040;&#21644;&#21592;&#24037;&#26397;&#22805;&#30456;&#22788;&#12290;&#25152;&#20197;&#22914;&#26524;&#26377;&#28857;&#24076;&#26395;&#21487;&#20197;&#21435;&#20105;&#21462;&#65292;&#37027;&#20063;&#21482;&#33021;&#25171;&#24863;&#24773;&#29260;&#20102;&#12290;</p><p>&#32508;&#19978;&#25152;&#36848;&#65292;&#20320;&#33021;&#29992;&#26469;&#25226;&#25569;&#25110;&#32773;&#35828;&#25414;&#32465;&#36825;&#20123;&#20851;&#31995;&#30340;&#27494;&#22120;&#65292;&#21482;&#26377;&#19968;&#20010;&#65292;&#37027;&#23601;&#26159;&#65306;</p><p>&#24773;&#12290;</p><p>&#37027;&#32467;&#21512;&#21040;&#20108;&#20843;&#27861;&#21017;&#65292;&#23601;&#26159;&#35828;&#65292;&#20320;&#22312;&#20840;&#24515;&#20840;&#24847;&#25414;&#32465;&#20320;&#30340;&#21512;&#20249;&#20154;&#30340;&#21516;&#26102;&#65292;&#26377;&#22810;&#20313;</p><p>&#31934;&#21147;&#20102;&#65292;&#20063;&#21487;&#20197;&#24110;&#21161;&#20320;&#30340;&#21512;&#20249;&#20154;&#19968;&#36215;&#21435;&#25414;&#32465; 20%&#26368;&#20026;&#37325;&#35201;&#30340;&#23458;&#25143;&#65292;&#25414;&#32465; 20%&#26368;&#20026;</p><p>42</p><p>&#37325;&#35201;&#30340;&#32463;&#38144;&#21830;&#65292;&#25414;&#32465; 20%&#26368;&#20026;&#37325;&#35201;&#30340;&#21592;&#24037;&#12290;<br>
+&#24403;&#28982;&#65292;&#25105;&#35828;&#36807;&#20102;&#65292;&#36825;&#35201;&#35270;&#20320;&#30340;&#27573;&#20301;&#19982;&#31934;&#21147;&#32780;&#35328;&#65292;&#20063;&#19981;&#26159;&#35828; 20%&#23601;&#26159; 20%&#20102;&#65292;</p><p>&#20855;&#20307;&#26159;&#22810;&#23569;&#21017;&#35201;&#33258;&#24049;&#21435;&#25226;&#25569;&#12290;</p><p>&#32780;&#25105;&#33258;&#24049;&#21602;&#65292;&#22312;&#36825;&#26041;&#38754;&#25226;&#25569;&#30340;&#20221;&#39069;&#23601;&#24456;&#23569;&#20102;&#65292;&#22823;&#22810;&#25968;&#39033;&#30446;&#21482;&#25414;&#32465;&#21512;&#20249;&#20154;&#65292;&#20854;</p><p>&#20182;&#30340;&#37117;&#19981;&#31649;&#12290;&#21482;&#26377;&#19968;&#20004;&#20010;&#39033;&#30446;&#25105;&#25165;&#33258;&#24049;&#21435;&#25226;&#25569;&#24456;&#23569;&#24456;&#23569;&#30340;&#20960;&#20010;&#23458;&#25143;&#21644;&#32463;&#38144;&#21830;&#12290;</p><p>&#31532;&#20108;&#33410; &#24590;&#26679;&#26469;&#35848;&#36825;&#29305;&#27530;&#30340;&ldquo;&#24651;&#29233;&rdquo;<br>
+&#37027;&#25509;&#19979;&#26469;&#30340;&#38382;&#39064;&#65292;&#25105;&#20204;&#35848;&#35848;&#24590;&#20040;&#26679;&#29992;&#24773;&#65292;&#26469;&#25414;&#32465;&#36825;&#20123;&#20851;&#31995;&#21602;&#65311;</p><p>&#35848;&#20043;&#21069;&#25105;&#35201;&#24341;&#29992;&#32943;&#23612;&#36842;&#30340;&#19968;&#21477;&#21517;&#35328;&#65306;&#19981;&#35201;&#38382;&#20320;&#20204;&#30340;&#22269;&#23478;&#33021;&#20026;&#20320;&#20204;&#20570;&#20123;&#20160;&#20040;&#65292;</p><p>&#32780;&#35201;&#38382;&#20320;&#20204;&#33021;&#20026;&#22269;&#23478;&#20570;&#20123;&#20160;&#20040;&#12290;</p><p>&#21548;&#21040;&#36825;&#21477;&#35805;&#21602;&#65292;&#20063;&#26159;&#24456;&#22810;&#24180;&#21069;&#20102;&#65292;&#24403;&#26102;&#24180;&#23569;&#36731;&#29378;&#19981;&#30693;&#25152;&#35859;&#65292;&#32780;&#38543;&#30528;&#24180;&#32426;&#36234;&#26469;</p><p>&#36234;&#22823;&#65292;&#38405;&#21382;&#36234;&#26469;&#36234;&#24191;&#65292;&#25165;&#21457;&#35273;&#65292;&#36825;&#21477;&#35805;&#30495;&#20182;&#22920;&#26159;&#20010;&#32463;&#20856;&#21568;&#12290;</p><p>&#20197;&#21069;&#30340;&#24086;&#23376;&#37324;&#38754;&#25552;&#21040;&#36807;&#65292;&#29616;&#22312;&#20877;&#27425;&#37325;&#22797;&#19968;&#36941;&#65306;</p><p>&#19981;&#35201;&#38382;&#21035;&#20154;&#20026;&#20320;&#20184;&#20986;&#20102;&#20160;&#20040;&#65292;&#35201;&#38382;&#20320;&#33258;&#24049;&#20026;&#21035;&#20154;&#20184;&#20986;&#20102;&#20160;&#20040;&#12290;</p><p>&#19981;&#35201;&#35201;&#27714;&#21035;&#20154;&#23545;&#20320;&#22909;&#65292;&#35201;&#20808;&#35201;&#27714;&#33258;&#24049;&#21435;&#23545;&#21035;&#20154;&#22909;&#12290;</p><p>&#20320;&#24819;&#24471;&#21040;&#20160;&#20040;&#65292;&#24517;&#39035;&#20808;&#20184;&#20986;&#20160;&#20040;&#12290;</p><p>&#36825;&#20010;&#19990;&#30028;&#19978;&#65292;&#22788;&#24515;&#31215;&#34385;&#21435;&#20260;&#23475;&#21035;&#20154;&#30340;&#20154;&#24456;&#23569;&#24456;&#23569;&#65292;&#32780;&#21463;&#21040;&#21035;&#20154;&#30340;&#20260;&#23475;&#36824;&#33021;&#21253;</p><p>&#23481;&#21035;&#20154;&#30340;&#20154;&#65292;&#20063;&#24456;&#23569;&#24456;&#23569;&#65292;&#32780;&#32477;&#22823;&#22810;&#25968;&#65292;&#23601;&#26159;&#26222;&#36890;&#30340;&#20154;&#65292;&#20154;&#24590;&#20040;&#23545;&#25105;&#65292;&#25105;&#23601;&#24590;&#20040;</p><p>&#23545;&#20154;&#65292;&#20154;&#19981;&#29359;&#25105;&#25105;&#19981;&#29359;&#20154;&#65292;&#20154;&#33509;&#29359;&#25105;&#25105;&#20063;&#29359;&#20154;&#12290;</p><p>&#25152;&#20197;&#65292;&#24456;&#22810;&#26379;&#21451;&#30340;&#20154;&#38469;&#20851;&#31995;&#19981;&#21644;&#35856;&#65292;&#23601;&#26159;&#22240;&#20026;&#25226;&#33258;&#24049;&#30475;&#24471;&#22826;&#39640;&#20102;&#65292;&#27880;&#24847;&#21147;&#25918;</p><p>&#22312;&#20102;&#21035;&#20154;&#30340;&#34892;&#20026;&#19978;&#65292;&#19981;&#24895;&#20808;&#20184;&#20986;&#33258;&#24049;&#25152;&#25317;&#26377;&#30340;&#32536;&#25925;&#21834;&#12290;</p><p>&#19968;&#33324;&#32780;&#35328;&#65292;&#21482;&#35201;&#20320;&#20840;&#24515;&#20840;&#24847;&#23545;&#21035;&#20154;&#22909;&#20102;&#65292;&#21035;&#20154;&#20063;&#33258;&#28982;&#20250;&#23545;&#20320;&#22909;&#12290;</p><p>&#20320;&#23545;&#21035;&#20154;&#22914;&#26379;&#21451;&#33324;&#22909;&#65292;&#21035;&#20154;&#20063;&#20250;&#23545;&#20320;&#22914;&#26379;&#21451;&#33324;&#22909;&#65307;&#20320;&#23545;&#21035;&#20154;&#22914;&#20804;&#22969;&#33324;&#22909;&#65292;&#21035;</p><p>&#20154;&#20063;&#20250;&#23545;&#20320;&#22914;&#20804;&#22969;&#33324;&#22909;&#12290;&#20154;&#19982;&#20154;&#20043;&#38388;&#26159;&#26377;&#30913;&#22330;&#12289;&#26377;&#24863;&#24212;&#30340;&#65292;&#20320;&#26102;&#24120;&#24806;&#35760;&#30528;&#21035;&#20154;&#65292;</p><p>&#20037;&#32780;&#20037;&#20043;&#21035;&#20154;&#20063;&#20250;&#24863;&#21463;&#24471;&#21040;&#65292;&#20063;&#20250;&#26102;&#24120;&#24806;&#35760;&#30528;&#20320;&#12290;</p><p>&#29609;&#24324;&#26435;&#35851;&#12289;&#21916;&#27426;&#21344;&#23567;&#20415;&#23452;&#12289;&#32781;&#23567;&#32874;&#26126;&#30340;&#20154;&#19981;&#31649;&#28436;&#25216;&#20877;&#39640;&#65292;&#37027;&#27605;&#31455;&#37117;&#26159;&#20123;&#34920;&#38754;</p><p>&#30340;&#19996;&#35199;&#65292;&#36831;&#26089;&#20250;&#34987;&#20154;&#21457;&#35273;&#24182;&#21822;&#24323;&#12290;</p><p>&#21621;&#21621;&#65292;&#21508;&#20301;&#21457;&#29616;&#20102;&#21527;&#65311;&#29616;&#22312;&#25105;&#35762;&#30340;&#35838;&#31243;&#22909;&#20687;&#19981;&#26159;&#22312;&#35848;&#22914;&#20309;&#20570;&#20107;&#20102;&#65292;&#32780;&#26159;&#22312;&#35828;</p><p>&#22914;&#20309;&#20570;&#20154;&#12290;</p><p>&#20854;&#23454;&#20570;&#20154;&#20570;&#20107;&#37117;&#26159;&#30456;&#36741;&#30456;&#25104;&#30340;&#65292;&#20154;&#20570;&#23545;&#20102;&#65292;&#20107;&#24773;&#33258;&#28982;&#20570;&#24471;&#23545;&#65307;&#20107;&#24773;&#32463;&#24120;&#33021;&#20570;</p><p>&#23545;&#65292;&#20570;&#20154;&#20063;&#24046;&#19981;&#21040;&#37027;&#37324;&#21435;&#12290;</p><p>&#27599;&#20010;&#20154;&#30340;&#24515;&#37324;&#65292;&#37117;&#20250;&#26377;&#24456;&#22810;&#20010;&#22825;&#24179;&#65292;&#20182;&#20250;&#19981;&#26029;&#22320;&#25226;&#20320;&#25918;&#21040;&#19978;&#38754;&#34913;&#37327;&#65292;&#26159;&#36215;&#26159;</p><p>&#33853;&#65292;&#20320;&#26080;&#27861;&#25511;&#21046;&#65292;&#20294;&#20320;&#21487;&#20197;&#19981;&#26029;&#21152;&#37325;&#20320;&#22312;&#20182;&#24515;&#20013;&#30340;&#20221;&#37327;&#12290;</p><p>43</p><p>&#32780;&#23545;&#20110;&#20320;&#29983;&#24847;&#20013;&#30340;&#36825;&#20123;&#20851;&#31995;&#65292;&#19968;&#23450;&#35760;&#20303;&#65306;&#35201;&#25226;&#20182;&#24403;&#25104;&#20320;&#30340;&#23478;&#20154;&#65292;&#26102;&#26102;&#21051;&#21051;&#32473;</p><p>&#20182;&#26080;&#24494;&#19981;&#33267;&#30340;&#20851;&#24576;&#12290;</p><p>&#35201;&#22909;&#21040;&#20160;&#20040;&#31243;&#24230;&#21602;&#65311;</p><p>&#22840;&#24352;&#28857;&#26469;&#35828;&#65292;&#35201;&#22909;&#21040;&#35753;&#21035;&#20154;&#35273;&#24471;&#20320;&#26159; GAY&#65292;&#35201;&#22909;&#21040;&#35753;&#20320;&#32769;&#23110;&#37117;&#21507;&#37259;&#12290;&#20320;&#23601;&#29275;</p><p>&#36924;&#20102;&#12290;</p><p>&#23613;&#31649;&#26368;&#24320;&#22987;&#20320;&#37117;&#20570;&#19981;&#21040;&#65292;&#24456;&#21035;&#25197;&#65292;&#24515;&#37324;&#20063;&#19981;&#20250;&#36825;&#26679;&#35748;&#20026;&#12290;&#20294;&#20320;&#24517;&#39035;&#35201;&#20570;&#23601;&#26159;</p><p>&#36924;&#36843;&#33258;&#24049;&#36825;&#26679;&#20570;&#65292;&#23613;&#31649;&#26377;&#26102;&#20505;&#20250;&#20570;&#24471;&#24456;&#19981;&#33258;&#28982;&#65292;&#20294;&#20570;&#24471;&#22810;&#20102;&#65292;&#24930;&#24930;&#22320;&#65292;&#20320;&#23601;&#20570;&#24471;</p><p>&#33258;&#28982;&#20102;&#65292;&#20320;&#23601;&#20250;&#30495;&#30340;&#25226;&#20182;&#24403;&#20570;&#20320;&#29983;&#21629;&#20013;&#30340;&#36149;&#20154;&#26469;&#23545;&#24453;&#20102;&#12290;</p><p>&#25509;&#19979;&#26469;&#65292;&#36814;&#25509;&#20320;&#30340;&#23601;&#26159;&#20154;&#33033;&#38065;&#33033;&#30340;&#21452;&#20016;&#25910;&#12290;</p><p>&#22909;&#20102;&#65292;&#36947;&#30340;&#37096;&#20998;&#35762;&#23436;&#20102;&#65292;&#19979;&#38754;&#26469;&#35848;&#35848;&#26415;&#30340;&#37096;&#20998;&#12290;&#25353;&#29031;&#24815;&#20363;&#65292;&#36824;&#26159;&#20030;&#20960;&#20010;&#25105;&#33258;</p><p>&#24049;&#30340;&#20363;&#23376;&#65292;&#35753;&#22823;&#23478;&#26377;&#20010;&#26356;&#31435;&#20307;&#30340;&#24863;&#21463;&#12290;</p><p>&#25105;&#26377;&#20010;&#29983;&#24847;&#26159;&#20570;&#27773;&#36710;&#25252;&#29702;&#30340;&#65292;&#21512;&#20249;&#20154;&#26159;&#19968;&#20892;&#26449;&#23567;&#20249;&#23376;&#65292;&#20026;&#20154;&#37027;&#21483;&#19968;&#20010;&#30495;&#35802;&#65292;</p><p>&#19987;&#19994;&#25216;&#33021;&#25166;&#23454;&#65292;&#19988;&#24040;&#33021;&#21507;&#33510;&#65292;&#25351;&#21738;&#25171;&#21738;&#12290;&#20294;&#32654;&#20013;&#19981;&#36275;&#30340;&#26159;&#20182;&#25991;&#21270;&#23618;&#27425;&#24456;&#20302;&#65292;&#20063;&#19981;</p><p>&#22826;&#29233;&#23398;&#20064;&#12290;&#25105;&#35273;&#24471;&#36825;&#28857;&#32570;&#25022;&#20250;&#24456;&#22823;&#31243;&#24230;&#24433;&#21709;&#20182;&#26410;&#26469;&#20107;&#19994;&#30340;&#39640;&#24230;&#12290;</p><p>&#25152;&#20197;&#65292;&#27809;&#26377;&#19968;&#27425;&#20363;&#22806;&#30340;&#65292;&#25105;&#27599;&#27425;&#21435;&#37117;&#32473;&#20182;&#24102;&#19968;&#26412;&#20070;&#65292;&#35753;&#20182;&#22312;&#25105;&#19979;&#27425;&#21435;&#20043;&#21069;&#30475;</p><p>&#23436;&#65292;&#28982;&#21518;&#21644;&#20182;&#20132;&#27969;&#21644;&#35752;&#35770;&#20070;&#20013;&#30340;&#19968;&#20123;&#35266;&#28857;&#12290;&#24403;&#28982;&#20102;&#65292;&#20070;&#37117;&#26159;&#32463;&#36807;&#25105;&#31934;&#24515;&#25361;&#36873;&#30340;&#65292;</p><p>&#23618;&#27425;&#20063;&#26159;&#30001;&#27973;&#21450;&#28145;&#12290;&#36825;&#26679;&#25345;&#32493;&#20102;&#22823;&#27010;&#20004;&#24180;&#22810;&#65292;&#29616;&#22312;&#20877;&#21644;&#20182;&#35848;&#38382;&#39064;&#65292;&#21069;&#21518;&#24863;&#35273;&#20182;&#23436;</p><p>&#20840;&#19981;&#26159;&#19968;&#20010;&#27573;&#20301;&#30340;&#20154;&#20102;&#12290;&#20182;&#33258;&#24049;&#33258;&#28982;&#20063;&#33021;&#28165;&#26970;&#22320;&#24863;&#21463;&#21040;&#36825;&#19968;&#28857;&#12290;</p><p>&#37027;&#20320;&#35828;&#65292;&#25105;&#20204;&#20457;&#30340;&#20851;&#31995;&#36824;&#21482;&#26159;&#21830;&#19994;&#20249;&#20276;&#30340;&#20851;&#31995;&#21527;&#65311;</p><p>&#25105;&#21602;&#65292;&#24456;&#21916;&#27426;&#26053;&#28216;&#65292;&#24456;&#22810;&#22909;&#29609;&#30340;&#22320;&#26041;&#37117;&#21435;&#36807;&#22909;&#22810;&#27425;&#20102;&#65292;&#26368;&#21916;&#27426;&#30340;&#26159;&#33258;&#39550;&#28216;&#65292;</p><p>&#20026;&#20309;&#65311;</p><p>&#22240;&#20026;&#33258;&#24049;&#24320;&#36710;&#21435;&#30340;&#35805;&#65292;&#26041;&#20415;&#24102;&#24456;&#22810;&#19996;&#35199;&#22238;&#26469;&#12290;&#32780;&#27599;&#27425;&#21644;&#26379;&#21451;&#20204;&#20986;&#21435;&#26053;&#28216;&#22238;&#26469;</p><p>&#20004;&#36742;&#36710;&#30340;&#21518;&#22791;&#31665;&#37117;&#22622;&#24471;&#28385;&#28385;&#30340;&#12290;</p><p>&#26377;&#20154;&#35201;&#38382;&#20102;&#65292;&#21435;&#25630;&#20010;&#26053;&#28216;&#26377;&#24517;&#35201;&#20080;&#36825;&#20040;&#22810;&#19996;&#35199;&#21527;&#65311;</p><p>&#21621;&#21621;&#65292;&#22240;&#20026;&#25105;&#27599;&#27425;&#21435;&#26053;&#28216;&#35201;&#20080;&#24403;&#22320;&#30340;&#19996;&#35199;&#30340;&#35805;&#65292;&#25105;&#37117;&#20250;&#25226;&#25105;&#21512;&#20249;&#20154;&#20204;&#20197;&#21450;&#20182;</p><p>&#20204;&#30340;&#23478;&#20154;&#20840;&#37096;&#21015;&#20030;&#19968;&#19979;&#65292;&#28982;&#21518;&#24930;&#24930;&#24819;&#65292;&#24930;&#24930;&#36873;&#65292;&#32473;&#27599;&#20010;&#20154;&#25361;&#36873;&#19968;&#20221;&#21512;&#36866;&#30340;&#31036;&#29289;&#12290;</p><p>&#22238;&#26469;&#31532;&#19968;&#26102;&#38388;&#23601;&#21435;&#20182;&#20204;&#23478;&#20998;&#32473;&#20182;&#20204;&#65292;&#23613;&#31649;&#26377;&#20960;&#20010;&#20154;&#37117;&#22312;&#19981;&#21516;&#30340;&#22478;&#24066;&#65292;&#25105;&#37117;&#20250;&#20146;&#33258;</p><p>&#24320;&#36710;&#21435;&#36865;&#31036;&#12290;</p><p>&#20320;&#35828;&#36825;&#26679;&#32972;&#30528;&#30707;&#22836;&#19978;&#23665;&#65292;&#26159;&#19981;&#26159;&#26377;&#30149;&#21602;&#65311;&#36335;&#36153;&#21861;&#30340;&#36828;&#36828;&#27604;&#36825;&#20010;&#31036;&#29289;&#35201;&#36149;&#12290;&#32780;</p><p>&#19988;&#29616;&#22312;&#21830;&#21697;&#27969;&#36890;&#24322;&#24120;&#21457;&#36798;&#65292;&#20960;&#20046;&#25152;&#26377;&#19996;&#35199;&#37117;&#21487;&#20197;&#28120;&#23453;&#21040;&#23478;&#12290;</p><p>&#37027;&#65292;&#25105;&#20026;&#20160;&#20040;&#19968;&#23450;&#35201;&#22312;&#19996;&#35199;&#21334;&#24471;&#27515;&#36149;&#27515;&#36149;&#30340;&#26053;&#28216;&#21306;&#20080;&#65292;&#32780;&#19988;&#36824;&#35201;&#20146;&#33258;&#36865;&#19978;&#38376;</p><p>&#21602;&#65311;</p><p>&#22079;&#22079;&#12290;&#30475;&#21040;&#36825;&#37324;&#65292;&#20320;&#32852;&#24819;&#36215;&#20102;&#26085;&#26412;&#25512;&#38144;&#20043;&#31070;&#65288;&#31616;&#31216;&#31659;&#31070;&#65289;&#21407;&#19968;&#24179;&#22812;&#26202;&#22312;&#23478;&#32473;</p><p>&#23458;&#25143;&#25171;&#30005;&#35805;&#37117;&#35201;&#25442;&#25104;&#35199;&#35013;&#38761;&#23653;&#30340;&#31070;&#32463;&#30149;&#20107;&#24773;&#20102;&#21527;&#65311;</p><p>44</p><p>&#36825;&#26159;&#19968;&#31181;&#31934;&#31070;&#65292;&#29992;&#21608;&#31435;&#27874;&#30340;&#35805;&#26469;&#35828;&#65292;&#36825;&#26159;&#19968;&#31181;&#20570;&#20154;&#30340;&#33108;&#35843;&#12290;</p><p>&#20063;&#23601;&#26159;&#20320;&#24515;&#37324;&#26377;&#20182;&#65292;&#24819;&#21040;&#20182;&#12289;&#20026;&#20102;&#20182;&#65292;&#20320;&#24536;&#35760;&#20102;&#37329;&#38065;&#30340;&#20215;&#20540;&#65292;&#24536;&#35760;&#20102;&#21518;&#26399;</p><p>&#30340;&#40635;&#28902;&#21644;&#21171;&#32047;&#65292;&#35760;&#24471;&#30340;&#21482;&#26377;&#24773;&#35850;&#12290;</p><p>&#20063;&#26377;&#20154;&#32463;&#24120;&#36136;&#30097;&#21507;&#20111;&#26159;&#31119;&#36825;&#21477;&#35805;&#65292;&#37027;&#21507;&#20111;&#20026;&#21861;&#36824;&#26159;&#31119;&#21602;&#65311;</p><p>&#21508;&#20301;&#21487;&#20197;&#22909;&#22909;&#29730;&#30952;&#29730;&#30952;&#65292;&#25105;&#21482;&#33021;&#21578;&#35785;&#21508;&#20301;&#30340;&#26159;&#65292;&#20170;&#22825;&#21507;&#30340;&#20219;&#20309;&#23567;&#20111;&#37117;&#20250;&#22312;&#26410;</p><p>&#26469;&#21152;&#19978;&#24040;&#39069;&#21033;&#24687;&#19968;&#36215;&#22238;&#39304;&#20110;&#20320;&#12290;</p><p>&#37027;&#19988;&#30475;&#30475;&#25105;&#37117;&#20026;&#25105;&#30340;&#21512;&#20249;&#20154;&#20204;&#21450;&#20182;&#20204;&#30340;&#23478;&#20154;&#37117;&#20080;&#36807;&#20123;&#20160;&#20040;&#21543;&#12290;</p><p>&#25105;&#26377;&#27425;&#26080;&#24847;&#20013;&#24102;&#20102;&#20960;&#20010;&#36125;&#22771;&#32473;&#25105;&#19968;&#20010;&#21512;&#20249;&#20154;&#30340;&#22969;&#22969;&#65292;&#22905;&#39640;&#20852;&#24471;&#19981;&#24471;&#20102;&#65292;&#21407;&#26469;</p><p>&#22905;&#38750;&#24120;&#21916;&#27426;&#28023;&#36125;&#12290;&#21518;&#26469;&#19968;&#27425;&#25105;&#21448;&#21435;&#28023;&#21335;&#30340;&#26102;&#20505;&#65292;&#23601;&#20080;&#20102;&#19968;&#22871;&#25454;&#35828;&#21697;&#30456;&#27604;&#36739;&#22909;&#30340;&#22235;</p><p>&#22823;&#21517;&#34746;&#65292;&#22909;&#22823;&#30340;&#20960;&#20010;&#19996;&#19996;&#65292;&#30495;&#26159;&#23041;&#27494;&#21834;&#12290;</p><p>&#36865;&#21040;&#20182;&#20204;&#23478;&#30340;&#26102;&#20505;&#65292;&#20182;&#22969;&#22969;&#21253;&#25324;&#20182;&#20840;&#23478;&#37117;&#38663;&#25788;&#20102;&#65292;&#36825;&#21487;&#35201;&#25670;&#22312;&#21738;&#37324;&#21734;&#65292;&#21621;&#21621;&#12290;</p><p>&#25105;&#26381;&#35013;&#29983;&#24847;&#21512;&#20249;&#20154;&#30340;&#32769;&#29240;&#38750;&#24120;&#21916;&#27426;&#20889;&#27611;&#31508;&#23383;&#65292;&#26159;&#20010;&#26377;&#25991;&#21270;&#24213;&#34164;&#30340;&#36864;&#20241;&#24178;&#37096;&#65292;</p><p>&#25105;&#21435;&#22235;&#24029;&#29609;&#30340;&#26102;&#20505;&#23601;&#25214;&#21040;&#19968;&#20010;&#20070;&#27861;&#23478;&#20889;&#20102;&#19968;&#21103;&#23383;&#65292;&#36865;&#32473;&#20182;&#65292;&#27426;&#21916;&#24471;&#19981;&#34892;&#12290;</p><p>&#36824;&#26377;&#19968;&#20010;&#21464;&#24577;&#30340;&#21512;&#20249;&#20154;&#65292;&#38750;&#24120;&#21916;&#27426;&#25670;&#24324;&#20992;&#20855;&#12290;&#25105;&#23601;&#19987;&#38376;&#35831;&#20102;&#19968;&#20301;&#38136;&#21073;&#24072;&#38203;&#36896;</p><p>&#20102;&#19968;&#25226;&#27494;&#22763;&#20992;&#65292;&#24182;&#22312;&#20992;&#20995;&#19978;&#21051;&#19978;&#20102;&#20182;&#21644;&#20182;&#22971;&#23376;&#30340;&#21517;&#23383;&#12290;&#36825;&#20010;&#28789;&#24863;&#26469;&#33258;&#20110;&#29275;&#36924;&#20154;&#26118;</p><p>&#27712;-&#22612;&#20262;&#33922;&#35834;&#23548;&#28436;&#30340;&#30005;&#24433;&#65306;&#26432;&#27515;&#27604;&#23572;&#12290;</p><p>&#12290;&#12290;&#12290;&#12290;&#12290;&#12290;</p><p>&#31561;&#31561;&#31561;&#31561;&#65292;&#35832;&#22914;&#27492;&#31867;&#30340;&#20107;&#24773;&#65292;&#25105;&#27599;&#22825;&#37117;&#22312;&#29730;&#30952;&#19982;&#23454;&#26045;&#12290;</p><p>&#21621;&#21621;&#65292;&#20320;&#20204;&#35828;&#25105;&#30340;&#29983;&#27963;&#36807;&#24471;&#36824;&#31639;&#26377;&#24847;&#24605;&#21543;&#65311;</p><p>&#23601;&#20687;&#36825;&#20960;&#22825;&#25105;&#27491;&#22312;&#31609;&#22791;&#30340;&#23601;&#26159;&#65292;&#25105;&#19968;&#21512;&#20249;&#20154;&#39532;&#19978;&#23601;&#21040;&#32467;&#23130;&#21313;&#21608;&#24180;&#20102;&#65292;&#22079;&#22079;&#65292;</p><p>&#36825;&#20010;&#28040;&#24687;&#25105;&#37117;&#26159;&#20174;&#20391;&#38754;&#20102;&#35299;&#21040;&#30340;&#12290;&#25105;&#20174;&#20182; QQ&#31354;&#38388;&#36873;&#20102;&#19968;&#24352;&#20182;&#20204;&#36817;&#26399;&#21040;&#24433;&#27004;&#29031;&#30340;</p><p>&#33402;&#26415;&#29031;&#21512;&#24433;&#65292;&#27491;&#22312;&#19982;&#19968;&#23478;&#19987;&#38376;&#20570;&#27700;&#26230;&#20687;&#30340;&#20844;&#21496;&#32852;&#31995;&#65292;&#32473;&#20182;&#20204;&#35746;&#20570;&#19968;&#24352;&#24040;&#22823;&#30340;&#27700;&#26230;</p><p>&#32426;&#24565;&#20687;&#12290;&#21703;&#21652;&#21652;&#65292;&#31561;&#21040;&#37027;&#19968;&#22825;&#31361;&#28982;&#36865;&#32473;&#20182;&#20204;&#65292;&#20320;&#20204;&#35828;&#65292;&#20182;&#20204;&#20250;&#26377;&#20160;&#20040;&#21453;&#24212;&#21834;&#65292;</p><p>hohohoho&#65292;&#24076;&#26395;&#20182;&#19981;&#35201;&#30475;&#21040;&#36825;&#20010;&#24086;&#23376;&#12290;&#12290;&#12290;</p><p>&#24403;&#28982;&#65292;&#36825;&#20123;&#37117;&#26159;&#20123;&#29305;&#27530;&#26102;&#20505;&#12290;&#24179;&#26102;&#30340;&#29983;&#27963;&#26469;&#24448;&#21602;&#65292;&#23601;&#26356;&#19981;&#29992;&#35828;&#20102;&#12290;&#25105;&#24515;&#20013;&#35013;</p><p>&#30340;&#20840;&#37096;&#26159;&#20182;&#20204;&#65292;&#26089;&#24050;&#32463;&#34701;&#20837;&#21040;&#20182;&#20204;&#30340;&#23478;&#24237;&#20013;&#20102;&#12290;&#25105;&#19981;&#20165;&#20165;&#26159;&#20182;&#30340;&#20107;&#19994;&#19978;&#30340;&#22909;&#20249;&#20276;&#12289;</p><p>&#29983;&#27963;&#20013;&#30340;&#22909;&#26379;&#21451;&#65292;&#32780;&#19988;&#36824;&#26159;&#20182;&#20204;&#23478;&#24237;&#30340;&#22909;&#26379;&#21451;&#65292;&#22909;&#24110;&#25163;&#12290;</p><p>&#26377;&#35841;&#21448;&#26377;&#20160;&#20040;&#29702;&#30001;&#19981;&#20063;&#23545;&#36825;&#26679;&#19968;&#20010;&#26379;&#21451;&#22909;&#21602;&#65311;&#32780;&#24544;&#35802;&#22320;&#12289;&#23613;&#24515;&#23613;&#36131;&#22320;&#20570;&#22909;&#39033;</p><p>&#30446;&#65292;&#23601;&#26159;&#26368;&#22909;&#30340;&#22238;&#25253;&#20102;&#21568;&#12290;</p><p>&#25152;&#20197;&#65292;&#25105;&#29616;&#22312;&#24456;&#22810;&#26102;&#38388;&#21644;&#31934;&#21147;&#37117;&#26159;&#22312;&#20026;&#25105;&#30340;&#36825;&#20123;&#21512;&#20249;&#20154;&#26381;&#21153;&#65292;&#29730;&#30952;&#30528;&#22914;&#20309;&#25226;</p><p>&#20182;&#20204;&#26381;&#21153;&#22909;&#12290;</p><p>&#29992;&#27604;&#36739;&#31895;&#20439;&#32932;&#27973;&#30340;&#35805;&#26469;&#35828;&#23601;&#26159;&#65306;&#21482;&#26377;&#25226;&#20182;&#20204;&#26381;&#21153;&#22909;&#20102;&#65292;&#20182;&#20204;&#25165;&#33021;&#25226;&#21508;&#33258;&#30340;&#39033;</p><p>&#30446;&#26381;&#21153;&#22909;&#21703;&#12290;</p><p>&#19968;&#26679;&#30340;&#36947;&#29702;&#65292;&#20182;&#33021;&#25226;&#20013;&#23618;&#24178;&#37096;&#26381;&#21153;&#22909;&#65292;&#20013;&#23618;&#24178;&#37096;&#25165;&#33021;&#25226;&#22522;&#23618;&#21592;&#24037;&#26381;&#21153;&#22909;&#65292;</p><p>45</p><p>&#22522;&#23618;&#21592;&#24037;&#25165;&#33021;&#25226;&#23458;&#25143;&#26381;&#21153;&#22909;&#65292;&#23458;&#25143;&#25165;&#33021;&#35753;&#25105;&#20204;&#30340;&#29983;&#27963;&#36807;&#24471;&#28363;&#28070;&#21703;&#12290;</p><p>&#31532;&#19977;&#33410; &#39550;&#39533;&#35201;&#19981;&#24471;<br>
+&#19982;&#20154;&#20026;&#21892;&#23545;&#20154;&#22909;&#65292;&#19981;&#26159;&#20197;&#39550;&#39533;&#20182;&#20026;&#30446;&#30340;&#65292;&#22914;&#26524;&#24320;&#22987;&#23601;&#26159;&#20197;&#36825;&#20010;&#20026;&#30446;&#30340;&#65292;&#32467;&#26524;</p><p>&#22823;&#22810;&#24456;&#26479;&#20855;&#12290;&#25105;&#20204;&#35201;&#20570;&#30340;&#26159;&#35201;&#20462;&#28860;&#33258;&#36523;&#65292;&#30495;&#35802;&#22320;&#23545;&#20154;&#22909;&#12290;&#20320;&#21487;&#20197;&#30475;&#20570;&#26159;&#65306;&#20182;&#20026;&#20320;</p><p>&#24037;&#20316;&#65292;&#20026;&#20320;&#30340;&#20107;&#19994;&#32780;&#25340;&#25615;&#65292;&#25152;&#20197;&#20320;&#35201;&#24453;&#20182;&#22914;&#23478;&#20154;&#33324;&#22909;&#12290;&#33509;&#26159;&#36825;&#26679;&#65292;&#24448;&#24448;&#65292;&#20182;&#23601;&#20250;</p><p>&#22240;&#20026;&#20320;&#24515;&#20013;&#26377;&#20182;&#12289;&#24453;&#20182;&#22909;&#12289;&#37325;&#24773;&#65292;&#25152;&#20197;&#65292;&#20570;&#22909;&#20107;&#24773;&#20063;&#24544;&#35802;&#20110;&#20320;&#12290;&#20107;&#24773;&#30340;&#34920;&#35937;&#19968;&#26679;&#65292;</p><p>&#20294;&#35201;&#30475;&#20986;&#21457;&#28857;&#26159;&#21542;&#20063;&#19968;&#26679;&#65292;&#36825;&#25165;&#26159;&#20915;&#23450;&#20107;&#29289;&#21457;&#23637;&#26368;&#32456;&#32467;&#26524;&#30340;&#20851;&#38190;&#12290;</p><p>&#25105;&#19968;&#21521;&#30340;&#21407;&#21017;&#26159;&#65306;&#20570;&#20154;&#20570;&#20107;&#65292;&#23569;&#20123;&#32416;&#32467;&#65292;&#22810;&#20123;&#22374;&#33633;&#12290;</p><p>&#21892;&#24453;&#27599;&#20010;&#35813;&#21892;&#24453;&#30340;&#20154;&#65292;&#20570;&#22909;&#27599;&#20214;&#21147;&#25152;&#33021;&#21450;&#30340;&#20107;&#65292;&#19981;&#20105;&#23436;&#32654;&#65292;&#20294;&#27714;&#26080;&#24871;&#65292;&#36275;&#30691;&#12290;</p><p>&#20063;&#35768;&#26159;&#25105;&#30340;&#29983;&#24847;&#27604;&#36739;&#20998;&#25955;&#65292;&#23601;&#31639;&#20854;&#20013;&#26377;&#21512;&#20249;&#20154;&#32972;&#21467;&#12289;&#21333;&#39134;&#65292;&#23545;&#25105;&#30340;&#24433;&#21709;&#20063;&#19981;</p><p>&#22826;&#22823;&#65292;&#25152;&#20197;&#65292;&#25105;&#23545;&#20110;&#36825;&#20214;&#20107;&#27604;&#36739;&#30475;&#28129;&#65292;&#24515;&#20013;&#26377;&#20182;&#20204;&#65292;&#30495;&#35802;&#23545;&#20182;&#20204;&#22909;&#23601;&#34892;&#20102;&#65292;&#33267;&#20110;</p><p>&#26368;&#32456;&#32467;&#26524;&#22914;&#20309;&#65292;&#24050;&#19981;&#26159;&#25105;&#33021;&#26029;&#23450;&#30340;&#33539;&#22260;&#20102;&#65292;&#37027;&#21448;&#20309;&#32416;&#32467;&#20043;&#26377;&#65311;&#20294;&#24448;&#24448;&#31177;&#25215;&#36825;&#26679;&#30340;</p><p>&#24605;&#32500;&#20570;&#20154;&#20570;&#20107;&#65292;&#32467;&#26524;&#21364;&#22823;&#22810;&#19981;&#20250;&#35753;&#20320;&#22833;&#26395;&#12290;&#33267;&#23569;&#25130;&#27490;&#30446;&#21069;&#65292;&#36824;&#27809;&#26377;&#19968;&#20010;&#21512;&#20249;&#20154;&#26377;</p><p>&#21333;&#39134;&#36857;&#35937;&#12290;</p><p>&#20986;&#21457;&#28857;&#27491;&#30830;&#65292;&#20107;&#24773;&#24448;&#24448;&#33021;&#36827;&#20837;&#33391;&#24615;&#24490;&#29615;&#65292;&#20986;&#21457;&#28857;&#19981;&#22823;&#27491;&#30830;&#65292;&#20107;&#24773;&#21017;&#24448;&#24448;&#36827;&#20837;</p><p>&#24694;&#24615;&#24490;&#29615;&#12290;</p><p>&#22312;&#21478;&#19968;&#20010;&#24086;&#23376;&#30475;&#21040;&#30340;&#19968;&#20010;&#31934;&#24425;&#30340;&#22238;&#24086;&#65292;&#36716;&#36807;&#26469;&#22823;&#20249;&#22260;&#35266;&#22260;&#35266;&#12290;</p><p>&#24352;&#19977;&#24110;&#20102;&#19979;&#23646;&#26446;&#22235;&#19968;&#20010;&#22823;&#24537;&#65292;&#26446;&#22235;&#23545;&#24352;&#19977;&#29305;&#21035;&#24544;&#35802;&#12290;</p><p>&#36825;&#20214;&#20107;&#34987;&#29579;&#20108;&#40635;&#23376;&#30475;&#21040;&#20102;&#65292;&#29579;&#20108;&#40635;&#23376;&#20570;&#20102;&#19968;&#20010;&#24635;&#32467;&#65306;&ldquo;&#24352;&#19977;&#24819;&#35201;&#39550;&#39533;&#26446;&#22235;&#65292;</p><p>&#25152;&#20197;&#20182;&#24110;&#20102;&#26446;&#22235;&#19968;&#20010;&#22823;&#24537;&#65292;&#32467;&#26524;&#21602;&#65292;&#26446;&#22235;&#23601;&#23545;&#24352;&#19977;&#24544;&#35802;&#20102;&rdquo;&#12290;</p><p>&#20294;&#26159;&#38382;&#39064;&#26159;&#29579;&#20108;&#40635;&#23376;&#21644;&#24352;&#19977;&#30340;&#19990;&#30028;&#35266;&#19981;&#19968;&#26679;&#21834;&#65292;&#22659;&#30028;&#19981;&#19968;&#26679;&#21834;&#12290;&#29579;&#20108;&#40635;&#23376;&#29992;</p><p>&#33258;&#24049;&#30340;&#19990;&#30028;&#35266;&#21644;&#20215;&#20540;&#35266;&#21435;&#34913;&#37327;&#24352;&#19977;&#26412;&#36523;&#23601;&#26159;&#21487;&#31505;&#30340;&#65292;&#22240;&#20026;&#29579;&#20108;&#40635;&#23376;&#24182;&#27809;&#26377;&#24352;&#19977;&#37027;</p><p>&#26679;&#30340;&#20010;&#20154;&#20462;&#20026;&#12290; &#21518;&#26469;&#29579;&#20108;&#40635;&#23376;&#20026;&#20102;&#39550;&#39533;&#19979;&#23646;&#65292;&#20063;&#25214;&#26426;&#20250;&#32473;&#20102;&#19979;&#23646;&#19968;&#20123;&#23567;&#24681;&#23567;&#24800;&#65292;</p><p>&#20294;&#26159;&#24456;&#24555;&#29579;&#20108;&#40635;&#23376;&#21457;&#29616;&#19979;&#23646;&#24182;&#19981;&#20080;&#36134;&#65292;&#34920;&#38754;&#19978;&#24863;&#24681;&#25140;&#24503;&#65292;&#20854;&#23454;&#24182;&#19981;&#24544;&#35802;&#12290;&#29579;&#20108;&#40635;</p><p>&#23376;&#24320;&#22987;&#24576;&#30097;&mdash;&mdash;&#20026;&#21861;&#36825;&#20010;&#21150;&#27861;&#24352;&#19977;&#33021;&#29992;&#65292;&#25105;&#23601;&#19981;&#33021;&#29992;&#21602;&#65311;&#20026;&#20160;&#20040;&#21602;&#65311;</p><p>&#29579;&#20108;&#40635;&#23376;&#20915;&#23450;&#22362;&#25345;&#65292;&#20110;&#26159;&#20182;&#22312;&#21508;&#31181;&#22330;&#21512;&#24819;&#21150;&#27861;&#20445;&#25252;&#33258;&#24049;&#30340;&#19979;&#23646;&#65292;&#24819;&#21150;&#27861;&#35753;&#19979;</p><p>&#23646;&#33719;&#24471;&#26356;&#22810;&#25910;&#33719;&#65292;&#20110;&#26159;&#24930;&#24930;&#30340;&#29579;&#20108;&#40635;&#23376;&#33258;&#24049;&#30340;&#20869;&#24515;&#19990;&#30028;&#21464;&#21270;&#20102;&#12290;&#20182;&#20877;&#20063;&#19981;&#26159;&#20026;&#20102;</p><p>&#39550;&#39533;&#19979;&#23646;&#32780;&#23545;&#19979;&#23646;&#22909;&#65292;&#32780;&#26159;&#21457;&#33258;&#20869;&#24515;&#30340;&#23545;&#19979;&#23646;&#36234;&#26469;&#36234;&#22909;&#12290;&#24930;&#24930;&#30340;&#65292;&#20182;&#21457;&#29616;&#19979;&#23646;&#23545;</p><p>&#20182;&#36234;&#26469;&#36234;&#24544;&#35802;&#65292;&#20110;&#26159;&#20182;&#32456;&#20110;&#32943;&#23450;&mdash;&mdash;&#21482;&#26159;&#24403;&#25105;&#24819;&#39550;&#39533;&#30340;&#26102;&#20505;&#65292;&#21453;&#32780;&#39550;&#39533;&#19981;&#20102;&#65292;&#24403;</p><p>&#25105;&#19981;&#20877;&#20026;&#20102;&#39550;&#39533;&#20182;&#20204;&#32780;&#21162;&#21147;&#65292;&#32780;&#26159;&#30495;&#24515;&#23545;&#24453;&#20182;&#20204;&#30340;&#26102;&#20505;&#65292;&#20182;&#20204;&#21453;&#32780;&#37117;&#24320;&#22987;&#36861;&#38543;&#25105;&#12290;</p><p>&#38271;&#26399;&#32463;&#39564;&#21578;&#35785;&#25105;&#65292;&#20013;&#22269;&#20154;&#26159;&#24456;&#38590;&#36890;&#36807;&#21046;&#24230;&#21644;&#35268;&#21017;&#31649;&#29702;&#30340;&#65292;&#37117;&#19981;&#26381;&#31649;&#12290;&#20320;&#36234;&#26159;</p><p>&#24819;&#36890;&#36807;&#36825;&#20123;&#19996;&#35199;&#30475;&#22909;&#20182;&#65292;&#20182;&#36234;&#26159;&#35201;&#20986;&#36712;&#32473;&#20320;&#30475;&#12290;&#20182;&#30340;&#24515;&#24819;&#36208;&#20102;&#65292;&#20219;&#20309;&#19996;&#35199;&#37117;&#30041;&#19981;</p><p>46</p><p>&#20303;&#12290;&#20284;&#20046;&#30475;&#20804;&#24351;&#20197;&#21069;&#25552;&#38382;&#36807;&#36130;&#21153;&#25511;&#21046;&#26041;&#38754;&#30340;&#38382;&#39064;&#65292;&#20854;&#23454;&#21644;&#36825;&#20010;&#26159;&#19968;&#26679;&#30340;&#36947;&#29702;&#65292;&#25105;</p><p>&#26377;&#20010;&#22238;&#24086;&#23601;&#26159;&#19987;&#38376;&#20026;&#20804;&#24351;&#20320;&#20889;&#30340;&#65292;&#19981;&#30693;&#36947;&#20320;&#26377;&#27809;&#26377;&#30041;&#24847;&#21602;&#65311;</p><p>&#25152;&#20197;&#23613;&#31649;&#25105;&#26377;&#20960;&#20010;&#29983;&#24847;&#24180;&#38144;&#21806;&#39069;&#37117;&#27604;&#36739;&#21487;&#35266;&#20102;&#65292;&#20294;&#25105;&#20381;&#26087;&#27809;&#26377;&#21644;&#20219;&#20309;&#19968;&#20010;&#21512;</p><p>&#20249;&#20154;&#31614;&#20160;&#20040;&#21327;&#35758;&#12290;&#20063;&#23601;&#26159;&#35828;&#20182;&#20204;&#21487;&#20197;&#38543;&#26102;&#25735;&#24320;&#25105;&#33258;&#24049;&#24178;&#65292;&#26356;&#35848;&#19981;&#19978;&#25105;&#33021;&#25511;&#21046;&#36130;&#21153;</p><p>&#21834;&#20160;&#20040;&#20043;&#31867;&#30340;&#20102;&#12290;</p><p>&#20808;&#22909;&#22909;&#30740;&#31350;&#33258;&#24049;&#30340;&#23450;&#20301;&#12290;&#20320;&#20250;&#21457;&#29616;&#65292;&#20320;&#36234;&#26159;&#24819;&#25511;&#21046;&#65292;&#36234;&#26159;&#25511;&#21046;&#19981;&#20102;&#65292;&#20320;&#36234;&#26159;</p><p>&#19981;&#24819;&#25511;&#21046;&#32780;&#26159;&#30495;&#27491;&#23545;&#20182;&#20204;&#22909;&#65292;&#20182;&#20204;&#21364;&#34987;&#20320;&#29282;&#29282;&#25511;&#21046;&#20303;&#20102;&#12290;</p>
+
+			</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>
