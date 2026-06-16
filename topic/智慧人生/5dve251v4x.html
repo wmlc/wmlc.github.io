@@ -1,0 +1,969 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>不要完全相信老师的话 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="f6f0loKSPw3ZEMmHr5CGpLa32o1KCijMdbN8ZWqj">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    智慧人生 <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>程序员</h2>
+<ul>
+<li id="blog106"><a href="34rvgz7ydj.html#blog106">一个程序员的财务自由之路</a>
+<li id="blog247"><a href="x2ev8elvor.html#blog247">程序员解决难题的实用指南</a>
+<li id="blog424"><a href="de2963w9q7.html#blog424">开发人员如何掌握向上管理的艺术</a>
+<li id="blog553"><a href="15dvep294x.html#blog553">编程思想</a>
+</ul>
+</li>
+<li>
+<h2>读书</h2>
+<ul>
+<li id="blog115"><a href="ekpv18qy8w.html#blog115">一本书应该读两遍</a>
+</ul>
+</li>
+<li>
+<h2>智慧人生</h2>
+<ul>
+<li id="blog263"><a href="j25v15dy1n.html#blog263">人生幸福的秘诀：低期望</a>
+<li id="blog345"><a href="qk2vmzgyp0.html#blog345">提问的智慧</a>
+<li id="blog440"><a href="nq5vr4ry7p.html#blog440">为什么找熟人买服务更容易被坑</a>
+<li id="blog441"><a href="1j6y00ly2k.html#blog441">不考虑怎么交代的人才有机会</a>
+<li id="blog442"><a href="n2qvpqzy3m.html#blog442">密切关注对旁人就是一种震慑力</a>
+<li id="blog466"><a href="n2qvp1zv3m.html#blog466">博弈论的智慧</a>
+<li id="blog662"><a href="rwyl206vz8.html#blog662">行业内幕</a>
+<li id="blog679"><a href="kl9no6lvz4.html#blog679">做事</a>
+<li id="blog712"><a href="569x574yep.html#blog712">平账解决夫妻间谁管钱的信任问题</a>
+<li id="blog856"><a href="xpv52kwv86.html#blog856">学习的关键：提高思维密度</a>
+<li id="blog930"><a href="4rvgnq6ydj.html#blog930">婚姻观</a>
+<li id="blog938"><a href="rwyl23zvz8.html#blog938">自己的因果，自己承担</a>
+<li id="blog971"><a href="2ev86jgyor.html#blog971">怎么把孩子教的很成功</a>
+<li id="blog975"><a href="3dykqlzyl0.html#blog975">超强自驱力是哪来的？</a>
+<li id="blog976"><a href="enyd5nn97d.html#blog976">考得不好怎么填志愿</a>
+<li id="blog977"><a href="5dve251v4x.html#blog977">不要完全相信老师的话</a>
+</ul>
+</li>
+<li>
+<h2>科普</h2>
+<ul>
+<li id="blog559"><a href="3qk94xlyw1.html#blog559">二氧化碳为什么会让地球变暖？</a>
+</ul>
+</li>
+<li>
+<h2>管理</h2>
+<ul>
+<li id="blog560"><a href="x569xok9ep.html#blog560">解决团队分歧的四种方式</a>
+<li id="blog854"><a href="4rvgn1qydj.html#blog854">什么情况下激励不发挥作用？</a>
+<li id="blog855"><a href="kl9nowdvz4.html#blog855">领导者的智慧</a>
+<li id="blog867"><a href="m892g0ny01.html#blog867">领导的时间管理</a>
+<li id="blog940"><a href="d6vro5jv3g.html#blog940">管理的智慧</a>
+</ul>
+</li>
+<li>
+<h2>博海拾贝</h2>
+<ul>
+<li id="blog711"><a href="qk942dgvw1.html#blog711">博海拾贝1</a>
+</ul>
+</li>
+<li>
+<h2>学习</h2>
+<ul>
+<li id="blog974"><a href="2wy3lw7ykm.html#blog974">普通人最大的学习陷阱，就是系统化学习</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/5dve251v4x.html', function (data, status) {
+            addView('5dve251v4x.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>不要完全相信老师的话</h1><ul>
+<li><a href="5dve251v4x.html#c8f2e262afa33af299a23bce84c34f1b">一、核心观点：没有切肤之痛的人，不配提供建议</a></li>
+<li><a href="5dve251v4x.html#5d7dd40775e40bda23641d6d34479bb1">二、老师为什么教不了你&quot;真实社会&quot;？</a>
+<ul>
+<li><a href="5dve251v4x.html#0bc8e406a3baedda24bceb3df11a0a8f">🔴 原因一：老师维护的是体面，社会运行靠的是利益</a></li>
+<li><a href="5dve251v4x.html#ef2680add806c12a828586b914014eaf">🔴 原因二：教育是工业化生产，而赢家往往是非标准化的人</a></li>
+</ul></li>
+<li><a href="5dve251v4x.html#b7540aec7c3732671e654f9e95eb2617">三、但我们不能没有老师</a></li>
+<li><a href="5dve251v4x.html#63d24eb72940b40ebd25ac64ec55d929">四、毕业那一刻，才是重塑三观的开端</a></li>
+<li><a href="5dve251v4x.html#9d0b365b1f65009d7a5ad609019b4f04">写在最后</a></li>
+</ul><?xml encoding="UTF-8"><p>&#26368;&#36817;&#26377;&#20010;&#31881;&#19997;&#24456;&#19981;&#35782;&#36259;&#22320;&#35828;&#20102;&#21477;&#65306;<strong>"&#19981;&#35201;&#23436;&#20840;&#30456;&#20449;&#32769;&#24072;&#30340;&#35805;&#65292;&#20182;&#20204;&#26159;&#31038;&#20250;&#23454;&#36341;&#26368;&#23569;&#30340;&#32676;&#20307;&#12290;"</strong> &#36824;&#38750;&#35201;&#38382;&#25105;&#36825;&#35805;&#23545;&#19981;&#23545;&#12290;</p><p>&#25105;&#27809;&#21333;&#29420;&#22238;&#22797;&#65292;&#30452;&#25509;&#20570;&#20102;&#26399;&#33410;&#30446;&#12290;</p><p>&#36825;&#35805;&#24050;&#32463;&#35828;&#24471;&#24456;&#22996;&#23113;&#20102;&#65292;&#31639;&#26159;&#32473;&#36275;&#38754;&#23376;&#20102;&#12290;</p><hr><h2 id="c8f2e262afa33af299a23bce84c34f1b">&#19968;&#12289;&#26680;&#24515;&#35266;&#28857;&#65306;&#27809;&#26377;&#20999;&#32932;&#20043;&#30171;&#30340;&#20154;&#65292;&#19981;&#37197;&#25552;&#20379;&#24314;&#35758;</h2><p>&#22612;&#21202;&#24067;&#22312;&#12298;&#38750;&#23545;&#31216;&#39118;&#38505;&#12299;&#37324;&#21453;&#22797;&#25552;&#21040;&#19968;&#20010;&#27010;&#24565;&#65306;<strong>&#27809;&#26377;&#20999;&#32932;&#20043;&#30171;&#30340;&#20154;&#19981;&#37197;&#25552;&#20379;&#24314;&#35758;&#12290;</strong></p><p>&#30495;&#30456;&#27604;&#36825;&#21477;&#35805;&#26356;&#27531;&#37239;&mdash;&mdash;</p><blockquote>
+<p><strong>&#32769;&#24072;&#19981;&#20165;&#26159;&#31038;&#20250;&#23454;&#36341;&#26368;&#23569;&#30340;&#32676;&#20307;&#65292;&#36824;&#26159;&#34987;&#25972;&#20010;&#31038;&#20250;&#31995;&#32479;&#26377;&#24847;&#38548;&#31163;&#22312;&#23553;&#38381;&#29615;&#22659;&#37324;&#30340;&#31209;&#24207;&#23432;&#25252;&#32773;&#12290;</strong></p>
+</blockquote><p>&#36825;&#32477;&#19981;&#26159;&#23545;&#25945;&#24072;&#32844;&#19994;&#30340;&#36140;&#20302;&#65292;&#32780;&#26159;&#22522;&#20110;&#31038;&#20250;&#20998;&#24037;&#30340;&#20998;&#26512;&#12290;</p><p>&#32769;&#24072;&#30340;&#32844;&#36131;&#26159;&#21578;&#35785;&#20320;<strong>&#19990;&#30028;&#24212;&#35813;&#26159;&#20160;&#20040;&#26679;&#30340;</strong>&#65292;&#32780;&#20320;&#36831;&#26089;&#35201;&#33258;&#24049;&#21435;&#25506;&#23547;<strong>&#19990;&#30028;&#23454;&#38469;&#30340;&#27169;&#26679;</strong>&#12290;</p><hr><h2 id="5d7dd40775e40bda23641d6d34479bb1">&#20108;&#12289;&#32769;&#24072;&#20026;&#20160;&#20040;&#25945;&#19981;&#20102;&#20320;"&#30495;&#23454;&#31038;&#20250;"&#65311;</h2><h3 id="0bc8e406a3baedda24bceb3df11a0a8f">&#128308; &#21407;&#22240;&#19968;&#65306;&#32769;&#24072;&#32500;&#25252;&#30340;&#26159;&#20307;&#38754;&#65292;&#31038;&#20250;&#36816;&#34892;&#38752;&#30340;&#26159;&#21033;&#30410;</h3><table>
+<thead>
+<tr>
+<th>&#23398;&#26657;&#36923;&#36753;</th>
+<th>&#30495;&#23454;&#31038;&#20250;&#36923;&#36753;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#35802;&#23454;&#12289;&#20844;&#24179;&#12289;&#21162;&#21147;&#23601;&#26377;&#22238;&#25253;</td>
+<td>&#20805;&#28385;&#28151;&#27788;&#12289;&#36816;&#27668;&#12289;&#36164;&#28304;&#32622;&#25442;&#12289;&#28508;&#35268;&#21017;</td>
+</tr>
+<tr>
+<td>&#32447;&#24615;&#30340;&#12289;&#21487;&#39044;&#27979;&#30340;&#22240;&#26524;&#20851;&#31995;</td>
+<td>&#27809;&#26377;&#26631;&#20934;&#35797;&#21367;&#65292;&#27809;&#26377;&#21807;&#19968;&#27491;&#30830;&#31572;&#26696;</td>
+</tr>
+<tr>
+<td>&#25237;&#20837;&#23601;&#26377;&#22238;&#25253;&#65292;&#26377;&#20154;&#20828;&#24213;</td>
+<td>&#39118;&#38505;&#38590;&#27979;&#65292;&#35268;&#21017;&#27169;&#31946;&#65292;&#24369;&#32905;&#24378;&#39135;</td>
+</tr>
+</tbody>
+</table><p>&#32769;&#24072;&#25343;&#30528;&#31283;&#23450;&#30340;&#36130;&#25919;&#24037;&#36164;&#65292;&#20139;&#21463;&#23506;&#26257;&#20551;&#65292;<strong>&#27809;&#26377;&#32463;&#21382;&#36807;&#21830;&#19994;&#31454;&#20105;&#30340;&#20999;&#32932;&#20043;&#30171;&#65292;&#27809;&#26377;&#20307;&#39564;&#36807;&#26397;&#19981;&#20445;&#22805;&#30340;&#29983;&#23384;&#28966;&#34385;&#65292;&#20063;&#27809;&#35265;&#35782;&#36807;&#20026;&#20102;&#21033;&#30410;&#20986;&#21334;&#28789;&#39746;&#30340;&#20154;&#24615;&#38452;&#26263;&#38754;&#12290;</strong></p><p>&#32780;&#19988;&#65292;&#22914;&#26524;&#19968;&#20010;&#32769;&#24072;&#30495;&#25945;&#20320;&#22914;&#20309;&#36865;&#31036;&#12289;&#22914;&#20309;&#21033;&#29992;&#20154;&#24615;&#24369;&#28857;&#12289;&#22914;&#20309;&#36890;&#36807;&#28784;&#33394;&#25163;&#27573;&#33719;&#21462;&#36164;&#28304;&mdash;&mdash;<strong>&#31532;&#20108;&#22825;&#23601;&#20250;&#34987;&#20030;&#25253;&#24320;&#38500;&#12290;</strong></p><p>&#20182;&#20204;&#30340;&#39277;&#30871;&#65292;&#20915;&#23450;&#20102;&#21482;&#33021;&#25945;&#20320;&#37027;&#20123;<strong>&#27491;&#30830;&#21364;&#26080;&#29992;&#30340;&#36947;&#29702;</strong>&#12290;</p><hr><h3 id="ef2680add806c12a828586b914014eaf">&#128308; &#21407;&#22240;&#20108;&#65306;&#25945;&#32946;&#26159;&#24037;&#19994;&#21270;&#29983;&#20135;&#65292;&#32780;&#36194;&#23478;&#24448;&#24448;&#26159;&#38750;&#26631;&#20934;&#21270;&#30340;&#20154;</h3><p>&#23398;&#26657;&#23601;&#20687;&#31038;&#20250;&#22823;&#24037;&#21378;&#30340;<strong>&#21069;&#32622;&#36710;&#38388;</strong>&#65292;&#26680;&#24515;&#30446;&#26631;&#26159;&#22521;&#20859;&#21548;&#35805;&#12289;&#22909;&#29992;&#12289;&#32784;&#29992;&#30340;&#24037;&#19994;&#38646;&#20214;&mdash;&mdash;&#20063;&#23601;&#26159;&#21512;&#26684;&#30340;&#25171;&#24037;&#20154;&#12290;</p><p>&#32769;&#24072;&#23601;&#20687;&#27969;&#27700;&#32447;&#19978;&#30340;&#36136;&#26816;&#21592;&#65292;<strong>&#26412;&#33021;&#22320;&#35752;&#21388;&#37027;&#20123;&#30772;&#22351;&#35268;&#21017;&#12289;&#25361;&#25112;&#26435;&#23041;&#12289;&#24605;&#32500;&#36339;&#36291;&#30340;&#24322;&#31867;&#12290;</strong></p><p>&#21487;&#24688;&#24688;&#26159;&#36825;&#20123;&#34987;&#32769;&#24072;&#30631;&#19981;&#19978;&#30340;&#29305;&#36136;&mdash;&mdash;</p><blockquote>
+<p><strong>&#23545;&#35268;&#21017;&#30340;&#34065;&#35270;&#12289;&#23545;&#39118;&#38505;&#30340;&#20559;&#22909;&#12289;&#23545;&#20154;&#24615;&#30340;&#25935;&#24863;&mdash;&mdash;&#25165;&#26159;&#22312;&#31038;&#20250;&#29983;&#23384;&#30340;&#39030;&#32423;&#27494;&#22120;&#12290;</strong></p>
+</blockquote><p>&#24179;&#20811;&middot;&#24343;&#27931;&#20234;&#24503;&#22312;&#12298;&#22681;&#12299;&#37324;&#21809;&#24471;&#24456;&#32477;&#26395;&#65306;</p><blockquote>
+<p><em>"We don't need no education. We don't need no thought control."</em><br>
+<strong>&#25105;&#20204;&#19981;&#38656;&#35201;&#34987;&#25945;&#32946;&#25104;&#22681;&#19978;&#30340;&#21478;&#19968;&#22359;&#30742;&#12290;</strong></p>
+</blockquote><p>&#24403;&#20320;&#23436;&#20840;&#30456;&#20449;&#32769;&#24072;&#30340;&#35805;&#65292;&#65292;&#20054;&#20054;&#25226;&#33258;&#24049;&#25171;&#30952;&#25104;&#20005;&#19997;&#21512;&#32541;&#30340;&#26631;&#20934;&#20214;&#65292;&#20320;&#23601;&#22833;&#21435;&#20102;&#22312;&#31038;&#20250;&#21338;&#24328;&#20013;&#26368;&#22823;&#30340;&#31609;&#30721;&mdash;&mdash;<strong>&#19981;&#21487;&#26367;&#20195;&#24615;&#12290;</strong></p><blockquote>
+<p>&#21548;&#35805;&#30340;&#23401;&#23376;&#26377;&#31958;&#21507;&#65292;&#22312;&#23398;&#26657;&#26159;&#30495;&#29702;&#65292;<strong>&#22312;&#31038;&#20250;&#21487;&#33021;&#26159;&#27602;&#33647;&#12290;</strong><br>
+&#22312;&#31038;&#20250;&#19978;&#65292;&#21548;&#35805;&#30340;&#23401;&#23376;&#36890;&#24120;&#21482;&#26377;&#24178;&#19981;&#23436;&#30340;&#27963;&#21644;&#32972;&#19981;&#23436;&#30340;&#38149;&#12290;</p>
+</blockquote><hr><h2 id="b7540aec7c3732671e654f9e95eb2617">&#19977;&#12289;&#20294;&#25105;&#20204;&#19981;&#33021;&#27809;&#26377;&#32769;&#24072;</h2><p>&#25351;&#20986;&#32769;&#24072;&#30340;&#23616;&#38480;&#24615;&#65292;<strong>&#24182;&#38750;&#21542;&#23450;&#25945;&#32946;&#30340;&#20215;&#20540;&#12290;</strong></p><p>&#22914;&#26524;&#27599;&#20010;&#20154;&#19968;&#20986;&#29983;&#23601;&#25509;&#21463;&#19995;&#26519;&#27861;&#21017;&#25945;&#32946;&#65292;&#24188;&#20799;&#22253;&#23601;&#24320;&#22987;&#25945;&#21402;&#40657;&#23398;&#65292;&#37027;&#31038;&#20250;&#24517;&#28982;&#20250;&#27814;&#20026;&#22320;&#29425;&#12290;</p><blockquote>
+<p><strong>&#32769;&#24072;&#24517;&#39035;&#22825;&#30495;&#29702;&#24819;&#20027;&#20041;&#65292;&#24517;&#39035;&#30456;&#20449;&#30495;&#21892;&#32654;&#65292;&#20182;&#20204;&#23432;&#25252;&#30340;&#26159;&#20154;&#31867;&#25991;&#26126;&#30340;&#21021;&#22987;&#35774;&#23450;&#12290;</strong></p>
+</blockquote><p>&#25105;&#20204;&#35201;&#24863;&#35874;&#32769;&#24072;&#25945;&#32473;&#25105;&#20204;&#30340;&#32654;&#22909;&#21697;&#36136;&#65292;&#37027;&#26159;&#25105;&#20204;<strong>&#20570;&#20154;&#30340;&#24213;&#33394;</strong>&#65292;&#26159;&#25105;&#20204;&#21320;&#22812;&#26790;&#22238;&#26102;&#33021;&#23433;&#28982;&#20837;&#30561;&#30340;&#33391;&#24515;&#12290;</p><hr><h2 id="63d24eb72940b40ebd25ac64ec55d929">&#22235;&#12289;&#27605;&#19994;&#37027;&#19968;&#21051;&#65292;&#25165;&#26159;&#37325;&#22609;&#19977;&#35266;&#30340;&#24320;&#31471;</h2><p>&#20320;&#36208;&#20986;&#26657;&#38376;&#30340;&#37027;&#19968;&#21051;&#65292;&#35201;&#36805;&#36895;&#23436;&#25104;&#19968;&#27425;<strong>&#31934;&#31070;&#19978;&#30340;&#26029;&#22902;</strong>&mdash;&mdash;&#20027;&#21160;&#25171;&#30772;&#28201;&#23460;&#37324;&#30340;&#29627;&#29827;&#65292;&#35753;&#29616;&#23454;&#30340;&#29378;&#39118;&#26089;&#28857;&#21561;&#36827;&#26469;&#12290;</p><p>&#20855;&#20307;&#24590;&#20040;&#20570;&#65311;</p><table>
+<thead>
+<tr>
+<th>&#32769;&#24072;&#25945;&#30340;</th>
+<th>&#20320;&#38656;&#35201;&#36827;&#21270;&#25104;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#21892;&#33391;</td>
+<td><strong>&#21892;&#33391;&#65292;&#20294;&#35201;&#32473;&#21892;&#33391;&#35013;&#19978;&#29273;&#40831;</strong></td>
+</tr>
+<tr>
+<td>&#35802;&#23454;</td>
+<td><strong>&#35802;&#23454;&#65292;&#20294;&#35201;&#23398;&#20250;&#23545;&#22351;&#20154;&#35828;&#35854;</strong></td>
+</tr>
+<tr>
+<td>&#35268;&#21017;&#24847;&#35782;</td>
+<td><strong>&#35268;&#21017;&#24847;&#35782;&#65292;&#20294;&#35201;&#25026;&#24471;&#24517;&#35201;&#26102;&#21033;&#29992;&#35268;&#21017;&#30340;&#28431;&#27934;</strong></td>
+</tr>
+</tbody>
+</table><hr><h2 id="9d0b365b1f65009d7a5ad609019b4f04">&#20889;&#22312;&#26368;&#21518;</h2><blockquote>
+<p><strong>&#21548;&#32769;&#24072;&#30340;&#35805;&#65292;&#33021;&#25104;&#20026;&#19968;&#20010;&#23545;&#31038;&#20250;&#26080;&#23475;&#30340;&#22909;&#20154;&#12290;</strong><br>
+<strong>&#19981;&#23436;&#20840;&#20449;&#32769;&#24072;&#30340;&#35805;&#65292;&#25165;&#26377;&#26426;&#20250;&#25104;&#20026;&#19968;&#20010;&#24378;&#32773;&#12290;</strong></p>
+</blockquote><p>&#30495;&#27491;&#30340;&#25104;&#29087;&#65292;&#26159;<strong>&#24038;&#25163;&#25343;&#30528;&#32769;&#24072;&#25945;&#30340;&#36947;&#24503;&#19982;&#27861;&#27835;&#65292;&#21491;&#25163;&#25343;&#30528;&#31038;&#20250;&#25945;&#30340;&#21402;&#40657;&#23398;</strong>&#65292;&#22312;&#27877;&#27870;&#30340;&#29616;&#23454;&#20013;&#36208;&#20986;&#23646;&#20110;&#33258;&#24049;&#30340;&#36335;&#12290;</p><p>&#19981;&#35201;&#36131;&#24618;&#32769;&#24072;&#27809;&#25945;&#25105;&#20204;&#29983;&#23384;&#30340;&#30495;&#30456;&mdash;&mdash;&#37027;&#26412;&#26469;&#23601;&#19981;&#26159;&#20182;&#20204;&#30340;&#32844;&#36131;&#65292;&#32780;&#26159;&#25105;&#20204;&#27599;&#20010;&#20154;&#33258;&#24049;&#30340;&#35838;&#39064;&#12290;</p>
+
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="enyd5nn97d.html#blog976" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">考得不好怎么填志愿</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="3qk94xlyw1.html#blog559" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">二氧化碳为什么会让地球变暖？</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>
