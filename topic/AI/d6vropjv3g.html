@@ -1,0 +1,1421 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Agent Skills 完全指南：把你的经验，变成 AI 的「操作手册」 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="0AlTSwitt5e2hv2KYeH5IfyjpCduIBzQrjLwqeRp">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    AI <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>ChatGPT</h2>
+<ul>
+<li id="blog443"><a href="5m892z6901.html#blog443">自建 ChatGpt 站点开源项目</a>
+<li id="blog450"><a href="62wy333ykm.html#blog450">ChatGpt 提示词收集</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog556"><a href="gxpv5lqy86.html#blog556">AI工具收集</a>
+</ul>
+</li>
+<li>
+<h2>VibeCoding</h2>
+<ul>
+<li id="blog969"><a href="ndvm36e93j.html#blog969">AI 编程的经济学与成本优化指南</a>
+<li id="blog970"><a href="3oyjd7ryp5.html#blog970">VibeCoding 工作流</a>
+<li id="blog984"><a href="569x5mryep.html#blog984">Vibe Coding 的不为清单</a>
+</ul>
+</li>
+<li>
+<h2>Skills</h2>
+<ul>
+<li id="blog988"><a href="d6vropjv3g.html#blog988">Agent Skills 完全指南：把你的经验，变成 AI 的「操作手册」</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/d6vropjv3g.html', function (data, status) {
+            addView('d6vropjv3g.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Agent Skills 完全指南：把你的经验，变成 AI 的「操作手册」</h1><ul>
+<li><a href="d6vropjv3g.html#c3b904db5abf01717cc2bc68d3ad7a06">一、Skills 到底是什么</a>
+<ul>
+<li><a href="d6vropjv3g.html#5434e18e21e287df28a0fb76ca36f2f5">聊天机器人 vs 智能体</a></li>
+</ul></li>
+<li><a href="d6vropjv3g.html#eadce7c3f7094f21141eff9b58795f84">二、定位：Skills vs Prompt vs MCP</a></li>
+<li><a href="d6vropjv3g.html#6c8576aeb90170aca21e703de3017603">三、工作原理：渐进式披露</a></li>
+<li><a href="d6vropjv3g.html#473b53d9ba791ccf993b690a71b5e47f">四、解剖一个 Skill</a>
+<ul>
+<li><a href="d6vropjv3g.html#b511e223649a9fb4ea9ffb47064501de">SKILL.md 的两大部分</a></li>
+</ul></li>
+<li><a href="d6vropjv3g.html#228b43887fc857c7c3c3d6829a5d2e28">五、description：决定生死的那几行字</a>
+<ul>
+<li><a href="d6vropjv3g.html#e6b47ef101e56af22ec0deeca8af43cb">四个编写技巧</a></li>
+<li><a href="d6vropjv3g.html#b4eee404eba70568cdef98da90533b5f">三种实用的触发策略</a></li>
+<li><a href="d6vropjv3g.html#f81151e494f0c0ce33ada952b3afcfed">什么任务会触发，什么不会</a></li>
+<li><a href="d6vropjv3g.html#68a9a8f59e21c4d1b6cacae6e064a841">三大常见问题速查</a></li>
+</ul></li>
+<li><a href="d6vropjv3g.html#82f44df21bbe5b11a73926f408c33fe6">六、工程化：脚本扩展与参数传递</a>
+<ul>
+<li><a href="d6vropjv3g.html#a180b6f210f9327b2516b95459a020ba">什么时候该写脚本</a></li>
+<li><a href="d6vropjv3g.html#2e640986127aa48e471890e77867a308">为 Agent 设计脚本的 8 个要点（重点⭐）</a></li>
+<li><a href="d6vropjv3g.html#07d727a1cf2ff7098e449185df1d403e">参数传递：没有函数签名，上下文就是参数</a></li>
+</ul></li>
+<li><a href="d6vropjv3g.html#ab0f86fec8893118a237774390f58fb6">七、调试：三类问题，逐层排查</a>
+<ul>
+<li><a href="d6vropjv3g.html#362c4ed3156244eacfd9cac0d291ef36">问题一：未触发（三步排查）</a></li>
+<li><a href="d6vropjv3g.html#4e458f18997669159b38820d74d69552">问题二：脚本执行错误（速查表）</a></li>
+<li><a href="d6vropjv3g.html#c6cf0778627d9146ee9fc5c1a85cb5c6">问题三：结果不符合预期</a></li>
+</ul></li>
+<li><a href="d6vropjv3g.html#3d63e6e36a5c13ef369789466584e8bb">八、上手路径：创建你的第一个 Skill</a>
+<ul>
+<li><a href="d6vropjv3g.html#638eb00aa5dd66e36b34d600bf301bfd">站在生态的肩膀上</a></li>
+</ul></li>
+<li><a href="d6vropjv3g.html#12ea3f76a979d2acf863f0b105460aba">全文总结</a></li>
+</ul><?xml encoding="UTF-8"><blockquote>
+<p>&#20174;&#24037;&#20316;&#21407;&#29702;&#21040; description &#35843;&#20248;&#65292;&#19968;&#31687;&#35762;&#36879; Skill &#30340;&#32534;&#20889;&#12289;&#35302;&#21457;&#19982;&#35843;&#35797;</p>
+</blockquote><p>&#19981;&#30693;&#36947;&#20320;&#26377;&#27809;&#26377;&#36935;&#21040;&#36807;&#36825;&#31181;&#24773;&#20917;&#65306;&#35753; AI &#22788;&#29702;&#19968;&#20221; PDF&#65292;&#23427;&#22238;&#20320;&#19968;&#27573;&#12300;&#25105;&#24110;&#20320;&#20998;&#26512;&#19968;&#19979;&#12301;&#30340;&#25991;&#23383;&#65292;&#20294;&#26082;&#19981;&#35843;&#29992;&#24037;&#20855;&#65292;&#20063;&#19981;&#29983;&#25104;&#25991;&#20214; &mdash;&mdash; &#22240;&#20026;<strong class="mk-p">&#23427;&#19981;&#30693;&#36947;&#20320;&#30340;&#29615;&#22659;&#37324;&#26377;&#20160;&#20040;&#24211;&#12289;&#25991;&#20214;&#25918;&#22312;&#21738;&#12289;&#36755;&#20986;&#35201;&#20160;&#20040;&#26684;&#24335;</strong>&#12290;</p><p>Skills&#65288;&#25216;&#33021;&#21253;&#65289;&#23601;&#26159;&#20026;&#35299;&#20915;&#36825;&#20010;&#38382;&#39064;&#32780;&#29983;&#30340;&#12290;&#36825;&#31687;&#25991;&#31456;&#31995;&#32479;&#26803;&#29702;&#20102; Skills &#30340;&#26680;&#24515;&#27010;&#24565;&#12289;&#24037;&#20316;&#21407;&#29702;&#12289;&#32534;&#20889;&#35268;&#33539;&#21644;&#35843;&#35797;&#26041;&#27861;&#65292;&#26159;&#25105;&#36817;&#26399;&#23454;&#36341;&#30340;&#19968;&#20221;&#23436;&#25972;&#31508;&#35760;&#12290;</p><hr><blockquote>
+<p><strong class="mk-b">TL;DR &middot; &#26680;&#24515;&#32467;&#35770;</strong></p>
+<p><strong class="mk-p">Skill &#19981;&#26159;&#25552;&#31034;&#35789;&#65292;&#32780;&#26159;&#19968;&#22871;&#23436;&#25972;&#30340;&#36719;&#20214;&#33021;&#21147;&#21253;&#12290;Prompt &#35299;&#20915;&#19968;&#27425;&#38382;&#39064;&#65292;Skill &#25226;&#33021;&#21147;&#27785;&#28096;&#25104;&#36164;&#20135;&#12290;</strong></p>
+<p>&#20889;&#22909;&#19968;&#20010; Skill &#30340;&#20851;&#38190;&#19981;&#22312;&#25351;&#20196;&#27491;&#25991;&#65292;&#32780;&#22312; <strong class="mk-y">description</strong> &mdash;&mdash; &#23427;&#26159; AI &#20915;&#23450;&#26159;&#21542;&#21551;&#29992;&#36825;&#20010;&#25216;&#33021;&#30340;&#21807;&#19968;&#20381;&#25454;&#12290;</p>
+</blockquote><h2 id="c3b904db5abf01717cc2bc68d3ad7a06">&#19968;&#12289;Skills &#21040;&#24213;&#26159;&#20160;&#20040;</h2><p>Skills &#26159;&#19968;&#20010;&#24320;&#25918;&#26684;&#24335;&#65292;&#29992;&#20110;&#20026; AI &#26234;&#33021;&#20307;&#65288;Agent&#65289;&#28155;&#21152;&#19987;&#19994;&#25216;&#33021;&#21644;&#30693;&#35782;&#12290;&#19977;&#20010;&#27010;&#24565;&#20808;&#23545;&#40784;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#27010;&#24565;</th>
+<th>&#23450;&#20041;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong class="mk-b">AI &#26234;&#33021;&#20307;</strong></td>
+<td>&#22823;&#27169;&#22411; + &#21160;&#25163;&#20570;&#20107;&#30340;&#33021;&#21147;&#65288;&#33021;&#24863;&#30693;&#12289;&#25512;&#29702;&#12289;&#34892;&#21160;&#65289;</td>
+</tr>
+<tr>
+<td><strong class="mk-y">Skills</strong></td>
+<td>&#21578;&#35785;&#26234;&#33021;&#20307;&#12300;&#22914;&#20309;&#23436;&#25104;&#26576;&#31867;&#20219;&#21153;&#12301;&#30340;&#35828;&#26126;&#20070;&#65288;&#19968;&#20010; <code>SKILL.md</code> &#25991;&#20214;&#65289;</td>
+</tr>
+<tr>
+<td><strong class="mk-b">&#26412;&#36136;</strong></td>
+<td>&#20154;&#31867;&#32534;&#20889;&#30340;&#39046;&#22495;&#30693;&#35782; / &#27969;&#31243; / &#32422;&#26463; &rarr; AI &#35835;&#21462;&#21518;&#33258;&#21160;&#25191;&#34892;</td>
+</tr>
+</tbody>
+</table><blockquote>
+<p>&#128161; <strong class="mk-p">&#19968;&#20010;&#31934;&#20934;&#30340;&#27604;&#21947;</strong>&#65306;&#26234;&#33021;&#20307; = &#32874;&#26126;&#30340;&#26032;&#21592;&#24037;&#65307;Skill = &#20844;&#21496;&#30340; SOP &#25163;&#20876;&#12290;<br>
+&#31867;&#27604;&#36719;&#20214;&#19990;&#30028;&#65306;<strong class="mk-b">Agent &#26159;&#25805;&#20316;&#31995;&#32479;&#65292;Skill &#26159;&#24212;&#29992;&#31243;&#24207;</strong> &mdash;&mdash; PDF &#20998;&#26512;&#12289;&#32593;&#39029;&#25235;&#21462;&#12289;SQL &#20248;&#21270;&#12289;&#25968;&#25454;&#32479;&#35745;&#65292;&#27599;&#20010; Skill &#37117;&#26159;&#29420;&#31435;&#30340;&#33021;&#21147;&#21333;&#20803;&#12290;</p>
+</blockquote><h3 id="5434e18e21e287df28a0fb76ca36f2f5">&#32842;&#22825;&#26426;&#22120;&#20154; vs &#26234;&#33021;&#20307;</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>&#32842;&#22825;&#26426;&#22120;&#20154;</th>
+<th>&#26234;&#33021;&#20307;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#33021;&#21147;</td>
+<td>&#21482;&#33021;&#35828;&#65288;&#22522;&#20110;&#35757;&#32451;&#25968;&#25454;&#29468;&#27979;&#65289;</td>
+<td>&#33021;&#21548;&#25026; + &#24605;&#32771; + &#21160;&#25163;&#24178;</td>
+</tr>
+<tr>
+<td>&#31034;&#20363;</td>
+<td>&#12300;&#21271;&#20140;&#22823;&#27010;&#26228;&#22825; 25 &#24230;&#12301;</td>
+<td>&#35843;&#25509;&#21475;&#36820;&#22238;&#30495;&#23454;&#22825;&#27668;&#25968;&#25454;</td>
+</tr>
+<tr>
+<td>&#23616;&#38480;</td>
+<td>&#26080;&#27861;&#35775;&#38382;&#22806;&#37096;&#31995;&#32479;</td>
+<td>&#21487;&#26597;&#25968;&#25454;&#24211;&#12289;&#35746;&#31080;&#12289;&#29983;&#25104;&#25991;&#20214;</td>
+</tr>
+</tbody>
+</table><p>&#26234;&#33021;&#20307;&#30340;&#24037;&#20316;&#27969;&#31243;&#26159;&#12300;&#19977;&#27493;&#36208;&#12301;&#65306;<strong class="mk-y">&#21548;&#25026;&#38656;&#27714;</strong>&#65288;&#22823;&#27169;&#22411;&#29702;&#35299;&#65289;&rarr; <strong class="mk-g">&#20915;&#31574;&#36873;&#25216;&#33021;</strong>&#65288;&#22823;&#27169;&#22411;&#21028;&#26029;&#29992;&#21738;&#20010; Skill&#65289;&rarr; <strong class="mk-y">&#25191;&#34892;&#24182;&#36820;&#22238;&#32467;&#26524;</strong>&#65288;&#38752; Skills &#23436;&#25104;&#65289;&#12290;</p><p>Skills &#24102;&#26469;&#30340;&#19977;&#22823;&#26680;&#24515;&#20215;&#20540;&#65306;</p><ol style="padding-left: 1.5em;">
+<li style="list-style-type: decimal;"><strong class="mk-y">&#20174;&#20250;&#32842;&#22825;&#21040;&#20250;&#24178;&#27963;</strong>&#65306;&#35753; AI &#25104;&#20026;&#30495;&#27491;&#30340;&#20219;&#21153;&#25191;&#34892;&#32773;&#65288;&#27604;&#22914;&#30452;&#25509;&#36755;&#20986;&#21487;&#29992;&#30340; <code>.docx</code> &#25991;&#20214;&#65289;&#65307;</li>
+<li style="list-style-type: decimal;"><strong class="mk-b">&#21487;&#22797;&#29992;&#30340;&#32463;&#39564;&#21253;</strong>&#65306;&#19968;&#27425;&#32534;&#20889;&#65292;&#25152;&#26377;&#20154;&#12289;&#25152;&#26377;&#35843;&#29992;&#30340;&#32467;&#26524;&#31283;&#23450;&#19968;&#33268;&#65307;</li>
+<li style="list-style-type: decimal;"><strong class="mk-g">&#20154;&#26426;&#21327;&#20316;&#30340;&#26725;&#26753;</strong>&#65306;&#20154;&#31867;&#23450;&#20041;&#12300;&#24590;&#20040;&#20570;&#12301;&#65292;AI &#36127;&#36131;&#12300;&#21435;&#20570;&#12301;&#12290;</li>
+</ol><h2 id="eadce7c3f7094f21141eff9b58795f84">&#20108;&#12289;&#23450;&#20301;&#65306;Skills vs Prompt vs MCP</h2><p>&#24456;&#22810;&#20154;&#20998;&#19981;&#28165;&#36825;&#19977;&#32773;&#30340;&#36793;&#30028;&#65292;&#19968;&#24352;&#34920;&#35828;&#28165;&#26970;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#32500;&#24230;</th>
+<th>Prompt</th>
+<th>Skills</th>
+<th>MCP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#23450;&#20301;</td>
+<td>&#19968;&#27425;&#24615;&#21475;&#22836;&#20132;&#20195;</td>
+<td><strong class="mk-g">&#30693;&#35782;&#22797;&#29992;</strong>&#65288;&#32463;&#39564;/&#27969;&#31243;/&#26368;&#20339;&#23454;&#36341;&#65289;</td>
+<td><strong class="mk-y">&#33021;&#21147;&#25193;&#23637;</strong>&#65288;&#36830;&#25509; API/&#25968;&#25454;&#24211;/&#24037;&#20855;&#65289;</td>
+</tr>
+<tr>
+<td>&#36733;&#20307;</td>
+<td>&#23545;&#35805;&#25991;&#26412;</td>
+<td>Markdown &#25991;&#20214;&#65292;&#20154;&#20154;&#21487;&#20889;</td>
+<td>&#38656;&#32534;&#30721; + &#26381;&#21153;&#22120;&#37197;&#32622;</td>
+</tr>
+<tr>
+<td>&#21152;&#36733;&#26041;&#24335;</td>
+<td>&#27599;&#27425;&#25163;&#21160;&#36755;&#20837;</td>
+<td>&#28176;&#36827;&#24335;&#21152;&#36733;&#65292;Token &#25928;&#29575;&#39640;</td>
+<td>&#21551;&#21160;&#26102;&#20840;&#37327;&#21152;&#36733;&#65292;Token &#28040;&#32791;&#39640;</td>
+</tr>
+<tr>
+<td>&#22797;&#26434;&#24230;</td>
+<td>&#26497;&#20302;</td>
+<td>&#20302;&#65292;&#26080;&#38656;&#21518;&#31471;</td>
+<td>&#39640;&#65292;&#38598;&#25104;&#33021;&#21147;&#24378;</td>
+</tr>
+</tbody>
+</table><p><strong class="mk-g">&#19968;&#21477;&#35805;&#21306;&#20998;&#65306;Skills &#31649;&#12300;&#30693;&#36947;&#24590;&#20040;&#20570;&#12301;&#65292;MCP &#31649;&#12300;&#33021;&#36830;&#19978;&#20160;&#20040;&#12301;&#12290;</strong> &#20108;&#32773;&#20114;&#34917;&#32780;&#38750;&#26367;&#20195; &mdash;&mdash; &#27604;&#22914;&#29992; MCP &#36830;&#19978;&#25968;&#25454;&#24211;&#65292;&#20877;&#29992; Skill &#35268;&#23450;&#12300;&#26597;&#25968; &rarr; &#28165;&#27927; &rarr; &#20986;&#25253;&#34920;&#12301;&#30340;&#26631;&#20934;&#27969;&#31243;&#12290;</p><p>Skills &#30340;&#20856;&#22411;&#36866;&#29992;&#22330;&#26223;&#65306;&#39046;&#22495;&#19987;&#19994;&#30693;&#35782;&#23553;&#35013;&#65288;&#27861;&#24459;&#23457;&#26597;&#12289;&#20195;&#30721;&#35268;&#33539;&#31561;&#65289;&#12289;&#22810;&#27493;&#39588;&#24037;&#20316;&#27969;&#31243;&#22266;&#21270;&#12289;&#20844;&#21496;&#35268;&#33539;/&#27169;&#26495;&#26631;&#20934;&#21270;&#12289;&#29305;&#23450;&#24037;&#20855;&#20351;&#29992;&#26041;&#27861;&#23553;&#35013;&#12290;</p><h2 id="6c8576aeb90170aca21e703de3017603">&#19977;&#12289;&#24037;&#20316;&#21407;&#29702;&#65306;&#28176;&#36827;&#24335;&#25259;&#38706;</h2><p>&#26234;&#33021;&#20307;&#38752;<strong class="mk-y">&#35835;&#25991;&#20214;</strong>&#29702;&#35299; Skill&#12290;&#35835;&#23436; <code>SKILL.md</code> &#21518;&#23427;&#25630;&#28165;&#26970;&#19977;&#20214;&#20107;&#65306;<strong class="mk-g">&#33021;&#24178;&#20160;&#20040;</strong>&#65288;&#33021;&#21147;&#25551;&#36848;&#65289;&#12289;<strong class="mk-b">&#38656;&#35201;&#25552;&#20379;&#20160;&#20040;</strong>&#65288;&#36755;&#20837;&#21442;&#25968;&#65289;&#12289;<strong class="mk-b">&#26377;&#20160;&#20040;&#35268;&#30697;</strong>&#65288;&#29615;&#22659;&#32422;&#26463;&#21644;&#27880;&#24847;&#20107;&#39033;&#65289;&#12290;</p><p>&#26680;&#24515;&#35774;&#35745;&#24605;&#24819;&#26159;<strong class="mk-y">&#28176;&#36827;&#24335;&#25259;&#38706;&#65288;Progressive Disclosure&#65289;</strong>&#65306;&#20998;&#38454;&#27573;&#21152;&#36733;&#19981;&#21516;&#35814;&#32454;&#31243;&#24230;&#30340;&#20449;&#24687;&#65292;&#36991;&#20813;&#19968;&#27425;&#24615;&#32791;&#23613;&#19978;&#19979;&#25991;&#31354;&#38388;&#12290;</p><table>
+<thead>
+<tr>
+<th>&#38454;&#27573;</th>
+<th>&#21152;&#36733;&#20869;&#23481;</th>
+<th>&#20856;&#22411;&#22823;&#23567;</th>
+<th>&#20316;&#29992;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#9312; &#21457;&#29616;&#65288;Discovery&#65289;</td>
+<td>name + description</td>
+<td>~100 tokens</td>
+<td>&#21028;&#26029;&#26159;&#21542;&#19982;&#24403;&#21069;&#20219;&#21153;&#30456;&#20851;</td>
+</tr>
+<tr>
+<td>&#9313; &#28608;&#27963;&#65288;Activation&#65289;</td>
+<td>&#23436;&#25972; SKILL.md</td>
+<td>&le;5000 tokens</td>
+<td>&#35835;&#21462;&#23436;&#25972;&#25351;&#20196;</td>
+</tr>
+<tr>
+<td>&#9314; &#25191;&#34892;&#65288;Execution&#65289;</td>
+<td>&#33050;&#26412;&#12289;&#21442;&#32771;&#36164;&#26009;&#31561;</td>
+<td>&#25353;&#38656;&#21152;&#36733;</td>
+<td>&#23454;&#38469;&#35843;&#29992;&#24037;&#20855;&#23436;&#25104;&#20219;&#21153;</td>
+</tr>
+</tbody>
+</table><blockquote>
+<p>&#20248;&#21183;&#65306;&#21487;&#21516;&#26102;&#25346;&#36733;&#22823;&#37327;&#25216;&#33021;&#32780; Token &#28040;&#32791;&#26497;&#20302; &mdash;&mdash; &#20808;&#35835; description&#65292;&#21629;&#20013;&#21518;&#25165;&#21152;&#36733;&#23436;&#25972;&#20869;&#23481;&#12290;</p>
+</blockquote><p>&#19968;&#27425;&#23436;&#25972;&#30340; Skill &#25191;&#34892;&#26159;&#19968;&#20010; 8 &#27493;&#38381;&#29615;&#65306;</p><pre><code class="   language-php">&#25509;&#25910;&#35831;&#27714; &rarr; &#29702;&#35299;&#24847;&#22270; &rarr; &#21046;&#23450;&#35745;&#21010; &rarr; &#36873;&#25321; Skill &rarr; &#25191;&#34892; &rarr; &#33719;&#21462;&#32467;&#26524; &rarr; &#29983;&#25104;&#22238;&#22797; &rarr; &#36820;&#22238;&#29992;&#25143;</code></pre><p>&#25191;&#34892;&#36335;&#24452;&#26159;&#21463;&#25511;&#30340;&#65306;&#21629;&#20013; Skill &rarr; &#21152;&#36733; SKILL.md &rarr; <strong class="mk-b">&#24314;&#31435;&#24037;&#20855;&#26435;&#38480;&#19982;&#34892;&#20026;&#36793;&#30028;</strong> &rarr; &#25512;&#29702; &rarr; &#21482;&#22312;&#30830;&#23454;&#38656;&#35201;&#26102;&#25165;&#35843;&#29992;&#34987;&#20801;&#35768;&#30340;&#24037;&#20855;&#65292;&#21542;&#21017;&#22312;&#35268;&#21017;&#20869;&#23436;&#25104;&#36923;&#36753;&#12290;</p><blockquote>
+<p><strong class="mk-g">Agent &#36127;&#36131;&#25509;&#25910;&#35831;&#27714;&#12289;&#24605;&#32771;&#21644;&#20915;&#31574;&#65292;Skill &#36127;&#36131;&#25191;&#34892;&#21160;&#20316;&#12290;</strong> SKILL.md &#23601;&#26159;&#36830;&#25509;&#20004;&#32773;&#30340;&#12300;&#25805;&#20316;&#25163;&#20876;&#12301;&mdash;&mdash; &#27880;&#24847;&#65292;<strong class="mk-y">Skill &#26412;&#36523;&#19981;&#20915;&#23450;&#20309;&#26102;&#34987;&#20351;&#29992;&#65292;&#20915;&#31574;&#26435;&#22312; Agent</strong>&#12290;</p>
+</blockquote><h2 id="473b53d9ba791ccf993b690a71b5e47f">&#22235;&#12289;&#35299;&#21078;&#19968;&#20010; Skill</h2><p>&#19968;&#20010; Skill = <strong class="mk-g">&#19968;&#20010;&#25991;&#20214;&#22841; + &#19968;&#20010; SKILL.md</strong>&#12290;&#26631;&#20934;&#30446;&#24405;&#32467;&#26500;&#65306;</p><pre><code class="   language-php">my-skill/
+&#9500;&#9472;&#9472; SKILL.md          &larr; &#26680;&#24515;&#25191;&#34892;&#25991;&#20214;&#65288;&#26368;&#37325;&#35201;&#65292;&#24517;&#39035;&#65289;
+&#9500;&#9472;&#9472; metadata.json     &larr; &#20803;&#20449;&#24687;&#65288;&#26426;&#22120;&#21487;&#35835;&#65292;&#21487;&#36873;&#65289;
+&#9500;&#9472;&#9472; scripts/          &larr; &#21487;&#25191;&#34892;&#33050;&#26412;&#65288;&#19981;&#21152;&#36733;&#21040;&#19978;&#19979;&#25991;&#65289;
+&#9500;&#9472;&#9472; references/       &larr; &#35814;&#32454;&#21442;&#32771;&#25991;&#26723;
+&#9500;&#9472;&#9472; assets/           &larr; &#27169;&#26495;&#12289;&#22270;&#29255;&#31561;&#38745;&#24577;&#36164;&#28304;
+&#9500;&#9472;&#9472; examples/         &larr; &#31034;&#20363;&#65288;Few-shot&#65289;
+&#9500;&#9472;&#9472; resources/        &larr; &#36164;&#28304;&#65288;&#37197;&#32622;/&#27169;&#26495;&#65289;
+&#9500;&#9472;&#9472; tests/            &larr; &#27979;&#35797;
+&#9492;&#9472;&#9472; README.md         &larr; &#20351;&#29992;&#35828;&#26126;</code></pre><p>&#30446;&#24405;&#21270;&#32972;&#21518;&#30340;&#21407;&#21017;&#26159;<strong class="mk-b">&#36991;&#20813;&#19978;&#19979;&#25991;&#33192;&#32960;</strong>&#65306;&#26680;&#24515;&#35268;&#21017;&#25918; SKILL.md&#65292;&#35814;&#32454;&#36164;&#26009;&#25918; references/&#65292;&#23454;&#29992;&#36923;&#36753;&#25918; scripts/&#65288;&#25191;&#34892;&#20294;&#19981;&#21152;&#36733;&#65289;&#12290;&#36825;&#20063;&#35299;&#20915;&#20102;&#21333;&#25991;&#20214;&#26041;&#26696;&#30340;&#32769;&#38382;&#39064;&#65306;&#26080;&#27861;&#32500;&#25252;&#12289;&#26080;&#27861;&#27979;&#35797;&#12289;&#26080;&#27861;&#22797;&#29992;&#12289;&#26080;&#27861;&#29256;&#26412;&#31649;&#29702;&#12289;&#26080;&#27861;&#22810;&#20154;&#21327;&#20316;&#12290;</p><p>&#21508;&#25991;&#20214;&#30340;&#20998;&#24037;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#25991;&#20214;/&#30446;&#24405;</th>
+<th>&#20316;&#29992;</th>
+<th>&#20851;&#38190;&#28857;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong class="mk-g">SKILL.md</strong></td>
+<td>&#23450;&#20041;&#25191;&#34892;&#36923;&#36753;</td>
+<td>&#24517;&#39035;&#21253;&#21547;&#65306;&#21151;&#33021;&#35828;&#26126; / &#20309;&#26102;&#20351;&#29992; / &#20309;&#26102;&#19981;&#29992; / &#36755;&#20837; / &#25351;&#20196; / &#36755;&#20986;</td>
+</tr>
+<tr>
+<td><strong class="mk-g">metadata.json</strong></td>
+<td>&#32467;&#26500;&#21270;&#20803;&#20449;&#24687;</td>
+<td><code>description</code> &#23383;&#27573;&#26368;&#37325;&#35201;&#65288;Agent &#38752;&#23427;&#21305;&#37197;&#65289;</td>
+</tr>
+<tr>
+<td><strong class="mk-g">examples/</strong></td>
+<td>Few-shot &#31034;&#20363;</td>
+<td>&#27604;&#22534;&#25552;&#31034;&#35789;&#26356;&#26377;&#25928;&#65292;&#35268;&#33539;&#36755;&#20986;&#26684;&#24335;</td>
+</tr>
+<tr>
+<td><strong class="mk-g">scripts/</strong></td>
+<td>&#30495;&#27491;&#25191;&#34892;&#20195;&#30721;</td>
+<td>&#35835; PDF&#12289;OCR&#12289;&#35843;&#25968;&#25454;&#24211;&#31561;&#23454;&#38469;&#24037;&#20316;</td>
+</tr>
+<tr>
+<td><strong class="mk-b">resources/</strong></td>
+<td>&#37197;&#32622;&#19982;&#20195;&#30721;&#20998;&#31163;</td>
+<td>prompt &#27169;&#26495;&#12289;config.yaml&#12289;SQL &#27169;&#26495;&#31561;</td>
+</tr>
+<tr>
+<td><strong class="mk-p">tests/</strong></td>
+<td>&#39564;&#35777;&#25928;&#26524;</td>
+<td>&#22238;&#24402;&#27979;&#35797;&#12289;A/B &#27979;&#35797;&#12289;&#33258;&#21160;&#35780;&#20272;</td>
+</tr>
+</tbody>
+</table><h3 id="b511e223649a9fb4ea9ffb47064501de">SKILL.md &#30340;&#20004;&#22823;&#37096;&#20998;</h3><pre><code class="   language-php">&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474; &#9312; YAML Frontmatter&#65288;&#20803;&#25968;&#25454;&#65289;  &#9474;  &larr; &#21578;&#35785; AI&#12300;&#25105;&#26159;&#35841;&#12289;&#20309;&#26102;&#29992;&#25105;&#12301;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474; &#9313; Markdown &#25351;&#20196;&#21306;&#22495;           &#9474;  &larr; &#21578;&#35785; AI&#12300;&#20855;&#20307;&#24590;&#20040;&#20570;&#12301;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</code></pre><p>Frontmatter &#23383;&#27573;&#19968;&#35272;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#23383;&#27573;</th>
+<th>&#24517;&#22635;</th>
+<th>&#38480;&#21046;</th>
+<th>&#35828;&#26126;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>&#9989;</td>
+<td>&le;64 &#23383;&#31526;&#65292;&#20165;&#23567;&#20889;&#23383;&#27597;/&#25968;&#23383;/<code>-</code>&#65292;&#19981;&#33021;&#20197; <code>-</code> &#24320;&#22836;&#32467;&#23614;&#65292;&#39035;&#19982;&#29238;&#30446;&#24405;&#21517;&#19968;&#33268;</td>
+<td>&#21807;&#19968;&#26631;&#35782;&#31526;&#65292;kebab-case</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>&#9989;</td>
+<td>&le;1024 &#23383;&#31526;</td>
+<td><strong class="mk-g">&#26368;&#37325;&#35201;</strong>&#65292;&#20915;&#23450;&#20309;&#26102;&#35302;&#21457;</td>
+</tr>
+<tr>
+<td><code>license</code></td>
+<td>&#10060;</td>
+<td>&mdash;</td>
+<td>&#35768;&#21487;&#35777;&#65288;&#22914; Apache-2.0&#65289;</td>
+</tr>
+<tr>
+<td><code>compatibility</code></td>
+<td>&#10060;</td>
+<td>&le;500 &#23383;&#31526;</td>
+<td>&#29615;&#22659;/&#20381;&#36182;&#35828;&#26126;</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td>&#10060;</td>
+<td>&mdash;</td>
+<td>&#33258;&#23450;&#20041;&#38190;&#20540;&#23545;&#65288;&#20316;&#32773;&#12289;&#29256;&#26412;&#31561;&#65289;</td>
+</tr>
+<tr>
+<td><code>allowed-tools</code></td>
+<td>&#10060;</td>
+<td>&#31354;&#26684;&#20998;&#38548;</td>
+<td>&#20801;&#35768;&#30340;&#24037;&#20855;&#21015;&#34920;&#65288;&#23454;&#39564;&#24615;&#65289;</td>
+</tr>
+</tbody>
+</table><p>&#21629;&#21517;&#25512;&#33616;<strong class="mk-b">&#21160;&#21517;&#35789;&#24418;&#24335;</strong>&#65288;&#21160;&#35789; + -ing&#65289;&#65292;&#19968;&#30524;&#30475;&#28165;&#33021;&#21147;&#65306;<code>processing-pdfs</code>&#12289;<code>analyzing-spreadsheets</code>&#12289;<code>code-reviewer</code>&#12289;<code>sql-optimizer</code>&#12290;&#21453;&#38754;&#25945;&#26448;&#65306;<code>helper</code>&#65288;&#22826;&#27169;&#31946;&#65289;&#12289;<code>MySkill</code>&#65288;&#22823;&#20889;&#36829;&#35268;&#65289;&#12289;<code>sql_optimizer</code>&#65288;&#19979;&#21010;&#32447;&#19981;&#26159;&#32422;&#23450;&#65289;&#12289;<code>deploy-check-tool-v2</code>&#65288;&#29256;&#26412;&#20449;&#24687;&#24212;&#25918;&#25991;&#20214;&#20869;&#37096;&#65289;&#12290;</p><blockquote>
+<p>&#9888;&#65039; <strong class="mk-b">&#20851;&#38190;&#38480;&#21046;</strong>&#65306;&#25351;&#20196;&#21306;&#22495;&#24314;&#35758; <strong class="mk-g">&le; 500 &#34892; / &le; 5000 tokens</strong>&#12290;&#25216;&#33021;&#28608;&#27963;&#21518;&#25972;&#20010; SKILL.md &#20250;&#34987;&#21152;&#36733;&#36827;&#19978;&#19979;&#25991;&#65292;&#36807;&#38271;&#23601;&#26159;&#32431;&#28010;&#36153; &mdash;&mdash; &#36229;&#20986;&#37096;&#20998;&#31227;&#21040; references/ &#21333;&#29420;&#23384;&#25918;&#12290;</p>
+</blockquote><p>&#19968;&#20010;&#21487;&#30452;&#25509;&#22871;&#29992;&#30340;&#23436;&#25972;&#27169;&#26495;&#65306;</p><pre><code class="language-markdown">---
+name: pdf-processing
+description: &#20174;PDF&#25552;&#21462;&#25991;&#26412;&#21644;&#34920;&#26684;&#65292;&#22635;&#20889;&#34920;&#21333;&#65292;&#21512;&#24182;PDF&#12290;&#29992;&#25143;&#25552;&#21450;PDF&#22788;&#29702;&#26102;&#20351;&#29992;&#12290;
+license: Apache-2.0
+compatibility: Requires Python 3.10+
+metadata:
+  author: your-name
+  version: "1.0"
+---
+
+# PDF &#22788;&#29702;&#25216;&#33021;
+
+## &#25805;&#20316;&#27493;&#39588;
+1. &#31532;&#19968;&#27493;&#65306;...
+2. &#31532;&#20108;&#27493;&#65306;...
+
+## &#31034;&#20363;
+### &#36755;&#20837; / &#36755;&#20986;
+...
+
+## &#27880;&#24847;&#20107;&#39033;
+- ...</code></pre><blockquote>
+<p>&#9888;&#65039; &#21453;&#27169;&#24335;&#25552;&#37266;&#65306;&#25351;&#20196;&#21482;&#20889;&#12300;&#35835;&#21462; PDF &rarr; &#24635;&#32467; &rarr; &#36820;&#22238;&#12301;&#36825;&#31181;&#19968;&#21477;&#35805;&#27969;&#31243;&#65292;&#32570;&#23569;&#22330;&#26223;&#30028;&#23450;&#21644;&#36755;&#20986;&#26684;&#24335; &mdash;&mdash; &#36825;&#26159;&#26032;&#25163;&#26368;&#24120;&#35265;&#30340;&#38169;&#35823;&#12290;</p>
+</blockquote><h2 id="228b43887fc857c7c3c3d6829a5d2e28">&#20116;&#12289;description&#65306;&#20915;&#23450;&#29983;&#27515;&#30340;&#37027;&#20960;&#34892;&#23383;</h2><p>&#36825;&#26159;&#25972;&#31687;&#25105;&#26368;&#24819;&#21010;&#37325;&#28857;&#30340;&#37096;&#20998;&#12290;&#22238;&#39038;&#19977;&#23618;&#21152;&#36733;&#26426;&#21046;&#65306;<strong class="mk-g">&#21457;&#29616;&#38454;&#27573; Agent &#21482;&#33021;&#30475;&#21040;&#27599;&#20010;&#25216;&#33021;&#30340; name + description&#65292;&#27491;&#25991;&#23436;&#20840;&#19981;&#21442;&#19982;&#35302;&#21457;&#21028;&#26029;</strong>&#12290;&#20063;&#23601;&#26159;&#35828; &mdash;&mdash;</p><blockquote>
+<p><strong class="mk-p">description &#26159; Agent &#21028;&#26029;&#26159;&#21542;&#28608;&#27963;&#25216;&#33021;&#30340;&#21807;&#19968;&#20381;&#25454;&#12290;</strong> &#20889;&#24471;&#24046; &rarr; &#35823;&#25253; / &#28431;&#25253; / &#28608;&#27963;&#38169;&#35823;&#25216;&#33021;&#12290;&#32780;&#19988; <strong class="mk-y">Skill &#19981;&#26159;&#34987;&#29992;&#25143;&#12300;&#35843;&#29992;&#12301;&#30340;&#65292;&#26159; AI &#33258;&#20027;&#20915;&#23450;&#26159;&#21542;&#20351;&#29992;&#30340;</strong>&#65292;&#20320;&#27809;&#26377;&#20219;&#20309;&#25163;&#21160;&#20828;&#24213;&#30340;&#26426;&#20250;&#12290;</p>
+</blockquote><p><strong class="mk-p">&#20889;&#27861;&#20844;&#24335;&#65306;description = &#21151;&#33021;&#35828;&#26126; + &#35302;&#21457;&#26465;&#20214; + &#20851;&#38190;&#35789;</strong></p><pre><code class="language-yaml">description: &#20174; PDF &#25991;&#20214;&#20013;&#25552;&#21462;&#25991;&#26412;&#21644;&#34920;&#26684;&#65292;&#22635;&#20889; PDF &#34920;&#21333;&#65292;&#21512;&#24182;&#22810;&#20010; PDF&#12290;&#22788;&#29702; PDF &#25991;&#26723;&#25110;&#29992;&#25143;&#25552;&#21450; PDF&#12289;&#34920;&#21333;&#25110;&#25991;&#26723;&#25552;&#21462;&#26102;&#20351;&#29992;&#12290;
+#            &uarr; &#21151;&#33021;&#35828;&#26126;&#65288;&#20570;&#20160;&#20040;&#65289;                              &uarr; &#35302;&#21457;&#26465;&#20214;&#65288;&#20160;&#20040;&#26102;&#20505;&#29992;&#65289;</code></pre><h3 id="e6b47ef101e56af22ec0deeca8af43cb">&#22235;&#20010;&#32534;&#20889;&#25216;&#24039;</h3><ol style="padding-left: 1.5em;">
+<li style="list-style-type: decimal;"><strong class="mk-p">&#21253;&#21547;&#20855;&#20307;&#35302;&#21457;&#20851;&#38190;&#35789;</strong>&#65306;&#21015;&#20986;&#29992;&#25143;&#21487;&#33021;&#35828;&#30340;&#35789;&#65292;&#22914;&#12300;PDF&#12301;&#12300;&#25552;&#21462;&#12301;&#12300;&#34920;&#21333;&#12301;&#65307;</li>
+<li style="list-style-type: decimal;"><strong class="mk-y">&#20855;&#20307;&#32780;&#38750;&#31548;&#32479;</strong>&#65306;&#10060;&#12300;&#24110;&#21161;&#22788;&#29702;&#21508;&#31181;&#25991;&#20214;&#12301;&rarr; &#9989;&#12300;&#22788;&#29702;&#22270;&#20687;&#25991;&#20214;&#65292;&#35843;&#25972;&#22823;&#23567;&#12289;&#36716;&#25442;&#26684;&#24335;&#12289;&#24212;&#29992;&#28388;&#38236;&#12301;&#65307;</li>
+<li style="list-style-type: decimal;"><strong class="mk-b">&#21015;&#20986;&#22810;&#20010;&#20351;&#29992;&#22330;&#26223;</strong>&#65306;&#24110;&#21161; Agent &#21305;&#37197;&#21516;&#19968;&#24847;&#22270;&#30340;&#19981;&#21516;&#34920;&#36848;&#65307;</li>
+<li style="list-style-type: decimal;"><strong class="mk-y">&#21306;&#20998;&#30456;&#20284;&#25216;&#33021;</strong>&#65306;&#22810;&#20010;&#30456;&#20851; Skill &#30340;&#25551;&#36848;&#24517;&#39035;&#26377;&#26126;&#26174;&#24046;&#24322;&#12290;</li>
+</ol><p>&#38271;&#24230;&#25511;&#21046;&#65306;&#31616;&#21333;&#25216;&#33021; 50&ndash;100 &#23383;&#31526;&#65292;&#20013;&#31561; 100&ndash;200&#65292;&#22797;&#26434; 200&ndash;400&#12290;<strong class="mk-y">&#19978;&#38480; 1024 &#23383;&#31526;&#65292;&#20294;&#19981;&#26159;&#36234;&#38271;&#36234;&#22909;</strong> &mdash;&mdash; &#36807;&#38271;&#21453;&#32780;&#24178;&#25200;&#21028;&#26029;&#12290;</p><h3 id="b4eee404eba70568cdef98da90533b5f">&#19977;&#31181;&#23454;&#29992;&#30340;&#35302;&#21457;&#31574;&#30053;</h3><pre><code class="language-yaml"># &#31574;&#30053;&#19968;&#65306;&#21015;&#20030;&#20855;&#20307;&#22330;&#26223;&#65288;&#21151;&#33021; + &#20309;&#26102;&#29992;&#65289;
+description: &gt;
+  &#22788;&#29702; Excel &#21644; CSV &#25991;&#20214;&#65292;&#21253;&#25324;&#65306;&#35835;&#21462;&#12289;&#28165;&#27927;&#12289;&#29983;&#25104;&#22270;&#34920;&#12289;
+  &#35745;&#31639;&#32479;&#35745;&#12289;&#21512;&#24182;&#34920;&#26684;&#12290;&#24403;&#29992;&#25143;&#25552;&#21040; Excel&#12289;xlsx&#12289;CSV&#12289;
+  &#34920;&#26684;&#25968;&#25454;&#12289;&#25968;&#25454;&#28165;&#27927;&#12289;&#36130;&#21153;&#25253;&#34920;&#26102;&#65292;&#24212;&#20248;&#20808;&#20351;&#29992;&#27492; Skill&#12290;
+
+# &#31574;&#30053;&#20108;&#65306;&#20351;&#29992;"&#25512;&#21160;&#24615;"&#35821;&#35328;&#65288;&#23545;&#20184;&#28431;&#25253;&#65289;
+description: &gt;
+  &#29983;&#25104;&#19987;&#19994; PPT&#12290;&#24403;&#29992;&#25143;&#38656;&#35201;&#21046;&#20316;&#24187;&#28783;&#29255;&#12289;&#28436;&#35762;&#31295;&#12289;&#27719;&#25253;&#26448;&#26009;&#26102;&#65292;
+  &#24517;&#39035;&#20351;&#29992;&#27492; Skill&#65292;&#21363;&#20351;&#29992;&#25143;&#27809;&#26377;&#26126;&#30830;&#35828;"&#29992; pptx &#26684;&#24335;"&#12290;
+
+# &#31574;&#30053;&#19977;&#65306;&#30452;&#25509;&#21015;&#20986;&#35302;&#21457;&#20851;&#38190;&#35789;
+description: &gt;
+  &#20195;&#30721;&#23457;&#26597;&#21161;&#25163;&#65292;&#20998;&#26512;&#20195;&#30721;&#36136;&#37327;&#12289;&#21457;&#29616; Bug&#12289;&#32473;&#20986;&#25913;&#36827;&#24314;&#35758;&#12290;
+  &#20851;&#38190;&#35789;&#65306;code review&#12289;&#20195;&#30721;&#23457;&#26597;&#12289;bug &#26816;&#26597;&#12289;&#37325;&#26500;&#24314;&#35758;&#12289;&#38745;&#24577;&#20998;&#26512;&#12290;</code></pre><h3 id="f81151e494f0c0ce33ada952b3afcfed">&#20160;&#20040;&#20219;&#21153;&#20250;&#35302;&#21457;&#65292;&#20160;&#20040;&#19981;&#20250;</h3><table>
+<thead>
+<tr>
+<th>&#35831;&#27714;&#31867;&#22411;</th>
+<th>&#31034;&#20363;</th>
+<th>&#35302;&#21457;&#65311;</th>
+<th>&#21407;&#22240;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#31616;&#21333;&#21333;&#27493;</td>
+<td>&#12300;&#35835;&#21462;&#36825;&#20010; PDF&#12301;</td>
+<td>&#10060; &#36890;&#24120;&#19981;&#35302;&#21457;</td>
+<td>AI &#30452;&#25509;&#22788;&#29702;&#26356;&#39640;&#25928;</td>
+</tr>
+<tr>
+<td>&#22797;&#26434;&#22810;&#27493;</td>
+<td>&#12300;&#25552;&#21462;&#34920;&#26684;&#24182;&#36716; Excel&#12301;</td>
+<td>&#9989; &#35302;&#21457;</td>
+<td>&#38656;&#35201;&#19987;&#38376;&#24037;&#20316;&#27969;</td>
+</tr>
+<tr>
+<td>&#19987;&#19994;&#39046;&#22495;</td>
+<td>&#12300;&#21512;&#24182; PDF &#24182;&#21152;&#27700;&#21360;&#12301;</td>
+<td>&#9989; &#35302;&#21457;</td>
+<td>&#28041;&#21450;&#29305;&#23450;&#24037;&#20855;&#38142;</td>
+</tr>
+<tr>
+<td>&#26126;&#30830;&#26684;&#24335;&#35201;&#27714;</td>
+<td>&#12300;&#29983;&#25104;&#20844;&#21496;&#27169;&#26495;&#30340; Word &#25253;&#21578;&#12301;</td>
+<td>&#9989; &#35302;&#21457;</td>
+<td>&#38656;&#35201;&#26684;&#24335;&#35268;&#33539;</td>
+</tr>
+</tbody>
+</table><p>&#22810;&#20010; Skill &#21516;&#26102;&#21305;&#37197;&#26102;&#65292;Agent &#36873;&#26368;&#30456;&#20851;&#30340;&#19968;&#20010;&#12290;&#20914;&#31361;&#30340;&#35299;&#27861;&#65306;<strong class="mk-g">&#35753; description &#26377;&#25490;&#20182;&#24615;</strong> &mdash;&mdash; &#27604;&#22914;&#20004;&#20010; PDF &#25216;&#33021;&#65292;&#19968;&#20010;&#26126;&#30830;&#20889;&#12300;PDF &#21019;&#24314;&#12301;&#65292;&#19968;&#20010;&#26126;&#30830;&#20889;&#12300;PDF &#35835;&#21462;&#12301;&#65307;&#21151;&#33021;&#22826;&#30456;&#20284;&#30340;&#23601;&#24178;&#33030;&#21512;&#24182;&#65292;&#20869;&#37096;&#20998;&#25903;&#22788;&#29702;&#12290;<strong class="mk-g">&#35760;&#20303;&#65306;&#12300;&#33021;&#20570;&#20160;&#20040;&#12301;&ne;&#12300;&#24212;&#35813;&#20160;&#20040;&#26102;&#20505;&#29992;&#12301;&#12290;</strong></p><h3 id="68a9a8f59e21c4d1b6cacae6e064a841">&#19977;&#22823;&#24120;&#35265;&#38382;&#39064;&#36895;&#26597;</h3><table>
+<thead>
+<tr>
+<th>&#38382;&#39064;</th>
+<th>&#21407;&#22240;</th>
+<th>&#35299;&#27861;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#24635;&#26159;&#34987;&#28608;&#27963;</td>
+<td>&#25551;&#36848;&#22826;&#23485;&#27867;</td>
+<td>&#21152;&#38480;&#23450;&#26465;&#20214;&#21644;&#20351;&#29992;&#22330;&#26223;</td>
+</tr>
+<tr>
+<td>&#20174;&#26410;&#34987;&#28608;&#27963;</td>
+<td>&#32570;&#23569;&#29992;&#25143;&#24120;&#29992;&#20851;&#38190;&#35789;</td>
+<td>&#34917;&#20805;&#26356;&#22810;&#35302;&#21457;&#35789;</td>
+</tr>
+<tr>
+<td>&#28608;&#27963;&#20102;&#38169;&#35823;&#25216;&#33021;</td>
+<td>&#22810;&#20010; Skill &#25551;&#36848;&#22826;&#30456;&#20284;</td>
+<td>&#35753;&#25551;&#36848;&#26356;&#20855;&#21306;&#20998;&#24230;</td>
+</tr>
+</tbody>
+</table><p>&#19968;&#20010;&#30495;&#23454;&#30340; description &#20248;&#21270;&#28436;&#36827;&#36807;&#31243;&#65306;</p><pre><code class="language-yaml"># v1 - &#10060; &#28431;&#25253;&#39118;&#38505;&#26497;&#39640;&#65306;&#27809;&#26377;&#22330;&#26223;&#12289;&#27809;&#26377;&#20851;&#38190;&#35789;
+description: &#25552;&#21462; PDF &#25991;&#26412;&#12290;
+
+# v2 - &#9888;&#65039; &#26377;&#22330;&#26223;&#20102;&#65292;&#20294;&#35302;&#21457;&#35789;&#35206;&#30422;&#20173;&#19981;&#22815;
+description: &#20174; PDF &#25991;&#20214;&#20013;&#25552;&#21462;&#25991;&#26412;&#20869;&#23481;&#21644;&#34920;&#26684;&#25968;&#25454;&#12290;&#20351;&#29992;&#22330;&#26223;&#65306;&#25552;&#21462; PDF &#25991;&#23383;&#12289;&#35835;&#21462; PDF &#20869;&#23481;&#12289;PDF &#36716;&#25991;&#26412;&#12290;
+
+# v3 - &#9989; &#21151;&#33021; + &#22330;&#26223; + &#20851;&#38190;&#35789;&#19977;&#35201;&#32032;&#40784;&#22791;
+description: &#20174; PDF &#25991;&#20214;&#20013;&#25552;&#21462;&#25991;&#26412;&#20869;&#23481;&#21644;&#34920;&#26684;&#25968;&#25454;&#12290;&#20351;&#29992;&#22330;&#26223;&#65306;&#25552;&#21462; PDF &#25991;&#23383;&#12289;&#35835;&#21462; PDF &#20869;&#23481;&#12289;PDF &#36716;&#25991;&#26412;&#12289;&#29992;&#25143;&#25552;&#21450;&#12300;PDF &#25552;&#21462;&#12301;&#12300;&#35835;&#21462; PDF&#12301;&#12300;PDF &#25991;&#23383;&#12301;&#12300;PDF &#20869;&#23481;&#12301;&#31561;&#20851;&#38190;&#35789;&#26102;&#20351;&#29992;&#12290;</code></pre><p>&#35843;&#20248;&#19981;&#24517;&#32431;&#38752;&#29468;&#65306;&#23448;&#26041;&#30340; skill-creator &#25552;&#20379;&#20102;&#35302;&#21457;&#35780;&#20272;&#33050;&#26412;&#65292;&#21487;&#20197;&#33258;&#21160;&#36305;&#12300;&#27979;&#35797; &rarr; &#25171;&#20998; &rarr; &#25913; description &rarr; &#20877;&#27979;&#12301;&#30340;&#24490;&#29615;&#65306;</p><pre><code class="language-bash">python -m scripts.run_loop \
+  --eval-set evals/trigger-eval.json \
+  --skill-path my-skill/ \
+  --max-iterations 5 \
+  --verbose</code></pre><h2 id="82f44df21bbe5b11a73926f408c33fe6">&#20845;&#12289;&#24037;&#31243;&#21270;&#65306;&#33050;&#26412;&#25193;&#23637;&#19982;&#21442;&#25968;&#20256;&#36882;</h2><h3 id="a180b6f210f9327b2516b95459a020ba">&#20160;&#20040;&#26102;&#20505;&#35813;&#20889;&#33050;&#26412;</h3><p>&#21028;&#26029;&#20449;&#21495;&#24456;&#26126;&#30830;&#65306;<strong class="mk-b">&#24403; Agent &#22810;&#27425;&#37325;&#22797;&#23454;&#29616;&#30456;&#21516;&#36923;&#36753;&#26102;&#65292;&#23601;&#35813;&#25226;&#23427;&#22266;&#21270;&#25104;&#33050;&#26412;&#20102;</strong>&#12290;&#33050;&#26412;&#23553;&#35013;&#22797;&#26434;&#36923;&#36753;&#12289;&#25552;&#20379;&#32463;&#36807;&#27979;&#35797;&#30340;&#21487;&#38752;&#23454;&#29616;&#65292;&#20063;&#36991;&#20813; SKILL.md &#37324;&#22534;&#20195;&#30721;&#12290;</p><p>&#20004;&#31181;&#20351;&#29992;&#26041;&#24335;&#65306;&#31616;&#21333;&#22330;&#26223;&#29992;<strong class="mk-b">&#19968;&#27425;&#24615;&#21629;&#20196;</strong>&#65288;<code>uvx ruff@0.8.0 check .</code>&#12289;<code>npx eslint@9 --fix .</code>&#65292;&#27880;&#24847;&#22266;&#23450;&#29256;&#26412;&#21495;&#20445;&#35777;&#34892;&#20026;&#19968;&#33268;&#65289;&#65307;&#38656;&#35201;&#22797;&#29992;&#30340;&#22797;&#26434;&#36923;&#36753;&#25165;&#25918;&#36827; <code>scripts/</code>&#12290;&#33050;&#26412;&#32534;&#20889;&#19977;&#21407;&#21017;&#65306;<strong class="mk-y">&#33258;&#21253;&#21547;</strong>&#65288;&#22768;&#26126;&#20381;&#36182;&#65289;&#12289;<strong class="mk-g">&#28165;&#26224;&#38169;&#35823;&#22788;&#29702;</strong>&#65288;&#38169;&#35823;&#36755;&#20986;&#21040; stderr&#65292;&#21547;&#20855;&#20307;&#21407;&#22240;&#21644;&#29992;&#27861;&#25552;&#31034;&#65289;&#12289;<strong class="mk-p">&#22788;&#29702;&#36793;&#30028;</strong>&#65288;&#39564;&#35777;&#36755;&#20837;&#65292;&#20248;&#38597;&#25298;&#32477;&#32780;&#38750;&#23849;&#28291;&#65289;&#12290;</p><h3 id="2e640986127aa48e471890e77867a308">&#20026; Agent &#35774;&#35745;&#33050;&#26412;&#30340; 8 &#20010;&#35201;&#28857;&#65288;&#37325;&#28857;&#11088;&#65289;</h3><table>
+<thead>
+<tr>
+<th>&#35201;&#28857;</th>
+<th>&#35828;&#26126;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong class="mk-p">&#31105;&#27490;&#20132;&#20114;&#24335;&#25552;&#31034;</strong></td>
+<td>Agent &#22312;&#38750;&#20132;&#20114; Shell &#36816;&#34892;&#65292;&#25152;&#26377;&#36755;&#20837;&#36890;&#36807;&#21442;&#25968; / &#29615;&#22659;&#21464;&#37327; / stdin &#20256;&#20837;</td>
+</tr>
+<tr>
+<td><strong class="mk-g">&#25552;&#20379; --help</strong></td>
+<td>&#36825;&#26159; Agent &#20102;&#35299;&#33050;&#26412;&#25509;&#21475;&#30340;&#20027;&#35201;&#26041;&#24335;&#65292;&#21547;&#35828;&#26126; + &#21442;&#25968; + &#31034;&#20363;</td>
+</tr>
+<tr>
+<td><strong class="mk-y">&#26377;&#29992;&#30340;&#38169;&#35823;&#20449;&#24687;</strong></td>
+<td>&#36234;&#20855;&#20307;&#65292;Agent &#36234;&#23481;&#26131;&#33258;&#25105;&#32416;&#27491;&#65288;&#25351;&#26126;&#12300;&#26399;&#26395;&#20540; vs &#23454;&#38469;&#20540;&#12301;&#65289;</td>
+</tr>
+<tr>
+<td><strong class="mk-p">&#32467;&#26500;&#21270;&#36755;&#20986;</strong></td>
+<td>&#20248;&#20808; JSON / CSV&#65307;&#25968;&#25454; &rarr; stdout&#65292;&#35786;&#26029; &rarr; stderr</td>
+</tr>
+<tr>
+<td><strong class="mk-y">&#24130;&#31561;&#24615;</strong></td>
+<td>Agent &#21487;&#33021;&#37325;&#35797;&#65292;&#12300;&#19981;&#23384;&#22312;&#21017;&#21019;&#24314;&#12301;&#27604;&#12300;&#37325;&#22797;&#25253;&#38169;&#12301;&#23433;&#20840;</td>
+</tr>
+<tr>
+<td><strong class="mk-g">Dry-run &#25903;&#25345;</strong></td>
+<td>&#30772;&#22351;&#24615;&#25805;&#20316;&#25552;&#20379; <code>--dry-run</code> &#39044;&#35272;</td>
+</tr>
+<tr>
+<td><strong class="mk-g">&#26377;&#24847;&#20041;&#36864;&#20986;&#30721;</strong></td>
+<td>&#19981;&#21516;&#22833;&#36133;&#31867;&#22411;&#29992;&#19981;&#21516;&#36864;&#20986;&#30721;</td>
+</tr>
+<tr>
+<td><strong class="mk-p">&#23433;&#20840;&#40664;&#35748;&#20540;</strong></td>
+<td>&#30772;&#22351;&#24615;&#25805;&#20316;&#38656; <code>--confirm</code> / <code>--force</code> &#26126;&#30830;&#30830;&#35748;</td>
+</tr>
+</tbody>
+</table><p>&#22312; SKILL.md &#20013;&#29992;<strong class="mk-g">&#30456;&#23545;&#20110; Skill &#26681;&#30446;&#24405;&#30340;&#36335;&#24452;</strong>&#24341;&#29992;&#33050;&#26412;&#65288;Agent &#20250;&#33258;&#21160;&#35299;&#26512;&#65289;&#65292;&#20808;&#21015;&#28165;&#21333;&#20877;&#22312;&#27493;&#39588;&#20013;&#24341;&#29992;&#65306;</p><pre><code class="language-markdown">## &#21487;&#29992;&#33050;&#26412;
+- **scripts/validate.sh** &mdash; &#39564;&#35777;&#37197;&#32622;&#25991;&#20214;
+- **scripts/process.py** &mdash; &#22788;&#29702;&#36755;&#20837;&#25968;&#25454;
+
+## &#25805;&#20316;&#27969;&#31243;
+1. &#36816;&#34892;&#39564;&#35777;&#65306;bash scripts/validate.sh "$INPUT_FILE"
+2. &#22788;&#29702;&#25968;&#25454;&#65306;python3 scripts/process.py --input results.json</code></pre><p>&#20381;&#36182;&#20998;&#21457;&#19977;&#32423;&#31574;&#30053;&#65306;SKILL.md &#20013;&#25991;&#23383;&#35828;&#26126;&#65288;&#26368;&#31616;&#21333;&#65289;&rarr; &#34394;&#25311;&#29615;&#22659;&#65288;&#22797;&#26434;&#39033;&#30446;&#65289;&rarr; Docker&#65288;&#23436;&#25972;&#36816;&#34892;&#29615;&#22659;&#65289;&#12290;<strong class="mk-p">&#32534;&#20889;&#21069;&#21153;&#24517;&#20102;&#35299;&#30446;&#26631;&#29992;&#25143;&#30340;&#36816;&#34892;&#29615;&#22659;&#65292;Python &#26159;&#26368;&#23433;&#20840;&#30340;&#36873;&#25321;&#12290;</strong></p><h3 id="07d727a1cf2ff7098e449185df1d403e">&#21442;&#25968;&#20256;&#36882;&#65306;&#27809;&#26377;&#20989;&#25968;&#31614;&#21517;&#65292;&#19978;&#19979;&#25991;&#23601;&#26159;&#21442;&#25968;</h3><p>Skills <strong class="mk-b">&#27809;&#26377;&#20256;&#32479;&#20989;&#25968;&#24335;&#30340;&#26174;&#24335;&#21442;&#25968;&#65292;&#32780;&#26159;&#36890;&#36807;&#23545;&#35805;&#19978;&#19979;&#25991;&#24863;&#30693;&#36755;&#20837;</strong>&#12290;&#21442;&#25968;&#26469;&#28304;&#26377;&#22235;&#31181;&#65306;&#29992;&#25143;&#24403;&#21069;&#28040;&#24687;&#65288;&#26368;&#30452;&#25509;&#65289;&#12289;&#19978;&#20256;&#30340;&#25991;&#20214;&#65288;&#36890;&#36807;&#36335;&#24452;&#20256;&#20837;&#65289;&#12289;&#21382;&#21490;&#23545;&#35805;&#65288;&#19978;&#19979;&#25991;&#20013;&#24341;&#29992;&#65289;&#12289;&#31995;&#32479;&#21464;&#37327;&#65288;&#24403;&#21069;&#26085;&#26399;&#12289;&#24037;&#20316;&#30446;&#24405;&#31561;&#65289;&#12290;</p><p>&#20570;&#27861;&#26159;&#22312; SKILL.md &#37324;&#29992;&#33258;&#28982;&#35821;&#35328;&#22768;&#26126;&#12300;&#36755;&#20837;&#35201;&#27714;&#12301;&mdash;&mdash; &#36825;&#27573;&#35805;&#20854;&#23454;&#26159;<strong class="mk-p">&#20889;&#32473; AI &#33258;&#24049;&#30475;&#30340;</strong>&#65292;&#23427;&#25454;&#27492;&#20174;&#19978;&#19979;&#25991;&#25552;&#21462;&#20449;&#24687;&#65292;&#32570;&#20449;&#24687;&#26102;&#20027;&#21160;&#36861;&#38382;&#29992;&#25143;&#65306;</p><pre><code class="language-markdown">## &#36755;&#20837;&#35201;&#27714;
+&#29992;&#25143;&#24212;&#25552;&#20379;&#20197;&#19979;&#20449;&#24687;&#65288;&#20174;&#23545;&#35805;&#19978;&#19979;&#25991;&#20013;&#33719;&#21462;&#65289;&#65306;
+- **&#25991;&#20214;&#36335;&#24452;**&#65306;&#24050;&#19978;&#20256; CSV &#25991;&#20214;&#30340;&#36335;&#24452;
+- **&#20998;&#26512;&#30446;&#26631;**&#65288;&#21487;&#36873;&#65289;&#65306;&#22914; "&#25214;&#20986;&#31354;&#20540;"&#12289;"&#32479;&#35745;&#20998;&#24067;"
+- **&#36755;&#20986;&#26684;&#24335;**&#65288;&#21487;&#36873;&#65289;&#65306;&#34920;&#26684;&#12289;&#22270;&#34920;&#25110;&#25991;&#23383;&#25688;&#35201;
+
+&#33509;&#19978;&#36848;&#20449;&#24687;&#26410;&#26126;&#30830;&#65292;&#20027;&#21160;&#21521;&#29992;&#25143;&#30830;&#35748;&#21518;&#20877;&#25191;&#34892;&#12290;</code></pre><p>&#33050;&#26412;&#20391;&#21017;&#29992;&#26631;&#20934;&#30340; <code>argparse</code> &#25509;&#25910;&#65292;&#25191;&#34892;&#21069;&#24517;&#39035;&#20570;&#21442;&#25968;&#39564;&#35777;&#65288;&#36335;&#24452;&#26159;&#21542;&#25552;&#20379;&#12289;&#25991;&#20214;&#26159;&#21542;&#23384;&#22312;&#12289;&#25193;&#23637;&#21517;&#26159;&#21542;&#27491;&#30830;&#12289;&#22823;&#23567;&#26159;&#21542;&#21512;&#29702;&#65289;&#12290;<strong class="mk-p">&#22987;&#32456;&#20351;&#29992;&#32477;&#23545;&#36335;&#24452;</strong>&#65292;&#35775;&#38382;&#21069;&#20808; <code>os.path.exists()</code> &#26816;&#26597;&#65307;&#38169;&#35823;&#20449;&#24687;&#35201;&#28165;&#26224;&#35828;&#26126;&#12300;&#26399;&#26395;&#20160;&#20040; + &#23454;&#38469;&#24471;&#21040;&#20160;&#20040;&#12301;&#65292;&#26041;&#20415; Agent &#21521;&#29992;&#25143;&#21453;&#39304;&#12290;</p><blockquote>
+<p>&#25972;&#20307;&#38142;&#36335;&#65306;<strong class="mk-b">SKILL.md &#22768;&#26126;&#12300;&#35201;&#20160;&#20040;&#12301;&rarr; Agent &#20174;&#19978;&#19979;&#25991;&#25552;&#21462; &rarr; &#33050;&#26412;&#29992; argparse &#25509;&#25910; &rarr; &#25191;&#34892;&#21069;&#39564;&#35777;</strong>&#12290;</p>
+</blockquote><h2 id="ab0f86fec8893118a237774390f58fb6">&#19971;&#12289;&#35843;&#35797;&#65306;&#19977;&#31867;&#38382;&#39064;&#65292;&#36880;&#23618;&#25490;&#26597;</h2><p>Skill &#20986;&#38382;&#39064;&#26080;&#38750;&#19977;&#31181;&#65292;&#25490;&#26597;&#39034;&#24207;&#26377;&#35762;&#31350;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#38382;&#39064;&#31867;&#22411;</th>
+<th>&#29616;&#35937;</th>
+<th>&#20248;&#20808;&#25490;&#26597;&#28857;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#9312; &#26410;&#35302;&#21457;</td>
+<td>AI &#23436;&#20840;&#27809;&#20351;&#29992; Skill</td>
+<td>description &#20889;&#27861;&#12289;&#20219;&#21153;&#22797;&#26434;&#24230;</td>
+</tr>
+<tr>
+<td>&#9313; &#35302;&#21457;&#20294;&#25191;&#34892;&#38169;&#35823;</td>
+<td>Skill &#34987;&#35835;&#21462;&#65292;&#33050;&#26412;&#36816;&#34892;&#22833;&#36133;</td>
+<td>&#33050;&#26412;&#36335;&#24452;&#12289;&#20381;&#36182;&#12289;&#21442;&#25968;&#26684;&#24335;</td>
+</tr>
+<tr>
+<td>&#9314; &#35302;&#21457;&#20294;&#32467;&#26524;&#19981;&#23545;</td>
+<td>&#36755;&#20986;&#19982;&#26399;&#26395;&#26377;&#20986;&#20837;</td>
+<td>SKILL.md &#25351;&#20196;&#28165;&#26224;&#24230;</td>
+</tr>
+</tbody>
+</table><h3 id="362c4ed3156244eacfd9cac0d291ef36">&#38382;&#39064;&#19968;&#65306;&#26410;&#35302;&#21457;&#65288;&#19977;&#27493;&#25490;&#26597;&#65289;</h3><ol style="padding-left: 1.5em;">
+<li style="list-style-type: decimal;"><strong class="mk-y">&#30830;&#35748;&#25991;&#20214;&#34987;&#21152;&#36733;</strong>&#65306;&#30446;&#24405;&#32467;&#26500;&#27491;&#30830;&#12289;<code>SKILL.md</code> &#23384;&#22312;&#19988;&#38750;&#31354;&#65307;</li>
+<li style="list-style-type: decimal;"><strong class="mk-g">&#26816;&#26597; YAML frontmatter &#26684;&#24335;</strong>&#65306;&#24517;&#39035;&#20197; <code>---</code> &#24320;&#22987;&#21644;&#32467;&#26463;&#65307;&#23383;&#27573;&#21517;&#26080;&#22810;&#20313;&#31354;&#26684;&#65307;<strong class="mk-b">&#20882;&#21495;&#21518;&#24517;&#39035;&#26377;&#19968;&#20010;&#31354;&#26684;</strong>&#65307;</li>
+<li style="list-style-type: decimal;"><strong class="mk-g">&#25442;&#26356;&#22797;&#26434;&#30340;&#27979;&#35797;&#25552;&#31034;&#35789;</strong>&#65306;&#12300;&#20998;&#26512;&#36825;&#20010;&#25991;&#20214;&#12301;&#22826;&#31616;&#21333;&#19981;&#26131;&#35302;&#21457;&#65292;&#25913;&#25104;&#12300;&#20998;&#26512;&#36825;&#20221;&#38144;&#21806;&#25968;&#25454; CSV&#65292;&#25214;&#20986;&#26376;&#24230;&#22686;&#38271;&#36235;&#21183;&#65292;&#29983;&#25104;&#32479;&#35745;&#25688;&#35201;&#34920;&#26684;&#12301;&#12290;</li>
+</ol><h3 id="4e458f18997669159b38820d74d69552">&#38382;&#39064;&#20108;&#65306;&#33050;&#26412;&#25191;&#34892;&#38169;&#35823;&#65288;&#36895;&#26597;&#34920;&#65289;</h3><table>
+<thead>
+<tr>
+<th>&#38169;&#35823;&#20449;&#24687;</th>
+<th>&#21407;&#22240;</th>
+<th>&#20462;&#22797;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ModuleNotFoundError</code></td>
+<td>&#20381;&#36182;&#26410;&#23433;&#35013;</td>
+<td>&#23433;&#35013;&#23545;&#24212;&#21253;&#65288;&#27880;&#24847;&#30446;&#26631;&#29615;&#22659;&#30340;&#21253;&#31649;&#29702;&#26041;&#24335;&#65289;</td>
+</tr>
+<tr>
+<td><code>FileNotFoundError</code></td>
+<td>&#25991;&#20214;&#36335;&#24452;&#38169;&#35823;</td>
+<td>&#30830;&#35748;&#25991;&#20214;&#23454;&#38469;&#20301;&#32622;&#65292;&#20351;&#29992;&#32477;&#23545;&#36335;&#24452;</td>
+</tr>
+<tr>
+<td><code>PermissionError</code></td>
+<td>&#26080;&#20889;&#20837;&#26435;&#38480;</td>
+<td>&#36755;&#20986;&#30446;&#26631;&#25913;&#21040;&#26377;&#26435;&#38480;&#30340;&#30446;&#24405;</td>
+</tr>
+<tr>
+<td><code>SyntaxError</code></td>
+<td>&#33050;&#26412;&#35821;&#27861;&#38169;&#35823;</td>
+<td>&#29992; <code>python -m py_compile &#33050;&#26412;.py</code> &#26816;&#26597;</td>
+</tr>
+</tbody>
+</table><p>&#24555;&#36895;&#35821;&#27861;&#33258;&#26816;&#65306;<code>python -m py_compile scripts/process.py</code>&#65288;Python&#65289;&#25110; <code>bash -n scripts/run.sh</code>&#65288;Shell&#65289;&#12290;&#33050;&#26412;&#20869;&#35843;&#35797;&#21487;&#22312;&#20851;&#38190;&#33410;&#28857;&#21152; <code>print(f"[DEBUG] ...")</code>&#65292;&#20294;<strong class="mk-y">&#35843;&#35797;&#23436;&#25104;&#21518;&#21153;&#24517;&#21024;&#38500;</strong>&#65292;&#36991;&#20813;&#27745;&#26579;&#27491;&#24335;&#36755;&#20986;&#12290;</p><h3 id="c6cf0778627d9146ee9fc5c1a85cb5c6">&#38382;&#39064;&#19977;&#65306;&#32467;&#26524;&#19981;&#31526;&#21512;&#39044;&#26399;</h3><p>&#26681;&#22240;&#20960;&#20046;&#24635;&#26159; <strong class="mk-b">SKILL.md &#25351;&#20196;&#21547;&#31946;&#25110;&#26377;&#27495;&#20041;</strong>&#12290;&#24863;&#21463;&#19968;&#19979;&#20889;&#27861;&#24046;&#36317;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#10060; &#21547;&#31946;</th>
+<th>&#9989; &#28165;&#26224;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#12300;&#22788;&#29702;&#23436;&#25104;&#21518;&#36755;&#20986;&#32467;&#26524;&#12301;</td>
+<td>&#12300;&#23558;&#32467;&#26524;&#20445;&#23384;&#21040;&#36755;&#20986;&#30446;&#24405;&#65292;&#24182;&#22312;&#23545;&#35805;&#20013;&#23637;&#31034;&#25991;&#20214;&#36335;&#24452;&#12301;</td>
+</tr>
+<tr>
+<td>&#12300;&#20998;&#26512;&#25968;&#25454;&#12301;</td>
+<td>&#12300;&#35745;&#31639;&#21508;&#21015;&#22343;&#20540;&#12289;&#20013;&#20301;&#25968;&#12289;&#26631;&#20934;&#24046;&#65292;&#20197; Markdown &#34920;&#26684;&#36755;&#20986;&#12301;</td>
+</tr>
+<tr>
+<td>&#12300;&#29983;&#25104;&#25253;&#21578;&#12301;</td>
+<td>&#12300;&#29983;&#25104;&#21547;&#25688;&#35201;&#12289;&#25968;&#25454;&#34920;&#26684;&#12289;&#32467;&#35770;&#30340; HTML &#25991;&#20214;&#65292;&#20445;&#23384;&#21040;&#36755;&#20986;&#30446;&#24405;&#12301;</td>
+</tr>
+</tbody>
+</table><p>&#25490;&#26597;&#26102;&#21487;&#20197;&#22312; SKILL.md &#20013;&#20020;&#26102;&#21152;&#19968;&#27573;&#12300;&#35843;&#35797;&#27169;&#24335;&#12301;&#25351;&#20196;&#65306;&#25191;&#34892;&#21069;&#20808;&#36755;&#20986;&#35782;&#21035;&#21040;&#30340;&#36755;&#20837;&#36335;&#24452;&#12289;&#26399;&#26395;&#30340;&#36755;&#20986;&#26684;&#24335;&#12289;&#35745;&#21010;&#27493;&#39588;&#21015;&#34920;&#65292;&#31561;&#30830;&#35748;&#21518;&#20877;&#32487;&#32493; &mdash;&mdash; &#23450;&#20301;&#23436;&#38382;&#39064;&#35760;&#24471;&#21024;&#25481;&#12290;</p><blockquote>
+<p>&#128161; <strong class="mk-g">&#35843;&#35797;&#26680;&#24515;&#24605;&#36335;&#65306;&#20808;&#30830;&#35748;&#35302;&#21457; &rarr; &#20877;&#30830;&#35748;&#25191;&#34892; &rarr; &#26368;&#21518;&#30830;&#35748;&#36755;&#20986;&#65292;&#36880;&#23618;&#32553;&#23567;&#33539;&#22260;&#12290;</strong></p>
+</blockquote><h2 id="3d63e6e36a5c13ef369789466584e8bb">&#20843;&#12289;&#19978;&#25163;&#36335;&#24452;&#65306;&#21019;&#24314;&#20320;&#30340;&#31532;&#19968;&#20010; Skill</h2><p>Skills &#36890;&#24120;&#26377;&#20004;&#20010;&#23384;&#25918;&#20301;&#32622;&#65306;<strong class="mk-y">&#20010;&#20154;&#20840;&#23616;&#30446;&#24405;</strong>&#65288;&#36328;&#39033;&#30446;&#21487;&#29992;&#65289;&#21644;<strong class="mk-g">&#39033;&#30446;&#30446;&#24405;</strong>&#65288;&#22242;&#38431;&#20849;&#20139;&#65289;&#12290;&#20197; Claude Code &#20026;&#20363;&#65292;&#36335;&#24452;&#20998;&#21035;&#26159; <code>~/.claude/skills/</code> &#21644; <code>&#39033;&#30446;&#30446;&#24405;/.claude/skills/</code>&#65292;&#20854;&#20182;&#24179;&#21488;&#32422;&#23450;&#31867;&#20284;&#12290;</p><p>&#21019;&#24314;&#19968;&#20010;&#12300;Python &#21629;&#21517;&#35268;&#33539;&#12301;&#25216;&#33021;&#65292;&#21482;&#38656;&#20004;&#27493;&#65306;</p><pre><code class="language-bash"># 1. &#21019;&#24314; Skill &#30446;&#24405;
+mkdir -p .claude/skills/python-naming-standard
+
+# 2. &#32534;&#20889; SKILL.md</code></pre><pre><code class="language-markdown">---
+name: python-naming-standard
+description: &#24403;&#29992;&#25143;&#35201;&#27714;&#37325;&#26500;&#12289;&#23457;&#26597;&#25110;&#32534;&#20889; Python &#20195;&#30721;&#26102;&#65292;&#35831;&#21442;&#32771;&#27492;&#35268;&#33539;&#12290;
+---
+
+## &#25351;&#20196;
+1. &#25152;&#26377;&#20869;&#37096;&#36741;&#21161;&#20989;&#25968;&#24517;&#39035;&#20197; `_internal_` &#21069;&#32512;&#21629;&#21517;
+2. &#21457;&#29616;&#19981;&#31526;&#21512;&#35268;&#21017;&#30340;&#20195;&#30721;&#65292;&#33258;&#21160;&#25552;&#20986;&#20462;&#25913;&#24314;&#35758;
+3. &#25191;&#34892;&#25552;&#20132;&#21069;&#24517;&#39035;&#26816;&#26597;&#27492;&#35268;&#33539;
+
+## &#21442;&#32771;&#31034;&#20363;
+- &#9989; `def _internal_calculate_risk():`
+- &#10060; `def _calculate_risk():`</code></pre><p>&#20043;&#21518;&#21551;&#21160; Agent &#36755;&#20837;&#20219;&#21153;&#65288;&#22914;&#12300;&#24110;&#25105;&#20889;&#19968;&#20010;&#35745;&#31639;&#25240;&#25187;&#30340;&#20989;&#25968;&#12301;&#65289;&#65292;&#23427;&#20250;&#33258;&#21160;&#21305;&#37197;&#36825;&#20010; Skill &#24182;&#25353;&#35268;&#33539;&#29983;&#25104;&#20195;&#30721;&#12290;<strong class="mk-y">&#35843;&#29992;&#38646;&#38376;&#27099;&#65306;&#33258;&#28982;&#35821;&#35328;&#21363;&#21487;&#65292;AI &#33258;&#21160;&#36335;&#30001;&#21040;&#23545;&#24212; Skill&#12290;</strong></p><h3 id="638eb00aa5dd66e36b34d600bf301bfd">&#31449;&#22312;&#29983;&#24577;&#30340;&#32937;&#33152;&#19978;</h3><p>Skills &#29983;&#24577;&#24050;&#32463;&#30456;&#24403;&#25104;&#29087;&#65292;<strong class="mk-b">&#20248;&#20808;&#22797;&#29992;&#32780;&#38750;&#20174;&#38646;&#32534;&#20889;</strong>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#36164;&#28304;</th>
+<th>&#35828;&#26126;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anthropic &#23448;&#26041;&#20179;&#24211;</td>
+<td>github.com/anthropics/skills&#65292;&#35206;&#30422;&#35774;&#35745;&#12289;&#24320;&#21457;&#12289;&#21150;&#20844;&#12289;&#25991;&#26723;&#32534;&#36753;&#65292;&#22810;&#25968;&#24320;&#28304;</td>
+</tr>
+<tr>
+<td>Skill &#32858;&#21512;&#20837;&#21475;</td>
+<td>skills.sh / skillsmp.com&#65288;&#20013;&#25991;&#65289;/ agentskills.io&#65288;&#26631;&#20934;&#31449;&#28857;&#65289;</td>
+</tr>
+<tr>
+<td>Awesome &#31934;&#36873;</td>
+<td>github.com/ComposioHQ/awesome-claude-skills</td>
+</tr>
+<tr>
+<td>skill-creator</td>
+<td>&#23448;&#26041;&#20803;&#25216;&#33021;&#65306;&#24110;&#20320;&#21019;&#24314;&#12289;&#20248;&#21270;&#12289;&#25171;&#21253; Skill&#65292;&#33258;&#24102;&#27979;&#35797;&#35780;&#20272;&#24037;&#20855;</td>
+</tr>
+</tbody>
+</table><p>&#29305;&#21035;&#25512;&#33616; <strong class="mk-g">skill-creator</strong> &#36825;&#20010;&#12300;&#20803;&#25216;&#33021;&#12301;&#65306;&#23427;&#30340;&#24037;&#20316;&#27969;&#26159;<strong class="mk-y">&#26126;&#30830;&#38656;&#27714; &rarr; &#36215;&#33609; SKILL.md &rarr; &#35774;&#35745;&#27979;&#35797;&#29992;&#20363; &rarr; &#26377;&#26080; Skill &#23545;&#27604;&#27979;&#35797; &rarr; &#35780;&#20272;&#25171;&#20998; &rarr; &#20462;&#25913; &rarr; &#25171;&#21253;</strong>&#30340;&#24490;&#29615;&#36845;&#20195;&#12290;&#20320;&#29978;&#33267;&#21487;&#20197;&#30452;&#25509;&#23545; Agent &#35828;&#12300;&#25226;&#25105;&#21018;&#25165;&#25945;&#20320;&#30340; Docker &#37197;&#32622;&#36923;&#36753;&#24635;&#32467;&#25104;&#19968;&#20010; Skill&#12301;&#65292;&#23427;&#20250;&#33258;&#21160;&#29983;&#25104;&#25991;&#20214;&#12290;</p><blockquote>
+<p>&#9888;&#65039; &#32463;&#39564;&#20043;&#35848;&#65306;&#38656;&#27714;&#38454;&#27573;&#23601;&#25226;&#32454;&#33410;&#21644;&#36793;&#30028;&#24773;&#20917;&#35828;&#28165;&#26970; &mdash;&mdash; &#21518;&#26399;&#27979;&#35797;&#36393;&#30340;&#22353;&#65292;&#22823;&#22810;&#28304;&#20110;&#38656;&#27714;&#38454;&#27573;&#30340;&#27169;&#31946;&#12290;</p>
+</blockquote><hr><h2 id="12ea3f76a979d2acf863f0b105460aba">&#20840;&#25991;&#24635;&#32467;</h2><p>Skills &#30340;&#26412;&#36136;&#65292;&#26159;&#25226;&#20154;&#31867;&#30340;&#39046;&#22495;&#30693;&#35782;&#12289;&#24037;&#20316;&#27969;&#31243;&#21644;&#26368;&#20339;&#23454;&#36341;&#65292;&#23553;&#35013;&#25104; AI &#21487;&#22797;&#29992;&#30340;&#33021;&#21147;&#21333;&#20803;&#12290;<strong class="mk-g">SKILL.md = YAML &#20803;&#25968;&#25454;&#65288;&#21578;&#35785; AI&#12300;&#25105;&#26159;&#35841;&#12289;&#20309;&#26102;&#29992;&#25105;&#12301;&#65289;+ Markdown &#25351;&#20196;&#65288;&#21578;&#35785; AI&#12300;&#20855;&#20307;&#24590;&#20040;&#20570;&#12301;&#65289;</strong>&#12290;</p><p>&#20889;&#22909;&#19968;&#20010; Skill &#30340;&#24515;&#27861;&#21482;&#26377;&#19977;&#26465;&#65306;<strong class="mk-g">description &#24403;&#35302;&#21457;&#22120;&#26469;&#20889;&#65292;&#25351;&#20196;&#24403; SOP &#26469;&#20889;&#65292;&#33050;&#26412;&#24403;&#32473;&#26032;&#21516;&#20107;&#30340; CLI &#24037;&#20855;&#26469;&#20889;</strong>&#12290;&#21097;&#19979;&#30340;&#65292;&#20132;&#32473;&#28176;&#36827;&#24335;&#25259;&#38706;&#21644;&#35843;&#35797;&#19977;&#26495;&#26023;&#12290;</p>
+
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="569x5mryep.html#blog984" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Vibe Coding 的不为清单</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <span class="nav-empty"></span>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>
