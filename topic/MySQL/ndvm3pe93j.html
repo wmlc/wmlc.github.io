@@ -1,0 +1,1303 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>MySQL 锁等待超时之后，到底回滚了什么？ | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="qNtfF7H8NRAhETBwl0MKozNYCyynxH8dl303h3H3">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    MySQL <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux%20服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue%20教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王%20-%20逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>字段</h2>
+<ul>
+<li id="blog71"><a href="x2ev8zwvor.html#blog71">MySQL 批量替换字段中的域名</a>
+<li id="blog112"><a href="jwnex74vxd.html#blog112">Mysql 的日期时间类型说明</a>
+<li id="blog337"><a href="mdgy70xvw2.html#blog337">MySql 字段类型说明和推荐</a>
+</ul>
+</li>
+<li>
+<h2>性能</h2>
+<ul>
+<li id="blog82"><a href="4x3vo76ym1.html#blog82">MySQL 回表查询</a>
+<li id="blog336"><a href="x569xxr9ep.html#blog336">高并发系统数据库架构设计</a>
+<li id="blog351"><a href="k3dyk7zvl0.html#blog351">MySql 定位和分析执行效率的方法</a>
+<li id="blog488"><a href="od6vrqr93g.html#blog488">MySql 单表分页 Limit 性能优化</a>
+<li id="blog492"><a href="4wevwlzyl2.html#blog492">MySql 索引介绍</a>
+<li id="blog675"><a href="3dykq84yl0.html#blog675">Mysql 性能优化方法汇总</a>
+</ul>
+</li>
+<li>
+<h2>MySQL</h2>
+<ul>
+<li id="blog86"><a href="lgwyldne3q.html#blog86">MySQL concat、concat_ws、group_concat 函数用法</a>
+<li id="blog107"><a href="m0wek4wyp9.html#blog107">SQL 中 WHERE 和 HAVING 子句有什么区别？</a>
+<li id="blog134"><a href="54lvo36v6z.html#blog134">MySql 5.7 报错 sql_mode=only_full_group_by 问题解决方法</a>
+<li id="blog148"><a href="8loyn5oyz3.html#blog148">mysql 控制 sql 长度的相关参数</a>
+<li id="blog172"><a href="de296j6vq7.html#blog172">MySql 各日志配置方法：错误日志、慢查询日志、执行日志</a>
+<li id="blog177"><a href="n2oegm5e73.html#blog177">MySQL 查询中 where in 如何保持顺序</a>
+<li id="blog270"><a href="71xyjw0ed9.html#blog270">理解 MySQL 字符集</a>
+<li id="blog300"><a href="8loyn11vz3.html#blog300">MySQL order by limit 分页数据重复或丢失问题说明</a>
+<li id="blog301"><a href="nxq9zd5ydo.html#blog301">MySql 事务特性以及隔离级别说明</a>
+<li id="blog302"><a href="z64y912e5l.html#blog302">MySQL 共享锁&amp;排他锁</a>
+<li id="blog322"><a href="j3oyjjryp5.html#blog322">Larvale MySQL事务回退、悲观锁</a>
+<li id="blog352"><a href="rpnv37wywm.html#blog352">MySQL 创建索引报错 &quot;Specified key was too long; max key length is 767 bytes&quot; 原因</a>
+<li id="blog473"><a href="nxq9zgjydo.html#blog473">MySQL中当字段值为 <code>NULL</code> 时的注意事项</a>
+<li id="blog489"><a href="02ky0klvz8.html#blog489">SQL 的执行顺序</a>
+<li id="blog490"><a href="n2qvpnzy3m.html#blog490">MySQL 基础架构</a>
+<li id="blog491"><a href="5m892e6901.html#blog491">MySQL不能远程连接解决方法</a>
+<li id="blog829"><a href="5dve27jv4x.html#blog829">MySQL 实现条件排序 ORDER BY CASE WHEN</a>
+<li id="blog879"><a href="kl9no1dvz4.html#blog879">数据库表名应该使用单数名词</a>
+<li id="blog884"><a href="569x531yep.html#blog884">Laravel 数据库 upsert 方法的使用</a>
+<li id="blog983"><a href="qk942wxvw1.html#blog983">MySQL 的间隙锁（Gap Lock）介绍</a>
+<li id="blog992"><a href="wevwmj39l2.html#blog992">MySQL 死锁根治术：用预锁定打破环形等待</a>
+<li id="blog993"><a href="ndvm3pe93j.html#blog993">MySQL 锁等待超时之后，到底回滚了什么？</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog709"><a href="3xyq4qjvmq.html#blog709">SQL 注入漏洞</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/ndvm3pe93j.html', function (data, status) {
+            addView('ndvm3pe93j.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>MySQL 锁等待超时之后，到底回滚了什么？</h1><ul>
+<li><a href="ndvm3pe93j.html#bf2b7b9a2065c065c813318fff41be06">TL;DR</a></li>
+<li><a href="ndvm3pe93j.html#2d3a4031dfef96843d8f2e0b217ff01a">一、MySQL 行锁冲突：默认是等待</a></li>
+<li><a href="ndvm3pe93j.html#656af6f062c12eae2f8bf683621f726e">二、锁等待和死锁，不是一回事</a></li>
+<li><a href="ndvm3pe93j.html#9b6b6d70fc63239d8f5f472fa4b8da39">三、最容易忽略的地方：1205 默认只回滚当前语句</a></li>
+<li><a href="ndvm3pe93j.html#58c861b65e1e49bb164d8de148c643f8">四、为什么这会造成业务逻辑问题？</a></li>
+<li><a href="ndvm3pe93j.html#f327e042bc32a46dc608b18d7e51c104">五、“本事务能看到前面的修改”不叫脏读</a></li>
+<li><a href="ndvm3pe93j.html#48b3646eea81e2da822227612ff0db47">六、innodb_rollback_on_timeout=ON 是不是更安全？</a></li>
+<li><a href="ndvm3pe93j.html#62ca25ca22a03dd1d876ff640654a71a">七、Laravel 会不会处理这个问题？</a></li>
+<li><a href="ndvm3pe93j.html#43c281d69580a5730a10ae472a4013a7">八、真正危险的是：把异常吞掉</a></li>
+<li><a href="ndvm3pe93j.html#4d96875bcf6094d554e8056cf6c93523">九、Laravel 会自动重试 1205 吗？</a></li>
+<li><a href="ndvm3pe93j.html#0d803bbcf9d25050f091b83d2173304a">十、为什么不能只重试失败的 SQL？</a></li>
+<li><a href="ndvm3pe93j.html#06d6ea7ff3071c91ea1ccc2b144f352c">十一、手动事务时，责任就回到开发者身上</a></li>
+<li><a href="ndvm3pe93j.html#47aa96047dbac1026641b1e61a8a92f3">十二、锁等待监控：MySQL 8.0 不要再使用旧表</a></li>
+<li><a href="ndvm3pe93j.html#90365548680ca195f773e88b6b462301">十三、Laravel 的悲观锁应该怎么用？</a></li>
+<li><a href="ndvm3pe93j.html#c0ba31634ac5dfbca927b3767af834ce">十四、我更推荐的事务设计原则</a>
+<ul>
+<li><a href="ndvm3pe93j.html#c77414e0c0e536a19a1c6b3fc97b7def">1. 事务尽可能短</a></li>
+<li><a href="ndvm3pe93j.html#456157563488d023695503620e46c4fd">2. 多行更新尽量统一锁顺序</a></li>
+<li><a href="ndvm3pe93j.html#1b776ad2bad54e6b440c8960b80aee4e">3. 1205 和 1213 分开处理</a></li>
+<li><a href="ndvm3pe93j.html#1ba408517d3586ff88cb8c85c3e23dc9">4. 重试一定是整个事务</a></li>
+<li><a href="ndvm3pe93j.html#eae6003d060ce2300cb8ad147779c1e9">5. Laravel 优先使用 DB::transaction()</a></li>
+<li><a href="ndvm3pe93j.html#8ff05901110366746793029869ee34c0">6. 不要在事务闭包里吞掉异常</a></li>
+</ul></li>
+<li><a href="ndvm3pe93j.html#5924b3122263c8fc6f49ea2c8036d729">十五、最终总结</a></li>
+</ul><?xml encoding="UTF-8"><blockquote>
+<p>&#19968;&#27425;&#38145;&#20914;&#31361;&#24182;&#19981;&#31561;&#20110;&#27515;&#38145;&#12290;&#23545; InnoDB &#26469;&#35828;&#65292;&#22823;&#22810;&#25968;&#26222;&#36890;&#30340;&#34892;&#38145;&#20914;&#31361;&#39318;&#20808;&#34920;&#29616;&#20026;&#31561;&#24453;&#65307;&#21482;&#26377;&#31561;&#19981;&#21040;&#38145;&#12289;&#21457;&#29983;&#27515;&#38145;&#31561;&#24773;&#20917;&#65292;&#25165;&#20250;&#20197;&#24322;&#24120;&#32467;&#26463;&#12290;&#30495;&#27491;&#23481;&#26131;&#36393;&#22353;&#30340;&#65292;&#26159;&ldquo;&#38145;&#31561;&#24453;&#36229;&#26102;&#20043;&#21518;&#65292;&#20107;&#21153;&#21040;&#24213;&#22238;&#28378;&#20102;&#22810;&#23569;&rdquo;&#12290;</p>
+</blockquote><h2 id="bf2b7b9a2065c065c813318fff41be06">TL;DR</h2><p>&#20808;&#35760;&#20303; 5 &#20214;&#20107;&#65306;</p><ol style="padding-left: 1.5em;">
+<li style="list-style-type: decimal;">InnoDB &#20013;&#65292;&#36935;&#21040;&#19981;&#20860;&#23481;&#30340;&#34892;&#38145;&#26102;&#65292;&#40664;&#35748;&#26159;<strong class="mk-b">&#31561;&#24453;</strong>&#65292;&#19981;&#26159;&#31435;&#21363;&#22833;&#36133;&#12290;</li>
+<li style="list-style-type: decimal;"><code>innodb_lock_wait_timeout</code> &#40664;&#35748;&#26159; <strong class="mk-p">50 &#31186;</strong>&#65307;&#36229;&#26102;&#36890;&#24120;&#36820;&#22238; <code>ERROR 1205</code>&#12290;</li>
+<li style="list-style-type: decimal;">&#38145;&#31561;&#24453;&#36229;&#26102;&#40664;&#35748;&#21482;&#22238;&#28378;<strong class="mk-y">&#24403;&#21069;&#35821;&#21477;</strong>&#65292;&#19981;&#20250;&#33258;&#21160;&#22238;&#28378;&#25972;&#20010;&#20107;&#21153;&#12290;</li>
+<li style="list-style-type: decimal;">&#27515;&#38145;&#26159;&#21478;&#19968;&#26465;&#36335;&#24452;&#65306;InnoDB &#20250;&#20027;&#21160;&#26816;&#27979;&#65292;&#36890;&#24120;&#36820;&#22238; <code>ERROR 1213</code>&#65292;&#24182;&#22238;&#28378;&#34987;&#36873;&#20013;&#30340;&#25972;&#20010;&#20107;&#21153;&#12290;</li>
+<li style="list-style-type: decimal;">&#22312; Laravel &#20013;&#65292;<code>DB::transaction()</code> &#20250;&#22312;&#20107;&#21153;&#38381;&#21253;&#25243;&#20986;&#24322;&#24120;&#26102;&#22238;&#28378;&#25972;&#20010;&#20107;&#21153;&#65307;&#20294;&#22914;&#26524;&#20320;&#22312;&#38381;&#21253;&#20869;&#37096;&#25226; <code>1205</code> &#24322;&#24120;&#21534;&#25481;&#65292;Laravel &#23601;&#20250;&#35748;&#20026;&#38381;&#21253;&#27491;&#24120;&#32467;&#26463;&#65292;&#20174;&#32780;&#21487;&#33021;&#25552;&#20132;&#21097;&#20313;&#20462;&#25913;&#12290;</li>
+</ol><hr><h2 id="2d3a4031dfef96843d8f2e0b217ff01a">&#19968;&#12289;MySQL &#34892;&#38145;&#20914;&#31361;&#65306;&#40664;&#35748;&#26159;&#31561;&#24453;</h2><p>&#20551;&#35774;&#20107;&#21153; A &#24050;&#32463;&#38145;&#20303; <code>id = 1</code>&#65306;</p><pre><code class="language-sql">-- &#20107;&#21153; A
+BEGIN;
+
+SELECT *
+FROM users
+WHERE id = 1
+FOR UPDATE;</code></pre><p>&#27492;&#26102;&#20107;&#21153; A &#25345;&#26377;&#35813;&#34892;&#30340;&#25490;&#20182;&#38145;&#12290;</p><p>&#20107;&#21153; B &#20877;&#20462;&#25913;&#21516;&#19968;&#34892;&#65306;</p><pre><code class="language-sql">-- &#20107;&#21153; B
+BEGIN;
+
+UPDATE users
+SET name = 'Tom'
+WHERE id = 1;</code></pre><p>&#22914;&#26524;&#36825;&#20010;&#38145;&#19982;&#20107;&#21153; A &#25345;&#26377;&#30340;&#38145;&#19981;&#20860;&#23481;&#65292;B &#19981;&#20250;&#31435;&#21363;&#22833;&#36133;&#65292;&#32780;&#26159;&#36827;&#20837; <code>LOCK WAIT</code>&#12290;</p><p>&#21487;&#20197;&#25226;&#36807;&#31243;&#29702;&#35299;&#25104;&#65306;</p><pre><code class="language-text">&#20107;&#21153; A                         &#20107;&#21153; B
+  &#9474;                              &#9474;
+  &#9474; SELECT ... FOR UPDATE        &#9474;
+  &#9474;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472; &#33719;&#24471; X &#38145; &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&gt;&#9474;
+  &#9474;                              &#9474;
+  &#9474;                         UPDATE id=1
+  &#9474;                              &#9474;
+  &#9474;                         &#9203; &#31561;&#24453;&#38145;
+  &#9474;                              &#9474;
+  &#9474; COMMIT                       &#9474;
+  &#9474;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472; &#37322;&#25918;&#38145; &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&gt;&#9474;
+  &#9474;                              &#9474;
+  &#9474;                         &#9989; &#33719;&#24471;&#38145;
+  &#9474;                         &#32487;&#32493;&#25191;&#34892;</code></pre><p>&#22914;&#26524;&#38459;&#22622;&#20107;&#21153;&#19968;&#30452;&#19981;&#37322;&#25918;&#38145;&#65292;&#31561;&#24453;&#26102;&#38388;&#36229;&#36807; <code>innodb_lock_wait_timeout</code>&#65292;&#25165;&#20250;&#36820;&#22238;&#65306;</p><pre><code class="language-text">ERROR 1205 (HY000):
+Lock wait timeout exceeded; try restarting transaction</code></pre><p>MySQL 8.0 &#23448;&#26041;&#25991;&#26723;&#26126;&#30830;&#35828;&#26126;&#65292;<code>innodb_lock_wait_timeout</code> &#40664;&#35748;&#20540;&#20026; 50 &#31186;&#65292;&#24182;&#19988;&#36825;&#20010;&#21442;&#25968;&#25511;&#21046; InnoDB &#20107;&#21153;&#31561;&#24453;&#34892;&#38145;&#30340;&#26102;&#38388;&#12290;</p><hr><h2 id="656af6f062c12eae2f8bf683621f726e">&#20108;&#12289;&#38145;&#31561;&#24453;&#21644;&#27515;&#38145;&#65292;&#19981;&#26159;&#19968;&#22238;&#20107;</h2><p>&#36825;&#20004;&#20010;&#38382;&#39064;&#32463;&#24120;&#34987;&#28151;&#22312;&#19968;&#36215;&#12290;</p><table>
+<thead>
+<tr>
+<th>&#23545;&#27604;</th>
+<th>&#38145;&#31561;&#24453;&#36229;&#26102;</th>
+<th>&#27515;&#38145;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#38169;&#35823;&#30721;</td>
+<td>1205</td>
+<td>1213</td>
+</tr>
+<tr>
+<td>&#26412;&#36136;</td>
+<td>&#19968;&#26041;&#31561;&#24453;&#21478;&#19968;&#26041;&#37322;&#25918;&#38145;</td>
+<td>&#22810;&#20010;&#20107;&#21153;&#24418;&#25104;&#29615;&#24418;&#31561;&#24453;</td>
+</tr>
+<tr>
+<td>&#26816;&#27979;&#26041;&#24335;</td>
+<td>&#31561;&#21040; timeout</td>
+<td>InnoDB &#20027;&#21160;&#26816;&#27979;</td>
+</tr>
+<tr>
+<td>&#40664;&#35748;&#31561;&#24453; 50 &#31186;</td>
+<td>&#26159;</td>
+<td>&#21542;</td>
+</tr>
+<tr>
+<td>&#22238;&#28378;&#33539;&#22260;</td>
+<td>&#40664;&#35748;&#24403;&#21069;&#35821;&#21477;</td>
+<td>&#34987;&#36873;&#20013;&#30340;&#25972;&#20010;&#20107;&#21153;</td>
+</tr>
+<tr>
+<td>&#26159;&#21542;&#24212;&#35813;&#37325;&#35797;</td>
+<td>&#35270;&#19994;&#21153;&#24773;&#20917;</td>
+<td>&#36890;&#24120;&#21487;&#20197;&#32771;&#34385;</td>
+</tr>
+</tbody>
+</table><p>&#20363;&#22914;&#65306;</p><pre><code class="language-text">&#20107;&#21153; A &#25345;&#26377;&#38145; 1
+&#20107;&#21153; B &#35831;&#27714;&#38145; 1
+
+A &#19981;&#31561;&#24453; B
+B &#31561;&#24453; A
+</code></pre><p>&#36825;&#21482;&#26159;&#26222;&#36890;&#38145;&#31561;&#24453;&#12290;</p><p>&#32780;&#65306;</p><pre><code class="language-text">&#20107;&#21153; A &#25345;&#26377;&#38145; 1
+&#20107;&#21153; B &#25345;&#26377;&#38145; 2
+
+A &#35831;&#27714;&#38145; 2
+B &#35831;&#27714;&#38145; 1</code></pre><p>&#23601;&#24418;&#25104;&#20102;&#65306;</p><pre><code class="language-text">A &rarr; &#31561; B
+B &rarr; &#31561; A</code></pre><p>&#36825;&#26159;&#27515;&#38145;&#12290;</p><p>&#22240;&#27492;&#65306;</p><blockquote>
+<p><strong class="mk-b">&#38145;&#31561;&#24453;&#36229;&#26102;&#19981;&#31561;&#20110;&#27515;&#38145;&#12290;</strong></p>
+</blockquote><p>&#27809;&#26377;&#24418;&#25104;&#29615;&#24418;&#31561;&#24453;&#26102;&#65292;&#36890;&#24120;&#23601;&#26159;&#31561;&#24453;&#65307;&#31561;&#19981;&#21040;&#25165;&#36820;&#22238; 1205&#12290;</p><hr><h2 id="9b6b6d70fc63239d8f5f472fa4b8da39">&#19977;&#12289;&#26368;&#23481;&#26131;&#24573;&#30053;&#30340;&#22320;&#26041;&#65306;1205 &#40664;&#35748;&#21482;&#22238;&#28378;&#24403;&#21069;&#35821;&#21477;</h2><p>&#36825;&#26159;&#25972;&#31687;&#25991;&#31456;&#26368;&#20540;&#24471;&#35760;&#20303;&#30340;&#19968;&#28857;&#12290;</p><p>&#26597;&#30475;&#21442;&#25968;&#65306;</p><pre><code class="language-sql">SHOW VARIABLES LIKE 'innodb_rollback_on_timeout';</code></pre><p>&#40664;&#35748;&#36890;&#24120;&#26159;&#65306;</p><pre><code class="language-text">OFF</code></pre><p>&#24403;&#38145;&#31561;&#24453;&#36229;&#26102;&#21457;&#29983;&#26102;&#65306;</p><pre><code class="language-text">innodb_rollback_on_timeout = OFF
+        &#9474;
+        &#9660;
+&#24403;&#21069;&#35821;&#21477;&#22238;&#28378;
+        &#9474;
+        &#9500;&#9472;&#9472; &#21069;&#38754;&#30340;&#35821;&#21477;&#65306;&#20173;&#28982;&#20445;&#30041;&#22312;&#24403;&#21069;&#20107;&#21153;&#20013;
+        &#9500;&#9472;&#9472; &#24403;&#21069;&#36229;&#26102;&#35821;&#21477;&#65306;&#22238;&#28378;
+        &#9492;&#9472;&#9472; &#20107;&#21153;&#65306;&#20173;&#28982;&#23384;&#22312;</code></pre><p>MySQL &#23448;&#26041;&#25991;&#26723;&#26126;&#30830;&#35828;&#26126;&#65306;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#38145;&#31561;&#24453;&#36229;&#26102;&#21482;&#22238;&#28378;&#26368;&#21518;&#19968;&#26465;&#35821;&#21477;&#65307;&#22914;&#26524;&#21551;&#29992; <code>innodb_rollback_on_timeout</code>&#65292;&#25165;&#20250;&#22238;&#28378;&#25972;&#20010;&#20107;&#21153;&#12290;</p><hr><h2 id="58c861b65e1e49bb164d8de148c643f8">&#22235;&#12289;&#20026;&#20160;&#20040;&#36825;&#20250;&#36896;&#25104;&#19994;&#21153;&#36923;&#36753;&#38382;&#39064;&#65311;</h2><p>&#30475;&#19968;&#20010;&#36716;&#36134;&#20363;&#23376;&#65306;</p><pre><code class="language-sql">BEGIN;
+
+UPDATE account
+SET balance = balance - 100
+WHERE user = 'A';
+
+UPDATE account
+SET balance = balance + 100
+WHERE user = 'B';</code></pre><p>&#20551;&#35774;&#31532;&#20108;&#26465; UPDATE &#22240;&#20026; B &#30340;&#36134;&#25143;&#34987;&#20854;&#20182;&#20107;&#21153;&#38145;&#20303;&#65292;&#31561;&#24453; 50 &#31186;&#21518;&#21457;&#29983; 1205&#12290;</p><p>&#22312;&#40664;&#35748;&#37197;&#32622;&#19979;&#65292;&#32467;&#26524;&#26159;&#65306;</p><pre><code class="language-text">A &#25187;&#27454; 100       &#9989; &#20445;&#30041;&#22312;&#24403;&#21069;&#20107;&#21153;
+B &#21152;&#27454; 100       &#10060; &#24403;&#21069;&#35821;&#21477;&#22238;&#28378;
+&#20107;&#21153;&#26412;&#36523;         &#128993; &#20173;&#28982;&#23384;&#22312;</code></pre><p>&#27492;&#26102;&#21315;&#19975;&#19981;&#35201;&#25226;&ldquo;&#24403;&#21069;&#35821;&#21477;&#22238;&#28378;&rdquo;&#29702;&#35299;&#25104;&ldquo;&#25972;&#20010;&#36716;&#36134;&#22833;&#36133;&#24182;&#19988;&#20107;&#21153;&#24050;&#32463;&#22238;&#28378;&rdquo;&#12290;</p><p>&#23454;&#38469;&#19978;&#65306;</p><pre><code class="language-text">&#25968;&#25454;&#24211;&#29366;&#24577;&#65306;
+
+A&#65306;-100  &larr; &#20173;&#22312;&#24403;&#21069;&#20107;&#21153;&#20013;
+B&#65306;  0   &larr; &#31532;&#20108;&#26465;&#35821;&#21477;&#27809;&#26377;&#29983;&#25928;</code></pre><p>&#22914;&#26524;&#24212;&#29992;&#38543;&#21518;&#38169;&#35823;&#22320;&#32487;&#32493;&#25191;&#34892;&#24182;&#26368;&#32456; <code>COMMIT</code>&#65292;&#23601;&#21487;&#33021;&#20986;&#29616;&#65306;</p><pre><code class="language-text">A &#25187;&#20102; 100
+B &#27809;&#25910;&#21040; 100</code></pre><p>&#36825;&#23601;&#26159; <code>innodb_rollback_on_timeout=OFF</code> &#26368;&#21361;&#38505;&#30340;&#22320;&#26041;&#12290;</p><hr><h2 id="f327e042bc32a46dc608b18d7e51c104">&#20116;&#12289;&ldquo;&#26412;&#20107;&#21153;&#33021;&#30475;&#21040;&#21069;&#38754;&#30340;&#20462;&#25913;&rdquo;&#19981;&#21483;&#33039;&#35835;</h2><p>&#36824;&#26377;&#19968;&#20010;&#23481;&#26131;&#20889;&#38169;&#30340;&#27010;&#24565;&#12290;</p><p>&#20363;&#22914;&#65306;</p><pre><code class="language-sql">BEGIN;
+
+UPDATE orders
+SET status = 'paid'
+WHERE id = 1;
+
+SELECT status
+FROM orders
+WHERE id = 1;</code></pre><p>&#24403;&#21069;&#20107;&#21153;&#36890;&#24120;&#21487;&#20197;&#30475;&#21040;&#33258;&#24049;&#21018;&#21018;&#20462;&#25913;&#30340;&#25968;&#25454;&#12290;</p><p>&#36825;&#19981;&#33021;&#31216;&#20026;&ldquo;&#33039;&#35835;&rdquo;&#12290;</p><p><strong class="mk-g">&#33039;&#35835;&#65288;Dirty Read&#65289;</strong>&#25351;&#30340;&#26159;&#19968;&#20010;&#20107;&#21153;&#35835;&#21462;&#21040;&#20102;&#21478;&#19968;&#20010;&#23578;&#26410;&#25552;&#20132;&#20107;&#21153;&#30340;&#25968;&#25454;&#12290;</p><p>&#36825;&#37324;&#35835;&#21462;&#30340;&#26159;&#65306;</p><blockquote>
+<p><strong class="mk-g">&#24403;&#21069;&#20107;&#21153;&#33258;&#24049;&#30340;&#26410;&#25552;&#20132;&#20462;&#25913;&#12290;</strong></p>
+</blockquote><p>&#25152;&#20197;&#26356;&#20934;&#30830;&#30340;&#35828;&#27861;&#24212;&#35813;&#26159;&#65306;</p><pre><code class="language-text">&#24403;&#21069;&#20107;&#21153;&#21487;&#20197;&#30475;&#21040;&#33258;&#24049;&#30340;&#26410;&#25552;&#20132;&#20462;&#25913;</code></pre><p>&#32780;&#19981;&#26159;&#65306;</p><pre><code class="language-text">&#21457;&#29983;&#20102;&#33039;&#35835;</code></pre><hr><h2 id="48b3646eea81e2da822227612ff0db47">&#20845;&#12289;<code>innodb_rollback_on_timeout=ON</code> &#26159;&#19981;&#26159;&#26356;&#23433;&#20840;&#65311;</h2><p>&#22914;&#26524;&#20320;&#30340;&#19994;&#21153;&#24076;&#26395;&#65306;</p><blockquote>
+<p>&#21482;&#35201;&#20107;&#21153;&#20013;&#30340;&#26576;&#26465; SQL &#22240;&#38145;&#31561;&#24453;&#36229;&#26102;&#22833;&#36133;&#65292;&#23601;&#25226;&#25972;&#20010;&#20107;&#21153;&#20316;&#20026;&#19968;&#20010;&#25972;&#20307;&#22833;&#36133;&#12290;</p>
+</blockquote><p>&#37027;&#20040;&#21487;&#20197;&#32771;&#34385;&#65306;</p><pre><code class="language-ini">[mysqld]
+innodb_rollback_on_timeout = ON</code></pre><p>&#27492;&#26102;&#65306;</p><pre><code class="language-text">stmt1 &#9989;
+stmt2 &#10060; 1205
+   &#9474;
+   &#9660;
+&#25972;&#20010;&#20107;&#21153;&#22238;&#28378;
+   &#9474;
+   &#9500;&#9472;&#9472; stmt1 &#22238;&#28378;
+   &#9492;&#9472;&#9472; stmt2 &#22238;&#28378;</code></pre><p>&#36825;&#20010;&#34892;&#20026;&#23545;&#20110;&#24378;&#20107;&#21153;&#19968;&#33268;&#24615;&#30340;&#19994;&#21153;&#26356;&#21152;&#30452;&#35266;&#12290;</p><p>&#38656;&#35201;&#27880;&#24847;&#30340;&#26159;&#65292;<code>innodb_rollback_on_timeout</code> &#26159;&#21551;&#21160;&#26102;&#37197;&#32622;&#39033;&#65292;&#19981;&#26159;&#21160;&#24577;&#21464;&#37327;&#12290;&#22240;&#27492;&#20462;&#25913;&#21518;&#36890;&#24120;&#38656;&#35201;&#37325;&#21551; MySQL&#12290;</p><p>&#19981;&#36807;&#25105;&#19981;&#24314;&#35758;&#25226;&#23427;&#29702;&#35299;&#25104;&#65306;</p><blockquote>
+<p>&ldquo;&#25171;&#24320; ON&#65292;&#20197;&#21518;&#24212;&#29992;&#23618;&#23601;&#19981;&#29992;&#22788;&#29702;&#20107;&#21153;&#24322;&#24120;&#20102;&#12290;&rdquo;</p>
+</blockquote><p>&#24212;&#29992;&#23618;&#20173;&#28982;&#24212;&#35813;&#27491;&#30830;&#22788;&#29702;&#24322;&#24120;&#65292;&#24182;&#22312;&#20107;&#21153;&#36793;&#30028;&#19978;&#20445;&#35777;&#19994;&#21153;&#21407;&#23376;&#24615;&#12290;</p><hr><h2 id="62ca25ca22a03dd1d876ff640654a71a">&#19971;&#12289;Laravel &#20250;&#19981;&#20250;&#22788;&#29702;&#36825;&#20010;&#38382;&#39064;&#65311;</h2><p>&#22914;&#26524;&#20351;&#29992; Laravel &#30340;&#65306;</p><pre><code class="language-php">DB::transaction(function () {
+    // ...
+});</code></pre><p>&#24773;&#20917;&#20250;&#22909;&#24456;&#22810;&#12290;</p><p>Laravel &#23448;&#26041;&#25991;&#26723;&#26126;&#30830;&#35828;&#26126;&#65306;</p><blockquote>
+<p>&#22914;&#26524;&#20107;&#21153;&#38381;&#21253;&#25243;&#20986;&#24322;&#24120;&#65292;Laravel &#20250;&#33258;&#21160;&#22238;&#28378;&#20107;&#21153;&#65292;&#24182;&#37325;&#26032;&#25243;&#20986;&#24322;&#24120;&#65307;&#22914;&#26524;&#38381;&#21253;&#27491;&#24120;&#25191;&#34892;&#32467;&#26463;&#65292;&#21017;&#33258;&#21160;&#25552;&#20132;&#12290;</p>
+</blockquote><p>&#20363;&#22914;&#65306;</p><pre><code class="language-php">DB::transaction(function () {
+    DB::table('account')
+        -&gt;where('user', 'A')
+        -&gt;decrement('balance', 100);
+
+    DB::table('account')
+        -&gt;where('user', 'B')
+        -&gt;increment('balance', 100);
+});</code></pre><p>&#20551;&#35774;&#31532;&#20108;&#26465; SQL &#21457;&#29983; 1205&#65306;</p><pre><code class="language-text">MySQL
+  &#9474;
+  &#9500;&#9472;&#9472; &#31532;&#20108;&#26465;&#35821;&#21477;&#22833;&#36133;
+  &#9474;
+  &#9660;
+Laravel &#25910;&#21040;&#24322;&#24120;
+  &#9474;
+  &#9660;
+DB::transaction() &#22238;&#28378;&#25972;&#20010;&#20107;&#21153;
+  &#9474;
+  &#9500;&#9472;&#9472; A &#30340;&#25187;&#27454;&#22238;&#28378;
+  &#9492;&#9472;&#9472; B &#30340;&#21152;&#27454;&#27809;&#26377;&#29983;&#25928;</code></pre><p>&#22240;&#27492;&#65306;</p><blockquote>
+<p><strong class="mk-p">MySQL &#40664;&#35748;&#21482;&#22238;&#28378;&#24403;&#21069;&#35821;&#21477;&#65292;&#24182;&#19981;&#24847;&#21619;&#30528; Laravel &#30340; <code>DB::transaction()</code> &#20063;&#21482;&#22238;&#28378;&#24403;&#21069;&#35821;&#21477;&#12290;</strong></p>
+</blockquote><p>&#36825;&#26159;&#20004;&#20010;&#19981;&#21516;&#23618;&#38754;&#30340;&#34892;&#20026;&#12290;</p><p>MySQL &#20915;&#23450;&ldquo;&#36825;&#26465; SQL &#36229;&#26102;&#20043;&#21518;&#25968;&#25454;&#24211;&#23618;&#38754;&#24590;&#20040;&#22788;&#29702;&rdquo;&#12290;</p><p>Laravel &#30340;&#20107;&#21153;&#23553;&#35013;&#21017;&#22312;&#24322;&#24120;&#32487;&#32493;&#21521;&#19978;&#20256;&#25773;&#26102;&#36127;&#36131;&#22238;&#28378;&#25972;&#20010; Laravel &#20107;&#21153;&#12290;</p><hr><h2 id="43c281d69580a5730a10ae472a4013a7">&#20843;&#12289;&#30495;&#27491;&#21361;&#38505;&#30340;&#26159;&#65306;&#25226;&#24322;&#24120;&#21534;&#25481;</h2><p>&#20363;&#22914;&#65306;</p><pre><code class="language-php">DB::transaction(function () {
+    DB::table('account')
+        -&gt;where('user', 'A')
+        -&gt;decrement('balance', 100);
+
+    try {
+        DB::table('account')
+            -&gt;where('user', 'B')
+            -&gt;increment('balance', 100);
+    } catch (\Throwable $e) {
+        Log::warning('B &#21152;&#38065;&#22833;&#36133;');
+        // &#10060; &#24322;&#24120;&#34987;&#21507;&#25481;
+    }
+
+    DB::table('transfer_log')-&gt;insert([
+        'status' =&gt; 'completed',
+    ]);
+});</code></pre><p>&#20174; Laravel &#30340;&#35282;&#24230;&#30475;&#65306;</p><pre><code class="language-text">&#38381;&#21253;&#25191;&#34892;&#23436;&#27605;
+    &darr;
+&#27809;&#26377;&#24322;&#24120;&#21521;&#22806;&#25243;
+    &darr;
+&#35748;&#20026;&#20107;&#21153;&#25104;&#21151;
+    &darr;
+COMMIT</code></pre><p>&#20110;&#26159;&#23601;&#21487;&#33021;&#24471;&#21040;&#65306;</p><pre><code class="language-text">A &#25187;&#27454;       &#9989;
+B &#21152;&#27454;       &#10060;
+transfer_log completed  &#9989;</code></pre><p>&#25152;&#20197;&#30495;&#27491;&#24212;&#35813;&#24378;&#35843;&#30340;&#26159;&#65306;</p><blockquote>
+<p><strong class="mk-b">Laravel &#33021;&#20828;&#20303;&ldquo;&#24322;&#24120;&#27491;&#24120;&#25243;&#20986;&rdquo;&#30340;&#20107;&#21153;&#22833;&#36133;&#65292;&#20294;&#19981;&#33021;&#26367;&#20320;&#21028;&#26029;&#19968;&#20010;&#34987; catch &#21518;&#21534;&#25481;&#30340;&#24322;&#24120;&#26159;&#21542;&#24847;&#21619;&#30528;&#19994;&#21153;&#24212;&#35813;&#22238;&#28378;&#12290;</strong></p>
+</blockquote><p>&#22914;&#26524;&#24517;&#39035;&#25429;&#33719;&#24322;&#24120;&#65292;&#36890;&#24120;&#24212;&#35813;&#65306;</p><pre><code class="language-php">DB::transaction(function () {
+    DB::table('account')
+        -&gt;where('user', 'A')
+        -&gt;decrement('balance', 100);
+
+    try {
+        DB::table('account')
+            -&gt;where('user', 'B')
+            -&gt;increment('balance', 100);
+    } catch (\Throwable $e) {
+        Log::error('&#36716;&#36134;&#22833;&#36133;', [
+            'exception' =&gt; $e,
+        ]);
+
+        throw $e;
+    }
+});</code></pre><hr><h2 id="4d96875bcf6094d554e8056cf6c93523">&#20061;&#12289;Laravel &#20250;&#33258;&#21160;&#37325;&#35797; 1205 &#21527;&#65311;</h2><p>&#36825;&#37324;&#20063;&#24456;&#23481;&#26131;&#20135;&#29983;&#35823;&#35299;&#12290;</p><p>Laravel &#30340;&#65306;</p><pre><code class="language-php">DB::transaction($callback, $attempts);</code></pre><p>&#31532;&#20108;&#20010;&#21442;&#25968;&#20027;&#35201;&#29992;&#20110;<strong class="mk-b">&#27515;&#38145;&#37325;&#35797;</strong>&#12290;</p><p>&#20363;&#22914;&#65306;</p><pre><code class="language-php">DB::transaction(function () {
+    // ...
+}, 5);</code></pre><p>Laravel &#23448;&#26041;&#25991;&#26723;&#25226;&#36825;&#20010;&#21442;&#25968;&#23450;&#20041;&#20026;&#65306;</p><blockquote>
+<p>&#24403;&#21457;&#29983;&#27515;&#38145;&#26102;&#65292;&#20107;&#21153;&#21487;&#20197;&#37325;&#26032;&#23581;&#35797;&#25191;&#34892;&#12290;</p>
+</blockquote><p>&#22240;&#27492;&#19981;&#35201;&#31616;&#21333;&#22320;&#20889;&#25104;&#65306;</p><pre><code class="language-text">1205 &#21644; 1213 &#37117;&#33258;&#21160;&#37325;&#35797;</code></pre><p>&#26356;&#20934;&#30830;&#30340;&#35828;&#27861;&#26159;&#65306;</p><pre><code class="language-text">1213 / &#27515;&#38145;
+    &rarr; Laravel &#30340; transaction attempts &#21487;&#20197;&#33258;&#21160;&#37325;&#35797;
+
+1205 / &#38145;&#31561;&#24453;&#36229;&#26102;
+    &rarr; &#19981;&#24212;&#25226; attempts &#24403;&#25104; 1205 &#30340;&#36890;&#29992;&#33258;&#21160;&#37325;&#35797;&#26426;&#21046;</code></pre><p>&#22914;&#26524;&#19994;&#21153;&#30830;&#23454;&#38656;&#35201;&#23545; 1205 &#20570;&#37325;&#35797;&#65292;&#21487;&#20197;&#22312;&#20107;&#21153;&#22806;&#23618;&#33258;&#24049;&#23553;&#35013;&#65306;</p><pre><code class="language-php">function transactionWithRetry( Closure $callback, int $attempts = 3 ): mixed {
+    for ($i = 1; $i &lt;= $attempts; $i++) {
+        try {
+            return DB::transaction($callback);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $code = $e-&gt;errorInfo[1] ?? null;
+
+            if (!in_array($code, [1205, 1213], true) || $i === $attempts) {
+                throw $e;
+            }
+
+            usleep($i * 100_000);
+        }
+    }
+
+    throw new RuntimeException('Transaction retry failed.');
+}</code></pre><p>&#36825;&#37324;&#26377;&#19968;&#20010;&#38750;&#24120;&#37325;&#35201;&#30340;&#21407;&#21017;&#65306;</p><blockquote>
+<p><strong class="mk-b">&#37325;&#35797;&#24212;&#35813;&#37325;&#35797;&#25972;&#20010;&#20107;&#21153;&#65292;&#32780;&#19981;&#26159;&#20174;&#22833;&#36133;&#30340;&#37027;&#26465; SQL &#32487;&#32493;&#25191;&#34892;&#12290;</strong></p>
+</blockquote><p>&#22240;&#20026;&#20107;&#21153;&#21069;&#38754;&#30340; SQL &#21487;&#33021;&#24050;&#32463;&#25191;&#34892;&#36807;&#12290;</p><hr><h2 id="0d803bbcf9d25050f091b83d2173304a">&#21313;&#12289;&#20026;&#20160;&#20040;&#19981;&#33021;&#21482;&#37325;&#35797;&#22833;&#36133;&#30340; SQL&#65311;</h2><p>&#36824;&#26159;&#36716;&#36134;&#65306;</p><pre><code class="language-text">stmt1&#65306;A -100   &#9989;
+stmt2&#65306;B +100   &#10060; 1205</code></pre><p>&#22914;&#26524;&#21482;&#37325;&#26032;&#25191;&#34892; stmt2&#65306;</p><pre><code class="language-text">A -100
+B +100</code></pre><p>&#30475;&#36215;&#26469;&#20284;&#20046;&#27809;&#38382;&#39064;&#12290;</p><p>&#20294;&#22914;&#26524;&#20320;&#30340;&#20195;&#30721;&#32467;&#26500;&#26356;&#22797;&#26434;&#65306;</p><pre><code class="language-text">stmt1
+stmt2
+stmt3
+stmt4</code></pre><p>&#32780; stmt3&#12289;stmt4 &#21448;&#20381;&#36182;&#21069;&#38754;&#30340;&#29366;&#24577;&#65292;&#31616;&#21333;&#20174;&#22833;&#36133;&#28857;&#32487;&#32493;&#25191;&#34892;&#24456;&#23481;&#26131;&#30772;&#22351;&#19994;&#21153;&#35821;&#20041;&#12290;</p><p>&#26356;&#21361;&#38505;&#30340;&#26159;&#65292;&#22914;&#26524;&#20320;&#25226;&#25972;&#20010;&#19994;&#21153;&#24490;&#29615;&#37325;&#26032;&#25191;&#34892;&#65292;&#21364;&#27809;&#26377; rollback&#65306;</p><pre><code class="language-text">&#31532;&#19968;&#27425;&#65306;
+A -100
+B +100  &larr; &#22833;&#36133;
+
+&#31532;&#20108;&#27425;&#65306;
+A -100  &larr; &#21448;&#25191;&#34892;&#19968;&#27425;
+B +100</code></pre><p>&#23601;&#21487;&#33021;&#21464;&#25104;&#65306;</p><pre><code class="language-text">A -200
+B +100</code></pre><p>&#25152;&#20197;&#27491;&#30830;&#30340;&#37325;&#35797;&#27169;&#22411;&#24212;&#35813;&#26159;&#65306;</p><pre><code class="language-text">BEGIN
+  &darr;
+&#25191;&#34892;&#25972;&#20010;&#19994;&#21153;
+  &darr;
+&#22833;&#36133;
+  &darr;
+ROLLBACK
+  &darr;
+&#37325;&#26032; BEGIN
+  &darr;
+&#37325;&#26032;&#25191;&#34892;&#25972;&#20010;&#19994;&#21153;
+  &darr;
+COMMIT</code></pre><hr><h2 id="06d6ea7ff3071c91ea1ccc2b144f352c">&#21313;&#19968;&#12289;&#25163;&#21160;&#20107;&#21153;&#26102;&#65292;&#36131;&#20219;&#23601;&#22238;&#21040;&#24320;&#21457;&#32773;&#36523;&#19978;</h2><p>&#20363;&#22914;&#65306;</p><pre><code class="language-php">DB::beginTransaction();
+
+try {
+    DB::table('account')
+        -&gt;where('user', 'A')
+        -&gt;decrement('balance', 100);
+
+    DB::table('account')
+        -&gt;where('user', 'B')
+        -&gt;increment('balance', 100);
+
+    DB::commit();
+} catch (\Throwable $e) {
+    DB::rollBack();
+
+    throw $e;
+}</code></pre><p>&#36825;&#37324;&#30340;&#21407;&#21017;&#38750;&#24120;&#31616;&#21333;&#65306;</p><blockquote>
+<p><strong class="mk-b">&#20107;&#21153;&#24320;&#22987;&#20043;&#21518;&#65292;&#21482;&#35201;&#19994;&#21153;&#27809;&#26377;&#25104;&#21151;&#23436;&#25104;&#65292;&#23601;&#24517;&#39035;&#30830;&#20445;&#26368;&#32456;&#25191;&#34892; rollback&#12290;</strong></p>
+</blockquote><p>Laravel &#24182;&#19981;&#20250;&#22240;&#20026;&#20320;&#35843;&#29992;&#20102;&#65306;</p><pre><code class="language-php">DB::beginTransaction();</code></pre><p>&#23601;&#33258;&#21160;&#26367;&#20320;&#34917;&#19978;&#19968;&#20010;&#21487;&#38752;&#30340;&#24322;&#24120;&#22788;&#29702;&#32467;&#26500;&#12290;</p><p>&#22240;&#27492;&#22312; Laravel &#39033;&#30446;&#20013;&#65292;&#25105;&#26356;&#20542;&#21521;&#20110;&#65306;</p><pre><code class="language-php">DB::transaction(function () {
+    // &#19994;&#21153;&#36923;&#36753;
+});</code></pre><p>&#32780;&#19981;&#26159;&#21040;&#22788;&#25163;&#20889;&#65306;</p><pre><code class="language-php">beginTransaction();
+try {
+    ...
+    commit();
+} catch (...) {
+    rollBack();
+}</code></pre><hr><h2 id="47aa96047dbac1026641b1e61a8a92f3">&#21313;&#20108;&#12289;&#38145;&#31561;&#24453;&#30417;&#25511;&#65306;MySQL 8.0 &#19981;&#35201;&#20877;&#20351;&#29992;&#26087;&#34920;</h2><p>&#21407;&#25991;&#20013;&#26377;&#19968;&#22788;&#38656;&#35201;&#29305;&#21035;&#20462;&#27491;&#12290;</p><p>MySQL 8.0 &#24212;&#35813;&#20351;&#29992;&#65306;</p><pre><code class="language-sql">performance_schema.data_locks
+performance_schema.data_lock_waits</code></pre><p>&#32780;&#19981;&#26159;&#65306;</p><pre><code class="language-sql">information_schema.INNODB_LOCKS
+information_schema.INNODB_LOCK_WAITS</code></pre><p>&#21518;&#20004;&#32773;&#23646;&#20110;&#26087;&#29256;&#26412;&#30340;&#38145;&#20449;&#24687;&#34920;&#65292;&#22312; MySQL 8.0 &#24050;&#34987; Performance Schema &#23545;&#24212;&#34920;&#21462;&#20195;&#12290;</p><p>&#20363;&#22914;&#65306;</p><pre><code class="language-sql">SELECT *
+FROM performance_schema.data_lock_waits;</code></pre><p>&#21487;&#20197;&#30475;&#21040;&#21738;&#20123;&#38145;&#35831;&#27714;&#27491;&#22312;&#34987;&#21738;&#20123;&#38145;&#38459;&#22622;&#12290;</p><p>&#22914;&#26524;&#24076;&#26395;&#36827;&#19968;&#27493;&#26597;&#30475;&#38145;&#30340;&#20855;&#20307;&#23545;&#35937;&#65292;&#21487;&#20197;&#20851;&#32852;&#65306;</p><pre><code class="language-sql">performance_schema.data_locks</code></pre><p>&#20197;&#21450;&#65306;</p><pre><code class="language-sql">information_schema.INNODB_TRX</code></pre><p>&#29983;&#20135;&#29615;&#22659;&#25490;&#26597;&#38145;&#31561;&#24453;&#26102;&#65292;&#24314;&#35758;&#20248;&#20808;&#20351;&#29992; MySQL 8.0 &#23448;&#26041;&#25512;&#33616;&#30340;&#25968;&#25454;&#28304;&#65292;&#32780;&#19981;&#35201;&#30452;&#25509;&#22797;&#21046;&#32593;&#19978;&#22522;&#20110; MySQL 5.7 &#30340; SQL&#12290;</p><hr><h2 id="90365548680ca195f773e88b6b462301">&#21313;&#19977;&#12289;Laravel &#30340;&#24754;&#35266;&#38145;&#24212;&#35813;&#24590;&#20040;&#29992;&#65311;</h2><p>Laravel &#26412;&#36523;&#25552;&#20379;&#20102;&#65306;</p><pre><code class="language-php">-&gt;lockForUpdate()</code></pre><p>&#20197;&#21450;&#65306;</p><pre><code class="language-php">-&gt;sharedLock()</code></pre><p>&#20363;&#22914;&#65306;</p><pre><code class="language-php">DB::transaction(function () {
+    $account = DB::table('account')
+        -&gt;where('user', 'A')
+        -&gt;lockForUpdate()
+        -&gt;first();
+
+    // &#20462;&#25913; account
+});</code></pre><p>&#36825;&#37324;&#30340;&#20851;&#38190;&#19981;&#26159;&#65306;</p><blockquote>
+<p>&ldquo;&#29992;&#20102; <code>lockForUpdate()</code> &#23601;&#19981;&#20250;&#27515;&#38145;&#12290;&rdquo;</p>
+</blockquote><p>&#32780;&#26159;&#65306;</p><blockquote>
+<p><strong class="mk-y">&#38145;&#30340;&#39034;&#24207;&#12289;&#20107;&#21153;&#36793;&#30028;&#12289;&#38145;&#25345;&#26377;&#26102;&#38388;&#65292;&#25165;&#26159;&#24182;&#21457;&#20107;&#21153;&#35774;&#35745;&#30340;&#26680;&#24515;&#12290;</strong></p>
+</blockquote><p>&#20363;&#22914;&#20004;&#20010;&#20107;&#21153;&#65306;</p><pre><code class="language-text">&#20107;&#21153; A&#65306;
+&#38145; account 1
+&#38145; account 2
+
+&#20107;&#21153; B&#65306;
+&#38145; account 2
+&#38145; account 1</code></pre><p>&#23601;&#21487;&#33021;&#20135;&#29983;&#65306;</p><pre><code class="language-text">A &#25345;&#26377; 1&#65292;&#31561;&#24453; 2
+B &#25345;&#26377; 2&#65292;&#31561;&#24453; 1</code></pre><p>&#24418;&#25104;&#27515;&#38145;&#12290;</p><p>&#22240;&#27492;&#23545;&#20110;&#38656;&#35201;&#21516;&#26102;&#25805;&#20316;&#22810;&#34892;&#30340;&#19994;&#21153;&#65292;&#19968;&#20010;&#38750;&#24120;&#37325;&#35201;&#30340;&#35774;&#35745;&#21407;&#21017;&#26159;&#65306;</p><blockquote>
+<p><strong class="mk-g">&#23613;&#37327;&#35753;&#25152;&#26377;&#20107;&#21153;&#25353;&#29031;&#32479;&#19968;&#39034;&#24207;&#33719;&#21462;&#38145;&#12290;</strong></p>
+</blockquote><p>&#20363;&#22914;&#25353;&#29031;&#20027;&#38190;&#21319;&#24207;&#65306;</p><pre><code class="language-text">1 &rarr; 2 &rarr; 3 &rarr; 4</code></pre><p>&#32780;&#19981;&#26159;&#65306;</p><pre><code class="language-text">&#20107;&#21153; A&#65306;1 &rarr; 2 &rarr; 3
+&#20107;&#21153; B&#65306;3 &rarr; 2 &rarr; 1</code></pre><hr><h2 id="c0ba31634ac5dfbca927b3767af834ce">&#21313;&#22235;&#12289;&#25105;&#26356;&#25512;&#33616;&#30340;&#20107;&#21153;&#35774;&#35745;&#21407;&#21017;</h2><p>&#32467;&#21512;&#23454;&#38469;&#19994;&#21153;&#24320;&#21457;&#65292;&#25105;&#20250;&#25226; MySQL &#38145;&#38382;&#39064;&#24402;&#32435;&#25104;&#19979;&#38754;&#20960;&#26465;&#12290;</p><h3 id="c77414e0c0e536a19a1c6b3fc97b7def">1. &#20107;&#21153;&#23613;&#21487;&#33021;&#30701;</h3><p>&#19981;&#35201;&#22312;&#20107;&#21153;&#20013;&#65306;</p><pre><code class="language-text">&#35831;&#27714;&#22806;&#37096; HTTP API
+&#35843;&#29992;&#31532;&#19977;&#26041;&#26381;&#21153;
+&#31561;&#24453;&#29992;&#25143;&#25805;&#20316;
+&#25191;&#34892;&#22823;&#37327;&#22797;&#26434;&#35745;&#31639;
+sleep</code></pre><p>&#22240;&#20026;&#20107;&#21153;&#36234;&#38271;&#65306;</p><pre><code class="language-text">&#38145;&#25345;&#26377;&#26102;&#38388;&#36234;&#38271;
+    &darr;
+&#20854;&#20182;&#20107;&#21153;&#31561;&#24453;&#26102;&#38388;&#36234;&#38271;
+    &darr;
+1205 &#27010;&#29575;&#19978;&#21319;
+    &darr;
+&#24182;&#21457;&#20914;&#31361;&#26356;&#21152;&#20005;&#37325;</code></pre><hr><h3 id="456157563488d023695503620e46c4fd">2. &#22810;&#34892;&#26356;&#26032;&#23613;&#37327;&#32479;&#19968;&#38145;&#39034;&#24207;</h3><p>&#20363;&#22914;&#32479;&#19968;&#65306;</p><pre><code class="language-text">&#25353; id &#21319;&#24207;&#21152;&#38145;</code></pre><p>&#21487;&#20197;&#26174;&#33879;&#38477;&#20302;&#22240;&#20026;&#38145;&#39034;&#24207;&#19981;&#19968;&#33268;&#23548;&#33268;&#30340;&#27515;&#38145;&#27010;&#29575;&#12290;</p><hr><h3 id="1b776ad2bad54e6b440c8960b80aee4e">3. 1205 &#21644; 1213 &#20998;&#24320;&#22788;&#29702;</h3><p>&#19981;&#35201;&#31616;&#21333;&#22320;&#65306;</p><pre><code class="language-php">catch (Throwable $e) {
+    retry();
+}</code></pre><p>&#33267;&#23569;&#24212;&#35813;&#21306;&#20998;&#65306;</p><pre><code class="language-text">1205&#65306;&#38145;&#31561;&#24453;&#36229;&#26102;
+1213&#65306;&#27515;&#38145;</code></pre><p>&#20004;&#32773;&#20135;&#29983;&#21407;&#22240;&#19981;&#21516;&#12290;</p><hr><h3 id="1ba408517d3586ff88cb8c85c3e23dc9">4. &#37325;&#35797;&#19968;&#23450;&#26159;&#25972;&#20010;&#20107;&#21153;</h3><p>&#38169;&#35823;&#26041;&#24335;&#65306;</p><pre><code class="language-text">&#22833;&#36133; SQL &rarr; &#30452;&#25509;&#37325;&#35797; SQL</code></pre><p>&#26356;&#21487;&#38752;&#30340;&#26041;&#24335;&#65306;</p><pre><code class="language-text">&#25972;&#20010;&#20107;&#21153; rollback
+        &darr;
+&#37325;&#26032;&#24320;&#21551;&#20107;&#21153;
+        &darr;
+&#23436;&#25972;&#25191;&#34892;&#25972;&#20010;&#19994;&#21153;</code></pre><hr><h3 id="eae6003d060ce2300cb8ad147779c1e9">5. Laravel &#20248;&#20808;&#20351;&#29992; <code>DB::transaction()</code></h3><pre><code class="language-php">DB::transaction(function () {
+    // &#25152;&#26377;&#20107;&#21153;&#19994;&#21153;
+});</code></pre><p>&#35753;&#26694;&#26550;&#22788;&#29702;&#65306;</p><pre><code class="language-text">BEGIN
+  &darr;
+&#19994;&#21153;&#20195;&#30721;
+  &darr;
+&#24322;&#24120;&#65311;
+ &#9500;&#9472; &#26159; &rarr; ROLLBACK
+ &#9492;&#9472; &#21542; &rarr; COMMIT</code></pre><hr><h3 id="8ff05901110366746793029869ee34c0">6. &#19981;&#35201;&#22312;&#20107;&#21153;&#38381;&#21253;&#37324;&#21534;&#25481;&#24322;&#24120;</h3><p>&#23588;&#20854;&#26159;&#65306;</p><pre><code class="language-php">try {
+    // &#25968;&#25454;&#24211;&#25805;&#20316;
+} catch (\Throwable $e) {
+    Log::error($e);
+    // &#20160;&#20040;&#37117;&#19981;&#20570;
+}</code></pre><p>&#36825;&#30456;&#24403;&#20110;&#21578;&#35785; Laravel&#65306;</p><blockquote>
+<p>&ldquo;&#27809;&#20107;&#65292;&#32487;&#32493;&#25552;&#20132;&#21543;&#12290;&rdquo;</p>
+</blockquote><p>&#22914;&#26524;&#19994;&#21153;&#19978;&#30830;&#23454;&#38656;&#35201;&#25429;&#33719;&#24182;&#36716;&#25442;&#24322;&#24120;&#65292;&#35201;&#20040;&#37325;&#26032;&#25243;&#20986;&#65292;&#35201;&#20040;&#26126;&#30830;&#25191;&#34892;&#22238;&#28378;&#24182;&#32467;&#26463;&#20107;&#21153;&#12290;</p><hr><h2 id="5924b3122263c8fc6f49ea2c8036d729">&#21313;&#20116;&#12289;&#26368;&#32456;&#24635;&#32467;</h2><p>MySQL &#34892;&#38145;&#20914;&#31361;&#30340;&#23454;&#38469;&#36807;&#31243;&#65292;&#21487;&#20197;&#27987;&#32553;&#25104;&#65306;</p><pre><code class="language-text">&#35831;&#27714;&#38145;
+  &#9474;
+  &#9660;
+&#26159;&#21542;&#19982;&#24050;&#26377;&#38145;&#20914;&#31361;&#65311;
+  &#9474;
+  &#9500;&#9472;&#9472; &#21542; &rarr; &#31435;&#21363;&#33719;&#24471;&#38145;
+  &#9474;
+  &#9492;&#9472;&#9472; &#26159;
+       &#9474;
+       &#9660;
+     &#36827;&#20837;&#31561;&#24453;
+       &#9474;
+       &#9500;&#9472;&#9472; &#23545;&#26041;&#37322;&#25918;&#38145;
+       &#9474;      &darr;
+       &#9474;    &#33719;&#24471;&#38145;&#65292;&#32487;&#32493;&#25191;&#34892;
+       &#9474;
+       &#9492;&#9472;&#9472; &#36229;&#36807; innodb_lock_wait_timeout
+              &darr;
+            ERROR 1205
+              &#9474;
+              &#9500;&#9472;&#9472; &#40664;&#35748; OFF
+              &#9474;     &rarr; &#24403;&#21069;&#35821;&#21477;&#22238;&#28378;
+              &#9474;     &rarr; &#25972;&#20010;&#20107;&#21153;&#20173;&#23384;&#22312;
+              &#9474;
+              &#9492;&#9472;&#9472; ON
+                    &rarr; &#25972;&#20010;&#20107;&#21153;&#22238;&#28378;</code></pre><p>&#32780;&#27515;&#38145;&#26159;&#21478;&#19968;&#26465;&#36335;&#24452;&#65306;</p><pre><code class="language-text">&#20107;&#21153; A &#9472;&#9472;&#31561;&#24453;&#9472;&#9472;&gt; &#20107;&#21153; B
+  &uarr;               &#9474;
+  &#9492;&#9472;&#9472;&#9472;&#9472;&#31561;&#24453;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+
+        &darr;
+
+   InnoDB &#26816;&#27979;&#21040;&#27515;&#38145;
+
+        &darr;
+
+   &#22238;&#28378;&#20854;&#20013;&#19968;&#20010;&#20107;&#21153;
+
+        &darr;
+
+      ERROR 1213</code></pre><p>&#26368;&#21518;&#20877;&#30475; Laravel&#65306;</p><pre><code class="language-text">DB::transaction()
+      &#9474;
+      &#9500;&#9472;&#9472; &#27491;&#24120;&#32467;&#26463; &rarr; COMMIT
+      &#9474;
+      &#9492;&#9472;&#9472; &#24322;&#24120;&#25243;&#20986; &rarr; ROLLBACK</code></pre><p>&#25152;&#20197;&#30495;&#27491;&#20540;&#24471;&#35760;&#20303;&#30340;&#19981;&#26159;&#26576;&#19968;&#20010;&#21442;&#25968;&#65292;&#32780;&#26159;&#19977;&#20010;&#23618;&#27425;&#65306;</p><pre><code class="language-text">MySQL &#23618;&#65306;
+1205 &#40664;&#35748;&#21482;&#22238;&#28378;&#24403;&#21069;&#35821;&#21477;
+
+Laravel &#20107;&#21153;&#23618;&#65306;
+&#24322;&#24120;&#20174; transaction &#38381;&#21253;&#25243;&#20986; &rarr; &#25972;&#20010;&#20107;&#21153; rollback
+
+&#19994;&#21153;&#20195;&#30721;&#23618;&#65306;
+&#22914;&#26524;&#20320;&#25226;&#24322;&#24120;&#21534;&#25481;&#65292;&#26694;&#26550;&#23601;&#21487;&#33021;&#35748;&#20026;&#20107;&#21153;&#25104;&#21151;</code></pre><p><strong class="mk-g">MySQL &#30340;&#38145;&#31561;&#24453;&#24182;&#19981;&#21487;&#24597;&#65292;&#21487;&#24597;&#30340;&#26159;&#24212;&#29992;&#31243;&#24207;&#27809;&#26377;&#27491;&#30830;&#29702;&#35299;&ldquo;&#35821;&#21477;&#22833;&#36133;&rdquo;&#21644;&ldquo;&#20107;&#21153;&#22833;&#36133;&rdquo;&#19981;&#26159;&#21516;&#19968;&#20214;&#20107;&#12290;</strong></p><p>&#23545;&#20110; Laravel &#39033;&#30446;&#65292;&#25105;&#20010;&#20154;&#26356;&#25512;&#33616;&#65306;</p><pre><code class="language-text">&#30701;&#20107;&#21153;
++
+&#32479;&#19968;&#21152;&#38145;&#39034;&#24207;
++
+DB::transaction()
++
+&#24322;&#24120;&#19981;&#21534;
++
+1205/1213 &#26126;&#30830;&#21306;&#20998;
++
+&#25972;&#20010;&#20107;&#21153;&#37325;&#35797;</code></pre><p>&#36825;&#26679;&#25165;&#33021;&#30495;&#27491;&#25226;&#25968;&#25454;&#24211;&#30340;&#24182;&#21457;&#25511;&#21046;&#21644;&#19994;&#21153;&#20107;&#21153;&#35821;&#20041;&#23545;&#40784;&#12290;</p>
+
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="wevwmj39l2.html#blog992" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">MySQL 死锁根治术：用预锁定打破环形等待</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="3xyq4qjvmq.html#blog709" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">SQL 注入漏洞</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

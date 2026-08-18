@@ -70,7 +70,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="Hjfg99i8x7MESYRg8Pak5sjkeUjO2JRrqwOHLS6N">
+    <meta name="csrf-token" content="qNtfF7H8NRAhETBwl0MKozNYCyynxH8dl303h3H3">
 
     
 </head>
@@ -329,7 +329,7 @@
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
-                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                                   href="../Linux%20服务器配置/overview.html">Linux 服务器配置</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
@@ -369,7 +369,7 @@
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
-                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                                   href="../Vue%20教程/overview.html">Vue 教程</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
@@ -465,7 +465,7 @@
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
-                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                                   href="../胡说老王%20-%20逐利/overview.html">胡说老王 - 逐利</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
@@ -542,6 +542,8 @@
 <li id="blog879"><a href="kl9no1dvz4.html#blog879">数据库表名应该使用单数名词</a>
 <li id="blog884"><a href="569x531yep.html#blog884">Laravel 数据库 upsert 方法的使用</a>
 <li id="blog983"><a href="qk942wxvw1.html#blog983">MySQL 的间隙锁（Gap Lock）介绍</a>
+<li id="blog992"><a href="wevwmj39l2.html#blog992">MySQL 死锁根治术：用预锁定打破环形等待</a>
+<li id="blog993"><a href="ndvm3pe93j.html#blog993">MySQL 锁等待超时之后，到底回滚了什么？</a>
 </ul>
 </li>
 <li>
@@ -632,6 +634,7 @@ var _hmt = _hmt || [];
 <ul>
 <li><a href="z64y912e5l.html#7e24b4890ad73ae4e099f77b81d03313">排他锁不同事务之间的读取</a></li>
 <li><a href="z64y912e5l.html#8373de58d92553b9fd26e8ac5784ca68">排他锁事务之间的修改</a></li>
+<li><a href="z64y912e5l.html#1d7983bfb6093a1f57849266fa03c870">事务中更新语句自动加排他锁</a></li>
 <li><a href="z64y912e5l.html#5a8ee6cba6cd82401a508f4c59634a22">普通索引 vs 唯一索引下排他锁的区别</a></li>
 <li><a href="z64y912e5l.html#25f9c7fa3b50aebe5125112ac1187777">总结</a></li>
 </ul></li>
@@ -652,7 +655,7 @@ select * from test where id = 1 for update;</code></pre><blockquote>
 <p>&#27880;&#24847;&#65306;&#21152;&#38145;&#26102;&#24403;&#26597;&#35810;&#30340;&#25968;&#25454;&#19981;&#23384;&#22312;&#26102;&#65292;&#21152;&#38145;&#26080;&#25928;</p>
 </blockquote><p>session2:</p><pre><code class="language-sql">start transaction;
 select * from test where id = 1 for update;</code></pre><p>&#24403;session1&#25191;&#34892;&#23436;&#25104;&#21518;&#65292;&#20877;&#27425;&#25191;&#34892;session2&#65292;&#27492;&#26102;session2&#20063;&#20250;&#21345;&#20303;&#65292;&#26080;&#27861;&#31435;&#21051;&#33719;&#21462;&#26597;&#35810;&#30340;&#25968;&#25454;&#12290;&#30452;&#21040;&#20986;&#29616;&#36229;&#26102;</p><pre><code class="   language-php">Lock wait timeout exceeded; try restarting transaction</code></pre><p>&#25110;session1 commit&#25165;&#20250;&#25191;&#34892;</p><p>&#37027;&#20040;&#20877;&#20351;&#29992;session3 &#21152;&#20837;&#20849;&#20139;&#38145;&#23581;&#35797;</p><pre><code class="language-sql">select * from test where id = 1 lock in share mode;</code></pre><p>&#32467;&#26524;&#20063;&#26159;&#22914;&#27492;&#65292;&#21644;session2&#19968;&#26679;&#65292;&#36229;&#26102;&#25110;&#31561;&#24453;session1 commit</p><pre><code class="   language-php">Lock wait timeout exceeded; try restarting transaction</code></pre><h3 id="8373de58d92553b9fd26e8ac5784ca68">&#25490;&#20182;&#38145;&#20107;&#21153;&#20043;&#38388;&#30340;&#20462;&#25913;</h3><p>&#24403;&#22312;session1&#20013;&#25191;&#34892;update&#35821;&#21477;&#65306;</p><pre><code class="language-sql">update test set name = 123 where id = 1;</code></pre><p>&#21487;&#20197;&#27491;&#24120;&#33719;&#21462;&#32467;&#26524;</p><pre><code class="   language-php">Query OK, 1 row affected (0.00 sec)
-Rows matched: 1  Changed: 1  Warnings: 0</code></pre><p>&#27492;&#26102;&#22312;session2&#20013;&#25191;&#34892;&#20462;&#25913;</p><pre><code class="language-sql">update test set name = 's2' where id = 1;</code></pre><p>&#21017;&#20250;&#21345;&#20303;&#30452;&#25509;&#36229;&#26102;&#25110;session1 commit,&#25165;&#20250;&#27491;&#24120;&#21520;&#20986;&#32467;&#26524;</p><p>session3&#20063;&#24456;&#26126;&#26174;&#21644;session2&#19968;&#26679;&#30340;&#32467;&#26524;&#65292;&#36825;&#37324;&#23601;&#19981;&#22810;&#36184;&#36848;</p><h3 id="5a8ee6cba6cd82401a508f4c59634a22">&#26222;&#36890;&#32034;&#24341; vs &#21807;&#19968;&#32034;&#24341;&#19979;&#25490;&#20182;&#38145;&#30340;&#21306;&#21035;</h3><table>
+Rows matched: 1  Changed: 1  Warnings: 0</code></pre><p>&#27492;&#26102;&#22312;session2&#20013;&#25191;&#34892;&#20462;&#25913;</p><pre><code class="language-sql">update test set name = 's2' where id = 1;</code></pre><p>&#21017;&#20250;&#21345;&#20303;&#30452;&#25509;&#36229;&#26102;&#25110;session1 commit,&#25165;&#20250;&#27491;&#24120;&#21520;&#20986;&#32467;&#26524;</p><p>session3&#20063;&#24456;&#26126;&#26174;&#21644;session2&#19968;&#26679;&#30340;&#32467;&#26524;&#65292;&#36825;&#37324;&#23601;&#19981;&#22810;&#36184;&#36848;</p><h3 id="1d7983bfb6093a1f57849266fa03c870">&#20107;&#21153;&#20013;&#26356;&#26032;&#35821;&#21477;&#33258;&#21160;&#21152;&#25490;&#20182;&#38145;</h3><p>&#20107;&#21153;&#20013;&#30340; UPDATE / DELETE / INSERT &#35821;&#21477;&#20250;&#33258;&#21160;&#21152;&#25490;&#20182;&#38145;&#65288;X&#38145;&#65289;&#65292;&#30452;&#21040;&#24403;&#21069;&#20107;&#21153; COMMIT &#25110; ROLLBACK &#25165;&#37322;&#25918;&#12290;&#36825;&#26159; InnoDB &#23384;&#20648;&#24341;&#25806;&#30340;&#40664;&#35748;&#34892;&#20026;&#65292;&#19981;&#38656;&#35201;&#20063;&#19981;&#25903;&#25345;&#25163;&#21160;&#25351;&#23450;&#12290;</p><h3 id="5a8ee6cba6cd82401a508f4c59634a22">&#26222;&#36890;&#32034;&#24341; vs &#21807;&#19968;&#32034;&#24341;&#19979;&#25490;&#20182;&#38145;&#30340;&#21306;&#21035;</h3><table>
 <thead>
 <tr>
 <th></th>
