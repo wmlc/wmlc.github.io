@@ -1,0 +1,1001 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Nginx $request_body 为什么是空的？一个 proxy_pass 揪出真相 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Nginx <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>Nginx</h2>
+<ul>
+<li id="blog28"><a href="jenyd5o97d.html#blog28">Nginx 如何防止域名权重被分散?</a>
+<li id="blog62"><a href="lgwyllny3q.html#blog62">Nginx 拦截打点与输出配置</a>
+<li id="blog64"><a href="od6vrxev3g.html#blog64">nginx 请求日志格式 log_format 配置</a>
+<li id="blog140"><a href="nq5vr9qv7p.html#blog140">Nginx server<em>name </em>;  的理解</a>
+<li id="blog286"><a href="lgwylwkv3q.html#blog286">nginx如何防止域名权重被分散?</a>
+<li id="blog294"><a href="71xyj10yd9.html#blog294">Nginx 配置子目录项目</a>
+<li id="blog303"><a href="mx5e615v0r.html#blog303">启用nginx status状态页详解</a>
+<li id="blog305"><a href="n2oeglwy73.html#blog305">Nginx 配置文件说明</a>
+<li id="blog306"><a href="7ndvd0weo2.html#blog306">Nginx 禁止ip直接访问或任意域名访问</a>
+<li id="blog309"><a href="n3xyq1lvmq.html#blog309">Nginx 日志分析常用命令</a>
+<li id="blog310"><a href="54lvo8oe6z.html#blog310">正向代理与反向代理的理解</a>
+<li id="blog328"><a href="rpnv3pwywm.html#blog328">Nginx 工作原理、进程模型</a>
+<li id="blog995"><a href="2ev86dgyor.html#blog995">Nginx $request_body 为什么是空的？一个 proxy_pass 揪出真相</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog53"><a href="15dve4k94x.html#blog53">nginx 配置 auth_basic 登录认证的方法</a>
+<li id="blog63"><a href="ekpv1mkv8w.html#blog63">Nginx 安全相关配置</a>
+<li id="blog70"><a href="j3oyjm8yp5.html#blog70">Nginx 防盗链配置</a>
+<li id="blog131"><a href="wkl9n0wvz4.html#blog131">nginx 杜绝 HTTP 伪请求头攻击</a>
+<li id="blog293"><a href="1ndvm1nv3j.html#blog293">nginx+php使用open_basedir限制站点目录防止跨站</a>
+<li id="blog304"><a href="jenyd0nv7d.html#blog304">Nginx 查看高频访问 IP，并封禁 IP 详解</a>
+</ul>
+</li>
+<li>
+<h2>负载均衡</h2>
+<ul>
+<li id="blog174"><a href="62wy35xvkm.html#blog174">Nginx 负载均衡配置</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/2ev86dgyor.html', function (data, status) {
+            addView('2ev86dgyor.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Nginx $request_body 为什么是空的？一个 proxy_pass 揪出真相</h1><ul>
+<li><a href="2ev86dgyor.html#30b2197999e9acc6819681fc73f705eb">一、问题不在 Buffer</a></li>
+<li><a href="2ev86dgyor.html#6b3c039a172291763ec4be34273d6c0a">二、client_body_in_file_only 也救不了</a></li>
+<li><a href="2ev86dgyor.html#ff276472991b272687be59a0c75eca79">三、为什么 proxy_pass 可以？</a></li>
+<li><a href="2ev86dgyor.html#e304c680eea59ddf9e8d1c025d9a28bd">四、一个极简后端</a></li>
+<li><a href="2ev86dgyor.html#694bf28b691de1c6ece93cd86a81b453">五、几个容易记错的地方</a>
+<ul>
+<li><a href="2ev86dgyor.html#aeefb5b97ccaef32bad098ca7e479a27">1. client_body_buffer_size 不负责读取</a></li>
+<li><a href="2ev86dgyor.html#b20c3a62a721083d58b41a45e2f197ca">2. client_body_in_single_buffer 不是“防截断”</a></li>
+<li><a href="2ev86dgyor.html#58801f85bad3c38668405cf74c7fcf0c">3. client_max_body_size 和 buffer 不是一回事</a></li>
+</ul></li>
+<li><a href="2ev86dgyor.html#58845ee7ff705553b5ed000467b149ce">六、最终配置</a></li>
+<li><a href="2ev86dgyor.html#25f9c7fa3b50aebe5125112ac1187777">总结</a></li>
+</ul><?xml encoding="UTF-8"><p>&#26368;&#36817;&#25509; Webhook &#22238;&#35843;&#65292;&#38656;&#35201;&#35753; Nginx &#25226; Post &#35831;&#27714;&#20307;&#35760;&#24405;&#21040;&#26085;&#24535;&#37324;&#12290;</p><p>&#37197;&#32622;&#24456;&#31616;&#21333;&#65306;</p><pre><code class="language-nginx">log_format hook_log
+    '$remote_addr [$time_local] "$request" $status body="$request_body"';
+
+location /webhook {
+    access_log /var/log/nginx/hook.log hook_log;
+    return 200 "OK\n";
+}</code></pre><p>&#23458;&#25143;&#31471;&#21457;&#36865;&#65306;</p><pre><code class="language-bash">curl -X POST https://hook.example.com/webhook \
+     -H "Content-Type: application/json" \
+     -d '{"event":"push","repo":"my-app"}'</code></pre><p>&#32467;&#26524;&#26085;&#24535;&#21364;&#26159;&#65306;</p><pre><code class="language-text">10.0.1.5 [21/Aug/2026:14:30:00 +0800] "POST /webhook HTTP/1.1" 200 body=""</code></pre><p>&#26126;&#26126; POST &#20102; JSON&#65292;&#20026;&#20160;&#20040; <code>$request_body</code> &#26159;&#31354;&#30340;&#65311;</p><hr><h2 id="30b2197999e9acc6819681fc73f705eb">&#19968;&#12289;&#38382;&#39064;&#19981;&#22312; Buffer</h2><p>&#19968;&#24320;&#22987;&#23581;&#35797;&#20102;&#65306;</p><pre><code class="language-nginx">client_max_body_size 10m;
+client_body_buffer_size 10m;
+client_body_in_single_buffer on;
+client_body_in_file_only clean;</code></pre><p>&#20294;&#36824;&#26159;&#31354;&#12290;</p><p>&#21407;&#22240;&#26159;&#65306;</p><blockquote>
+<p><strong class="mk-b">&#36825;&#20123;&#37197;&#32622;&#35299;&#20915;&#30340;&#26159; request body &#24590;&#20040;&#23384;&#65292;&#19981;&#36127;&#36131;&#20027;&#21160;&#35302;&#21457; request body &#30340;&#35835;&#21462;&#12290;</strong></p>
+</blockquote><p><code>$request_body</code> &#21482;&#26377;&#22312; Nginx &#30340;&#35831;&#27714;&#22788;&#29702;&#27969;&#31243;&#23454;&#38469;&#35835;&#21462;&#20102; body&#65292;&#24182;&#19988; body &#20301;&#20110;&#20869;&#23384; buffer &#20013;&#26102;&#65292;&#25165;&#33021;&#25343;&#21040;&#20869;&#23481;&#12290;</p><p>&#32780;&#36825;&#37324;&#65306;</p><pre><code class="language-nginx">return 200 "OK\n";</code></pre><p>&#35831;&#27714;&#24456;&#26089;&#23601;&#34987; <code>return</code> &#22788;&#29702;&#25481;&#20102;&#65292;&#24182;&#27809;&#26377;&#36827;&#20837;&#38656;&#35201;&#35835;&#21462; request body &#30340;&#22788;&#29702;&#27969;&#31243;&#12290;</p><p>&#25152;&#20197;&#65306;</p><pre><code class="language-text">POST JSON
+   &darr;
+Nginx
+   &darr;
+return 200
+   &darr;
+&#27809;&#26377;&#35835;&#21462; body
+   &darr;
+$request_body = ""</code></pre><hr><h2 id="6b3c039a172291763ec4be34273d6c0a">&#20108;&#12289;<code>client_body_in_file_only</code> &#20063;&#25937;&#19981;&#20102;</h2><p>&#36825;&#20010;&#25351;&#20196;&#65306;</p><pre><code class="language-nginx">client_body_in_file_only on;</code></pre><p>&#21482;&#26159;&#35753; Nginx &#25226; request body &#20445;&#23384;&#21040;&#20020;&#26102;&#25991;&#20214;&#12290;</p><p>&#23427;&#24182;&#19981;&#20250;&#35302;&#21457; body &#35835;&#21462;&#12290;</p><p>&#32780; <code>$request_body</code> &#26412;&#36523;&#20381;&#36182;&#20869;&#23384;&#20013;&#30340; request body&#65307;&#22914;&#26524; body &#34987;&#25918;&#21040;&#20102;&#20020;&#26102;&#25991;&#20214;&#65292;&#24212;&#35813;&#20851;&#27880;&#65306;</p><pre><code class="language-nginx">$request_body_file</code></pre><p>&#25152;&#20197;&#19981;&#35201;&#25226;&#65306;</p><pre><code class="language-nginx">client_body_in_file_only</code></pre><p>&#24403;&#25104;&ldquo;&#24378;&#21046;&#35835;&#21462; body&rdquo;&#30340;&#24320;&#20851;&#12290;</p><hr><h2 id="ff276472991b272687be59a0c75eca79">&#19977;&#12289;&#20026;&#20160;&#20040; <code>proxy_pass</code> &#21487;&#20197;&#65311;</h2><p>&#26368;&#31616;&#21333;&#30340;&#35299;&#20915;&#26041;&#26696;&#65306;</p><pre><code class="language-nginx">location /webhook {
+    proxy_pass http://127.0.0.1:9999;
+
+    proxy_request_buffering on;
+
+    client_max_body_size 10m;
+    client_body_buffer_size 10m;
+    client_body_in_single_buffer on;
+
+    access_log /var/log/nginx/hook.log hook_log;
+}</code></pre><p>&#20851;&#38190;&#22312;&#20110;&#65306;</p><pre><code class="language-nginx">proxy_pass</code></pre><p>&#35753;&#35831;&#27714;&#36827;&#20837;&#20102; proxy &#27169;&#22359;&#30340;&#22788;&#29702;&#27969;&#31243;&#12290;</p><p>&#40664;&#35748;&#65306;</p><pre><code class="language-nginx">proxy_request_buffering on;</code></pre><p>Nginx &#20250;&#20808;&#35835;&#21462;&#23458;&#25143;&#31471;&#30340; request body&#65292;&#20877;&#21457;&#36865;&#32473; upstream&#12290;</p><p>&#20110;&#26159;&#27969;&#31243;&#21464;&#25104;&#65306;</p><pre><code class="language-text">&#23458;&#25143;&#31471; POST
+    &darr;
+Nginx
+    &darr;
+proxy_pass
+    &darr;
+&#35835;&#21462; request body
+    &darr;
+&#20869;&#23384; buffer
+    &darr;
+&#36716;&#21457;&#32473;&#21518;&#31471;
+    &darr;
+LOG &#38454;&#27573;
+    &darr;
+$request_body &#26377;&#20540;</code></pre><hr><h2 id="e304c680eea59ddf9e8d1c025d9a28bd">&#22235;&#12289;&#19968;&#20010;&#26497;&#31616;&#21518;&#31471;</h2><p>&#27604;&#22914;&#29992; Go&#65306;</p><pre><code class="language-go">package main
+
+import (
+    "io"
+    "net/http"
+)
+
+func main() {
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        io.Copy(io.Discard, r.Body)
+        r.Body.Close()
+
+        w.WriteHeader(http.StatusOK)
+        w.Write([]byte("OK"))
+    })
+
+    http.ListenAndServe("127.0.0.1:9999", nil)
+}</code></pre><p>&#21551;&#21160;&#65306;</p><pre><code class="language-bash">go build -o hook-server main.go
+./hook-server</code></pre><p>&#28982;&#21518;&#65306;</p><pre><code class="language-bash">curl -X POST https://hook.example.com/webhook \
+     -H "Content-Type: application/json" \
+     -d '{"event":"push","repo":"my-app"}'</code></pre><p>&#26085;&#24535;&#23601;&#21487;&#20197;&#25343;&#21040;&#65306;</p><pre><code class="language-text">body="{"event":"push","repo":"my-app"}"</code></pre><p>&#29983;&#20135;&#29615;&#22659;&#24314;&#35758;&#20351;&#29992;&#65306;</p><pre><code class="language-nginx">log_format hook_log escape=json
+    '{"remote_addr":"$remote_addr",'
+    '"time":"$time_iso8601",'
+    '"request":"$request",'
+    '"status":$status,'
+    '"body":"$request_body"}';</code></pre><p>&#36991;&#20813; request body &#20013;&#30340;&#24341;&#21495;&#12289;&#25442;&#34892;&#31561;&#29305;&#27530;&#23383;&#31526;&#30772;&#22351;&#26085;&#24535;&#26684;&#24335;&#12290;</p><hr><h2 id="694bf28b691de1c6ece93cd86a81b453">&#20116;&#12289;&#20960;&#20010;&#23481;&#26131;&#35760;&#38169;&#30340;&#22320;&#26041;</h2><h3 id="aeefb5b97ccaef32bad098ca7e479a27">1. <code>client_body_buffer_size</code> &#19981;&#36127;&#36131;&#35835;&#21462;</h3><p>&#23427;&#21482;&#26159;&#65306;</p><pre><code class="language-text">&#35835;&#21462; body &#26102;&#20351;&#29992;&#22810;&#22823;&#30340; buffer</code></pre><p>&#19981;&#26159;&#65306;</p><pre><code class="language-text">&#24320;&#21551; body &#35835;&#21462;</code></pre><h3 id="b20c3a62a721083d58b41a45e2f197ca">2. <code>client_body_in_single_buffer</code> &#19981;&#26159;&ldquo;&#38450;&#25130;&#26029;&rdquo;</h3><p>&#23427;&#20027;&#35201;&#26159;&#35753;&#25972;&#20010; body &#23613;&#37327;&#20301;&#20110;&#19968;&#20010; buffer &#20013;&#65292;&#20351;&#29992; <code>$request_body</code> &#26102;&#21487;&#20197;&#20943;&#23569; copy&#12290;</p><h3 id="58801f85bad3c38668405cf74c7fcf0c">3. <code>client_max_body_size</code> &#21644; buffer &#19981;&#26159;&#19968;&#22238;&#20107;</h3><pre><code class="language-nginx">client_max_body_size 10m;</code></pre><p>&#34920;&#31034;&#65306;</p><blockquote>
+<p>&#26368;&#22810;&#20801;&#35768;&#23458;&#25143;&#31471;&#21457;&#36865; 10 MB&#12290;</p>
+</blockquote><p>&#32780;&#65306;</p><pre><code class="language-nginx">client_body_buffer_size 10m;</code></pre><p>&#34920;&#31034;&#65306;</p><blockquote>
+<p>&#35835;&#21462; body &#26102;&#20351;&#29992; 10 MB &#30340; buffer&#12290;</p>
+</blockquote><p>body &#36229;&#36807; buffer &#21518;&#65292;Nginx &#21487;&#33021;&#20351;&#29992;&#20020;&#26102;&#25991;&#20214;&#65292;&#24182;&#19981;&#31561;&#20110;&#30452;&#25509;&#25130;&#26029;&#12290;</p><hr><h2 id="58845ee7ff705553b5ed000467b149ce">&#20845;&#12289;&#26368;&#32456;&#37197;&#32622;</h2><p>&#23545;&#20110;&#19968;&#20010;&#31616;&#21333;&#30340; Webhook &#26381;&#21153;&#65292;&#21487;&#20197;&#30452;&#25509;&#36825;&#26679;&#65306;</p><pre><code class="language-nginx">http {
+    log_format hook_log escape=json
+        '{"remote_addr":"$remote_addr",'
+        '"time":"$time_iso8601",'
+        '"request":"$request",'
+        '"status":$status,'
+        '"content_type":"$content_type",'
+        '"content_length":"$content_length",'
+        '"body":"$request_body"}';
+
+    upstream hook_backend {
+        server 127.0.0.1:9999;
+    }
+
+    server {
+        listen 443 ssl;
+        server_name hook.example.com;
+
+        location /webhook {
+            proxy_pass http://hook_backend;
+            proxy_request_buffering on;
+
+            client_max_body_size 10m;
+            client_body_buffer_size 10m;
+            client_body_in_single_buffer on;
+
+            access_log /var/log/nginx/hook.log hook_log;
+        }
+    }
+}</code></pre><hr><h2 id="25f9c7fa3b50aebe5125112ac1187777">&#24635;&#32467;</h2><p>&#36825;&#27425;&#36393;&#22353;&#26368;&#20540;&#24471;&#35760;&#20303;&#30340;&#19981;&#26159;&#65306;</p><blockquote>
+<p>&ldquo;Nginx &#19981;&#36716;&#21457;&#23601;&#19981;&#35835; body&#12290;&rdquo;</p>
+</blockquote><p>&#36825;&#21477;&#35805;&#22826;&#32477;&#23545;&#12290;</p><p>&#26356;&#20934;&#30830;&#30340;&#26159;&#65306;</p><blockquote>
+<p><strong class="mk-g">Nginx &#19981;&#20250;&#22240;&#20026; <code>access_log</code> &#20351;&#29992;&#20102; <code>$request_body</code>&#65292;&#23601;&#33258;&#21160;&#35835;&#21462; request body&#12290;&#24517;&#39035;&#26377;&#35831;&#27714;&#22788;&#29702;&#27969;&#31243;&#23454;&#38469;&#35835;&#21462; body&#65307;&#32780; <code>$request_body</code> &#38656;&#35201; body &#20301;&#20110;&#20869;&#23384; buffer &#20013;&#25165;&#33021;&#20351;&#29992;&#12290;</strong></p>
+</blockquote><p>&#23545;&#20110; Webhook &#36825;&#31181;&#22330;&#26223;&#65306;</p><pre><code class="language-text">return 200
+    &darr;
+&#19981;&#20250;&#20027;&#21160;&#35835;&#21462; body</code></pre><p>&#32780;&#65306;</p><pre><code class="language-text">proxy_pass
+    &darr;
+&#35835;&#21462; body
+    &darr;
+&#36716;&#21457;&#32473;&#36731;&#37327;&#21518;&#31471;
+    &darr;
+$request_body</code></pre><p>&#25152;&#20197;&#65292;&#22914;&#26524;&#20320;&#38656;&#35201;&#22312; Nginx &#26085;&#24535;&#20013;&#35760;&#24405; Webhook Body&#65292;&#19968;&#20010;&#31616;&#21333;&#21487;&#38752;&#30340;&#26041;&#26696;&#23601;&#26159;&#65306;</p><pre><code class="language-nginx">proxy_pass + proxy_request_buffering on</code></pre><p>&#20165;&#27492;&#32780;&#24050;&#12290;</p>
+
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="rpnv3pwywm.html#blog328" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Nginx 工作原理、进程模型</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="15dve4k94x.html#blog53" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">nginx 配置 auth_basic 登录认证的方法</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>
