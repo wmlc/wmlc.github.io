@@ -1,0 +1,1635 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Laravel Scout | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/2wy3l13ykm.html', function (data, status) {
+            addView('2wy3l13ykm.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Laravel Scout</h1><ul>
+<li><a href="2wy3l13ykm.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="2wy3l13ykm.html#e655a410ff21cd07e7a0150491e04371">安装</a>
+<ul>
+<li><a href="2wy3l13ykm.html#0796f7f8b93ad1204d4769c52aff5284">队列</a>
+<ul>
+<li><a href="2wy3l13ykm.html#bd32ec6c012675c519f65715bb35d00e">唯一任务</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#adedcf38d9a936ccab5013ed6369db97">驱动先决条件</a>
+<ul>
+<li><a href="2wy3l13ykm.html#72ceec27e9e0722c8d38fc944bc2ebc8">Algolia</a></li>
+<li><a href="2wy3l13ykm.html#bae02e3b6f5ed318df8eded935a5c72c">Meilisearch</a></li>
+<li><a href="2wy3l13ykm.html#d5dc85a5c533314071967fd69c5e9e10">Typesense</a></li>
+<li><a href="2wy3l13ykm.html#af871bc3939bbc3bebcb13b4351d0bda">Turbopuffer</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#224e2ccda861c2514faa683b3683c361">配置</a>
+<ul>
+<li><a href="2wy3l13ykm.html#262bce353801f8208113414c99da4e3e">配置可搜索数据</a>
+<ul>
+<li><a href="2wy3l13ykm.html#00fbcb20e1c0b96c44313f38486167ce">为每个模型配置搜索引擎</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#1b4e53a4516b8de3154def1af34eea03">数据库 / 集合引擎</a>
+<ul>
+<li><a href="2wy3l13ykm.html#43b716d80b391c249c8e8ed785260bdd">数据库引擎</a>
+<ul>
+<li><a href="2wy3l13ykm.html#f6cd358217245b2ab1eeab70ceb2bc12">语义搜索与混合搜索</a></li>
+<li><a href="2wy3l13ykm.html#d78b0db4e165bc2569550c12402f3eb7">自定义数据库搜索策略</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#86f0c756b8dbffca2a80d5448abc9975">集合引擎</a>
+<ul>
+<li><a href="2wy3l13ykm.html#7fd0916bf0eea52475392ef67d129ac4">与数据库引擎的区别</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#f2c7db81cb0b5dfd7feac3c6eb09852f">第三方引擎配置</a>
+<ul>
+<li><a href="2wy3l13ykm.html#bc743ebe0dc3301d8da53122dd8e83e7">配置模型索引</a>
+<ul>
+<li><a href="2wy3l13ykm.html#8c24646e120ae62f34ffe550a7926684">配置模型 ID</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#72ceec27e9e0722c8d38fc944bc2ebc8">Algolia</a>
+<ul>
+<li><a href="2wy3l13ykm.html#19286b631b5009fd0fb4bc3a2c6ddeef">索引设置</a></li>
+<li><a href="2wy3l13ykm.html#147b4d87daa0ab6690e6b16e27b00fd4">识别用户</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#bae02e3b6f5ed318df8eded935a5c72c">Meilisearch</a>
+<ul>
+<li><a href="2wy3l13ykm.html#19286b631b5009fd0fb4bc3a2c6ddeef">索引设置</a></li>
+<li><a href="2wy3l13ykm.html#f6cd358217245b2ab1eeab70ceb2bc12">语义搜索与混合搜索</a></li>
+<li><a href="2wy3l13ykm.html#7dda6d88286d25123bbed69208f5e7d0">可搜索数据类型</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#d5dc85a5c533314071967fd69c5e9e10">Typesense</a>
+<ul>
+<li><a href="2wy3l13ykm.html#731876ea3b4495bd75664b8ddbfbc3d0">准备可搜索数据</a></li>
+<li><a href="2wy3l13ykm.html#53e0b6afb8c15bbc9304495470ad5506">动态搜索参数</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#af871bc3939bbc3bebcb13b4351d0bda">Turbopuffer</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#fa3c8ee9780f4d650b9d67c9888ac707">第三方引擎索引</a>
+<ul>
+<li><a href="2wy3l13ykm.html#407f3df2c996cb376f253cb597127317">批量导入</a>
+<ul>
+<li><a href="2wy3l13ykm.html#24d8f68adcf4a2a8acaeee36aa544a85">修改导入查询</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#3d95aa21acfb97c6c7b8f278243f8196">添加记录</a>
+<ul>
+<li><a href="2wy3l13ykm.html#b5029baefd525d2cbc208dd0b81355c3">通过查询添加记录</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#c054fb6e7a4b8511a2cc90a55d70eae9">更新记录</a>
+<ul>
+<li><a href="2wy3l13ykm.html#1da4ea72b09cfdf66f5e8b39b7d17714">在导入前修改记录</a></li>
+<li><a href="2wy3l13ykm.html#7628cf3b431d9bf9f366874f09632756">有条件地更新搜索索引</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#a790208cafd5c95a18dd9a168319ecf8">删除记录</a></li>
+<li><a href="2wy3l13ykm.html#bed74ee9d7d15c93fd4bf48defdd69af">暂停索引</a></li>
+<li><a href="2wy3l13ykm.html#f78065aa2bd4b0f08d99277f93d3fa80">有条件地可搜索的模型实例</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#e5f71fc31e7246dd6ccc5539570471b0">搜索</a>
+<ul>
+<li><a href="2wy3l13ykm.html#16d27cb31d5d8977d2cefdb4a6422413">语义搜索</a>
+<ul>
+<li><a href="2wy3l13ykm.html#aee62cf46784161de91be8bffe9ef93f">自定义索引</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#f21faee8511c01b691ffe808aab11806">Where 子句</a>
+<ul>
+<li><a href="2wy3l13ykm.html#b1e03b3fda5d4d8fb2d1edd030177020">自定义 Eloquent 结果查询</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#3862626c138ce5945e0e273a1bdfbad0">分页</a></li>
+<li><a href="2wy3l13ykm.html#ad44487282d6916e824d28f38cca400b">软删除</a></li>
+<li><a href="2wy3l13ykm.html#fa4826e336531fbde862c68ac5f157f6">自定义引擎搜索</a></li>
+</ul></li>
+<li><a href="2wy3l13ykm.html#c2a816a71d8f47c092290cce311c6698">自定义引擎</a>
+<ul>
+<li><a href="2wy3l13ykm.html#90ea8614872a188b3a6f2794cd0aeaa1">编写引擎</a></li>
+<li><a href="2wy3l13ykm.html#8809ad07dd513626ae559dd1546dc103">注册引擎</a></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p><a href="https://github.com/laravel/scout" target="_blank" rel="noopener noreferrer">Laravel Scout</a> &#25552;&#20379;&#20102;&#19968;&#20010;&#31616;&#21333;&#30340;&#12289;&#22522;&#20110;&#39537;&#21160;&#30340;&#35299;&#20915;&#26041;&#26696;&#65292;&#29992;&#20110;&#21521; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent" target="_blank">Eloquent &#27169;&#22411;</a> &#28155;&#21152;&#20840;&#25991;&#25628;&#32034;&#12290;&#20351;&#29992;&#27169;&#22411;&#35266;&#23519;&#32773;&#65292;Scout &#20250;&#33258;&#21160;&#20445;&#25345;&#25628;&#32034;&#32034;&#24341;&#19982; Eloquent &#35760;&#24405;&#21516;&#27493;&#12290;</p><p>Scout &#20869;&#32622;&#19968;&#20010; <code>database</code> &#24341;&#25806;&#65292;&#20351;&#29992; MySQL / PostgreSQL &#20840;&#25991;&#32034;&#24341;&#21644; <code>LIKE</code> &#23376;&#21477;&#25628;&#32034;&#29616;&#26377;&#25968;&#25454;&#24211;&#65292;&#19981;&#38656;&#35201;&#22806;&#37096;&#26381;&#21153;&#12290;&#23545;&#20110;&#22823;&#22810;&#25968;&#24212;&#29992;&#65292;&#36825;&#24050;&#32463;&#36275;&#22815;&#12290;&#26377;&#20851; Laravel &#20013;&#25152;&#26377;&#21487;&#29992;&#25628;&#32034;&#36873;&#39033;&#30340;&#27010;&#36848;&#65292;&#35831;&#21442;&#38405; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/search" target="_blank">search &#25991;&#26723;</a>&#12290;</p><p>&#24403;&#20320;&#38656;&#35201;&#22823;&#35268;&#27169;&#23481;&#38169;&#12289;&#20998;&#38754;&#36807;&#28388;&#12289;&#21521;&#37327;&#25628;&#32034;&#25110;&#22320;&#29702;&#25628;&#32034;&#31561;&#21151;&#33021;&#26102;&#65292;Scout &#36824;&#21253;&#21547; <a href="https://www.algolia.com/" target="_blank" rel="noopener noreferrer">Algolia</a>&#12289;<a href="https://www.meilisearch.com" target="_blank" rel="noopener noreferrer">Meilisearch</a>&#12289;<a href="https://typesense.org" target="_blank" rel="noopener noreferrer">Typesense</a> &#21644; <a href="https://turbopuffer.com" target="_blank" rel="noopener noreferrer">Turbopuffer</a> &#30340;&#39537;&#21160;&#12290;&#36824;&#25552;&#20379;&#12300;collection&#12301;&#39537;&#21160;&#29992;&#20110;&#26412;&#22320;&#24320;&#21457;&#65292;&#20320;&#20063;&#21487;&#20197;&#33258;&#30001;&#32534;&#20889;<a href="2wy3l13ykm.html#custom-engines" target="_blank">&#33258;&#23450;&#20041;&#24341;&#25806;</a>&#12290;</p><h2 id="e655a410ff21cd07e7a0150491e04371">&#23433;&#35013;</h2><p>&#39318;&#20808;&#65292;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013; Scout&#65306;</p><pre><code class="language-shell">composer require laravel/scout</code></pre><p>&#23433;&#35013; Scout &#21518;&#65292;&#24212;&#20351;&#29992; <code>vendor:publish</code> Artisan &#21629;&#20196;&#21457;&#24067; Scout &#37197;&#32622;&#25991;&#20214;&#12290;&#35813;&#21629;&#20196;&#20250;&#23558; <code>scout.php</code> &#37197;&#32622;&#25991;&#20214;&#21457;&#24067;&#21040;&#24212;&#29992;&#30340; <code>config</code> &#30446;&#24405;&#65306;</p><pre><code class="language-shell">php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"</code></pre><p>&#26368;&#21518;&#65292;&#23558; <code>Laravel\Scout\Searchable</code> trait &#28155;&#21152;&#21040;&#24076;&#26395;&#20351;&#20854;&#21487;&#25628;&#32034;&#30340;&#27169;&#22411;&#12290;&#35813; trait &#20250;&#27880;&#20876;&#19968;&#20010;&#27169;&#22411;&#35266;&#23519;&#32773;&#65292;&#33258;&#21160;&#20351;&#27169;&#22411;&#19982;&#25628;&#32034;&#39537;&#21160;&#20445;&#25345;&#21516;&#27493;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
+
+class Post extends Model
+{
+    use Searchable;
+}</code></pre><h3 id="0796f7f8b93ad1204d4769c52aff5284">&#38431;&#21015;</h3><p>&#24403;&#20351;&#29992;&#38750; <code>database</code> &#25110; <code>collection</code> &#24341;&#25806;&#26102;&#65292;&#24212;&#24378;&#28872;&#32771;&#34385;&#22312;&#20351;&#29992;&#35813;&#24211;&#20043;&#21069;&#37197;&#32622;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues" target="_blank">&#38431;&#21015;&#39537;&#21160;</a>&#12290;&#36816;&#34892;&#38431;&#21015;&#24037;&#20316;&#36827;&#31243;&#23558;&#20801;&#35768; Scout &#23558;&#21516;&#27493;&#27169;&#22411;&#20449;&#24687;&#21040;&#25628;&#32034;&#32034;&#24341;&#30340;&#25152;&#26377;&#25805;&#20316;&#25490;&#38431;&#65292;&#20174;&#32780;&#20026;&#24212;&#29992;&#30340; Web &#30028;&#38754;&#25552;&#20379;&#26356;&#22909;&#30340;&#21709;&#24212;&#26102;&#38388;&#12290;</p><p>&#37197;&#32622;&#38431;&#21015;&#39537;&#21160;&#21518;&#65292;&#22312; <code>config/scout.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23558; <code>queue</code> &#36873;&#39033;&#30340;&#20540;&#35774;&#32622;&#20026; <code>true</code>&#65306;</p><pre><code class="language-php">'queue' =&gt; true,</code></pre><p>&#21363;&#20351; <code>queue</code> &#36873;&#39033;&#35774;&#32622;&#20026; <code>false</code>&#65292;&#20063;&#35201;&#35760;&#20303;&#19968;&#20123; Scout &#39537;&#21160;&#65288;&#22914; Algolia &#21644; Meilisearch&#65289;&#22987;&#32456;&#24322;&#27493;&#32034;&#24341;&#35760;&#24405;&#12290;&#25442;&#21477;&#35805;&#35828;&#65292;&#21363;&#20351;&#32034;&#24341;&#25805;&#20316;&#24050;&#22312; Laravel &#24212;&#29992;&#20869;&#23436;&#25104;&#65292;&#25628;&#32034;&#24341;&#25806;&#26412;&#36523;&#20063;&#21487;&#33021;&#19981;&#20250;&#31435;&#21363;&#21453;&#26144;&#26032;&#22686;&#21644;&#26356;&#26032;&#30340;&#35760;&#24405;&#12290;</p><p>&#35201;&#25351;&#23450; Scout &#20219;&#21153;&#65288;job&#65289;&#20351;&#29992;&#30340;&#36830;&#25509;&#21644;&#38431;&#21015;&#65292;&#21487;&#20197;&#23558; <code>queue</code> &#37197;&#32622;&#36873;&#39033;&#23450;&#20041;&#20026;&#25968;&#32452;&#65306;</p><pre><code class="language-php">'queue' =&gt; [
+    'connection' =&gt; 'redis',
+    'queue' =&gt; 'scout'
+],</code></pre><p>&#24403;&#28982;&#65292;&#22914;&#26524;&#33258;&#23450;&#20041; Scout &#20219;&#21153;&#20351;&#29992;&#30340;&#36830;&#25509;&#21644;&#38431;&#21015;&#65292;&#21017;&#24212;&#36816;&#34892;&#38431;&#21015;&#24037;&#20316;&#36827;&#31243;&#26469;&#22788;&#29702;&#35813;&#36830;&#25509;&#21644;&#38431;&#21015;&#19978;&#30340;&#20219;&#21153;&#65306;</p><pre><code class="language-shell">php artisan queue:work redis --queue=scout</code></pre><h4 id="bd32ec6c012675c519f65715bb35d00e">&#21807;&#19968;&#20219;&#21153;</h4><p>&#22312;&#20889;&#20837;&#23494;&#38598;&#22411;&#24212;&#29992;&#20013;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#38459;&#27490; Scout &#20026;&#21516;&#19968;&#27169;&#22411;&#35760;&#24405;&#25490;&#38431;&#37325;&#22797;&#30340;&#20219;&#21153;&#12290;&#21487;&#20197;&#36890;&#36807;&#27880;&#20876; <code>MakeSearchableUniquely</code> &#21644; <code>RemoveFromSearchUniquely</code> &#20219;&#21153;&#31867;&#65288;&#36890;&#24120;&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#65289;&#36873;&#25321;&#21551;&#29992;&#21807;&#19968;&#32034;&#24341;&#20219;&#21153;&#65306;</p><pre><code class="language-php">use Laravel\Scout\Jobs\MakeSearchableUniquely;
+use Laravel\Scout\Jobs\RemoveFromSearchUniquely;
+use Laravel\Scout\Scout;
+
+Scout::makeSearchableUsing(MakeSearchableUniquely::class);
+Scout::removeFromSearchUsing(RemoveFromSearchUniquely::class);</code></pre><p>&#36825;&#20123;&#20219;&#21153;&#20351;&#29992; Laravel &#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues#unique-jobs" target="_blank">&#21807;&#19968;&#20219;&#21153;&#38145;</a> &#26469;&#36991;&#20813;&#22312;&#24050;&#32463;&#26377;&#21305;&#37197;&#20219;&#21153;&#25490;&#38431;&#30340;&#24773;&#20917;&#19979;&#65292;&#20026;&#21516;&#19968;&#21487;&#25628;&#32034;&#27169;&#22411;&#35760;&#24405;&#20998;&#27966;&#37325;&#22797;&#30340;&#25490;&#38431;&#32034;&#24341;&#25805;&#20316;&#12290;</p><h2 id="adedcf38d9a936ccab5013ed6369db97">&#39537;&#21160;&#20808;&#20915;&#26465;&#20214;</h2><h3 id="72ceec27e9e0722c8d38fc944bc2ebc8">Algolia</h3><p>&#20351;&#29992; Algolia &#39537;&#21160;&#26102;&#65292;&#24212;&#22312; <code>config/scout.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#37197;&#32622; Algolia &#30340; <code>id</code> &#21644; <code>secret</code> &#20973;&#25454;&#12290;&#37197;&#32622;&#20973;&#25454;&#21518;&#65292;&#36824;&#38656;&#35201;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013; Algolia PHP SDK&#65306;</p><pre><code class="language-shell">composer require algolia/algoliasearch-client-php</code></pre><h3 id="bae02e3b6f5ed318df8eded935a5c72c">Meilisearch</h3><p><a href="https://www.meilisearch.com" target="_blank" rel="noopener noreferrer">Meilisearch</a> &#26159;&#19968;&#20010;&#24555;&#36895;&#30340;&#24320;&#28304;&#25628;&#32034;&#24341;&#25806;&#12290;&#22914;&#26524;&#19981;&#30693;&#36947;&#22914;&#20309;&#22312;&#26412;&#22320;&#26426;&#22120;&#19978;&#23433;&#35013; Meilisearch&#65292;&#21487;&#20197;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sail#meilisearch" target="_blank">Laravel Sail</a>&#65292;&#36825;&#26159; Laravel &#23448;&#26041;&#25903;&#25345;&#30340; Docker &#24320;&#21457;&#29615;&#22659;&#12290;</p><p>&#20351;&#29992; Meilisearch &#39537;&#21160;&#26102;&#65292;&#38656;&#35201;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013; Meilisearch PHP SDK&#65306;</p><pre><code class="language-shell">composer require meilisearch/meilisearch-php http-interop/http-factory-guzzle</code></pre><p>&#28982;&#21518;&#65292;&#22312;&#24212;&#29992;&#30340; <code>.env</code> &#25991;&#20214;&#20013;&#35774;&#32622; <code>SCOUT_DRIVER</code> &#29615;&#22659;&#21464;&#37327;&#20197;&#21450; Meilisearch &#30340; <code>host</code> &#21644; <code>key</code> &#20973;&#25454;&#65306;</p><pre><code class="language-ini">SCOUT_DRIVER=meilisearch
+MEILISEARCH_HOST=http://127.0.0.1:7700
+MEILISEARCH_KEY=masterKey</code></pre><p>&#26377;&#20851; Meilisearch &#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405; <a href="https://docs.meilisearch.com/learn/getting_started/quick_start.html" target="_blank" rel="noopener noreferrer">Meilisearch &#25991;&#26723;</a>&#12290;</p><p>&#27492;&#22806;&#65292;&#24212;&#36890;&#36807;&#26597;&#30475; <a href="https://github.com/meilisearch/meilisearch-php#-compatibility-with-meilisearch" target="_blank" rel="noopener noreferrer">Meilisearch &#20851;&#20110;&#20108;&#36827;&#21046;&#20860;&#23481;&#24615;&#30340;&#25991;&#26723;</a>&#65292;&#30830;&#20445;&#23433;&#35013;&#19982;&#20320;&#30340; Meilisearch &#20108;&#36827;&#21046;&#29256;&#26412;&#20860;&#23481;&#30340; <code>meilisearch/meilisearch-php</code> &#29256;&#26412;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#22312;&#20351;&#29992; Meilisearch &#30340;&#24212;&#29992;&#19978;&#21319;&#32423; Scout &#26102;&#65292;&#24212;&#22987;&#32456;<a href="https://github.com/meilisearch/Meilisearch/releases" target="_blank" rel="noopener noreferrer">&#26597;&#30475; Meilisearch &#26381;&#21153;&#26412;&#36523;&#30340;&#20219;&#20309;&#20854;&#20182;&#30772;&#22351;&#24615;&#21464;&#26356;</a>&#12290;</p>
+</blockquote><h3 id="d5dc85a5c533314071967fd69c5e9e10">Typesense</h3><p><a href="https://typesense.org" target="_blank" rel="noopener noreferrer">Typesense</a> &#26159;&#19968;&#20010;&#38378;&#30005;&#33324;&#24555;&#36895;&#30340;&#24320;&#28304;&#25628;&#32034;&#24341;&#25806;&#65292;&#25903;&#25345;&#20851;&#38190;&#35789;&#25628;&#32034;&#12289;&#35821;&#20041;&#25628;&#32034;&#12289;&#22320;&#29702;&#25628;&#32034;&#21644;&#21521;&#37327;&#25628;&#32034;&#12290;</p><p>&#21487;&#20197;<a href="https://typesense.org/docs/guide/install-typesense.html#option-2-local-machine-self-hosting" target="_blank" rel="noopener noreferrer">&#33258;&#25176;&#31649;</a> Typesense &#25110;&#20351;&#29992; <a href="https://cloud.typesense.org" target="_blank" rel="noopener noreferrer">Typesense Cloud</a>&#12290;</p><p>&#35201;&#24320;&#22987;&#23558; Typesense &#19982; Scout &#19968;&#36215;&#20351;&#29992;&#65292;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013; Typesense PHP SDK&#65306;</p><pre><code class="language-shell">composer require typesense/typesense-php</code></pre><p>&#28982;&#21518;&#65292;&#22312;&#24212;&#29992;&#30340; <code>.env</code> &#25991;&#20214;&#20013;&#35774;&#32622; <code>SCOUT_DRIVER</code> &#29615;&#22659;&#21464;&#37327;&#20197;&#21450; Typesense &#20027;&#26426;&#21644; API &#23494;&#38053;&#20973;&#25454;&#65306;</p><pre><code class="language-ini">SCOUT_DRIVER=typesense
+TYPESENSE_API_KEY=masterKey
+TYPESENSE_HOST=localhost</code></pre><p>&#22914;&#26524;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sail" target="_blank">Laravel Sail</a>&#65292;&#21487;&#33021;&#38656;&#35201;&#35843;&#25972; <code>TYPESENSE_HOST</code> &#29615;&#22659;&#21464;&#37327;&#20197;&#21305;&#37197; Docker &#23481;&#22120;&#21517;&#31216;&#12290;&#36824;&#21487;&#20197;&#36873;&#25321;&#25351;&#23450;&#23433;&#35013;&#30340;&#31471;&#21475;&#12289;&#36335;&#24452;&#21644;&#21327;&#35758;&#65306;</p><pre><code class="language-ini">TYPESENSE_PORT=8108
+TYPESENSE_PATH=
+TYPESENSE_PROTOCOL=http</code></pre><p>Typesense &#38598;&#21512;&#30340;&#20854;&#20182;&#35774;&#32622;&#21644;&#27169;&#24335;&#23450;&#20041;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>config/scout.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#25214;&#21040;&#12290;&#26377;&#20851; Typesense &#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405; <a href="https://typesense.org/docs/guide/#quick-start" target="_blank" rel="noopener noreferrer">Typesense &#25991;&#26723;</a>&#12290;</p><h3 id="af871bc3939bbc3bebcb13b4351d0bda">Turbopuffer</h3><p><a href="https://turbopuffer.com" target="_blank" rel="noopener noreferrer">Turbopuffer</a> &#26159;&#19968;&#20010;&#25903;&#25345;&#20840;&#25991;&#25628;&#32034;&#12289;&#35821;&#20041;&#25628;&#32034;&#21644;&#28151;&#21512;&#25628;&#32034;&#30340;&#25628;&#32034;&#24341;&#25806;&#12290;&#35201;&#20351;&#29992; Turbopuffer &#39537;&#21160;&#65292;&#35831;&#35774;&#32622; <code>SCOUT_DRIVER</code> &#29615;&#22659;&#21464;&#37327;&#24182;&#25552;&#20379; Turbopuffer API &#23494;&#38053;&#65306;</p><pre><code class="language-ini">SCOUT_DRIVER=turbopuffer
+TURBOPUFFER_API_KEY=tpuf_...
+TURBOPUFFER_REGION=gcp-us-central1</code></pre><p><code>TURBOPUFFER_REGION</code> &#29615;&#22659;&#21464;&#37327;&#26159;&#21487;&#36873;&#30340;&#65292;&#40664;&#35748;&#20540;&#20026; <code>gcp-us-central1</code>&#12290;</p><h2 id="224e2ccda861c2514faa683b3683c361">&#37197;&#32622;</h2><h3 id="262bce353801f8208113414c99da4e3e">&#37197;&#32622;&#21487;&#25628;&#32034;&#25968;&#25454;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#32473;&#23450;&#27169;&#22411;&#30340;&#25972;&#20010; <code>toArray</code> &#24418;&#24335;&#23558;&#34987;&#25345;&#20037;&#21270;&#21040;&#20854;&#25628;&#32034;&#32034;&#24341;&#12290;&#22914;&#26524;&#24076;&#26395;&#33258;&#23450;&#20041;&#21516;&#27493;&#21040;&#25628;&#32034;&#32034;&#24341;&#30340;&#25968;&#25454;&#65292;&#21487;&#20197;&#37325;&#20889;&#27169;&#22411;&#19978;&#30340; <code>toSearchableArray</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
+
+class Post extends Model
+{
+    use Searchable;
+
+    /**
+     * &#33719;&#21462;&#27169;&#22411;&#30340;&#21487;&#32034;&#24341;&#25968;&#25454;&#25968;&#32452;&#12290;
+     *
+     * @return array&lt;string, mixed&gt;
+     */
+    public function toSearchableArray(): array
+    {
+        $array = $this-&gt;toArray();
+
+        // &#33258;&#23450;&#20041;&#25968;&#25454;&#25968;&#32452;...
+
+        return $array;
+    }
+}</code></pre><h4 id="00fbcb20e1c0b96c44313f38486167ce">&#20026;&#27599;&#20010;&#27169;&#22411;&#37197;&#32622;&#25628;&#32034;&#24341;&#25806;</h4><p>&#25628;&#32034;&#26102;&#65292;Scout &#36890;&#24120;&#20351;&#29992;&#24212;&#29992;&#30340; <code>scout</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#25351;&#23450;&#30340;&#40664;&#35748;&#25628;&#32034;&#24341;&#25806;&#12290;&#20294;&#26159;&#65292;&#21487;&#20197;&#36890;&#36807;&#37325;&#20889;&#27169;&#22411;&#19978;&#30340; <code>searchableUsing</code> &#26041;&#27861;&#26469;&#26356;&#25913;&#29305;&#23450;&#27169;&#22411;&#30340;&#25628;&#32034;&#24341;&#25806;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Engines\Engine;
+use Laravel\Scout\Scout;
+use Laravel\Scout\Searchable;
+
+class User extends Model
+{
+    use Searchable;
+
+    /**
+     * &#33719;&#21462;&#29992;&#20110;&#32034;&#24341;&#27169;&#22411;&#30340;&#24341;&#25806;&#12290;
+     */
+    public function searchableUsing(): Engine
+    {
+        return Scout::engine('meilisearch');
+    }
+}</code></pre><h2 id="1b4e53a4516b8de3154def1af34eea03">&#25968;&#25454;&#24211; / &#38598;&#21512;&#24341;&#25806;</h2><h3 id="43b716d80b391c249c8e8ed785260bdd">&#25968;&#25454;&#24211;&#24341;&#25806;</h3><blockquote>
+<p>[!WARNING]<br>
+&#25968;&#25454;&#24211;&#24341;&#25806;&#30446;&#21069;&#25903;&#25345; MySQL &#21644; PostgreSQL&#65292;&#23427;&#20204;&#37117;&#25903;&#25345;&#24555;&#36895;&#30340;&#20840;&#25991;&#21015;&#32034;&#24341;&#12290;</p>
+</blockquote><p><code>database</code> &#24341;&#25806;&#20351;&#29992; MySQL / PostgreSQL &#20840;&#25991;&#32034;&#24341;&#21644; <code>LIKE</code> &#23376;&#21477;&#30452;&#25509;&#25628;&#32034;&#29616;&#26377;&#25968;&#25454;&#24211;&#12290;&#23545;&#20110;&#35768;&#22810;&#24212;&#29992;&#26469;&#35828;&#65292;&#36825;&#26159;&#28155;&#21152;&#25628;&#32034;&#26368;&#31616;&#21333;&#12289;&#26368;&#23454;&#29992;&#30340;&#26041;&#24335;&mdash;&mdash;&#26080;&#38656;&#22806;&#37096;&#26381;&#21153;&#25110;&#39069;&#22806;&#30340;&#22522;&#30784;&#35774;&#26045;&#12290;</p><p>&#35201;&#20351;&#29992;&#25968;&#25454;&#24211;&#24341;&#25806;&#65292;&#35831;&#23558; <code>SCOUT_DRIVER</code> &#29615;&#22659;&#21464;&#37327;&#35774;&#32622;&#20026; <code>database</code>&#65306;</p><pre><code class="language-ini">SCOUT_DRIVER=database</code></pre><p>&#37197;&#32622;&#23436;&#25104;&#21518;&#65292;&#21487;&#20197;<a href="2wy3l13ykm.html#configuring-searchable-data" target="_blank">&#23450;&#20041;&#21487;&#25628;&#32034;&#25968;&#25454;</a> &#24182;&#24320;&#22987;&#23545;&#27169;&#22411;<a href="2wy3l13ykm.html#searching" target="_blank">&#25191;&#34892;&#25628;&#32034;&#26597;&#35810;</a>&#12290;&#19982;&#31532;&#19977;&#26041;&#24341;&#25806;&#19981;&#21516;&#65292;&#25968;&#25454;&#24211;&#24341;&#25806;&#19981;&#38656;&#35201;&#21333;&#29420;&#30340;&#32034;&#24341;&#27493;&#39588;&mdash;&mdash;&#23427;&#30452;&#25509;&#25628;&#32034;&#25968;&#25454;&#24211;&#34920;&#12290;</p><h4 id="f6cd358217245b2ab1eeab70ceb2bc12">&#35821;&#20041;&#25628;&#32034;&#19982;&#28151;&#21512;&#25628;&#32034;</h4><p>&#22312;&#20351;&#29992;&#24102;&#26377; <code>pgvector</code> &#25193;&#23637;&#30340; PostgreSQL &#26102;&#65292;&#25968;&#25454;&#24211;&#24341;&#25806;&#25903;&#25345;&#35821;&#20041;&#25628;&#32034;&#21644;&#28151;&#21512;&#25628;&#32034;&#12290;&#39318;&#20808;&#65292;&#21521;&#27169;&#22411;&#30340;&#34920;&#28155;&#21152;&#21487;&#31354;&#21521;&#37327;&#21015;&#21644;&#20840;&#25991;&#32034;&#24341;&#12290;&#21521;&#37327;&#21015;&#24517;&#39035;&#21487;&#31354;&#65292;&#22240;&#20026; Scout &#20250;&#22312;&#27169;&#22411;&#25345;&#20037;&#21270;&#21518;&#23384;&#20648;&#23884;&#20837;&#65306;</p><pre><code class="language-php">Schema::ensureVectorExtensionExists();
+
+Schema::table('articles', function (Blueprint $table) {
+    // ...
+
+    $table-&gt;vector('embedding', dimensions: 1536)-&gt;nullable();
+    $table-&gt;vectorIndex('embedding');
+    $table-&gt;fullText(['title', 'body']);
+});</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#22312;&#27169;&#22411;&#19978;&#23450;&#20041; <code>toSearchableEmbedding</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#21487;&#20197;&#36820;&#22238; Scout &#24212;&#23884;&#20837;&#30340;&#28304;&#25991;&#26412;&#25110;&#39044;&#35745;&#31639;&#30340;&#23884;&#20837;&#25968;&#32452;&#12290;Scout &#40664;&#35748;&#23558;&#23884;&#20837;&#23384;&#20648;&#22312; <code>embedding</code> &#21015;&#20013;&#65307;&#35201;&#20351;&#29992;&#20854;&#20182;&#21015;&#65292;&#35831;&#22312;&#27169;&#22411;&#19978;&#23450;&#20041; <code>searchableEmbeddingColumn</code> &#26041;&#27861;&#12290;</p><h4 id="d78b0db4e165bc2569550c12402f3eb7">&#33258;&#23450;&#20041;&#25968;&#25454;&#24211;&#25628;&#32034;&#31574;&#30053;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#25968;&#25454;&#24211;&#24341;&#25806;&#20250;&#23545;<a href="2wy3l13ykm.html#configuring-searchable-data" target="_blank">&#24050;&#37197;&#32622;&#20026;&#21487;&#25628;&#32034;</a> &#30340;&#27599;&#20010;&#27169;&#22411;&#23646;&#24615;&#25191;&#34892; <code>LIKE</code> &#26597;&#35810;&#12290;&#20294;&#26159;&#65292;&#21487;&#20197;&#20026;&#29305;&#23450;&#21015;&#20998;&#37197;&#26356;&#39640;&#25928;&#30340;&#25628;&#32034;&#31574;&#30053;&#12290;<code>SearchUsingFullText</code> &#23646;&#24615;&#23558;&#23545;&#21015;&#20351;&#29992;&#25968;&#25454;&#24211;&#30340;&#20840;&#25991;&#32034;&#24341;&#65292;&#32780; <code>SearchUsingPrefix</code> &#20165;&#21305;&#37197;&#23383;&#31526;&#20018;&#30340;&#24320;&#22836;&#65288;<code>example%</code>&#65289;&#65292;&#32780;&#19981;&#26159;&#22312;&#25972;&#20010;&#23383;&#31526;&#20018;&#20013;&#25628;&#32034;&#65288;<code>%example%</code>&#65289;&#12290;</p><p>&#35201;&#23450;&#20041;&#27492;&#34892;&#20026;&#65292;&#35831;&#23558; PHP &#23646;&#24615;&#20998;&#37197;&#32473;&#27169;&#22411;&#30340; <code>toSearchableArray</code> &#26041;&#27861;&#12290;&#20219;&#20309;&#27809;&#26377;&#23646;&#24615;&#30340;&#21015;&#23558;&#32487;&#32493;&#20351;&#29992;&#40664;&#35748;&#30340; <code>LIKE</code> &#31574;&#30053;&#65306;</p><pre><code class="language-php">use Laravel\Scout\Attributes\SearchUsingFullText;
+use Laravel\Scout\Attributes\SearchUsingPrefix;
+
+/**
+ * &#33719;&#21462;&#27169;&#22411;&#30340;&#21487;&#32034;&#24341;&#25968;&#25454;&#25968;&#32452;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+#[SearchUsingPrefix(['id', 'email'])]
+#[SearchUsingFullText(['bio'])]
+public function toSearchableArray(): array
+{
+    return [
+        'id' =&gt; $this-&gt;id,
+        'name' =&gt; $this-&gt;name,
+        'email' =&gt; $this-&gt;email,
+        'bio' =&gt; $this-&gt;bio,
+    ];
+}</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22312;&#25351;&#23450;&#21015;&#24212;&#20351;&#29992;&#20840;&#25991;&#26597;&#35810;&#32422;&#26463;&#20043;&#21069;&#65292;&#35831;&#30830;&#20445;&#24050;&#20026;&#35813;&#21015;&#20998;&#37197;&#20102;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/migrations#available-index-types" target="_blank">&#20840;&#25991;&#32034;&#24341;</a>&#12290;</p>
+</blockquote><h3 id="86f0c756b8dbffca2a80d5448abc9975">&#38598;&#21512;&#24341;&#25806;</h3><p>&#12300;collection&#12301;&#24341;&#25806;&#36866;&#29992;&#20110;&#24555;&#36895;&#21407;&#22411;&#35774;&#35745;&#12289;&#26497;&#23567;&#30340;&#25968;&#25454;&#38598;&#65288;&#20960;&#30334;&#26465;&#35760;&#24405;&#65289;&#25110;&#36816;&#34892;&#27979;&#35797;&#12290;&#23427;&#20174;&#25968;&#25454;&#24211;&#20013;&#26816;&#32034;&#25152;&#26377;&#21487;&#33021;&#30340;&#35760;&#24405;&#65292;&#24182;&#20351;&#29992; Laravel &#30340; <code>Str::is</code> &#36741;&#21161;&#20989;&#25968;&#22312; PHP &#20013;&#36807;&#28388;&#23427;&#20204;&#65292;&#22240;&#27492;&#23427;&#19981;&#38656;&#35201;&#20219;&#20309;&#32034;&#24341;&#25110;&#25968;&#25454;&#24211;&#29305;&#23450;&#30340;&#21151;&#33021;&#12290;&#23545;&#20110;&#36229;&#20986;&#31616;&#21333;&#29992;&#20363;&#30340;&#20351;&#29992;&#65292;&#24212;&#25913;&#29992;<a href="2wy3l13ykm.html#database-engine" target="_blank">&#25968;&#25454;&#24211;&#24341;&#25806;</a>&#12290;</p><p>&#35201;&#20351;&#29992;&#38598;&#21512;&#24341;&#25806;&#65292;&#21482;&#38656;&#23558; <code>SCOUT_DRIVER</code> &#29615;&#22659;&#21464;&#37327;&#30340;&#20540;&#35774;&#32622;&#20026; <code>collection</code>&#65292;&#25110;&#22312;&#24212;&#29992;&#30340; <code>scout</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30452;&#25509;&#25351;&#23450; <code>collection</code> &#39537;&#21160;&#65306;</p><pre><code class="language-ini">SCOUT_DRIVER=collection</code></pre><p>&#25351;&#23450;&#38598;&#21512;&#39537;&#21160;&#20316;&#20026;&#39318;&#36873;&#39537;&#21160;&#21518;&#65292;&#23601;&#21487;&#20197;&#24320;&#22987;&#23545;&#27169;&#22411;<a href="2wy3l13ykm.html#searching" target="_blank">&#25191;&#34892;&#25628;&#32034;&#26597;&#35810;</a>&#12290;&#24403;&#20351;&#29992;&#38598;&#21512;&#24341;&#25806;&#26102;&#65292;&#19981;&#38656;&#35201;&#25628;&#32034;&#24341;&#25806;&#32034;&#24341;&#65288;&#22914;&#20026; Algolia&#12289;Meilisearch &#25110; Typesense &#32034;&#24341;&#22635;&#20805;&#25968;&#25454;&#25152;&#38656;&#30340;&#32034;&#24341;&#65289;&#12290;</p><h4 id="7fd0916bf0eea52475392ef67d129ac4">&#19982;&#25968;&#25454;&#24211;&#24341;&#25806;&#30340;&#21306;&#21035;</h4><p>&#25968;&#25454;&#24211;&#24341;&#25806;&#20351;&#29992;&#20840;&#25991;&#32034;&#24341;&#21644; <code>LIKE</code> &#23376;&#21477;&#26469;&#39640;&#25928;&#26597;&#25214;&#21305;&#37197;&#35760;&#24405;&#65292;&#32780;&#38598;&#21512;&#24341;&#25806;&#25289;&#21462;&#25152;&#26377;&#35760;&#24405;&#24182;&#22312; PHP &#20013;&#36807;&#28388;&#23427;&#20204;&#12290;&#38598;&#21512;&#24341;&#25806;&#26159;&#26368;&#20855;&#21487;&#31227;&#26893;&#24615;&#30340;&#36873;&#39033;&#65292;&#22240;&#20026;&#23427;&#36866;&#29992;&#20110; Laravel &#25903;&#25345;&#30340;&#25152;&#26377;&#20851;&#31995;&#25968;&#25454;&#24211;&#65288;&#21253;&#25324; SQLite &#21644; SQL Server&#65289;&#65307;&#20294;&#26159;&#65292;&#23427;&#30340;&#25928;&#29575;&#26126;&#26174;&#20302;&#20110;&#25968;&#25454;&#24211;&#24341;&#25806;&#65292;&#19981;&#24212;&#29992;&#20110;&#22823;&#22411;&#25968;&#25454;&#38598;&#12290;</p><h2 id="f2c7db81cb0b5dfd7feac3c6eb09852f">&#31532;&#19977;&#26041;&#24341;&#25806;&#37197;&#32622;</h2><p>&#20197;&#19979;&#37197;&#32622;&#36873;&#39033;&#20165;&#22312;&#20351;&#29992;&#31532;&#19977;&#26041;&#25628;&#32034;&#24341;&#25806;&#65288;&#22914; Algolia&#12289;Meilisearch &#25110; Typesense&#65289;&#26102;&#25165;&#30456;&#20851;&#12290;&#22914;&#26524;&#20351;&#29992;<a href="2wy3l13ykm.html#database-engine" target="_blank">&#25968;&#25454;&#24211;&#24341;&#25806;</a>&#65292;&#21487;&#20197;&#36339;&#36807;&#26412;&#33410;&#12290;</p><h3 id="bc743ebe0dc3301d8da53122dd8e83e7">&#37197;&#32622;&#27169;&#22411;&#32034;&#24341;</h3><p>&#20351;&#29992;&#31532;&#19977;&#26041;&#24341;&#25806;&#26102;&#65292;&#27599;&#20010; Eloquent &#27169;&#22411;&#37117;&#20250;&#19982;&#32473;&#23450;&#30340;&#25628;&#32034;&#12300;&#32034;&#24341;&#12301;&#21516;&#27493;&#65292;&#35813;&#32034;&#24341;&#21253;&#21547;&#35813;&#27169;&#22411;&#30340;&#25152;&#26377;&#21487;&#25628;&#32034;&#35760;&#24405;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#27599;&#20010;&#27169;&#22411;&#23558;&#25345;&#20037;&#21270;&#21040;&#19982;&#27169;&#22411;&#20856;&#22411;&#12300;table&#12301;&#21517;&#31216;&#21305;&#37197;&#30340;&#32034;&#24341;&#20013;&#12290;&#36890;&#24120;&#65292;&#36825;&#26159;&#27169;&#22411;&#21517;&#31216;&#30340;&#22797;&#25968;&#24418;&#24335;&#65307;&#20294;&#26159;&#65292;&#21487;&#20197;&#36890;&#36807;&#37325;&#20889;&#27169;&#22411;&#19978;&#30340; <code>searchableAs</code> &#26041;&#27861;&#33258;&#30001;&#33258;&#23450;&#20041;&#27169;&#22411;&#30340;&#32034;&#24341;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
+
+class Post extends Model
+{
+    use Searchable;
+
+    /**
+     * &#33719;&#21462;&#19982;&#27169;&#22411;&#20851;&#32852;&#30340;&#32034;&#24341;&#21517;&#31216;&#12290;
+     */
+    public function searchableAs(): string
+    {
+        return 'posts_index';
+    }
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#20351;&#29992;&#25968;&#25454;&#24211;&#24341;&#25806;&#26102;&#65292;<code>searchableAs</code> &#26041;&#27861;&#26080;&#25928;&#65292;&#22240;&#20026;&#25968;&#25454;&#24211;&#24341;&#25806;&#22987;&#32456;&#30452;&#25509;&#25628;&#32034;&#27169;&#22411;&#30340;&#25968;&#25454;&#24211;&#34920;&#12290;</p>
+</blockquote><h4 id="8c24646e120ae62f34ffe550a7926684">&#37197;&#32622;&#27169;&#22411; ID</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Scout &#20250;&#23558;&#27169;&#22411;&#30340;&#20027;&#38190;&#29992;&#20316;&#23384;&#20648;&#22312;&#25628;&#32034;&#32034;&#24341;&#20013;&#30340;&#27169;&#22411;&#21807;&#19968; ID / &#38190;&#12290;&#22914;&#26524;&#22312;&#20351;&#29992;&#31532;&#19977;&#26041;&#24341;&#25806;&#26102;&#38656;&#35201;&#33258;&#23450;&#20041;&#27492;&#34892;&#20026;&#65292;&#21487;&#20197;&#37325;&#20889;&#27169;&#22411;&#19978;&#30340; <code>getScoutKey</code> &#21644; <code>getScoutKeyName</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
+
+class User extends Model
+{
+    use Searchable;
+
+    /**
+     * &#33719;&#21462;&#29992;&#20110;&#32034;&#24341;&#27169;&#22411;&#30340;&#20540;&#12290;
+     */
+    public function getScoutKey(): mixed
+    {
+        return $this-&gt;email;
+    }
+
+    /**
+     * &#33719;&#21462;&#29992;&#20110;&#32034;&#24341;&#27169;&#22411;&#30340;&#38190;&#21517;&#12290;
+     */
+    public function getScoutKeyName(): mixed
+    {
+        return 'email';
+    }
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#20351;&#29992;&#25968;&#25454;&#24211;&#24341;&#25806;&#26102;&#65292;<code>getScoutKey</code> &#21644; <code>getScoutKeyName</code> &#26041;&#27861;&#26080;&#25928;&#65292;&#22240;&#20026;&#25968;&#25454;&#24211;&#24341;&#25806;&#22987;&#32456;&#20351;&#29992;&#27169;&#22411;&#30340;&#20027;&#38190;&#12290;</p>
+</blockquote><h3 id="72ceec27e9e0722c8d38fc944bc2ebc8">Algolia</h3><h4 id="19286b631b5009fd0fb4bc3a2c6ddeef">&#32034;&#24341;&#35774;&#32622;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#22312; Algolia &#32034;&#24341;&#19978;&#37197;&#32622;&#20854;&#20182;&#35774;&#32622;&#12290;&#34429;&#28982;&#21487;&#20197;&#36890;&#36807; Algolia UI &#31649;&#29702;&#36825;&#20123;&#35774;&#32622;&#65292;&#20294;&#30452;&#25509;&#20174;&#24212;&#29992;&#30340; <code>config/scout.php</code> &#37197;&#32622;&#25991;&#20214;&#31649;&#29702;&#32034;&#24341;&#37197;&#32622;&#30340;&#25152;&#38656;&#29366;&#24577;&#36890;&#24120;&#26356;&#39640;&#25928;&#12290;</p><p>&#27492;&#26041;&#27861;&#20801;&#35768;&#20320;&#36890;&#36807;&#24212;&#29992;&#30340;&#33258;&#21160;&#21270;&#37096;&#32626;&#27969;&#27700;&#32447;&#37096;&#32626;&#36825;&#20123;&#35774;&#32622;&#65292;&#36991;&#20813;&#25163;&#21160;&#37197;&#32622;&#24182;&#30830;&#20445;&#36328;&#22810;&#20010;&#29615;&#22659;&#30340;&#19968;&#33268;&#24615;&#12290;&#21487;&#20197;&#37197;&#32622;&#21487;&#36807;&#28388;&#23646;&#24615;&#12289;&#25490;&#21517;&#12289;&#20998;&#38754;&#65292;&#25110;<a href="https://www.algolia.com/doc/rest-api/search/#tag/Indices/operation/setSettings" target="_blank" rel="noopener noreferrer">&#20219;&#20309;&#20854;&#20182;&#25903;&#25345;&#30340;&#35774;&#32622;</a>&#12290;</p><p>&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#35831;&#22312;&#24212;&#29992;&#30340; <code>config/scout.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#20026;&#27599;&#20010;&#32034;&#24341;&#28155;&#21152;&#35774;&#32622;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use App\Models\Flight;
+
+'algolia' =&gt; [
+    'id' =&gt; env('ALGOLIA_APP_ID', ''),
+    'secret' =&gt; env('ALGOLIA_SECRET', ''),
+    'index-settings' =&gt; [
+        User::class =&gt; [
+            'searchableAttributes' =&gt; ['id', 'name', 'email'],
+            'attributesForFaceting'=&gt; ['filterOnly(email)'],
+            // &#20854;&#20182;&#35774;&#32622;&#23383;&#27573;...
+        ],
+        Flight::class =&gt; [
+            'searchableAttributes'=&gt; ['id', 'destination'],
+        ],
+    ],
+],</code></pre><p>&#22914;&#26524;&#32473;&#23450;&#32034;&#24341;&#19979;&#30340;&#27169;&#22411;&#21487;&#36719;&#21024;&#38500;&#19988;&#21253;&#21547;&#22312; <code>index-settings</code> &#25968;&#32452;&#20013;&#65292;Scout &#23558;&#33258;&#21160;&#22312;&#35813;&#32034;&#24341;&#19978;&#21253;&#21547;&#23545;&#36719;&#21024;&#38500;&#27169;&#22411;&#30340;&#20998;&#38754;&#25903;&#25345;&#12290;&#22914;&#26524;&#27809;&#26377;&#20854;&#20182;&#20998;&#38754;&#23646;&#24615;&#35201;&#20026;&#21487;&#36719;&#21024;&#38500;&#30340;&#27169;&#22411;&#32034;&#24341;&#23450;&#20041;&#65292;&#21017;&#21487;&#20197;&#31616;&#21333;&#22320;&#20026;&#35813;&#27169;&#22411;&#22312; <code>index-settings</code> &#25968;&#32452;&#20013;&#28155;&#21152;&#19968;&#20010;&#31354;&#26465;&#30446;&#65306;</p><pre><code class="language-php">'index-settings' =&gt; [
+    Flight::class =&gt; []
+],</code></pre><p>&#37197;&#32622;&#24212;&#29992;&#30340;&#32034;&#24341;&#35774;&#32622;&#21518;&#65292;&#24517;&#39035;&#35843;&#29992; <code>scout:sync-index-settings</code> Artisan &#21629;&#20196;&#12290;&#27492;&#21629;&#20196;&#20250;&#23558;&#24403;&#21069;&#37197;&#32622;&#30340;&#32034;&#24341;&#35774;&#32622;&#36890;&#30693; Algolia&#12290;&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#23558;&#27492;&#21629;&#20196;&#32435;&#20837;&#37096;&#32626;&#27969;&#31243;&#65306;</p><pre><code class="language-shell">php artisan scout:sync-index-settings</code></pre><h4 id="147b4d87daa0ab6690e6b16e27b00fd4">&#35782;&#21035;&#29992;&#25143;</h4><p>Scout &#20801;&#35768;&#20320;&#22312;&#20351;&#29992; Algolia &#26102;&#33258;&#21160;&#35782;&#21035;&#29992;&#25143;&#12290;&#23558;&#32463;&#36807;&#36523;&#20221;&#39564;&#35777;&#30340;&#29992;&#25143;&#19982;&#25628;&#32034;&#25805;&#20316;&#20851;&#32852;&#36215;&#26469;&#65292;&#22312; Algolia &#20202;&#34920;&#26495;&#20013;&#26597;&#30475;&#25628;&#32034;&#20998;&#26512;&#26102;&#21487;&#33021;&#20250;&#26377;&#25152;&#24110;&#21161;&#12290;&#21487;&#20197;&#36890;&#36807;&#22312;&#24212;&#29992;&#30340; <code>.env</code> &#25991;&#20214;&#20013;&#23558; <code>SCOUT_IDENTIFY</code> &#29615;&#22659;&#21464;&#37327;&#23450;&#20041;&#20026; <code>true</code> &#26469;&#21551;&#29992;&#29992;&#25143;&#35782;&#21035;&#65306;</p><pre><code class="language-ini">SCOUT_IDENTIFY=true</code></pre><p>&#21551;&#29992;&#27492;&#21151;&#33021;&#36824;&#20250;&#23558;&#35831;&#27714;&#30340; IP &#22320;&#22336;&#21644;&#32463;&#36807;&#36523;&#20221;&#39564;&#35777;&#30340;&#29992;&#25143;&#30340;&#20027;&#26631;&#35782;&#31526;&#20256;&#36882;&#32473; Algolia&#65292;&#20197;&#20415;&#23558;&#27492;&#25968;&#25454;&#19982;&#29992;&#25143;&#21457;&#20986;&#30340;&#20219;&#20309;&#25628;&#32034;&#35831;&#27714;&#30456;&#20851;&#32852;&#12290;</p><h3 id="bae02e3b6f5ed318df8eded935a5c72c">Meilisearch</h3><h4 id="19286b631b5009fd0fb4bc3a2c6ddeef">&#32034;&#24341;&#35774;&#32622;</h4><p>Meilisearch &#35201;&#27714;&#20320;&#39044;&#23450;&#20041;&#32034;&#24341;&#25628;&#32034;&#35774;&#32622;&#65292;&#20363;&#22914;&#21487;&#36807;&#28388;&#23646;&#24615;&#12289;&#21487;&#25490;&#24207;&#23646;&#24615;&#65292;&#20197;&#21450;<a href="https://docs.meilisearch.com/reference/api/settings.html" target="_blank" rel="noopener noreferrer">&#20854;&#20182;&#25903;&#25345;&#30340;&#35774;&#32622;&#23383;&#27573;</a>&#12290;</p><p>&#21487;&#36807;&#28388;&#23646;&#24615;&#26159;&#35843;&#29992; Scout &#30340; <code>where</code> &#26041;&#27861;&#26102;&#35745;&#21010;&#36827;&#34892;&#36807;&#28388;&#30340;&#20219;&#20309;&#23646;&#24615;&#65292;&#32780;&#21487;&#25490;&#24207;&#23646;&#24615;&#26159;&#35843;&#29992; Scout &#30340; <code>orderBy</code> &#26041;&#27861;&#26102;&#35745;&#21010;&#25490;&#24207;&#30340;&#20219;&#20309;&#23646;&#24615;&#12290;&#35201;&#23450;&#20041;&#32034;&#24341;&#35774;&#32622;&#65292;&#35831;&#35843;&#25972;&#24212;&#29992;&#30340; <code>scout</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>meilisearch</code> &#37197;&#32622;&#26465;&#30446;&#30340; <code>index-settings</code> &#37096;&#20998;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use App\Models\Flight;
+
+'meilisearch' =&gt; [
+    'host' =&gt; env('MEILISEARCH_HOST', 'http://localhost:7700'),
+    'key' =&gt; env('MEILISEARCH_KEY', null),
+    'index-settings' =&gt; [
+        User::class =&gt; [
+            'filterableAttributes'=&gt; ['id', 'name', 'email'],
+            'sortableAttributes' =&gt; ['created_at'],
+            // &#20854;&#20182;&#35774;&#32622;&#23383;&#27573;...
+        ],
+        Flight::class =&gt; [
+            'filterableAttributes'=&gt; ['id', 'destination'],
+            'sortableAttributes' =&gt; ['updated_at'],
+        ],
+    ],
+],</code></pre><p>&#22914;&#26524;&#32473;&#23450;&#32034;&#24341;&#19979;&#30340;&#27169;&#22411;&#21487;&#36719;&#21024;&#38500;&#19988;&#21253;&#21547;&#22312; <code>index-settings</code> &#25968;&#32452;&#20013;&#65292;Scout &#23558;&#33258;&#21160;&#22312;&#35813;&#32034;&#24341;&#19978;&#21253;&#21547;&#23545;&#36719;&#21024;&#38500;&#27169;&#22411;&#36807;&#28388;&#30340;&#25903;&#25345;&#12290;&#22914;&#26524;&#27809;&#26377;&#20854;&#20182;&#21487;&#36807;&#28388;&#25110;&#21487;&#25490;&#24207;&#23646;&#24615;&#35201;&#20026;&#21487;&#36719;&#21024;&#38500;&#30340;&#27169;&#22411;&#32034;&#24341;&#23450;&#20041;&#65292;&#21017;&#21487;&#20197;&#31616;&#21333;&#22320;&#20026;&#35813;&#27169;&#22411;&#22312; <code>index-settings</code> &#25968;&#32452;&#20013;&#28155;&#21152;&#19968;&#20010;&#31354;&#26465;&#30446;&#65306;</p><pre><code class="language-php">'index-settings' =&gt; [
+    Flight::class =&gt; []
+],</code></pre><p>&#37197;&#32622;&#24212;&#29992;&#30340;&#32034;&#24341;&#35774;&#32622;&#21518;&#65292;&#24517;&#39035;&#35843;&#29992; <code>scout:sync-index-settings</code> Artisan &#21629;&#20196;&#12290;&#27492;&#21629;&#20196;&#20250;&#23558;&#24403;&#21069;&#37197;&#32622;&#30340;&#32034;&#24341;&#35774;&#32622;&#36890;&#30693; Meilisearch&#12290;&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#23558;&#27492;&#21629;&#20196;&#32435;&#20837;&#37096;&#32626;&#27969;&#31243;&#65306;</p><pre><code class="language-shell">php artisan scout:sync-index-settings</code></pre><h4 id="f6cd358217245b2ab1eeab70ceb2bc12">&#35821;&#20041;&#25628;&#32034;&#19982;&#28151;&#21512;&#25628;&#32034;</h4><p>&#35201;&#23558;&#35821;&#20041;&#25110;&#28151;&#21512;&#25628;&#32034;&#19982; Meilisearch &#19968;&#36215;&#20351;&#29992;&#65292;&#35831;&#20026;&#27599;&#20010;&#21487;&#25628;&#32034;&#27169;&#22411;&#37197;&#32622;&#32034;&#24341;&#35774;&#32622;&#20013;&#30340;&#23884;&#20837;&#22120;&#20197;&#21450;&#23884;&#20837;&#35774;&#32622;&#65306;</p><pre><code class="language-php">'meilisearch' =&gt; [
+    // ...
+    'index-settings' =&gt; [
+        Article::class =&gt; [
+            'embedders' =&gt; [
+                'default' =&gt; [
+                    'source' =&gt; 'userProvided',
+                    'dimensions' =&gt; 1536,
+                ],
+            ],
+        ],
+    ],
+    'model-settings' =&gt; [
+        Article::class =&gt; [
+            'embedding' =&gt; [
+                'embedder' =&gt; 'default',
+                'dimensions' =&gt; 1536,
+            ],
+        ],
+    ],
+],</code></pre><p>&#27169;&#22411;&#30340; <code>toSearchableEmbedding</code> &#26041;&#27861;&#21487;&#20197;&#36820;&#22238;&#28304;&#25991;&#26412;&#65292;Scout &#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/ai-sdk" target="_blank">Laravel AI SDK</a> &#23545;&#20854;&#36827;&#34892;&#23884;&#20837;&#65292;&#20063;&#21487;&#20197;&#36820;&#22238;&#39044;&#35745;&#31639;&#30340;&#23884;&#20837;&#25968;&#32452;&#12290;&#26356;&#26032;&#37197;&#32622;&#21518;&#65292;&#36816;&#34892; <code>scout:sync-index-settings</code> &#21629;&#20196;&#12290;</p><h4 id="7dda6d88286d25123bbed69208f5e7d0">&#21487;&#25628;&#32034;&#25968;&#25454;&#31867;&#22411;</h4><p>Meilisearch &#20165;&#23545;&#27491;&#30830;&#31867;&#22411;&#30340;&#25968;&#25454;&#25191;&#34892;&#36807;&#28388;&#25805;&#20316;&#65288;<code>&gt;</code>&#12289;<code>&lt;</code> &#31561;&#65289;&#12290;&#22312;&#33258;&#23450;&#20041;&#21487;&#25628;&#32034;&#25968;&#25454;&#26102;&#65292;&#24212;&#30830;&#20445;&#23558;&#25968;&#20540;&#24378;&#21046;&#36716;&#25442;&#20026;&#27491;&#30830;&#30340;&#31867;&#22411;&#65306;</p><pre><code class="language-php">public function toSearchableArray()
+{
+    return [
+        'id' =&gt; (int) $this-&gt;id,
+        'name' =&gt; $this-&gt;name,
+        'price' =&gt; (float) $this-&gt;price,
+    ];
+}</code></pre><h3 id="d5dc85a5c533314071967fd69c5e9e10">Typesense</h3><h4 id="731876ea3b4495bd75664b8ddbfbc3d0">&#20934;&#22791;&#21487;&#25628;&#32034;&#25968;&#25454;</h4><p>&#20351;&#29992; Typesense &#26102;&#65292;&#21487;&#25628;&#32034;&#27169;&#22411;&#24517;&#39035;&#23450;&#20041; <code>toSearchableArray</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#23558;&#27169;&#22411;&#30340;&#20027;&#38190;&#24378;&#21046;&#36716;&#25442;&#20026;&#23383;&#31526;&#20018;&#65292;&#24182;&#23558;&#21019;&#24314;&#26085;&#26399;&#24378;&#21046;&#36716;&#25442;&#20026; UNIX &#26102;&#38388;&#25139;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#27169;&#22411;&#30340;&#21487;&#32034;&#24341;&#25968;&#25454;&#25968;&#32452;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toSearchableArray(): array
+{
+    return array_merge($this-&gt;toArray(),[
+        'id' =&gt; (string) $this-&gt;id,
+        'created_at' =&gt; $this-&gt;created_at-&gt;timestamp,
+    ]);
+}</code></pre><p>&#36824;&#24212;&#22312;&#24212;&#29992;&#30340; <code>config/scout.php</code> &#25991;&#20214;&#20013;&#23450;&#20041; Typesense &#38598;&#21512;&#30340; schema&#12290;&#38598;&#21512;&#30340; schema &#25551;&#36848;&#20102;&#21487;&#36890;&#36807; Typesense &#25628;&#32034;&#30340;&#27599;&#20010;&#23383;&#27573;&#30340;&#25968;&#25454;&#31867;&#22411;&#12290;&#26377;&#20851;&#25152;&#26377;&#21487;&#29992; schema &#36873;&#39033;&#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405; <a href="https://typesense.org/docs/latest/api/collections.html#schema-parameters" target="_blank" rel="noopener noreferrer">Typesense &#25991;&#26723;</a>&#12290;</p><p>&#22914;&#26524;&#38656;&#35201;&#22312;&#23450;&#20041; Typesense &#38598;&#21512; schema &#21518;&#36827;&#34892;&#26356;&#25913;&#65292;&#21487;&#20197;&#36816;&#34892; <code>scout:flush</code> &#21644; <code>scout:import</code>&#65292;&#36825;&#23558;&#21024;&#38500;&#25152;&#26377;&#29616;&#26377;&#32034;&#24341;&#25968;&#25454;&#24182;&#37325;&#26032;&#21019;&#24314; schema&#12290;&#25110;&#32773;&#65292;&#21487;&#20197;&#20351;&#29992; Typesense &#30340; API &#20462;&#25913;&#38598;&#21512;&#30340; schema &#32780;&#19981;&#21024;&#38500;&#20219;&#20309;&#32034;&#24341;&#25968;&#25454;&#12290;</p><p>&#22914;&#26524;&#21487;&#25628;&#32034;&#27169;&#22411;&#21487;&#36719;&#21024;&#38500;&#65292;&#24212;&#22312;&#24212;&#29992;&#30340; <code>config/scout.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#20026;&#27169;&#22411;&#23545;&#24212;&#30340; Typesense schema &#23450;&#20041; <code>__soft_deleted</code> &#23383;&#27573;&#65306;</p><pre><code class="language-php">User::class =&gt; [
+    'collection-schema' =&gt; [
+        'fields' =&gt; [
+            // ...
+            [
+                'name' =&gt; '__soft_deleted',
+                'type' =&gt; 'int32',
+                'optional' =&gt; true,
+            ],
+        ],
+    ],
+],</code></pre><h4 id="53e0b6afb8c15bbc9304495470ad5506">&#21160;&#24577;&#25628;&#32034;&#21442;&#25968;</h4><p>Typesense &#20801;&#35768;&#22312;&#36890;&#36807; <code>options</code> &#26041;&#27861;&#25191;&#34892;&#25628;&#32034;&#25805;&#20316;&#26102;&#21160;&#24577;&#20462;&#25913;<a href="https://typesense.org/docs/latest/api/search.html#search-parameters" target="_blank" rel="noopener noreferrer">&#25628;&#32034;&#21442;&#25968;</a>&#65306;</p><pre><code class="language-php">use App\Models\Todo;
+
+Todo::search('Groceries')-&gt;options([
+    'query_by' =&gt; 'title, description'
+])-&gt;get();</code></pre><h3 id="af871bc3939bbc3bebcb13b4351d0bda">Turbopuffer</h3><p>Turbopuffer &#38656;&#35201;&#20026;&#27599;&#20010;&#27169;&#22411;&#23450;&#20041; schema &#21644;&#21487;&#25628;&#32034;&#23646;&#24615;&#12290;&#22312; <code>scout</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>turbopuffer</code> &#37197;&#32622;&#30340; <code>model-settings</code> &#25968;&#32452;&#20013;&#23450;&#20041;&#23427;&#20204;&#65306;</p><pre><code class="language-php">use App\Models\Article;
+
+'turbopuffer' =&gt; [
+    // ...
+    'model-settings' =&gt; [
+        Article::class =&gt; [
+            'searchable-attributes' =&gt; [
+                'title' =&gt; 3,
+                'body' =&gt; 1,
+            ],
+            'schema' =&gt; [
+                'title' =&gt; ['type' =&gt; 'string', 'full_text_search' =&gt; true],
+                'body' =&gt; ['type' =&gt; 'string', 'full_text_search' =&gt; true],
+                'status' =&gt; ['type' =&gt; 'string'],
+            ],
+        ],
+    ],
+],</code></pre><p>&#20998;&#37197;&#32473; <code>searchable-attributes</code> &#30340;&#25968;&#20540;&#26159;&#30456;&#23545; BM25 &#26435;&#37325;&#12290;&#22312;&#19978;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#25991;&#31456;&#26631;&#39064;&#20013;&#21305;&#37197;&#30340;&#24471;&#20998;&#26159;&#27491;&#25991;&#21305;&#37197;&#30340; 3 &#20493;&#12290;</p><p>&#35201;&#21551;&#29992;&#35821;&#20041;&#21644;&#28151;&#21512;&#25628;&#32034;&#65292;&#35831;&#23558; <code>embedding</code> &#35774;&#32622;&#21644;&#21521;&#37327; schema &#28155;&#21152;&#21040;&#27169;&#22411;&#30340;&#37197;&#32622;&#20013;&#65306;</p><pre><code class="language-php">'turbopuffer' =&gt; [
+    // ...
+    'model-settings' =&gt; [
+        Article::class =&gt; [
+            'searchable-attributes' =&gt; [
+                'title' =&gt; 3,
+                'body' =&gt; 1,
+            ],
+            'embedding' =&gt; [
+                'attribute' =&gt; 'embedding',
+                'dimensions' =&gt; 1536,
+            ],
+            'schema' =&gt; [
+                'title' =&gt; ['type' =&gt; 'string', 'full_text_search' =&gt; true],
+                'body' =&gt; ['type' =&gt; 'string', 'full_text_search' =&gt; true],
+                'embedding' =&gt; ['type' =&gt; '[1536]f32', 'ann' =&gt; true],
+            ],
+        ],
+    ],
+],</code></pre><p>&#27169;&#22411;&#30340; <code>toSearchableEmbedding</code> &#26041;&#27861;&#24212;&#36820;&#22238; Scout &#24212;&#23884;&#20837;&#30340;&#28304;&#25991;&#26412;&#25110;&#39044;&#35745;&#31639;&#30340;&#23884;&#20837;&#25968;&#32452;&#12290;Scout &#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/ai-sdk" target="_blank">Laravel AI SDK</a> &#29983;&#25104;&#28304;&#25991;&#26412;&#23884;&#20837;&#12290;</p><p>&#25110;&#32773;&#65292;&#21487;&#20197;&#20351;&#29992; Turbopuffer &#30340;&#21407;&#29983;&#23884;&#20837;&#32780;&#26080;&#38656;&#23433;&#35013; Laravel AI SDK &#25110;&#23450;&#20041; <code>toSearchableEmbedding</code> &#26041;&#27861;&#12290;&#23558;&#23884;&#20837;&#39537;&#21160;&#35774;&#32622;&#20026; <code>turbopuffer</code> &#24182;&#22312;&#21487;&#25628;&#32034;&#28304;&#23646;&#24615;&#19978;&#37197;&#32622; <code>embed</code> schema&#65306;</p><pre><code class="language-php">'embedding' =&gt; [
+    'driver' =&gt; 'turbopuffer',
+    'attribute' =&gt; 'embedding_text',
+],
+
+'schema' =&gt; [
+    // ...
+    'embedding_text' =&gt; [
+        'type' =&gt; 'string',
+        'embed' =&gt; [
+            'model' =&gt; 'voyage/voyage-4',
+            'dimensions' =&gt; 1024,
+            'attribute' =&gt; 'embedding',
+        ],
+    ],
+],</code></pre><p>&#28304;&#23646;&#24615;&#24517;&#39035;&#21253;&#21547;&#22312;&#27169;&#22411;&#30340; <code>toSearchableArray</code> &#36755;&#20986;&#20013;&#12290;</p><h2 id="fa3c8ee9780f4d650b9d67c9888ac707">&#31532;&#19977;&#26041;&#24341;&#25806;&#32034;&#24341;</h2><blockquote>
+<p>[!NOTE]<br>
+&#26412;&#33410;&#25551;&#36848;&#30340;&#32034;&#24341;&#21151;&#33021;&#20027;&#35201;&#19982;&#20351;&#29992;&#31532;&#19977;&#26041;&#24341;&#25806;&#65288;Algolia&#12289;Meilisearch&#12289;Typesense &#25110; Turbopuffer&#65289;&#30456;&#20851;&#12290;&#25968;&#25454;&#24211;&#24341;&#25806;&#30452;&#25509;&#25628;&#32034;&#25968;&#25454;&#24211;&#34920;&#65292;&#22240;&#27492;&#19981;&#38656;&#35201;&#25163;&#21160;&#32034;&#24341;&#31649;&#29702;&#12290;</p>
+</blockquote><h3 id="407f3df2c996cb376f253cb597127317">&#25209;&#37327;&#23548;&#20837;</h3><p>&#22914;&#26524;&#35201;&#23558; Scout &#23433;&#35013;&#21040;&#29616;&#26377;&#39033;&#30446;&#20013;&#65292;&#21487;&#33021;&#24050;&#32463;&#26377;&#38656;&#35201;&#23548;&#20837;&#21040;&#32034;&#24341;&#20013;&#30340;&#25968;&#25454;&#24211;&#35760;&#24405;&#12290;Scout &#25552;&#20379;&#20102;&#19968;&#20010; <code>scout:import</code> Artisan &#21629;&#20196;&#65292;&#21487;&#29992;&#20110;&#23558;&#25152;&#26377;&#29616;&#26377;&#35760;&#24405;&#23548;&#20837;&#21040;&#25628;&#32034;&#32034;&#24341;&#65306;</p><pre><code class="language-shell">php artisan scout:import "App\Models\Post"</code></pre><p><code>scout:queue-import</code> &#21629;&#20196;&#21487;&#29992;&#20110;&#20351;&#29992;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues" target="_blank">&#25490;&#38431;&#20219;&#21153;</a> &#23548;&#20837;&#25152;&#26377;&#29616;&#26377;&#35760;&#24405;&#65306;</p><pre><code class="language-shell">php artisan scout:queue-import "App\Models\Post" --chunk=500</code></pre><p><code>flush</code> &#21629;&#20196;&#21487;&#29992;&#20110;&#20174;&#25628;&#32034;&#32034;&#24341;&#20013;&#21024;&#38500;&#27169;&#22411;&#30340;&#25152;&#26377;&#35760;&#24405;&#65306;</p><pre><code class="language-shell">php artisan scout:flush "App\Models\Post"</code></pre><h4 id="24d8f68adcf4a2a8acaeee36aa544a85">&#20462;&#25913;&#23548;&#20837;&#26597;&#35810;</h4><p>&#22914;&#26524;&#24076;&#26395;&#20462;&#25913;&#29992;&#20110;&#25209;&#37327;&#23548;&#20837;&#26102;&#26816;&#32034;&#25152;&#26377;&#27169;&#22411;&#30340;&#26597;&#35810;&#65292;&#21487;&#20197;&#22312;&#27169;&#22411;&#19978;&#23450;&#20041; <code>makeAllSearchableUsing</code> &#26041;&#27861;&#12290;&#36825;&#26159;&#19968;&#20010;&#24456;&#22909;&#30340;&#22320;&#26041;&#65292;&#21487;&#20197;&#22312;&#23548;&#20837;&#27169;&#22411;&#20043;&#21069;&#28155;&#21152;&#20219;&#20309;&#21487;&#33021;&#38656;&#35201;&#30340;&#39044;&#21152;&#36733;&#20851;&#32852;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Eloquent\Builder;
+
+/**
+ * &#20462;&#25913;&#29992;&#20110;&#22312;&#20351;&#25152;&#26377;&#27169;&#22411;&#21487;&#25628;&#32034;&#26102;&#26816;&#32034;&#27169;&#22411;&#30340;&#26597;&#35810;&#12290;
+ */
+protected function makeAllSearchableUsing(Builder $query): Builder
+{
+    return $query-&gt;with('author');
+}</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#20351;&#29992;&#38431;&#21015;&#25209;&#37327;&#23548;&#20837;&#27169;&#22411;&#26102;&#65292;<code>makeAllSearchableUsing</code> &#26041;&#27861;&#21487;&#33021;&#19981;&#36866;&#29992;&#12290;&#24403;&#20219;&#21153;&#22788;&#29702;&#27169;&#22411;&#38598;&#21512;&#26102;&#65292;&#20851;&#32852;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues#handling-relationships" target="_blank">&#19981;&#20250;&#34987;&#24674;&#22797;</a>&#12290;</p>
+</blockquote><h3 id="3d95aa21acfb97c6c7b8f278243f8196">&#28155;&#21152;&#35760;&#24405;</h3><p>&#23558; <code>Laravel\Scout\Searchable</code> trait &#28155;&#21152;&#21040;&#27169;&#22411;&#21518;&#65292;&#21482;&#38656; <code>save</code> &#25110; <code>create</code> &#19968;&#20010;&#27169;&#22411;&#23454;&#20363;&#65292;&#23427;&#23601;&#20250;&#33258;&#21160;&#28155;&#21152;&#21040;&#25628;&#32034;&#32034;&#24341;&#12290;&#22914;&#26524;&#24050;&#23558; Scout &#37197;&#32622;&#20026;<a href="2wy3l13ykm.html#queueing" target="_blank">&#20351;&#29992;&#38431;&#21015;</a>&#65292;&#21017;&#27492;&#25805;&#20316;&#23558;&#30001;&#38431;&#21015;&#24037;&#20316;&#36827;&#31243;&#22312;&#21518;&#21488;&#25191;&#34892;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+
+$order = new Order;
+
+// ...
+
+$order-&gt;save();</code></pre><h4 id="b5029baefd525d2cbc208dd0b81355c3">&#36890;&#36807;&#26597;&#35810;&#28155;&#21152;&#35760;&#24405;</h4><p>&#22914;&#26524;&#24076;&#26395;&#36890;&#36807; Eloquent &#26597;&#35810;&#23558;&#27169;&#22411;&#38598;&#21512;&#28155;&#21152;&#21040;&#25628;&#32034;&#32034;&#24341;&#65292;&#21487;&#20197;&#23558; <code>searchable</code> &#26041;&#27861;&#38142;&#25509;&#21040; Eloquent &#26597;&#35810;&#19978;&#12290;<code>searchable</code> &#26041;&#27861;&#23558;&#23545;&#26597;&#35810;&#32467;&#26524;&#36827;&#34892;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent#chunking-results" target="_blank">&#20998;&#22359;</a>&#65292;&#24182;&#23558;&#35760;&#24405;&#28155;&#21152;&#21040;&#25628;&#32034;&#32034;&#24341;&#12290;&#21516;&#26679;&#65292;&#22914;&#26524;&#24050;&#23558; Scout &#37197;&#32622;&#20026;&#20351;&#29992;&#38431;&#21015;&#65292;&#21017;&#25152;&#26377;&#22359;&#23558;&#30001;&#38431;&#21015;&#24037;&#20316;&#36827;&#31243;&#22312;&#21518;&#21488;&#23548;&#20837;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+
+Order::where('price', '&gt;', 100)-&gt;searchable();</code></pre><p>&#36824;&#21487;&#20197;&#22312; Eloquent &#20851;&#32852;&#23454;&#20363;&#19978;&#35843;&#29992; <code>searchable</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$user-&gt;orders()-&gt;searchable();</code></pre><p>&#25110;&#32773;&#65292;&#22914;&#26524;&#20869;&#23384;&#20013;&#24050;&#26377; Eloquent &#27169;&#22411;&#38598;&#21512;&#65292;&#21487;&#20197;&#22312;&#38598;&#21512;&#23454;&#20363;&#19978;&#35843;&#29992; <code>searchable</code> &#26041;&#27861;&#65292;&#23558;&#27169;&#22411;&#23454;&#20363;&#28155;&#21152;&#21040;&#20854;&#23545;&#24212;&#30340;&#32034;&#24341;&#65306;</p><pre><code class="language-php">$orders-&gt;searchable();</code></pre><blockquote>
+<p>[!NOTE]<br>
+<code>searchable</code> &#26041;&#27861;&#21487;&#34987;&#35270;&#20026;&#12300;upsert&#12301;&#25805;&#20316;&#12290;&#25442;&#21477;&#35805;&#35828;&#65292;&#22914;&#26524;&#27169;&#22411;&#35760;&#24405;&#24050;&#22312;&#32034;&#24341;&#20013;&#65292;&#21017;&#20250;&#26356;&#26032;&#12290;&#22914;&#26524;&#23427;&#19981;&#23384;&#22312;&#20110;&#25628;&#32034;&#32034;&#24341;&#20013;&#65292;&#21017;&#20250;&#28155;&#21152;&#21040;&#32034;&#24341;&#20013;&#12290;</p>
+</blockquote><h3 id="c054fb6e7a4b8511a2cc90a55d70eae9">&#26356;&#26032;&#35760;&#24405;</h3><p>&#35201;&#26356;&#26032;&#21487;&#25628;&#32034;&#27169;&#22411;&#65292;&#21482;&#38656;&#26356;&#26032;&#27169;&#22411;&#23454;&#20363;&#30340;&#23646;&#24615;&#24182; <code>save</code> &#27169;&#22411;&#21040;&#25968;&#25454;&#24211;&#21363;&#21487;&#12290;Scout &#20250;&#33258;&#21160;&#23558;&#26356;&#25913;&#25345;&#20037;&#21270;&#21040;&#25628;&#32034;&#32034;&#24341;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+
+$order = Order::find(1);
+
+// &#26356;&#26032;&#35746;&#21333;...
+
+$order-&gt;save();</code></pre><p>&#36824;&#21487;&#20197;&#22312; Eloquent &#26597;&#35810;&#23454;&#20363;&#19978;&#35843;&#29992; <code>searchable</code> &#26041;&#27861;&#26469;&#26356;&#26032;&#27169;&#22411;&#38598;&#21512;&#12290;&#22914;&#26524;&#27169;&#22411;&#19981;&#23384;&#22312;&#20110;&#25628;&#32034;&#32034;&#24341;&#20013;&#65292;&#21017;&#20250;&#21019;&#24314;&#23427;&#20204;&#65306;</p><pre><code class="language-php">Order::where('price', '&gt;', 100)-&gt;searchable();</code></pre><p>&#22914;&#26524;&#24076;&#26395;&#26356;&#26032;&#20851;&#32852;&#20013;&#25152;&#26377;&#27169;&#22411;&#30340;&#25628;&#32034;&#32034;&#24341;&#35760;&#24405;&#65292;&#21487;&#20197;&#22312;&#20851;&#32852;&#23454;&#20363;&#19978;&#35843;&#29992; <code>searchable</code>&#65306;</p><pre><code class="language-php">$user-&gt;orders()-&gt;searchable();</code></pre><p>&#25110;&#32773;&#65292;&#22914;&#26524;&#20869;&#23384;&#20013;&#24050;&#26377; Eloquent &#27169;&#22411;&#38598;&#21512;&#65292;&#21487;&#20197;&#22312;&#38598;&#21512;&#23454;&#20363;&#19978;&#35843;&#29992; <code>searchable</code> &#26041;&#27861;&#65292;&#23558;&#27169;&#22411;&#23454;&#20363;&#26356;&#26032;&#21040;&#20854;&#23545;&#24212;&#30340;&#32034;&#24341;&#65306;</p><pre><code class="language-php">$orders-&gt;searchable();</code></pre><h4 id="1da4ea72b09cfdf66f5e8b39b7d17714">&#22312;&#23548;&#20837;&#21069;&#20462;&#25913;&#35760;&#24405;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#22312;&#27169;&#22411;&#38598;&#21512;&#21464;&#20026;&#21487;&#25628;&#32034;&#20043;&#21069;&#20934;&#22791;&#22909;&#23427;&#20204;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#39044;&#21152;&#36733;&#20851;&#32852;&#65292;&#20197;&#20415;&#20851;&#32852;&#25968;&#25454;&#21487;&#20197;&#39640;&#25928;&#22320;&#28155;&#21152;&#21040;&#25628;&#32034;&#32034;&#24341;&#12290;&#20026;&#27492;&#65292;&#35831;&#22312;&#30456;&#24212;&#30340;&#27169;&#22411;&#19978;&#23450;&#20041; <code>makeSearchableUsing</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Eloquent\Collection;
+
+/**
+ * &#20462;&#25913;&#27491;&#22312;&#21464;&#20026;&#21487;&#25628;&#32034;&#30340;&#27169;&#22411;&#38598;&#21512;&#12290;
+ */
+public function makeSearchableUsing(Collection $models): Collection
+{
+    return $models-&gt;load('author');
+}</code></pre><h4 id="7628cf3b431d9bf9f366874f09632756">&#26377;&#26465;&#20214;&#22320;&#26356;&#26032;&#25628;&#32034;&#32034;&#24341;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#26080;&#35770;&#20462;&#25913;&#20102;&#21738;&#20123;&#23646;&#24615;&#65292;Scout &#37117;&#20250;&#37325;&#26032;&#32034;&#24341;&#24050;&#26356;&#26032;&#30340;&#27169;&#22411;&#12290;&#22914;&#26524;&#24076;&#26395;&#33258;&#23450;&#20041;&#27492;&#34892;&#20026;&#65292;&#21487;&#20197;&#22312;&#27169;&#22411;&#19978;&#23450;&#20041; <code>searchIndexShouldBeUpdated</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * &#30830;&#23450;&#26159;&#21542;&#24212;&#26356;&#26032;&#25628;&#32034;&#32034;&#24341;&#12290;
+ */
+public function searchIndexShouldBeUpdated(): bool
+{
+    return $this-&gt;wasRecentlyCreated || $this-&gt;wasChanged(['title', 'body']);
+}</code></pre><h3 id="a790208cafd5c95a18dd9a168319ecf8">&#21024;&#38500;&#35760;&#24405;</h3><p>&#35201;&#20174;&#32034;&#24341;&#20013;&#21024;&#38500;&#35760;&#24405;&#65292;&#21482;&#38656;&#20174;&#25968;&#25454;&#24211;&#20013; <code>delete</code> &#35813;&#27169;&#22411;&#12290;&#21363;&#20351;&#20351;&#29992;&#30340;&#26159;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent#soft-deleting" target="_blank">&#36719;&#21024;&#38500;</a> &#27169;&#22411;&#65292;&#20063;&#21487;&#20197;&#36825;&#26679;&#20570;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+
+$order = Order::find(1);
+
+$order-&gt;delete();</code></pre><p>&#22914;&#26524;&#19981;&#24819;&#22312;&#21024;&#38500;&#35760;&#24405;&#20043;&#21069;&#26816;&#32034;&#27169;&#22411;&#65292;&#21487;&#20197;&#22312; Eloquent &#26597;&#35810;&#23454;&#20363;&#19978;&#20351;&#29992; <code>unsearchable</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Order::where('price', '&gt;', 100)-&gt;unsearchable();</code></pre><p>&#22914;&#26524;&#24076;&#26395;&#21024;&#38500;&#20851;&#32852;&#20013;&#25152;&#26377;&#27169;&#22411;&#30340;&#25628;&#32034;&#32034;&#24341;&#35760;&#24405;&#65292;&#21487;&#20197;&#22312;&#20851;&#32852;&#23454;&#20363;&#19978;&#35843;&#29992; <code>unsearchable</code>&#65306;</p><pre><code class="language-php">$user-&gt;orders()-&gt;unsearchable();</code></pre><p>&#25110;&#32773;&#65292;&#22914;&#26524;&#20869;&#23384;&#20013;&#24050;&#26377; Eloquent &#27169;&#22411;&#38598;&#21512;&#65292;&#21487;&#20197;&#22312;&#38598;&#21512;&#23454;&#20363;&#19978;&#35843;&#29992; <code>unsearchable</code> &#26041;&#27861;&#65292;&#20174;&#20854;&#23545;&#24212;&#30340;&#32034;&#24341;&#20013;&#21024;&#38500;&#27169;&#22411;&#23454;&#20363;&#65306;</p><pre><code class="language-php">$orders-&gt;unsearchable();</code></pre><p>&#35201;&#20174;&#20854;&#23545;&#24212;&#30340;&#32034;&#24341;&#20013;&#21024;&#38500;&#25152;&#26377;&#27169;&#22411;&#35760;&#24405;&#65292;&#21487;&#20197;&#35843;&#29992; <code>removeAllFromSearch</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Order::removeAllFromSearch();</code></pre><h3 id="bed74ee9d7d15c93fd4bf48defdd69af">&#26242;&#20572;&#32034;&#24341;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#22312;&#19981;&#23558;&#27169;&#22411;&#25968;&#25454;&#21516;&#27493;&#21040;&#25628;&#32034;&#32034;&#24341;&#30340;&#24773;&#20917;&#19979;&#23545;&#27169;&#22411;&#25191;&#34892;&#19968;&#25209; Eloquent &#25805;&#20316;&#12290;&#21487;&#20197;&#20351;&#29992; <code>withoutSyncingToSearch</code> &#26041;&#27861;&#25191;&#34892;&#27492;&#25805;&#20316;&#12290;&#27492;&#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#23558;&#31435;&#21363;&#25191;&#34892;&#30340;&#38381;&#21253;&#12290;&#22312;&#38381;&#21253;&#20869;&#21457;&#29983;&#30340;&#20219;&#20309;&#27169;&#22411;&#25805;&#20316;&#37117;&#19981;&#20250;&#21516;&#27493;&#21040;&#27169;&#22411;&#30340;&#32034;&#24341;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+
+Order::withoutSyncingToSearch(function () {
+    // &#25191;&#34892;&#27169;&#22411;&#25805;&#20316;...
+});</code></pre><h3 id="f78065aa2bd4b0f08d99277f93d3fa80">&#26377;&#26465;&#20214;&#22320;&#21487;&#25628;&#32034;&#30340;&#27169;&#22411;&#23454;&#20363;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#21482;&#24076;&#26395;&#22312;&#29305;&#23450;&#26465;&#20214;&#19979;&#20351;&#27169;&#22411;&#21487;&#25628;&#32034;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774;&#26377;&#19968;&#20010; <code>App\Models\Post</code> &#27169;&#22411;&#65292;&#21487;&#33021;&#22788;&#20110;&#20004;&#31181;&#29366;&#24577;&#20043;&#19968;&#65306;&#12300;&#33609;&#31295;&#12301;&#21644;&#12300;&#24050;&#21457;&#24067;&#12301;&#12290;&#20320;&#21487;&#33021;&#21482;&#24076;&#26395;&#20801;&#35768;&#12300;&#24050;&#21457;&#24067;&#12301;&#30340;&#25991;&#31456;&#21487;&#25628;&#32034;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#22312;&#27169;&#22411;&#19978;&#23450;&#20041; <code>shouldBeSearchable</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * &#30830;&#23450;&#27169;&#22411;&#26159;&#21542;&#24212;&#21487;&#25628;&#32034;&#12290;
+ */
+public function shouldBeSearchable(): bool
+{
+    return $this-&gt;isPublished();
+}</code></pre><p><code>shouldBeSearchable</code> &#26041;&#27861;&#20165;&#22312;&#36890;&#36807; <code>save</code> &#21644; <code>create</code> &#26041;&#27861;&#12289;&#26597;&#35810;&#25110;&#20851;&#32852;&#25805;&#20316;&#27169;&#22411;&#26102;&#25165;&#36866;&#29992;&#12290;&#30452;&#25509;&#20351;&#29992; <code>searchable</code> &#26041;&#27861;&#20351;&#27169;&#22411;&#25110;&#38598;&#21512;&#21487;&#25628;&#32034;&#23558;&#35206;&#30422; <code>shouldBeSearchable</code> &#26041;&#27861;&#30340;&#32467;&#26524;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#20351;&#29992; Scout &#30340;&#12300;database&#12301;&#24341;&#25806;&#26102;&#65292;<code>shouldBeSearchable</code> &#26041;&#27861;&#19981;&#36866;&#29992;&#65292;&#22240;&#20026;&#25152;&#26377;&#21487;&#25628;&#32034;&#25968;&#25454;&#22987;&#32456;&#23384;&#20648;&#22312;&#25968;&#25454;&#24211;&#20013;&#12290;&#35201;&#22312;&#20351;&#29992;&#25968;&#25454;&#24211;&#24341;&#25806;&#26102;&#23454;&#29616;&#31867;&#20284;&#30340;&#34892;&#20026;&#65292;&#24212;&#25913;&#29992; <a href="2wy3l13ykm.html#where-clauses" target="_blank">where &#23376;&#21477;</a>&#12290;</p>
+</blockquote><h2 id="e5f71fc31e7246dd6ccc5539570471b0">&#25628;&#32034;</h2><p>&#21487;&#20197;&#20351;&#29992; <code>search</code> &#26041;&#27861;&#24320;&#22987;&#25628;&#32034;&#27169;&#22411;&#12290;<code>search</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#23383;&#31526;&#20018;&#65292;&#35813;&#23383;&#31526;&#20018;&#23558;&#29992;&#20110;&#25628;&#32034;&#27169;&#22411;&#12290;&#28982;&#21518;&#24212;&#23558; <code>get</code> &#26041;&#27861;&#38142;&#25509;&#21040;&#25628;&#32034;&#26597;&#35810;&#19978;&#65292;&#20197;&#26816;&#32034;&#19982;&#32473;&#23450;&#25628;&#32034;&#26597;&#35810;&#21305;&#37197;&#30340; Eloquent &#27169;&#22411;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+
+$orders = Order::search('Star Trek')-&gt;get();</code></pre><p>&#30001;&#20110; Scout &#25628;&#32034;&#36820;&#22238; Eloquent &#27169;&#22411;&#38598;&#21512;&#65292;&#29978;&#33267;&#21487;&#20197;&#30452;&#25509;&#20174;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#36820;&#22238;&#32467;&#26524;&#65292;&#23427;&#20204;&#23558;&#33258;&#21160;&#36716;&#25442;&#20026; JSON&#65306;</p><pre><code class="language-php">use App\Models\Order;
+use Illuminate\Http\Request;
+
+Route::get('/search', function (Request $request) {
+    return Order::search($request-&gt;search)-&gt;get();
+});</code></pre><p>&#22914;&#26524;&#24076;&#26395;&#22312;&#32467;&#26524;&#36716;&#25442;&#20026; Eloquent &#27169;&#22411;&#20043;&#21069;&#33719;&#21462;&#21407;&#22987;&#25628;&#32034;&#32467;&#26524;&#65292;&#21487;&#20197;&#20351;&#29992; <code>raw</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$orders = Order::search('Star Trek')-&gt;raw();</code></pre><h3 id="16d27cb31d5d8977d2cefdb4a6422413">&#35821;&#20041;&#25628;&#32034;</h3><p>&#25968;&#25454;&#24211;&#12289;Meilisearch &#21644; Turbopuffer &#24341;&#25806;&#25903;&#25345;&#35821;&#20041;&#25628;&#32034;&#65292;&#23427;&#26681;&#25454;&#26597;&#35810;&#30340;&#21547;&#20041;&#21305;&#37197;&#35760;&#24405;&#12290;&#24403; Scout &#29983;&#25104;&#23884;&#20837;&#26102;&#65292;&#35821;&#20041;&#21644;&#28151;&#21512;&#25628;&#32034;&#38656;&#35201; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/ai-sdk" target="_blank">Laravel AI SDK</a>&#12290;Turbopuffer &#30340;<a href="2wy3l13ykm.html#turbopuffer-configuration" target="_blank">&#21407;&#29983;&#23884;&#20837;</a> &#21644;&#39044;&#35745;&#31639;&#30340;&#26597;&#35810;&#21521;&#37327;&#19981;&#38656;&#35201; Laravel AI SDK&#12290;</p><p>&#20026;&#25152;&#36873;&#24341;&#25806;&#37197;&#32622;&#23884;&#20837;&#21518;&#65292;&#22312;&#25628;&#32034;&#26597;&#35810;&#19978;&#35843;&#29992; <code>semantic</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$articles = Article::search('staying cool in the summer')
+    -&gt;semantic()
+    -&gt;get();</code></pre><p>&#22312;&#25152;&#36873;&#24341;&#25806;&#25903;&#25345;&#26102;&#65292;&#21487;&#20197;&#25552;&#20379;&#26368;&#23567;&#30456;&#20284;&#24230;&#38408;&#20540;&#65306;</p><pre><code class="language-php">$articles = Article::search('renewable energy storage')
+    -&gt;semantic(minSimilarity: 0.6)
+    -&gt;get();</code></pre><p>&#35201;&#32467;&#21512;&#20840;&#25991;&#21644;&#35821;&#20041;&#25628;&#32034;&#65292;&#35831;&#20351;&#29992; <code>hybrid</code> &#26041;&#27861;&#12290;&#23427;&#30340;&#21069;&#20004;&#20010;&#21442;&#25968;&#25511;&#21046;&#25991;&#26412;&#21644;&#35821;&#20041;&#32467;&#26524;&#30340;&#30456;&#23545;&#26435;&#37325;&#65306;</p><pre><code class="language-php">$articles = Article::search('renewable energy storage')
+    -&gt;hybrid(textWeight: 1, semanticWeight: 2)
+    -&gt;get();</code></pre><h4 id="aee62cf46784161de91be8bffe9ef93f">&#33258;&#23450;&#20041;&#32034;&#24341;</h4><p>&#20351;&#29992;&#31532;&#19977;&#26041;&#24341;&#25806;&#25628;&#32034;&#26102;&#65292;&#25628;&#32034;&#26597;&#35810;&#36890;&#24120;&#22312;&#27169;&#22411;&#30340; <a href="2wy3l13ykm.html#configuring-model-indexes" target="_blank">searchableAs</a> &#26041;&#27861;&#25351;&#23450;&#30340;&#32034;&#24341;&#19978;&#25191;&#34892;&#12290;&#20294;&#26159;&#65292;&#21487;&#20197;&#20351;&#29992; <code>within</code> &#26041;&#27861;&#25351;&#23450;&#35201;&#25628;&#32034;&#30340;&#33258;&#23450;&#20041;&#32034;&#24341;&#65306;</p><pre><code class="language-php">$orders = Order::search('Star Trek')
+    -&gt;within('tv_shows_popularity_desc')
+    -&gt;get();</code></pre><h3 id="f21faee8511c01b691ffe808aab11806">Where &#23376;&#21477;</h3><p>Scout &#20801;&#35768;&#21521;&#25628;&#32034;&#26597;&#35810;&#28155;&#21152;&#12300;where&#12301;&#23376;&#21477;&#12290;&#20363;&#22914;&#65292;&#22522;&#26412;&#30456;&#31561;&#24615;&#26816;&#26597;&#23545;&#20110;&#25353;&#25152;&#26377;&#32773; ID &#38480;&#23450;&#25628;&#32034;&#26597;&#35810;&#33539;&#22260;&#38750;&#24120;&#26377;&#29992;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+
+$orders = Order::search('Star Trek')-&gt;where('user_id', 1)-&gt;get();</code></pre><p>&#36824;&#21487;&#20197;&#20351;&#29992; <code>=</code>&#12289;<code>!=</code>&#12289;<code>&lt;</code>&#12289;<code>&gt;</code>&#12289;<code>&gt;=</code>&#12289;<code>&lt;=</code> &#27604;&#36739;&#36816;&#31639;&#31526;&#26500;&#24314;&#26356;&#39640;&#32423;&#30340;&#26597;&#35810;&#65306;</p><pre><code class="language-php">Order::search('Star Trek')
+  -&gt;where('status', '=', 'completed')
+  -&gt;where('is_refunded', '!=', true)
+  -&gt;where('total_price', '&gt;', 100)
+  -&gt;where('shipping_cost', '&lt;', 20)
+  -&gt;where('discount_percent', '&gt;=', 10)
+  -&gt;where('item_count', '&lt;=', 5)
+  -&gt;get();</code></pre><p>&#27492;&#22806;&#65292;<code>whereIn</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#39564;&#35777;&#32473;&#23450;&#21015;&#30340;&#20540;&#26159;&#21542;&#21253;&#21547;&#22312;&#32473;&#23450;&#25968;&#32452;&#20013;&#65306;</p><pre><code class="language-php">$orders = Order::search('Star Trek')-&gt;whereIn(
+    'status', ['open', 'paid']
+)-&gt;get();</code></pre><p><code>whereNotIn</code> &#26041;&#27861;&#39564;&#35777;&#32473;&#23450;&#21015;&#30340;&#20540;&#19981;&#21253;&#21547;&#22312;&#32473;&#23450;&#25968;&#32452;&#20013;&#65306;</p><pre><code class="language-php">$orders = Order::search('Star Trek')-&gt;whereNotIn(
+    'status', ['closed']
+)-&gt;get();</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22914;&#26524;&#24212;&#29992;&#27491;&#22312;&#20351;&#29992; Meilisearch&#65292;&#21017;&#24517;&#39035;&#22312;&#20351;&#29992; Scout &#30340;&#12300;where&#12301;&#23376;&#21477;&#20043;&#21069;&#37197;&#32622;&#24212;&#29992;&#30340;<a href="2wy3l13ykm.html#meilisearch-index-settings" target="_blank">&#21487;&#36807;&#28388;&#23646;&#24615;</a>&#12290;</p>
+</blockquote><h4 id="b1e03b3fda5d4d8fb2d1edd030177020">&#33258;&#23450;&#20041; Eloquent &#32467;&#26524;&#26597;&#35810;</h4><p>Scout &#20174;&#24212;&#29992;&#25628;&#32034;&#24341;&#25806;&#26816;&#32034;&#21305;&#37197;&#30340; Eloquent &#27169;&#22411;&#21015;&#34920;&#21518;&#65292;&#23558;&#20351;&#29992; Eloquent &#36890;&#36807;&#20027;&#38190;&#26816;&#32034;&#25152;&#26377;&#21305;&#37197;&#30340;&#27169;&#22411;&#12290;&#21487;&#20197;&#36890;&#36807;&#35843;&#29992; <code>query</code> &#26041;&#27861;&#26469;&#33258;&#23450;&#20041;&#27492;&#26597;&#35810;&#12290;<code>query</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#20316;&#20026;&#21442;&#25968;&#65292;&#35813;&#38381;&#21253;&#23558;&#25509;&#25910; Eloquent &#26597;&#35810;&#26500;&#36896;&#22120;&#23454;&#20363;&#20316;&#20026;&#21442;&#25968;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+use Illuminate\Database\Eloquent\Builder;
+
+$orders = Order::search('Star Trek')
+    -&gt;query(fn (Builder $query) =&gt; $query-&gt;with('invoices'))
+    -&gt;get();</code></pre><p>&#20351;&#29992;&#31532;&#19977;&#26041;&#24341;&#25806;&#26102;&#65292;&#27492;&#22238;&#35843;&#22312;&#24050;&#32463;&#20174;&#25628;&#32034;&#24341;&#25806;&#26816;&#32034;&#21040;&#30456;&#20851;&#27169;&#22411;&#20043;&#21518;&#35843;&#29992;&#65292;&#22240;&#27492;&#23427;&#19981;&#24212;&#29992;&#20110;&#12300;&#36807;&#28388;&#12301;&#32467;&#26524;&mdash;&mdash;&#35831;&#25913;&#29992; <a href="2wy3l13ykm.html#where-clauses" target="_blank">Scout where &#23376;&#21477;</a>&#12290;&#20294;&#26159;&#65292;&#20351;&#29992;&#25968;&#25454;&#24211;&#24341;&#25806;&#26102;&#65292;<code>query</code> &#26041;&#27861;&#30340;&#32422;&#26463;&#30452;&#25509;&#24212;&#29992;&#20110;&#25968;&#25454;&#24211;&#26597;&#35810;&#65292;&#22240;&#27492;&#20063;&#21487;&#20197;&#23558;&#20854;&#29992;&#20110;&#36807;&#28388;&#12290;</p><h3 id="3862626c138ce5945e0e273a1bdfbad0">&#20998;&#39029;</h3><p>&#38500;&#20102;&#26816;&#32034;&#27169;&#22411;&#38598;&#21512;&#22806;&#65292;&#36824;&#21487;&#20197;&#20351;&#29992; <code>paginate</code> &#26041;&#27861;&#23545;&#25628;&#32034;&#32467;&#26524;&#36827;&#34892;&#20998;&#39029;&#12290;&#27492;&#26041;&#27861;&#23558;&#36820;&#22238; <code>Illuminate\Pagination\LengthAwarePaginator</code> &#23454;&#20363;&#65292;&#23601;&#20687;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/pagination" target="_blank">&#23545;&#20256;&#32479; Eloquent &#26597;&#35810;&#36827;&#34892;&#20998;&#39029;</a> &#19968;&#26679;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+
+$orders = Order::search('Star Trek')-&gt;paginate();</code></pre><p>&#21487;&#20197;&#36890;&#36807;&#23558;&#25968;&#37327;&#20316;&#20026;&#31532;&#19968;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>paginate</code> &#26041;&#27861;&#26469;&#25351;&#23450;&#27599;&#39029;&#26816;&#32034;&#30340;&#27169;&#22411;&#25968;&#37327;&#65306;</p><pre><code class="language-php">$orders = Order::search('Star Trek')-&gt;paginate(15);</code></pre><p>&#20351;&#29992;&#25968;&#25454;&#24211;&#24341;&#25806;&#26102;&#65292;&#36824;&#21487;&#20197;&#20351;&#29992; <code>simplePaginate</code> &#26041;&#27861;&#12290;&#19982; <code>paginate</code> &#19981;&#21516;&#65288;<code>paginate</code> &#26816;&#32034;&#21305;&#37197;&#35760;&#24405;&#30340;&#24635;&#25968;&#20197;&#20415;&#26174;&#31034;&#39029;&#30721;&#65289;&#65292;<code>simplePaginate</code> &#20165;&#30830;&#23450;&#24403;&#21069;&#39029;&#20043;&#21518;&#26159;&#21542;&#36824;&#26377;&#26356;&#22810;&#32467;&#26524;&mdash;&mdash;&#23545;&#20110;&#21482;&#38656;&#35201;&#12300;&#19978;&#19968;&#39029;&#12301;&#21644;&#12300;&#19979;&#19968;&#39029;&#12301;&#38142;&#25509;&#30340;&#22823;&#22411;&#25968;&#25454;&#38598;&#26469;&#35828;&#26356;&#39640;&#25928;&#65306;</p><pre><code class="language-php">$orders = Order::search('Star Trek')-&gt;simplePaginate(15);</code></pre><p>&#26816;&#32034;&#32467;&#26524;&#21518;&#65292;&#21487;&#20197;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/blade" target="_blank">Blade</a> &#26174;&#31034;&#32467;&#26524;&#24182;&#21576;&#29616;&#39029;&#38754;&#38142;&#25509;&#65292;&#23601;&#20687;&#23545;&#20256;&#32479; Eloquent &#26597;&#35810;&#36827;&#34892;&#20998;&#39029;&#19968;&#26679;&#65306;</p><pre><code class="language-html">&lt;div class="container"&gt;
+    @foreach ($orders as $order)
+        {{ $order-&gt;price }}
+    @endforeach
+&lt;/div&gt;
+
+{{ $orders-&gt;links() }}</code></pre><p>&#24403;&#28982;&#65292;&#22914;&#26524;&#24076;&#26395;&#20197; JSON &#24418;&#24335;&#26816;&#32034;&#20998;&#39029;&#32467;&#26524;&#65292;&#21487;&#20197;&#30452;&#25509;&#20174;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#36820;&#22238;&#20998;&#39029;&#22120;&#23454;&#20363;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+use Illuminate\Http\Request;
+
+Route::get('/orders', function (Request $request) {
+    return Order::search($request-&gt;input('query'))-&gt;paginate(15);
+});</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#30001;&#20110;&#25628;&#32034;&#24341;&#25806;&#19981;&#30693;&#36947; Eloquent &#27169;&#22411;&#30340;&#20840;&#23616;&#20316;&#29992;&#22495;&#23450;&#20041;&#65292;&#22240;&#27492;&#19981;&#24212;&#22312;&#21033;&#29992; Scout &#20998;&#39029;&#30340;&#24212;&#29992;&#20013;&#20351;&#29992;&#20840;&#23616;&#20316;&#29992;&#22495;&#12290;&#25110;&#32773;&#65292;&#24212;&#22312;&#36890;&#36807; Scout &#25628;&#32034;&#26102;&#37325;&#26032;&#21019;&#24314;&#20840;&#23616;&#20316;&#29992;&#22495;&#30340;&#32422;&#26463;&#12290;</p>
+</blockquote><h3 id="ad44487282d6916e824d28f38cca400b">&#36719;&#21024;&#38500;</h3><p>&#22914;&#26524;&#24050;&#32034;&#24341;&#30340;&#27169;&#22411;&#26159;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent#soft-deleting" target="_blank">&#36719;&#21024;&#38500;</a> &#30340;&#65292;&#24182;&#19988;&#38656;&#35201;&#25628;&#32034;&#36719;&#21024;&#38500;&#30340;&#27169;&#22411;&#65292;&#35831;&#23558; <code>config/scout.php</code> &#37197;&#32622;&#25991;&#20214;&#30340; <code>soft_delete</code> &#36873;&#39033;&#35774;&#32622;&#20026; <code>true</code>&#65306;</p><pre><code class="language-php">'soft_delete' =&gt; true,</code></pre><p>&#24403;&#27492;&#37197;&#32622;&#36873;&#39033;&#20026; <code>true</code> &#26102;&#65292;Scout &#19981;&#20250;&#20174;&#25628;&#32034;&#32034;&#24341;&#20013;&#21024;&#38500;&#36719;&#21024;&#38500;&#30340;&#27169;&#22411;&#12290;&#30456;&#21453;&#65292;&#23427;&#23558;&#22312;&#32034;&#24341;&#30340;&#35760;&#24405;&#19978;&#35774;&#32622;&#19968;&#20010;&#38544;&#34255;&#30340; <code>__soft_deleted</code> &#23646;&#24615;&#12290;&#28982;&#21518;&#65292;&#21487;&#20197;&#20351;&#29992; <code>withTrashed</code> &#25110; <code>onlyTrashed</code> &#26041;&#27861;&#22312;&#25628;&#32034;&#26102;&#26816;&#32034;&#36719;&#21024;&#38500;&#30340;&#35760;&#24405;&#65306;</p><pre><code class="language-php">use App\Models\Order;
+
+// &#22312;&#26816;&#32034;&#32467;&#26524;&#26102;&#21253;&#25324;&#24050;&#21024;&#38500;&#30340;&#35760;&#24405;...
+$orders = Order::search('Star Trek')-&gt;withTrashed()-&gt;get();
+
+// &#22312;&#26816;&#32034;&#32467;&#26524;&#26102;&#20165;&#21253;&#25324;&#24050;&#21024;&#38500;&#30340;&#35760;&#24405;...
+$orders = Order::search('Star Trek')-&gt;onlyTrashed()-&gt;get();</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#24403;&#20351;&#29992; <code>forceDelete</code> &#27704;&#20037;&#21024;&#38500;&#36719;&#21024;&#38500;&#27169;&#22411;&#26102;&#65292;Scout &#23558;&#33258;&#21160;&#20174;&#25628;&#32034;&#32034;&#24341;&#20013;&#21024;&#38500;&#23427;&#12290;</p>
+</blockquote><h3 id="fa4826e336531fbde862c68ac5f157f6">&#33258;&#23450;&#20041;&#24341;&#25806;&#25628;&#32034;</h3><p>&#22914;&#26524;&#38656;&#35201;&#23545;&#24341;&#25806;&#30340;&#25628;&#32034;&#34892;&#20026;&#36827;&#34892;&#39640;&#32423;&#33258;&#23450;&#20041;&#65292;&#21487;&#20197;&#23558;&#38381;&#21253;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>search</code> &#26041;&#27861;&#12290;&#20363;&#22914;&#65292;&#21487;&#20197;&#20351;&#29992;&#27492;&#22238;&#35843;&#22312;&#25628;&#32034;&#26597;&#35810;&#20256;&#36882;&#32473; Algolia &#20043;&#21069;&#23558;&#22320;&#29702;&#20301;&#32622;&#25968;&#25454;&#28155;&#21152;&#21040;&#25628;&#32034;&#36873;&#39033;&#65306;</p><pre><code class="language-php">use Algolia\AlgoliaSearch\SearchIndex;
+use App\Models\Order;
+
+Order::search(
+    'Star Trek',
+    function (SearchIndex $algolia, string $query, array $options) {
+        $options['body']['query']['bool']['filter']['geo_distance'] = [
+            'distance' =&gt; '1000km',
+            'location' =&gt; ['lat' =&gt; 36, 'lon' =&gt; 111],
+        ];
+
+        return $algolia-&gt;search($query, $options);
+    }
+)-&gt;get();</code></pre><h2 id="c2a816a71d8f47c092290cce311c6698">&#33258;&#23450;&#20041;&#24341;&#25806;</h2><h4 id="90ea8614872a188b3a6f2794cd0aeaa1">&#32534;&#20889;&#24341;&#25806;</h4><p>&#22914;&#26524;&#26576;&#20010;&#20869;&#32622; Scout &#25628;&#32034;&#24341;&#25806;&#19981;&#36866;&#21512;&#20320;&#30340;&#38656;&#27714;&#65292;&#21487;&#20197;&#32534;&#20889;&#33258;&#24049;&#30340;&#33258;&#23450;&#20041;&#24341;&#25806;&#24182;&#23558;&#20854;&#27880;&#20876;&#21040; Scout&#12290;&#20320;&#30340;&#24341;&#25806;&#24212;&#32487;&#25215; <code>Laravel\Scout\Engines\Engine</code> &#25277;&#35937;&#31867;&#12290;&#35813;&#25277;&#35937;&#31867;&#21253;&#21547;&#33258;&#23450;&#20041;&#24341;&#25806;&#24517;&#39035;&#23454;&#29616;&#30340;&#20843;&#20010;&#26041;&#27861;&#65306;</p><pre><code class="language-php">use Laravel\Scout\Builder;
+
+abstract public function update($models);
+abstract public function delete($models);
+abstract public function search(Builder $builder);
+abstract public function paginate(Builder $builder, $perPage, $page);
+abstract public function mapIds($results);
+abstract public function map(Builder $builder, $results, $model);
+abstract public function getTotalCount($results);
+abstract public function flush($model);</code></pre><p>&#26597;&#30475; <code>Laravel\Scout\Engines\AlgoliaEngine</code> &#31867;&#19978;&#36825;&#20123;&#26041;&#27861;&#30340;&#23454;&#29616;&#21487;&#33021;&#20250;&#26377;&#25152;&#24110;&#21161;&#12290;&#35813;&#31867;&#23558;&#20026;&#20320;&#25552;&#20379;&#19968;&#20010;&#33391;&#22909;&#30340;&#36215;&#28857;&#65292;&#24110;&#21161;&#20320;&#20102;&#35299;&#22914;&#20309;&#22312;&#33258;&#24049;&#30340;&#24341;&#25806;&#20013;&#23454;&#29616;&#27599;&#20010;&#26041;&#27861;&#12290;</p><h4 id="8809ad07dd513626ae559dd1546dc103">&#27880;&#20876;&#24341;&#25806;</h4><p>&#32534;&#20889;&#33258;&#23450;&#20041;&#24341;&#25806;&#21518;&#65292;&#21487;&#20197;&#20351;&#29992; Scout &#24341;&#25806;&#31649;&#29702;&#22120;&#30340; <code>extend</code> &#26041;&#27861;&#23558;&#20854;&#27880;&#20876;&#21040; Scout&#12290;Scout &#30340;&#24341;&#25806;&#31649;&#29702;&#22120;&#21487;&#20197;&#20174; Laravel &#26381;&#21153;&#23481;&#22120;&#20013;&#35299;&#26512;&#12290;&#24212;&#35813;&#20174; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#25110;&#24212;&#29992;&#20351;&#29992;&#30340;&#20219;&#20309;&#20854;&#20182;&#26381;&#21153;&#25552;&#20379;&#32773;&#20013;&#35843;&#29992; <code>extend</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use App\ScoutExtensions\MySqlSearchEngine;
+use Laravel\Scout\EngineManager;
+
+/**
+ * &#24341;&#23548;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    resolve(EngineManager::class)-&gt;extend('mysql', function () {
+        return new MySqlSearchEngine;
+    });
+}</code></pre><p>&#27880;&#20876;&#24341;&#25806;&#21518;&#65292;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>config/scout.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23558;&#20854;&#25351;&#23450;&#20026;&#40664;&#35748; Scout <code>driver</code>&#65306;</p><pre><code class="language-php">'driver' =&gt; 'mysql',</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Laravel Scout: <i><a href="https://github.com/laravel/scout" target="_blank">https://github.com/laravel/scout</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Eloquent 模型: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent" target="_blank">/docs/Laravel 13.x/eloquent</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> search 文档: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/search" target="_blank">/docs/Laravel 13.x/search</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Algolia: <i><a href="https://www.algolia.com/" target="_blank">https://www.algolia.com/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> Meilisearch: <i><a href="https://www.meilisearch.com" target="_blank">https://www.meilisearch.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Typesense: <i><a href="https://typesense.org" target="_blank">https://typesense.org</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> Turbopuffer: <i><a href="https://turbopuffer.com" target="_blank">https://turbopuffer.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 自定义引擎: <i><a href="2wy3l13ykm.html#custom-engines" target="_blank">#custom-engines</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> 队列驱动: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues" target="_blank">/docs/Laravel 13.x/queues</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> 唯一任务锁: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues#unique-jobs" target="_blank">/docs/Laravel 13.x/queues#unique-jobs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> Meilisearch: <i><a href="https://www.meilisearch.com" target="_blank">https://www.meilisearch.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> Laravel Sail: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sail#meilisearch" target="_blank">/docs/Laravel 13.x/sail#meilisearch</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> Meilisearch 文档: <i><a href="https://docs.meilisearch.com/learn/getting_started/quick_start.html" target="_blank">https://docs.meilisearch.com/learn/getting_started/quick_start.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> Meilisearch 关于二进制兼容性的文档: <i><a href="https://github.com/meilisearch/meilisearch-php#-compatibility-with-meilisearch" target="_blank">https://github.com/meilisearch/meilisearch-php#-compatibility-with-meilisearch</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 查看 Meilisearch 服务本身的任何其他破坏性变更: <i><a href="https://github.com/meilisearch/Meilisearch/releases" target="_blank">https://github.com/meilisearch/Meilisearch/releases</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> Typesense: <i><a href="https://typesense.org" target="_blank">https://typesense.org</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> 自托管: <i><a href="https://typesense.org/docs/guide/install-typesense.html#option-2-local-machine-self-hosting" target="_blank">https://typesense.org/docs/guide/install-typesense.html#option-2-local-machine-self-hosting</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> Typesense Cloud: <i><a href="https://cloud.typesense.org" target="_blank">https://cloud.typesense.org</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> Laravel Sail: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sail" target="_blank">/docs/Laravel 13.x/sail</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> Typesense 文档: <i><a href="https://typesense.org/docs/guide/#quick-start" target="_blank">https://typesense.org/docs/guide/#quick-start</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> Turbopuffer: <i><a href="https://turbopuffer.com" target="_blank">https://turbopuffer.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> 定义可搜索数据: <i><a href="2wy3l13ykm.html#configuring-searchable-data" target="_blank">#configuring-searchable-data</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> 执行搜索查询: <i><a href="2wy3l13ykm.html#searching" target="_blank">#searching</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> 已配置为可搜索: <i><a href="2wy3l13ykm.html#configuring-searchable-data" target="_blank">#configuring-searchable-data</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> 全文索引: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/migrations#available-index-types" target="_blank">/docs/Laravel 13.x/migrations#available-index-types</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> 数据库引擎: <i><a href="2wy3l13ykm.html#database-engine" target="_blank">#database-engine</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> 执行搜索查询: <i><a href="2wy3l13ykm.html#searching" target="_blank">#searching</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> 数据库引擎: <i><a href="2wy3l13ykm.html#database-engine" target="_blank">#database-engine</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> 任何其他支持的设置: <i><a href="https://www.algolia.com/doc/rest-api/search/#tag/Indices/operation/setSettings" target="_blank">https://www.algolia.com/doc/rest-api/search/#tag/Indices/operation/setSettings</a></i><br><code style="font-size: 90%; opacity: 0.6;">[30]</code> 其他支持的设置字段: <i><a href="https://docs.meilisearch.com/reference/api/settings.html" target="_blank">https://docs.meilisearch.com/reference/api/settings.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[31]</code> Laravel AI SDK: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/ai-sdk" target="_blank">/docs/Laravel 13.x/ai-sdk</a></i><br><code style="font-size: 90%; opacity: 0.6;">[32]</code> Typesense 文档: <i><a href="https://typesense.org/docs/latest/api/collections.html#schema-parameters" target="_blank">https://typesense.org/docs/latest/api/collections.html#schema-parameters</a></i><br><code style="font-size: 90%; opacity: 0.6;">[33]</code> 搜索参数: <i><a href="https://typesense.org/docs/latest/api/search.html#search-parameters" target="_blank">https://typesense.org/docs/latest/api/search.html#search-parameters</a></i><br><code style="font-size: 90%; opacity: 0.6;">[34]</code> Laravel AI SDK: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/ai-sdk" target="_blank">/docs/Laravel 13.x/ai-sdk</a></i><br><code style="font-size: 90%; opacity: 0.6;">[35]</code> 排队任务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues" target="_blank">/docs/Laravel 13.x/queues</a></i><br><code style="font-size: 90%; opacity: 0.6;">[36]</code> 不会被恢复: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues#handling-relationships" target="_blank">/docs/Laravel 13.x/queues#handling-relationships</a></i><br><code style="font-size: 90%; opacity: 0.6;">[37]</code> 使用队列: <i><a href="2wy3l13ykm.html#queueing" target="_blank">#queueing</a></i><br><code style="font-size: 90%; opacity: 0.6;">[38]</code> 分块: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent#chunking-results" target="_blank">/docs/Laravel 13.x/eloquent#chunking-results</a></i><br><code style="font-size: 90%; opacity: 0.6;">[39]</code> 软删除: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent#soft-deleting" target="_blank">/docs/Laravel 13.x/eloquent#soft-deleting</a></i><br><code style="font-size: 90%; opacity: 0.6;">[40]</code> where 子句: <i><a href="2wy3l13ykm.html#where-clauses" target="_blank">#where-clauses</a></i><br><code style="font-size: 90%; opacity: 0.6;">[41]</code> Laravel AI SDK: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/ai-sdk" target="_blank">/docs/Laravel 13.x/ai-sdk</a></i><br><code style="font-size: 90%; opacity: 0.6;">[42]</code> 原生嵌入: <i><a href="2wy3l13ykm.html#turbopuffer-configuration" target="_blank">#turbopuffer-configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[43]</code> searchableAs: <i><a href="2wy3l13ykm.html#configuring-model-indexes" target="_blank">#configuring-model-indexes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[44]</code> 可过滤属性: <i><a href="2wy3l13ykm.html#meilisearch-index-settings" target="_blank">#meilisearch-index-settings</a></i><br><code style="font-size: 90%; opacity: 0.6;">[45]</code> Scout where 子句: <i><a href="2wy3l13ykm.html#where-clauses" target="_blank">#where-clauses</a></i><br><code style="font-size: 90%; opacity: 0.6;">[46]</code> 对传统 Eloquent 查询进行分页: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/pagination" target="_blank">/docs/Laravel 13.x/pagination</a></i><br><code style="font-size: 90%; opacity: 0.6;">[47]</code> Blade: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/blade" target="_blank">/docs/Laravel 13.x/blade</a></i><br><code style="font-size: 90%; opacity: 0.6;">[48]</code> 软删除: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent#soft-deleting" target="_blank">/docs/Laravel 13.x/eloquent#soft-deleting</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="xq9zr3jvdo.html#blog1097" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Laravel Sanctum</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="3dykq5oyl0.html#blog1099" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">Laravel Socialite</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

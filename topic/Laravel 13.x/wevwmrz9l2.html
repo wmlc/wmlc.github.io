@@ -1,0 +1,1946 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Blade 模板 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/wevwmrz9l2.html', function (data, status) {
+            addView('wevwmrz9l2.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Blade 模板</h1><ul>
+<li><a href="wevwmrz9l2.html#e05dce83e5129785b9f316978a14b896">简介</a>
+<ul>
+<li><a href="wevwmrz9l2.html#c79996ae0195c266426e23c73c43c63d">用 Livewire 增强 Blade</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#6a96da50c37d0f6b7e93e36e85d5de7a">显示数据</a>
+<ul>
+<li><a href="wevwmrz9l2.html#2a1e393e66e11b58f67c18787ada3e6d">HTML 实体编码</a>
+<ul>
+<li><a href="wevwmrz9l2.html#ad332a24718805357e76e11fa2590fb5">显示未转义的数据</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#d20681a27e7830adb9fbd17cfe5fdff8">Blade 与 JavaScript 框架</a>
+<ul>
+<li><a href="wevwmrz9l2.html#fe5f8e5e730afd3c8c12d128d37de53f">渲染 JSON</a></li>
+<li><a href="wevwmrz9l2.html#c0ade5ac5786c45f0d0de3103c8001ed">@verbatim 指令</a></li>
+</ul></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#206f100755e57f8372e2d50e700ec0cf">Blade 指令</a>
+<ul>
+<li><a href="wevwmrz9l2.html#f948c4115608d2975a192526782e9746">if 语句</a>
+<ul>
+<li><a href="wevwmrz9l2.html#110b8b364512235acaadb257f6e3a59b">身份验证指令</a></li>
+<li><a href="wevwmrz9l2.html#191edd510974c652a3d7320cfb68fa37">环境指令</a></li>
+<li><a href="wevwmrz9l2.html#0f23e7e889cfae3088df050ed790f6d8">section 指令</a></li>
+<li><a href="wevwmrz9l2.html#1029fcae5291f12a28fc417432738424">session 指令</a></li>
+<li><a href="wevwmrz9l2.html#51a2d0d7ab1d04c23e2e3359c55f0e9c">context 指令</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#8d7810f3dd2016b64cca490c81e89413">switch 语句</a></li>
+<li><a href="wevwmrz9l2.html#69bdc66bb88ac5b63053e2bb7db41801">循环</a></li>
+<li><a href="wevwmrz9l2.html#f6e074645f7568b9125d83a1ec13e983">循环变量</a></li>
+<li><a href="wevwmrz9l2.html#2e80ec194d12b2c38a5ee1df45b28ca8">条件类与样式</a></li>
+<li><a href="wevwmrz9l2.html#259e698b03360390354501f1b2db270b">附加属性</a></li>
+<li><a href="wevwmrz9l2.html#518004e1c1c5f0212deba50fd88c49a5">包含子视图</a>
+<ul>
+<li><a href="wevwmrz9l2.html#65999cc52047fdaada0fd399efa4d106">为集合渲染视图</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#6bd3965771da8bf628ef65a28f7a0ef8">@once 指令</a></li>
+<li><a href="wevwmrz9l2.html#55609fb8569cd498585fdeb2e9df97ed">原生 PHP</a></li>
+<li><a href="wevwmrz9l2.html#8456bc40d48da5af833f1c63385e9879">字体</a></li>
+<li><a href="wevwmrz9l2.html#ee656aa13bfbf6dfd83440765959d43f">注释</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#bb79667f37035e9562ec6bcffd6cf8ef">组件</a>
+<ul>
+<li><a href="wevwmrz9l2.html#1ca5f5e0e85526bf14d7915b820d4e7a">手动注册包组件</a>
+<ul>
+<li><a href="wevwmrz9l2.html#e1b9ba960b8765cef62d0da39483f15c">渲染组件</a></li>
+<li><a href="wevwmrz9l2.html#e17fee28b4975abdb1fb3ef9dd95c9f1">Index 组件</a></li>
+<li><a href="wevwmrz9l2.html#94b06e40e000169af687fe9b139d2d7e">向组件传递数据</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#a848d0ef91630c5096dde352aa7bf163">大小写约定</a></li>
+<li><a href="wevwmrz9l2.html#a51a2d8ac043c93458bebd254238f680">简短属性语法</a></li>
+<li><a href="wevwmrz9l2.html#9e7cf753f50ceb4283a2b6a0029f3371">转义属性渲染</a></li>
+<li><a href="wevwmrz9l2.html#1c4b49674ea86aaad36d5af1f9947bed">组件方法</a></li>
+<li><a href="wevwmrz9l2.html#d02a25bd51fb12491b74aaff4db55296">在组件类中访问属性和插槽</a></li>
+<li><a href="wevwmrz9l2.html#caf01c2e2c3326da85d3e7e0abaa93a7">附加依赖</a></li>
+<li><a href="wevwmrz9l2.html#ee1a29950cbd4539f99e84e2d5e9dc65">隐藏属性 / 方法</a>
+<ul>
+<li><a href="wevwmrz9l2.html#94e789e1280e0c80eb38a03c52842611">组件属性</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#643c5bbc4405ce967aa07b26520fa253">默认 / 合并属性</a></li>
+<li><a href="wevwmrz9l2.html#a1c77dd3397e2b98c7e21dc41b262907">按条件合并类</a></li>
+<li><a href="wevwmrz9l2.html#6be60560e8b6949df3c700144f5b995c">非 class 属性的合并</a></li>
+<li><a href="wevwmrz9l2.html#7d0f0dc70834a6b41fe56d7ca8f9c75a">检索和过滤属性</a>
+<ul>
+<li><a href="wevwmrz9l2.html#e5f86b88c11d264c9a2008a8a188e78a">保留关键字</a></li>
+<li><a href="wevwmrz9l2.html#bab5bc7935d5e76bdcd0a0bdf6bb2500">插槽</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#18c532f95f5d9576eac10ec32e60c7df">作用域插槽</a></li>
+<li><a href="wevwmrz9l2.html#a131d312d6adc6e75d9bd5a6f10e46b1">插槽属性</a>
+<ul>
+<li><a href="wevwmrz9l2.html#b28c2be4135697325dd3bf243a363b22">内联组件视图</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#88da71fd949d030325ae54e2228ecbcc">生成内联视图组件</a>
+<ul>
+<li><a href="wevwmrz9l2.html#6bb6a59c43edfd89960dd0d8916cf106">动态组件</a></li>
+<li><a href="wevwmrz9l2.html#fb68df203e4efa6ce839e0ca7779a272">手动注册组件</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#b98d7e0c57bf321d926869160461e2d3">自动加载包组件</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#821a9c48046e7c37f37e94c86a5de724">匿名组件</a>
+<ul>
+<li><a href="wevwmrz9l2.html#05a29599487da2cef43c4c41364ade46">匿名 Index 组件</a></li>
+<li><a href="wevwmrz9l2.html#e3e26c1706595152a635c822797f62bf">数据属性 / 属性</a></li>
+<li><a href="wevwmrz9l2.html#f3efff3bd5aeb72a4efab0405e414910">访问父级数据</a></li>
+<li><a href="wevwmrz9l2.html#0476dc81b3e487fc353c4a8b6bfb03f0">匿名组件路径</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#0ef9972c411b1a2d355a3b4651aa64f4">构建布局</a>
+<ul>
+<li><a href="wevwmrz9l2.html#60fa57027a435ee5148fbc9fe1f20c6e">使用组件构建布局</a>
+<ul>
+<li><a href="wevwmrz9l2.html#b4e6254fa68c4ec7b7c4812433a91297">定义布局组件</a></li>
+<li><a href="wevwmrz9l2.html#4d85b4b148516e043f8af14d31a69af0">应用布局组件</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#7e0b517fe8e6a716f6d371161bfa100f">使用模板继承构建布局</a>
+<ul>
+<li><a href="wevwmrz9l2.html#2c8530985d722d7e128883ef5fb3e43d">定义布局</a></li>
+<li><a href="wevwmrz9l2.html#8685fc9b0d3d1842d6606cb34a4ef7f8">扩展布局</a></li>
+</ul></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#eee1e2258d7ea163fec625ee44be9637">表单</a>
+<ul>
+<li><a href="wevwmrz9l2.html#f2846d61c9a487cf7cec1050cb53d155">CSRF 字段</a></li>
+<li><a href="wevwmrz9l2.html#4f64d1a0f6ad394a067de11a8436cec8">Method 字段</a></li>
+<li><a href="wevwmrz9l2.html#b1d83b54cc3e89efc57b13a3ef6807fd">验证错误</a></li>
+</ul></li>
+<li><a href="wevwmrz9l2.html#411e226d4fcf13d4e1af66d9fa664ef3">Stacks</a></li>
+<li><a href="wevwmrz9l2.html#76c46be1cc63f78f5e3866c63c2dc86a">服务注入</a></li>
+<li><a href="wevwmrz9l2.html#832e571d78e1da7bd4521d932e686d62">渲染内联 Blade 模板</a></li>
+<li><a href="wevwmrz9l2.html#8b5d1a20827cf8c66ef4db7d5069c880">渲染 Blade Fragments</a></li>
+<li><a href="wevwmrz9l2.html#23338b60ecd7af1a75aca0f9dc3f95a4">扩展 Blade</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>Blade &#26159; Laravel &#20869;&#32622;&#30340;&#31616;&#27905;&#32780;&#24378;&#22823;&#30340;&#27169;&#26495;&#24341;&#25806;&#12290;&#19982;&#19968;&#20123; PHP &#27169;&#26495;&#24341;&#25806;&#19981;&#21516;&#65292;Blade &#19981;&#38480;&#21046;&#20320;&#22312;&#27169;&#26495;&#20013;&#20351;&#29992;&#21407;&#29983; PHP &#20195;&#30721;&#12290;&#20107;&#23454;&#19978;&#65292;&#25152;&#26377; Blade &#27169;&#26495;&#37117;&#20250;&#34987;&#32534;&#35793;&#20026;&#21407;&#29983; PHP &#20195;&#30721;&#24182;&#32531;&#23384;&#36215;&#26469;&#65292;&#30452;&#21040;&#23427;&#20204;&#34987;&#20462;&#25913;&#65292;&#36825;&#24847;&#21619;&#30528; Blade &#22522;&#26412;&#19978;&#19981;&#20250;&#32473;&#20320;&#30340;&#24212;&#29992;&#24102;&#26469;&#20219;&#20309;&#39069;&#22806;&#24320;&#38144;&#12290;Blade &#27169;&#26495;&#25991;&#20214;&#20351;&#29992; <code>.blade.php</code> &#25991;&#20214;&#25193;&#23637;&#21517;&#65292;&#36890;&#24120;&#23384;&#25918;&#22312; <code>resources/views</code> &#30446;&#24405;&#20013;&#12290;</p><p>&#20320;&#21487;&#20197;&#22312;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#20013;&#20351;&#29992;&#20840;&#23616;&#30340; <code>view</code> &#36741;&#21161;&#20989;&#25968;&#36820;&#22238; Blade &#35270;&#22270;&#12290;&#24403;&#28982;&#65292;&#27491;&#22914; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/views" target="_blank">&#35270;&#22270;</a> &#25991;&#26723;&#20013;&#25552;&#21040;&#30340;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; <code>view</code> &#36741;&#21161;&#20989;&#25968;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#23558;&#25968;&#25454;&#20256;&#36882;&#32473; Blade &#35270;&#22270;&#65306;</p><pre><code class="language-php">Route::get('/', function () {
+    return view('greeting', ['name' =&gt; 'Finn']);
+});</code></pre><h3 id="c79996ae0195c266426e23c73c43c63d">&#29992; Livewire &#22686;&#24378; Blade</h3><p>&#24819;&#35753;&#20320;&#30340; Blade &#27169;&#26495;&#26356;&#36827;&#19968;&#27493;&#65292;&#36731;&#26494;&#26500;&#24314;&#21160;&#24577;&#30028;&#38754;&#21527;&#65311;&#26469;&#30475;&#30475; <a href="https://livewire.laravel.com" target="_blank" rel="noopener noreferrer">Laravel Livewire</a>&#12290;Livewire &#20801;&#35768;&#20320;&#32534;&#20889;&#24102;&#26377;&#21160;&#24577;&#21151;&#33021;&#30340; Blade &#32452;&#20214;&#65292;&#36825;&#20123;&#21151;&#33021;&#36890;&#24120;&#21482;&#33021;&#36890;&#36807; React&#12289;Svelte &#25110; Vue &#31561;&#21069;&#31471;&#26694;&#26550;&#23454;&#29616;&#65292;&#20026;&#26500;&#24314;&#29616;&#20195;&#21270;&#12289;&#21709;&#24212;&#24335;&#21069;&#31471;&#25552;&#20379;&#20102;&#19968;&#31181;&#26497;&#20339;&#30340;&#26041;&#24335;&#65292;&#26080;&#38656;&#25215;&#25285;&#35768;&#22810; JavaScript &#26694;&#26550;&#30340;&#22797;&#26434;&#24615;&#12289;&#23458;&#25143;&#31471;&#28210;&#26579;&#25110;&#26500;&#24314;&#27493;&#39588;&#12290;</p><h2 id="6a96da50c37d0f6b7e93e36e85d5de7a">&#26174;&#31034;&#25968;&#25454;</h2><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#23558;&#21464;&#37327;&#21253;&#35065;&#22312;&#22823;&#25324;&#21495;&#20013;&#26469;&#26174;&#31034;&#20256;&#36882;&#32473; Blade &#35270;&#22270;&#30340;&#25968;&#25454;&#12290;&#20363;&#22914;&#65292;&#32473;&#23450;&#20197;&#19979;&#36335;&#30001;&#65306;</p><pre><code class="language-php">Route::get('/', function () {
+    return view('welcome', ['name' =&gt; 'Samantha']);
+});</code></pre><p>&#20320;&#21487;&#20197;&#20687;&#19979;&#38754;&#36825;&#26679;&#26174;&#31034; <code>name</code> &#21464;&#37327;&#30340;&#20869;&#23481;&#65306;</p><pre><code class="language-blade">Hello, {{ $name }}.</code></pre><blockquote>
+<p>[!NOTE]<br>
+Blade &#30340; <code>{{ }}</code> &#36755;&#20986;&#35821;&#21477;&#20250;&#33258;&#21160;&#32463;&#36807; PHP &#30340; <code>htmlspecialchars</code> &#20989;&#25968;&#22788;&#29702;&#65292;&#20197;&#38450;&#27490; XSS &#25915;&#20987;&#12290;</p>
+</blockquote><p>&#20320;&#21487;&#20197;&#26174;&#31034;&#20256;&#36882;&#32473;&#35270;&#22270;&#30340;&#21464;&#37327;&#20869;&#23481;&#65292;&#19981;&#20165;&#38480;&#20110;&#27492;&#12290;&#20320;&#36824;&#21487;&#20197;&#36755;&#20986;&#20219;&#20309; PHP &#20989;&#25968;&#30340;&#32467;&#26524;&#12290;&#20107;&#23454;&#19978;&#65292;&#20320;&#21487;&#20197;&#22312; Blade &#36755;&#20986;&#35821;&#21477;&#20013;&#25918;&#20837;&#20219;&#20309;&#20320;&#24819;&#35201;&#30340; PHP &#20195;&#30721;&#65306;</p><pre><code class="language-blade">The current UNIX timestamp is {{ time() }}.</code></pre><h3 id="2a1e393e66e11b58f67c18787ada3e6d">HTML &#23454;&#20307;&#32534;&#30721;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Blade&#65288;&#20197;&#21450; Laravel &#30340; <code>e</code> &#20989;&#25968;&#65289;&#20250;&#23545; HTML &#23454;&#20307;&#36827;&#34892;&#21452;&#37325;&#32534;&#30721;&#12290;&#22914;&#26524;&#20320;&#24819;&#31105;&#29992;&#21452;&#37325;&#32534;&#30721;&#65292;&#35831;&#22312; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992; <code>Blade::withoutDoubleEncoding</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        Blade::withoutDoubleEncoding();
+    }
+}</code></pre><h4 id="ad332a24718805357e76e11fa2590fb5">&#26174;&#31034;&#26410;&#36716;&#20041;&#30340;&#25968;&#25454;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Blade &#30340; <code>{{ }}</code> &#35821;&#21477;&#20250;&#33258;&#21160;&#32463;&#36807; PHP &#30340; <code>htmlspecialchars</code> &#20989;&#25968;&#22788;&#29702;&#65292;&#20197;&#38450;&#27490; XSS &#25915;&#20987;&#12290;&#22914;&#26524;&#20320;&#19981;&#24076;&#26395;&#25968;&#25454;&#34987;&#36716;&#20041;&#65292;&#21487;&#20197;&#20351;&#29992;&#20197;&#19979;&#35821;&#27861;&#65306;</p><pre><code class="language-blade">Hello, {!! $name !!}.</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22312;&#36755;&#20986;&#29992;&#25143;&#25552;&#20379;&#30340;&#20869;&#23481;&#26102;&#65292;&#35831;&#21153;&#24517;&#23567;&#24515;&#12290;&#36890;&#24120;&#24212;&#20351;&#29992;&#24102;&#36716;&#20041;&#30340;&#21452;&#22823;&#25324;&#21495;&#35821;&#27861;&#26469;&#26174;&#31034;&#29992;&#25143;&#25552;&#20379;&#30340;&#25968;&#25454;&#65292;&#20197;&#38450;&#27490; XSS &#25915;&#20987;&#12290;</p>
+</blockquote><h3 id="d20681a27e7830adb9fbd17cfe5fdff8">Blade &#19982; JavaScript &#26694;&#26550;</h3><p>&#30001;&#20110;&#35768;&#22810; JavaScript &#26694;&#26550;&#20063;&#20351;&#29992;&#12300;&#22823;&#25324;&#21495;&#12301;&#26469;&#25351;&#31034;&#26576;&#20010;&#34920;&#36798;&#24335;&#24212;&#22312;&#27983;&#35272;&#22120;&#20013;&#26174;&#31034;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>@</code> &#31526;&#21495;&#21578;&#30693; Blade &#28210;&#26579;&#24341;&#25806;&#26576;&#20010;&#34920;&#36798;&#24335;&#24212;&#20445;&#25345;&#21407;&#26679;&#12290;&#20363;&#22914;&#65306;</p><pre><code class="language-blade">&lt;h1&gt;Laravel&lt;/h1&gt;
+
+Hello, @{{ name }}.</code></pre><p>&#22312;&#36825;&#20010;&#20363;&#23376;&#20013;&#65292;<code>@</code> &#31526;&#21495;&#20250;&#34987; Blade &#31227;&#38500;&#65307;&#20294; <code>{{ name }}</code> &#34920;&#36798;&#24335;&#20250;&#20445;&#25345;&#19981;&#21464;&#65292;&#20174;&#32780;&#20801;&#35768;&#23427;&#30001;&#20320;&#30340; JavaScript &#26694;&#26550;&#36827;&#34892;&#28210;&#26579;&#12290;</p><p><code>@</code> &#31526;&#21495;&#20063;&#21487;&#20197;&#29992;&#26469;&#36716;&#20041; Blade &#25351;&#20196;&#65306;</p><pre><code class="language-blade">{{-- Blade template --}}
+@@if()
+
+&lt;!-- HTML output --&gt;
+@if()</code></pre><h4 id="fe5f8e5e730afd3c8c12d128d37de53f">&#28210;&#26579; JSON</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#23558;&#19968;&#20010;&#25968;&#32452;&#20256;&#36882;&#32473;&#35270;&#22270;&#65292;&#24182;&#23558;&#20854;&#28210;&#26579;&#20026; JSON &#20197;&#21021;&#22987;&#21270;&#19968;&#20010; JavaScript &#21464;&#37327;&#12290;&#20363;&#22914;&#65306;</p><pre><code class="language-php">&lt;script&gt;
+    var app = &lt;?php echo json_encode($array); ?&gt;;
+&lt;/script&gt;</code></pre><p>&#19981;&#36807;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Illuminate\Support\Js::from</code> &#26041;&#27861;&#65292;&#32780;&#26080;&#38656;&#25163;&#21160;&#35843;&#29992; <code>json_encode</code>&#12290;<code>from</code> &#26041;&#27861;&#25509;&#21463;&#19982; PHP &#30340; <code>json_encode</code> &#20989;&#25968;&#30456;&#21516;&#30340;&#21442;&#25968;&#65307;&#20294;&#23427;&#20250;&#30830;&#20445;&#29983;&#25104;&#30340; JSON &#24050;&#27491;&#30830;&#36716;&#20041;&#65292;&#21487;&#20197;&#21253;&#21547;&#22312; HTML &#24341;&#21495;&#20869;&#12290;<code>from</code> &#26041;&#27861;&#20250;&#36820;&#22238;&#19968;&#20010; <code>JSON.parse</code> &#30340; JavaScript &#35821;&#21477;&#23383;&#31526;&#20018;&#65292;&#29992;&#20110;&#23558;&#32473;&#23450;&#30340;&#23545;&#35937;&#25110;&#25968;&#32452;&#36716;&#25442;&#20026;&#26377;&#25928;&#30340; JavaScript &#23545;&#35937;&#65306;</p><pre><code class="language-blade">&lt;script&gt;
+    var app = {{ Illuminate\Support\Js::from($array) }};
+&lt;/script&gt;</code></pre><p>&#26368;&#26032;&#29256; Laravel &#24212;&#29992;&#39592;&#26550;&#21253;&#21547;&#19968;&#20010; <code>Js</code> Facade&#65292;&#21487;&#22312; Blade &#27169;&#26495;&#20869;&#26041;&#20415;&#22320;&#35775;&#38382;&#27492;&#21151;&#33021;&#65306;</p><pre><code class="language-blade">&lt;script&gt;
+    var app = {{ Js::from($array) }};
+&lt;/script&gt;</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#20320;&#24212;&#20165;&#20351;&#29992; <code>Js::from</code> &#26041;&#27861;&#23558;&#29616;&#26377;&#21464;&#37327;&#28210;&#26579;&#20026; JSON&#12290;Blade &#27169;&#26495;&#22522;&#20110;&#27491;&#21017;&#34920;&#36798;&#24335;&#65292;&#23581;&#35797;&#21521;&#35813;&#25351;&#20196;&#20256;&#36882;&#22797;&#26434;&#34920;&#36798;&#24335;&#21487;&#33021;&#20250;&#23548;&#33268;&#24847;&#22806;&#22833;&#36133;&#12290;</p>
+</blockquote><h4 id="c0ade5ac5786c45f0d0de3103c8001ed"><code>@verbatim</code> &#25351;&#20196;</h4><p>&#22914;&#26524;&#27169;&#26495;&#20013;&#26377;&#22823;&#27573;&#21306;&#22495;&#29992;&#20110;&#26174;&#31034; JavaScript &#21464;&#37327;&#65292;&#21487;&#20197;&#23558; HTML &#21253;&#35065;&#22312; <code>@verbatim</code> &#25351;&#20196;&#20013;&#65292;&#36825;&#26679;&#23601;&#26080;&#38656;&#22312;&#27599;&#20010; Blade &#36755;&#20986;&#35821;&#21477;&#21069;&#28155;&#21152; <code>@</code> &#31526;&#21495;&#65306;</p><pre><code class="language-blade">@verbatim
+    &lt;div class="container"&gt;
+        Hello, {{ name }}.
+    &lt;/div&gt;
+@endverbatim</code></pre><h2 id="206f100755e57f8372e2d50e700ec0cf">Blade &#25351;&#20196;</h2><p>&#38500;&#20102;&#27169;&#26495;&#32487;&#25215;&#21644;&#25968;&#25454;&#26174;&#31034;&#20043;&#22806;&#65292;Blade &#36824;&#20026;&#24120;&#35265;&#30340; PHP &#25511;&#21046;&#32467;&#26500;&#65288;&#22914;&#26465;&#20214;&#35821;&#21477;&#21644;&#24490;&#29615;&#65289;&#25552;&#20379;&#20102;&#20415;&#25463;&#30340;&#24555;&#25463;&#26041;&#24335;&#12290;&#36825;&#20123;&#24555;&#25463;&#26041;&#24335;&#25552;&#20379;&#20102;&#19968;&#31181;&#38750;&#24120;&#31616;&#27905;&#30340;&#26041;&#24335;&#26469;&#22788;&#29702; PHP &#25511;&#21046;&#32467;&#26500;&#65292;&#21516;&#26102;&#20173;&#28982;&#19982;&#23545;&#24212;&#30340; PHP &#20889;&#27861;&#20445;&#25345;&#19968;&#33268;&#12290;</p><h3 id="f948c4115608d2975a192526782e9746">if &#35821;&#21477;</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>@if</code>&#12289;<code>@elseif</code>&#12289;<code>@else</code> &#21644; <code>@endif</code> &#25351;&#20196;&#26469;&#26500;&#36896; <code>if</code> &#35821;&#21477;&#12290;&#36825;&#20123;&#25351;&#20196;&#30340;&#21151;&#33021;&#19982;&#23545;&#24212;&#30340; PHP &#35821;&#21477;&#23436;&#20840;&#30456;&#21516;&#65306;</p><pre><code class="language-blade">@if (count($records) === 1)
+    I have one record!
+@elseif (count($records) &gt; 1)
+    I have multiple records!
+@else
+    I don't have any records!
+@endif</code></pre><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;Blade &#36824;&#25552;&#20379;&#20102; <code>@unless</code> &#25351;&#20196;&#65306;</p><pre><code class="language-blade">@unless (Auth::check())
+    You are not signed in.
+@endunless</code></pre><p>&#38500;&#20102;&#19978;&#38754;&#35752;&#35770;&#30340;&#26465;&#20214;&#25351;&#20196;&#22806;&#65292;<code>@isset</code> &#21644; <code>@empty</code> &#25351;&#20196;&#36824;&#21487;&#20197;&#29992;&#20316;&#23545;&#24212; PHP &#20989;&#25968;&#30340;&#20415;&#25463;&#24555;&#25463;&#26041;&#24335;&#65306;</p><pre><code class="language-blade">@isset($records)
+    // $records is defined and is not null...
+@endisset
+
+@empty($records)
+    // $records is "empty"...
+@endempty</code></pre><h4 id="110b8b364512235acaadb257f6e3a59b">&#36523;&#20221;&#39564;&#35777;&#25351;&#20196;</h4><p><code>@auth</code> &#21644; <code>@guest</code> &#25351;&#20196;&#21487;&#29992;&#20110;&#24555;&#36895;&#21028;&#26029;&#24403;&#21069;&#29992;&#25143;&#26159;&#21542;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication" target="_blank">&#24050;&#36890;&#36807;&#36523;&#20221;&#39564;&#35777;</a>&#25110;&#26159;&#21542;&#20026;&#28216;&#23458;&#65306;</p><pre><code class="language-blade">@auth
+    // The user is authenticated...
+@endauth
+
+@guest
+    // The user is not authenticated...
+@endguest</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#20320;&#21487;&#20197;&#22312;&#20351;&#29992; <code>@auth</code> &#21644; <code>@guest</code> &#25351;&#20196;&#26102;&#25351;&#23450;&#35201;&#26816;&#26597;&#30340;&#36523;&#20221;&#39564;&#35777;&#30475;&#23432;&#22120;&#65306;</p><pre><code class="language-blade">@auth('admin')
+    // The user is authenticated...
+@endauth
+
+@guest('admin')
+    // The user is not authenticated...
+@endguest</code></pre><h4 id="191edd510974c652a3d7320cfb68fa37">&#29615;&#22659;&#25351;&#20196;</h4><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>@production</code> &#25351;&#20196;&#26816;&#26597;&#24212;&#29992;&#26159;&#21542;&#36816;&#34892;&#22312;&#29983;&#20135;&#29615;&#22659;&#20013;&#65306;</p><pre><code class="language-blade">@production
+    // Production specific content...
+@endproduction</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>@env</code> &#25351;&#20196;&#21028;&#26029;&#24212;&#29992;&#26159;&#21542;&#36816;&#34892;&#22312;&#29305;&#23450;&#29615;&#22659;&#20013;&#65306;</p><pre><code class="language-blade">@env('staging')
+    // The application is running in "staging"...
+@endenv
+
+@env(['staging', 'production'])
+    // The application is running in "staging" or "production"...
+@endenv</code></pre><h4 id="0f23e7e889cfae3088df050ed790f6d8">section &#25351;&#20196;</h4><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>@hasSection</code> &#25351;&#20196;&#21028;&#26029;&#27169;&#26495;&#32487;&#25215;&#30340; section &#26159;&#21542;&#21253;&#21547;&#20869;&#23481;&#65306;</p><pre><code class="language-blade">@hasSection('navigation')
+    &lt;div class="pull-right"&gt;
+        @yield('navigation')
+    &lt;/div&gt;
+
+    &lt;div class="clearfix"&gt;&lt;/div&gt;
+@endif</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>sectionMissing</code> &#25351;&#20196;&#21028;&#26029;&#26576;&#20010; section &#26159;&#21542;&#27809;&#26377;&#20869;&#23481;&#65306;</p><pre><code class="language-blade">@sectionMissing('navigation')
+    &lt;div class="pull-right"&gt;
+        @include('default-navigation')
+    &lt;/div&gt;
+@endif</code></pre><h4 id="1029fcae5291f12a28fc417432738424">session &#25351;&#20196;</h4><p><code>@session</code> &#25351;&#20196;&#21487;&#29992;&#20110;&#21028;&#26029; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/session" target="_blank">session</a> &#20540;&#26159;&#21542;&#23384;&#22312;&#12290;&#22914;&#26524; session &#20540;&#23384;&#22312;&#65292;&#21017; <code>@session</code> &#21644; <code>@endsession</code> &#25351;&#20196;&#20043;&#38388;&#30340;&#27169;&#26495;&#20869;&#23481;&#23558;&#34987;&#27714;&#20540;&#12290;&#22312; <code>@session</code> &#25351;&#20196;&#30340;&#20869;&#23481;&#20013;&#65292;&#20320;&#21487;&#20197;&#36755;&#20986; <code>$value</code> &#21464;&#37327;&#20197;&#26174;&#31034; session &#20540;&#65306;</p><pre><code class="language-blade">@session('status')
+    &lt;div class="p-4 bg-green-100"&gt;
+        {{ $value }}
+    &lt;/div&gt;
+@endsession</code></pre><h4 id="51a2d0d7ab1d04c23e2e3359c55f0e9c">context &#25351;&#20196;</h4><p><code>@context</code> &#25351;&#20196;&#21487;&#29992;&#20110;&#21028;&#26029; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/context" target="_blank">context</a> &#20540;&#26159;&#21542;&#23384;&#22312;&#12290;&#22914;&#26524; context &#20540;&#23384;&#22312;&#65292;&#21017; <code>@context</code> &#21644; <code>@endcontext</code> &#25351;&#20196;&#20043;&#38388;&#30340;&#27169;&#26495;&#20869;&#23481;&#23558;&#34987;&#27714;&#20540;&#12290;&#22312; <code>@context</code> &#25351;&#20196;&#30340;&#20869;&#23481;&#20013;&#65292;&#20320;&#21487;&#20197;&#36755;&#20986; <code>$value</code> &#21464;&#37327;&#20197;&#26174;&#31034; context &#20540;&#65306;</p><pre><code class="language-blade">@context('canonical')
+    &lt;link href="{{ $value }}" rel="canonical"&gt;
+@endcontext</code></pre><h3 id="8d7810f3dd2016b64cca490c81e89413">switch &#35821;&#21477;</h3><p>&#21487;&#20197;&#20351;&#29992; <code>@switch</code>&#12289;<code>@case</code>&#12289;<code>@break</code>&#12289;<code>@default</code> &#21644; <code>@endswitch</code> &#25351;&#20196;&#26469;&#26500;&#36896; switch &#35821;&#21477;&#65306;</p><pre><code class="language-blade">@switch($i)
+    @case(1)
+        First case...
+        @break
+
+    @case(2)
+        Second case...
+        @break
+
+    @default
+        Default case...
+@endswitch</code></pre><h3 id="69bdc66bb88ac5b63053e2bb7db41801">&#24490;&#29615;</h3><p>&#38500;&#20102;&#26465;&#20214;&#35821;&#21477;&#22806;&#65292;Blade &#36824;&#25552;&#20379;&#20102;&#19982; PHP &#24490;&#29615;&#32467;&#26500;&#23545;&#24212;&#30340;&#31616;&#21333;&#25351;&#20196;&#12290;&#21516;&#26679;&#65292;&#36825;&#20123;&#25351;&#20196;&#30340;&#21151;&#33021;&#19982;&#23545;&#24212;&#30340; PHP &#20889;&#27861;&#23436;&#20840;&#30456;&#21516;&#65306;</p><pre><code class="language-blade">@for ($i = 0; $i &lt; 10; $i++)
+    The current value is {{ $i }}
+@endfor
+
+@foreach ($users as $user)
+    &lt;p&gt;This is user {{ $user-&gt;id }}&lt;/p&gt;
+@endforeach
+
+@forelse ($users as $user)
+    &lt;li&gt;{{ $user-&gt;name }}&lt;/li&gt;
+    @empty
+    &lt;p&gt;No users&lt;/p&gt;
+@endforelse
+
+@while (true)
+    &lt;p&gt;I'm looping forever.&lt;/p&gt;
+@endwhile</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22312; <code>foreach</code> &#24490;&#29615;&#20013;&#36845;&#20195;&#26102;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <a href="wevwmrz9l2.html#the-loop-variable" target="_blank">&#24490;&#29615;&#21464;&#37327;</a> &#26469;&#33719;&#21462;&#26377;&#20851;&#24490;&#29615;&#30340;&#26377;&#29992;&#20449;&#24687;&#65292;&#20363;&#22914;&#24403;&#21069;&#26159;&#24490;&#29615;&#30340;&#31532;&#19968;&#27425;&#36824;&#26159;&#26368;&#21518;&#19968;&#27425;&#36845;&#20195;&#12290;</p>
+</blockquote><p>&#22312;&#20351;&#29992;&#24490;&#29615;&#26102;&#65292;&#20320;&#36824;&#21487;&#20197;&#20351;&#29992; <code>@continue</code> &#21644; <code>@break</code> &#25351;&#20196;&#36339;&#36807;&#24403;&#21069;&#36845;&#20195;&#25110;&#32456;&#27490;&#24490;&#29615;&#65306;</p><pre><code class="language-blade">@foreach ($users as $user)
+    @if ($user-&gt;type == 1)
+        @continue
+    @endif
+
+    &lt;li&gt;{{ $user-&gt;name }}&lt;/li&gt;
+
+    @if ($user-&gt;number == 5)
+        @break
+    @endif
+@endforeach</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#22312;&#25351;&#20196;&#22768;&#26126;&#20013;&#21152;&#20837;&#32487;&#32493;&#25110;&#20013;&#26029;&#26465;&#20214;&#65306;</p><pre><code class="language-blade">@foreach ($users as $user)
+    @continue($user-&gt;type == 1)
+
+    &lt;li&gt;{{ $user-&gt;name }}&lt;/li&gt;
+
+    @break($user-&gt;number == 5)
+@endforeach</code></pre><h3 id="f6e074645f7568b9125d83a1ec13e983">&#24490;&#29615;&#21464;&#37327;</h3><p>&#22312; <code>foreach</code> &#24490;&#29615;&#36845;&#20195;&#36807;&#31243;&#20013;&#65292;&#24490;&#29615;&#20869;&#37096;&#20250;&#25552;&#20379;&#19968;&#20010; <code>$loop</code> &#21464;&#37327;&#12290;&#35813;&#21464;&#37327;&#25552;&#20379;&#20102;&#19968;&#20123;&#26377;&#29992;&#30340;&#20449;&#24687;&#65292;&#20363;&#22914;&#24403;&#21069;&#24490;&#29615;&#32034;&#24341;&#20197;&#21450;&#24403;&#21069;&#26159;&#21542;&#20026;&#24490;&#29615;&#30340;&#31532;&#19968;&#27425;&#25110;&#26368;&#21518;&#19968;&#27425;&#36845;&#20195;&#65306;</p><pre><code class="language-blade">@foreach ($users as $user)
+    @if ($loop-&gt;first)
+        This is the first iteration.
+    @endif
+
+    @if ($loop-&gt;last)
+        This is the last iteration.
+    @endif
+
+    &lt;p&gt;This is user {{ $user-&gt;id }}&lt;/p&gt;
+@endforeach</code></pre><p>&#22914;&#26524;&#20320;&#22788;&#20110;&#23884;&#22871;&#24490;&#29615;&#20013;&#65292;&#21487;&#20197;&#36890;&#36807; <code>parent</code> &#23646;&#24615;&#35775;&#38382;&#29238;&#32423;&#24490;&#29615;&#30340; <code>$loop</code> &#21464;&#37327;&#65306;</p><pre><code class="language-blade">@foreach ($users as $user)
+    @foreach ($user-&gt;posts as $post)
+        @if ($loop-&gt;parent-&gt;first)
+            This is the first iteration of the parent loop.
+        @endif
+    @endforeach
+@endforeach</code></pre><p><code>$loop</code> &#21464;&#37327;&#36824;&#21253;&#21547;&#35768;&#22810;&#20854;&#20182;&#26377;&#29992;&#30340;&#23646;&#24615;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#23646;&#24615;</th>
+<th>&#25551;&#36848;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$loop-&gt;index</code></td>
+<td>&#24403;&#21069;&#24490;&#29615;&#36845;&#20195;&#30340;&#32034;&#24341;&#65288;&#20174; 0 &#24320;&#22987;&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>$loop-&gt;iteration</code></td>
+<td>&#24403;&#21069;&#24490;&#29615;&#36845;&#20195;&#30340;&#27425;&#25968;&#65288;&#20174; 1 &#24320;&#22987;&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>$loop-&gt;remaining</code></td>
+<td>&#24490;&#29615;&#20013;&#21097;&#20313;&#30340;&#36845;&#20195;&#27425;&#25968;&#12290;</td>
+</tr>
+<tr>
+<td><code>$loop-&gt;count</code></td>
+<td>&#25152;&#36845;&#20195;&#25968;&#32452;&#20013;&#30340;&#20803;&#32032;&#24635;&#25968;&#12290;</td>
+</tr>
+<tr>
+<td><code>$loop-&gt;first</code></td>
+<td>&#24403;&#21069;&#26159;&#21542;&#20026;&#24490;&#29615;&#30340;&#31532;&#19968;&#27425;&#36845;&#20195;&#12290;</td>
+</tr>
+<tr>
+<td><code>$loop-&gt;last</code></td>
+<td>&#24403;&#21069;&#26159;&#21542;&#20026;&#24490;&#29615;&#30340;&#26368;&#21518;&#19968;&#27425;&#36845;&#20195;&#12290;</td>
+</tr>
+<tr>
+<td><code>$loop-&gt;even</code></td>
+<td>&#24403;&#21069;&#26159;&#21542;&#20026;&#20598;&#25968;&#27425;&#36845;&#20195;&#12290;</td>
+</tr>
+<tr>
+<td><code>$loop-&gt;odd</code></td>
+<td>&#24403;&#21069;&#26159;&#21542;&#20026;&#22855;&#25968;&#27425;&#36845;&#20195;&#12290;</td>
+</tr>
+<tr>
+<td><code>$loop-&gt;depth</code></td>
+<td>&#24403;&#21069;&#24490;&#29615;&#30340;&#23884;&#22871;&#23618;&#32423;&#12290;</td>
+</tr>
+<tr>
+<td><code>$loop-&gt;parent</code></td>
+<td>&#22312;&#23884;&#22871;&#24490;&#29615;&#20013;&#65292;&#29238;&#32423;&#24490;&#29615;&#30340;&#24490;&#29615;&#21464;&#37327;&#12290;</td>
+</tr>
+</tbody>
+</table><h3 id="2e80ec194d12b2c38a5ee1df45b28ca8">&#26465;&#20214;&#31867;&#19982;&#26679;&#24335;</h3><p><code>@class</code> &#25351;&#20196;&#20250;&#25353;&#26465;&#20214;&#32534;&#35793; CSS &#31867;&#23383;&#31526;&#20018;&#12290;&#35813;&#25351;&#20196;&#25509;&#21463;&#19968;&#20010;&#31867;&#25968;&#32452;&#65292;&#25968;&#32452;&#30340;&#38190;&#21253;&#21547;&#20320;&#24076;&#26395;&#28155;&#21152;&#30340;&#31867;&#65292;&#20540;&#26159;&#19968;&#20010;&#24067;&#23572;&#34920;&#36798;&#24335;&#12290;&#22914;&#26524;&#25968;&#32452;&#20803;&#32032;&#20351;&#29992;&#25968;&#23383;&#38190;&#65292;&#23427;&#23558;&#22987;&#32456;&#21253;&#21547;&#22312;&#28210;&#26579;&#30340;&#31867;&#21015;&#34920;&#20013;&#65306;</p><pre><code class="language-blade">@php
+    $isActive = false;
+    $hasError = true;
+@endphp
+
+&lt;span @class([
+    'p-4',
+    'font-bold' =&gt; $isActive,
+    'text-gray-500' =&gt; ! $isActive,
+    'bg-red' =&gt; $hasError,
+])&gt;&lt;/span&gt;
+
+&lt;span class="p-4 text-gray-500 bg-red"&gt;&lt;/span&gt;</code></pre><p>&#21516;&#26679;&#22320;&#65292;<code>@style</code> &#25351;&#20196;&#21487;&#20197;&#29992;&#20110;&#25353;&#26465;&#20214;&#21521; HTML &#20803;&#32032;&#28155;&#21152;&#20869;&#32852; CSS &#26679;&#24335;&#65306;</p><pre><code class="language-blade">@php
+    $isActive = true;
+@endphp
+
+&lt;span @style([
+    'background-color: red',
+    'font-weight: bold' =&gt; $isActive,
+])&gt;&lt;/span&gt;
+
+&lt;span style="background-color: red; font-weight: bold;"&gt;&lt;/span&gt;</code></pre><h3 id="259e698b03360390354501f1b2db270b">&#38468;&#21152;&#23646;&#24615;</h3><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>@checked</code> &#25351;&#20196;&#36731;&#26494;&#25351;&#31034;&#32473;&#23450;&#30340; HTML checkbox &#36755;&#20837;&#26159;&#21542;&#22788;&#20110;&#12300;&#36873;&#20013;&#12301;&#29366;&#24577;&#12290;&#22914;&#26524;&#25552;&#20379;&#30340;&#26465;&#20214;&#27714;&#20540;&#20026; <code>true</code>&#65292;&#35813;&#25351;&#20196;&#23558;&#36755;&#20986; <code>checked</code>&#65306;</p><pre><code class="language-blade">&lt;input
+    type="checkbox"
+    name="active"
+    value="active"
+    @checked(old('active', $user-&gt;active))
+/&gt;</code></pre><p>&#21516;&#26679;&#22320;&#65292;<code>@selected</code> &#25351;&#20196;&#21487;&#29992;&#20110;&#25351;&#31034;&#32473;&#23450;&#30340; select &#36873;&#39033;&#26159;&#21542;&#24212;&#22788;&#20110;&#12300;&#36873;&#20013;&#12301;&#29366;&#24577;&#65306;</p><pre><code class="language-blade">&lt;select name="version"&gt;
+    @foreach ($product-&gt;versions as $version)
+        &lt;option value="{{ $version }}" @selected(old('version') == $version)&gt;
+            {{ $version }}
+        &lt;/option&gt;
+    @endforeach
+&lt;/select&gt;</code></pre><p>&#27492;&#22806;&#65292;<code>@disabled</code> &#25351;&#20196;&#21487;&#29992;&#20110;&#25351;&#31034;&#32473;&#23450;&#20803;&#32032;&#26159;&#21542;&#24212;&#22788;&#20110;&#12300;&#31105;&#29992;&#12301;&#29366;&#24577;&#65306;</p><pre><code class="language-blade">&lt;button type="submit" @disabled($errors-&gt;isNotEmpty())&gt;Submit&lt;/button&gt;</code></pre><p>&#27492;&#22806;&#65292;<code>@readonly</code> &#25351;&#20196;&#21487;&#29992;&#20110;&#25351;&#31034;&#32473;&#23450;&#20803;&#32032;&#26159;&#21542;&#24212;&#22788;&#20110;&#12300;&#21482;&#35835;&#12301;&#29366;&#24577;&#65306;</p><pre><code class="language-blade">&lt;input
+    type="email"
+    name="email"
+    value="email@laravel.com"
+    @readonly($user-&gt;isNotAdmin())
+/&gt;</code></pre><p>&#27492;&#22806;&#65292;<code>@required</code> &#25351;&#20196;&#21487;&#29992;&#20110;&#25351;&#31034;&#32473;&#23450;&#20803;&#32032;&#26159;&#21542;&#20026;&#12300;&#24517;&#22635;&#12301;&#65306;</p><pre><code class="language-blade">&lt;input
+    type="text"
+    name="title"
+    value="title"
+    @required($user-&gt;isAdmin())
+/&gt;</code></pre><h3 id="518004e1c1c5f0212deba50fd88c49a5">&#21253;&#21547;&#23376;&#35270;&#22270;</h3><blockquote>
+<p>[!NOTE]<br>
+&#34429;&#28982;&#20320;&#21487;&#20197;&#33258;&#30001;&#20351;&#29992; <code>@include</code> &#25351;&#20196;&#65292;&#20294; Blade <a href="wevwmrz9l2.html#components" target="_blank">&#32452;&#20214;</a> &#25552;&#20379;&#20102;&#31867;&#20284;&#21151;&#33021;&#65292;&#24182;&#22312;&#25968;&#25454;&#19982;&#23646;&#24615;&#32465;&#23450;&#31561;&#26041;&#38754;&#27604; <code>@include</code> &#25351;&#20196;&#20855;&#26377;&#26356;&#22810;&#20248;&#21183;&#12290;</p>
+</blockquote><p>Blade &#30340; <code>@include</code> &#25351;&#20196;&#20801;&#35768;&#20320;&#20174;&#19968;&#20010;&#35270;&#22270;&#20869;&#21253;&#21547;&#21478;&#19968;&#20010; Blade &#35270;&#22270;&#12290;&#25152;&#26377;&#22312;&#29238;&#35270;&#22270;&#20013;&#21487;&#29992;&#30340;&#21464;&#37327;&#22312;&#21253;&#21547;&#30340;&#35270;&#22270;&#20013;&#21516;&#26679;&#21487;&#29992;&#65306;</p><pre><code class="language-blade">&lt;div&gt;
+    @include('shared.errors')
+
+    &lt;form&gt;
+        &lt;!-- Form Contents --&gt;
+    &lt;/form&gt;
+&lt;/div&gt;</code></pre><p>&#23613;&#31649;&#34987;&#21253;&#21547;&#30340;&#35270;&#22270;&#20250;&#32487;&#25215;&#29238;&#35270;&#22270;&#20013;&#25152;&#26377;&#21487;&#29992;&#30340;&#25968;&#25454;&#65292;&#20320;&#20063;&#21487;&#20197;&#20256;&#36882;&#19968;&#20010;&#39069;&#22806;&#30340;&#25968;&#25454;&#25968;&#32452;&#65292;&#36825;&#20123;&#25968;&#25454;&#23558;&#22312;&#34987;&#21253;&#21547;&#30340;&#35270;&#22270;&#20013;&#21487;&#29992;&#65306;</p><pre><code class="language-blade">@include('view.name', ['status' =&gt; 'complete'])</code></pre><p>&#22914;&#26524;&#20320;&#23581;&#35797; <code>@include</code> &#19968;&#20010;&#19981;&#23384;&#22312;&#30340;&#35270;&#22270;&#65292;Laravel &#23558;&#25243;&#20986;&#19968;&#20010;&#38169;&#35823;&#12290;&#22914;&#26524;&#20320;&#24076;&#26395;&#21253;&#21547;&#19968;&#20010;&#21487;&#33021;&#23384;&#22312;&#20063;&#21487;&#33021;&#19981;&#23384;&#22312;&#30340;&#35270;&#22270;&#65292;&#24212;&#20351;&#29992; <code>@includeIf</code> &#25351;&#20196;&#65306;</p><pre><code class="language-blade">@includeIf('view.name', ['status' =&gt; 'complete'])</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#22312;&#32473;&#23450;&#30340;&#24067;&#23572;&#34920;&#36798;&#24335;&#27714;&#20540;&#20026; <code>true</code> &#25110; <code>false</code> &#26102;&#25165; <code>@include</code> &#19968;&#20010;&#35270;&#22270;&#65292;&#21487;&#20197;&#20351;&#29992; <code>@includeWhen</code> &#21644; <code>@includeUnless</code> &#25351;&#20196;&#65306;</p><pre><code class="language-blade">@includeWhen($boolean, 'view.name', ['status' =&gt; 'complete'])
+
+@includeUnless($boolean, 'view.name', ['status' =&gt; 'complete'])</code></pre><p>&#35201;&#20174;&#32473;&#23450;&#30340;&#35270;&#22270;&#25968;&#32452;&#20013;&#21253;&#21547;&#31532;&#19968;&#20010;&#23384;&#22312;&#30340;&#35270;&#22270;&#65292;&#21487;&#20197;&#20351;&#29992; <code>includeFirst</code> &#25351;&#20196;&#65306;</p><pre><code class="language-blade">@includeFirst(['custom.admin', 'admin'], ['status' =&gt; 'complete'])</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#21253;&#21547;&#35270;&#22270;&#26102;&#19981;&#35201;&#20174;&#29238;&#35270;&#22270;&#32487;&#25215;&#20219;&#20309;&#21464;&#37327;&#65292;&#21487;&#20197;&#20351;&#29992; <code>@includeIsolated</code> &#25351;&#20196;&#12290;&#34987;&#21253;&#21547;&#30340;&#35270;&#22270;&#23558;&#21482;&#33021;&#35775;&#38382;&#20320;&#26174;&#24335;&#20256;&#20837;&#30340;&#21464;&#37327;&#65306;</p><pre><code class="language-blade">@includeIsolated('view.name', ['user' =&gt; $user])</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#24212;&#36991;&#20813;&#22312; Blade &#35270;&#22270;&#20013;&#20351;&#29992; <code>__DIR__</code> &#21644; <code>__FILE__</code> &#24120;&#37327;&#65292;&#22240;&#20026;&#23427;&#20204;&#23558;&#25351;&#21521;&#24050;&#32531;&#23384;&#12289;&#24050;&#32534;&#35793;&#35270;&#22270;&#30340;&#20301;&#32622;&#12290;</p>
+</blockquote><h4 id="65999cc52047fdaada0fd399efa4d106">&#20026;&#38598;&#21512;&#28210;&#26579;&#35270;&#22270;</h4><p>&#20320;&#21487;&#20197;&#20351;&#29992; Blade &#30340; <code>@each</code> &#25351;&#20196;&#23558;&#24490;&#29615;&#19982;&#21253;&#21547;&#21512;&#20108;&#20026;&#19968;&#65306;</p><pre><code class="language-blade">@each('view.name', $jobs, 'job')</code></pre><p><code>@each</code> &#25351;&#20196;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#20026;&#25968;&#32452;&#25110;&#38598;&#21512;&#20013;&#30340;&#27599;&#20010;&#20803;&#32032;&#28210;&#26579;&#30340;&#35270;&#22270;&#12290;&#31532;&#20108;&#20010;&#21442;&#25968;&#26159;&#20320;&#24076;&#26395;&#36845;&#20195;&#30340;&#25968;&#32452;&#25110;&#38598;&#21512;&#65292;&#31532;&#19977;&#20010;&#21442;&#25968;&#26159;&#22312;&#35270;&#22270;&#20013;&#20998;&#37197;&#32473;&#24403;&#21069;&#36845;&#20195;&#30340;&#21464;&#37327;&#21517;&#31216;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#20320;&#27491;&#22312;&#36845;&#20195;&#19968;&#20010; <code>jobs</code> &#25968;&#32452;&#65292;&#36890;&#24120;&#24076;&#26395;&#22312;&#35270;&#22270;&#20013;&#20197; <code>job</code> &#21464;&#37327;&#35775;&#38382;&#27599;&#20010; job&#12290;&#24403;&#21069;&#36845;&#20195;&#30340;&#25968;&#32452;&#38190;&#22312;&#35270;&#22270;&#20013;&#20197; <code>key</code> &#21464;&#37327;&#25552;&#20379;&#12290;</p><p>&#20320;&#20063;&#21487;&#20197;&#21521; <code>@each</code> &#25351;&#20196;&#20256;&#20837;&#31532;&#22235;&#20010;&#21442;&#25968;&#65292;&#35813;&#21442;&#25968;&#25351;&#23450;&#24403;&#32473;&#23450;&#25968;&#32452;&#20026;&#31354;&#26102;&#23558;&#28210;&#26579;&#30340;&#35270;&#22270;&#65306;</p><pre><code class="language-blade">@each('view.name', $jobs, 'job', 'view.empty')</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#36890;&#36807; <code>@each</code> &#28210;&#26579;&#30340;&#35270;&#22270;&#19981;&#20250;&#32487;&#25215;&#29238;&#35270;&#22270;&#20013;&#30340;&#21464;&#37327;&#12290;&#22914;&#26524;&#23376;&#35270;&#22270;&#38656;&#35201;&#36825;&#20123;&#21464;&#37327;&#65292;&#24212;&#25913;&#29992; <code>@foreach</code> &#21644; <code>@include</code> &#25351;&#20196;&#12290;</p>
+</blockquote><h3 id="6bd3965771da8bf628ef65a28f7a0ef8"><code>@once</code> &#25351;&#20196;</h3><p><code>@once</code> &#25351;&#20196;&#20801;&#35768;&#20320;&#23450;&#20041;&#19968;&#20010;&#20165;&#22312;&#27599;&#27425;&#28210;&#26579;&#21608;&#26399;&#20869;&#27714;&#20540;&#19968;&#27425;&#30340;&#27169;&#26495;&#29255;&#27573;&#12290;&#24403;&#38656;&#35201;&#20351;&#29992; <a href="wevwmrz9l2.html#stacks" target="_blank">stacks</a> &#23558;&#26576;&#27573; JavaScript &#25512;&#36865;&#21040;&#39029;&#38754;&#30340; head &#26102;&#65292;&#36825;&#38750;&#24120;&#26377;&#29992;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#20320;&#22312;&#24490;&#29615;&#20013;&#28210;&#26579;&#26576;&#20010;&#32473;&#23450;&#30340; <a href="wevwmrz9l2.html#components" target="_blank">&#32452;&#20214;</a>&#65292;&#20320;&#21487;&#33021;&#21482;&#24076;&#26395;&#22312;&#31532;&#19968;&#27425;&#28210;&#26579;&#35813;&#32452;&#20214;&#26102;&#23558;&#35813; JavaScript &#25512;&#36865;&#21040; head&#65306;</p><pre><code class="language-blade">@once
+    @push('scripts')
+        &lt;script&gt;
+            // Your custom JavaScript...
+        &lt;/script&gt;
+    @endpush
+@endonce</code></pre><p>&#30001;&#20110; <code>@once</code> &#25351;&#20196;&#32463;&#24120;&#19982; <code>@push</code> &#25110; <code>@prepend</code> &#25351;&#20196;&#19968;&#36215;&#20351;&#29992;&#65292;<code>@pushOnce</code> &#21644; <code>@prependOnce</code> &#25351;&#20196;&#24050;&#20026;&#20320;&#20934;&#22791;&#22909;&#20197;&#20415;&#20351;&#29992;&#65306;</p><pre><code class="language-blade">@pushOnce('scripts')
+    &lt;script&gt;
+        // Your custom JavaScript...
+    &lt;/script&gt;
+@endPushOnce</code></pre><p>&#22914;&#26524;&#20320;&#20174;&#20004;&#20010;&#19981;&#21516;&#30340; Blade &#27169;&#26495;&#20013;&#25512;&#36865;&#37325;&#22797;&#20869;&#23481;&#65292;&#24212;&#21521; <code>@pushOnce</code> &#25351;&#20196;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#25552;&#20379;&#19968;&#20010;&#21807;&#19968;&#26631;&#35782;&#31526;&#65292;&#20197;&#30830;&#20445;&#20869;&#23481;&#21482;&#28210;&#26579;&#19968;&#27425;&#65306;</p><pre><code class="language-blade">&lt;!-- pie-chart.blade.php --&gt;
+@pushOnce('scripts', 'chart.js')
+    &lt;script src="/chart.js"&gt;&lt;/script&gt;
+@endPushOnce
+
+&lt;!-- line-chart.blade.php --&gt;
+@pushOnce('scripts', 'chart.js')
+    &lt;script src="/chart.js"&gt;&lt;/script&gt;
+@endPushOnce</code></pre><h3 id="55609fb8569cd498585fdeb2e9df97ed">&#21407;&#29983; PHP</h3><p>&#22312;&#26576;&#20123;&#24773;&#20917;&#19979;&#65292;&#22312;&#35270;&#22270;&#20013;&#23884;&#20837; PHP &#20195;&#30721;&#38750;&#24120;&#26377;&#29992;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; Blade &#30340; <code>@php</code> &#25351;&#20196;&#22312;&#27169;&#26495;&#20013;&#25191;&#34892;&#19968;&#27573;&#21407;&#29983; PHP &#20195;&#30721;&#22359;&#65306;</p><pre><code class="language-blade">@php
+    $counter = 1;
+@endphp</code></pre><p>&#25110;&#32773;&#65292;&#22914;&#26524;&#20320;&#21482;&#26159;&#24819;&#20351;&#29992; PHP &#26469;&#24341;&#20837;&#26576;&#20010;&#31867;&#65292;&#21487;&#20197;&#20351;&#29992; <code>@use</code> &#25351;&#20196;&#65306;</p><pre><code class="language-blade">@use('App\Models\Flight')</code></pre><p>&#21487;&#20197;&#20026; <code>@use</code> &#25351;&#20196;&#25552;&#20379;&#31532;&#20108;&#20010;&#21442;&#25968;&#20026;&#24341;&#20837;&#30340;&#31867;&#35774;&#32622;&#21035;&#21517;&#65306;</p><pre><code class="language-blade">@use('App\Models\Flight', 'FlightModel')</code></pre><p>&#22914;&#26524;&#21516;&#19968;&#21629;&#21517;&#31354;&#38388;&#19979;&#26377;&#22810;&#20010;&#31867;&#65292;&#21487;&#20197;&#23545;&#36825;&#20123;&#31867;&#30340;&#23548;&#20837;&#36827;&#34892;&#20998;&#32452;&#65306;</p><pre><code class="language-blade">@use('App\Models\{Flight, Airport}')</code></pre><p><code>@use</code> &#25351;&#20196;&#36824;&#25903;&#25345;&#36890;&#36807;&#22312;&#23548;&#20837;&#36335;&#24452;&#21069;&#21152;&#19978; <code>function</code> &#25110; <code>const</code> &#20462;&#39280;&#31526;&#26469;&#23548;&#20837; PHP &#20989;&#25968;&#21644;&#24120;&#37327;&#65306;</p><pre><code class="language-blade">@use(function App\Helpers\format_currency)
+@use(const App\Constants\MAX_ATTEMPTS)</code></pre><p>&#19982;&#31867;&#23548;&#20837;&#19968;&#26679;&#65292;&#20989;&#25968;&#21644;&#24120;&#37327;&#20063;&#25903;&#25345;&#21035;&#21517;&#65306;</p><pre><code class="language-blade">@use(function App\Helpers\format_currency, 'formatMoney')
+@use(const App\Constants\MAX_ATTEMPTS, 'MAX_TRIES')</code></pre><p>&#20998;&#32452;&#23548;&#20837;&#21516;&#26679;&#25903;&#25345; <code>function</code> &#21644; <code>const</code> &#20462;&#39280;&#31526;&#65292;&#20801;&#35768;&#20320;&#22312;&#21333;&#20010;&#25351;&#20196;&#20013;&#20174;&#21516;&#19968;&#21629;&#21517;&#31354;&#38388;&#23548;&#20837;&#22810;&#20010;&#31526;&#21495;&#65306;</p><pre><code class="language-blade">@use(function App\Helpers\{format_currency, format_date})
+@use(const App\Constants\{MAX_ATTEMPTS, DEFAULT_TIMEOUT})</code></pre><h3 id="8456bc40d48da5af833f1c63385e9879">&#23383;&#20307;</h3><p>&#24403;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/vite#working-with-fonts" target="_blank">Laravel &#30340; Vite &#23383;&#20307;&#20248;&#21270;</a> &#26102;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>@fonts</code> &#25351;&#20196;&#22312;&#24212;&#29992;&#24067;&#23616;&#20013;&#28210;&#26579;&#24050;&#37197;&#32622;&#30340;&#23383;&#20307;&#39044;&#21152;&#36733;&#38142;&#25509;&#19982;&#20869;&#32852;&#23383;&#20307; CSS&#65306;</p><pre><code class="language-blade">&lt;!doctype html&gt;
+&lt;head&gt;
+    {{-- ... --}}
+
+    @fonts
+    @vite('resources/js/app.js')
+&lt;/head&gt;</code></pre><p><code>@fonts</code> &#25351;&#20196;&#20250;&#28210;&#26579;&#22312; <code>vite.config.js</code> &#25991;&#20214;&#20013;&#37197;&#32622;&#30340;&#25152;&#26377;&#23383;&#20307;&#26063;&#12290;&#35813;&#25351;&#20196;&#36890;&#24120;&#24212;&#25918;&#32622;&#22312;&#24212;&#29992;&#26681;&#24067;&#23616;&#30340; <code>&lt;head&gt;</code> &#20013;&#12289;&#20219;&#20309;&#20351;&#29992;&#36825;&#20123;&#23383;&#20307;&#30340;&#20869;&#23481;&#20043;&#21069;&#12290;</p><p>&#22914;&#26524;&#39029;&#38754;&#21482;&#38656;&#35201;&#26576;&#20123;&#24050;&#37197;&#32622;&#30340;&#23383;&#20307;&#65292;&#20320;&#21487;&#20197;&#21521;&#25351;&#20196;&#20256;&#20837;&#19968;&#20010;&#25110;&#22810;&#20010;&#23383;&#20307;&#21035;&#21517;&#65306;</p><pre><code class="language-blade">{{-- Load a single font alias... --}}
+@fonts('sans')
+
+{{-- Load multiple font aliases... --}}
+@fonts(['sans', 'mono'])</code></pre><p>&#23383;&#20307;&#21035;&#21517;&#36890;&#36807;&#22312; Vite &#37197;&#32622;&#20013;&#23450;&#20041;&#23383;&#20307;&#26102;&#30340; <code>alias</code> &#36873;&#39033;&#36827;&#34892;&#37197;&#32622;&#12290;<code>@fonts</code> &#25351;&#20196;&#35843;&#29992; <code>Vite</code> Facade &#25552;&#20379;&#30340; <code>fonts</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#20063;&#21487;&#20197;&#30452;&#25509;&#35843;&#29992;&#65306;</p><pre><code class="language-blade">{{ Vite::fonts(['sans', 'mono']) }}</code></pre><h3 id="ee656aa13bfbf6dfd83440765959d43f">&#27880;&#37322;</h3><p>Blade &#36824;&#20801;&#35768;&#20320;&#22312;&#35270;&#22270;&#20013;&#23450;&#20041;&#27880;&#37322;&#12290;&#20294;&#19982; HTML &#27880;&#37322;&#19981;&#21516;&#65292;Blade &#27880;&#37322;&#19981;&#20250;&#21253;&#21547;&#22312;&#24212;&#29992;&#36820;&#22238;&#30340; HTML &#20013;&#65306;</p><pre><code class="language-blade">{{-- This comment will not be present in the rendered HTML --}}</code></pre><h2 id="bb79667f37035e9562ec6bcffd6cf8ef">&#32452;&#20214;</h2><p>&#32452;&#20214;&#21644;&#25554;&#27133;&#25552;&#20379;&#20102;&#19982; sections&#12289;layouts &#21644; includes &#31867;&#20284;&#30340;&#22909;&#22788;&#65307;&#19981;&#36807;&#65292;&#26377;&#20123;&#20154;&#21487;&#33021;&#35273;&#24471;&#32452;&#20214;&#21644;&#25554;&#27133;&#30340;&#24515;&#26234;&#27169;&#22411;&#26356;&#23481;&#26131;&#29702;&#35299;&#12290;&#32534;&#20889;&#32452;&#20214;&#26377;&#20004;&#31181;&#26041;&#24335;&#65306;&#22522;&#20110;&#31867;&#30340;&#32452;&#20214;&#21644;&#21311;&#21517;&#32452;&#20214;&#12290;</p><p>&#35201;&#21019;&#24314;&#22522;&#20110;&#31867;&#30340;&#32452;&#20214;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>make:component</code> Artisan &#21629;&#20196;&#12290;&#20026;&#20102;&#35828;&#26126;&#32452;&#20214;&#30340;&#29992;&#27861;&#65292;&#25105;&#20204;&#23558;&#21019;&#24314;&#19968;&#20010;&#31616;&#21333;&#30340; <code>Alert</code> &#32452;&#20214;&#12290;<code>make:component</code> &#21629;&#20196;&#20250;&#23558;&#32452;&#20214;&#25918;&#22312; <code>app/View/Components</code> &#30446;&#24405;&#20013;&#65306;</p><pre><code class="language-shell">php artisan make:component Alert</code></pre><p><code>make:component</code> &#21629;&#20196;&#36824;&#20250;&#20026;&#35813;&#32452;&#20214;&#21019;&#24314;&#19968;&#20010;&#35270;&#22270;&#27169;&#26495;&#12290;&#35270;&#22270;&#23558;&#25918;&#32622;&#22312; <code>resources/views/components</code> &#30446;&#24405;&#20013;&#12290;&#20026;&#33258;&#24049;&#30340;&#24212;&#29992;&#32534;&#20889;&#32452;&#20214;&#26102;&#65292;&#32452;&#20214;&#20250;&#33258;&#21160;&#22312; <code>app/View/Components</code> &#30446;&#24405;&#21644; <code>resources/views/components</code> &#30446;&#24405;&#20013;&#21457;&#29616;&#65292;&#22240;&#27492;&#36890;&#24120;&#26080;&#38656;&#36827;&#19968;&#27493;&#30340;&#32452;&#20214;&#27880;&#20876;&#12290;</p><p>&#20320;&#20063;&#21487;&#20197;&#22312;&#23376;&#30446;&#24405;&#20013;&#21019;&#24314;&#32452;&#20214;&#65306;</p><pre><code class="language-shell">php artisan make:component Forms/Input</code></pre><p>&#19978;&#38754;&#30340;&#21629;&#20196;&#20250;&#22312; <code>app/View/Components/Forms</code> &#30446;&#24405;&#20013;&#21019;&#24314;&#19968;&#20010; <code>Input</code> &#32452;&#20214;&#65292;&#24182;&#23558;&#35270;&#22270;&#25918;&#22312; <code>resources/views/components/forms</code> &#30446;&#24405;&#20013;&#12290;</p><h4 id="1ca5f5e0e85526bf14d7915b820d4e7a">&#25163;&#21160;&#27880;&#20876;&#21253;&#32452;&#20214;</h4><p>&#20026;&#33258;&#24049;&#30340;&#24212;&#29992;&#32534;&#20889;&#32452;&#20214;&#26102;&#65292;&#32452;&#20214;&#20250;&#33258;&#21160;&#22312; <code>app/View/Components</code> &#30446;&#24405;&#21644; <code>resources/views/components</code> &#30446;&#24405;&#20013;&#21457;&#29616;&#12290;</p><p>&#20294;&#26159;&#65292;&#22914;&#26524;&#20320;&#27491;&#22312;&#26500;&#24314;&#20351;&#29992; Blade &#32452;&#20214;&#30340;&#21253;&#65292;&#21017;&#38656;&#35201;&#25163;&#21160;&#27880;&#20876;&#32452;&#20214;&#31867;&#21450;&#20854; HTML &#26631;&#31614;&#21035;&#21517;&#12290;&#36890;&#24120;&#24212;&#22312;&#21253;&#30340;&#26381;&#21153;&#25552;&#20379;&#32773;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#27880;&#20876;&#32452;&#20214;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Blade;
+
+/**
+ * Bootstrap your package's services.
+ */
+public function boot(): void
+{
+    Blade::component('package-alert', Alert::class);
+}</code></pre><p>&#19968;&#26086;&#32452;&#20214;&#34987;&#27880;&#20876;&#65292;&#23601;&#21487;&#20197;&#20351;&#29992;&#20854;&#26631;&#31614;&#21035;&#21517;&#36827;&#34892;&#28210;&#26579;&#65306;</p><pre><code class="language-blade">&lt;x-package-alert/&gt;</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>componentNamespace</code> &#26041;&#27861;&#25353;&#32422;&#23450;&#33258;&#21160;&#21152;&#36733;&#32452;&#20214;&#31867;&#12290;&#20363;&#22914;&#65292;&#19968;&#20010; <code>Nightshade</code> &#21253;&#21487;&#33021;&#25317;&#26377;&#20301;&#20110; <code>Package\Views\Components</code> &#21629;&#21517;&#31354;&#38388;&#19979;&#30340; <code>Calendar</code> &#21644; <code>ColorPicker</code> &#32452;&#20214;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Blade;
+
+/**
+ * Bootstrap your package's services.
+ */
+public function boot(): void
+{
+    Blade::componentNamespace('Nightshade\\Views\\Components', 'nightshade');
+}</code></pre><p>&#36825;&#20801;&#35768;&#36890;&#36807;&#20379;&#24212;&#21830;&#21629;&#21517;&#31354;&#38388;&#20351;&#29992; <code>package-name::</code> &#35821;&#27861;&#35843;&#29992;&#21253;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-nightshade::calendar /&gt;
+&lt;x-nightshade::color-picker /&gt;</code></pre><p>Blade &#20250;&#36890;&#36807;&#23558;&#32452;&#20214;&#21517;&#36716;&#25442;&#20026; Pascal Case &#33258;&#21160;&#26816;&#27979;&#19982;&#20043;&#20851;&#32852;&#30340;&#31867;&#12290;&#23376;&#30446;&#24405;&#20063;&#25903;&#25345;&#20351;&#29992;&#12300;&#28857;&#12301;&#34920;&#31034;&#27861;&#12290;</p><h3 id="e1b9ba960b8765cef62d0da39483f15c">&#28210;&#26579;&#32452;&#20214;</h3><p>&#35201;&#26174;&#31034;&#19968;&#20010;&#32452;&#20214;&#65292;&#20320;&#21487;&#20197;&#22312;&#26576;&#20010; Blade &#27169;&#26495;&#20013;&#20351;&#29992; Blade &#32452;&#20214;&#26631;&#31614;&#12290;Blade &#32452;&#20214;&#26631;&#31614;&#20197;&#23383;&#31526;&#20018; <code>x-</code> &#24320;&#22836;&#65292;&#21518;&#36319;&#32452;&#20214;&#31867;&#30340; kebab-case &#21517;&#31216;&#65306;</p><pre><code class="language-blade">&lt;x-alert/&gt;
+
+&lt;x-user-profile/&gt;</code></pre><p>&#22914;&#26524;&#32452;&#20214;&#31867;&#23884;&#22871;&#22312; <code>app/View/Components</code> &#30446;&#24405;&#30340;&#26356;&#28145;&#20301;&#32622;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>.</code> &#23383;&#31526;&#26469;&#34920;&#31034;&#30446;&#24405;&#23884;&#22871;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774;&#26576;&#20010;&#32452;&#20214;&#20301;&#20110; <code>app/View/Components/Inputs/Button.php</code>&#65292;&#25105;&#20204;&#21487;&#20197;&#36825;&#26679;&#28210;&#26579;&#23427;&#65306;</p><pre><code class="language-blade">&lt;x-inputs.button/&gt;</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#25353;&#26465;&#20214;&#28210;&#26579;&#32452;&#20214;&#65292;&#21487;&#20197;&#22312;&#32452;&#20214;&#31867;&#19978;&#23450;&#20041; <code>shouldRender</code> &#26041;&#27861;&#12290;&#22914;&#26524; <code>shouldRender</code> &#26041;&#27861;&#36820;&#22238; <code>false</code>&#65292;&#21017;&#19981;&#20250;&#28210;&#26579;&#35813;&#32452;&#20214;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Str;
+
+/**
+ * Whether the component should be rendered
+ */
+public function shouldRender(): bool
+{
+    return Str::length($this-&gt;message) &gt; 0;
+}</code></pre><h3 id="e17fee28b4975abdb1fb3ef9dd95c9f1">Index &#32452;&#20214;</h3><p>&#26377;&#26102;&#32452;&#20214;&#26159;&#32452;&#20214;&#32452;&#30340;&#19968;&#37096;&#20998;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#23558;&#30456;&#20851;&#32452;&#20214;&#20998;&#32452;&#21040;&#21333;&#20010;&#30446;&#24405;&#20013;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774;&#26377;&#19968;&#20010;&#20855;&#26377;&#20197;&#19979;&#31867;&#32467;&#26500;&#30340;&#12300;card&#12301;&#32452;&#20214;&#65306;</p><pre><code class="language-text">App\Views\Components\Card\Card
+App\Views\Components\Card\Header
+App\Views\Components\Card\Body</code></pre><p>&#30001;&#20110;&#26681; <code>Card</code> &#32452;&#20214;&#23884;&#22871;&#22312; <code>Card</code> &#30446;&#24405;&#20013;&#65292;&#20320;&#21487;&#33021;&#39044;&#26399;&#38656;&#35201;&#36890;&#36807; <code>&lt;x-card.card&gt;</code> &#28210;&#26579;&#35813;&#32452;&#20214;&#12290;&#20294;&#26159;&#65292;&#24403;&#32452;&#20214;&#30340;&#25991;&#20214;&#21517;&#19982;&#32452;&#20214;&#30446;&#24405;&#21517;&#21305;&#37197;&#26102;&#65292;Laravel &#20250;&#33258;&#21160;&#23558;&#35813;&#32452;&#20214;&#35270;&#20026;&#12300;&#26681;&#12301;&#32452;&#20214;&#65292;&#20801;&#35768;&#20320;&#26080;&#38656;&#37325;&#22797;&#30446;&#24405;&#21517;&#21363;&#21487;&#28210;&#26579;&#35813;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-card&gt;
+    &lt;x-card.header&gt;...&lt;/x-card.header&gt;
+    &lt;x-card.body&gt;...&lt;/x-card.body&gt;
+&lt;/x-card&gt;</code></pre><h3 id="94b06e40e000169af687fe9b139d2d7e">&#21521;&#32452;&#20214;&#20256;&#36882;&#25968;&#25454;</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; HTML &#23646;&#24615;&#21521; Blade &#32452;&#20214;&#20256;&#36882;&#25968;&#25454;&#12290;&#30828;&#32534;&#30721;&#30340;&#21407;&#22987;&#20540;&#21487;&#20197;&#20351;&#29992;&#31616;&#21333;&#30340; HTML &#23646;&#24615;&#23383;&#31526;&#20018;&#20256;&#36882;&#32473;&#32452;&#20214;&#12290;PHP &#34920;&#36798;&#24335;&#21644;&#21464;&#37327;&#24212;&#36890;&#36807;&#20351;&#29992; <code>:</code> &#23383;&#31526;&#20316;&#20026;&#21069;&#32512;&#30340;&#23646;&#24615;&#20256;&#36882;&#32473;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-alert type="error" :message="$message"/&gt;</code></pre><p>&#20320;&#24212;&#35813;&#22312;&#32452;&#20214;&#31867;&#30340;&#26500;&#36896;&#20989;&#25968;&#20013;&#23450;&#20041;&#25152;&#26377;&#32452;&#20214;&#30340;&#25968;&#25454;&#23646;&#24615;&#12290;&#32452;&#20214;&#19978;&#30340;&#25152;&#26377; public &#23646;&#24615;&#23558;&#33258;&#21160;&#23545;&#32452;&#20214;&#30340;&#35270;&#22270;&#21487;&#29992;&#65292;&#26080;&#38656;&#20174;&#32452;&#20214;&#30340; <code>render</code> &#26041;&#27861;&#23558;&#25968;&#25454;&#20256;&#36882;&#32473;&#35270;&#22270;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\View\Components;
+
+use Illuminate\View\Component;
+use Illuminate\View\View;
+
+class Alert extends Component
+{
+    /**
+     * Create the component instance.
+     */
+    public function __construct(
+        public string $type,
+        public string $message,
+    ) {}
+
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View
+    {
+        return view('components.alert');
+    }
+}</code></pre><p>&#24403;&#32452;&#20214;&#34987;&#28210;&#26579;&#26102;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#25353;&#21517;&#31216;&#36755;&#20986;&#21464;&#37327;&#26469;&#26174;&#31034;&#32452;&#20214;&#30340; public &#23646;&#24615;&#30340;&#20869;&#23481;&#65306;</p><pre><code class="language-blade">&lt;div class="alert alert-{{ $type }}"&gt;
+    {{ $message }}
+&lt;/div&gt;</code></pre><h4 id="a848d0ef91630c5096dde352aa7bf163">&#22823;&#23567;&#20889;&#32422;&#23450;</h4><p>&#32452;&#20214;&#26500;&#36896;&#20989;&#25968;&#21442;&#25968;&#24212;&#20351;&#29992; <code>camelCase</code> &#25351;&#23450;&#65292;&#32780;&#22312; HTML &#23646;&#24615;&#20013;&#24341;&#29992;&#21442;&#25968;&#21517;&#26102;&#24212;&#20351;&#29992; <code>kebab-case</code>&#12290;&#20363;&#22914;&#65292;&#32473;&#23450;&#20197;&#19979;&#32452;&#20214;&#26500;&#36896;&#20989;&#25968;&#65306;</p><pre><code class="language-php">/**
+ * Create the component instance.
+ */
+public function __construct(
+    public string $alertType,
+) {}</code></pre><p><code>$alertType</code> &#21442;&#25968;&#21487;&#20197;&#36825;&#26679;&#20256;&#36882;&#32473;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-alert alert-type="danger" /&gt;</code></pre><h4 id="a51a2d8ac043c93458bebd254238f680">&#31616;&#30701;&#23646;&#24615;&#35821;&#27861;</h4><p>&#21521;&#32452;&#20214;&#20256;&#36882;&#23646;&#24615;&#26102;&#65292;&#20063;&#21487;&#20197;&#20351;&#29992;&#12300;&#31616;&#30701;&#23646;&#24615;&#12301;&#35821;&#27861;&#12290;&#36825;&#36890;&#24120;&#24456;&#26041;&#20415;&#65292;&#22240;&#20026;&#23646;&#24615;&#21517;&#31216;&#32463;&#24120;&#19982;&#23427;&#20204;&#23545;&#24212;&#30340;&#21464;&#37327;&#21517;&#30456;&#21516;&#65306;</p><pre><code class="language-blade">{{-- Short attribute syntax... --}}
+&lt;x-profile :$userId :$name /&gt;
+
+{{-- Is equivalent to... --}}
+&lt;x-profile :user-id="$userId" :name="$name" /&gt;</code></pre><h4 id="9e7cf753f50ceb4283a2b6a0029f3371">&#36716;&#20041;&#23646;&#24615;&#28210;&#26579;</h4><p>&#30001;&#20110;&#26576;&#20123; JavaScript &#26694;&#26550;&#65288;&#22914; Alpine.js&#65289;&#20063;&#20351;&#29992;&#20882;&#21495;&#21069;&#32512;&#30340;&#23646;&#24615;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#21452;&#20882;&#21495;&#65288;<code>::</code>&#65289;&#21069;&#32512;&#26469;&#21578;&#30693; Blade &#35813;&#23646;&#24615;&#19981;&#26159; PHP &#34920;&#36798;&#24335;&#12290;&#20363;&#22914;&#65292;&#32473;&#23450;&#20197;&#19979;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-button ::class="{ danger: isDeleting }"&gt;
+    Submit
+&lt;/x-button&gt;</code></pre><p>Blade &#20250;&#28210;&#26579;&#20197;&#19979; HTML&#65306;</p><pre><code class="language-blade">&lt;button :class="{ danger: isDeleting }"&gt;
+    Submit
+&lt;/button&gt;</code></pre><h4 id="1c4b49674ea86aaad36d5af1f9947bed">&#32452;&#20214;&#26041;&#27861;</h4><p>&#38500;&#20102; public &#21464;&#37327;&#23545;&#32452;&#20214;&#27169;&#26495;&#21487;&#29992;&#20043;&#22806;&#65292;&#32452;&#20214;&#19978;&#30340;&#20219;&#20309; public &#26041;&#27861;&#20063;&#21487;&#20197;&#34987;&#35843;&#29992;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774;&#19968;&#20010;&#32452;&#20214;&#20855;&#26377; <code>isSelected</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * Determine if the given option is the currently selected option.
+ */
+public function isSelected(string $option): bool
+{
+    return $option === $this-&gt;selected;
+}</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#35843;&#29992;&#19982;&#35813;&#26041;&#27861;&#21517;&#31216;&#21305;&#37197;&#30340;&#21464;&#37327;&#65292;&#20174;&#32452;&#20214;&#27169;&#26495;&#20013;&#25191;&#34892;&#27492;&#26041;&#27861;&#65306;</p><pre><code class="language-blade">&lt;option {{ $isSelected($value) ? 'selected' : '' }} value="{{ $value }}"&gt;
+    {{ $label }}
+&lt;/option&gt;</code></pre><h4 id="d02a25bd51fb12491b74aaff4db55296">&#22312;&#32452;&#20214;&#31867;&#20013;&#35775;&#38382;&#23646;&#24615;&#21644;&#25554;&#27133;</h4><p>Blade &#32452;&#20214;&#36824;&#20801;&#35768;&#20320;&#22312;&#31867;&#30340; <code>render</code> &#26041;&#27861;&#20013;&#35775;&#38382;&#32452;&#20214;&#21517;&#12289;&#23646;&#24615;&#21644;&#25554;&#27133;&#12290;&#20294;&#26159;&#65292;&#20026;&#20102;&#35775;&#38382;&#36825;&#20123;&#25968;&#25454;&#65292;&#24212;&#35813;&#20174;&#32452;&#20214;&#30340; <code>render</code> &#26041;&#27861;&#36820;&#22238;&#19968;&#20010;&#38381;&#21253;&#65306;</p><pre><code class="language-php">use Closure;
+
+/**
+ * Get the view / contents that represent the component.
+ */
+public function render(): Closure
+{
+    return function () {
+        return '&lt;div {{ $attributes }}&gt;Components content&lt;/div&gt;';
+    };
+}</code></pre><p>&#30001;&#32452;&#20214;&#30340; <code>render</code> &#26041;&#27861;&#36820;&#22238;&#30340;&#38381;&#21253;&#20063;&#21487;&#20197;&#25509;&#21463;&#19968;&#20010; <code>$data</code> &#25968;&#32452;&#20316;&#20026;&#21807;&#19968;&#21442;&#25968;&#12290;&#35813;&#25968;&#32452;&#23558;&#21253;&#21547;&#20960;&#20010;&#25552;&#20379;&#32452;&#20214;&#30456;&#20851;&#20449;&#24687;&#30340;&#20803;&#32032;&#65306;</p><pre><code class="language-php">return function (array $data) {
+    // $data['componentName'];
+    // $data['attributes'];
+    // $data['slot'];
+
+    return '&lt;div {{ $attributes }}&gt;Components content&lt;/div&gt;';
+}</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#27704;&#36828;&#19981;&#35201;&#23558; <code>$data</code> &#25968;&#32452;&#20013;&#30340;&#20803;&#32032;&#30452;&#25509;&#23884;&#20837;&#21040; <code>render</code> &#26041;&#27861;&#36820;&#22238;&#30340; Blade &#23383;&#31526;&#20018;&#20013;&#65292;&#22240;&#20026;&#36825;&#26679;&#20570;&#21487;&#33021;&#20250;&#30001;&#20110;&#24694;&#24847;&#23646;&#24615;&#20869;&#23481;&#32780;&#23548;&#33268;&#36828;&#31243;&#20195;&#30721;&#25191;&#34892;&#12290;</p>
+</blockquote><p><code>componentName</code> &#31561;&#20110; HTML &#26631;&#31614;&#20013; <code>x-</code> &#21069;&#32512;&#20043;&#21518;&#20351;&#29992;&#30340;&#21517;&#31216;&#12290;&#25152;&#20197; <code>&lt;x-alert /&gt;</code> &#30340; <code>componentName</code> &#23558;&#26159; <code>alert</code>&#12290;<code>attributes</code> &#20803;&#32032;&#23558;&#21253;&#21547; HTML &#26631;&#31614;&#19978;&#23384;&#22312;&#30340;&#25152;&#26377;&#23646;&#24615;&#12290;<code>slot</code> &#20803;&#32032;&#26159;&#19968;&#20010; <code>Illuminate\Support\HtmlString</code> &#23454;&#20363;&#65292;&#20854;&#20013;&#21253;&#21547;&#32452;&#20214;&#25554;&#27133;&#30340;&#20869;&#23481;&#12290;</p><p>&#38381;&#21253;&#24212;&#36820;&#22238;&#19968;&#20010;&#23383;&#31526;&#20018;&#12290;&#22914;&#26524;&#36820;&#22238;&#30340;&#23383;&#31526;&#20018;&#23545;&#24212;&#20110;&#29616;&#26377;&#35270;&#22270;&#65292;&#21017;&#20250;&#28210;&#26579;&#35813;&#35270;&#22270;&#65307;&#21542;&#21017;&#65292;&#36820;&#22238;&#30340;&#23383;&#31526;&#20018;&#23558;&#20316;&#20026;&#20869;&#32852; Blade &#35270;&#22270;&#36827;&#34892;&#27714;&#20540;&#12290;</p><h4 id="caf01c2e2c3326da85d3e7e0abaa93a7">&#38468;&#21152;&#20381;&#36182;</h4><p>&#22914;&#26524;&#20320;&#30340;&#32452;&#20214;&#38656;&#35201; Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/container" target="_blank">&#26381;&#21153;&#23481;&#22120;</a> &#20013;&#30340;&#20381;&#36182;&#65292;&#20320;&#21487;&#20197;&#22312;&#32452;&#20214;&#30340;&#20219;&#20309;&#25968;&#25454;&#23646;&#24615;&#20043;&#21069;&#21015;&#20986;&#23427;&#20204;&#65292;&#23427;&#20204;&#23558;&#30001;&#23481;&#22120;&#33258;&#21160;&#27880;&#20837;&#65306;</p><pre><code class="language-php">use App\Services\AlertCreator;
+
+/**
+ * Create the component instance.
+ */
+public function __construct(
+    public AlertCreator $creator,
+    public string $type,
+    public string $message,
+) {}</code></pre><h4 id="ee1a29950cbd4539f99e84e2d5e9dc65">&#38544;&#34255;&#23646;&#24615; / &#26041;&#27861;</h4><p>&#22914;&#26524;&#24076;&#26395;&#38459;&#27490;&#26576;&#20123; public &#26041;&#27861;&#25110;&#23646;&#24615;&#20316;&#20026;&#21464;&#37327;&#26292;&#38706;&#32473;&#32452;&#20214;&#27169;&#26495;&#65292;&#21487;&#20197;&#23558;&#23427;&#20204;&#28155;&#21152;&#21040;&#32452;&#20214;&#19978;&#30340; <code>$except</code> &#25968;&#32452;&#23646;&#24615;&#20013;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\View\Components;
+
+use Illuminate\View\Component;
+
+class Alert extends Component
+{
+    /**
+     * The properties / methods that should not be exposed to the component template.
+     *
+     * @var array
+     */
+    protected $except = ['type'];
+
+    /**
+     * Create the component instance.
+     */
+    public function __construct(
+        public string $type,
+    ) {}
+}</code></pre><h3 id="94e789e1280e0c80eb38a03c52842611">&#32452;&#20214;&#23646;&#24615;</h3><p>&#25105;&#20204;&#24050;&#32463;&#35752;&#35770;&#20102;&#22914;&#20309;&#21521;&#32452;&#20214;&#20256;&#36882;&#25968;&#25454;&#23646;&#24615;&#65307;&#20294;&#26159;&#65292;&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#25351;&#23450;&#32452;&#20214;&#21151;&#33021;&#25152;&#38656;&#25968;&#25454;&#20043;&#22806;&#30340;&#38468;&#21152; HTML &#23646;&#24615;&#65292;&#20363;&#22914; <code>class</code>&#12290;&#36890;&#24120;&#65292;&#20320;&#24076;&#26395;&#23558;&#36825;&#20123;&#38468;&#21152;&#23646;&#24615;&#21521;&#19979;&#20256;&#36882;&#21040;&#32452;&#20214;&#27169;&#26495;&#30340;&#26681;&#20803;&#32032;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774;&#25105;&#20204;&#24076;&#26395;&#20687;&#19979;&#38754;&#36825;&#26679;&#28210;&#26579;&#19968;&#20010; <code>alert</code> &#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-alert type="error" :message="$message" class="mt-4"/&gt;</code></pre><p>&#25152;&#26377;&#19981;&#23646;&#20110;&#32452;&#20214;&#26500;&#36896;&#20989;&#25968;&#30340;&#23646;&#24615;&#23558;&#33258;&#21160;&#28155;&#21152;&#21040;&#32452;&#20214;&#30340;&#12300;&#23646;&#24615;&#21253;&#12301;&#20013;&#12290;&#35813;&#23646;&#24615;&#21253;&#20250;&#33258;&#21160;&#36890;&#36807; <code>$attributes</code> &#21464;&#37327;&#25552;&#20379;&#32473;&#32452;&#20214;&#12290;&#25152;&#26377;&#23646;&#24615;&#37117;&#21487;&#20197;&#36890;&#36807;&#36755;&#20986;&#27492;&#21464;&#37327;&#22312;&#32452;&#20214;&#20869;&#36827;&#34892;&#28210;&#26579;&#65306;</p><pre><code class="language-blade">&lt;div {{ $attributes }}&gt;
+    &lt;!-- Component content --&gt;
+&lt;/div&gt;</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#30446;&#21069;&#19981;&#25903;&#25345;&#22312;&#32452;&#20214;&#26631;&#31614;&#20013;&#20351;&#29992;&#35832;&#22914; <code>@env</code> &#31561;&#25351;&#20196;&#12290;&#20363;&#22914;&#65292;<code>&lt;x-alert :live="@env('production')"/&gt;</code> &#19981;&#20250;&#34987;&#32534;&#35793;&#12290;</p>
+</blockquote><h4 id="643c5bbc4405ce967aa07b26520fa253">&#40664;&#35748; / &#21512;&#24182;&#23646;&#24615;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#20026;&#23646;&#24615;&#25351;&#23450;&#40664;&#35748;&#20540;&#65292;&#25110;&#23558;&#20854;&#20182;&#20540;&#21512;&#24182;&#21040;&#32452;&#20214;&#30340;&#26576;&#20123;&#23646;&#24615;&#20013;&#12290;&#20026;&#27492;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#23646;&#24615;&#21253;&#30340; <code>merge</code> &#26041;&#27861;&#12290;&#24403;&#23450;&#20041;&#24212;&#22987;&#32456;&#24212;&#29992;&#20110;&#32452;&#20214;&#30340;&#19968;&#32452;&#40664;&#35748; CSS &#31867;&#26102;&#65292;&#27492;&#26041;&#27861;&#29305;&#21035;&#26377;&#29992;&#65306;</p><pre><code class="language-blade">&lt;div {{ $attributes-&gt;merge(['class' =&gt; 'alert alert-'.$type]) }}&gt;
+    {{ $message }}
+&lt;/div&gt;</code></pre><p>&#20551;&#35774;&#27492;&#32452;&#20214;&#34987;&#22914;&#19979;&#20351;&#29992;&#65306;</p><pre><code class="language-blade">&lt;x-alert type="error" :message="$message" class="mb-4"/&gt;</code></pre><p>&#32452;&#20214;&#26368;&#32456;&#28210;&#26579;&#30340; HTML &#23558;&#22914;&#19979;&#25152;&#31034;&#65306;</p><pre><code class="language-blade">&lt;div class="alert alert-error mb-4"&gt;
+    &lt;!-- Contents of the $message variable --&gt;
+&lt;/div&gt;</code></pre><h4 id="a1c77dd3397e2b98c7e21dc41b262907">&#25353;&#26465;&#20214;&#21512;&#24182;&#31867;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#22312;&#32473;&#23450;&#26465;&#20214;&#20026; <code>true</code> &#26102;&#21512;&#24182;&#31867;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807; <code>class</code> &#26041;&#27861;&#23454;&#29616;&#36825;&#19968;&#28857;&#65292;&#35813;&#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#31867;&#25968;&#32452;&#65292;&#20854;&#20013;&#25968;&#32452;&#30340;&#38190;&#21253;&#21547;&#20320;&#24076;&#26395;&#28155;&#21152;&#30340;&#31867;&#65292;&#20540;&#26159;&#19968;&#20010;&#24067;&#23572;&#34920;&#36798;&#24335;&#12290;&#22914;&#26524;&#25968;&#32452;&#20803;&#32032;&#20351;&#29992;&#25968;&#23383;&#38190;&#65292;&#23427;&#23558;&#22987;&#32456;&#21253;&#21547;&#22312;&#28210;&#26579;&#30340;&#31867;&#21015;&#34920;&#20013;&#65306;</p><pre><code class="language-blade">&lt;div {{ $attributes-&gt;class(['p-4', 'bg-red' =&gt; $hasError]) }}&gt;
+    {{ $message }}
+&lt;/div&gt;</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#23558;&#20854;&#20182;&#23646;&#24615;&#21512;&#24182;&#21040;&#32452;&#20214;&#20013;&#65292;&#21487;&#20197;&#23558; <code>merge</code> &#26041;&#27861;&#38142;&#25509;&#21040; <code>class</code> &#26041;&#27861;&#20043;&#21518;&#65306;</p><pre><code class="language-blade">&lt;button {{ $attributes-&gt;class(['p-4'])-&gt;merge(['type' =&gt; 'button']) }}&gt;
+    {{ $slot }}
+&lt;/button&gt;</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#38656;&#35201;&#22312;&#19981;&#24212;&#25509;&#25910;&#21512;&#24182;&#23646;&#24615;&#30340;&#20854;&#20182; HTML &#20803;&#32032;&#19978;&#26377;&#26465;&#20214;&#22320;&#32534;&#35793;&#31867;&#65292;&#21487;&#20197;&#20351;&#29992; <a href="wevwmrz9l2.html#conditional-classes" target="_blank">@class &#25351;&#20196;</a>&#12290;</p>
+</blockquote><h4 id="6be60560e8b6949df3c700144f5b995c">&#38750; class &#23646;&#24615;&#30340;&#21512;&#24182;</h4><p>&#21512;&#24182;&#38750; <code>class</code> &#23646;&#24615;&#26102;&#65292;&#25552;&#20379;&#32473; <code>merge</code> &#26041;&#27861;&#30340;&#20540;&#23558;&#34987;&#35270;&#20026;&#35813;&#23646;&#24615;&#30340;&#12300;&#40664;&#35748;&#20540;&#12301;&#12290;&#20294;&#26159;&#65292;&#19982; <code>class</code> &#23646;&#24615;&#19981;&#21516;&#65292;&#36825;&#20123;&#23646;&#24615;&#19981;&#20250;&#19982;&#27880;&#20837;&#30340;&#23646;&#24615;&#20540;&#21512;&#24182;&#65292;&#32780;&#26159;&#20250;&#34987;&#35206;&#30422;&#12290;&#20363;&#22914;&#65292;&#19968;&#20010; <code>button</code> &#32452;&#20214;&#30340;&#23454;&#29616;&#21487;&#33021;&#22914;&#19979;&#25152;&#31034;&#65306;</p><pre><code class="language-blade">&lt;button {{ $attributes-&gt;merge(['type' =&gt; 'button']) }}&gt;
+    {{ $slot }}
+&lt;/button&gt;</code></pre><p>&#35201;&#20351;&#29992;&#33258;&#23450;&#20041;&#30340; <code>type</code> &#28210;&#26579; button &#32452;&#20214;&#65292;&#21487;&#20197;&#22312;&#20351;&#29992;&#32452;&#20214;&#26102;&#25351;&#23450;&#23427;&#12290;&#22914;&#26524;&#26410;&#25351;&#23450; <code>type</code>&#65292;&#21017;&#23558;&#20351;&#29992; <code>button</code> &#31867;&#22411;&#65306;</p><pre><code class="language-blade">&lt;x-button type="submit"&gt;
+    Submit
+&lt;/x-button&gt;</code></pre><p>&#26412;&#20363;&#20013; <code>button</code> &#32452;&#20214;&#28210;&#26579;&#30340; HTML &#20026;&#65306;</p><pre><code class="language-blade">&lt;button type="submit"&gt;
+    Submit
+&lt;/button&gt;</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#38500; <code>class</code> &#20043;&#22806;&#30340;&#23646;&#24615;&#23558;&#20854;&#40664;&#35748;&#20540;&#19982;&#27880;&#20837;&#20540;&#36830;&#25509;&#22312;&#19968;&#36215;&#65292;&#21487;&#20197;&#20351;&#29992; <code>prepends</code> &#26041;&#27861;&#12290;&#22312;&#26412;&#20363;&#20013;&#65292;<code>data-controller</code> &#23646;&#24615;&#23558;&#22987;&#32456;&#20197; <code>profile-controller</code> &#24320;&#22836;&#65292;&#20219;&#20309;&#39069;&#22806;&#27880;&#20837;&#30340; <code>data-controller</code> &#20540;&#37117;&#23558;&#25918;&#22312;&#27492;&#40664;&#35748;&#20540;&#20043;&#21518;&#65306;</p><pre><code class="language-blade">&lt;div {{ $attributes-&gt;merge(['data-controller' =&gt; $attributes-&gt;prepends('profile-controller')]) }}&gt;
+    {{ $slot }}
+&lt;/div&gt;</code></pre><h4 id="7d0f0dc70834a6b41fe56d7ca8f9c75a">&#26816;&#32034;&#21644;&#36807;&#28388;&#23646;&#24615;</h4><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>filter</code> &#26041;&#27861;&#36807;&#28388;&#23646;&#24615;&#12290;&#35813;&#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#65292;&#22914;&#26524;&#24076;&#26395;&#20445;&#30041;&#23646;&#24615;&#21253;&#20013;&#30340;&#23646;&#24615;&#65292;&#38381;&#21253;&#24212;&#36820;&#22238; <code>true</code>&#65306;</p><pre><code class="language-blade">{{ $attributes-&gt;filter(fn (string $value, string $key) =&gt; $key == 'foo') }}</code></pre><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>whereStartsWith</code> &#26041;&#27861;&#26816;&#32034;&#25152;&#26377;&#38190;&#20197;&#32473;&#23450;&#23383;&#31526;&#20018;&#24320;&#22836;&#30340;&#23646;&#24615;&#65306;</p><pre><code class="language-blade">{{ $attributes-&gt;whereStartsWith('wire:model') }}</code></pre><p>&#30456;&#21453;&#65292;&#21487;&#20197;&#20351;&#29992; <code>whereDoesntStartWith</code> &#26041;&#27861;&#25490;&#38500;&#25152;&#26377;&#38190;&#20197;&#32473;&#23450;&#23383;&#31526;&#20018;&#24320;&#22836;&#30340;&#23646;&#24615;&#65306;</p><pre><code class="language-blade">{{ $attributes-&gt;whereDoesntStartWith('wire:model') }}</code></pre><p>&#20351;&#29992; <code>first</code> &#26041;&#27861;&#65292;&#20320;&#21487;&#20197;&#28210;&#26579;&#32473;&#23450;&#23646;&#24615;&#21253;&#20013;&#30340;&#31532;&#19968;&#20010;&#23646;&#24615;&#65306;</p><pre><code class="language-blade">{{ $attributes-&gt;whereStartsWith('wire:model')-&gt;first() }}</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#26816;&#26597;&#32452;&#20214;&#19978;&#26159;&#21542;&#23384;&#22312;&#26576;&#20010;&#23646;&#24615;&#65292;&#21487;&#20197;&#20351;&#29992; <code>has</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#25509;&#21463;&#23646;&#24615;&#21517;&#31216;&#20316;&#20026;&#21807;&#19968;&#21442;&#25968;&#65292;&#24182;&#36820;&#22238;&#19968;&#20010;&#24067;&#23572;&#20540;&#65292;&#25351;&#31034;&#35813;&#23646;&#24615;&#26159;&#21542;&#23384;&#22312;&#65306;</p><pre><code class="language-blade">@if ($attributes-&gt;has('class'))
+    &lt;div&gt;Class attribute is present&lt;/div&gt;
+@endif</code></pre><p>&#22914;&#26524;&#23558;&#19968;&#20010;&#25968;&#32452;&#20256;&#36882;&#32473; <code>has</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#23558;&#21028;&#26029;&#32452;&#20214;&#19978;&#26159;&#21542;&#21516;&#26102;&#23384;&#22312;&#25152;&#26377;&#32473;&#23450;&#23646;&#24615;&#65306;</p><pre><code class="language-blade">@if ($attributes-&gt;has(['name', 'class']))
+    &lt;div&gt;All of the attributes are present&lt;/div&gt;
+@endif</code></pre><p><code>hasAny</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#21028;&#26029;&#32452;&#20214;&#19978;&#26159;&#21542;&#23384;&#22312;&#20219;&#24847;&#32473;&#23450;&#23646;&#24615;&#65306;</p><pre><code class="language-blade">@if ($attributes-&gt;hasAny(['href', ':href', 'v-bind:href']))
+    &lt;div&gt;One of the attributes is present&lt;/div&gt;
+@endif</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>get</code> &#26041;&#27861;&#26816;&#32034;&#29305;&#23450;&#23646;&#24615;&#30340;&#20540;&#65306;</p><pre><code class="language-blade">{{ $attributes-&gt;get('class') }}</code></pre><p><code>only</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#20165;&#26816;&#32034;&#20855;&#26377;&#32473;&#23450;&#38190;&#30340;&#23646;&#24615;&#65306;</p><pre><code class="language-blade">{{ $attributes-&gt;only(['class']) }}</code></pre><p><code>except</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26816;&#32034;&#38500;&#20855;&#26377;&#32473;&#23450;&#38190;&#30340;&#23646;&#24615;&#20043;&#22806;&#30340;&#25152;&#26377;&#23646;&#24615;&#65306;</p><pre><code class="language-blade">{{ $attributes-&gt;except(['class']) }}</code></pre><h3 id="e5f86b88c11d264c9a2008a8a188e78a">&#20445;&#30041;&#20851;&#38190;&#23383;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#26576;&#20123;&#20851;&#38190;&#23383;&#20026; Blade &#20869;&#37096;&#20445;&#30041;&#65292;&#29992;&#20110;&#28210;&#26579;&#32452;&#20214;&#12290;&#20197;&#19979;&#20851;&#38190;&#23383;&#19981;&#33021;&#22312;&#32452;&#20214;&#20013;&#23450;&#20041;&#20026; public &#23646;&#24615;&#25110;&#26041;&#27861;&#21517;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;"><code>data</code></li>
+<li style="list-style-type: disc;"><code>render</code></li>
+<li style="list-style-type: disc;"><code>resolve</code></li>
+<li style="list-style-type: disc;"><code>resolveView</code></li>
+<li style="list-style-type: disc;"><code>shouldRender</code></li>
+<li style="list-style-type: disc;"><code>view</code></li>
+<li style="list-style-type: disc;"><code>withAttributes</code></li>
+<li style="list-style-type: disc;"><code>withName</code></li>
+</ul><h3 id="bab5bc7935d5e76bdcd0a0bdf6bb2500">&#25554;&#27133;</h3><p>&#20320;&#32463;&#24120;&#38656;&#35201;&#36890;&#36807;&#12300;&#25554;&#27133;&#12301;&#21521;&#32452;&#20214;&#20256;&#36882;&#38468;&#21152;&#20869;&#23481;&#12290;&#32452;&#20214;&#25554;&#27133;&#36890;&#36807;&#36755;&#20986; <code>$slot</code> &#21464;&#37327;&#36827;&#34892;&#28210;&#26579;&#12290;&#20026;&#20102;&#35828;&#26126;&#36825;&#20010;&#27010;&#24565;&#65292;&#35753;&#25105;&#20204;&#20551;&#35774;&#19968;&#20010; <code>alert</code> &#32452;&#20214;&#20855;&#26377;&#20197;&#19979;&#26631;&#35760;&#65306;</p><pre><code class="language-blade">&lt;!-- /resources/views/components/alert.blade.php --&gt;
+
+&lt;div class="alert alert-danger"&gt;
+    {{ $slot }}
+&lt;/div&gt;</code></pre><p>&#25105;&#20204;&#21487;&#20197;&#36890;&#36807;&#21521;&#32452;&#20214;&#27880;&#20837;&#20869;&#23481;&#26469;&#23558;&#20869;&#23481;&#20256;&#36882;&#32473; <code>slot</code>&#65306;</p><pre><code class="language-blade">&lt;x-alert&gt;
+    &lt;strong&gt;Whoops!&lt;/strong&gt; Something went wrong!
+&lt;/x-alert&gt;</code></pre><p>&#26377;&#26102;&#32452;&#20214;&#21487;&#33021;&#38656;&#35201;&#22312;&#32452;&#20214;&#20869;&#37096;&#30340;&#19981;&#21516;&#20301;&#32622;&#28210;&#26579;&#22810;&#20010;&#19981;&#21516;&#30340;&#25554;&#27133;&#12290;&#35753;&#25105;&#20204;&#20462;&#25913; alert &#32452;&#20214;&#20197;&#20801;&#35768;&#27880;&#20837;&#12300;title&#12301;&#25554;&#27133;&#65306;</p><pre><code class="language-blade">&lt;!-- /resources/views/components/alert.blade.php --&gt;
+
+&lt;span class="alert-title"&gt;{{ $title }}&lt;/span&gt;
+
+&lt;div class="alert alert-danger"&gt;
+    {{ $slot }}
+&lt;/div&gt;</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>x-slot</code> &#26631;&#31614;&#23450;&#20041;&#20855;&#21517;&#25554;&#27133;&#30340;&#20869;&#23481;&#12290;&#20219;&#20309;&#19981;&#22312;&#26174;&#24335; <code>x-slot</code> &#26631;&#31614;&#20869;&#30340;&#20869;&#23481;&#37117;&#23558;&#36890;&#36807; <code>$slot</code> &#21464;&#37327;&#20256;&#36882;&#32473;&#32452;&#20214;&#65306;</p><pre><code class="language-xml">&lt;x-alert&gt;
+    &lt;x-slot:title&gt;
+        Server Error
+    &lt;/x-slot&gt;
+
+    &lt;strong&gt;Whoops!&lt;/strong&gt; Something went wrong!
+&lt;/x-alert&gt;</code></pre><p>&#20320;&#21487;&#20197;&#35843;&#29992;&#25554;&#27133;&#30340; <code>isEmpty</code> &#26041;&#27861;&#26469;&#21028;&#26029;&#25554;&#27133;&#26159;&#21542;&#21253;&#21547;&#20869;&#23481;&#65306;</p><pre><code class="language-blade">&lt;span class="alert-title"&gt;{{ $title }}&lt;/span&gt;
+
+&lt;div class="alert alert-danger"&gt;
+    @if ($slot-&gt;isEmpty())
+        This is default content if the slot is empty.
+    @else
+        {{ $slot }}
+    @endif
+&lt;/div&gt;</code></pre><p>&#27492;&#22806;&#65292;<code>hasActualContent</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#21028;&#26029;&#25554;&#27133;&#26159;&#21542;&#21253;&#21547;&#20219;&#20309;&#12300;&#23454;&#38469;&#12301;&#20869;&#23481;&#65288;&#38750; HTML &#27880;&#37322;&#65289;&#65306;</p><pre><code class="language-blade">@if ($slot-&gt;hasActualContent())
+    The scope has non-comment content.
+@endif</code></pre><h4 id="18c532f95f5d9576eac10ec32e60c7df">&#20316;&#29992;&#22495;&#25554;&#27133;</h4><p>&#22914;&#26524;&#20320;&#20351;&#29992;&#36807; Vue &#36825;&#26679;&#30340; JavaScript &#26694;&#26550;&#65292;&#20320;&#21487;&#33021;&#29087;&#24713;&#12300;&#20316;&#29992;&#22495;&#25554;&#27133;&#12301;&#65292;&#23427;&#20801;&#35768;&#20320;&#22312;&#25554;&#27133;&#20869;&#35775;&#38382;&#32452;&#20214;&#30340;&#25968;&#25454;&#25110;&#26041;&#27861;&#12290;&#22312; Laravel &#20013;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#32452;&#20214;&#19978;&#23450;&#20041; public &#26041;&#27861;&#25110;&#23646;&#24615;&#65292;&#24182;&#36890;&#36807; <code>$component</code> &#21464;&#37327;&#22312;&#25554;&#27133;&#20869;&#35775;&#38382;&#35813;&#32452;&#20214;&#65292;&#20174;&#32780;&#23454;&#29616;&#31867;&#20284;&#30340;&#34892;&#20026;&#12290;&#22312;&#26412;&#20363;&#20013;&#65292;&#25105;&#20204;&#20551;&#35774; <code>x-alert</code> &#32452;&#20214;&#22312;&#20854;&#32452;&#20214;&#31867;&#19978;&#23450;&#20041;&#20102;&#19968;&#20010; public <code>formatAlert</code> &#26041;&#27861;&#65306;</p><pre><code class="language-blade">&lt;x-alert&gt;
+    &lt;x-slot:title&gt;
+        {{ $component-&gt;formatAlert('Server Error') }}
+    &lt;/x-slot&gt;
+
+    &lt;strong&gt;Whoops!&lt;/strong&gt; Something went wrong!
+&lt;/x-alert&gt;</code></pre><h4 id="a131d312d6adc6e75d9bd5a6f10e46b1">&#25554;&#27133;&#23646;&#24615;</h4><p>&#19982; Blade &#32452;&#20214;&#19968;&#26679;&#65292;&#20320;&#20063;&#21487;&#20197;&#20026;&#25554;&#27133;&#20998;&#37197;&#38468;&#21152;&#30340;<a href="wevwmrz9l2.html#component-attributes" target="_blank">&#23646;&#24615;</a>&#65292;&#20363;&#22914; CSS &#31867;&#21517;&#65306;</p><pre><code class="language-xml">&lt;x-card class="shadow-sm"&gt;
+    &lt;x-slot:heading class="font-bold"&gt;
+        Heading
+    &lt;/x-slot&gt;
+
+    Content
+
+    &lt;x-slot:footer class="text-sm"&gt;
+        Footer
+    &lt;/x-slot&gt;
+&lt;/x-card&gt;</code></pre><p>&#35201;&#19982;&#25554;&#27133;&#23646;&#24615;&#20132;&#20114;&#65292;&#20320;&#21487;&#20197;&#35775;&#38382;&#25554;&#27133;&#21464;&#37327;&#30340; <code>attributes</code> &#23646;&#24615;&#12290;&#26377;&#20851;&#22914;&#20309;&#19982;&#23646;&#24615;&#20132;&#20114;&#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405;<a href="wevwmrz9l2.html#component-attributes" target="_blank">&#32452;&#20214;&#23646;&#24615;</a>&#25991;&#26723;&#65306;</p><pre><code class="language-blade">@props([
+    'heading',
+    'footer',
+])
+
+&lt;div {{ $attributes-&gt;class(['border']) }}&gt;
+    &lt;h1 {{ $heading-&gt;attributes-&gt;class(['text-lg']) }}&gt;
+        {{ $heading }}
+    &lt;/h1&gt;
+
+    {{ $slot }}
+
+    &lt;footer {{ $footer-&gt;attributes-&gt;class(['text-gray-700']) }}&gt;
+        {{ $footer }}
+    &lt;/footer&gt;
+&lt;/div&gt;</code></pre><h3 id="b28c2be4135697325dd3bf243a363b22">&#20869;&#32852;&#32452;&#20214;&#35270;&#22270;</h3><p>&#23545;&#20110;&#38750;&#24120;&#23567;&#30340;&#32452;&#20214;&#65292;&#21516;&#26102;&#31649;&#29702;&#32452;&#20214;&#31867;&#21644;&#32452;&#20214;&#30340;&#35270;&#22270;&#27169;&#26495;&#21487;&#33021;&#20250;&#26174;&#24471;&#32321;&#29712;&#12290;&#22240;&#27492;&#65292;&#20320;&#21487;&#20197;&#20174; <code>render</code> &#26041;&#27861;&#30452;&#25509;&#36820;&#22238;&#32452;&#20214;&#30340;&#26631;&#35760;&#65306;</p><pre><code class="language-php">/**
+ * Get the view / contents that represent the component.
+ */
+public function render(): string
+{
+    return &lt;&lt;&lt;'blade'
+        &lt;div class="alert alert-danger"&gt;
+            {{ $slot }}
+        &lt;/div&gt;
+    blade;
+}</code></pre><h4 id="88da71fd949d030325ae54e2228ecbcc">&#29983;&#25104;&#20869;&#32852;&#35270;&#22270;&#32452;&#20214;</h4><p>&#35201;&#21019;&#24314;&#28210;&#26579;&#20869;&#32852;&#35270;&#22270;&#30340;&#32452;&#20214;&#65292;&#20320;&#21487;&#20197;&#22312;&#25191;&#34892; <code>make:component</code> &#21629;&#20196;&#26102;&#20351;&#29992; <code>inline</code> &#36873;&#39033;&#65306;</p><pre><code class="language-shell">php artisan make:component Alert --inline</code></pre><h3 id="6bb6a59c43edfd89960dd0d8916cf106">&#21160;&#24577;&#32452;&#20214;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#28210;&#26579;&#26576;&#20010;&#32452;&#20214;&#65292;&#20294;&#22312;&#36816;&#34892;&#26102;&#20043;&#21069;&#24182;&#19981;&#30693;&#36947;&#24212;&#28210;&#26579;&#21738;&#20010;&#32452;&#20214;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; Laravel &#20869;&#32622;&#30340; <code>dynamic-component</code> &#32452;&#20214;&#65292;&#26681;&#25454;&#36816;&#34892;&#26102;&#20540;&#25110;&#21464;&#37327;&#28210;&#26579;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">// $componentName = "secondary-button";
+
+&lt;x-dynamic-component :component="$componentName" class="mt-4" /&gt;</code></pre><h3 id="fb68df203e4efa6ce839e0ca7779a272">&#25163;&#21160;&#27880;&#20876;&#32452;&#20214;</h3><blockquote>
+<p>[!WARNING]<br>
+&#20197;&#19979;&#20851;&#20110;&#25163;&#21160;&#27880;&#20876;&#32452;&#20214;&#30340;&#25991;&#26723;&#20027;&#35201;&#36866;&#29992;&#20110;&#32534;&#20889;&#21253;&#21547;&#35270;&#22270;&#32452;&#20214;&#30340; Laravel &#21253;&#30340;&#20154;&#12290;&#22914;&#26524;&#20320;&#19981;&#32534;&#20889;&#21253;&#65292;&#21017;&#36825;&#37096;&#20998;&#32452;&#20214;&#25991;&#26723;&#21487;&#33021;&#19982;&#20320;&#26080;&#20851;&#12290;</p>
+</blockquote><p>&#20026;&#33258;&#24049;&#30340;&#24212;&#29992;&#32534;&#20889;&#32452;&#20214;&#26102;&#65292;&#32452;&#20214;&#20250;&#33258;&#21160;&#22312; <code>app/View/Components</code> &#30446;&#24405;&#21644; <code>resources/views/components</code> &#30446;&#24405;&#20013;&#21457;&#29616;&#12290;</p><p>&#20294;&#26159;&#65292;&#22914;&#26524;&#20320;&#27491;&#22312;&#26500;&#24314;&#20351;&#29992; Blade &#32452;&#20214;&#30340;&#21253;&#65292;&#25110;&#23558;&#32452;&#20214;&#25918;&#22312;&#38750;&#32422;&#23450;&#30446;&#24405;&#20013;&#65292;&#21017;&#38656;&#35201;&#25163;&#21160;&#27880;&#20876;&#32452;&#20214;&#31867;&#21450;&#20854; HTML &#26631;&#31614;&#21035;&#21517;&#65292;&#20197;&#20415; Laravel &#30693;&#36947;&#22312;&#21738;&#37324;&#25214;&#21040;&#35813;&#32452;&#20214;&#12290;&#36890;&#24120;&#24212;&#22312;&#21253;&#30340;&#26381;&#21153;&#25552;&#20379;&#32773;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#27880;&#20876;&#32452;&#20214;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Blade;
+use VendorPackage\View\Components\AlertComponent;
+
+/**
+ * Bootstrap your package's services.
+ */
+public function boot(): void
+{
+    Blade::component('package-alert', AlertComponent::class);
+}</code></pre><p>&#19968;&#26086;&#32452;&#20214;&#34987;&#27880;&#20876;&#65292;&#23601;&#21487;&#20197;&#20351;&#29992;&#20854;&#26631;&#31614;&#21035;&#21517;&#36827;&#34892;&#28210;&#26579;&#65306;</p><pre><code class="language-blade">&lt;x-package-alert/&gt;</code></pre><h4 id="b98d7e0c57bf321d926869160461e2d3">&#33258;&#21160;&#21152;&#36733;&#21253;&#32452;&#20214;</h4><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>componentNamespace</code> &#26041;&#27861;&#25353;&#32422;&#23450;&#33258;&#21160;&#21152;&#36733;&#32452;&#20214;&#31867;&#12290;&#20363;&#22914;&#65292;&#19968;&#20010; <code>Nightshade</code> &#21253;&#21487;&#33021;&#25317;&#26377;&#20301;&#20110; <code>Package\Views\Components</code> &#21629;&#21517;&#31354;&#38388;&#19979;&#30340; <code>Calendar</code> &#21644; <code>ColorPicker</code> &#32452;&#20214;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Blade;
+
+/**
+ * Bootstrap your package's services.
+ */
+public function boot(): void
+{
+    Blade::componentNamespace('Nightshade\\Views\\Components', 'nightshade');
+}</code></pre><p>&#36825;&#20801;&#35768;&#36890;&#36807;&#20379;&#24212;&#21830;&#21629;&#21517;&#31354;&#38388;&#20351;&#29992; <code>package-name::</code> &#35821;&#27861;&#35843;&#29992;&#21253;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-nightshade::calendar /&gt;
+&lt;x-nightshade::color-picker /&gt;</code></pre><p>Blade &#20250;&#36890;&#36807;&#23558;&#32452;&#20214;&#21517;&#36716;&#25442;&#20026; Pascal Case &#33258;&#21160;&#26816;&#27979;&#19982;&#20043;&#20851;&#32852;&#30340;&#31867;&#12290;&#23376;&#30446;&#24405;&#20063;&#25903;&#25345;&#20351;&#29992;&#12300;&#28857;&#12301;&#34920;&#31034;&#27861;&#12290;</p><h2 id="821a9c48046e7c37f37e94c86a5de724">&#21311;&#21517;&#32452;&#20214;</h2><p>&#19982;&#20869;&#32852;&#32452;&#20214;&#31867;&#20284;&#65292;&#21311;&#21517;&#32452;&#20214;&#25552;&#20379;&#20102;&#19968;&#31181;&#36890;&#36807;&#21333;&#20010;&#25991;&#20214;&#31649;&#29702;&#32452;&#20214;&#30340;&#26426;&#21046;&#12290;&#20294;&#26159;&#65292;&#21311;&#21517;&#32452;&#20214;&#20351;&#29992;&#21333;&#20010;&#35270;&#22270;&#25991;&#20214;&#65292;&#24182;&#19988;&#27809;&#26377;&#20851;&#32852;&#30340;&#31867;&#12290;&#35201;&#23450;&#20041;&#21311;&#21517;&#32452;&#20214;&#65292;&#21482;&#38656;&#23558; Blade &#27169;&#26495;&#25918;&#22312; <code>resources/views/components</code> &#30446;&#24405;&#20013;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774;&#20320;&#24050;&#22312; <code>resources/views/components/alert.blade.php</code> &#23450;&#20041;&#20102;&#19968;&#20010;&#32452;&#20214;&#65292;&#21017;&#21487;&#20197;&#30452;&#25509;&#36825;&#26679;&#28210;&#26579;&#23427;&#65306;</p><pre><code class="language-blade">&lt;x-alert/&gt;</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>.</code> &#23383;&#31526;&#26469;&#34920;&#31034;&#32452;&#20214;&#26159;&#21542;&#23884;&#22871;&#22312; <code>components</code> &#30446;&#24405;&#30340;&#26356;&#28145;&#20301;&#32622;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774;&#32452;&#20214;&#23450;&#20041;&#22312; <code>resources/views/components/inputs/button.blade.php</code>&#65292;&#21487;&#20197;&#36825;&#26679;&#28210;&#26579;&#65306;</p><pre><code class="language-blade">&lt;x-inputs.button/&gt;</code></pre><p>&#35201;&#36890;&#36807; Artisan &#21019;&#24314;&#21311;&#21517;&#32452;&#20214;&#65292;&#21487;&#20197;&#22312;&#35843;&#29992; <code>make:component</code> &#21629;&#20196;&#26102;&#20351;&#29992; <code>--view</code> &#26631;&#24535;&#65306;</p><pre><code class="language-shell">php artisan make:component forms.input --view</code></pre><p>&#19978;&#38754;&#30340;&#21629;&#20196;&#23558;&#22312; <code>resources/views/components/forms/input.blade.php</code> &#21019;&#24314;&#19968;&#20010; Blade &#25991;&#20214;&#65292;&#21487;&#20197;&#36890;&#36807; <code>&lt;x-forms.input /&gt;</code> &#20316;&#20026;&#32452;&#20214;&#36827;&#34892;&#28210;&#26579;&#12290;</p><h3 id="05a29599487da2cef43c4c41364ade46">&#21311;&#21517; Index &#32452;&#20214;</h3><p>&#26377;&#26102;&#65292;&#24403;&#26576;&#20010;&#32452;&#20214;&#30001;&#22810;&#20010; Blade &#27169;&#26495;&#32452;&#25104;&#26102;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#23558;&#35813;&#32452;&#20214;&#30340;&#27169;&#26495;&#20998;&#32452;&#21040;&#21333;&#20010;&#30446;&#24405;&#20013;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774;&#19968;&#20010;&#12300;accordion&#12301;&#32452;&#20214;&#20855;&#26377;&#20197;&#19979;&#30446;&#24405;&#32467;&#26500;&#65306;</p><pre><code class="language-text">/resources/views/components/accordion.blade.php
+/resources/views/components/accordion/item.blade.php</code></pre><p>&#27492;&#30446;&#24405;&#32467;&#26500;&#20801;&#35768;&#20320;&#20687;&#19979;&#38754;&#36825;&#26679;&#28210;&#26579; accordion &#32452;&#20214;&#21450;&#20854; item&#65306;</p><pre><code class="language-blade">&lt;x-accordion&gt;
+    &lt;x-accordion.item&gt;
+        ...
+    &lt;/x-accordion.item&gt;
+&lt;/x-accordion&gt;</code></pre><p>&#20294;&#26159;&#65292;&#20026;&#20102;&#36890;&#36807; <code>x-accordion</code> &#28210;&#26579; accordion &#32452;&#20214;&#65292;&#25105;&#20204;&#19981;&#24471;&#19981;&#23558;&#12300;index&#12301;accordion &#32452;&#20214;&#27169;&#26495;&#25918;&#22312; <code>resources/views/components</code> &#30446;&#24405;&#20013;&#65292;&#32780;&#19981;&#26159;&#19982;&#20854;&#20182; accordion &#30456;&#20851;&#27169;&#26495;&#19968;&#36215;&#23884;&#22871;&#22312; <code>accordion</code> &#30446;&#24405;&#20013;&#12290;</p><p>&#20540;&#24471;&#24198;&#24184;&#30340;&#26159;&#65292;Blade &#20801;&#35768;&#20320;&#22312;&#32452;&#20214;&#30446;&#24405;&#20013;&#25918;&#32622;&#19968;&#20010;&#19982;&#32452;&#20214;&#30446;&#24405;&#21517;&#21516;&#21517;&#30340;&#25991;&#20214;&#12290;&#24403;&#27492;&#27169;&#26495;&#23384;&#22312;&#26102;&#65292;&#21363;&#20351;&#23427;&#23884;&#22871;&#22312;&#30446;&#24405;&#20013;&#65292;&#20063;&#21487;&#20197;&#20316;&#20026;&#32452;&#20214;&#30340;&#12300;&#26681;&#12301;&#20803;&#32032;&#36827;&#34892;&#28210;&#26579;&#12290;&#22240;&#27492;&#65292;&#25105;&#20204;&#21487;&#20197;&#32487;&#32493;&#20351;&#29992;&#19978;&#38754;&#31034;&#20363;&#20013;&#30456;&#21516;&#30340; Blade &#35821;&#27861;&#65307;&#20294;&#26159;&#65292;&#25105;&#20204;&#23558;&#35843;&#25972;&#30446;&#24405;&#32467;&#26500;&#22914;&#19979;&#65306;</p><pre><code class="language-text">/resources/views/components/accordion/accordion.blade.php
+/resources/views/components/accordion/item.blade.php</code></pre><h3 id="e3e26c1706595152a635c822797f62bf">&#25968;&#25454;&#23646;&#24615; / &#23646;&#24615;</h3><p>&#30001;&#20110;&#21311;&#21517;&#32452;&#20214;&#27809;&#26377;&#20219;&#20309;&#20851;&#32852;&#30340;&#31867;&#65292;&#20320;&#21487;&#33021;&#24819;&#30693;&#36947;&#22914;&#20309;&#21306;&#20998;&#21738;&#20123;&#25968;&#25454;&#24212;&#20316;&#20026;&#21464;&#37327;&#20256;&#36882;&#32473;&#32452;&#20214;&#65292;&#21738;&#20123;&#23646;&#24615;&#24212;&#25918;&#22312;&#32452;&#20214;&#30340;<a href="wevwmrz9l2.html#component-attributes" target="_blank">&#23646;&#24615;&#21253;</a>&#20013;&#12290;</p><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>@props</code> &#25351;&#20196;&#22312;&#32452;&#20214; Blade &#27169;&#26495;&#30340;&#39030;&#37096;&#25351;&#23450;&#24212;&#34987;&#35270;&#20026;&#25968;&#25454;&#21464;&#37327;&#30340;&#23646;&#24615;&#12290;&#32452;&#20214;&#19978;&#30340;&#25152;&#26377;&#20854;&#20182;&#23646;&#24615;&#21487;&#36890;&#36807;&#32452;&#20214;&#30340;&#23646;&#24615;&#21253;&#35775;&#38382;&#12290;&#22914;&#26524;&#24076;&#26395;&#20026;&#25968;&#25454;&#21464;&#37327;&#25552;&#20379;&#40664;&#35748;&#20540;&#65292;&#21487;&#20197;&#23558;&#21464;&#37327;&#21517;&#25351;&#23450;&#20026;&#25968;&#32452;&#38190;&#65292;&#23558;&#40664;&#35748;&#20540;&#25351;&#23450;&#20026;&#25968;&#32452;&#20540;&#65306;</p><pre><code class="language-blade">&lt;!-- /resources/views/components/alert.blade.php --&gt;
+
+@props(['type' =&gt; 'info', 'message'])
+
+&lt;div {{ $attributes-&gt;merge(['class' =&gt; 'alert alert-'.$type]) }}&gt;
+    {{ $message }}
+&lt;/div&gt;</code></pre><p>&#26681;&#25454;&#19978;&#38754;&#30340;&#32452;&#20214;&#23450;&#20041;&#65292;&#25105;&#20204;&#21487;&#20197;&#36825;&#26679;&#20351;&#29992;&#35813;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-alert type="error" :message="$message" class="mb-4"/&gt;</code></pre><h3 id="f3efff3bd5aeb72a4efab0405e414910">&#35775;&#38382;&#29238;&#32423;&#25968;&#25454;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#20174;&#29238;&#32452;&#20214;&#20869;&#35775;&#38382;&#23376;&#32452;&#20214;&#20013;&#30340;&#25968;&#25454;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>@aware</code> &#25351;&#20196;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774;&#25105;&#20204;&#27491;&#22312;&#26500;&#24314;&#19968;&#20010;&#30001;&#29238;&#32423; <code>&lt;x-menu&gt;</code> &#21644;&#23376;&#32423; <code>&lt;x-menu.item&gt;</code> &#32452;&#25104;&#30340;&#22797;&#26434;&#33756;&#21333;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-menu color="purple"&gt;
+    &lt;x-menu.item&gt;...&lt;/x-menu.item&gt;
+    &lt;x-menu.item&gt;...&lt;/x-menu.item&gt;
+&lt;/x-menu&gt;</code></pre><p><code>&lt;x-menu&gt;</code> &#32452;&#20214;&#30340;&#23454;&#29616;&#21487;&#33021;&#22914;&#19979;&#25152;&#31034;&#65306;</p><pre><code class="language-blade">&lt;!-- /resources/views/components/menu/index.blade.php --&gt;
+
+@props(['color' =&gt; 'gray'])
+
+&lt;ul {{ $attributes-&gt;merge(['class' =&gt; 'bg-'.$color.'-200']) }}&gt;
+    {{ $slot }}
+&lt;/ul&gt;</code></pre><p>&#22240;&#20026; <code>color</code> prop &#20165;&#20256;&#36882;&#32473;&#29238;&#32423;&#65288;<code>&lt;x-menu&gt;</code>&#65289;&#65292;&#25152;&#20197;&#23427;&#22312; <code>&lt;x-menu.item&gt;</code> &#20869;&#19981;&#21487;&#29992;&#12290;&#20294;&#26159;&#65292;&#22914;&#26524;&#25105;&#20204;&#20351;&#29992; <code>@aware</code> &#25351;&#20196;&#65292;&#20063;&#21487;&#20197;&#22312; <code>&lt;x-menu.item&gt;</code> &#20869;&#20351;&#20854;&#21487;&#29992;&#65306;</p><pre><code class="language-blade">&lt;!-- /resources/views/components/menu/item.blade.php --&gt;
+
+@aware(['color' =&gt; 'gray'])
+
+&lt;li {{ $attributes-&gt;merge(['class' =&gt; 'text-'.$color.'-800']) }}&gt;
+    {{ $slot }}
+&lt;/li&gt;</code></pre><blockquote>
+<p>[!WARNING]<br>
+<code>@aware</code> &#25351;&#20196;&#26080;&#27861;&#35775;&#38382;&#26410;&#36890;&#36807; HTML &#23646;&#24615;&#26174;&#24335;&#20256;&#36882;&#32473;&#29238;&#32452;&#20214;&#30340;&#29238;&#32423;&#25968;&#25454;&#12290;&#26410;&#26174;&#24335;&#20256;&#36882;&#32473;&#29238;&#32452;&#20214;&#30340;&#40664;&#35748; <code>@props</code> &#20540;&#26080;&#27861;&#34987; <code>@aware</code> &#25351;&#20196;&#35775;&#38382;&#12290;</p>
+</blockquote><h3 id="0476dc81b3e487fc353c4a8b6bfb03f0">&#21311;&#21517;&#32452;&#20214;&#36335;&#24452;</h3><p>&#22914;&#21069;&#25152;&#36848;&#65292;&#21311;&#21517;&#32452;&#20214;&#36890;&#24120;&#36890;&#36807;&#23558; Blade &#27169;&#26495;&#25918;&#22312; <code>resources/views/components</code> &#30446;&#24405;&#20013;&#26469;&#23450;&#20041;&#12290;&#20294;&#26159;&#65292;&#38500;&#20102;&#40664;&#35748;&#36335;&#24452;&#20043;&#22806;&#65292;&#20320;&#21487;&#33021;&#20598;&#23572;&#24076;&#26395;&#21521; Laravel &#27880;&#20876;&#20854;&#20182;&#21311;&#21517;&#32452;&#20214;&#36335;&#24452;&#12290;</p><p><code>anonymousComponentPath</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#25509;&#21463;&#21311;&#21517;&#32452;&#20214;&#20301;&#32622;&#30340;&#12300;&#36335;&#24452;&#12301;&#65292;&#31532;&#20108;&#20010;&#21442;&#25968;&#26159;&#21487;&#36873;&#30340;&#12300;&#21629;&#21517;&#31354;&#38388;&#12301;&#65292;&#32452;&#20214;&#24212;&#25918;&#22312;&#35813;&#21629;&#21517;&#31354;&#38388;&#19979;&#12290;&#36890;&#24120;&#65292;&#24212;&#22312;&#26576;&#20010;&#24212;&#29992;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/providers" target="_blank">&#26381;&#21153;&#25552;&#20379;&#32773;</a> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#27492;&#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Blade::anonymousComponentPath(__DIR__.'/../components');
+}</code></pre><p>&#22914;&#19978;&#38754;&#30340;&#31034;&#20363;&#25152;&#31034;&#65292;&#24403;&#27880;&#20876;&#32452;&#20214;&#36335;&#24452;&#26102;&#26410;&#25351;&#23450;&#21069;&#32512;&#65292;&#36825;&#20123;&#36335;&#24452;&#19979;&#30340;&#32452;&#20214;&#20063;&#21487;&#20197;&#22312; Blade &#32452;&#20214;&#20013;&#26080;&#21069;&#32512;&#22320;&#28210;&#26579;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#22312;&#19978;&#38754;&#27880;&#20876;&#30340;&#36335;&#24452;&#20013;&#23384;&#22312; <code>panel.blade.php</code> &#32452;&#20214;&#65292;&#21487;&#20197;&#36825;&#26679;&#28210;&#26579;&#65306;</p><pre><code class="language-blade">&lt;x-panel /&gt;</code></pre><p>&#21487;&#20197;&#23558;&#12300;namespace&#12301;&#21069;&#32512;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>anonymousComponentPath</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Blade::anonymousComponentPath(__DIR__.'/../components', 'dashboard');</code></pre><p>&#24403;&#25552;&#20379;&#21069;&#32512;&#26102;&#65292;&#21487;&#20197;&#36890;&#36807;&#22312;&#28210;&#26579;&#32452;&#20214;&#26102;&#23558;&#21629;&#21517;&#31354;&#38388;&#21069;&#32512;&#28155;&#21152;&#21040;&#32452;&#20214;&#21517;&#31216;&#26469;&#28210;&#26579;&#35813;&#12300;&#21629;&#21517;&#31354;&#38388;&#12301;&#19979;&#30340;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-dashboard::panel /&gt;</code></pre><h2 id="0ef9972c411b1a2d355a3b4651aa64f4">&#26500;&#24314;&#24067;&#23616;</h2><h3 id="60fa57027a435ee5148fbc9fe1f20c6e">&#20351;&#29992;&#32452;&#20214;&#26500;&#24314;&#24067;&#23616;</h3><p>&#22823;&#22810;&#25968; Web &#24212;&#29992;&#22312;&#21508;&#20010;&#39029;&#38754;&#20043;&#38388;&#20445;&#25345;&#30456;&#21516;&#30340;&#19968;&#33324;&#24067;&#23616;&#12290;&#22914;&#26524;&#25105;&#20204;&#24517;&#39035;&#22312;&#21019;&#24314;&#30340;&#27599;&#20010;&#35270;&#22270;&#20013;&#37325;&#22797;&#25972;&#20010;&#24067;&#23616; HTML&#65292;&#37027;&#23558;&#38750;&#24120;&#32321;&#29712;&#19988;&#38590;&#20197;&#32500;&#25252;&#12290;&#20540;&#24471;&#24198;&#24184;&#30340;&#26159;&#65292;&#21487;&#20197;&#23558;&#27492;&#24067;&#23616;&#26041;&#20415;&#22320;&#23450;&#20041;&#20026;&#21333;&#20010; <a href="wevwmrz9l2.html#components" target="_blank">Blade &#32452;&#20214;</a>&#65292;&#28982;&#21518;&#22312;&#25972;&#20010;&#24212;&#29992;&#20013;&#20351;&#29992;&#23427;&#12290;</p><h4 id="b4e6254fa68c4ec7b7c4812433a91297">&#23450;&#20041;&#24067;&#23616;&#32452;&#20214;</h4><p>&#20363;&#22914;&#65292;&#20551;&#35774;&#25105;&#20204;&#27491;&#22312;&#26500;&#24314;&#19968;&#20010;&#12300;todo&#12301;&#21015;&#34920;&#24212;&#29992;&#12290;&#25105;&#20204;&#21487;&#20197;&#23450;&#20041;&#19968;&#20010; <code>layout</code> &#32452;&#20214;&#65292;&#22914;&#19979;&#25152;&#31034;&#65306;</p><pre><code class="language-blade">&lt;!-- resources/views/components/layout.blade.php --&gt;
+
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;{{ $title ?? 'Todo Manager' }}&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Todos&lt;/h1&gt;
+        &lt;hr/&gt;
+        {{ $slot }}
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre><h4 id="4d85b4b148516e043f8af14d31a69af0">&#24212;&#29992;&#24067;&#23616;&#32452;&#20214;</h4><p>&#19968;&#26086;&#23450;&#20041;&#20102; <code>layout</code> &#32452;&#20214;&#65292;&#25105;&#20204;&#23601;&#21487;&#20197;&#21019;&#24314;&#19968;&#20010;&#20351;&#29992;&#35813;&#32452;&#20214;&#30340; Blade &#35270;&#22270;&#12290;&#22312;&#26412;&#20363;&#20013;&#65292;&#25105;&#20204;&#23558;&#23450;&#20041;&#19968;&#20010;&#31616;&#21333;&#30340;&#35270;&#22270;&#26469;&#26174;&#31034;&#20219;&#21153;&#21015;&#34920;&#65306;</p><pre><code class="language-blade">&lt;!-- resources/views/tasks.blade.php --&gt;
+
+&lt;x-layout&gt;
+    @foreach ($tasks as $task)
+        &lt;div&gt;{{ $task }}&lt;/div&gt;
+    @endforeach
+&lt;/x-layout&gt;</code></pre><p>&#35831;&#35760;&#20303;&#65292;&#27880;&#20837;&#21040;&#32452;&#20214;&#20013;&#30340;&#20869;&#23481;&#23558;&#25552;&#20379;&#32473; <code>layout</code> &#32452;&#20214;&#20869;&#30340;&#40664;&#35748; <code>$slot</code> &#21464;&#37327;&#12290;&#20320;&#21487;&#33021;&#24050;&#32463;&#27880;&#24847;&#21040;&#65292;&#22914;&#26524;&#25552;&#20379;&#20102; <code>$title</code> &#25554;&#27133;&#65292;&#25105;&#20204;&#30340; layout &#20063;&#20250;&#36981;&#24490;&#23427;&#65307;&#21542;&#21017;&#65292;&#23558;&#26174;&#31034;&#40664;&#35748;&#26631;&#39064;&#12290;&#25105;&#20204;&#21487;&#20197;&#20351;&#29992;<a href="wevwmrz9l2.html#components" target="_blank">&#32452;&#20214;&#25991;&#26723;</a>&#20013;&#35752;&#35770;&#30340;&#26631;&#20934;&#25554;&#27133;&#35821;&#27861;&#20174;&#20219;&#21153;&#21015;&#34920;&#35270;&#22270;&#27880;&#20837;&#33258;&#23450;&#20041;&#26631;&#39064;&#65306;</p><pre><code class="language-blade">&lt;!-- resources/views/tasks.blade.php --&gt;
+
+&lt;x-layout&gt;
+    &lt;x-slot:title&gt;
+        Custom Title
+    &lt;/x-slot&gt;
+
+    @foreach ($tasks as $task)
+        &lt;div&gt;{{ $task }}&lt;/div&gt;
+    @endforeach
+&lt;/x-layout&gt;</code></pre><p>&#29616;&#22312;&#25105;&#20204;&#24050;&#32463;&#23450;&#20041;&#20102; layout &#21644;&#20219;&#21153;&#21015;&#34920;&#35270;&#22270;&#65292;&#25105;&#20204;&#21482;&#38656;&#35201;&#20174;&#36335;&#30001;&#36820;&#22238; <code>task</code> &#35270;&#22270;&#65306;</p><pre><code class="language-php">use App\Models\Task;
+
+Route::get('/tasks', function () {
+    return view('tasks', ['tasks' =&gt; Task::all()]);
+});</code></pre><h3 id="7e0b517fe8e6a716f6d371161bfa100f">&#20351;&#29992;&#27169;&#26495;&#32487;&#25215;&#26500;&#24314;&#24067;&#23616;</h3><h4 id="2c8530985d722d7e128883ef5fb3e43d">&#23450;&#20041;&#24067;&#23616;</h4><p>&#24067;&#23616;&#20063;&#21487;&#20197;&#36890;&#36807;&#12300;&#27169;&#26495;&#32487;&#25215;&#12301;&#21019;&#24314;&#12290;&#36825;&#26159;<a href="wevwmrz9l2.html#components" target="_blank">&#32452;&#20214;</a> &#20986;&#29616;&#20043;&#21069;&#26500;&#24314;&#24212;&#29992;&#30340;&#20027;&#35201;&#26041;&#24335;&#12290;</p><p>&#35753;&#25105;&#20204;&#20174;&#19968;&#20010;&#31616;&#21333;&#30340;&#31034;&#20363;&#24320;&#22987;&#12290;&#39318;&#20808;&#65292;&#25105;&#20204;&#23558;&#32771;&#23519;&#19968;&#20010;&#39029;&#38754;&#24067;&#23616;&#12290;&#30001;&#20110;&#22823;&#22810;&#25968; Web &#24212;&#29992;&#22312;&#21508;&#20010;&#39029;&#38754;&#20043;&#38388;&#20445;&#25345;&#30456;&#21516;&#30340;&#19968;&#33324;&#24067;&#23616;&#65292;&#22240;&#27492;&#23558;&#27492;&#24067;&#23616;&#23450;&#20041;&#20026;&#21333;&#20010; Blade &#35270;&#22270;&#38750;&#24120;&#26041;&#20415;&#65306;</p><pre><code class="language-blade">&lt;!-- resources/views/layouts/app.blade.php --&gt;
+
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;App Name - @yield('title')&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        @section('sidebar')
+            This is the master sidebar.
+        @show
+
+        &lt;div class="container"&gt;
+            @yield('content')
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre><p>&#22914;&#20320;&#25152;&#35265;&#65292;&#27492;&#25991;&#20214;&#21253;&#21547;&#20856;&#22411;&#30340; HTML &#26631;&#35760;&#12290;&#20294;&#35831;&#27880;&#24847; <code>@section</code> &#21644; <code>@yield</code> &#25351;&#20196;&#12290;&#39038;&#21517;&#24605;&#20041;&#65292;<code>@section</code> &#25351;&#20196;&#23450;&#20041;&#20869;&#23481;&#30340;&#19968;&#37096;&#20998;&#65292;&#32780; <code>@yield</code> &#25351;&#20196;&#29992;&#20110;&#26174;&#31034;&#32473;&#23450; section &#30340;&#20869;&#23481;&#12290;</p><p>&#29616;&#22312;&#25105;&#20204;&#24050;&#32463;&#20026;&#24212;&#29992;&#23450;&#20041;&#20102;&#19968;&#20010;&#24067;&#23616;&#65292;&#35753;&#25105;&#20204;&#23450;&#20041;&#19968;&#20010;&#32487;&#25215;&#35813;&#24067;&#23616;&#30340;&#23376;&#39029;&#38754;&#12290;</p><h4 id="8685fc9b0d3d1842d6606cb34a4ef7f8">&#25193;&#23637;&#24067;&#23616;</h4><p>&#23450;&#20041;&#23376;&#35270;&#22270;&#26102;&#65292;&#20351;&#29992; <code>@extends</code> Blade &#25351;&#20196;&#25351;&#23450;&#23376;&#35270;&#22270;&#24212;&#12300;&#32487;&#25215;&#12301;&#30340;&#24067;&#23616;&#12290;&#25193;&#23637; Blade &#24067;&#23616;&#30340;&#35270;&#22270;&#21487;&#20197;&#20351;&#29992; <code>@section</code> &#25351;&#20196;&#23558;&#20869;&#23481;&#27880;&#20837;&#21040;&#24067;&#23616;&#30340; section &#20013;&#12290;&#35831;&#35760;&#20303;&#65292;&#22914;&#19978;&#38754;&#30340;&#31034;&#20363;&#25152;&#31034;&#65292;&#36825;&#20123; section &#30340;&#20869;&#23481;&#23558;&#20351;&#29992; <code>@yield</code> &#22312;&#24067;&#23616;&#20013;&#26174;&#31034;&#65306;</p><pre><code class="language-blade">&lt;!-- resources/views/child.blade.php --&gt;
+
+@extends('layouts.app')
+
+@section('title', 'Page Title')
+
+@section('sidebar')
+    @parent
+
+    &lt;p&gt;This is appended to the master sidebar.&lt;/p&gt;
+@endsection
+
+@section('content')
+    &lt;p&gt;This is my body content.&lt;/p&gt;
+@endsection</code></pre><p>&#22312;&#27492;&#31034;&#20363;&#20013;&#65292;<code>sidebar</code> section &#20351;&#29992; <code>@parent</code> &#25351;&#20196;&#23558;&#20869;&#23481;&#38468;&#21152;&#65288;&#32780;&#38750;&#35206;&#30422;&#65289;&#21040;&#24067;&#23616;&#30340; sidebar&#12290;<code>@parent</code> &#25351;&#20196;&#23558;&#22312;&#35270;&#22270;&#28210;&#26579;&#26102;&#34987;&#24067;&#23616;&#30340;&#20869;&#23481;&#26367;&#25442;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#19982;&#21069;&#38754;&#30340;&#31034;&#20363;&#30456;&#21453;&#65292;&#27492; <code>sidebar</code> section &#20197; <code>@endsection</code> &#32467;&#23614;&#65292;&#32780;&#19981;&#26159; <code>@show</code>&#12290;<code>@endsection</code> &#25351;&#20196;&#21482;&#20250;&#23450;&#20041;&#19968;&#20010; section&#65292;&#32780; <code>@show</code> &#25351;&#20196;&#23558;&#23450;&#20041;&#24182;<strong class="mk-b">&#31435;&#21363; yield</strong> &#35813; section&#12290;</p>
+</blockquote><p><code>@yield</code> &#25351;&#20196;&#20063;&#25509;&#21463;&#40664;&#35748;&#20540;&#20316;&#20026;&#20854;&#31532;&#20108;&#20010;&#21442;&#25968;&#12290;&#22914;&#26524;&#35201; yield &#30340; section &#26410;&#23450;&#20041;&#65292;&#21017;&#23558;&#28210;&#26579;&#35813;&#20540;&#65306;</p><pre><code class="language-blade">@yield('content', 'Default content')</code></pre><h2 id="eee1e2258d7ea163fec625ee44be9637">&#34920;&#21333;</h2><h3 id="f2846d61c9a487cf7cec1050cb53d155">CSRF &#23383;&#27573;</h3><p>&#27599;&#24403;&#20320;&#22312;&#24212;&#29992;&#20013;&#23450;&#20041; HTML &#34920;&#21333;&#26102;&#65292;&#37117;&#24212;&#22312;&#34920;&#21333;&#20013;&#21253;&#21547;&#19968;&#20010;&#38544;&#34255;&#30340; CSRF &#20196;&#29260;&#23383;&#27573;&#65292;&#20197;&#20415; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/csrf" target="_blank">CSRF &#20445;&#25252;</a> &#20013;&#38388;&#20214;&#21487;&#20197;&#39564;&#35777;&#35831;&#27714;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>@csrf</code> Blade &#25351;&#20196;&#26469;&#29983;&#25104;&#35813;&#20196;&#29260;&#23383;&#27573;&#65306;</p><pre><code class="language-blade">&lt;form method="POST" action="/profile"&gt;
+    @csrf
+
+    ...
+&lt;/form&gt;</code></pre><h3 id="4f64d1a0f6ad394a067de11a8436cec8">Method &#23383;&#27573;</h3><p>&#30001;&#20110; HTML &#34920;&#21333;&#26080;&#27861;&#21457;&#36215; <code>PUT</code>&#12289;<code>PATCH</code> &#25110; <code>DELETE</code> &#35831;&#27714;&#65292;&#20320;&#38656;&#35201;&#28155;&#21152;&#19968;&#20010;&#38544;&#34255;&#30340; <code>_method</code> &#23383;&#27573;&#26469;&#20266;&#36896;&#36825;&#20123; HTTP &#35859;&#35789;&#12290;<code>@method</code> Blade &#25351;&#20196;&#21487;&#20197;&#20026;&#20320;&#21019;&#24314;&#27492;&#23383;&#27573;&#65306;</p><pre><code class="language-blade">&lt;form action="/foo/bar" method="POST"&gt;
+    @method('PUT')
+
+    ...
+&lt;/form&gt;</code></pre><h3 id="b1d83b54cc3e89efc57b13a3ef6807fd">&#39564;&#35777;&#38169;&#35823;</h3><p><code>@error</code> &#25351;&#20196;&#21487;&#29992;&#20110;&#24555;&#36895;&#26816;&#26597;&#32473;&#23450;&#23646;&#24615;&#26159;&#21542;&#23384;&#22312;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation#quick-displaying-the-validation-errors" target="_blank">&#39564;&#35777;&#38169;&#35823;&#28040;&#24687;</a>&#12290;&#22312; <code>@error</code> &#25351;&#20196;&#20869;&#65292;&#20320;&#21487;&#20197;&#36755;&#20986; <code>$message</code> &#21464;&#37327;&#26469;&#26174;&#31034;&#38169;&#35823;&#28040;&#24687;&#65306;</p><pre><code class="language-blade">&lt;!-- /resources/views/post/create.blade.php --&gt;
+
+&lt;label for="title"&gt;Post Title&lt;/label&gt;
+
+&lt;input
+    id="title"
+    type="text"
+    class="@error('title') is-invalid @enderror"
+/&gt;
+
+@error('title')
+    &lt;div class="alert alert-danger"&gt;{{ $message }}&lt;/div&gt;
+@enderror</code></pre><p>&#30001;&#20110; <code>@error</code> &#25351;&#20196;&#20250;&#32534;&#35793;&#20026;&#19968;&#26465;&#12300;if&#12301;&#35821;&#21477;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>@else</code> &#25351;&#20196;&#22312;&#35813;&#23646;&#24615;&#19981;&#23384;&#22312;&#38169;&#35823;&#26102;&#28210;&#26579;&#20869;&#23481;&#65306;</p><pre><code class="language-blade">&lt;!-- /resources/views/auth.blade.php --&gt;
+
+&lt;label for="email"&gt;Email address&lt;/label&gt;
+
+&lt;input
+    id="email"
+    type="email"
+    class="@error('email') is-invalid @else is-valid @enderror"
+/&gt;</code></pre><p>&#20320;&#21487;&#20197;&#23558;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation#named-error-bags" target="_blank">&#29305;&#23450;&#38169;&#35823; bag &#30340;&#21517;&#31216;</a> &#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>@error</code> &#25351;&#20196;&#65292;&#20197;&#22312;&#21253;&#21547;&#22810;&#20010;&#34920;&#21333;&#30340;&#39029;&#38754;&#20013;&#26816;&#32034;&#39564;&#35777;&#38169;&#35823;&#28040;&#24687;&#65306;</p><pre><code class="language-blade">&lt;!-- /resources/views/auth.blade.php --&gt;
+
+&lt;label for="email"&gt;Email address&lt;/label&gt;
+
+&lt;input
+    id="email"
+    type="email"
+    class="@error('email', 'login') is-invalid @enderror"
+/&gt;
+
+@error('email', 'login')
+    &lt;div class="alert alert-danger"&gt;{{ $message }}&lt;/div&gt;
+@enderror</code></pre><h2 id="411e226d4fcf13d4e1af66d9fa664ef3">Stacks</h2><p>Blade &#20801;&#35768;&#20320;&#25512;&#36865;&#21040;&#20855;&#21517; stacks&#65292;&#36825;&#20123; stacks &#21487;&#20197;&#22312;&#21478;&#19968;&#20010;&#35270;&#22270;&#25110;&#24067;&#23616;&#30340;&#20854;&#20182;&#22320;&#26041;&#36827;&#34892;&#28210;&#26579;&#12290;&#24403;&#38656;&#35201;&#25351;&#23450;&#23376;&#35270;&#22270;&#25152;&#38656;&#30340;&#20219;&#20309; JavaScript &#24211;&#26102;&#65292;&#36825;&#29305;&#21035;&#26377;&#29992;&#65306;</p><pre><code class="language-blade">@push('scripts')
+    &lt;script src="/example.js"&gt;&lt;/script&gt;
+@endpush</code></pre><p>&#22914;&#26524;&#24076;&#26395;&#22312;&#32473;&#23450;&#30340;&#24067;&#23572;&#34920;&#36798;&#24335;&#27714;&#20540;&#20026; <code>true</code> &#26102;&#25165; <code>@push</code> &#20869;&#23481;&#65292;&#21487;&#20197;&#20351;&#29992; <code>@pushIf</code> &#25351;&#20196;&#65306;</p><pre><code class="language-blade">@pushIf($shouldPush, 'scripts')
+    &lt;script src="/example.js"&gt;&lt;/script&gt;
+@endPushIf</code></pre><p>&#20320;&#21487;&#20197;&#26681;&#25454;&#38656;&#35201;&#22810;&#27425;&#25512;&#36865;&#21040; stack&#12290;&#35201;&#28210;&#26579;&#23436;&#25972;&#30340; stack &#20869;&#23481;&#65292;&#35831;&#23558; stack &#21517;&#31216;&#20256;&#36882;&#32473; <code>@stack</code> &#25351;&#20196;&#65306;</p><pre><code class="language-blade">&lt;head&gt;
+    &lt;!-- Head Contents --&gt;
+
+    @stack('scripts')
+&lt;/head&gt;</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#23558;&#20869;&#23481;&#21069;&#32622;&#21040; stack &#30340;&#24320;&#22836;&#65292;&#24212;&#20351;&#29992; <code>@prepend</code> &#25351;&#20196;&#65306;</p><pre><code class="language-blade">@push('scripts')
+    This will be second...
+@endpush
+
+// Later...
+
+@prepend('scripts')
+    This will be first...
+@endprepend</code></pre><p><code>@hasstack</code> &#25351;&#20196;&#21487;&#29992;&#20110;&#21028;&#26029; stack &#26159;&#21542;&#20026;&#31354;&#65306;</p><pre><code class="language-blade">@hasstack('list')
+    &lt;ul&gt;
+        @stack('list')
+    &lt;/ul&gt;
+@endif</code></pre><h2 id="76c46be1cc63f78f5e3866c63c2dc86a">&#26381;&#21153;&#27880;&#20837;</h2><p><code>@inject</code> &#25351;&#20196;&#21487;&#29992;&#20110;&#20174; Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/container" target="_blank">&#26381;&#21153;&#23481;&#22120;</a> &#20013;&#26816;&#32034;&#26381;&#21153;&#12290;&#20256;&#36882;&#32473; <code>@inject</code> &#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#26381;&#21153;&#23558;&#35201;&#25918;&#20837;&#30340;&#21464;&#37327;&#21517;&#31216;&#65292;&#31532;&#20108;&#20010;&#21442;&#25968;&#26159;&#20320;&#24076;&#26395;&#35299;&#26512;&#30340;&#26381;&#21153;&#30340;&#31867;&#21517;&#25110;&#25509;&#21475;&#21517;&#65306;</p><pre><code class="language-blade">@inject('metrics', 'App\Services\MetricsService')
+
+&lt;div&gt;
+    Monthly Revenue: {{ $metrics-&gt;monthlyRevenue() }}.
+&lt;/div&gt;</code></pre><h2 id="832e571d78e1da7bd4521d932e686d62">&#28210;&#26579;&#20869;&#32852; Blade &#27169;&#26495;</h2><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#23558;&#21407;&#22987;&#30340; Blade &#27169;&#26495;&#23383;&#31526;&#20018;&#36716;&#25442;&#20026;&#26377;&#25928;&#30340; HTML&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Blade</code> Facade &#25552;&#20379;&#30340; <code>render</code> &#26041;&#27861;&#26469;&#23454;&#29616;&#12290;<code>render</code> &#26041;&#27861;&#25509;&#21463; Blade &#27169;&#26495;&#23383;&#31526;&#20018;&#20197;&#21450;&#19968;&#20010;&#21487;&#36873;&#30340;&#25552;&#20379;&#32473;&#27169;&#26495;&#30340;&#25968;&#25454;&#25968;&#32452;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Blade;
+
+return Blade::render('Hello, {{ $name }}', ['name' =&gt; 'Julian Bashir']);</code></pre><p>Laravel &#36890;&#36807;&#23558;&#20869;&#32852; Blade &#27169;&#26495;&#20889;&#20837; <code>storage/framework/views</code> &#30446;&#24405;&#26469;&#28210;&#26579;&#23427;&#20204;&#12290;&#22914;&#26524;&#20320;&#24076;&#26395; Laravel &#22312;&#28210;&#26579; Blade &#27169;&#26495;&#21518;&#21024;&#38500;&#36825;&#20123;&#20020;&#26102;&#25991;&#20214;&#65292;&#21487;&#20197;&#21521;&#26041;&#27861;&#25552;&#20379; <code>deleteCachedView</code> &#21442;&#25968;&#65306;</p><pre><code class="language-php">return Blade::render(
+    'Hello, {{ $name }}',
+    ['name' =&gt; 'Julian Bashir'],
+    deleteCachedView: true
+);</code></pre><h2 id="8b5d1a20827cf8c66ef4db7d5069c880">&#28210;&#26579; Blade Fragments</h2><p>&#22312;&#20351;&#29992;&#35832;&#22914; <a href="https://turbo.hotwired.dev/" target="_blank" rel="noopener noreferrer">Turbo</a> &#21644; <a href="https://htmx.org/" target="_blank" rel="noopener noreferrer">htmx</a> &#31561;&#21069;&#31471;&#26694;&#26550;&#26102;&#65292;&#20320;&#21487;&#33021;&#20598;&#23572;&#38656;&#35201;&#20165;&#22312; HTTP &#21709;&#24212;&#20013;&#36820;&#22238;&#37096;&#20998; Blade &#27169;&#26495;&#12290;Blade&#12300;fragments&#12301;&#27491;&#26159;&#20026;&#27492;&#32780;&#35774;&#35745;&#30340;&#12290;&#39318;&#20808;&#65292;&#23558;&#37096;&#20998; Blade &#27169;&#26495;&#25918;&#22312; <code>@fragment</code> &#21644; <code>@endfragment</code> &#25351;&#20196;&#20013;&#65306;</p><pre><code class="language-blade">@fragment('user-list')
+    &lt;ul&gt;
+        @foreach ($users as $user)
+            &lt;li&gt;{{ $user-&gt;name }}&lt;/li&gt;
+        @endforeach
+    &lt;/ul&gt;
+@endfragment</code></pre><p>&#28982;&#21518;&#65292;&#22312;&#28210;&#26579;&#20351;&#29992;&#27492;&#27169;&#26495;&#30340;&#35270;&#22270;&#26102;&#65292;&#21487;&#20197;&#35843;&#29992; <code>fragment</code> &#26041;&#27861;&#25351;&#23450;&#21709;&#24212;&#20013;&#20165;&#24212;&#21253;&#21547;&#25351;&#23450;&#30340; fragment&#65306;</p><pre><code class="language-php">return view('dashboard', ['users' =&gt; $users])-&gt;fragment('user-list');</code></pre><p><code>fragmentIf</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#26681;&#25454;&#32473;&#23450;&#26465;&#20214;&#26377;&#26465;&#20214;&#22320;&#36820;&#22238;&#35270;&#22270;&#30340; fragment&#12290;&#21542;&#21017;&#65292;&#23558;&#36820;&#22238;&#25972;&#20010;&#35270;&#22270;&#65306;</p><pre><code class="language-php">return view('dashboard', ['users' =&gt; $users])
+    -&gt;fragmentIf($request-&gt;hasHeader('HX-Request'), 'user-list');</code></pre><p><code>fragments</code> &#21644; <code>fragmentsIf</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#22312;&#21709;&#24212;&#20013;&#36820;&#22238;&#22810;&#20010;&#35270;&#22270; fragment&#12290;&#36825;&#20123; fragment &#23558;&#36830;&#25509;&#22312;&#19968;&#36215;&#65306;</p><pre><code class="language-php">view('dashboard', ['users' =&gt; $users])
+    -&gt;fragments(['user-list', 'comment-list']);
+
+view('dashboard', ['users' =&gt; $users])
+    -&gt;fragmentsIf(
+        $request-&gt;hasHeader('HX-Request'),
+        ['user-list', 'comment-list']
+    );</code></pre><h2 id="23338b60ecd7af1a75aca0f9dc3f95a4">&#25193;&#23637; Blade</h2><p>Blade &#20801;&#35768;&#20320;&#20351;&#29992; <code>directive</code> &#26041;&#27861;&#23450;&#20041;&#33258;&#24049;&#30340;&#33258;&#23450;&#20041;&#25351;&#20196;&#12290;&#24403; Blade &#32534;&#35793;&#22120;&#36935;&#21040;&#33258;&#23450;&#20041;&#25351;&#20196;&#26102;&#65292;&#23427;&#23558;&#20351;&#29992;&#35813;&#25351;&#20196;&#21253;&#21547;&#30340;&#34920;&#36798;&#24335;&#35843;&#29992;&#25552;&#20379;&#30340;&#22238;&#35843;&#12290;</p><p>&#20197;&#19979;&#31034;&#20363;&#21019;&#24314;&#19968;&#20010; <code>@datetime($var)</code> &#25351;&#20196;&#65292;&#29992;&#20110;&#26684;&#24335;&#21270;&#32473;&#23450;&#30340; <code>$var</code>&#65292;&#35813;&#21464;&#37327;&#24212;&#20026; <code>DateTime</code> &#30340;&#23454;&#20363;&#65306;</p><pre><code class="language-php">
+&lt;?php
+
+namespace App\Providers;
+
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 视图: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/views" target="_blank">/docs/Laravel 13.x/views</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Laravel Livewire: <i><a href="https://livewire.laravel.com" target="_blank">https://livewire.laravel.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 已通过身份验证: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication" target="_blank">/docs/Laravel 13.x/authentication</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> session: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/session" target="_blank">/docs/Laravel 13.x/session</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> context: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/context" target="_blank">/docs/Laravel 13.x/context</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 循环变量: <i><a href="wevwmrz9l2.html#the-loop-variable" target="_blank">#the-loop-variable</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 组件: <i><a href="wevwmrz9l2.html#components" target="_blank">#components</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> stacks: <i><a href="wevwmrz9l2.html#stacks" target="_blank">#stacks</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> 组件: <i><a href="wevwmrz9l2.html#components" target="_blank">#components</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> Laravel 的 Vite 字体优化: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/vite#working-with-fonts" target="_blank">/docs/Laravel 13.x/vite#working-with-fonts</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> 服务容器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/container" target="_blank">/docs/Laravel 13.x/container</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> @class 指令: <i><a href="wevwmrz9l2.html#conditional-classes" target="_blank">#conditional-classes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> 属性: <i><a href="wevwmrz9l2.html#component-attributes" target="_blank">#component-attributes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> 组件属性: <i><a href="wevwmrz9l2.html#component-attributes" target="_blank">#component-attributes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 属性包: <i><a href="wevwmrz9l2.html#component-attributes" target="_blank">#component-attributes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> 服务提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/providers" target="_blank">/docs/Laravel 13.x/providers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> Blade 组件: <i><a href="wevwmrz9l2.html#components" target="_blank">#components</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> 组件文档: <i><a href="wevwmrz9l2.html#components" target="_blank">#components</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> 组件: <i><a href="wevwmrz9l2.html#components" target="_blank">#components</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> CSRF 保护: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/csrf" target="_blank">/docs/Laravel 13.x/csrf</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> 验证错误消息: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation#quick-displaying-the-validation-errors" target="_blank">/docs/Laravel 13.x/validation#quick-displaying-the-validation-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> 特定错误 bag 的名称: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation#named-error-bags" target="_blank">/docs/Laravel 13.x/validation#named-error-bags</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> 服务容器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/container" target="_blank">/docs/Laravel 13.x/container</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> Turbo: <i><a href="https://turbo.hotwired.dev/" target="_blank">https://turbo.hotwired.dev/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> htmx: <i><a href="https://htmx.org/" target="_blank">https://htmx.org/</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="m892gz6y01.html#blog1019" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">视图</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="ndvm3gj93j.html#blog1021" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">资源打包（Vite）</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

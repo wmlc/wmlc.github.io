@@ -1,0 +1,1401 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Laravel Fortify | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/x3vo0x4vm1.html', function (data, status) {
+            addView('x3vo0x4vm1.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Laravel Fortify</h1><ul>
+<li><a href="x3vo0x4vm1.html#61a3ec6656837d917b6f69525a262eec">介绍</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#b731d8e60714aa8a4b0fffcf235b8e49">Fortify 是什么？</a></li>
+<li><a href="x3vo0x4vm1.html#b7f491c4e7e3251027ae9a3a34251ac3">什么时候应该使用 Fortify？</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#40e80e65c414ac87e7c03349f2525c2b">Laravel Fortify 与 Laravel Sanctum</a></li>
+</ul></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#e655a410ff21cd07e7a0150491e04371">安装</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#0d0297fbec5d19c78ca16f42fa918047">Fortify 功能</a></li>
+<li><a href="x3vo0x4vm1.html#d29c8de1619f88a23658e11fe0119cd6">禁用视图</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#adf73cfb58de65beb75101ba8b3fd408">禁用视图与密码重置</a></li>
+</ul></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#785a37313cbc5189279700e6217bb8f5">用户认证</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#33244928d2d5acbd8ee06304addf91a4">自定义用户认证</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#ee3e2a0c23396361b9a5667eca1f7ace">认证 Guard</a></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#6d056d654bb684d0b0fa455ace09e798">自定义认证管道</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#c1f3b6fc480fa5a9e35171ad77b4ecd5">登录限流</a></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#223139d677ea910bc7c7c418ecc5f348">自定义重定向</a></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#3ff73ee95393a1df4724d3106f7bb9a5">双重身份认证</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#f3260806c24eb4f94d61275213c97858">启用双重身份认证</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#4130a492cfb3ec7d6896bf97f94f90d3">确认双重身份认证</a></li>
+<li><a href="x3vo0x4vm1.html#79670fb02eeb9a84865781c0d8154e9c">显示恢复码</a></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#f91da810254f27935e85c44cdca56826">使用双重身份认证进行登录</a></li>
+<li><a href="x3vo0x4vm1.html#7c216d4cbe247e0b047a42007d8b6d4c">关闭双重身份认证</a></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#006ebcc9856c311d1312185e47957587">通行密钥</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#192e71cd2ab9da9264ed7d27244749d2">启用通行密钥</a></li>
+<li><a href="x3vo0x4vm1.html#424dc8990e01d22b5eeb103d659b6e02">JavaScript 客户端</a></li>
+<li><a href="x3vo0x4vm1.html#06264bce41ee073ba180776ec11c01cb">使用通行密钥登录</a></li>
+<li><a href="x3vo0x4vm1.html#9eab4f6af0a531318282d7de6fdea1b3">使用通行密钥确认密码</a></li>
+<li><a href="x3vo0x4vm1.html#a823adc0c932e3bd99f6d22d86431a2f">注册通行密钥</a></li>
+<li><a href="x3vo0x4vm1.html#5d3cd73cb72c5aab01eed4433ac9ce60">删除通行密钥</a></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#e804a9a2158eb06e6609b0b7ac9c3cb9">用户注册</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#989fcb25a5b1dd17859d5510a0bc03a0">自定义注册</a></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#0719aa2bb09a63f0d59e0df2c4b0a3f8">重置密码</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#03d986485628a31f82bcc7876b98c972">请求重置密码链接</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#b182bd9c7a920aa226ebe4fa046925a9">处理重置密码链接请求的响应</a></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#0719aa2bb09a63f0d59e0df2c4b0a3f8">重置密码</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#a46afef3eed7a6a377e726933f889f12">处理重置密码请求的响应</a></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#9cad4399fab73dbe27c4eeff557e87ae">自定义密码重置</a></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#9b99e210b22348a310af267ddca4dba0">邮箱验证</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#c9028a61fc412d92078136c17b6ddf4b">重新发送邮箱验证链接</a>
+<ul>
+<li><a href="x3vo0x4vm1.html#801705ac2343e82fa596c98e745035e8">保护路由</a></li>
+</ul></li>
+</ul></li>
+<li><a href="x3vo0x4vm1.html#92fa7ce5c5cfbd7c1aef8ea0018a81c9">密码确认</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="61a3ec6656837d917b6f69525a262eec">&#20171;&#32461;</h2><p><a href="https://github.com/laravel/fortify" target="_blank" rel="noopener noreferrer">Laravel Fortify</a> &#26159;&#19968;&#20010;&#38024;&#23545; Laravel &#30340;&#12289;&#19982;&#21069;&#31471;&#26080;&#20851;&#30340;&#35748;&#35777;&#21518;&#31471;&#23454;&#29616;&#12290;Fortify &#27880;&#20876;&#20102;&#23454;&#29616; Laravel &#25152;&#26377;&#35748;&#35777;&#21151;&#33021;&#25152;&#38656;&#30340;&#36335;&#30001;&#21644;&#25511;&#21046;&#22120;&#65292;&#21253;&#25324;&#30331;&#24405;&#12289;&#27880;&#20876;&#12289;&#23494;&#30721;&#37325;&#32622;&#12289;&#37038;&#31665;&#39564;&#35777;&#31561;&#12290;&#23433;&#35013; Fortify &#21518;&#65292;&#20320;&#21487;&#20197;&#36816;&#34892; <code>route:list</code> Artisan &#21629;&#20196;&#26597;&#30475; Fortify &#27880;&#20876;&#30340;&#36335;&#30001;&#12290;</p><p>&#30001;&#20110; Fortify &#24182;&#19981;&#25552;&#20379;&#33258;&#24049;&#30340;&#29992;&#25143;&#30028;&#38754;&#65292;&#22240;&#27492;&#38656;&#35201;&#19982;&#20320;&#33258;&#24049;&#30340;&#29992;&#25143;&#30028;&#38754;&#37197;&#21512;&#20351;&#29992;&#65292;&#30001;&#23427;&#26469;&#21521;&#36825;&#20123;&#36335;&#30001;&#21457;&#36215;&#35831;&#27714;&#12290;&#26412;&#25991;&#26723;&#21518;&#38754;&#20250;&#35814;&#32454;&#35828;&#26126;&#22914;&#20309;&#21521;&#36825;&#20123;&#36335;&#30001;&#21457;&#36215;&#35831;&#27714;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#35831;&#35760;&#20303;&#65292;Fortify &#26159;&#19968;&#20010;&#29992;&#20110;&#24110;&#21161;&#20320;&#23454;&#29616; Laravel &#35748;&#35777;&#21151;&#33021;&#30340;&#21253;&#12290;<strong class="mk-g">&#20320;&#24182;&#38750;&#24517;&#39035;&#20351;&#29992;&#23427;&#12290;</strong> &#20320;&#23436;&#20840;&#21487;&#20197;&#25353;&#29031; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication" target="_blank">&#29992;&#25143;&#35748;&#35777;</a>&#12289;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/passwords" target="_blank">&#23494;&#30721;&#37325;&#32622;</a> &#21644; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/verification" target="_blank">&#37038;&#31665;&#39564;&#35777;</a> &#25991;&#26723;&#20013;&#30340;&#35828;&#26126;&#65292;&#25163;&#21160;&#20351;&#29992; Laravel &#30340;&#35748;&#35777;&#26381;&#21153;&#12290;</p>
+</blockquote><h3 id="b731d8e60714aa8a4b0fffcf235b8e49">Fortify &#26159;&#20160;&#20040;&#65311;</h3><p>&#22914;&#21069;&#25152;&#36848;&#65292;Laravel Fortify &#26159;&#19968;&#20010;&#38024;&#23545; Laravel &#30340;&#12289;&#19982;&#21069;&#31471;&#26080;&#20851;&#30340;&#35748;&#35777;&#21518;&#31471;&#23454;&#29616;&#12290;Fortify &#27880;&#20876;&#20102;&#23454;&#29616; Laravel &#25152;&#26377;&#35748;&#35777;&#21151;&#33021;&#25152;&#38656;&#30340;&#36335;&#30001;&#21644;&#25511;&#21046;&#22120;&#65292;&#21253;&#25324;&#30331;&#24405;&#12289;&#27880;&#20876;&#12289;&#23494;&#30721;&#37325;&#32622;&#12289;&#37038;&#31665;&#39564;&#35777;&#31561;&#12290;</p><p><strong class="mk-g">&#21363;&#20351;&#19981;&#20351;&#29992; Fortify&#65292;&#20063;&#21487;&#20197;&#20351;&#29992; Laravel &#30340;&#35748;&#35777;&#21151;&#33021;&#12290;</strong> &#20320;&#23436;&#20840;&#21487;&#20197;&#25353;&#29031; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication" target="_blank">&#29992;&#25143;&#35748;&#35777;</a>&#12289;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/passwords" target="_blank">&#23494;&#30721;&#37325;&#32622;</a> &#21644; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/verification" target="_blank">&#37038;&#31665;&#39564;&#35777;</a> &#25991;&#26723;&#20013;&#30340;&#35828;&#26126;&#65292;&#25163;&#21160;&#20351;&#29992; Laravel &#30340;&#35748;&#35777;&#26381;&#21153;&#12290;</p><p>&#22914;&#26524;&#20320;&#26159; Laravel &#26032;&#25163;&#65292;&#21487;&#20197;&#21442;&#32771; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#25105;&#20204;&#30340;&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#12290;Laravel &#30340;&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;&#20869;&#37096;&#23601;&#20351;&#29992;&#20102; Fortify &#26469;&#25552;&#20379;&#35748;&#35777;&#33050;&#25163;&#26550;&#65292;&#24182;&#38468;&#24102;&#22522;&#20110; <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">Tailwind CSS</a> &#30340;&#29992;&#25143;&#30028;&#38754;&#12290;&#36825;&#20415;&#20110;&#20320;&#36793;&#23398;&#36793;&#29087;&#24713; Laravel &#30340;&#35748;&#35777;&#21151;&#33021;&#12290;</p><p>Laravel Fortify &#23454;&#36136;&#19978;&#26159;&#25226;&#25105;&#20204;&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;&#37324;&#30340;&#36335;&#30001;&#21644;&#25511;&#21046;&#22120;&#25277;&#20986;&#20026;&#19968;&#20010;&#19981;&#21253;&#21547;&#29992;&#25143;&#30028;&#38754;&#30340;&#21253;&#12290;&#36825;&#35753;&#20320;&#21487;&#20197;&#24555;&#36895;&#25645;&#24314;&#24212;&#29992;&#35748;&#35777;&#23618;&#30340;&#21518;&#31471;&#23454;&#29616;&#65292;&#32780;&#26080;&#38656;&#34987;&#20219;&#20309;&#29305;&#23450;&#30340;&#21069;&#31471;&#36873;&#22411;&#25152;&#26463;&#32538;&#12290;</p><h3 id="b7f491c4e7e3251027ae9a3a34251ac3">&#20160;&#20040;&#26102;&#20505;&#24212;&#35813;&#20351;&#29992; Fortify&#65311;</h3><p>&#20320;&#21487;&#33021;&#24819;&#30693;&#36947; Laravel Fortify &#30340;&#36866;&#29992;&#22330;&#26223;&#12290;&#39318;&#20808;&#65292;&#22914;&#26524;&#20320;&#27491;&#22312;&#20351;&#29992; Laravel &#30340;&#26576;&#20010; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#65292;&#23601;&#19981;&#24517;&#20877;&#21333;&#29420;&#23433;&#35013; Laravel Fortify&#65292;&#22240;&#20026;&#36825;&#20123;&#22871;&#20214;&#37117;&#20351;&#29992;&#20102; Fortify &#24182;&#24050;&#32463;&#25552;&#20379;&#20102;&#23436;&#25972;&#30340;&#35748;&#35777;&#23454;&#29616;&#12290;</p><p>&#22914;&#26524;&#20320;&#27809;&#26377;&#20351;&#29992;&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;&#65292;&#32780;&#20320;&#30340;&#24212;&#29992;&#21448;&#38656;&#35201;&#35748;&#35777;&#21151;&#33021;&#65292;&#37027;&#20320;&#26377;&#20004;&#20010;&#36873;&#25321;&#65306;&#33258;&#34892;&#23454;&#29616;&#35748;&#35777;&#21151;&#33021;&#65292;&#25110;&#32773;&#20351;&#29992; Laravel Fortify &#26469;&#25552;&#20379;&#36825;&#20123;&#21151;&#33021;&#30340;&#21518;&#31471;&#23454;&#29616;&#12290;</p><p>&#22914;&#26524;&#20320;&#36873;&#25321;&#23433;&#35013; Fortify&#65292;&#20320;&#30340;&#29992;&#25143;&#30028;&#38754;&#23558;&#25353;&#29031;&#26412;&#25991;&#26723;&#30340;&#35828;&#26126;&#21521; Fortify &#30340;&#35748;&#35777;&#36335;&#30001;&#21457;&#36215;&#35831;&#27714;&#65292;&#20197;&#23436;&#25104;&#29992;&#25143;&#35748;&#35777;&#21644;&#27880;&#20876;&#12290;</p><p>&#22914;&#26524;&#20320;&#36873;&#25321;&#32469;&#36807; Fortify&#65292;&#30452;&#25509;&#25163;&#21160;&#20351;&#29992; Laravel &#30340;&#35748;&#35777;&#26381;&#21153;&#65292;&#21487;&#20197;&#25353;&#29031; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication" target="_blank">&#29992;&#25143;&#35748;&#35777;</a>&#12289;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/passwords" target="_blank">&#23494;&#30721;&#37325;&#32622;</a> &#21644; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/verification" target="_blank">&#37038;&#31665;&#39564;&#35777;</a> &#25991;&#26723;&#20013;&#30340;&#35828;&#26126;&#36827;&#34892;&#25805;&#20316;&#12290;</p><h4 id="40e80e65c414ac87e7c03349f2525c2b">Laravel Fortify &#19982; Laravel Sanctum</h4><p>&#19968;&#20123;&#24320;&#21457;&#32773;&#20250;&#28151;&#28102; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Laravel Sanctum</a> &#19982; Laravel Fortify&#12290;&#30001;&#20110;&#36825;&#20004;&#20010;&#21253;&#35299;&#20915;&#30340;&#26159;&#19981;&#21516;&#20294;&#21448;&#30456;&#20851;&#30340;&#38382;&#39064;&#65292;&#23427;&#20204;&#24182;&#19981;&#26159;&#20114;&#26021;&#25110;&#31454;&#20105;&#30340;&#20851;&#31995;&#12290;</p><p>Laravel Sanctum &#21482;&#20851;&#27880; API Token &#31649;&#29702;&#20197;&#21450;&#20351;&#29992; Session Cookie &#25110; Token &#23545;&#29616;&#26377;&#29992;&#25143;&#36827;&#34892;&#35748;&#35777;&#12290;&#23427;&#19981;&#25552;&#20379;&#22788;&#29702;&#29992;&#25143;&#27880;&#20876;&#12289;&#23494;&#30721;&#37325;&#32622;&#31561;&#25805;&#20316;&#30340;&#36335;&#30001;&#12290;</p><p>&#22914;&#26524;&#20320;&#27491;&#25171;&#31639;&#20026;&#26082;&#25552;&#20379; API &#21448;&#20316;&#20026;&#21333;&#39029;&#24212;&#29992;&#21518;&#31471;&#30340;&#24212;&#29992;&#25163;&#21160;&#25645;&#24314;&#35748;&#35777;&#23618;&#65292;&#37027;&#20040; Laravel Fortify&#65288;&#29992;&#20110;&#29992;&#25143;&#27880;&#20876;&#12289;&#23494;&#30721;&#37325;&#32622;&#31561;&#65289;&#21644; Laravel Sanctum&#65288;&#29992;&#20110; API Token &#31649;&#29702;&#12289;Session &#35748;&#35777;&#65289;&#23436;&#20840;&#21487;&#20197;&#19968;&#36215;&#20351;&#29992;&#12290;</p><h2 id="e655a410ff21cd07e7a0150491e04371">&#23433;&#35013;</h2><p>&#39318;&#20808;&#65292;&#20351;&#29992; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013; Fortify&#65306;</p><pre><code class="language-shell">composer require laravel/fortify</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#20351;&#29992; <code>fortify:install</code> Artisan &#21629;&#20196;&#21457;&#24067; Fortify &#30340;&#36164;&#28304;&#65306;</p><pre><code class="language-shell">php artisan fortify:install</code></pre><p>&#35813;&#21629;&#20196;&#20250;&#25226; Fortify &#30340; Actions &#21457;&#24067;&#21040; <code>app/Actions</code> &#30446;&#24405;&#65288;&#22914;&#26524;&#35813;&#30446;&#24405;&#19981;&#23384;&#22312;&#23558;&#33258;&#21160;&#21019;&#24314;&#65289;&#65292;&#21516;&#26102;&#20063;&#20250;&#21457;&#24067; <code>FortifyServiceProvider</code>&#12289;&#37197;&#32622;&#25991;&#20214;&#20197;&#21450;&#25152;&#26377;&#24517;&#35201;&#30340;&#25968;&#25454;&#24211;&#36801;&#31227;&#12290;</p><p>&#25509;&#19979;&#26469;&#65292;&#24212;&#24403;&#36816;&#34892;&#25968;&#25454;&#24211;&#36801;&#31227;&#65306;</p><pre><code class="language-shell">php artisan migrate</code></pre><h3 id="0d0297fbec5d19c78ca16f42fa918047">Fortify &#21151;&#33021;</h3><p><code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#21253;&#21547;&#19968;&#20010; <code>features</code> &#37197;&#32622;&#25968;&#32452;&#12290;&#35813;&#25968;&#32452;&#23450;&#20041;&#20102; Fortify &#40664;&#35748;&#20250;&#26292;&#38706;&#30340;&#21518;&#31471;&#36335;&#30001;/&#21151;&#33021;&#12290;&#25105;&#20204;&#24314;&#35758;&#21482;&#21551;&#29992;&#20197;&#19979;&#20960;&#39033;&#65292;&#36825;&#20123;&#20063;&#26159;&#22823;&#22810;&#25968; Laravel &#24212;&#29992;&#25152;&#38656;&#30340;&#22522;&#30784;&#35748;&#35777;&#21151;&#33021;&#65306;</p><pre><code class="language-php">'features' =&gt; [
+    Features::registration(),
+    Features::resetPasswords(),
+    Features::emailVerification(),
+],</code></pre><h3 id="d29c8de1619f88a23658e11fe0119cd6">&#31105;&#29992;&#35270;&#22270;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Fortify &#20250;&#23450;&#20041;&#19968;&#20123;&#29992;&#20110;&#36820;&#22238;&#35270;&#22270;&#30340;&#36335;&#30001;&#65292;&#20363;&#22914;&#30331;&#24405;&#39029;&#38754;&#21644;&#27880;&#20876;&#39029;&#38754;&#12290;&#20294;&#22914;&#26524;&#20320;&#27491;&#22312;&#26500;&#24314; JavaScript &#39537;&#21160;&#30340;&#21333;&#39029;&#24212;&#29992;&#65292;&#21017;&#21487;&#33021;&#24182;&#19981;&#38656;&#35201;&#36825;&#20123;&#36335;&#30001;&#12290;&#20026;&#27492;&#65292;&#20320;&#21487;&#20197;&#25226;&#24212;&#29992; <code>config/fortify.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; <code>views</code> &#37197;&#32622;&#20540;&#35774;&#20026; <code>false</code>&#65292;&#20197;&#23436;&#20840;&#31105;&#29992;&#36825;&#20123;&#36335;&#30001;&#65306;</p><pre><code class="language-php">'views' =&gt; false,</code></pre><h4 id="adf73cfb58de65beb75101ba8b3fd408">&#31105;&#29992;&#35270;&#22270;&#19982;&#23494;&#30721;&#37325;&#32622;</h4><p>&#22914;&#26524;&#20320;&#36873;&#25321;&#31105;&#29992; Fortify &#30340;&#35270;&#22270;&#65292;&#24182;&#19988;&#36824;&#35201;&#23454;&#29616;&#24212;&#29992;&#30340;&#23494;&#30721;&#37325;&#32622;&#21151;&#33021;&#65292;&#37027;&#20040;&#20173;&#38656;&#23450;&#20041;&#19968;&#26465;&#21517;&#20026; <code>password.reset</code> &#30340;&#36335;&#30001;&#65292;&#29992;&#20110;&#28210;&#26579;"&#37325;&#32622;&#23494;&#30721;"&#35270;&#22270;&#12290;&#36825;&#26159;&#24517;&#38656;&#30340;&#65292;&#22240;&#20026; Laravel &#30340; <code>Illuminate\Auth\Notifications\ResetPassword</code> &#36890;&#30693;&#20250;&#36890;&#36807;&#21517;&#20026; <code>password.reset</code> &#30340;&#36335;&#30001;&#29983;&#25104;&#23494;&#30721;&#37325;&#32622; URL&#12290;</p><h2 id="785a37313cbc5189279700e6217bb8f5">&#29992;&#25143;&#35748;&#35777;</h2><p>&#39318;&#20808;&#65292;&#25105;&#20204;&#38656;&#35201;&#21578;&#35785; Fortify &#22914;&#20309;&#36820;&#22238;"&#30331;&#24405;"&#35270;&#22270;&#12290;&#35831;&#35760;&#20303;&#65292;Fortify &#26159;&#19968;&#20010;&#26080;&#22836;&#65288;headless&#65289;&#30340;&#35748;&#35777;&#24211;&#12290;&#22914;&#26524;&#20320;&#24819;&#35201;&#19968;&#22871;&#24320;&#31665;&#21363;&#29992;&#12289;&#24050;&#32463;&#23436;&#25104;&#30340;&#21069;&#31471;&#35748;&#35777;&#23454;&#29616;&#65292;&#24212;&#24403;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#12290;</p><p>&#25152;&#26377;"&#30331;&#24405;"&#35270;&#22270;&#30340;&#28210;&#26579;&#36923;&#36753;&#37117;&#21487;&#20197;&#36890;&#36807; <code>Laravel\Fortify\Fortify</code> &#31867;&#19978;&#30340;&#30456;&#24212;&#26041;&#27861;&#26469;&#33258;&#23450;&#20041;&#12290;&#36890;&#24120;&#24212;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\FortifyServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#37324;&#35843;&#29992;&#35813;&#26041;&#27861;&#12290;Fortify &#20250;&#36127;&#36131;&#23450;&#20041;&#36820;&#22238;&#35813;&#35270;&#22270;&#30340; <code>/login</code> &#36335;&#30001;&#65306;</p><pre><code class="language-php">use Laravel\Fortify\Fortify;
+
+/**
+ * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Fortify::loginView(function () {
+        return view('auth.login');
+    });
+
+    // ...
+}</code></pre><p>&#20320;&#30340;&#30331;&#24405;&#27169;&#26495;&#24212;&#24403;&#21253;&#21547;&#19968;&#20010;&#23545; <code>/login</code> &#21457; POST &#35831;&#27714;&#30340;&#34920;&#21333;&#12290;<code>/login</code> &#31471;&#28857;&#26399;&#24453;&#19968;&#20010;&#23383;&#31526;&#20018;&#31867;&#22411;&#30340; <code>email</code> / <code>username</code> &#23383;&#27573;&#20197;&#21450;&#19968;&#20010; <code>password</code> &#23383;&#27573;&#12290;&#20854;&#20013; email / username &#23383;&#27573;&#30340;&#21517;&#23383;&#24517;&#39035;&#19982; <code>config/fortify.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; <code>username</code> &#20540;&#19968;&#33268;&#12290;&#27492;&#22806;&#65292;&#36824;&#21487;&#20197;&#25552;&#20379;&#19968;&#20010;&#24067;&#23572;&#22411; <code>remember</code> &#23383;&#27573;&#65292;&#29992;&#20110;&#34920;&#31034;&#29992;&#25143;&#24076;&#26395;&#20351;&#29992; Laravel &#25552;&#20379;&#30340;"&#35760;&#20303;&#25105;"&#21151;&#33021;&#12290;</p><p>&#22914;&#26524;&#30331;&#24405;&#23581;&#35797;&#25104;&#21151;&#65292;Fortify &#20250;&#25226;&#20320;&#37325;&#23450;&#21521;&#21040;&#24212;&#29992; <code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#36890;&#36807; <code>home</code> &#37197;&#32622;&#39033;&#37197;&#32622;&#30340; URI&#12290;&#22914;&#26524;&#30331;&#24405;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#21017;&#20250;&#36820;&#22238; 200 HTTP &#21709;&#24212;&#12290;</p><p>&#22914;&#26524;&#30331;&#24405;&#22833;&#36133;&#65292;&#20250;&#34987;&#37325;&#23450;&#21521;&#22238;&#30331;&#24405;&#39029;&#38754;&#65292;&#26657;&#39564;&#38169;&#35823;&#21487;&#20197;&#36890;&#36807;&#20849;&#20139;&#30340; Blade &#27169;&#26495;&#21464;&#37327; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation#quick-displaying-the-validation-errors" target="_blank">Blade &#27169;&#26495;&#21464;&#37327; <code>$errors</code></a> &#33719;&#21462;&#65307;&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#26657;&#39564;&#38169;&#35823;&#20250;&#38543; 422 HTTP &#21709;&#24212;&#19968;&#21516;&#36820;&#22238;&#12290;</p><h3 id="33244928d2d5acbd8ee06304addf91a4">&#33258;&#23450;&#20041;&#29992;&#25143;&#35748;&#35777;</h3><p>Fortify &#20250;&#22522;&#20110;&#25552;&#20379;&#30340;&#20973;&#25454;&#21644;&#24212;&#29992;&#37197;&#32622;&#30340;&#35748;&#35777; Guard &#33258;&#21160;&#33719;&#21462;&#24182;&#35748;&#35777;&#29992;&#25143;&#12290;&#20294;&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#23436;&#20840;&#33258;&#23450;&#20041;&#30331;&#24405;&#20973;&#25454;&#30340;&#35748;&#35777;&#26041;&#24335;&#21644;&#29992;&#25143;&#30340;&#33719;&#21462;&#26041;&#24335;&#12290;&#24184;&#36816;&#30340;&#26159;&#65292;Fortify &#20801;&#35768;&#20320;&#36890;&#36807; <code>Fortify::authenticateUsing</code> &#26041;&#27861;&#36731;&#26494;&#23454;&#29616;&#36825;&#19968;&#28857;&#12290;</p><p>&#35813;&#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#20316;&#20026;&#21442;&#25968;&#65292;&#38381;&#21253;&#25509;&#25910;&#20256;&#20837;&#30340; HTTP &#35831;&#27714;&#12290;&#38381;&#21253;&#36127;&#36131;&#26657;&#39564;&#35831;&#27714;&#38468;&#24102;&#30340;&#30331;&#24405;&#20973;&#25454;&#65292;&#24182;&#36820;&#22238;&#23545;&#24212;&#30340;&#29992;&#25143;&#23454;&#20363;&#12290;&#22914;&#26524;&#20973;&#25454;&#26080;&#25928;&#25110;&#25214;&#19981;&#21040;&#29992;&#25143;&#65292;&#38381;&#21253;&#24212;&#36820;&#22238; <code>null</code> &#25110; <code>false</code>&#12290;&#36890;&#24120;&#24212;&#22312; <code>FortifyServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#37324;&#35843;&#29992;&#35813;&#26041;&#27861;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Fortify\Fortify;
+
+/**
+ * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Fortify::authenticateUsing(function (Request $request) {
+        $user = User::where('email', $request-&gt;email)-&gt;first();
+
+        if ($user &amp;&amp;
+            Hash::check($request-&gt;password, $user-&gt;password)) {
+            return $user;
+        }
+    });
+
+    // ...
+}</code></pre><h4 id="ee3e2a0c23396361b9a5667eca1f7ace">&#35748;&#35777; Guard</h4><p>&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#33258;&#23450;&#20041; Fortify &#20351;&#29992;&#30340;&#35748;&#35777; Guard&#12290;&#20294;&#20320;&#38656;&#35201;&#30830;&#20445;&#25152;&#37197;&#32622;&#30340; Guard &#26159; <code>Illuminate\Contracts\Auth\StatefulGuard</code> &#30340;&#23454;&#29616;&#12290;&#22914;&#26524;&#20320;&#25171;&#31639;&#29992; Laravel Fortify &#26469;&#35748;&#35777;&#19968;&#20010; SPA&#65292;&#24212;&#32467;&#21512; <a href="https://laravel.com/docs/sanctum" target="_blank" rel="noopener noreferrer">Laravel Sanctum</a> &#20351;&#29992; Laravel &#40664;&#35748;&#30340; <code>web</code> Guard&#12290;</p><h3 id="6d056d654bb684d0b0fa455ace09e798">&#33258;&#23450;&#20041;&#35748;&#35777;&#31649;&#36947;</h3><p>Laravel Fortify &#36890;&#36807;&#19968;&#32452;&#21487;&#35843;&#29992;&#31867;&#32452;&#25104;&#30340;&#31649;&#36947;&#26469;&#23436;&#25104;&#30331;&#24405;&#35831;&#27714;&#30340;&#35748;&#35777;&#12290;&#22914;&#26524;&#20320;&#24895;&#24847;&#65292;&#21487;&#20197;&#23450;&#20041;&#19968;&#20010;&#30001;&#22810;&#20010;&#31867;&#32452;&#25104;&#12289;&#33258;&#23450;&#20041;&#39034;&#24207;&#30340;&#31649;&#36947;&#65292;&#35753;&#30331;&#24405;&#35831;&#27714;&#20381;&#27425;&#31359;&#36807;&#36825;&#20123;&#31867;&#12290;&#27599;&#20010;&#31867;&#37117;&#38656;&#35201;&#25552;&#20379;&#19968;&#20010; <code>__invoke</code> &#26041;&#27861;&#65292;&#25509;&#25910;&#20256;&#20837;&#30340; <code>Illuminate\Http\Request</code> &#23454;&#20363;&#65292;&#24182;&#20687; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/middleware" target="_blank">&#20013;&#38388;&#20214;</a> &#19968;&#26679;&#25509;&#25910;&#19968;&#20010; <code>$next</code> &#21464;&#37327;&#65292;&#35843;&#29992;&#23427;&#21363;&#21487;&#23558;&#35831;&#27714;&#20256;&#36882;&#32473;&#31649;&#36947;&#20013;&#30340;&#19979;&#19968;&#20010;&#31867;&#12290;</p><p>&#35201;&#23450;&#20041;&#33258;&#23450;&#20041;&#31649;&#36947;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Fortify::authenticateThrough</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#25509;&#25910;&#19968;&#20010;&#38381;&#21253;&#65292;&#38381;&#21253;&#24212;&#36820;&#22238;&#30331;&#24405;&#35831;&#27714;&#35201;&#20381;&#27425;&#31359;&#36807;&#30340;&#31867;&#25968;&#32452;&#12290;&#36890;&#24120;&#24212;&#22312; <code>App\Providers\FortifyServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#37324;&#35843;&#29992;&#23427;&#12290;</p><p>&#19979;&#38754;&#30340;&#31034;&#20363;&#23637;&#31034;&#20102;&#40664;&#35748;&#30340;&#31649;&#36947;&#23450;&#20041;&#65292;&#20320;&#21487;&#20197;&#25226;&#23427;&#20316;&#20026;&#36215;&#28857;&#65292;&#20877;&#26681;&#25454;&#38656;&#35201;&#36827;&#34892;&#33258;&#23450;&#20041;&#65306;</p><pre><code class="language-php">use Laravel\Fortify\Actions\AttemptToAuthenticate;
+use Laravel\Fortify\Actions\CanonicalizeUsername;
+use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
+use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
+use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
+use Laravel\Fortify\Features;
+use Laravel\Fortify\Fortify;
+use Illuminate\Http\Request;
+
+Fortify::authenticateThrough(function (Request $request) {
+    return array_filter([
+            config('fortify.limiters.login') ? null : EnsureLoginIsNotThrottled::class,
+            config('fortify.lowercase_usernames') ? CanonicalizeUsername::class : null,
+            Features::enabled(Features::twoFactorAuthentication()) ? RedirectIfTwoFactorAuthenticatable::class : null,
+            AttemptToAuthenticate::class,
+            PrepareAuthenticatedSession::class,
+    ]);
+});</code></pre><h4 id="c1f3b6fc480fa5a9e35171ad77b4ecd5">&#30331;&#24405;&#38480;&#27969;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Fortify &#20250;&#20351;&#29992; <code>EnsureLoginIsNotThrottled</code> &#20013;&#38388;&#20214;&#23545;&#30331;&#24405;&#23581;&#35797;&#36827;&#34892;&#38480;&#27969;&#12290;&#35813;&#20013;&#38388;&#20214;&#25353;&#29031;&#29992;&#25143;&#21517;&#19982; IP &#22320;&#22336;&#30340;&#32452;&#21512;&#20316;&#20026;&#21807;&#19968;&#32500;&#24230;&#26469;&#38480;&#27969;&#12290;</p><p>&#26576;&#20123;&#24212;&#29992;&#21487;&#33021;&#38656;&#35201;&#19981;&#21516;&#30340;&#38480;&#27969;&#31574;&#30053;&#65292;&#20363;&#22914;&#20165;&#25353; IP &#22320;&#22336;&#36827;&#34892;&#38480;&#27969;&#12290;&#20026;&#27492;&#65292;Fortify &#20801;&#35768;&#20320;&#36890;&#36807; <code>fortify.limiters.login</code> &#37197;&#32622;&#39033;&#25351;&#23450;&#33258;&#24049;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/routing#rate-limiting" target="_blank">&#38480;&#27969;&#22120;</a>&#12290;&#24403;&#28982;&#65292;&#36825;&#20010;&#37197;&#32622;&#39033;&#20301;&#20110;&#24212;&#29992;&#30340; <code>config/fortify.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#23558;&#38480;&#27969;&#12289;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/fortify#two-factor-authentication" target="_blank">&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;</a> &#21644;&#22806;&#37096; Web &#24212;&#29992;&#38450;&#28779;&#22681;&#65288;WAF&#65289;&#32467;&#21512;&#20351;&#29992;&#65292;&#21487;&#20197;&#20026;&#21512;&#27861;&#24212;&#29992;&#29992;&#25143;&#25552;&#20379;&#26368;&#31283;&#20581;&#30340;&#38450;&#24481;&#12290;</p>
+</blockquote><h3 id="223139d677ea910bc7c7c418ecc5f348">&#33258;&#23450;&#20041;&#37325;&#23450;&#21521;</h3><p>&#22914;&#26524;&#30331;&#24405;&#23581;&#35797;&#25104;&#21151;&#65292;Fortify &#20250;&#25226;&#20320;&#37325;&#23450;&#21521;&#21040;&#24212;&#29992; <code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#36890;&#36807; <code>home</code> &#37197;&#32622;&#39033;&#37197;&#32622;&#30340; URI&#12290;&#22914;&#26524;&#30331;&#24405;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#21017;&#20250;&#36820;&#22238; 200 HTTP &#21709;&#24212;&#12290;&#29992;&#25143;&#30331;&#20986;&#24212;&#29992;&#21518;&#65292;&#23558;&#34987;&#37325;&#23450;&#21521;&#21040; <code>/</code> URI&#12290;</p><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#26356;&#39640;&#32423;&#30340;&#33258;&#23450;&#20041;&#34892;&#20026;&#65292;&#21487;&#20197;&#25226; <code>LoginResponse</code> &#21644; <code>LogoutResponse</code> &#22865;&#32422;&#30340;&#23454;&#29616;&#32465;&#23450;&#21040; Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/container" target="_blank">&#26381;&#21153;&#23481;&#22120;</a> &#20013;&#12290;&#36890;&#24120;&#24212;&#22312; <code>App\Providers\FortifyServiceProvider</code> &#31867;&#30340; <code>register</code> &#26041;&#27861;&#37324;&#23436;&#25104;&#65306;</p><pre><code class="language-php">use Laravel\Fortify\Contracts\LogoutResponse;
+
+/**
+ * &#27880;&#20876;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function register(): void
+{
+    $this-&gt;app-&gt;instance(LogoutResponse::class, new class implements LogoutResponse {
+        public function toResponse($request)
+        {
+            return redirect('/');
+        }
+    });
+}</code></pre><h2 id="3ff73ee95393a1df4724d3106f7bb9a5">&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;</h2><p>&#21551;&#29992; Fortify &#30340;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#65288;2FA&#65289;&#21518;&#65292;&#29992;&#25143;&#22312;&#35748;&#35777;&#36807;&#31243;&#20013;&#38656;&#35201;&#36755;&#20837;&#19968;&#20010; 6 &#20301;&#25968;&#23383;&#20196;&#29260;&#12290;&#35813;&#20196;&#29260;&#22522;&#20110;&#26102;&#38388;&#19968;&#27425;&#24615;&#23494;&#30721;&#65288;TOTP&#65289;&#29983;&#25104;&#65292;&#21487;&#20197;&#20174;&#20219;&#20309;&#20860;&#23481; TOTP &#30340;&#31227;&#21160;&#35748;&#35777;&#24212;&#29992;&#65288;&#22914; Google Authenticator&#65289;&#33719;&#21462;&#12290;</p><p>&#24320;&#22987;&#20043;&#21069;&#65292;&#24212;&#20808;&#30830;&#35748;&#24212;&#29992;&#30340; <code>App\Models\User</code> &#27169;&#22411;&#20351;&#29992;&#20102; <code>Laravel\Fortify\TwoFactorAuthenticatable</code> trait&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+
+class User extends Authenticatable
+{
+    use Notifiable, TwoFactorAuthenticatable;
+}</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#24212;&#24403;&#22312;&#24212;&#29992;&#20869;&#26500;&#24314;&#19968;&#20010;&#39029;&#38754;&#65292;&#35753;&#29992;&#25143;&#31649;&#29702;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#30340;&#30456;&#20851;&#35774;&#32622;&#12290;&#35813;&#39029;&#38754;&#24212;&#20801;&#35768;&#29992;&#25143;&#21551;&#29992;&#21644;&#20851;&#38381;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#65292;&#20197;&#21450;&#37325;&#26032;&#29983;&#25104;&#24674;&#22797;&#30721;&#12290;</p><blockquote>
+<p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#30340; <code>features</code> &#25968;&#32452;&#25351;&#31034; Fortify &#22312;&#20462;&#25913;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#35774;&#32622;&#21069;&#35201;&#27714;&#23494;&#30721;&#30830;&#35748;&#12290;&#22240;&#27492;&#65292;&#22312;&#32487;&#32493;&#20043;&#21069;&#65292;&#20320;&#30340;&#24212;&#29992;&#24212;&#24403;&#20808;&#23454;&#29616; Fortify &#30340; <a href="x3vo0x4vm1.html#password-confirmation" target="_blank">&#23494;&#30721;&#30830;&#35748;</a> &#21151;&#33021;&#12290;</p>
+</blockquote><h3 id="f3260806c24eb4f94d61275213c97858">&#21551;&#29992;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;</h3><p>&#35201;&#24320;&#22987;&#21551;&#29992;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#65292;&#24212;&#29992;&#24212;&#21521; Fortify &#23450;&#20041;&#30340; <code>/user/two-factor-authentication</code> &#31471;&#28857;&#21457;&#36215; POST &#35831;&#27714;&#12290;&#22914;&#26524;&#35831;&#27714;&#25104;&#21151;&#65292;&#29992;&#25143;&#23558;&#34987;&#37325;&#23450;&#21521;&#22238;&#19978;&#19968;&#20010; URL&#65292;&#19988; <code>status</code> Session &#21464;&#37327;&#20250;&#34987;&#35774;&#20026; <code>two-factor-authentication-enabled</code>&#12290;&#20320;&#21487;&#20197;&#22312;&#27169;&#26495;&#37324;&#26816;&#27979;&#35813; <code>status</code> Session &#21464;&#37327;&#65292;&#20197;&#26174;&#31034;&#30456;&#24212;&#30340;&#25104;&#21151;&#28040;&#24687;&#12290;&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#21017;&#20250;&#36820;&#22238; <code>200</code> HTTP &#21709;&#24212;&#12290;</p><p>&#29992;&#25143;&#22312;&#36873;&#25321;&#21551;&#29992;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#20043;&#21518;&#65292;&#36824;&#24517;&#39035;&#25552;&#20379;&#26377;&#25928;&#30340;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#20195;&#30721;&#26469;"&#30830;&#35748;"&#27492;&#27425;&#37197;&#32622;&#12290;&#22240;&#27492;&#65292;&#20320;&#30340;"&#25104;&#21151;"&#28040;&#24687;&#24212;&#24403;&#25552;&#31034;&#29992;&#25143;&#65306;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#30340;&#30830;&#35748;&#27493;&#39588;&#20173;&#26159;&#24517;&#38656;&#30340;&#65306;</p><pre><code class="language-html">@if (session('status') == 'two-factor-authentication-enabled')
+    &lt;div class="mb-4 font-medium text-sm"&gt;
+        Please finish configuring two-factor authentication below.
+    &lt;/div&gt;
+@endif</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#24212;&#24403;&#21521;&#29992;&#25143;&#23637;&#31034;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#30340;&#20108;&#32500;&#30721;&#65292;&#29992;&#25143;&#21487;&#20351;&#29992;&#35748;&#35777; App &#25195;&#25551;&#35813;&#20108;&#32500;&#30721;&#12290;&#22914;&#26524;&#20351;&#29992; Blade &#28210;&#26579;&#24212;&#29992;&#21069;&#31471;&#65292;&#21487;&#20197;&#36890;&#36807;&#29992;&#25143;&#23454;&#20363;&#19978;&#30340; <code>twoFactorQrCodeSvg</code> &#26041;&#27861;&#33719;&#21462;&#20108;&#32500;&#30721;&#30340; SVG&#65306;</p><pre><code class="language-php">$request-&gt;user()-&gt;twoFactorQrCodeSvg();</code></pre><p>&#22914;&#26524;&#20320;&#27491;&#22312;&#26500;&#24314; JavaScript &#39537;&#21160;&#30340;&#21069;&#31471;&#65292;&#21487;&#20197;&#21457;&#36215; XHR GET &#35831;&#27714;&#35775;&#38382; <code>/user/two-factor-qr-code</code> &#31471;&#28857;&#26469;&#33719;&#21462;&#29992;&#25143;&#30340;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#20108;&#32500;&#30721;&#12290;&#35813;&#31471;&#28857;&#20250;&#36820;&#22238;&#19968;&#20010;&#21253;&#21547; <code>svg</code> &#38190;&#30340; JSON &#23545;&#35937;&#12290;</p><h4 id="4130a492cfb3ec7d6896bf97f94f90d3">&#30830;&#35748;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;</h4><p>&#38500;&#20102;&#23637;&#31034;&#29992;&#25143;&#30340;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#20108;&#32500;&#30721;&#65292;&#36824;&#24212;&#25552;&#20379;&#19968;&#20010;&#25991;&#26412;&#36755;&#20837;&#26694;&#65292;&#20379;&#29992;&#25143;&#36755;&#20837;&#26377;&#25928;&#30340;&#35748;&#35777;&#20195;&#30721;&#26469;"&#30830;&#35748;"&#20854;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#37197;&#32622;&#12290;&#35813;&#20195;&#30721;&#24212;&#36890;&#36807; POST &#35831;&#27714;&#25552;&#20132;&#21040; Fortify &#23450;&#20041;&#30340; <code>/user/confirmed-two-factor-authentication</code> &#31471;&#28857;&#12290;</p><p>&#22914;&#26524;&#35831;&#27714;&#25104;&#21151;&#65292;&#29992;&#25143;&#23558;&#34987;&#37325;&#23450;&#21521;&#22238;&#19978;&#19968;&#20010; URL&#65292;&#24182;&#23558; <code>status</code> Session &#21464;&#37327;&#35774;&#20026; <code>two-factor-authentication-confirmed</code>&#65306;</p><pre><code class="language-html">@if (session('status') == 'two-factor-authentication-confirmed')
+    &lt;div class="mb-4 font-medium text-sm"&gt;
+        Two-factor authentication confirmed and enabled successfully.
+    &lt;/div&gt;
+@endif</code></pre><p>&#22914;&#26524;&#21521;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#30830;&#35748;&#31471;&#28857;&#21457;&#36215;&#30340;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#20250;&#36820;&#22238; <code>200</code> HTTP &#21709;&#24212;&#12290;</p><h4 id="79670fb02eeb9a84865781c0d8154e9c">&#26174;&#31034;&#24674;&#22797;&#30721;</h4><p>&#20320;&#36824;&#24212;&#24403;&#26174;&#31034;&#29992;&#25143;&#30340;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#24674;&#22797;&#30721;&#12290;&#36825;&#20123;&#24674;&#22797;&#30721;&#29992;&#20110;&#22312;&#29992;&#25143;&#26080;&#27861;&#20351;&#29992;&#31227;&#21160;&#35774;&#22791;&#26102;&#36827;&#34892;&#35748;&#35777;&#12290;&#22914;&#26524;&#20351;&#29992; Blade &#28210;&#26579;&#24212;&#29992;&#21069;&#31471;&#65292;&#21487;&#20197;&#36890;&#36807;&#24050;&#35748;&#35777;&#30340;&#29992;&#25143;&#23454;&#20363;&#25343;&#21040;&#36825;&#20123;&#24674;&#22797;&#30721;&#65306;</p><pre><code class="language-php">(array) $request-&gt;user()-&gt;recoveryCodes()</code></pre><p>&#22914;&#26524;&#20320;&#27491;&#22312;&#26500;&#24314; JavaScript &#39537;&#21160;&#30340;&#21069;&#31471;&#65292;&#21487;&#20197;&#21457;&#36215; XHR GET &#35831;&#27714;&#35775;&#38382; <code>/user/two-factor-recovery-codes</code> &#31471;&#28857;&#12290;&#35813;&#31471;&#28857;&#20250;&#36820;&#22238;&#19968;&#20010;&#21253;&#21547;&#29992;&#25143;&#24674;&#22797;&#30721;&#30340; JSON &#25968;&#32452;&#12290;</p><p>&#35201;&#37325;&#26032;&#29983;&#25104;&#29992;&#25143;&#30340;&#24674;&#22797;&#30721;&#65292;&#24212;&#29992;&#24212;&#24403;&#21521; <code>/user/two-factor-recovery-codes</code> &#31471;&#28857;&#21457;&#36215; POST &#35831;&#27714;&#12290;</p><h3 id="f91da810254f27935e85c44cdca56826">&#20351;&#29992;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#36827;&#34892;&#30331;&#24405;</h3><p>&#22312;&#35748;&#35777;&#36807;&#31243;&#20013;&#65292;Fortify &#20250;&#33258;&#21160;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#24212;&#29992;&#30340;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#25361;&#25112;&#39029;&#38754;&#12290;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#21457;&#36215;&#30340;&#26159; XHR &#30331;&#24405;&#35831;&#27714;&#65292;&#21017;&#25104;&#21151;&#30331;&#24405;&#21518;&#36820;&#22238;&#30340; JSON &#21709;&#24212;&#20013;&#20250;&#21253;&#21547;&#19968;&#20010; <code>two_factor</code> &#24067;&#23572;&#23383;&#27573;&#12290;&#20320;&#24212;&#24403;&#26816;&#26597;&#35813;&#20540;&#65292;&#20197;&#20915;&#23450;&#26159;&#21542;&#38656;&#35201;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#25361;&#25112;&#39029;&#38754;&#12290;</p><p>&#35201;&#24320;&#22987;&#23454;&#29616;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#21151;&#33021;&#65292;&#25105;&#20204;&#38656;&#35201;&#21578;&#35785; Fortify &#22914;&#20309;&#36820;&#22238;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#25361;&#25112;&#35270;&#22270;&#12290;&#25152;&#26377; Fortify &#30340;&#35748;&#35777;&#35270;&#22270;&#28210;&#26579;&#36923;&#36753;&#37117;&#21487;&#20197;&#36890;&#36807; <code>Laravel\Fortify\Fortify</code> &#31867;&#19978;&#30340;&#30456;&#24212;&#26041;&#27861;&#36827;&#34892;&#33258;&#23450;&#20041;&#12290;&#36890;&#24120;&#24212;&#22312; <code>App\Providers\FortifyServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#37324;&#35843;&#29992;&#23427;&#65306;</p><pre><code class="language-php">use Laravel\Fortify\Fortify;
+
+/**
+ * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Fortify::twoFactorChallengeView(function () {
+        return view('auth.two-factor-challenge');
+    });
+
+    // ...
+}</code></pre><p>Fortify &#20250;&#36127;&#36131;&#23450;&#20041;&#36820;&#22238;&#35813;&#35270;&#22270;&#30340; <code>/two-factor-challenge</code> &#36335;&#30001;&#12290;&#20320;&#30340; <code>two-factor-challenge</code> &#27169;&#26495;&#24212;&#24403;&#21253;&#21547;&#19968;&#20010;&#23545; <code>/two-factor-challenge</code> &#31471;&#28857;&#21457; POST &#35831;&#27714;&#30340;&#34920;&#21333;&#12290;&#35813;&#21160;&#20316;&#25509;&#25910; <code>code</code> &#23383;&#27573;&#65288;&#21253;&#21547;&#26377;&#25928;&#30340; TOTP &#20196;&#29260;&#65289;&#25110; <code>recovery_code</code> &#23383;&#27573;&#65288;&#21253;&#21547;&#29992;&#25143;&#30340;&#26576;&#20010;&#24674;&#22797;&#30721;&#65289;&#12290;</p><p>&#22914;&#26524;&#30331;&#24405;&#25104;&#21151;&#65292;Fortify &#20250;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#24212;&#29992; <code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#36890;&#36807; <code>home</code> &#37197;&#32622;&#39033;&#37197;&#32622;&#30340; URI&#12290;&#22914;&#26524;&#30331;&#24405;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#21017;&#20250;&#36820;&#22238; 204 HTTP &#21709;&#24212;&#12290;</p><p>&#22914;&#26524;&#30331;&#24405;&#22833;&#36133;&#65292;&#29992;&#25143;&#23558;&#34987;&#37325;&#23450;&#21521;&#22238;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#25361;&#25112;&#39029;&#38754;&#65292;&#26657;&#39564;&#38169;&#35823;&#21487;&#20197;&#36890;&#36807;&#20849;&#20139;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation#quick-displaying-the-validation-errors" target="_blank">Blade &#27169;&#26495;&#21464;&#37327; <code>$errors</code></a> &#33719;&#21462;&#12290;&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#26657;&#39564;&#38169;&#35823;&#20250;&#38543; 422 HTTP &#21709;&#24212;&#19968;&#21516;&#36820;&#22238;&#12290;</p><h3 id="7c216d4cbe247e0b047a42007d8b6d4c">&#20851;&#38381;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;</h3><p>&#35201;&#20851;&#38381;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#65292;&#24212;&#29992;&#24212;&#21521; <code>/user/two-factor-authentication</code> &#31471;&#28857;&#21457;&#36215; DELETE &#35831;&#27714;&#12290;&#35831;&#27880;&#24847;&#65292;Fortify &#30340;&#21452;&#37325;&#36523;&#20221;&#35748;&#35777;&#30456;&#20851;&#31471;&#28857;&#22312;&#34987;&#35843;&#29992;&#21069;&#38656;&#35201;&#36827;&#34892; <a href="x3vo0x4vm1.html#password-confirmation" target="_blank">&#23494;&#30721;&#30830;&#35748;</a>&#12290;</p><h2 id="006ebcc9856c311d1312185e47957587">&#36890;&#34892;&#23494;&#38053;</h2><p>Fortify &#36890;&#36807; WebAuthn &#25903;&#25345;&#36890;&#34892;&#23494;&#38053;&#65288;Passkey&#65289;&#35748;&#35777;&#12290;&#36890;&#34892;&#23494;&#38053;&#20801;&#35768;&#29992;&#25143;&#22312;&#19981;&#20351;&#29992;&#23494;&#30721;&#30340;&#24773;&#20917;&#19979;&#36827;&#34892;&#35748;&#35777;&#65292;&#20351;&#29992;&#24179;&#21488;&#35748;&#35777;&#22120;&#65288;&#22914; Face ID&#12289;Touch ID&#12289;Windows Hello&#65289;&#25110;&#30828;&#20214;&#23433;&#20840;&#23494;&#38053;&#12290;</p><h3 id="192e71cd2ab9da9264ed7d27244749d2">&#21551;&#29992;&#36890;&#34892;&#23494;&#38053;</h3><p>&#39318;&#20808;&#65292;&#30830;&#20445;&#24212;&#29992;&#30340; <code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#37324;&#21551;&#29992;&#20102; <code>passkeys</code> &#21151;&#33021;&#65306;</p><pre><code class="language-php">use Laravel\Fortify\Features;
+
+'features' =&gt; [
+    // ...
+    Features::passkeys([
+        'confirmPassword' =&gt; true,
+    ]),
+],</code></pre><p><code>confirmPassword</code> &#36873;&#39033;&#20915;&#23450; Fortify &#26159;&#21542;&#22312;&#27880;&#20876;&#25110;&#21024;&#38500;&#36890;&#34892;&#23494;&#38053;&#21069;&#35201;&#27714;&#36827;&#34892; <a href="x3vo0x4vm1.html#password-confirmation" target="_blank">&#23494;&#30721;&#30830;&#35748;</a>&#12290;</p><p>&#25509;&#19979;&#26469;&#65292;&#30830;&#20445;&#24212;&#29992;&#30340; <code>App\Models\User</code> &#27169;&#22411;&#23454;&#29616;&#20102; <code>Laravel\Fortify\Contracts\PasskeyUser</code> &#25509;&#21475;&#65292;&#24182;&#20351;&#29992;&#20102; <code>Laravel\Fortify\PasskeyAuthenticatable</code> trait&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\Contracts\PasskeyUser;
+use Laravel\Fortify\PasskeyAuthenticatable;
+
+class User extends Authenticatable implements PasskeyUser
+{
+    use Notifiable, PasskeyAuthenticatable;
+}</code></pre><p>Fortify &#30340;&#36890;&#34892;&#23494;&#38053;&#30456;&#20851;&#37197;&#32622;&#39033;&#21487;&#20197;&#36890;&#36807;&#24212;&#29992; <code>config/fortify.php</code> &#25991;&#20214;&#20013;&#30340; <code>passkeys</code> &#37197;&#32622;&#25968;&#32452;&#36827;&#34892;&#33258;&#23450;&#20041;&#65306;</p><pre><code class="language-php">'passkeys' =&gt; [
+    'relying_party_id' =&gt; parse_url(config('app.url'), PHP_URL_HOST),
+    'allowed_origins' =&gt; [config('app.url')],
+    'user_handle_secret' =&gt; config('app.key'),
+    'timeout' =&gt; 60000,
+],</code></pre><blockquote>
+<p>[!NOTE]<br>
+Fortify &#23553;&#35013;&#20102; <code>laravel/passkeys</code> Composer &#21253;&#24182;&#20026;&#20320;&#23436;&#25104;&#30456;&#20851;&#37197;&#32622;&#12290;&#22914;&#26524;&#20320;&#22312;&#20351;&#29992; Fortify &#30340;&#36890;&#34892;&#23494;&#38053;&#21151;&#33021;&#65292;&#35831;&#36890;&#36807; <code>config/fortify.php</code> &#37197;&#32622;&#36890;&#34892;&#23494;&#38053;&#12290;&#26080;&#38656;&#21457;&#24067; <code>laravel/passkeys</code> &#30340;&#37197;&#32622;&#25991;&#20214;&#65292;&#22312;&#37027;&#37324;&#37197;&#32622;&#30340;&#20540;&#20250;&#34987; Fortify &#35206;&#30422;&#12290;</p>
+</blockquote><p><code>relying_party_id</code> &#24212;&#24403;&#19982;&#24212;&#29992;&#22495;&#21517;&#21305;&#37197;&#12290;<code>allowed_origins</code> &#25968;&#32452;&#21015;&#20986;&#20102;&#21487;&#20197;&#23436;&#25104;&#36890;&#34892;&#23494;&#38053;&#27880;&#20876;&#21644;&#35748;&#35777;&#30340;&#27983;&#35272;&#22120;&#26469;&#28304;&#12290;<code>user_handle_secret</code> &#29992;&#20110;&#27966;&#29983;&#19981;&#36879;&#26126;&#30340;&#29992;&#25143;&#26631;&#35782;&#31526;&#65292;&#20445;&#35777;&#22312;&#22810;&#27425;&#27880;&#20876;&#36890;&#34892;&#23494;&#38053;&#26102;&#33021;&#35782;&#21035;&#20986;&#21516;&#19968;&#20010;&#29992;&#25143;&#12290;<code>timeout</code> &#36873;&#39033;&#25511;&#21046;&#36890;&#34892;&#23494;&#38053;&#27880;&#20876;&#21644;&#35748;&#35777;&#25805;&#20316;&#30340;&#26368;&#38271;&#25345;&#32493;&#26102;&#38388;&#12290;</p><p>Fortify &#20026;&#20854;&#36890;&#34892;&#23494;&#38053;&#30331;&#24405;&#12289;&#30830;&#35748;&#21644;&#27880;&#20876;&#36335;&#30001;&#24212;&#29992;&#20102;&#19987;&#38376;&#30340;&#36890;&#34892;&#23494;&#38053;&#38480;&#27969;&#22120;&#12290;&#22914;&#26377;&#38656;&#35201;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; <code>fortify.limiters.passkeys</code> &#37197;&#32622;&#39033;&#21644;&#30456;&#24212;&#30340; <code>RateLimiter::for(...)</code> &#23450;&#20041;&#26469;&#33258;&#23450;&#20041;&#35813;&#38480;&#27969;&#22120;&#12290;</p><h3 id="424dc8990e01d22b5eeb103d659b6e02">JavaScript &#23458;&#25143;&#31471;</h3><p>&#22914;&#26524;&#20320;&#22312;&#26500;&#24314;&#33258;&#23450;&#20041;&#21069;&#31471;&#65288;&#21253;&#25324;&#24102;&#26377;&#27983;&#35272;&#22120;&#31471;&#33050;&#26412;&#30340; Blade &#24212;&#29992;&#65289;&#65292;&#21487;&#20197;&#20351;&#29992;&#23448;&#26041;&#30340; <a href="https://www.npmjs.com/package/@laravel/passkeys" target="_blank" rel="noopener noreferrer"><code>@laravel/passkeys</code></a> &#21253;&#12290;&#35813;&#21253;&#20250;&#22788;&#29702;&#27983;&#35272;&#22120;&#30340; WebAuthn &#27969;&#31243;&#65292;&#24182;&#21521; Fortify &#30340;&#36890;&#34892;&#23494;&#38053;&#31471;&#28857;&#21457;&#36215;&#35831;&#27714;&#12290;</p><p>&#36890;&#36807; npm &#23433;&#35013;&#35813;&#21253;&#65306;</p><pre><code class="language-shell">npm install @laravel/passkeys</code></pre><p>&#28982;&#21518;&#65292;&#20320;&#21487;&#20197;&#20174;&#21069;&#31471;&#21551;&#21160;&#36890;&#34892;&#23494;&#38053;&#30340;&#27880;&#20876;&#21644;&#26657;&#39564;&#65306;</p><pre><code class="language-js">import { Passkeys } from "@laravel/passkeys";
+
+await Passkeys.register({ name: "MacBook Pro" });
+await Passkeys.verify();</code></pre><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20351;&#29992;&#33258;&#23450;&#20041;&#30340;&#36890;&#34892;&#23494;&#38053;&#31471;&#28857; URI&#65292;&#21487;&#20197;&#38024;&#23545;&#21333;&#27425;&#35843;&#29992;&#35206;&#30422;&#30456;&#20851;&#36335;&#30001;&#65306;</p><pre><code class="language-js">await Passkeys.verify({
+    routes: {
+        options: "/passkeys/confirm/options",
+        submit: "/passkeys/confirm",
+    },
+});
+
+await Passkeys.register({
+    name: "MacBook Pro",
+    routes: {
+        options: "/user/passkeys/options",
+        submit: "/user/passkeys",
+    },
+});</code></pre><p>&#35813;&#21253;&#36824;&#36890;&#36807; <code>@laravel/passkeys/react</code>&#12289;<code>@laravel/passkeys/vue</code> &#21644; <code>@laravel/passkeys/svelte</code> &#25552;&#20379; React&#12289;Vue &#21644; Svelte &#30340;&#36741;&#21161;&#20989;&#25968;&#12290;</p><h3 id="06264bce41ee073ba180776ec11c01cb">&#20351;&#29992;&#36890;&#34892;&#23494;&#38053;&#30331;&#24405;</h3><p>&#35201;&#20351;&#29992;&#36890;&#34892;&#23494;&#38053;&#35748;&#35777;&#29992;&#25143;&#65292;&#24212;&#29992;&#24212;&#24403;&#20808;&#21521; <code>/passkeys/login/options</code> &#31471;&#28857;&#21457;&#36215; GET &#35831;&#27714;&#12290;&#35813;&#31471;&#28857;&#20250;&#36820;&#22238; WebAuthn &#25361;&#25112;&#36873;&#39033;&#65292;&#21069;&#31471;&#24212;&#23558;&#20854;&#20256;&#32473; <code>navigator.credentials.get(...)</code>&#12290;</p><p>&#27983;&#35272;&#22120;&#36820;&#22238;&#20973;&#25454;&#21518;&#65292;&#24212;&#29992;&#24212;&#21521; <code>/passkeys/login</code> &#21457;&#36215; POST &#35831;&#27714;&#65292;&#25226;&#20973;&#25454;&#36127;&#36733;&#20316;&#20026;&#35831;&#27714;&#20307;&#65292;&#21516;&#26102;&#20063;&#21487;&#20197;&#21253;&#21547;&#19968;&#20010;&#24067;&#23572;&#22411; <code>remember</code> &#23383;&#27573;&#12290;</p><p>&#22914;&#26524;&#35831;&#27714;&#25104;&#21151;&#65292;Fortify &#20250;&#25226;&#29992;&#25143;&#30331;&#24405;&#21040;&#37197;&#32622;&#22909;&#30340; Guard&#65292;&#24182;&#36820;&#22238;&#20197;&#19979;&#20004;&#31181;&#20043;&#19968;&#65306;</p><div class="content-list">
+<ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">&#23545;&#24120;&#35268;&#35831;&#27714;&#65292;&#37325;&#23450;&#21521;&#21040;&#20320;&#26399;&#26395;&#30340;&#30446;&#26631;&#39029;&#38754;&#12290;</li>
+<li style="list-style-type: disc;">&#23545; XHR &#35831;&#27714;&#65292;&#36820;&#22238; <code>200</code> HTTP &#21709;&#24212;&#65292;&#20854;&#20013; JSON &#36127;&#36733;&#21253;&#21547; <code>redirect</code> &#38190;&#12290;</li>
+</ul>
+</div><h3 id="9eab4f6af0a531318282d7de6fdea1b3">&#20351;&#29992;&#36890;&#34892;&#23494;&#38053;&#30830;&#35748;&#23494;&#30721;</h3><p>&#38024;&#23545;&#24050;&#35748;&#35777;&#30340;&#20250;&#35805;&#65292;Fortify &#25552;&#20379;&#20102;&#36890;&#34892;&#23494;&#38053;&#30830;&#35748;&#31471;&#28857;&#65292;&#33021;&#22815;&#28385;&#36275; Laravel &#20026;&#24403;&#21069;&#20250;&#35805;&#35774;&#32622;&#30340;"&#23494;&#30721;&#30830;&#35748;"&#35201;&#27714;&#12290;</p><p>&#35201;&#20351;&#29992;&#36890;&#34892;&#23494;&#38053;&#36827;&#34892;&#30830;&#35748;&#65292;&#24212;&#29992;&#24212;&#20808;&#21457;&#36215; GET &#35831;&#27714;&#35775;&#38382; <code>/passkeys/confirm/options</code>&#12290;&#35813;&#31471;&#28857;&#20250;&#36820;&#22238; WebAuthn &#25361;&#25112;&#36873;&#39033;&#65292;&#21069;&#31471;&#24212;&#23558;&#20854;&#20256;&#32473; <code>navigator.credentials.get(...)</code>&#12290;</p><p>&#27983;&#35272;&#22120;&#36820;&#22238;&#20973;&#25454;&#21518;&#65292;&#24212;&#29992;&#24212;&#21521; <code>/passkeys/confirm</code> &#21457;&#36215; POST &#35831;&#27714;&#65292;&#25226;&#20973;&#25454;&#36127;&#36733;&#20316;&#20026;&#35831;&#27714;&#20307;&#12290;</p><p>&#22914;&#26524;&#35831;&#27714;&#25104;&#21151;&#65292;Fortify &#20250;&#25226;&#24403;&#21069;&#20250;&#35805;&#26631;&#35760;&#20026;&#23494;&#30721;&#24050;&#30830;&#35748;&#65292;&#24182;&#36820;&#22238;&#20197;&#19979;&#20004;&#31181;&#20043;&#19968;&#65306;</p><div class="content-list">
+<ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">&#23545;&#24120;&#35268;&#35831;&#27714;&#65292;&#37325;&#23450;&#21521;&#21040;&#20320;&#26399;&#26395;&#30340;&#30446;&#26631;&#39029;&#38754;&#12290;</li>
+<li style="list-style-type: disc;">&#23545; XHR &#35831;&#27714;&#65292;&#36820;&#22238; <code>200</code> HTTP &#21709;&#24212;&#65292;&#20854;&#20013; JSON &#36127;&#36733;&#21253;&#21547; <code>redirect</code> &#38190;&#12290;</li>
+</ul>
+</div><h3 id="a823adc0c932e3bd99f6d22d86431a2f">&#27880;&#20876;&#36890;&#34892;&#23494;&#38053;</h3><p>&#20026;&#24050;&#35748;&#35777;&#29992;&#25143;&#27880;&#20876;&#36890;&#34892;&#23494;&#38053;&#26102;&#65292;&#24212;&#29992;&#24212;&#20808;&#21457;&#36215; GET &#35831;&#27714;&#35775;&#38382; <code>/user/passkeys/options</code>&#12290;&#35813;&#31471;&#28857;&#20250;&#36820;&#22238; WebAuthn &#21019;&#24314;&#36873;&#39033;&#65292;&#21069;&#31471;&#24212;&#23558;&#20854;&#20256;&#32473; <code>navigator.credentials.create(...)</code>&#12290;</p><p>&#27983;&#35272;&#22120;&#36820;&#22238;&#20973;&#25454;&#21518;&#65292;&#24212;&#29992;&#24212;&#21521; <code>/user/passkeys</code> &#21457;&#36215; POST &#35831;&#27714;&#65292;&#35831;&#27714;&#20307;&#25658;&#24102; <code>name</code> &#23383;&#27573;&#20197;&#21450; <code>credential</code> &#23383;&#27573;&#65288;&#20854;&#20540;&#20026; <code>navigator.credentials.create(...)</code> &#36820;&#22238;&#30340; <a href="https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential" target="_blank" rel="noopener noreferrer"><code>PublicKeyCredential</code></a> &#23545;&#35937;&#24207;&#21015;&#21270;&#32467;&#26524;&#65289;&#12290;</p><p>&#22914;&#26524;&#35831;&#27714;&#25104;&#21151;&#65292;Fortify &#20250;&#36820;&#22238;&#20197;&#19979;&#20004;&#31181;&#20043;&#19968;&#65306;</p><div class="content-list">
+<ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">&#23545;&#24120;&#35268;&#35831;&#27714;&#65292;&#36827;&#34892;&#37325;&#23450;&#21521;&#22238;&#36864;&#21709;&#24212;&#65292;&#24182;&#25226; <code>passkey-registered</code> &#29366;&#24577;&#20889;&#20837; Session&#12290;</li>
+<li style="list-style-type: disc;">&#23545; XHR &#35831;&#27714;&#65292;&#36820;&#22238; <code>200</code> HTTP &#21709;&#24212;&#65292;JSON &#36127;&#36733;&#21253;&#21547; <code>status</code> &#38190;&#20197;&#21450;&#21018;&#21018;&#27880;&#20876;&#36890;&#34892;&#23494;&#38053;&#30340; <code>id</code> &#21644; <code>name</code>&#12290;</li>
+</ul>
+</div><h3 id="5d3cd73cb72c5aab01eed4433ac9ce60">&#21024;&#38500;&#36890;&#34892;&#23494;&#38053;</h3><p>&#35201;&#21024;&#38500;&#26576;&#20010;&#36890;&#34892;&#23494;&#38053;&#65292;&#24212;&#29992;&#24212;&#24403;&#21521; <code>/user/passkeys/{passkey}</code> &#21457;&#36215; DELETE &#35831;&#27714;&#12290;</p><p>&#22914;&#26524;&#35831;&#27714;&#25104;&#21151;&#65292;Fortify &#20250;&#36820;&#22238;&#20197;&#19979;&#20004;&#31181;&#20043;&#19968;&#65306;</p><div class="content-list">
+<ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">&#23545;&#24120;&#35268;&#35831;&#27714;&#65292;&#36827;&#34892;&#37325;&#23450;&#21521;&#22238;&#36864;&#21709;&#24212;&#65292;&#24182;&#25226; <code>passkey-deleted</code> &#29366;&#24577;&#20889;&#20837; Session&#12290;</li>
+<li style="list-style-type: disc;">&#23545; XHR &#35831;&#27714;&#65292;&#36820;&#22238; <code>200</code> HTTP &#21709;&#24212;&#65292;JSON &#36127;&#36733;&#21253;&#21547; <code>status</code> &#38190;&#12290;</li>
+</ul>
+</div><h2 id="e804a9a2158eb06e6609b0b7ac9c3cb9">&#29992;&#25143;&#27880;&#20876;</h2><p>&#35201;&#24320;&#22987;&#23454;&#29616;&#29992;&#25143;&#27880;&#20876;&#21151;&#33021;&#65292;&#25105;&#20204;&#38656;&#35201;&#21578;&#35785; Fortify &#22914;&#20309;&#36820;&#22238;"register"&#35270;&#22270;&#12290;&#35831;&#35760;&#20303;&#65292;Fortify &#26159;&#19968;&#20010;&#26080;&#22836;&#65288;headless&#65289;&#30340;&#35748;&#35777;&#24211;&#12290;&#22914;&#26524;&#20320;&#24819;&#35201;&#19968;&#22871;&#24320;&#31665;&#21363;&#29992;&#12289;&#24050;&#32463;&#23436;&#25104;&#30340;&#21069;&#31471;&#35748;&#35777;&#23454;&#29616;&#65292;&#24212;&#24403;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#12290;</p><p>&#25152;&#26377; Fortify &#30340;&#35270;&#22270;&#28210;&#26579;&#36923;&#36753;&#37117;&#21487;&#20197;&#36890;&#36807; <code>Laravel\Fortify\Fortify</code> &#31867;&#19978;&#30340;&#30456;&#24212;&#26041;&#27861;&#36827;&#34892;&#33258;&#23450;&#20041;&#12290;&#36890;&#24120;&#24212;&#22312; <code>App\Providers\FortifyServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#37324;&#35843;&#29992;&#23427;&#65306;</p><pre><code class="language-php">use Laravel\Fortify\Fortify;
+
+/**
+ * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Fortify::registerView(function () {
+        return view('auth.register');
+    });
+
+    // ...
+}</code></pre><p>Fortify &#20250;&#36127;&#36131;&#23450;&#20041;&#36820;&#22238;&#35813;&#35270;&#22270;&#30340; <code>/register</code> &#36335;&#30001;&#12290;&#20320;&#30340; <code>register</code> &#27169;&#26495;&#24212;&#24403;&#21253;&#21547;&#19968;&#20010;&#34920;&#21333;&#65292;&#23545; Fortify &#23450;&#20041;&#30340; <code>/register</code> &#31471;&#28857;&#21457;&#36215; POST &#35831;&#27714;&#12290;</p><p><code>/register</code> &#31471;&#28857;&#26399;&#24453;&#20197;&#19979;&#23383;&#27573;&#65306;&#23383;&#31526;&#20018;&#31867;&#22411; <code>name</code>&#12289;&#23383;&#31526;&#20018;&#31867;&#22411;&#30340;&#37038;&#31665;&#22320;&#22336; / &#29992;&#25143;&#21517;&#12289;<code>password</code> &#21644; <code>password_confirmation</code>&#12290;&#37038;&#31665; / &#29992;&#25143;&#21517;&#23383;&#27573;&#30340;&#21517;&#23383;&#24517;&#39035;&#19982;&#24212;&#29992; <code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#30340; <code>username</code> &#37197;&#32622;&#20540;&#19968;&#33268;&#12290;</p><p>&#22914;&#26524;&#27880;&#20876;&#35831;&#27714;&#25104;&#21151;&#65292;Fortify &#20250;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#24212;&#29992; <code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#36890;&#36807; <code>home</code> &#37197;&#32622;&#39033;&#37197;&#32622;&#30340; URI&#12290;&#22914;&#26524;&#27880;&#20876;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#21017;&#20250;&#36820;&#22238; 201 HTTP &#21709;&#24212;&#12290;</p><p>&#22914;&#26524;&#27880;&#20876;&#35831;&#27714;&#22833;&#36133;&#65292;&#29992;&#25143;&#23558;&#34987;&#37325;&#23450;&#21521;&#22238;&#27880;&#20876;&#39029;&#38754;&#65292;&#26657;&#39564;&#38169;&#35823;&#21487;&#20197;&#36890;&#36807;&#20849;&#20139;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation#quick-displaying-the-validation-errors" target="_blank">Blade &#27169;&#26495;&#21464;&#37327; <code>$errors</code></a> &#33719;&#21462;&#12290;&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#26657;&#39564;&#38169;&#35823;&#20250;&#38543; 422 HTTP &#21709;&#24212;&#19968;&#21516;&#36820;&#22238;&#12290;</p><h3 id="989fcb25a5b1dd17859d5510a0bc03a0">&#33258;&#23450;&#20041;&#27880;&#20876;</h3><p>&#21487;&#20197;&#36890;&#36807;&#20462;&#25913;&#23433;&#35013; Laravel Fortify &#26102;&#29983;&#25104;&#30340; <code>App\Actions\Fortify\CreateNewUser</code> Action &#26469;&#33258;&#23450;&#20041;&#29992;&#25143;&#26657;&#39564;&#19982;&#21019;&#24314;&#27969;&#31243;&#12290;</p><h2 id="0719aa2bb09a63f0d59e0df2c4b0a3f8">&#37325;&#32622;&#23494;&#30721;</h2><h3 id="03d986485628a31f82bcc7876b98c972">&#35831;&#27714;&#37325;&#32622;&#23494;&#30721;&#38142;&#25509;</h3><p>&#35201;&#24320;&#22987;&#23454;&#29616;&#23494;&#30721;&#37325;&#32622;&#21151;&#33021;&#65292;&#25105;&#20204;&#38656;&#35201;&#21578;&#35785; Fortify &#22914;&#20309;&#36820;&#22238;"&#24536;&#35760;&#23494;&#30721;&#65288;forgot password&#65289;"&#35270;&#22270;&#12290;&#35831;&#35760;&#20303;&#65292;Fortify &#26159;&#19968;&#20010;&#26080;&#22836;&#65288;headless&#65289;&#30340;&#35748;&#35777;&#24211;&#12290;&#22914;&#26524;&#20320;&#24819;&#35201;&#19968;&#22871;&#24320;&#31665;&#21363;&#29992;&#12289;&#24050;&#32463;&#23436;&#25104;&#30340;&#21069;&#31471;&#35748;&#35777;&#23454;&#29616;&#65292;&#24212;&#24403;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#12290;</p><p>&#25152;&#26377; Fortify &#30340;&#35270;&#22270;&#28210;&#26579;&#36923;&#36753;&#37117;&#21487;&#20197;&#36890;&#36807; <code>Laravel\Fortify\Fortify</code> &#31867;&#19978;&#30340;&#30456;&#24212;&#26041;&#27861;&#36827;&#34892;&#33258;&#23450;&#20041;&#12290;&#36890;&#24120;&#24212;&#22312; <code>App\Providers\FortifyServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#37324;&#35843;&#29992;&#23427;&#65306;</p><pre><code class="language-php">use Laravel\Fortify\Fortify;
+
+/**
+ * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Fortify::requestPasswordResetLinkView(function () {
+        return view('auth.forgot-password');
+    });
+
+    // ...
+}</code></pre><p>Fortify &#20250;&#36127;&#36131;&#23450;&#20041;&#36820;&#22238;&#35813;&#35270;&#22270;&#30340; <code>/forgot-password</code> &#31471;&#28857;&#12290;&#20320;&#30340; <code>forgot-password</code> &#27169;&#26495;&#24212;&#24403;&#21253;&#21547;&#19968;&#20010;&#34920;&#21333;&#65292;&#23545; <code>/forgot-password</code> &#31471;&#28857;&#21457;&#36215; POST &#35831;&#27714;&#12290;</p><p><code>/forgot-password</code> &#31471;&#28857;&#38656;&#35201;&#19968;&#20010;&#23383;&#31526;&#20018;&#31867;&#22411;&#30340; <code>email</code> &#23383;&#27573;&#12290;&#35813;&#23383;&#27573;&#30340;&#21517;&#23383; / &#25968;&#25454;&#24211;&#21015;&#24517;&#39035;&#19982;&#24212;&#29992; <code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>email</code> &#37197;&#32622;&#20540;&#19968;&#33268;&#12290;</p><h4 id="b182bd9c7a920aa226ebe4fa046925a9">&#22788;&#29702;&#37325;&#32622;&#23494;&#30721;&#38142;&#25509;&#35831;&#27714;&#30340;&#21709;&#24212;</h4><p>&#22914;&#26524;&#37325;&#32622;&#23494;&#30721;&#38142;&#25509;&#35831;&#27714;&#25104;&#21151;&#65292;Fortify &#20250;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#22238; <code>/forgot-password</code> &#31471;&#28857;&#65292;&#24182;&#21521;&#29992;&#25143;&#21457;&#36865;&#19968;&#23553;&#21253;&#21547;&#23433;&#20840;&#38142;&#25509;&#30340;&#37038;&#20214;&#65292;&#29992;&#25143;&#21487;&#20197;&#36890;&#36807;&#35813;&#38142;&#25509;&#37325;&#32622;&#23494;&#30721;&#12290;&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#21017;&#20250;&#36820;&#22238; 200 HTTP &#21709;&#24212;&#12290;</p><p>&#35831;&#27714;&#25104;&#21151;&#21518;&#34987;&#37325;&#23450;&#21521;&#22238; <code>/forgot-password</code> &#31471;&#28857;&#26102;&#65292;&#21487;&#20197;&#20351;&#29992; <code>status</code> Session &#21464;&#37327;&#26469;&#26174;&#31034;&#37325;&#32622;&#23494;&#30721;&#38142;&#25509;&#35831;&#27714;&#30340;&#29366;&#24577;&#12290;</p><p><code>$status</code> Session &#21464;&#37327;&#30340;&#20540;&#23558;&#19982;&#24212;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/localization" target="_blank">&#35821;&#35328;&#25991;&#20214;</a> <code>passwords</code> &#20013;&#23450;&#20041;&#30340;&#26576;&#26465;&#32763;&#35793;&#23383;&#31526;&#20018;&#21305;&#37197;&#12290;&#22914;&#26524;&#20320;&#24819;&#33258;&#23450;&#20041;&#36825;&#19968;&#20540;&#20294;&#36824;&#27809;&#26377;&#21457;&#24067; Laravel &#30340;&#35821;&#35328;&#25991;&#20214;&#65292;&#21487;&#20197;&#36890;&#36807; <code>lang:publish</code> Artisan &#21629;&#20196;&#21457;&#24067;&#21518;&#20877;&#20462;&#25913;&#65306;</p><pre><code class="language-html">@if (session('status'))
+    &lt;div class="mb-4 font-medium text-sm text-green-600"&gt;
+        {{ session('status') }}
+    &lt;/div&gt;
+@endif</code></pre><p>&#22914;&#26524;&#35831;&#27714;&#22833;&#36133;&#65292;&#29992;&#25143;&#23558;&#34987;&#37325;&#23450;&#21521;&#22238;"&#35831;&#27714;&#37325;&#32622;&#23494;&#30721;&#38142;&#25509;"&#39029;&#38754;&#65292;&#26657;&#39564;&#38169;&#35823;&#21487;&#20197;&#36890;&#36807;&#20849;&#20139;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation#quick-displaying-the-validation-errors" target="_blank">Blade &#27169;&#26495;&#21464;&#37327; <code>$errors</code></a> &#33719;&#21462;&#12290;&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#26657;&#39564;&#38169;&#35823;&#20250;&#38543; 422 HTTP &#21709;&#24212;&#19968;&#21516;&#36820;&#22238;&#12290;</p><h3 id="0719aa2bb09a63f0d59e0df2c4b0a3f8">&#37325;&#32622;&#23494;&#30721;</h3><p>&#35201;&#23436;&#25104;&#23494;&#30721;&#37325;&#32622;&#21151;&#33021;&#65292;&#25105;&#20204;&#36824;&#38656;&#35201;&#21578;&#35785; Fortify &#22914;&#20309;&#36820;&#22238;"&#37325;&#32622;&#23494;&#30721;&#65288;reset password&#65289;"&#35270;&#22270;&#12290;</p><p>&#25152;&#26377; Fortify &#30340;&#35270;&#22270;&#28210;&#26579;&#36923;&#36753;&#37117;&#21487;&#20197;&#36890;&#36807; <code>Laravel\Fortify\Fortify</code> &#31867;&#19978;&#30340;&#30456;&#24212;&#26041;&#27861;&#36827;&#34892;&#33258;&#23450;&#20041;&#12290;&#36890;&#24120;&#24212;&#22312; <code>App\Providers\FortifyServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#37324;&#35843;&#29992;&#23427;&#65306;</p><pre><code class="language-php">use Laravel\Fortify\Fortify;
+use Illuminate\Http\Request;
+
+/**
+ * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Fortify::resetPasswordView(function (Request $request) {
+        return view('auth.reset-password', ['request' =&gt; $request]);
+    });
+
+    // ...
+}</code></pre><p>Fortify &#20250;&#36127;&#36131;&#23450;&#20041;&#29992;&#20110;&#26174;&#31034;&#35813;&#35270;&#22270;&#30340;&#36335;&#30001;&#12290;&#20320;&#30340; <code>reset-password</code> &#27169;&#26495;&#24212;&#24403;&#21253;&#21547;&#19968;&#20010;&#23545; <code>/reset-password</code> &#21457;&#36215; POST &#35831;&#27714;&#30340;&#34920;&#21333;&#12290;</p><p><code>/reset-password</code> &#31471;&#28857;&#38656;&#35201;&#19968;&#20010;&#23383;&#31526;&#20018;&#31867;&#22411; <code>email</code> &#23383;&#27573;&#12289;&#19968;&#20010; <code>password</code> &#23383;&#27573;&#12289;&#19968;&#20010; <code>password_confirmation</code> &#23383;&#27573;&#65292;&#20197;&#21450;&#19968;&#20010;&#21517;&#20026; <code>token</code> &#30340;&#38544;&#34255;&#23383;&#27573;&#65292;&#20854;&#20540;&#20026; <code>request()-&gt;route('token')</code>&#12290;email &#23383;&#27573;&#30340;&#21517;&#23383; / &#25968;&#25454;&#24211;&#21015;&#24517;&#39035;&#19982;&#24212;&#29992; <code>fortify</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>email</code> &#37197;&#32622;&#20540;&#19968;&#33268;&#12290;</p><h4 id="a46afef3eed7a6a377e726933f889f12">&#22788;&#29702;&#37325;&#32622;&#23494;&#30721;&#35831;&#27714;&#30340;&#21709;&#24212;</h4><p>&#22914;&#26524;&#37325;&#32622;&#23494;&#30721;&#35831;&#27714;&#25104;&#21151;&#65292;Fortify &#20250;&#37325;&#23450;&#21521;&#22238; <code>/login</code> &#36335;&#30001;&#65292;&#20197;&#20415;&#29992;&#25143;&#29992;&#26032;&#23494;&#30721;&#30331;&#24405;&#12290;&#27492;&#22806;&#65292;&#36824;&#20250;&#35774;&#32622;&#19968;&#20010; <code>status</code> Session &#21464;&#37327;&#65292;&#20415;&#20110;&#20320;&#22312;&#30331;&#24405;&#39029;&#38754;&#26174;&#31034;&#37325;&#32622;&#25104;&#21151;&#29366;&#24577;&#65306;</p><pre><code class="language-blade">@if (session('status'))
+    &lt;div class="mb-4 font-medium text-sm text-green-600"&gt;
+        {{ session('status') }}
+    &lt;/div&gt;
+@endif</code></pre><p>&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#21017;&#20250;&#36820;&#22238; 200 HTTP &#21709;&#24212;&#12290;</p><p>&#22914;&#26524;&#35831;&#27714;&#22833;&#36133;&#65292;&#29992;&#25143;&#23558;&#34987;&#37325;&#23450;&#21521;&#22238;"&#37325;&#32622;&#23494;&#30721;"&#39029;&#38754;&#65292;&#26657;&#39564;&#38169;&#35823;&#21487;&#20197;&#36890;&#36807;&#20849;&#20139;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation#quick-displaying-the-validation-errors" target="_blank">Blade &#27169;&#26495;&#21464;&#37327; <code>$errors</code></a> &#33719;&#21462;&#12290;&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#26657;&#39564;&#38169;&#35823;&#20250;&#38543; 422 HTTP &#21709;&#24212;&#19968;&#21516;&#36820;&#22238;&#12290;</p><h3 id="9cad4399fab73dbe27c4eeff557e87ae">&#33258;&#23450;&#20041;&#23494;&#30721;&#37325;&#32622;</h3><p>&#21487;&#20197;&#36890;&#36807;&#20462;&#25913;&#23433;&#35013; Laravel Fortify &#26102;&#29983;&#25104;&#30340; <code>App\Actions\ResetUserPassword</code> Action &#26469;&#33258;&#23450;&#20041;&#23494;&#30721;&#37325;&#32622;&#27969;&#31243;&#12290;</p><h2 id="9b99e210b22348a310af267ddca4dba0">&#37038;&#31665;&#39564;&#35777;</h2><p>&#27880;&#20876;&#20043;&#21518;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#29992;&#25143;&#22312;&#32487;&#32493;&#35775;&#38382;&#24212;&#29992;&#21069;&#20808;&#39564;&#35777;&#37038;&#31665;&#12290;&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#35831;&#20808;&#30830;&#20445; <code>fortify</code> &#37197;&#32622;&#25991;&#20214; <code>features</code> &#25968;&#32452;&#37324;&#21551;&#29992;&#20102; <code>emailVerification</code> &#21151;&#33021;&#12290;&#25509;&#19979;&#26469;&#65292;&#30830;&#20445;&#20320;&#30340; <code>App\Models\User</code> &#31867;&#23454;&#29616;&#20102; <code>Illuminate\Contracts\Auth\MustVerifyEmail</code> &#25509;&#21475;&#12290;</p><p>&#23436;&#25104;&#36825;&#20004;&#20010;&#35774;&#32622;&#21518;&#65292;&#26032;&#27880;&#20876;&#30340;&#29992;&#25143;&#23558;&#25910;&#21040;&#19968;&#23553;&#37038;&#20214;&#65292;&#35201;&#27714;&#20182;&#20204;&#39564;&#35777;&#37038;&#31665;&#25152;&#26377;&#26435;&#12290;&#20294;&#25105;&#20204;&#36824;&#38656;&#35201;&#21578;&#35785; Fortify &#22914;&#20309;&#28210;&#26579;&#37027;&#20010;&#25552;&#31034;&#29992;&#25143;&#21435;&#37038;&#31665;&#37324;&#28857;&#20987;&#39564;&#35777;&#38142;&#25509;&#30340;"&#37038;&#31665;&#39564;&#35777;"&#39029;&#38754;&#12290;</p><p>&#25152;&#26377; Fortify &#30340;&#35270;&#22270;&#28210;&#26579;&#36923;&#36753;&#37117;&#21487;&#20197;&#36890;&#36807; <code>Laravel\Fortify\Fortify</code> &#31867;&#19978;&#30340;&#30456;&#24212;&#26041;&#27861;&#36827;&#34892;&#33258;&#23450;&#20041;&#12290;&#36890;&#24120;&#24212;&#22312; <code>App\Providers\FortifyServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#37324;&#35843;&#29992;&#23427;&#65306;</p><pre><code class="language-php">use Laravel\Fortify\Fortify;
+
+/**
+ * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Fortify::verifyEmailView(function () {
+        return view('auth.verify-email');
+    });
+
+    // ...
+}</code></pre><p>&#24403;&#29992;&#25143;&#34987; Laravel &#20869;&#32622;&#30340; <code>verified</code> &#20013;&#38388;&#20214;&#37325;&#23450;&#21521;&#21040; <code>/email/verify</code> &#31471;&#28857;&#26102;&#65292;Fortify &#20250;&#36127;&#36131;&#23450;&#20041;&#29992;&#20110;&#26174;&#31034;&#35813;&#35270;&#22270;&#30340;&#36335;&#30001;&#12290;</p><p>&#20320;&#30340; <code>verify-email</code> &#27169;&#26495;&#24212;&#24403;&#21253;&#21547;&#19968;&#26465;&#25552;&#31034;&#20449;&#24687;&#65292;&#21578;&#35785;&#29992;&#25143;&#38656;&#35201;&#28857;&#20987;&#37038;&#20214;&#37324;&#30340;&#39564;&#35777;&#38142;&#25509;&#12290;</p><h4 id="c9028a61fc412d92078136c17b6ddf4b">&#37325;&#26032;&#21457;&#36865;&#37038;&#31665;&#39564;&#35777;&#38142;&#25509;</h4><p>&#22914;&#26524;&#20320;&#24895;&#24847;&#65292;&#21487;&#20197;&#22312;&#20320;&#24212;&#29992;&#30340; <code>verify-email</code> &#27169;&#26495;&#20013;&#21152;&#19968;&#20010;&#25353;&#38062;&#65292;&#29992;&#20110;&#21521; <code>/email/verification-notification</code> &#31471;&#28857;&#21457;&#36215; POST &#35831;&#27714;&#12290;&#24403;&#35813;&#31471;&#28857;&#25910;&#21040;&#35831;&#27714;&#26102;&#65292;&#20250;&#21521;&#29992;&#25143;&#21457;&#36865;&#19968;&#23553;&#26032;&#30340;&#39564;&#35777;&#37038;&#20214;&#65292;&#20415;&#20110;&#29992;&#25143;&#22312;&#20043;&#21069;&#30340;&#38142;&#25509;&#34987;&#35823;&#21024;&#25110;&#20002;&#22833;&#26102;&#33719;&#24471;&#26032;&#30340;&#39564;&#35777;&#38142;&#25509;&#12290;</p><p>&#22914;&#26524;&#37325;&#26032;&#21457;&#36865;&#39564;&#35777;&#37038;&#20214;&#30340;&#35831;&#27714;&#25104;&#21151;&#65292;Fortify &#20250;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#22238; <code>/email/verify</code> &#31471;&#28857;&#24182;&#24102;&#19978;&#19968;&#20010; <code>status</code> Session &#21464;&#37327;&#65292;&#20415;&#20110;&#20320;&#21521;&#29992;&#25143;&#23637;&#31034;&#19968;&#26465;&#25552;&#31034;&#25805;&#20316;&#25104;&#21151;&#30340;&#28040;&#24687;&#12290;&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#21017;&#20250;&#36820;&#22238; 202 HTTP &#21709;&#24212;&#65306;</p><pre><code class="language-blade">@if (session('status') == 'verification-link-sent')
+    &lt;div class="mb-4 font-medium text-sm text-green-600"&gt;
+        A new email verification link has been emailed to you!
+    &lt;/div&gt;
+@endif</code></pre><h3 id="801705ac2343e82fa596c98e745035e8">&#20445;&#25252;&#36335;&#30001;</h3><p>&#35201;&#25351;&#23450;&#26576;&#26465;&#36335;&#30001;&#25110;&#26576;&#20010;&#36335;&#30001;&#32452;&#38656;&#35201;&#29992;&#25143;&#24050;&#32463;&#39564;&#35777;&#36807;&#37038;&#31665;&#65292;&#21487;&#20197;&#25226; Laravel &#20869;&#32622;&#30340; <code>verified</code> &#20013;&#38388;&#20214;&#25346;&#21040;&#35813;&#36335;&#30001;&#19978;&#12290;<code>verified</code> &#20013;&#38388;&#20214;&#21035;&#21517;&#30001; Laravel &#33258;&#21160;&#27880;&#20876;&#65292;&#26159; <code>Illuminate\Auth\Middleware\EnsureEmailIsVerified</code> &#20013;&#38388;&#20214;&#30340;&#21035;&#21517;&#65306;</p><pre><code class="language-php">Route::get('/dashboard', function () {
+    // ...
+})-&gt;middleware(['verified']);</code></pre><h2 id="92fa7ce5c5cfbd7c1aef8ea0018a81c9">&#23494;&#30721;&#30830;&#35748;</h2><p>&#22312;&#26500;&#24314;&#24212;&#29992;&#26102;&#65292;&#20598;&#23572;&#20250;&#36935;&#21040;&#36825;&#26679;&#30340;&#24773;&#24418;&#65306;&#26576;&#20123;&#25805;&#20316;&#22312;&#25191;&#34892;&#21069;&#38656;&#35201;&#29992;&#25143;&#20808;&#30830;&#35748;&#33258;&#24049;&#30340;&#23494;&#30721;&#12290;&#36890;&#24120;&#36825;&#20123;&#36335;&#30001;&#20250;&#20351;&#29992; Laravel &#20869;&#32622;&#30340; <code>password.confirm</code> &#20013;&#38388;&#20214;&#26469;&#20445;&#25252;&#12290;</p><p>&#35201;&#24320;&#22987;&#23454;&#29616;&#23494;&#30721;&#30830;&#35748;&#21151;&#33021;&#65292;&#25105;&#20204;&#38656;&#35201;&#21578;&#35785; Fortify &#22914;&#20309;&#36820;&#22238;&#24212;&#29992;&#30340;"&#23494;&#30721;&#30830;&#35748;"&#35270;&#22270;&#12290;&#35831;&#35760;&#20303;&#65292;Fortify &#26159;&#19968;&#20010;&#26080;&#22836;&#65288;headless&#65289;&#30340;&#35748;&#35777;&#24211;&#12290;&#22914;&#26524;&#20320;&#24819;&#35201;&#19968;&#22871;&#24320;&#31665;&#21363;&#29992;&#12289;&#24050;&#32463;&#23436;&#25104;&#30340;&#21069;&#31471;&#35748;&#35777;&#23454;&#29616;&#65292;&#24212;&#24403;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#12290;</p><p>&#25152;&#26377; Fortify &#30340;&#35270;&#22270;&#28210;&#26579;&#36923;&#36753;&#37117;&#21487;&#20197;&#36890;&#36807; <code>Laravel\Fortify\Fortify</code> &#31867;&#19978;&#30340;&#30456;&#24212;&#26041;&#27861;&#36827;&#34892;&#33258;&#23450;&#20041;&#12290;&#36890;&#24120;&#24212;&#22312; <code>App\Providers\FortifyServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#37324;&#35843;&#29992;&#23427;&#65306;</p><pre><code class="language-php">use Laravel\Fortify\Fortify;
+
+/**
+ * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Fortify::confirmPasswordView(function () {
+        return view('auth.confirm-password');
+    });
+
+    // ...
+}</code></pre><p>Fortify &#20250;&#36127;&#36131;&#23450;&#20041; <code>/user/confirm-password</code> &#31471;&#28857;&#65292;&#29992;&#20110;&#36820;&#22238;&#35813;&#35270;&#22270;&#12290;&#20320;&#30340; <code>confirm-password</code> &#27169;&#26495;&#24212;&#24403;&#21253;&#21547;&#19968;&#20010;&#23545; <code>/user/confirm-password</code> &#31471;&#28857;&#21457;&#36215; POST &#35831;&#27714;&#30340;&#34920;&#21333;&#12290;&#35813;&#31471;&#28857;&#38656;&#35201;&#19968;&#20010; <code>password</code> &#23383;&#27573;&#65292;&#20854;&#20540;&#20026;&#29992;&#25143;&#30340;&#24403;&#21069;&#23494;&#30721;&#12290;</p><p>&#22914;&#26524;&#23494;&#30721;&#19982;&#29992;&#25143;&#24403;&#21069;&#30340;&#23494;&#30721;&#21305;&#37197;&#65292;Fortify &#20250;&#37325;&#23450;&#21521;&#22238;&#29992;&#25143;&#21407;&#26412;&#24819;&#35775;&#38382;&#30340;&#36335;&#30001;&#12290;&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#21017;&#20250;&#36820;&#22238; 201 HTTP &#21709;&#24212;&#12290;</p><p>&#22914;&#26524;&#35831;&#27714;&#22833;&#36133;&#65292;&#29992;&#25143;&#23558;&#34987;&#37325;&#23450;&#21521;&#22238;"&#23494;&#30721;&#30830;&#35748;"&#39029;&#38754;&#65292;&#26657;&#39564;&#38169;&#35823;&#21487;&#20197;&#36890;&#36807;&#20849;&#20139;&#30340; Blade &#27169;&#26495;&#21464;&#37327; <code>$errors</code> &#33719;&#21462;&#12290;&#22914;&#26524;&#35831;&#27714;&#26159; XHR &#35831;&#27714;&#65292;&#26657;&#39564;&#38169;&#35823;&#20250;&#38543; 422 HTTP &#21709;&#24212;&#19968;&#21516;&#36820;&#22238;&#12290;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Laravel Fortify: <i><a href="https://github.com/laravel/fortify" target="_blank">https://github.com/laravel/fortify</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 用户认证: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication" target="_blank">/docs/Laravel 13.x/authentication</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 密码重置: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/passwords" target="_blank">/docs/Laravel 13.x/passwords</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> 邮箱验证: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/verification" target="_blank">/docs/Laravel 13.x/verification</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> 用户认证: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication" target="_blank">/docs/Laravel 13.x/authentication</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 密码重置: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/passwords" target="_blank">/docs/Laravel 13.x/passwords</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 邮箱验证: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/verification" target="_blank">/docs/Laravel 13.x/verification</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 我们的应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> Tailwind CSS: <i><a href="https://tailwindcss.com" target="_blank">https://tailwindcss.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> 用户认证: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication" target="_blank">/docs/Laravel 13.x/authentication</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> 密码重置: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/passwords" target="_blank">/docs/Laravel 13.x/passwords</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> 邮箱验证: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/verification" target="_blank">/docs/Laravel 13.x/verification</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> Laravel Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> Blade 模板变量 `$errors`: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation#quick-displaying-the-validation-errors" target="_blank">/docs/Laravel 13.x/validation#quick-displaying-the-validation-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> Laravel Sanctum: <i><a href="https://laravel.com/docs/sanctum" target="_blank">https://laravel.com/docs/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> 中间件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/middleware" target="_blank">/docs/Laravel 13.x/middleware</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> 限流器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/routing#rate-limiting" target="_blank">/docs/Laravel 13.x/routing#rate-limiting</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> 双重身份认证: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/fortify#two-factor-authentication" target="_blank">/docs/Laravel 13.x/fortify#two-factor-authentication</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> 服务容器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/container" target="_blank">/docs/Laravel 13.x/container</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> 密码确认: <i><a href="x3vo0x4vm1.html#password-confirmation" target="_blank">#password-confirmation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> Blade 模板变量 `$errors`: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation#quick-displaying-the-validation-errors" target="_blank">/docs/Laravel 13.x/validation#quick-displaying-the-validation-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> 密码确认: <i><a href="x3vo0x4vm1.html#password-confirmation" target="_blank">#password-confirmation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> 密码确认: <i><a href="x3vo0x4vm1.html#password-confirmation" target="_blank">#password-confirmation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> `@laravel/passkeys`: <i><a href="https://www.npmjs.com/package/@laravel/passkeys" target="_blank">https://www.npmjs.com/package/@laravel/passkeys</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> `PublicKeyCredential`: <i><a href="https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential" target="_blank">https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> Blade 模板变量 `$errors`: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation#quick-displaying-the-validation-errors" target="_blank">/docs/Laravel 13.x/validation#quick-displaying-the-validation-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[30]</code> 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[31]</code> 语言文件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/localization" target="_blank">/docs/Laravel 13.x/localization</a></i><br><code style="font-size: 90%; opacity: 0.6;">[32]</code> Blade 模板变量 `$errors`: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation#quick-displaying-the-validation-errors" target="_blank">/docs/Laravel 13.x/validation#quick-displaying-the-validation-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[33]</code> Blade 模板变量 `$errors`: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation#quick-displaying-the-validation-errors" target="_blank">/docs/Laravel 13.x/validation#quick-displaying-the-validation-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[34]</code> 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="3xyq4l4vmq.html#blog1081" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Laravel Envoy</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="qk942rovw1.html#blog1083" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">Laravel Folio</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

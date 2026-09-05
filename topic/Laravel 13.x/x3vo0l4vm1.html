@@ -1,0 +1,1963 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>事件 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/x3vo0l4vm1.html', function (data, status) {
+            addView('x3vo0l4vm1.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>事件</h1><ul>
+<li><a href="x3vo0l4vm1.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="x3vo0l4vm1.html#ade409ee3a2e6711a500381bb57c0b45">生成事件与监听器</a></li>
+<li><a href="x3vo0l4vm1.html#5be25b3932d34f7e96fa93b03bec1bd2">注册事件与监听器</a>
+<ul>
+<li><a href="x3vo0l4vm1.html#19dad247ce8b97230acad357202f35ae">事件发现</a>
+<ul>
+<li><a href="x3vo0l4vm1.html#e63a245dcee8c96a3452a878b4ba9535">生产环境中的事件发现</a></li>
+<li><a href="x3vo0l4vm1.html#b753e6efacf2f4e6e69c08bb49c7aa79">动态事件发现</a></li>
+</ul></li>
+<li><a href="x3vo0l4vm1.html#448dadbdd41015d61066aaa6a8b1cabc">手动注册事件</a></li>
+<li><a href="x3vo0l4vm1.html#831660943467e7cf85bcb61bb9cc0b1e">闭包监听器</a>
+<ul>
+<li><a href="x3vo0l4vm1.html#c07b6552d2e63c5803e909ec5248a24e">可排队的匿名事件监听器</a></li>
+<li><a href="x3vo0l4vm1.html#17a7157bd79647cb328b598e9e92ed3f">通配符事件监听器</a></li>
+</ul></li>
+</ul></li>
+<li><a href="x3vo0l4vm1.html#6568bcba71fe1847b70e9b99d74a3878">定义事件</a></li>
+<li><a href="x3vo0l4vm1.html#4c15a8496479c753b304ee4f99957e0f">定义监听器</a>
+<ul>
+<li><a href="x3vo0l4vm1.html#ab8265293c18170135c550ac8e1a8190">阻止事件的传播</a></li>
+</ul></li>
+<li><a href="x3vo0l4vm1.html#c08cb720bc040129cbfce56ce12d446b">队列事件监听器</a>
+<ul>
+<li><a href="x3vo0l4vm1.html#c32af3718c00e0a9c89e3ed64e9ffd63">自定义队列连接、名称与延迟</a></li>
+<li><a href="x3vo0l4vm1.html#31038f8a686479eb10f329823ebcafd3">有条件地排队监听器</a>
+<ul>
+<li><a href="x3vo0l4vm1.html#c67465570e9441f6f7ff523314c50701">手动与队列交互</a></li>
+<li><a href="x3vo0l4vm1.html#cc1789529dab8af24c62c1d6d175cd84">队列事件监听器与数据库事务</a></li>
+<li><a href="x3vo0l4vm1.html#a8116c4a0477b524a6f62916e1b6d802">队列监听器中间件</a></li>
+<li><a href="x3vo0l4vm1.html#da893cf645bc1588168b747a61b22418">加密的队列监听器</a></li>
+<li><a href="x3vo0l4vm1.html#f15652f632d92a9ce72ae6df35405948">唯一事件监听器</a></li>
+</ul></li>
+<li><a href="x3vo0l4vm1.html#9290cd40411d064a609c4d03f4f2d27d">在处理开始前保持监听器唯一</a></li>
+<li><a href="x3vo0l4vm1.html#d483cd9cc4bfa954a5144e947d46443c">唯一监听器锁</a>
+<ul>
+<li><a href="x3vo0l4vm1.html#c3cf19030eecf52c7ffebe4cfaa40180">防抖事件监听器</a></li>
+<li><a href="x3vo0l4vm1.html#cb0b2214bf151600525eb7c02daf7f64">处理失败的任务</a></li>
+</ul></li>
+<li><a href="x3vo0l4vm1.html#5f2aecf5b26fdd0db498152671cf2249">指定队列监听器的最大尝试次数</a></li>
+<li><a href="x3vo0l4vm1.html#65b2c1389540705ce9a195229d5b7209">指定队列监听器的退避时间</a></li>
+<li><a href="x3vo0l4vm1.html#5dfee09aba921c6fe340a30fcb7391a4">指定队列监听器的最大异常数</a></li>
+<li><a href="x3vo0l4vm1.html#2359a35070a882957ada2fa2e96f36cf">指定队列监听器的超时时间</a></li>
+</ul></li>
+<li><a href="x3vo0l4vm1.html#ba8f1025a6c20f71599409a699d32603">派发事件</a>
+<ul>
+<li><a href="x3vo0l4vm1.html#a0f6cbd24823d89d85c97e8de5c546d7">在数据库事务提交后派发事件</a></li>
+<li><a href="x3vo0l4vm1.html#cd668e41e148303d6181bdfb9eeee100">延迟事件</a></li>
+</ul></li>
+<li><a href="x3vo0l4vm1.html#59bc4f3d40546d3281fd2bc78672ce94">事件订阅器</a>
+<ul>
+<li><a href="x3vo0l4vm1.html#1abffde01ffbf23871b0405ce7a9d41e">编写事件订阅器</a></li>
+<li><a href="x3vo0l4vm1.html#a5a57b8c2c063bf04fa16f19e29d331d">注册事件订阅器</a></li>
+</ul></li>
+<li><a href="x3vo0l4vm1.html#db06c78d1e24cf708a14ce81c9b617ec">测试</a>
+<ul>
+<li><a href="x3vo0l4vm1.html#a3d136f8e54aab6616a509e39db2b507">伪造部分事件</a></li>
+<li><a href="x3vo0l4vm1.html#37736d449055e3dd58e346cc1ea901e6">作用域事件伪造</a></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>Laravel &#30340;&#20107;&#20214;&#25552;&#20379;&#20102;&#19968;&#31181;&#31616;&#21333;&#30340;&#35266;&#23519;&#32773;&#27169;&#24335;&#65288;observer pattern&#65289;&#23454;&#29616;&#65292;&#35753;&#20320;&#33021;&#22815;&#35746;&#38405;&#24182;&#30417;&#21548;&#24212;&#29992;&#20869;&#21457;&#29983;&#30340;&#21508;&#31181;&#20107;&#20214;&#12290;&#20107;&#20214;&#31867;&#36890;&#24120;&#23384;&#25918;&#22312; <code>app/Events</code> &#30446;&#24405;&#65292;&#32780;&#30417;&#21548;&#22120;&#21017;&#23384;&#25918;&#22312; <code>app/Listers</code> &#30446;&#24405;&#12290;&#21363;&#20351;&#20320;&#30340;&#24212;&#29992;&#20013;&#26242;&#26102;&#30475;&#19981;&#21040;&#36825;&#20123;&#30446;&#24405;&#20063;&#19981;&#24517;&#25285;&#24515;&#65292;&#22240;&#20026;&#22312;&#20351;&#29992; Artisan &#21629;&#20196;&#29983;&#25104;&#20107;&#20214;&#21644;&#30417;&#21548;&#22120;&#26102;&#65292;&#31995;&#32479;&#20250;&#33258;&#21160;&#21019;&#24314;&#23427;&#20204;&#12290;</p><p>&#20107;&#20214;&#26159;&#35299;&#32806;&#24212;&#29992;&#21508;&#20010;&#37096;&#20998;&#30340;&#22909;&#21150;&#27861;&#65292;&#22240;&#20026;&#21333;&#20010;&#20107;&#20214;&#21487;&#20197;&#25317;&#26377;&#22810;&#20010;&#20114;&#19981;&#20381;&#36182;&#30340;&#30417;&#21548;&#22120;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#22312;&#27599;&#27425;&#35746;&#21333;&#21457;&#36135;&#26102;&#21521;&#29992;&#25143;&#21457;&#36865; Slack &#36890;&#30693;&#12290;&#19982;&#20854;&#25226;&#35746;&#21333;&#22788;&#29702;&#20195;&#30721;&#19982; Slack &#36890;&#30693;&#20195;&#30721;&#32806;&#21512;&#22312;&#19968;&#36215;&#65292;&#19981;&#22914;&#35302;&#21457;&#19968;&#20010; <code>App\Events\OrderShipped</code> &#20107;&#20214;&#65292;&#30001;&#30417;&#21548;&#22120;&#25509;&#25910;&#24182;&#25454;&#27492;&#27966;&#21457; Slack &#36890;&#30693;&#12290;</p><h2 id="ade409ee3a2e6711a500381bb57c0b45">&#29983;&#25104;&#20107;&#20214;&#19982;&#30417;&#21548;&#22120;</h2><p>&#35201;&#24555;&#36895;&#29983;&#25104;&#20107;&#20214;&#21644;&#30417;&#21548;&#22120;&#65292;&#21487;&#20197;&#20351;&#29992; <code>make:event</code> &#21644; <code>make:listener</code> &#36825;&#20004;&#20010; Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan make:event PodcastProcessed
+
+php artisan make:listener SendPodcastNotification --event=PodcastProcessed</code></pre><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#20063;&#21487;&#20197;&#19981;&#24102;&#39069;&#22806;&#21442;&#25968;&#30452;&#25509;&#35843;&#29992; <code>make:event</code> &#21644; <code>make:listener</code> &#36825;&#20004;&#20010; Artisan &#21629;&#20196;&#12290;&#27492;&#26102; Laravel &#20250;&#33258;&#21160;&#25552;&#31034;&#20320;&#36755;&#20837;&#31867;&#21517;&#65292;&#24182;&#22312;&#21019;&#24314;&#30417;&#21548;&#22120;&#26102;&#25552;&#31034;&#20320;&#35201;&#30417;&#21548;&#30340;&#20107;&#20214;&#65306;</p><pre><code class="language-shell">php artisan make:event
+
+php artisan make:listener</code></pre><h2 id="5be25b3932d34f7e96fa93b03bec1bd2">&#27880;&#20876;&#20107;&#20214;&#19982;&#30417;&#21548;&#22120;</h2><h3 id="19dad247ce8b97230acad357202f35ae">&#20107;&#20214;&#21457;&#29616;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Laravel &#20250;&#33258;&#21160;&#25195;&#25551;&#24212;&#29992;&#30340; <code>Listeners</code> &#30446;&#24405;&#26469;&#21457;&#29616;&#24182;&#27880;&#20876;&#20107;&#20214;&#30417;&#21548;&#22120;&#12290;&#24403; Laravel &#25214;&#21040;&#20219;&#20309;&#20197; <code>handle</code> &#25110; <code>__invoke</code> &#24320;&#22836;&#30340;&#26041;&#27861;&#26102;&#65292;&#23601;&#20250;&#23558;&#35813;&#26041;&#27861;&#27880;&#20876;&#20026;&#26041;&#27861;&#31614;&#21517;&#20013;&#31867;&#22411;&#25552;&#31034;&#65288;type-hinted&#65289;&#25152;&#23545;&#24212;&#30340;&#20107;&#20214;&#30340;&#30417;&#21548;&#22120;&#65306;</p><pre><code class="language-php">use App\Events\PodcastProcessed;
+
+class SendPodcastNotification
+{
+    /**
+     * &#22788;&#29702;&#20107;&#20214;&#12290;
+     */
+    public function handle(PodcastProcessed $event): void
+    {
+        // ...
+    }
+}</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; PHP &#30340;&#32852;&#21512;&#31867;&#22411;&#26469;&#30417;&#21548;&#22810;&#20010;&#20107;&#20214;&#65306;</p><pre><code class="language-php">/**
+ * &#22788;&#29702;&#20107;&#20214;&#12290;
+ */
+public function handle(PodcastProcessed|PodcastPublished $event): void
+{
+    // ...
+}</code></pre><p>&#22914;&#26524;&#20320;&#25171;&#31639;&#25226;&#30417;&#21548;&#22120;&#23384;&#25918;&#22312;&#20854;&#20182;&#30446;&#24405;&#25110;&#20998;&#25955;&#22312;&#22810;&#20010;&#30446;&#24405;&#20013;&#65292;&#21487;&#20197;&#20351;&#29992;&#24212;&#29992; <code>bootstrap/app.php</code> &#25991;&#20214;&#20013;&#30340; <code>withEvents</code> &#26041;&#27861;&#65292;&#25351;&#31034; Laravel &#25195;&#25551;&#36825;&#20123;&#30446;&#24405;&#65306;</p><pre><code class="language-php">-&gt;withEvents(discover: [
+    __DIR__.'/../app/Domain/Orders/Listeners',
+])</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#20351;&#29992; <code>*</code> &#23383;&#31526;&#20316;&#20026;&#36890;&#37197;&#31526;&#65292;&#22312;&#22810;&#20010;&#31867;&#20284;&#30446;&#24405;&#20013;&#25195;&#25551;&#30417;&#21548;&#22120;&#65306;</p><pre><code class="language-php">-&gt;withEvents(discover: [
+    __DIR__.'/../app/Domain/*/Listeners',
+])</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>event:list</code> &#21629;&#20196;&#21015;&#20986;&#24212;&#29992;&#20013;&#27880;&#20876;&#30340;&#25152;&#26377;&#30417;&#21548;&#22120;&#65306;</p><pre><code class="language-shell">php artisan event:list</code></pre><h4 id="e63a245dcee8c96a3452a878b4ba9535">&#29983;&#20135;&#29615;&#22659;&#20013;&#30340;&#20107;&#20214;&#21457;&#29616;</h4><p>&#20026;&#20102;&#35753;&#24212;&#29992;&#36816;&#34892;&#24471;&#26356;&#24555;&#65292;&#24212;&#35813;&#20351;&#29992; <code>optimize</code> &#25110; <code>event:cache</code> &#36825;&#20004;&#20010; Artisan &#21629;&#20196;&#32531;&#23384;&#19968;&#20221;&#21253;&#21547;&#25152;&#26377;&#24212;&#29992;&#30417;&#21548;&#22120;&#30340;&#28165;&#21333;&#12290;&#36890;&#24120;&#65292;&#35813;&#21629;&#20196;&#24212;&#24403;&#20316;&#20026;&#24212;&#29992;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/deployment#optimization" target="_blank">&#37096;&#32626;&#27969;&#31243;</a>&#30340;&#19968;&#37096;&#20998;&#26469;&#36816;&#34892;&#12290;&#26694;&#26550;&#20250;&#20351;&#29992;&#36825;&#20221;&#28165;&#21333;&#26469;&#21152;&#36895;&#20107;&#20214;&#27880;&#20876;&#36807;&#31243;&#12290;&#21487;&#20197;&#20351;&#29992; <code>event:clear</code> &#21629;&#20196;&#26469;&#28165;&#38500;&#20107;&#20214;&#32531;&#23384;&#12290;</p><h4 id="b753e6efacf2f4e6e69c08bb49c7aa79">&#21160;&#24577;&#20107;&#20214;&#21457;&#29616;</h4><p>&#33509;&#35201;&#21160;&#24577;&#25511;&#21046;&#26576;&#20010;&#30417;&#21548;&#22120;&#26159;&#21542;&#34987;&#32435;&#20837;&#21457;&#29616;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#23454;&#29616; <code>ShouldBeDiscovered</code> &#25509;&#21475;&#65292;&#24182;&#23450;&#20041;&#19968;&#20010;&#36820;&#22238;&#24067;&#23572;&#20540;&#30340; <code>shouldBeDiscovered</code> &#26041;&#27861;&#12290;&#22914;&#26524;&#35813;&#26041;&#27861;&#36820;&#22238; <code>false</code>&#65292;&#37027;&#20040;&#35813;&#30417;&#21548;&#22120;&#22312;&#20107;&#20214;&#21457;&#29616;&#38454;&#27573;&#23601;&#19981;&#20250;&#34987;&#27880;&#20876;&#65306;</p><pre><code class="language-php">use Illuminate\Contracts\Events\ShouldBeDiscovered;
+
+class SendPodcastNotification implements ShouldBeDiscovered
+{
+    /**
+     * &#22788;&#29702;&#20107;&#20214;&#12290;
+     */
+    public function handle(PodcastProcessed $event): void
+    {
+        // ...
+    }
+
+    /**
+     * &#21028;&#26029;&#35813;&#30417;&#21548;&#22120;&#26159;&#21542;&#24212;&#34987;&#32435;&#20837;&#21457;&#29616;&#12290;
+     */
+    public static function shouldBeDiscovered(): bool
+    {
+        return app()-&gt;environment('production');
+    }
+}</code></pre><h3 id="448dadbdd41015d61066aaa6a8b1cabc">&#25163;&#21160;&#27880;&#20876;&#20107;&#20214;</h3><p>&#20351;&#29992; <code>Event</code> Facade&#65292;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#25163;&#21160;&#27880;&#20876;&#20107;&#20214;&#21450;&#20854;&#23545;&#24212;&#30340;&#30417;&#21548;&#22120;&#65306;</p><pre><code class="language-php">use App\Domain\Orders\Events\PodcastProcessed;
+use App\Domain\Orders\Listeners\SendPodcastNotification;
+use Illuminate\Support\Facades\Event;
+
+/**
+ * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Event::listen(
+        PodcastProcessed::class,
+        SendPodcastNotification::class,
+    );
+}</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>event:list</code> &#21629;&#20196;&#21015;&#20986;&#24212;&#29992;&#20013;&#27880;&#20876;&#30340;&#25152;&#26377;&#30417;&#21548;&#22120;&#65306;</p><pre><code class="language-shell">php artisan event:list</code></pre><h3 id="831660943467e7cf85bcb61bb9cc0b1e">&#38381;&#21253;&#30417;&#21548;&#22120;</h3><p>&#36890;&#24120;&#30417;&#21548;&#22120;&#20197;&#31867;&#30340;&#24418;&#24335;&#23450;&#20041;&#65307;&#19981;&#36807;&#65292;&#20320;&#20063;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#25163;&#21160;&#27880;&#20876;&#22522;&#20110;&#38381;&#21253;&#30340;&#30417;&#21548;&#22120;&#65306;</p><pre><code class="language-php">use App\Events\PodcastProcessed;
+use Illuminate\Support\Facades\Event;
+
+/**
+ * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Event::listen(function (PodcastProcessed $event) {
+        // ...
+    });
+}</code></pre><h4 id="c07b6552d2e63c5803e909ec5248a24e">&#21487;&#25490;&#38431;&#30340;&#21311;&#21517;&#20107;&#20214;&#30417;&#21548;&#22120;</h4><p>&#22312;&#27880;&#20876;&#22522;&#20110;&#38381;&#21253;&#30340;&#30417;&#21548;&#22120;&#26102;&#65292;&#21487;&#20197;&#25226;&#30417;&#21548;&#38381;&#21253;&#21253;&#35065;&#22312; <code>Illuminate\Events\queueable</code> &#20989;&#25968;&#20013;&#65292;&#25351;&#31034; Laravel &#20351;&#29992;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues" target="_blank">&#38431;&#21015;</a>&#26469;&#25191;&#34892;&#35813;&#30417;&#21548;&#22120;&#65306;</p><pre><code class="language-php">use App\Events\PodcastProcessed;
+use function Illuminate\Events\queueable;
+use Illuminate\Support\Facades\Event;
+
+/**
+ * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Event::listen(queueable(function (PodcastProcessed $event) {
+        // ...
+    }));
+}</code></pre><p>&#19982;&#25490;&#38431;&#20219;&#21153;&#31867;&#20284;&#65292;&#21487;&#20197;&#20351;&#29992; <code>onConnection</code>&#12289;<code>onQueue</code> &#21644; <code>delay</code> &#26041;&#27861;&#26469;&#23450;&#21046;&#25490;&#38431;&#30417;&#21548;&#22120;&#30340;&#25191;&#34892;&#65306;</p><pre><code class="language-php">Event::listen(queueable(function (PodcastProcessed $event) {
+    // ...
+})-&gt;onConnection('redis')-&gt;onQueue('podcasts')-&gt;delay(now()-&gt;plus(seconds: 10)));</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#22788;&#29702;&#21311;&#21517;&#25490;&#38431;&#30417;&#21548;&#22120;&#30340;&#22833;&#36133;&#24773;&#20917;&#65292;&#21487;&#20197;&#22312;&#23450;&#20041; <code>queueable</code> &#30417;&#21548;&#22120;&#26102;&#65292;&#21521; <code>catch</code> &#26041;&#27861;&#25552;&#20379;&#19968;&#20010;&#38381;&#21253;&#12290;&#35813;&#38381;&#21253;&#20250;&#25509;&#25910;&#21040;&#20107;&#20214;&#23454;&#20363;&#65292;&#20197;&#21450;&#23548;&#33268;&#30417;&#21548;&#22120;&#22833;&#36133;&#30340; <code>Throwable</code> &#23454;&#20363;&#65306;</p><pre><code class="language-php">use App\Events\PodcastProcessed;
+use function Illuminate\Events\queueable;
+use Illuminate\Support\Facades\Event;
+use Throwable;
+
+Event::listen(queueable(function (PodcastProcessed $event) {
+    // ...
+})-&gt;catch(function (PodcastProcessed $event, Throwable $e) {
+    // &#25490;&#38431;&#30417;&#21548;&#22120;&#25191;&#34892;&#22833;&#36133;&hellip;&hellip;
+}));</code></pre><h4 id="17a7157bd79647cb328b598e9e92ed3f">&#36890;&#37197;&#31526;&#20107;&#20214;&#30417;&#21548;&#22120;</h4><p>&#20320;&#20063;&#21487;&#20197;&#20351;&#29992; <code>*</code> &#23383;&#31526;&#20316;&#20026;&#36890;&#37197;&#31526;&#21442;&#25968;&#26469;&#27880;&#20876;&#30417;&#21548;&#22120;&#65292;&#20174;&#32780;&#35753;&#21516;&#19968;&#20010;&#30417;&#21548;&#22120;&#25429;&#33719;&#22810;&#20010;&#20107;&#20214;&#12290;&#36890;&#37197;&#31526;&#30417;&#21548;&#22120;&#20250;&#25226;&#20107;&#20214;&#21517;&#31216;&#20316;&#20026;&#31532;&#19968;&#20010;&#21442;&#25968;&#12289;&#25226;&#23436;&#25972;&#30340;&#20107;&#20214;&#25968;&#25454;&#25968;&#32452;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#65306;</p><pre><code class="language-php">Event::listen('event.*', function (string $eventName, array $data) {
+    // ...
+});</code></pre><h2 id="6568bcba71fe1847b70e9b99d74a3878">&#23450;&#20041;&#20107;&#20214;</h2><p>&#20107;&#20214;&#31867;&#26412;&#36136;&#19978;&#26159;&#19968;&#20010;&#25968;&#25454;&#23481;&#22120;&#65292;&#29992;&#26469;&#20445;&#23384;&#19982;&#20107;&#20214;&#30456;&#20851;&#30340;&#20449;&#24687;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774; <code>App\Events\OrderShipped</code> &#20107;&#20214;&#25509;&#25910;&#19968;&#20010; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent" target="_blank">Eloquent ORM</a> &#23545;&#35937;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Events;
+
+use App\Models\Order;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class OrderShipped
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    /**
+     * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#20107;&#20214;&#23454;&#20363;&#12290;
+     */
+    public function __construct(
+        public Order $order,
+    ) {}
+}</code></pre><p>&#22914;&#20320;&#25152;&#35265;&#65292;&#36825;&#20010;&#20107;&#20214;&#31867;&#19981;&#21253;&#21547;&#20219;&#20309;&#36923;&#36753;&#12290;&#23427;&#21482;&#26159;&#19968;&#20010;&#20445;&#23384;&#24050;&#36141;&#20080; <code>App\Models\Order</code> &#23454;&#20363;&#30340;&#23481;&#22120;&#12290;&#20107;&#20214;&#20351;&#29992;&#30340; <code>SerializesModels</code> Trait &#20250;&#22312;&#20107;&#20214;&#23545;&#35937;&#36890;&#36807; PHP &#30340; <code>serialize</code> &#20989;&#25968;&#24207;&#21015;&#21270;&#26102;&#65288;&#20363;&#22914;&#20351;&#29992;<a href="x3vo0l4vm1.html#queued-event-listeners" target="_blank">&#38431;&#21015;&#30417;&#21548;&#22120;</a>&#26102;&#65289;&#65292;&#20248;&#38597;&#22320;&#24207;&#21015;&#21270;&#20219;&#24847; Eloquent &#27169;&#22411;&#12290;</p><h2 id="4c15a8496479c753b304ee4f99957e0f">&#23450;&#20041;&#30417;&#21548;&#22120;</h2><p>&#25509;&#19979;&#26469;&#65292;&#25105;&#20204;&#26469;&#30475;&#30475;&#31034;&#20363;&#20107;&#20214;&#30340;&#30417;&#21548;&#22120;&#12290;&#20107;&#20214;&#30417;&#21548;&#22120;&#20250;&#22312;&#20854; <code>handle</code> &#26041;&#27861;&#20013;&#25509;&#25910;&#20107;&#20214;&#23454;&#20363;&#12290;&#24403;&#20351;&#29992; <code>--event</code> &#36873;&#39033;&#35843;&#29992; <code>make:listener</code> Artisan &#21629;&#20196;&#26102;&#65292;&#23427;&#20250;&#33258;&#21160;&#23548;&#20837;&#23545;&#24212;&#30340;&#20107;&#20214;&#31867;&#65292;&#24182;&#22312; <code>handle</code> &#26041;&#27861;&#20013;&#20026;&#20107;&#20214;&#28155;&#21152;&#31867;&#22411;&#25552;&#31034;&#12290;&#20320;&#21487;&#20197;&#22312; <code>handle</code> &#26041;&#27861;&#20013;&#25191;&#34892;&#20219;&#20309;&#21709;&#24212;&#20107;&#20214;&#25152;&#38656;&#30340;&#25805;&#20316;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+
+class SendShipmentNotification
+{
+    /**
+     * &#21019;&#24314;&#20107;&#20214;&#30417;&#21548;&#22120;&#12290;
+     */
+    public function __construct() {}
+
+    /**
+     * &#22788;&#29702;&#20107;&#20214;&#12290;
+     */
+    public function handle(OrderShipped $event): void
+    {
+        // &#36890;&#36807; $event-&gt;order &#35775;&#38382;&#35746;&#21333;&hellip;&hellip;
+    }
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#20320;&#30340;&#20107;&#20214;&#30417;&#21548;&#22120;&#20063;&#21487;&#20197;&#22312;&#26500;&#36896;&#20989;&#25968;&#20013;&#31867;&#22411;&#25552;&#31034;&#25152;&#38656;&#30340;&#20219;&#20309;&#20381;&#36182;&#12290;&#25152;&#26377;&#20107;&#20214;&#30417;&#21548;&#22120;&#37117;&#36890;&#36807; Laravel &#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/container" target="_blank">&#26381;&#21153;&#23481;&#22120;</a>&#35299;&#26512;&#65292;&#22240;&#27492;&#20381;&#36182;&#20250;&#34987;&#33258;&#21160;&#27880;&#20837;&#12290;</p>
+</blockquote><h4 id="ab8265293c18170135c550ac8e1a8190">&#38459;&#27490;&#20107;&#20214;&#30340;&#20256;&#25773;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#38459;&#27490;&#20107;&#20214;&#32487;&#32493;&#20256;&#25773;&#32473;&#20854;&#20182;&#30417;&#21548;&#22120;&#12290;&#21482;&#38656;&#22312;&#30417;&#21548;&#22120;&#30340; <code>handle</code> &#26041;&#27861;&#20013;&#36820;&#22238; <code>false</code> &#21363;&#21487;&#12290;</p><h2 id="c08cb720bc040129cbfce56ce12d446b">&#38431;&#21015;&#20107;&#20214;&#30417;&#21548;&#22120;</h2><p>&#24403;&#30417;&#21548;&#22120;&#38656;&#35201;&#25191;&#34892;&#35832;&#22914;&#21457;&#36865;&#37038;&#20214;&#25110;&#21457;&#36215; HTTP &#35831;&#27714;&#36825;&#31867;&#36739;&#24930;&#30340;&#20219;&#21153;&#26102;&#65292;&#23558;&#30417;&#21548;&#22120;&#25490;&#38431;&#20250;&#24456;&#26377;&#24110;&#21161;&#12290;&#22312;&#20351;&#29992;&#38431;&#21015;&#30417;&#21548;&#22120;&#20043;&#21069;&#65292;&#35831;&#30830;&#20445;&#24050;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues" target="_blank">&#37197;&#32622;&#22909;&#38431;&#21015;</a>&#65292;&#24182;&#22312;&#26381;&#21153;&#22120;&#25110;&#26412;&#22320;&#24320;&#21457;&#29615;&#22659;&#20013;&#21551;&#21160;&#19968;&#20010;&#38431;&#21015; Worker&#12290;</p><p>&#35201;&#25351;&#23450;&#26576;&#20010;&#30417;&#21548;&#22120;&#24212;&#24403;&#34987;&#25490;&#38431;&#65292;&#21482;&#38656;&#32473;&#30417;&#21548;&#22120;&#31867;&#21152;&#19978; <code>ShouldQueue</code> &#25509;&#21475;&#12290;&#30001; <code>make:listener</code> Artisan &#21629;&#20196;&#29983;&#25104;&#30340;&#30417;&#21548;&#22120;&#24050;&#32463;&#23558;&#35813;&#25509;&#21475;&#23548;&#20837;&#24403;&#21069;&#21629;&#21517;&#31354;&#38388;&#65292;&#22240;&#27492;&#20320;&#21487;&#20197;&#31435;&#21363;&#20351;&#29992;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class SendShipmentNotification implements ShouldQueue
+{
+    // ...
+}</code></pre><p>&#23601;&#26159;&#36825;&#26679;&#65281;&#29616;&#22312;&#65292;&#24403;&#36825;&#20010;&#30417;&#21548;&#22120;&#25152;&#22788;&#29702;&#30340;&#20107;&#20214;&#34987;&#27966;&#21457;&#26102;&#65292;&#20107;&#20214;&#35843;&#24230;&#22120;&#20250;&#36890;&#36807; Laravel &#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues" target="_blank">&#38431;&#21015;&#31995;&#32479;</a>&#33258;&#21160;&#23558;&#35813;&#30417;&#21548;&#22120;&#25490;&#38431;&#12290;&#22914;&#26524;&#38431;&#21015;&#25191;&#34892;&#30417;&#21548;&#22120;&#26102;&#27809;&#26377;&#25243;&#20986;&#24322;&#24120;&#65292;&#37027;&#20040;&#25490;&#38431;&#30340;&#20219;&#21153;&#22312;&#23436;&#25104;&#21518;&#20250;&#34987;&#33258;&#21160;&#21024;&#38500;&#12290;</p><h4 id="c32af3718c00e0a9c89e3ed64e9ffd63">&#33258;&#23450;&#20041;&#38431;&#21015;&#36830;&#25509;&#12289;&#21517;&#31216;&#19982;&#24310;&#36831;</h4><p>&#22914;&#26524;&#20320;&#24819;&#33258;&#23450;&#20041;&#20107;&#20214;&#30417;&#21548;&#22120;&#30340;&#38431;&#21015;&#36830;&#25509;&#12289;&#38431;&#21015;&#21517;&#31216;&#25110;&#38431;&#21015;&#24310;&#36831;&#26102;&#38388;&#65292;&#21487;&#20197;&#20351;&#29992;&#30417;&#21548;&#22120;&#31867;&#19978;&#30340; <code>Connection</code>&#12289;<code>Queue</code> &#21644; <code>Delay</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\Attributes\Connection;
+use Illuminate\Queue\Attributes\Delay;
+use Illuminate\Queue\Attributes\Queue;
+
+#[Connection('sqs')]
+#[Queue('listeners')]
+#[Delay(60)]
+class SendShipmentNotification implements ShouldQueue
+{
+    // ...
+}</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#22312;&#36816;&#34892;&#26102;&#23450;&#20041;&#30417;&#21548;&#22120;&#30340;&#38431;&#21015;&#36830;&#25509;&#12289;&#38431;&#21015;&#21517;&#31216;&#25110;&#24310;&#36831;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#19978;&#23450;&#20041; <code>viaConnection</code>&#12289;<code>viaQueue</code> &#25110; <code>withDelay</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#30417;&#21548;&#22120;&#38431;&#21015;&#36830;&#25509;&#30340;&#21517;&#31216;&#12290;
+ */
+public function viaConnection(): string
+{
+    return 'sqs';
+}
+
+/**
+ * &#33719;&#21462;&#30417;&#21548;&#22120;&#38431;&#21015;&#30340;&#21517;&#31216;&#12290;
+ */
+public function viaQueue(): string
+{
+    return 'listeners';
+}
+
+/**
+ * &#33719;&#21462;&#20219;&#21153;&#34987;&#22788;&#29702;&#21069;&#24212;&#31561;&#24453;&#30340;&#31186;&#25968;&#12290;
+ */
+public function withDelay(OrderShipped $event): int
+{
+    return $event-&gt;highPriority ? 0 : 60;
+}</code></pre><h4 id="31038f8a686479eb10f329823ebcafd3">&#26377;&#26465;&#20214;&#22320;&#25490;&#38431;&#30417;&#21548;&#22120;</h4><p>&#26377;&#26102;&#65292;&#20320;&#38656;&#35201;&#26681;&#25454;&#26576;&#20123;&#20165;&#22312;&#36816;&#34892;&#26102;&#25165;&#33021;&#33719;&#24471;&#30340;&#25968;&#25454;&#26469;&#20915;&#23450;&#26159;&#21542;&#23558;&#30417;&#21548;&#22120;&#25490;&#38431;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#19978;&#28155;&#21152; <code>shouldQueue</code> &#26041;&#27861;&#65292;&#29992;&#20110;&#21028;&#26029;&#30417;&#21548;&#22120;&#26159;&#21542;&#24212;&#24403;&#25490;&#38431;&#12290;&#22914;&#26524; <code>shouldQueue</code> &#26041;&#27861;&#36820;&#22238; <code>false</code>&#65292;&#30417;&#21548;&#22120;&#23601;&#19981;&#20250;&#34987;&#25490;&#38431;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderCreated;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class RewardGiftCard implements ShouldQueue
+{
+    /**
+     * &#21521;&#23458;&#25143;&#21457;&#25918;&#31036;&#21697;&#21345;&#12290;
+     */
+    public function handle(OrderCreated $event): void
+    {
+        // ...
+    }
+
+    /**
+     * &#21028;&#26029;&#30417;&#21548;&#22120;&#26159;&#21542;&#24212;&#24403;&#25490;&#38431;&#12290;
+     */
+    public function shouldQueue(OrderCreated $event): bool
+    {
+        return $event-&gt;order-&gt;subtotal &gt;= 5000;
+    }
+}</code></pre><h3 id="c67465570e9441f6f7ff523314c50701">&#25163;&#21160;&#19982;&#38431;&#21015;&#20132;&#20114;</h3><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#25163;&#21160;&#35775;&#38382;&#30417;&#21548;&#22120;&#24213;&#23618;&#38431;&#21015;&#20219;&#21153;&#30340; <code>delete</code> &#21644; <code>release</code> &#26041;&#27861;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Illuminate\Queue\InteractsWithQueue</code> Trait&#12290;&#35813; Trait &#22312;&#29983;&#25104;&#30340;&#30417;&#21548;&#22120;&#20013;&#34987;&#40664;&#35748;&#23548;&#20837;&#65292;&#24182;&#25552;&#20379;&#23545;&#36825;&#20123;&#26041;&#27861;&#30340;&#35775;&#38382;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+
+class SendShipmentNotification implements ShouldQueue
+{
+    use InteractsWithQueue;
+
+    /**
+     * &#22788;&#29702;&#20107;&#20214;&#12290;
+     */
+    public function handle(OrderShipped $event): void
+    {
+        if ($condition) {
+            $this-&gt;release(30);
+        }
+    }
+}</code></pre><h3 id="cc1789529dab8af24c62c1d6d175cd84">&#38431;&#21015;&#20107;&#20214;&#30417;&#21548;&#22120;&#19982;&#25968;&#25454;&#24211;&#20107;&#21153;</h3><p>&#24403;&#38431;&#21015;&#30417;&#21548;&#22120;&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#20869;&#37096;&#34987;&#27966;&#21457;&#26102;&#65292;&#38431;&#21015;&#21487;&#33021;&#20250;&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#25552;&#20132;&#20043;&#21069;&#23601;&#22788;&#29702;&#23427;&#20204;&#12290;&#21457;&#29983;&#36825;&#31181;&#24773;&#20917;&#26102;&#65292;&#20320;&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#26399;&#38388;&#23545;&#27169;&#22411;&#25110;&#25968;&#25454;&#24211;&#35760;&#24405;&#25152;&#20570;&#30340;&#20219;&#20309;&#26356;&#26032;&#37117;&#36824;&#26410;&#33021;&#21453;&#26144;&#21040;&#25968;&#25454;&#24211;&#20013;&#12290;&#27492;&#22806;&#65292;&#22312;&#20107;&#21153;&#20869;&#21019;&#24314;&#30340;&#20219;&#20309;&#27169;&#22411;&#25110;&#25968;&#25454;&#24211;&#35760;&#24405;&#21487;&#33021;&#36824;&#19981;&#23384;&#22312;&#20110;&#25968;&#25454;&#24211;&#20013;&#12290;&#22914;&#26524;&#20320;&#30340;&#30417;&#21548;&#22120;&#20381;&#36182;&#36825;&#20123;&#27169;&#22411;&#65292;&#37027;&#20040;&#22312;&#27966;&#21457;&#35813;&#38431;&#21015;&#30417;&#21548;&#22120;&#30340;&#20219;&#21153;&#34987;&#22788;&#29702;&#26102;&#65292;&#23601;&#21487;&#33021;&#21457;&#29983;&#24847;&#24819;&#19981;&#21040;&#30340;&#38169;&#35823;&#12290;</p><p>&#22914;&#26524;&#20320;&#30340;&#38431;&#21015;&#36830;&#25509;&#30340; <code>after_commit</code> &#37197;&#32622;&#39033;&#34987;&#35774;&#20026; <code>false</code>&#65292;&#20320;&#20173;&#28982;&#21487;&#20197;&#36890;&#36807;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#23454;&#29616; <code>ShouldQueueAfterCommit</code> &#25509;&#21475;&#65292;&#26469;&#25351;&#26126;&#35813;&#29305;&#23450;&#38431;&#21015;&#30417;&#21548;&#22120;&#24212;&#22312;&#25152;&#26377;&#26410;&#25552;&#20132;&#30340;&#25968;&#25454;&#24211;&#20107;&#21153;&#37117;&#25552;&#20132;&#20043;&#21518;&#25165;&#34987;&#27966;&#21457;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
+use Illuminate\Queue\InteractsWithQueue;
+
+class SendShipmentNotification implements ShouldQueueAfterCommit
+{
+    use InteractsWithQueue;
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#24819;&#20102;&#35299;&#26356;&#22810;&#24212;&#23545;&#36825;&#20123;&#38382;&#39064;&#30340;&#26041;&#27861;&#65292;&#35831;&#26597;&#38405;&#20851;&#20110;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues#jobs-and-database-transactions" target="_blank">&#38431;&#21015;&#20219;&#21153;&#19982;&#25968;&#25454;&#24211;&#20107;&#21153;</a>&#30340;&#25991;&#26723;&#12290;</p>
+</blockquote><h3 id="a8116c4a0477b524a6f62916e1b6d802">&#38431;&#21015;&#30417;&#21548;&#22120;&#20013;&#38388;&#20214;</h3><p>&#38431;&#21015;&#30417;&#21548;&#22120;&#20063;&#21487;&#20197;&#20351;&#29992;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues#job-middleware" target="_blank">&#20219;&#21153;&#20013;&#38388;&#20214;</a>&#12290;&#20219;&#21153;&#20013;&#38388;&#20214;&#35753;&#20320;&#21487;&#20197;&#22312;&#25490;&#38431;&#30417;&#21548;&#22120;&#30340;&#25191;&#34892;&#36923;&#36753;&#22806;&#23618;&#21253;&#35065;&#33258;&#23450;&#20041;&#36923;&#36753;&#65292;&#20174;&#32780;&#20943;&#23569;&#30417;&#21548;&#22120;&#33258;&#36523;&#30340;&#26679;&#26495;&#20195;&#30721;&#12290;&#21019;&#24314;&#20219;&#21153;&#20013;&#38388;&#20214;&#20043;&#21518;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#30340; <code>middleware</code> &#26041;&#27861;&#20013;&#23558;&#20854;&#36820;&#22238;&#65292;&#20174;&#32780;&#23558;&#20854;&#38468;&#21152;&#21040;&#30417;&#21548;&#22120;&#19978;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+use App\Jobs\Middleware\RateLimited;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class SendShipmentNotification implements ShouldQueue
+{
+    /**
+     * &#22788;&#29702;&#20107;&#20214;&#12290;
+     */
+    public function handle(OrderShipped $event): void
+    {
+        // &#22788;&#29702;&#20107;&#20214;&hellip;&hellip;
+    }
+
+    /**
+     * &#33719;&#21462;&#30417;&#21548;&#22120;&#24212;&#24403;&#32463;&#36807;&#30340;&#20013;&#38388;&#20214;&#12290;
+     *
+     * @return array&lt;int, object&gt;
+     */
+    public function middleware(OrderShipped $event): array
+    {
+        return [new RateLimited];
+    }
+}</code></pre><h3 id="da893cf645bc1588168b747a61b22418">&#21152;&#23494;&#30340;&#38431;&#21015;&#30417;&#21548;&#22120;</h3><p>Laravel &#20801;&#35768;&#20320;&#36890;&#36807;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/encryption" target="_blank">&#21152;&#23494;</a>&#26469;&#20445;&#35777;&#38431;&#21015;&#30417;&#21548;&#22120;&#25968;&#25454;&#30340;&#31169;&#23494;&#24615;&#19982;&#23436;&#25972;&#24615;&#12290;&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#21482;&#38656;&#32473;&#30417;&#21548;&#22120;&#31867;&#21152;&#19978; <code>ShouldBeEncrypted</code> &#25509;&#21475;&#12290;&#19968;&#26086;&#35813;&#31867;&#21152;&#19978;&#36825;&#20010;&#25509;&#21475;&#65292;Laravel &#23601;&#20250;&#22312;&#23558;&#20854;&#25512;&#20837;&#38431;&#21015;&#20043;&#21069;&#33258;&#21160;&#21152;&#23494;&#20320;&#30340;&#30417;&#21548;&#22120;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+use Illuminate\Contracts\Queue\ShouldBeEncrypted;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class SendShipmentNotification implements ShouldQueue, ShouldBeEncrypted
+{
+    // ...
+}</code></pre><h3 id="f15652f632d92a9ce72ae6df35405948">&#21807;&#19968;&#20107;&#20214;&#30417;&#21548;&#22120;</h3><blockquote>
+<p>[!WARNING]<br>
+&#21807;&#19968;&#30417;&#21548;&#22120;&#38656;&#35201;&#19968;&#20010;&#25903;&#25345;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/cache#atomic-locks" target="_blank">&#38145;</a>&#30340;&#32531;&#23384;&#39537;&#21160;&#12290;&#30446;&#21069;&#65292;<code>memcached</code>&#12289;<code>redis</code>&#12289;<code>dynamodb</code>&#12289;<code>database</code>&#12289;<code>file</code> &#21644; <code>array</code> &#36825;&#20123;&#32531;&#23384;&#39537;&#21160;&#37117;&#25903;&#25345;&#21407;&#23376;&#38145;&#12290;</p>
+</blockquote><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#30830;&#20445;&#26576;&#20010;&#29305;&#23450;&#30417;&#21548;&#22120;&#22312;&#20219;&#24847;&#26102;&#21051;&#21482;&#26377;&#19968;&#20010;&#23454;&#20363;&#20301;&#20110;&#38431;&#21015;&#20013;&#12290;&#35201;&#36825;&#26679;&#20570;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#23454;&#29616; <code>ShouldBeUnique</code> &#25509;&#21475;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\LicenseSaved;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class AcquireProductKey implements ShouldQueue, ShouldBeUnique
+{
+    public function __invoke(LicenseSaved $event): void
+    {
+        // ...
+    }
+}</code></pre><p>&#22312;&#19978;&#38754;&#30340;&#20363;&#23376;&#20013;&#65292;<code>AcquireProductKey</code> &#30417;&#21548;&#22120;&#26159;&#21807;&#19968;&#30340;&#12290;&#22240;&#27492;&#65292;&#22914;&#26524;&#38431;&#21015;&#20013;&#24050;&#32463;&#23384;&#22312;&#35813;&#30417;&#21548;&#22120;&#30340;&#21478;&#19968;&#20010;&#23454;&#20363;&#19988;&#23578;&#26410;&#22788;&#29702;&#23436;&#25104;&#65292;&#37027;&#20040;&#35813;&#30417;&#21548;&#22120;&#23601;&#19981;&#20250;&#20877;&#27425;&#20837;&#38431;&#12290;&#36825;&#20445;&#35777;&#20102;&#27599;&#20010;&#35768;&#21487;&#35777;&#21482;&#20250;&#33719;&#21462;&#19968;&#20010;&#20135;&#21697;&#23494;&#38053;&#65292;&#21363;&#20351;&#35813;&#35768;&#21487;&#35777;&#22312;&#30701;&#26102;&#38388;&#20869;&#34987;&#20445;&#23384;&#22810;&#27425;&#20063;&#26159;&#22914;&#27492;&#12290;</p><p>&#22312;&#26576;&#20123;&#24773;&#20917;&#19979;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#23450;&#20041;&#19968;&#20010;&#29305;&#23450;&#30340;"&#38190;"&#26469;&#20351;&#30417;&#21548;&#22120;&#20445;&#25345;&#21807;&#19968;&#65292;&#25110;&#32773;&#24076;&#26395;&#25351;&#23450;&#19968;&#20010;&#36229;&#26102;&#26102;&#38388;&#65292;&#36229;&#36807;&#35813;&#26102;&#38388;&#21518;&#30417;&#21548;&#22120;&#19981;&#20877;&#20445;&#25345;&#21807;&#19968;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#23450;&#20041; <code>uniqueId</code> &#21644; <code>uniqueFor</code> &#23646;&#24615;&#25110;&#26041;&#27861;&#12290;&#36825;&#20123;&#26041;&#27861;&#20250;&#25509;&#25910;&#21040;&#20107;&#20214;&#23454;&#20363;&#65292;&#35753;&#20320;&#21487;&#20197;&#21033;&#29992;&#20107;&#20214;&#25968;&#25454;&#26469;&#26500;&#36896;&#36820;&#22238;&#20540;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\LicenseSaved;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class AcquireProductKey implements ShouldQueue, ShouldBeUnique
+{
+    /**
+     * &#30417;&#21548;&#22120;&#21807;&#19968;&#38145;&#22312;&#34987;&#37322;&#25918;&#20043;&#21069;&#25152;&#32463;&#36807;&#30340;&#31186;&#25968;&#12290;
+     *
+     * @var int
+     */
+    public $uniqueFor = 3600;
+
+    public function __invoke(LicenseSaved $event): void
+    {
+        // ...
+    }
+
+    /**
+     * &#33719;&#21462;&#35813;&#30417;&#21548;&#22120;&#30340;&#21807;&#19968; ID&#12290;
+     */
+    public function uniqueId(LicenseSaved $event): string
+    {
+        return 'listener:'.$event-&gt;license-&gt;id;
+    }
+}</code></pre><p>&#22312;&#19978;&#38754;&#30340;&#20363;&#23376;&#20013;&#65292;<code>AcquireProductKey</code> &#30417;&#21548;&#22120;&#25353;&#35768;&#21487;&#35777; ID &#20445;&#25345;&#21807;&#19968;&#12290;&#22240;&#27492;&#65292;&#22312;&#20026;&#21516;&#19968;&#35768;&#21487;&#35777;&#37325;&#26032;&#27966;&#21457;&#35813;&#30417;&#21548;&#22120;&#20043;&#21069;&#65292;&#21482;&#35201;&#29616;&#26377;&#30417;&#21548;&#22120;&#23578;&#26410;&#22788;&#29702;&#23436;&#25104;&#65292;&#26032;&#30340;&#27966;&#21457;&#23601;&#20250;&#34987;&#24573;&#30053;&#12290;&#36825;&#23601;&#36991;&#20813;&#20102;&#20026;&#21516;&#19968;&#35768;&#21487;&#35777;&#37325;&#22797;&#33719;&#21462;&#20135;&#21697;&#23494;&#38053;&#12290;&#27492;&#22806;&#65292;&#22914;&#26524;&#29616;&#26377;&#30417;&#21548;&#22120;&#22312;&#19968;&#23567;&#26102;&#20869;&#26410;&#34987;&#22788;&#29702;&#65292;&#21807;&#19968;&#38145;&#20250;&#34987;&#37322;&#25918;&#65292;&#27492;&#26102;&#25317;&#26377;&#30456;&#21516;&#21807;&#19968;&#38190;&#30340;&#21478;&#19968;&#20010;&#30417;&#21548;&#22120;&#23601;&#21487;&#20197;&#20837;&#38431;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20174;&#22810;&#20010; Web &#26381;&#21153;&#22120;&#25110;&#23481;&#22120;&#27966;&#21457;&#20107;&#20214;&#65292;&#20320;&#24212;&#24403;&#30830;&#20445;&#25152;&#26377;&#26381;&#21153;&#22120;&#37117;&#19982;&#21516;&#19968;&#20010;&#20013;&#24515;&#32531;&#23384;&#26381;&#21153;&#22120;&#36890;&#20449;&#65292;&#36825;&#26679; Laravel &#25165;&#33021;&#20934;&#30830;&#21028;&#26029;&#26576;&#20010;&#30417;&#21548;&#22120;&#26159;&#21542;&#21807;&#19968;&#12290;</p>
+</blockquote><h4 id="9290cd40411d064a609c4d03f4f2d27d">&#22312;&#22788;&#29702;&#24320;&#22987;&#21069;&#20445;&#25345;&#30417;&#21548;&#22120;&#21807;&#19968;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#21807;&#19968;&#30417;&#21548;&#22120;&#20250;&#22312;&#30417;&#21548;&#22120;&#22788;&#29702;&#23436;&#25104;&#25110;&#25152;&#26377;&#37325;&#35797;&#23581;&#35797;&#37117;&#22833;&#36133;&#20043;&#21518;"&#35299;&#38145;"&#12290;&#19981;&#36807;&#65292;&#22312;&#26576;&#20123;&#24773;&#20917;&#19979;&#20320;&#21487;&#33021;&#24076;&#26395;&#30417;&#21548;&#22120;&#22312;&#21363;&#23558;&#34987;&#22788;&#29702;&#26102;&#23601;&#31435;&#21363;&#35299;&#38145;&#12290;&#20026;&#27492;&#65292;&#30417;&#21548;&#22120;&#24212;&#24403;&#23454;&#29616; <code>ShouldBeUniqueUntilProcessing</code> &#22865;&#32422;&#65292;&#32780;&#19981;&#26159; <code>ShouldBeUnique</code> &#22865;&#32422;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\LicenseSaved;
+use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class AcquireProductKey implements ShouldQueue, ShouldBeUniqueUntilProcessing
+{
+    // ...
+}</code></pre><h4 id="d483cd9cc4bfa954a5144e947d46443c">&#21807;&#19968;&#30417;&#21548;&#22120;&#38145;</h4><p>&#22312;&#24213;&#23618;&#65292;&#24403; <code>ShouldBeUnique</code> &#30417;&#21548;&#22120;&#34987;&#27966;&#21457;&#26102;&#65292;Laravel &#20250;&#23581;&#35797;&#20197; <code>uniqueId</code> &#20026;&#38190;&#33719;&#21462;&#19968;&#20010;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/cache#atomic-locks" target="_blank">&#38145;</a>&#12290;&#22914;&#26524;&#35813;&#38145;&#24050;&#34987;&#25345;&#26377;&#65292;&#30417;&#21548;&#22120;&#23601;&#19981;&#20250;&#34987;&#27966;&#21457;&#12290;&#24403;&#30417;&#21548;&#22120;&#22788;&#29702;&#23436;&#25104;&#25110;&#25152;&#26377;&#37325;&#35797;&#22833;&#36133;&#21518;&#65292;&#35813;&#38145;&#20250;&#34987;&#37322;&#25918;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Laravel &#20250;&#20351;&#29992;&#40664;&#35748;&#30340;&#32531;&#23384;&#39537;&#21160;&#26469;&#33719;&#21462;&#36825;&#20010;&#38145;&#12290;&#19981;&#36807;&#65292;&#22914;&#26524;&#20320;&#24819;&#20351;&#29992;&#20854;&#20182;&#39537;&#21160;&#26469;&#33719;&#21462;&#38145;&#65292;&#21487;&#20197;&#23450;&#20041;&#19968;&#20010; <code>uniqueVia</code> &#26041;&#27861;&#65292;&#36820;&#22238;&#24212;&#24403;&#20351;&#29992;&#30340;&#32531;&#23384;&#39537;&#21160;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\LicenseSaved;
+use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Support\Facades\Cache;
+
+class AcquireProductKey implements ShouldQueue, ShouldBeUnique
+{
+    // ...
+
+    /**
+     * &#33719;&#21462;&#29992;&#20110;&#21807;&#19968;&#30417;&#21548;&#22120;&#38145;&#30340;&#32531;&#23384;&#39537;&#21160;&#12290;
+     */
+    public function uniqueVia(LicenseSaved $event): Repository
+    {
+        return Cache::driver('redis');
+    }
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#21482;&#26159;&#24819;&#38480;&#21046;&#30417;&#21548;&#22120;&#30340;&#24182;&#21457;&#22788;&#29702;&#65292;&#35831;&#25913;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues#preventing-job-overlaps" target="_blank">WithoutOverlapping</a> &#20219;&#21153;&#20013;&#38388;&#20214;&#12290;</p>
+</blockquote><h3 id="c3cf19030eecf52c7ffebe4cfaa40180">&#38450;&#25238;&#20107;&#20214;&#30417;&#21548;&#22120;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#21482;&#24819;&#22788;&#29702;&#22312;&#30701;&#26102;&#38388;&#20869;&#34987;&#21453;&#22797;&#27966;&#21457;&#30340;&#20107;&#20214;&#20013;&#26368;&#26032;&#30340;&#19968;&#27425;&#23454;&#20363;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#32473;&#25490;&#38431;&#30417;&#21548;&#22120;&#28155;&#21152; <code>DebounceFor</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\ProductUpdated;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\Attributes\DebounceFor;
+
+#[DebounceFor(30)]
+class UpdateProductSearchIndex implements ShouldQueue
+{
+    /**
+     * &#22788;&#29702;&#20107;&#20214;&#12290;
+     */
+    public function handle(ProductUpdated $event): void
+    {
+        // &#26356;&#26032;&#20135;&#21697;&#30340;&#25628;&#32034;&#32034;&#24341;&hellip;&hellip;
+    }
+
+    /**
+     * &#33719;&#21462;&#35813;&#30417;&#21548;&#22120;&#30340;&#38450;&#25238; ID&#12290;
+     */
+    public function debounceId(ProductUpdated $event): string
+    {
+        return (string) $event-&gt;product-&gt;getKey();
+    }
+}</code></pre><p>&#22312;&#19978;&#38754;&#30340;&#20363;&#23376;&#20013;&#65292;&#22312; <code>30</code> &#31186;&#20869;&#20026;&#21516;&#19968;&#20135;&#21697;&#21453;&#22797;&#27966;&#21457; <code>ProductUpdated</code> &#20107;&#20214;&#20250;&#20351;&#30417;&#21548;&#22120;&#36827;&#20837;&#38450;&#25238;&#29366;&#24577;&#65292;&#20174;&#32780;&#21482;&#22788;&#29702;&#26368;&#26032;&#30340;&#20107;&#20214;&#12290;&#19981;&#21516;&#30340;&#38450;&#25238; ID &#20250;&#34987;&#29420;&#31435;&#22788;&#29702;&#12290;</p><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#38480;&#21046;&#19968;&#20010;&#39057;&#32321;&#27966;&#21457;&#30340;&#20107;&#20214;&#25302;&#24310;&#30417;&#21548;&#22120;&#30340;&#26368;&#38271;&#26102;&#38388;&#65292;&#21487;&#20197;&#32473; <code>DebounceFor</code> &#23646;&#24615;&#25552;&#20379; <code>maxWait</code> &#21442;&#25968;&#65306;</p><pre><code class="language-php">#[DebounceFor(30, maxWait: 120)]
+class UpdateProductSearchIndex implements ShouldQueue
+{
+    // ...
+}</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#30417;&#21548;&#22120;&#19978;&#23450;&#20041; <code>debounceVia</code> &#26041;&#27861;&#26469;&#33258;&#23450;&#20041;&#29992;&#20110;&#38450;&#25238;&#36861;&#36394;&#30340;&#32531;&#23384;&#23384;&#20648;&#12290;&#35813;&#26041;&#27861;&#25509;&#25910;&#20107;&#20214;&#23454;&#20363;&#65292;&#24182;&#24212;&#24403;&#36820;&#22238;&#19968;&#20010;&#32531;&#23384;&#20179;&#24211;&#65306;</p><pre><code class="language-php">use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Support\Facades\Cache;
+
+public function debounceVia(ProductUpdated $event): Repository
+{
+    return Cache::driver('redis');
+}</code></pre><p>&#38450;&#25238;&#30417;&#21548;&#22120;&#19982;&#21807;&#19968;&#30417;&#21548;&#22120;&#26159;&#20114;&#26021;&#30340;&#12290;&#20351;&#29992; <code>DebounceFor</code> &#23646;&#24615;&#30340;&#30417;&#21548;&#22120;&#19981;&#24212;&#23454;&#29616; <code>ShouldBeUnique</code>&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20174;&#22810;&#20010; Web &#26381;&#21153;&#22120;&#25110;&#23481;&#22120;&#27966;&#21457;&#20107;&#20214;&#65292;&#20320;&#24212;&#24403;&#30830;&#20445;&#25152;&#26377;&#26381;&#21153;&#22120;&#37117;&#19982;&#21516;&#19968;&#20010;&#20013;&#24515;&#32531;&#23384;&#26381;&#21153;&#22120;&#36890;&#20449;&#12290;</p>
+</blockquote><h3 id="cb0b2214bf151600525eb7c02daf7f64">&#22788;&#29702;&#22833;&#36133;&#30340;&#20219;&#21153;</h3><p>&#26377;&#26102;&#20320;&#30340;&#38431;&#21015;&#20107;&#20214;&#30417;&#21548;&#22120;&#21487;&#33021;&#20250;&#22833;&#36133;&#12290;&#22914;&#26524;&#38431;&#21015;&#30417;&#21548;&#22120;&#36229;&#36807;&#20102;&#38431;&#21015; Worker &#25152;&#23450;&#20041;&#30340;&#26368;&#22823;&#23581;&#35797;&#27425;&#25968;&#65292;&#30417;&#21548;&#22120;&#19978;&#30340; <code>failed</code> &#26041;&#27861;&#23601;&#20250;&#34987;&#35843;&#29992;&#12290;<code>failed</code> &#26041;&#27861;&#20250;&#25509;&#25910;&#21040;&#20107;&#20214;&#23454;&#20363;&#20197;&#21450;&#23548;&#33268;&#22833;&#36133;&#30340; <code>Throwable</code>&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Throwable;
+
+class SendShipmentNotification implements ShouldQueue
+{
+    use InteractsWithQueue;
+
+    /**
+     * &#22788;&#29702;&#20107;&#20214;&#12290;
+     */
+    public function handle(OrderShipped $event): void
+    {
+        // ...
+    }
+
+    /**
+     * &#22788;&#29702;&#20219;&#21153;&#22833;&#36133;&#12290;
+     */
+    public function failed(OrderShipped $event, Throwable $exception): void
+    {
+        // ...
+    }
+}</code></pre><h4 id="5f2aecf5b26fdd0db498152671cf2249">&#25351;&#23450;&#38431;&#21015;&#30417;&#21548;&#22120;&#30340;&#26368;&#22823;&#23581;&#35797;&#27425;&#25968;</h4><p>&#24403;&#26576;&#20010;&#38431;&#21015;&#30417;&#21548;&#22120;&#36935;&#21040;&#38169;&#35823;&#26102;&#65292;&#20320;&#21487;&#33021;&#19981;&#24076;&#26395;&#23427;&#26080;&#38480;&#26399;&#22320;&#37325;&#35797;&#19979;&#21435;&#12290;&#22240;&#27492;&#65292;Laravel &#25552;&#20379;&#20102;&#22810;&#31181;&#26041;&#24335;&#26469;&#25351;&#23450;&#30417;&#21548;&#22120;&#21487;&#20197;&#23581;&#35797;&#30340;&#27425;&#25968;&#25110;&#26102;&#38271;&#12290;</p><p>&#20320;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#20351;&#29992; <code>Tries</code> &#23646;&#24615;&#65292;&#26469;&#25351;&#23450;&#30417;&#21548;&#22120;&#22312;&#34987;&#21028;&#23450;&#20026;&#22833;&#36133;&#20043;&#21069;&#21487;&#20197;&#23581;&#35797;&#30340;&#27425;&#25968;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\Attributes\Tries;
+use Illuminate\Queue\InteractsWithQueue;
+
+#[Tries(5)]
+class SendShipmentNotification implements ShouldQueue
+{
+    use InteractsWithQueue;
+
+    // ...
+}</code></pre><p>&#38500;&#20102;&#23450;&#20041;&#30417;&#21548;&#22120;&#22312;&#34987;&#21028;&#23450;&#20026;&#22833;&#36133;&#20043;&#21069;&#21487;&#23581;&#35797;&#30340;&#27425;&#25968;&#20043;&#22806;&#65292;&#20320;&#20063;&#21487;&#20197;&#23450;&#20041;&#30417;&#21548;&#22120;&#19981;&#24212;&#20877;&#34987;&#23581;&#35797;&#30340;&#26102;&#38388;&#28857;&#12290;&#36825;&#26679;&#65292;&#22312;&#32473;&#23450;&#26102;&#38388;&#33539;&#22260;&#20869;&#30417;&#21548;&#22120;&#21487;&#20197;&#34987;&#23581;&#35797;&#20219;&#24847;&#22810;&#27425;&#12290;&#35201;&#20026;&#30417;&#21548;&#22120;&#23450;&#20041;&#19981;&#24212;&#20877;&#34987;&#23581;&#35797;&#30340;&#26102;&#38388;&#28857;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#28155;&#21152;&#19968;&#20010; <code>retryUntil</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#24212;&#24403;&#36820;&#22238;&#19968;&#20010; <code>DateTimeInterface</code> &#23454;&#20363;&#65306;</p><pre><code class="language-php">use DateTimeInterface;
+
+/**
+ * &#30830;&#23450;&#30417;&#21548;&#22120;&#24212;&#24403;&#36229;&#26102;&#30340;&#26102;&#38388;&#28857;&#12290;
+ */
+public function retryUntil(): DateTimeInterface
+{
+    return now()-&gt;plus(minutes: 5);
+}</code></pre><p>&#22914;&#26524;&#21516;&#26102;&#23450;&#20041;&#20102; <code>retryUntil</code> &#21644; <code>tries</code>&#65292;Laravel &#20250;&#20197; <code>retryUntil</code> &#26041;&#27861;&#20026;&#20934;&#12290;</p><h4 id="65b2c1389540705ce9a195229d5b7209">&#25351;&#23450;&#38431;&#21015;&#30417;&#21548;&#22120;&#30340;&#36864;&#36991;&#26102;&#38388;</h4><p>&#22914;&#26524;&#20320;&#24819;&#37197;&#32622; Laravel &#22312;&#37325;&#35797;&#36935;&#21040;&#24322;&#24120;&#30340;&#30417;&#21548;&#22120;&#20043;&#21069;&#24212;&#24403;&#31561;&#24453;&#22810;&#23569;&#31186;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#20351;&#29992; <code>Backoff</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\Attributes\Backoff;
+
+#[Backoff(3)]
+class SendShipmentNotification implements ShouldQueue
+{
+    // ...
+}</code></pre><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#26356;&#22797;&#26434;&#30340;&#36923;&#36753;&#26469;&#20915;&#23450;&#30417;&#21548;&#22120;&#30340;&#36864;&#36991;&#26102;&#38388;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#23450;&#20041;&#19968;&#20010; <code>backoff</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * &#35745;&#31639;&#22312;&#37325;&#35797;&#38431;&#21015;&#30417;&#21548;&#22120;&#20043;&#21069;&#24212;&#31561;&#24453;&#30340;&#31186;&#25968;&#12290;
+ */
+public function backoff(OrderShipped $event): int
+{
+    return 3;
+}</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#20174; <code>backoff</code> &#26041;&#27861;&#36820;&#22238;&#19968;&#20010;&#36864;&#36991;&#20540;&#25968;&#32452;&#65292;&#36731;&#26494;&#37197;&#32622;"&#25351;&#25968;"&#36864;&#36991;&#12290;&#22312;&#36825;&#20010;&#20363;&#23376;&#20013;&#65292;&#31532;&#19968;&#27425;&#37325;&#35797;&#30340;&#24310;&#36831;&#20026; 1 &#31186;&#65292;&#31532;&#20108;&#27425;&#20026; 5 &#31186;&#65292;&#31532;&#19977;&#27425;&#20026; 10 &#31186;&#65307;&#22914;&#26524;&#36824;&#26377;&#26356;&#22810;&#37325;&#35797;&#27425;&#25968;&#65292;&#20043;&#21518;&#30340;&#27599;&#27425;&#37325;&#35797;&#24310;&#36831;&#22343;&#20026; 10 &#31186;&#65306;</p><pre><code class="language-php">/**
+ * &#35745;&#31639;&#22312;&#37325;&#35797;&#38431;&#21015;&#30417;&#21548;&#22120;&#20043;&#21069;&#24212;&#31561;&#24453;&#30340;&#31186;&#25968;&#12290;
+ *
+ * @return list&lt;int&gt;
+ */
+public function backoff(OrderShipped $event): array
+{
+    return [1, 5, 10];
+}</code></pre><h4 id="5dfee09aba921c6fe340a30fcb7391a4">&#25351;&#23450;&#38431;&#21015;&#30417;&#21548;&#22120;&#30340;&#26368;&#22823;&#24322;&#24120;&#25968;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#25351;&#23450;&#26576;&#20010;&#38431;&#21015;&#30417;&#21548;&#22120;&#21487;&#20197;&#34987;&#23581;&#35797;&#24456;&#22810;&#27425;&#65292;&#20294;&#22914;&#26524;&#37325;&#35797;&#26159;&#30001;&#32473;&#23450;&#25968;&#37327;&#30340;&#26410;&#22788;&#29702;&#24322;&#24120;&#65288;&#32780;&#38750;&#36890;&#36807; <code>release</code> &#26041;&#27861;&#30452;&#25509;&#37322;&#25918;&#65289;&#35302;&#21457;&#30340;&#65292;&#21017;&#24212;&#24403;&#21028;&#23450;&#20026;&#22833;&#36133;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#20351;&#29992; <code>Tries</code> &#21644; <code>MaxExceptions</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\Attributes\MaxExceptions;
+use Illuminate\Queue\Attributes\Tries;
+use Illuminate\Queue\InteractsWithQueue;
+
+#[Tries(25)]
+#[MaxExceptions(3)]
+class SendShipmentNotification implements ShouldQueue
+{
+    use InteractsWithQueue;
+
+    /**
+     * &#22788;&#29702;&#20107;&#20214;&#12290;
+     */
+    public function handle(OrderShipped $event): void
+    {
+        // &#22788;&#29702;&#20107;&#20214;&hellip;&hellip;
+    }
+}</code></pre><p>&#22312;&#36825;&#20010;&#20363;&#23376;&#20013;&#65292;&#30417;&#21548;&#22120;&#26368;&#22810;&#20250;&#34987;&#37325;&#35797; 25 &#27425;&#12290;&#20294;&#26159;&#65292;&#22914;&#26524;&#30417;&#21548;&#22120;&#25243;&#20986;&#20102;&#19977;&#20010;&#26410;&#22788;&#29702;&#30340;&#24322;&#24120;&#65292;&#30417;&#21548;&#22120;&#23601;&#20250;&#34987;&#21028;&#23450;&#20026;&#22833;&#36133;&#12290;</p><h4 id="2359a35070a882957ada2fa2e96f36cf">&#25351;&#23450;&#38431;&#21015;&#30417;&#21548;&#22120;&#30340;&#36229;&#26102;&#26102;&#38388;</h4><p>&#36890;&#24120;&#20320;&#33021;&#22823;&#33268;&#39044;&#20272;&#38431;&#21015;&#30417;&#21548;&#22120;&#38656;&#35201;&#25191;&#34892;&#22810;&#20037;&#12290;&#22240;&#27492;&#65292;Laravel &#20801;&#35768;&#20320;&#25351;&#23450;&#19968;&#20010;"&#36229;&#26102;"&#20540;&#12290;&#22914;&#26524;&#26576;&#20010;&#30417;&#21548;&#22120;&#30340;&#25191;&#34892;&#26102;&#38388;&#36229;&#36807;&#20102;&#36229;&#26102;&#20540;&#25152;&#25351;&#23450;&#30340;&#31186;&#25968;&#65292;&#22788;&#29702;&#35813;&#30417;&#21548;&#22120;&#30340; Worker &#23601;&#20250;&#25253;&#38169;&#36864;&#20986;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#20351;&#29992; <code>Timeout</code> &#23646;&#24615;&#26469;&#23450;&#20041;&#30417;&#21548;&#22120;&#34987;&#20801;&#35768;&#36816;&#34892;&#30340;&#26368;&#22823;&#31186;&#25968;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\Attributes\Timeout;
+
+#[Timeout(120)]
+class SendShipmentNotification implements ShouldQueue
+{
+    // ...
+}</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#25351;&#26126;&#26576;&#20010;&#30417;&#21548;&#22120;&#22312;&#36229;&#26102;&#26102;&#24212;&#24403;&#34987;&#26631;&#35760;&#20026;&#22833;&#36133;&#65292;&#21487;&#20197;&#22312;&#30417;&#21548;&#22120;&#31867;&#19978;&#20351;&#29992; <code>FailOnTimeout</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use App\Events\OrderShipped;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\Attributes\FailOnTimeout;
+
+#[FailOnTimeout]
+class SendShipmentNotification implements ShouldQueue
+{
+    // ...
+}</code></pre><h2 id="ba8f1025a6c20f71599409a699d32603">&#27966;&#21457;&#20107;&#20214;</h2><p>&#35201;&#27966;&#21457;&#20107;&#20214;&#65292;&#21487;&#20197;&#35843;&#29992;&#20107;&#20214;&#19978;&#30340;&#38745;&#24577; <code>dispatch</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#30001; <code>Illuminate\Foundation\Events\Dispatchable</code> Trait &#25552;&#20379;&#32473;&#20107;&#20214;&#12290;&#20219;&#20309;&#20256;&#20837; <code>dispatch</code> &#26041;&#27861;&#30340;&#21442;&#25968;&#37117;&#20250;&#20256;&#36882;&#32473;&#20107;&#20214;&#30340;&#26500;&#36896;&#20989;&#25968;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Events\OrderShipped;
+use App\Models\Order;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class OrderShipmentController extends Controller
+{
+    /**
+     * &#21457;&#36135;&#32473;&#23450;&#35746;&#21333;&#12290;
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $order = Order::findOrFail($request-&gt;order_id);
+
+        // &#35746;&#21333;&#21457;&#36135;&#36923;&#36753;&hellip;&hellip;
+
+        OrderShipped::dispatch($order);
+
+        return redirect('/orders');
+    }
+}</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#26377;&#26465;&#20214;&#22320;&#27966;&#21457;&#20107;&#20214;&#65292;&#21487;&#20197;&#20351;&#29992; <code>dispatchIf</code> &#21644; <code>dispatchUnless</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">OrderShipped::dispatchIf($condition, $order);
+
+OrderShipped::dispatchUnless($condition, $order);</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22312;&#27979;&#35797;&#26102;&#65292;&#26029;&#35328;&#26576;&#20123;&#20107;&#20214;&#24050;&#34987;&#27966;&#21457;&#32780;&#23454;&#38469;&#19978;&#24182;&#19981;&#35302;&#21457;&#20854;&#30417;&#21548;&#22120;&#65292;&#24448;&#24448;&#24456;&#26377;&#24110;&#21161;&#12290;Laravel &#30340;<a href="x3vo0l4vm1.html#testing" target="_blank">&#20869;&#32622;&#27979;&#35797;&#36741;&#21161;&#20989;&#25968;</a>&#35753;&#36825;&#19968;&#20999;&#21464;&#24471;&#36731;&#32780;&#26131;&#20030;&#12290;</p>
+</blockquote><h3 id="a0f6cbd24823d89d85c97e8de5c546d7">&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#25552;&#20132;&#21518;&#27966;&#21457;&#20107;&#20214;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#25351;&#31034; Laravel &#21482;&#22312;&#24403;&#21069;&#27963;&#21160;&#30340;&#25968;&#25454;&#24211;&#20107;&#21153;&#25552;&#20132;&#20043;&#21518;&#25165;&#27966;&#21457;&#20107;&#20214;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#22312;&#20107;&#20214;&#31867;&#19978;&#23454;&#29616; <code>ShouldDispatchAfterCommit</code> &#25509;&#21475;&#12290;</p><p>&#35813;&#25509;&#21475;&#20250;&#25351;&#31034; Laravel &#22312;&#24403;&#21069;&#25968;&#25454;&#24211;&#20107;&#21153;&#25552;&#20132;&#20043;&#21069;&#19981;&#35201;&#27966;&#21457;&#35813;&#20107;&#20214;&#12290;&#22914;&#26524;&#20107;&#21153;&#22833;&#36133;&#65292;&#35813;&#20107;&#20214;&#20250;&#34987;&#20002;&#24323;&#12290;&#22914;&#26524;&#22312;&#27966;&#21457;&#20107;&#20214;&#26102;&#27809;&#26377;&#27491;&#22312;&#36827;&#34892;&#20013;&#30340;&#25968;&#25454;&#24211;&#20107;&#21153;&#65292;&#20107;&#20214;&#20250;&#31435;&#21363;&#34987;&#27966;&#21457;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Events;
+
+use App\Models\Order;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class OrderShipped implements ShouldDispatchAfterCommit
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    /**
+     * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#20107;&#20214;&#23454;&#20363;&#12290;
+     */
+    public function __construct(
+        public Order $order,
+    ) {}
+}</code></pre><h3 id="cd668e41e148303d6181bdfb9eeee100">&#24310;&#36831;&#20107;&#20214;</h3><p>&#24310;&#36831;&#20107;&#20214;&#35753;&#20320;&#21487;&#20197;&#25226;&#27169;&#22411;&#20107;&#20214;&#30340;&#27966;&#21457;&#19982;&#20107;&#20214;&#30417;&#21548;&#22120;&#30340;&#25191;&#34892;&#65292;&#25512;&#36831;&#21040;&#26576;&#27573;&#29305;&#23450;&#20195;&#30721;&#25191;&#34892;&#23436;&#25104;&#20043;&#21518;&#12290;&#24403;&#20320;&#38656;&#35201;&#30830;&#20445;&#25152;&#26377;&#30456;&#20851;&#35760;&#24405;&#37117;&#24050;&#21019;&#24314;&#65292;&#20107;&#20214;&#30417;&#21548;&#22120;&#25165;&#20250;&#34987;&#35302;&#21457;&#26102;&#65292;&#36825;&#19968;&#28857;&#23588;&#20854;&#26377;&#29992;&#12290;</p><p>&#35201;&#24310;&#36831;&#20107;&#20214;&#65292;&#21487;&#20197;&#21521; <code>Event::defer()</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#38381;&#21253;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Illuminate\Support\Facades\Event;
+
+Event::defer(function () {
+    $user = User::create(['name' =&gt; 'Victoria Otwell']);
+
+    $user-&gt;posts()-&gt;create(['title' =&gt; 'My first post!']);
+});</code></pre><p>&#38381;&#21253;&#20869;&#35302;&#21457;&#30340;&#25152;&#26377;&#20107;&#20214;&#65292;&#37117;&#20250;&#22312;&#38381;&#21253;&#25191;&#34892;&#23436;&#27605;&#21518;&#25165;&#34987;&#27966;&#21457;&#12290;&#36825;&#20445;&#35777;&#20102;&#20107;&#20214;&#30417;&#21548;&#22120;&#33021;&#22815;&#35775;&#38382;&#21040;&#24310;&#36831;&#25191;&#34892;&#26399;&#38388;&#21019;&#24314;&#30340;&#25152;&#26377;&#30456;&#20851;&#35760;&#24405;&#12290;&#22914;&#26524;&#38381;&#21253;&#20869;&#37096;&#21457;&#29983;&#24322;&#24120;&#65292;&#24310;&#36831;&#20107;&#20214;&#23601;&#19981;&#20250;&#34987;&#27966;&#21457;&#12290;</p><p>&#22914;&#26524;&#21482;&#24819;&#24310;&#36831;&#29305;&#23450;&#30340;&#20107;&#20214;&#65292;&#21487;&#20197;&#25226;&#20107;&#20214;&#25968;&#32452;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#32473; <code>defer</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Illuminate\Support\Facades\Event;
+
+Event::defer(function () {
+    $user = User::create(['name' =&gt; 'Victoria Otwell']);
+
+    $user-&gt;posts()-&gt;create(['title' =&gt; 'My first post!']);
+}, ['eloquent.created: '.User::class]);</code></pre><h2 id="59bc4f3d40546d3281fd2bc78672ce94">&#20107;&#20214;&#35746;&#38405;&#22120;</h2><h3 id="1abffde01ffbf23871b0405ce7a9d41e">&#32534;&#20889;&#20107;&#20214;&#35746;&#38405;&#22120;</h3><p>&#20107;&#20214;&#35746;&#38405;&#22120;&#26159;&#33021;&#22815;&#22312;&#20854;&#33258;&#36523;&#31867;&#20869;&#37096;&#35746;&#38405;&#22810;&#20010;&#20107;&#20214;&#30340;&#31867;&#65292;&#35753;&#20320;&#21487;&#20197;&#25226;&#22810;&#20010;&#20107;&#20214;&#22788;&#29702;&#22120;&#23450;&#20041;&#22312;&#21516;&#19968;&#20010;&#31867;&#20013;&#12290;&#35746;&#38405;&#22120;&#24212;&#24403;&#23450;&#20041;&#19968;&#20010; <code>subscribe</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#25509;&#25910;&#19968;&#20010;&#20107;&#20214;&#35843;&#24230;&#22120;&#23454;&#20363;&#12290;&#20320;&#21487;&#20197;&#35843;&#29992;&#32473;&#23450;&#35843;&#24230;&#22120;&#30340; <code>listen</code> &#26041;&#27861;&#26469;&#27880;&#20876;&#20107;&#20214;&#30417;&#21548;&#22120;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
+use Illuminate\Events\Dispatcher;
+
+class UserEventSubscriber
+{
+    /**
+     * &#22788;&#29702;&#29992;&#25143;&#30331;&#24405;&#20107;&#20214;&#12290;
+     */
+    public function handleUserLogin(Login $event): void {}
+
+    /**
+     * &#22788;&#29702;&#29992;&#25143;&#30331;&#20986;&#20107;&#20214;&#12290;
+     */
+    public function handleUserLogout(Logout $event): void {}
+
+    /**
+     * &#20026;&#35746;&#38405;&#22120;&#27880;&#20876;&#30417;&#21548;&#22120;&#12290;
+     */
+    public function subscribe(Dispatcher $events): void
+    {
+        $events-&gt;listen(
+            Login::class,
+            [UserEventSubscriber::class, 'handleUserLogin']
+        );
+
+        $events-&gt;listen(
+            Logout::class,
+            [UserEventSubscriber::class, 'handleUserLogout']
+        );
+    }
+}</code></pre><p>&#22914;&#26524;&#20320;&#30340;&#20107;&#20214;&#30417;&#21548;&#26041;&#27861;&#23450;&#20041;&#22312;&#35746;&#38405;&#22120;&#33258;&#36523;&#20869;&#37096;&#65292;&#37027;&#20040;&#20174;&#35746;&#38405;&#22120;&#30340; <code>subscribe</code> &#26041;&#27861;&#36820;&#22238;&#19968;&#20010;"&#20107;&#20214; =&gt; &#26041;&#27861;&#21517;"&#25968;&#32452;&#20250;&#26356;&#26041;&#20415;&#12290;&#22312;&#27880;&#20876;&#20107;&#20214;&#30417;&#21548;&#22120;&#26102;&#65292;Laravel &#20250;&#33258;&#21160;&#30830;&#23450;&#35746;&#38405;&#22120;&#30340;&#31867;&#21517;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Listeners;
+
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
+use Illuminate\Events\Dispatcher;
+
+class UserEventSubscriber
+{
+    /**
+     * &#22788;&#29702;&#29992;&#25143;&#30331;&#24405;&#20107;&#20214;&#12290;
+     */
+    public function handleUserLogin(Login $event): void {}
+
+    /**
+     * &#22788;&#29702;&#29992;&#25143;&#30331;&#20986;&#20107;&#20214;&#12290;
+     */
+    public function handleUserLogout(Logout $event): void {}
+
+    /**
+     * &#20026;&#35746;&#38405;&#22120;&#27880;&#20876;&#30417;&#21548;&#22120;&#12290;
+     *
+     * @return array&lt;string, string&gt;
+     */
+    public function subscribe(Dispatcher $events): array
+    {
+        return [
+            Login::class =&gt; 'handleUserLogin',
+            Logout::class =&gt; 'handleUserLogout',
+        ];
+    }
+}</code></pre><h3 id="a5a57b8c2c063bf04fa16f19e29d331d">&#27880;&#20876;&#20107;&#20214;&#35746;&#38405;&#22120;</h3><p>&#32534;&#20889;&#22909;&#35746;&#38405;&#22120;&#20043;&#21518;&#65292;&#22914;&#26524;&#35746;&#38405;&#22120;&#20869;&#37096;&#30340;&#22788;&#29702;&#26041;&#27861;&#36981;&#24490; Laravel &#30340;<a href="x3vo0l4vm1.html#event-discovery" target="_blank">&#20107;&#20214;&#21457;&#29616;&#32422;&#23450;</a>&#65292;Laravel &#20250;&#33258;&#21160;&#27880;&#20876;&#23427;&#20204;&#12290;&#21542;&#21017;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Event</code> Facade &#30340; <code>subscribe</code> &#26041;&#27861;&#26469;&#25163;&#21160;&#27880;&#20876;&#35746;&#38405;&#22120;&#12290;&#36890;&#24120;&#65292;&#36825;&#24212;&#24403;&#22312;&#24212;&#29992;&#30340; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#23436;&#25104;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use App\Listeners\UserEventSubscriber;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function boot(): void
+    {
+        Event::subscribe(UserEventSubscriber::class);
+    }
+}</code></pre><h2 id="db06c78d1e24cf708a14ce81c9b617ec">&#27979;&#35797;</h2><p>&#22312;&#27979;&#35797;&#20250;&#27966;&#21457;&#20107;&#20214;&#30340;&#20195;&#30721;&#26102;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#25351;&#31034; Laravel &#19981;&#35201;&#30495;&#27491;&#25191;&#34892;&#20107;&#20214;&#30340;&#30417;&#21548;&#22120;&#65292;&#22240;&#20026;&#30417;&#21548;&#22120;&#33258;&#36523;&#30340;&#20195;&#30721;&#21487;&#20197;&#21333;&#29420;&#12289;&#30452;&#25509;&#22320;&#36827;&#34892;&#27979;&#35797;&#65292;&#32780;&#19981;&#24517;&#20381;&#36182;&#27966;&#21457;&#23545;&#24212;&#20107;&#20214;&#30340;&#20195;&#30721;&#12290;&#24403;&#28982;&#65292;&#35201;&#27979;&#35797;&#30417;&#21548;&#22120;&#26412;&#36523;&#65292;&#20320;&#21487;&#20197;&#23454;&#20363;&#21270;&#19968;&#20010;&#30417;&#21548;&#22120;&#23545;&#35937;&#65292;&#24182;&#22312;&#27979;&#35797;&#20013;&#30452;&#25509;&#35843;&#29992;&#20854; <code>handle</code> &#26041;&#27861;&#12290;</p><p>&#20351;&#29992; <code>Event</code> Facade &#30340; <code>fake</code> &#26041;&#27861;&#65292;&#20320;&#21487;&#20197;&#38459;&#27490;&#30417;&#21548;&#22120;&#25191;&#34892;&#65292;&#20808;&#36816;&#34892;&#24453;&#27979;&#20195;&#30721;&#65292;&#28982;&#21518;&#20877;&#20351;&#29992; <code>assertDispatched</code>&#12289;<code>assertNotDispatched</code> &#21644; <code>assertNothingDispatched</code> &#26041;&#27861;&#26469;&#26029;&#35328;&#24212;&#29992;&#27966;&#21457;&#20102;&#21738;&#20123;&#20107;&#20214;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use App\Events\OrderFailedToShip;
+use App\Events\OrderShipped;
+use Illuminate\Support\Facades\Event;
+
+test('orders can be shipped', function () {
+    Event::fake();
+
+    // &#25191;&#34892;&#35746;&#21333;&#21457;&#36135;&hellip;&hellip;
+
+    // &#26029;&#35328;&#26576;&#20010;&#20107;&#20214;&#24050;&#34987;&#27966;&#21457;&hellip;&hellip;
+    Event::assertDispatched(OrderShipped::class);
+
+    // &#26029;&#35328;&#26576;&#20010;&#20107;&#20214;&#34987;&#27966;&#21457;&#20102;&#20004;&#27425;&hellip;&hellip;
+    Event::assertDispatched(OrderShipped::class, 2);
+
+    // &#26029;&#35328;&#26576;&#20010;&#20107;&#20214;&#34987;&#27966;&#21457;&#20102;&#19968;&#27425;&hellip;&hellip;
+    Event::assertDispatchedOnce(OrderShipped::class);
+
+    // &#26029;&#35328;&#26576;&#20010;&#20107;&#20214;&#26410;&#34987;&#27966;&#21457;&hellip;&hellip;
+    Event::assertNotDispatched(OrderFailedToShip::class);
+
+    // &#26029;&#35328;&#27809;&#26377;&#27966;&#21457;&#20219;&#20309;&#20107;&#20214;&hellip;&hellip;
+    Event::assertNothingDispatched();
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use App\Events\OrderFailedToShip;
+use App\Events\OrderShipped;
+use Illuminate\Support\Facades\Event;
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#27979;&#35797;&#35746;&#21333;&#21457;&#36135;&#12290;
+     */
+    public function test_orders_can_be_shipped(): void
+    {
+        Event::fake();
+
+        // &#25191;&#34892;&#35746;&#21333;&#21457;&#36135;&hellip;&hellip;
+
+        // &#26029;&#35328;&#26576;&#20010;&#20107;&#20214;&#24050;&#34987;&#27966;&#21457;&hellip;&hellip;
+        Event::assertDispatched(OrderShipped::class);
+
+        // &#26029;&#35328;&#26576;&#20010;&#20107;&#20214;&#34987;&#27966;&#21457;&#20102;&#20004;&#27425;&hellip;&hellip;
+        Event::assertDispatched(OrderShipped::class, 2);
+
+        // &#26029;&#35328;&#26576;&#20010;&#20107;&#20214;&#34987;&#27966;&#21457;&#20102;&#19968;&#27425;&hellip;&hellip;
+        Event::assertDispatchedOnce(OrderShipped::class);
+
+        // &#26029;&#35328;&#26576;&#20010;&#20107;&#20214;&#26410;&#34987;&#27966;&#21457;&hellip;&hellip;
+        Event::assertNotDispatched(OrderFailedToShip::class);
+
+        // &#26029;&#35328;&#27809;&#26377;&#27966;&#21457;&#20219;&#20309;&#20107;&#20214;&hellip;&hellip;
+        Event::assertNothingDispatched();
+    }
+}</code></pre><p>&#20320;&#21487;&#20197;&#21521; <code>assertDispatched</code> &#25110; <code>assertNotDispatched</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#38381;&#21253;&#65292;&#20174;&#32780;&#26029;&#35328;&#27966;&#21457;&#30340;&#20107;&#20214;&#36890;&#36807;&#20102;&#32473;&#23450;&#30340;"&#30495;&#20540;&#27979;&#35797;"&#12290;&#21482;&#35201;&#33267;&#23569;&#26377;&#19968;&#20010;&#27966;&#21457;&#30340;&#20107;&#20214;&#36890;&#36807;&#20102;&#32473;&#23450;&#30340;&#30495;&#20540;&#27979;&#35797;&#65292;&#26029;&#35328;&#23601;&#20250;&#25104;&#21151;&#65306;</p><pre><code class="language-php">Event::assertDispatched(function (OrderShipped $event) use ($order) {
+    return $event-&gt;order-&gt;id === $order-&gt;id;
+});</code></pre><p>&#22914;&#26524;&#20320;&#21482;&#26159;&#24819;&#26029;&#35328;&#26576;&#20010;&#20107;&#20214;&#30417;&#21548;&#22120;&#27491;&#22312;&#30417;&#21548;&#26576;&#20010;&#32473;&#23450;&#20107;&#20214;&#65292;&#21487;&#20197;&#20351;&#29992; <code>assertListening</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Event::assertListening(
+    OrderShipped::class,
+    SendShipmentNotification::class
+);</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#35843;&#29992; <code>Event::fake()</code> &#20043;&#21518;&#65292;&#20219;&#20309;&#20107;&#20214;&#30417;&#21548;&#22120;&#37117;&#19981;&#20250;&#34987;&#25191;&#34892;&#12290;&#22240;&#27492;&#65292;&#22914;&#26524;&#20320;&#30340;&#27979;&#35797;&#20351;&#29992;&#20102;&#20381;&#36182;&#20107;&#20214;&#30340;&#27169;&#22411;&#24037;&#21378;&#65288;&#20363;&#22914;&#22312;&#27169;&#22411;&#30340; <code>creating</code> &#20107;&#20214;&#20013;&#21019;&#24314; UUID&#65289;&#65292;&#20320;&#24212;&#24403;&#22312;&#20351;&#29992;&#20102;&#24037;&#21378;<strong class="mk-p">&#20043;&#21518;</strong>&#20877;&#35843;&#29992; <code>Event::fake()</code>&#12290;</p>
+</blockquote><h3 id="a3d136f8e54aab6616a509e39db2b507">&#20266;&#36896;&#37096;&#20998;&#20107;&#20214;</h3><p>&#22914;&#26524;&#20320;&#21482;&#24819;&#20026;&#19968;&#32452;&#29305;&#23450;&#20107;&#20214;&#20266;&#36896;&#30417;&#21548;&#22120;&#65292;&#21487;&#20197;&#25226;&#23427;&#20204;&#20256;&#32473; <code>fake</code> &#25110; <code>fakeFor</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">test('orders can be processed', function () {
+    Event::fake([
+        OrderCreated::class,
+    ]);
+
+    $order = Order::factory()-&gt;create();
+
+    Event::assertDispatched(OrderCreated::class);
+
+    // &#20854;&#20182;&#20107;&#20214;&#29031;&#24120;&#27966;&#21457;&hellip;&hellip;
+    $order-&gt;update([
+        // ...
+    ]);
+});</code></pre><pre><code class="language-php">/**
+ * &#27979;&#35797;&#35746;&#21333;&#22788;&#29702;&#27969;&#31243;&#12290;
+ */
+public function test_orders_can_be_processed(): void
+{
+    Event::fake([
+        OrderCreated::class,
+    ]);
+
+    $order = Order::factory()-&gt;create();
+
+    Event::assertDispatched(OrderCreated::class);
+
+    // &#20854;&#20182;&#20107;&#20214;&#29031;&#24120;&#27966;&#21457;&hellip;&hellip;
+    $order-&gt;update([
+        // ...
+    ]);
+}</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>except</code> &#26041;&#27861;&#26469;&#20266;&#36896;&#38500;&#25351;&#23450;&#20107;&#20214;&#38598;&#21512;&#20043;&#22806;&#30340;&#25152;&#26377;&#20107;&#20214;&#65306;</p><pre><code class="language-php">Event::fake()-&gt;except([
+    OrderCreated::class,
+]);</code></pre><h3 id="37736d449055e3dd58e346cc1ea901e6">&#20316;&#29992;&#22495;&#20107;&#20214;&#20266;&#36896;</h3><p>&#22914;&#26524;&#20320;&#21482;&#24819;&#22312;&#27979;&#35797;&#30340;&#19968;&#37096;&#20998;&#20013;&#20266;&#36896;&#20107;&#20214;&#30417;&#21548;&#22120;&#65292;&#21487;&#20197;&#20351;&#29992; <code>fakeFor</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use App\Events\OrderCreated;
+use App\Models\Order;
+use Illuminate\Support\Facades\Event;
+
+test('orders can be processed', function () {
+    $order = Event::fakeFor(function () {
+        $order = Order::factory()-&gt;create();
+
+        Event::assertDispatched(OrderCreated::class);
+
+        return $order;
+    });
+
+    // &#20107;&#20214;&#29031;&#24120;&#27966;&#21457;&#65292;&#35266;&#23519;&#32773;&#20063;&#20250;&#36816;&#34892;&hellip;&hellip;
+    $order-&gt;update([
+        // ...
+    ]);
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use App\Events\OrderCreated;
+use App\Models\Order;
+use Illuminate\Support\Facades\Event;
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#27979;&#35797;&#35746;&#21333;&#22788;&#29702;&#27969;&#31243;&#12290;
+     */
+    public function test_orders_can_be_processed(): void
+    {
+        $order = Event::fakeFor(function () {
+            $order = Order::factory()-&gt;create();
+
+            Event::assertDispatched(OrderCreated::class);
+
+            return $order;
+        });
+
+        // &#20107;&#20214;&#29031;&#24120;&#27966;&#21457;&#65292;&#35266;&#23519;&#32773;&#20063;&#20250;&#36816;&#34892;&hellip;&hellip;
+        $order-&gt;update([
+            // ...
+        ]);
+    }
+}</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 部署流程: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/deployment#optimization" target="_blank">/docs/Laravel 13.x/deployment#optimization</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 队列: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues" target="_blank">/docs/Laravel 13.x/queues</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Eloquent ORM: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent" target="_blank">/docs/Laravel 13.x/eloquent</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> 队列监听器: <i><a href="x3vo0l4vm1.html#queued-event-listeners" target="_blank">#queued-event-listeners</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> 服务容器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/container" target="_blank">/docs/Laravel 13.x/container</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 配置好队列: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues" target="_blank">/docs/Laravel 13.x/queues</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 队列系统: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues" target="_blank">/docs/Laravel 13.x/queues</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 队列任务与数据库事务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues#jobs-and-database-transactions" target="_blank">/docs/Laravel 13.x/queues#jobs-and-database-transactions</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> 任务中间件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues#job-middleware" target="_blank">/docs/Laravel 13.x/queues#job-middleware</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> 加密: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/encryption" target="_blank">/docs/Laravel 13.x/encryption</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> 锁: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/cache#atomic-locks" target="_blank">/docs/Laravel 13.x/cache#atomic-locks</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> 锁: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/cache#atomic-locks" target="_blank">/docs/Laravel 13.x/cache#atomic-locks</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> WithoutOverlapping: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues#preventing-job-overlaps" target="_blank">/docs/Laravel 13.x/queues#preventing-job-overlaps</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> 内置测试辅助函数: <i><a href="x3vo0l4vm1.html#testing" target="_blank">#testing</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 事件发现约定: <i><a href="x3vo0l4vm1.html#event-discovery" target="_blank">#event-discovery</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="3xyq4r4vmq.html#blog1033" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">契约（Contracts）</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="qk9428ovw1.html#blog1035" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">文件存储</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

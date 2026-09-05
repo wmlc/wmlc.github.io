@@ -70,7 +70,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
 
     
 </head>
@@ -322,6 +322,10 @@
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
                                    href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel&#32;13.x/overview.html">Laravel 13.x</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
@@ -586,6 +590,93 @@
     })();
 </script>
 
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -617,10 +708,10 @@ var _hmt = _hmt || [];
 <li><a href="3xyq43pvmq.html#ef962f82977d8a3ccb17ed0812987268">3. 两种方法的对比</a></li>
 <li><a href="3xyq43pvmq.html#8a6703bc9f47dec1f5fe64389f4dfb00">4. 如何选择？</a></li>
 <li><a href="3xyq43pvmq.html#816d6b7f5bc0ca0d31c5208309a212fb">5. 进阶方案</a></li>
-</ul><?xml encoding="UTF-8"><p>&#22522;&#20110; Redis &#30340;&#35775;&#38382;&#38480;&#27969;&#20027;&#35201;&#26377;&#20004;&#31181;&#24120;&#35265;&#26041;&#27861;&#65306;<strong class="mk-g">&#35745;&#25968;&#22120;&#38480;&#27969;&#65288;&#22266;&#23450;&#31383;&#21475;&#65289;</strong> &#21644; <strong class="mk-b">&#28369;&#21160;&#31383;&#21475;&#38480;&#27969;</strong>&#12290;&#23427;&#20204;&#21508;&#26377;&#20248;&#32570;&#28857;&#65292;&#36866;&#29992;&#20110;&#19981;&#21516;&#30340;&#22330;&#26223;&#12290;  </p><hr><h2 id="9c8c803d0fd25d0a110eef11dd4d915f">1. &#35745;&#25968;&#22120;&#38480;&#27969;&#65288;&#22266;&#23450;&#31383;&#21475;&#65289;</h2><h3 id="dde6ec1628cca436d7b3e43236c5d52f"><strong class="mk-b">&#23454;&#29616;&#26041;&#24335;</strong></h3><ul style="padding-left: 1.5em;">
+</ul><?xml encoding="UTF-8"><p>&#22522;&#20110; Redis &#30340;&#35775;&#38382;&#38480;&#27969;&#20027;&#35201;&#26377;&#20004;&#31181;&#24120;&#35265;&#26041;&#27861;&#65306;<strong class="mk-p">&#35745;&#25968;&#22120;&#38480;&#27969;&#65288;&#22266;&#23450;&#31383;&#21475;&#65289;</strong> &#21644; <strong class="mk-b">&#28369;&#21160;&#31383;&#21475;&#38480;&#27969;</strong>&#12290;&#23427;&#20204;&#21508;&#26377;&#20248;&#32570;&#28857;&#65292;&#36866;&#29992;&#20110;&#19981;&#21516;&#30340;&#22330;&#26223;&#12290;  </p><hr><h2 id="9c8c803d0fd25d0a110eef11dd4d915f">1. &#35745;&#25968;&#22120;&#38480;&#27969;&#65288;&#22266;&#23450;&#31383;&#21475;&#65289;</h2><h3 id="dde6ec1628cca436d7b3e43236c5d52f"><strong class="mk-b">&#23454;&#29616;&#26041;&#24335;</strong></h3><ul style="padding-left: 1.5em;">
 <li style="list-style-type: disc;">&#20351;&#29992; Redis &#30340; <code>INCR</code> + <code>EXPIRE</code> &#23454;&#29616;&#22266;&#23450;&#26102;&#38388;&#31383;&#21475;&#20869;&#30340;&#35831;&#27714;&#35745;&#25968;&#12290;  </li>
 <li style="list-style-type: disc;">&#20363;&#22914;&#65306;&#38480;&#21046; 100 &#35831;&#27714;/&#20998;&#38047;&#65292;&#27599;&#20998;&#38047;&#37325;&#32622;&#35745;&#25968;&#22120;&#12290;  </li>
-</ul><h3 id="d7a9df09e00dc933cd051df548a6d266"><strong class="mk-y">PHP &#31034;&#20363;&#20195;&#30721;</strong></h3><pre><code class="language-php">function isRateLimited(string $key, int $limit, int $windowSeconds): bool
+</ul><h3 id="d7a9df09e00dc933cd051df548a6d266"><strong class="mk-g">PHP &#31034;&#20363;&#20195;&#30721;</strong></h3><pre><code class="language-php">function isRateLimited(string $key, int $limit, int $windowSeconds): bool
 {
     $redis = Redis::connection();
     $current = $redis-&gt;incr($key);
@@ -630,21 +721,21 @@ var _hmt = _hmt || [];
     }
 
     return $current &gt; $limit;
-}</code></pre><p><strong class="mk-y">&#35843;&#29992;&#26041;&#24335;</strong>&#65306;</p><pre><code class="language-php">$key = "rate_limit:user_123"; // &#38480;&#27969; key
+}</code></pre><p><strong class="mk-g">&#35843;&#29992;&#26041;&#24335;</strong>&#65306;</p><pre><code class="language-php">$key = "rate_limit:user_123"; // &#38480;&#27969; key
 $limit = 100;                 // 100 &#27425;/&#20998;&#38047;
 $windowSeconds = 60;          // 60 &#31186;&#31383;&#21475;
 if (isRateLimited($key, $limit, $windowSeconds)) {
     throw new Exception("&#35831;&#27714;&#22826;&#39057;&#32321;&#65292;&#35831;&#31245;&#21518;&#20877;&#35797;");
-}</code></pre><h3 id="d31db097ae0ff5c215684997bbbe913a"><strong class="mk-p">&#20248;&#28857;</strong></h3><p>&#9989; <strong class="mk-p">&#23454;&#29616;&#31616;&#21333;</strong>&#65292;&#36866;&#21512;&#20302;&#24182;&#21457;&#22330;&#26223;<br>
-&#9989; <strong class="mk-b">&#24615;&#33021;&#39640;</strong>&#65292;&#20165;&#38656; <code>INCR</code> + <code>EXPIRE</code><br>
-&#9989; <strong class="mk-g">&#20869;&#23384;&#21344;&#29992;&#20302;</strong>&#65292;&#20165;&#23384;&#20648;&#19968;&#20010;&#35745;&#25968;  </p><h3 id="ecfff095b676c68f29ea8dc873d83c0e"><strong class="mk-p">&#32570;&#28857;</strong></h3><p>&#10060; <strong class="mk-g">&#20020;&#30028;&#26102;&#38388;&#38382;&#39064;</strong>&#65288;&#31383;&#21475;&#36793;&#30028;&#21487;&#33021;&#31361;&#30772;&#38480;&#21046;&#65289;  </p><ul style="padding-left: 1.5em;">
+}</code></pre><h3 id="d31db097ae0ff5c215684997bbbe913a"><strong class="mk-y">&#20248;&#28857;</strong></h3><p>&#9989; <strong class="mk-y">&#23454;&#29616;&#31616;&#21333;</strong>&#65292;&#36866;&#21512;&#20302;&#24182;&#21457;&#22330;&#26223;<br>
+&#9989; <strong class="mk-y">&#24615;&#33021;&#39640;</strong>&#65292;&#20165;&#38656; <code>INCR</code> + <code>EXPIRE</code><br>
+&#9989; <strong class="mk-y">&#20869;&#23384;&#21344;&#29992;&#20302;</strong>&#65292;&#20165;&#23384;&#20648;&#19968;&#20010;&#35745;&#25968;  </p><h3 id="ecfff095b676c68f29ea8dc873d83c0e"><strong class="mk-b">&#32570;&#28857;</strong></h3><p>&#10060; <strong class="mk-y">&#20020;&#30028;&#26102;&#38388;&#38382;&#39064;</strong>&#65288;&#31383;&#21475;&#36793;&#30028;&#21487;&#33021;&#31361;&#30772;&#38480;&#21046;&#65289;  </p><ul style="padding-left: 1.5em;">
 <li style="list-style-type: disc;">&#20363;&#22914;&#65306;  
 <ul style="padding-left: 1.5em;">
 <li style="list-style-type: disc;">&#22312; <code>00:59</code> &#21457;&#36865; 100 &#27425;&#35831;&#27714;  </li>
 <li style="list-style-type: disc;">&#22312; <code>01:00</code> &#21448;&#21457;&#36865; 100 &#27425;&#35831;&#27714;  </li>
 <li style="list-style-type: disc;">&#23454;&#38469; 2 &#31186;&#20869;&#22788;&#29702;&#20102; 200 &#27425;&#35831;&#27714;&#65292;&#36229;&#20986;&#39044;&#26399;  </li>
 </ul></li>
-</ul><hr><h2 id="e0385b8c43907119af7cb56ef81068e2">2. &#28369;&#21160;&#31383;&#21475;&#38480;&#27969;</h2><h3 id="dde6ec1628cca436d7b3e43236c5d52f"><strong class="mk-b">&#23454;&#29616;&#26041;&#24335;</strong></h3><ul style="padding-left: 1.5em;">
+</ul><hr><h2 id="e0385b8c43907119af7cb56ef81068e2">2. &#28369;&#21160;&#31383;&#21475;&#38480;&#27969;</h2><h3 id="dde6ec1628cca436d7b3e43236c5d52f"><strong class="mk-g">&#23454;&#29616;&#26041;&#24335;</strong></h3><ul style="padding-left: 1.5em;">
 <li style="list-style-type: disc;">&#20351;&#29992; Redis &#30340; <code>ZSET</code>&#65288;&#26377;&#24207;&#38598;&#21512;&#65289;&#35760;&#24405;&#27599;&#27425;&#35831;&#27714;&#30340;&#26102;&#38388;&#25139;  </li>
 <li style="list-style-type: disc;">&#27599;&#27425;&#35831;&#27714;&#26102;&#65292;&#28165;&#29702;&#36807;&#26399;&#30340;&#35831;&#27714;&#65292;&#24182;&#35745;&#31639;&#24403;&#21069;&#31383;&#21475;&#20869;&#30340;&#35831;&#27714;&#25968;  </li>
 </ul><h3 id="d7a9df09e00dc933cd051df548a6d266"><strong class="mk-y">PHP &#31034;&#20363;&#20195;&#30721;</strong></h3><pre><code class="language-php">function isRateLimitedSlidingWindow(string $key,int $limit,int $windowSeconds): bool {
@@ -667,30 +758,30 @@ if (isRateLimited($key, $limit, $windowSeconds)) {
     $redis-&gt;expire($key, $windowSeconds); // &#36991;&#20813; ZSET &#26080;&#38480;&#22686;&#38271;
 
     return false;
-}</code></pre><p><strong class="mk-p">&#35843;&#29992;&#26041;&#24335;</strong>&#65306;</p><pre><code class="language-php">$key = "rate_limit_sliding:user_123";
+}</code></pre><p><strong class="mk-b">&#35843;&#29992;&#26041;&#24335;</strong>&#65306;</p><pre><code class="language-php">$key = "rate_limit_sliding:user_123";
 $limit = 100;      // 100 &#27425;/&#20998;&#38047;
 $windowSeconds = 60;
 if (isRateLimitedSlidingWindow($key, $limit, $windowSeconds)) {
     throw new Exception("&#35831;&#27714;&#22826;&#39057;&#32321;&#65292;&#35831;&#31245;&#21518;&#20877;&#35797;");
-}</code></pre><h3 id="d31db097ae0ff5c215684997bbbe913a"><strong class="mk-y">&#20248;&#28857;</strong></h3><p>&#9989; <strong class="mk-y">&#26356;&#31934;&#30830;&#30340;&#38480;&#27969;</strong>&#65292;&#36991;&#20813;&#22266;&#23450;&#31383;&#21475;&#30340;&#20020;&#30028;&#38382;&#39064;<br>
-&#9989; <strong class="mk-g">&#24179;&#28369;&#25511;&#21046;</strong>&#65292;&#19981;&#20250;&#20986;&#29616;&#30701;&#26102;&#38388;&#31361;&#21457;&#27969;&#37327;  </p><h3 id="ecfff095b676c68f29ea8dc873d83c0e"><strong class="mk-g">&#32570;&#28857;</strong></h3><p>&#10060; <strong class="mk-p">&#23454;&#29616;&#36739;&#22797;&#26434;</strong>&#65292;&#38656;&#35201; <code>ZSET</code> &#25805;&#20316;<br>
-&#10060; <strong class="mk-b">&#24615;&#33021;&#31245;&#20302;</strong>&#65292;&#27599;&#27425;&#35831;&#27714;&#38656;&#28165;&#29702;&#36807;&#26399;&#25968;&#25454;<br>
+}</code></pre><h3 id="d31db097ae0ff5c215684997bbbe913a"><strong class="mk-b">&#20248;&#28857;</strong></h3><p>&#9989; <strong class="mk-b">&#26356;&#31934;&#30830;&#30340;&#38480;&#27969;</strong>&#65292;&#36991;&#20813;&#22266;&#23450;&#31383;&#21475;&#30340;&#20020;&#30028;&#38382;&#39064;<br>
+&#9989; <strong class="mk-p">&#24179;&#28369;&#25511;&#21046;</strong>&#65292;&#19981;&#20250;&#20986;&#29616;&#30701;&#26102;&#38388;&#31361;&#21457;&#27969;&#37327;  </p><h3 id="ecfff095b676c68f29ea8dc873d83c0e"><strong class="mk-b">&#32570;&#28857;</strong></h3><p>&#10060; <strong class="mk-b">&#23454;&#29616;&#36739;&#22797;&#26434;</strong>&#65292;&#38656;&#35201; <code>ZSET</code> &#25805;&#20316;<br>
+&#10060; <strong class="mk-g">&#24615;&#33021;&#31245;&#20302;</strong>&#65292;&#27599;&#27425;&#35831;&#27714;&#38656;&#28165;&#29702;&#36807;&#26399;&#25968;&#25454;<br>
 &#10060; <strong class="mk-b">&#20869;&#23384;&#21344;&#29992;&#26356;&#39640;</strong>&#65292;&#23384;&#20648;&#25152;&#26377;&#35831;&#27714;&#26102;&#38388;&#25139;  </p><hr><h2 id="ef962f82977d8a3ccb17ed0812987268">3. &#20004;&#31181;&#26041;&#27861;&#30340;&#23545;&#27604;</h2><table>
 <thead>
 <tr>
-<th><strong class="mk-g">&#23545;&#27604;&#39033;</strong></th>
-<th><strong class="mk-b">&#35745;&#25968;&#22120;&#65288;&#22266;&#23450;&#31383;&#21475;&#65289;</strong></th>
-<th><strong class="mk-y">&#28369;&#21160;&#31383;&#21475;</strong></th>
+<th><strong class="mk-p">&#23545;&#27604;&#39033;</strong></th>
+<th><strong class="mk-p">&#35745;&#25968;&#22120;&#65288;&#22266;&#23450;&#31383;&#21475;&#65289;</strong></th>
+<th><strong class="mk-b">&#28369;&#21160;&#31383;&#21475;</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong class="mk-p">&#23454;&#29616;&#22797;&#26434;&#24230;</strong></td>
+<td><strong class="mk-b">&#23454;&#29616;&#22797;&#26434;&#24230;</strong></td>
 <td>&#11088;&#11088;&#65288;&#31616;&#21333;&#65289;</td>
 <td>&#11088;&#11088;&#11088;&#11088;&#65288;&#36739;&#22797;&#26434;&#65289;</td>
 </tr>
 <tr>
-<td><strong class="mk-g">&#24615;&#33021;</strong></td>
+<td><strong class="mk-p">&#24615;&#33021;</strong></td>
 <td>&#11088;&#11088;&#11088;&#11088;&#65288;&#39640;&#65289;</td>
 <td>&#11088;&#11088;&#11088;&#65288;&#31245;&#20302;&#65289;</td>
 </tr>
@@ -700,12 +791,12 @@ if (isRateLimitedSlidingWindow($key, $limit, $windowSeconds)) {
 <td>&#11088;&#11088;&#65288;&#36739;&#39640;&#65289;</td>
 </tr>
 <tr>
-<td><strong class="mk-p">&#31934;&#30830;&#24230;</strong></td>
+<td><strong class="mk-y">&#31934;&#30830;&#24230;</strong></td>
 <td>&#10060;&#65288;&#20020;&#30028;&#38382;&#39064;&#65289;</td>
 <td>&#9989;&#65288;&#26356;&#31934;&#30830;&#65289;</td>
 </tr>
 <tr>
-<td><strong class="mk-g">&#36866;&#29992;&#22330;&#26223;</strong></td>
+<td><strong class="mk-p">&#36866;&#29992;&#22330;&#26223;</strong></td>
 <td>&#20302;&#24182;&#21457;&#12289;&#20801;&#35768;&#23569;&#37327;&#31361;&#21457;</td>
 <td>&#39640;&#24182;&#21457;&#12289;&#20005;&#26684;&#38480;&#27969;</td>
 </tr>
@@ -714,27 +805,27 @@ if (isRateLimitedSlidingWindow($key, $limit, $windowSeconds)) {
 <li style="list-style-type: disc;">
 <p><strong class="mk-b">&#35745;&#25968;&#22120;&#65288;&#22266;&#23450;&#31383;&#21475;&#65289;</strong>&#65306;  </p>
 <ul style="padding-left: 1.5em;">
-<li style="list-style-type: disc;">&#36866;&#29992;&#20110; <strong class="mk-g">API &#38480;&#27969;&#12289;&#20302;&#39057;&#19994;&#21153;</strong>&#65288;&#22914;&#30331;&#24405;&#38450;&#26292;&#21147;&#30772;&#35299;&#65289;  </li>
-<li style="list-style-type: disc;">&#23545; <strong class="mk-y">&#31934;&#30830;&#24230;&#35201;&#27714;&#19981;&#39640;</strong>&#65292;&#20294;&#38656;&#35201; <strong class="mk-y">&#39640;&#24615;&#33021;</strong> &#30340;&#22330;&#26223;  </li>
+<li style="list-style-type: disc;">&#36866;&#29992;&#20110; <strong class="mk-y">API &#38480;&#27969;&#12289;&#20302;&#39057;&#19994;&#21153;</strong>&#65288;&#22914;&#30331;&#24405;&#38450;&#26292;&#21147;&#30772;&#35299;&#65289;  </li>
+<li style="list-style-type: disc;">&#23545; <strong class="mk-g">&#31934;&#30830;&#24230;&#35201;&#27714;&#19981;&#39640;</strong>&#65292;&#20294;&#38656;&#35201; <strong class="mk-b">&#39640;&#24615;&#33021;</strong> &#30340;&#22330;&#26223;  </li>
 </ul>
 </li>
 <li style="list-style-type: disc;">
 <p><strong class="mk-b">&#28369;&#21160;&#31383;&#21475;</strong>&#65306;  </p>
 <ul style="padding-left: 1.5em;">
 <li style="list-style-type: disc;">&#36866;&#29992;&#20110; <strong class="mk-b">&#39640;&#24182;&#21457; API&#12289;&#25903;&#20184;&#25509;&#21475;&#12289;&#31186;&#26432;&#31995;&#32479;</strong>  </li>
-<li style="list-style-type: disc;">&#38656;&#35201; <strong class="mk-b">&#20005;&#26684;&#38480;&#27969;</strong>&#65292;&#36991;&#20813;&#31361;&#21457;&#27969;&#37327;  </li>
+<li style="list-style-type: disc;">&#38656;&#35201; <strong class="mk-g">&#20005;&#26684;&#38480;&#27969;</strong>&#65292;&#36991;&#20813;&#31361;&#21457;&#27969;&#37327;  </li>
 </ul>
 </li>
 </ul><hr><h2 id="816d6b7f5bc0ca0d31c5208309a212fb">5. &#36827;&#38454;&#26041;&#26696;</h2><ul style="padding-left: 1.5em;">
-<li style="list-style-type: disc;"><strong class="mk-b">&#20196;&#29260;&#26742;&#65288;Token Bucket&#65289;</strong>&#65306;  
+<li style="list-style-type: disc;"><strong class="mk-g">&#20196;&#29260;&#26742;&#65288;Token Bucket&#65289;</strong>&#65306;  
 <ul style="padding-left: 1.5em;">
 <li style="list-style-type: disc;">&#20351;&#29992; <code>Redis</code> + <code>Lua</code> &#23454;&#29616;&#26356;&#24179;&#28369;&#30340;&#38480;&#27969;&#65288;&#22914; <code>Google Guava</code> &#30340; <code>RateLimiter</code>&#65289;  </li>
 </ul></li>
-<li style="list-style-type: disc;"><strong class="mk-y">&#28431;&#26742;&#65288;Leaky Bucket&#65289;</strong>&#65306;  
+<li style="list-style-type: disc;"><strong class="mk-g">&#28431;&#26742;&#65288;Leaky Bucket&#65289;</strong>&#65306;  
 <ul style="padding-left: 1.5em;">
-<li style="list-style-type: disc;">&#36866;&#29992;&#20110; <strong class="mk-b">&#24658;&#23450;&#36895;&#29575;&#22788;&#29702;</strong>&#65288;&#22914;&#28040;&#24687;&#38431;&#21015;&#28040;&#36153;&#38480;&#36895;&#65289;  </li>
+<li style="list-style-type: disc;">&#36866;&#29992;&#20110; <strong class="mk-y">&#24658;&#23450;&#36895;&#29575;&#22788;&#29702;</strong>&#65288;&#22914;&#28040;&#24687;&#38431;&#21015;&#28040;&#36153;&#38480;&#36895;&#65289;  </li>
 </ul></li>
-</ul><p>&#22914;&#26524;&#20320;&#38656;&#35201; <strong class="mk-b">&#26356;&#20005;&#26684;&#30340;&#38480;&#27969;</strong>&#65292;&#24314;&#35758;&#20351;&#29992; <strong class="mk-b">&#28369;&#21160;&#31383;&#21475;</strong> &#25110; <strong class="mk-p">&#20196;&#29260;&#26742;</strong>&#12290;&#22914;&#26524;&#21482;&#26159;&#31616;&#21333;&#38480;&#27969;&#65292;<strong class="mk-b">&#35745;&#25968;&#22120;</strong> &#23601;&#22815;&#29992;&#20102;&#12290;</p>
+</ul><p>&#22914;&#26524;&#20320;&#38656;&#35201; <strong class="mk-y">&#26356;&#20005;&#26684;&#30340;&#38480;&#27969;</strong>&#65292;&#24314;&#35758;&#20351;&#29992; <strong class="mk-g">&#28369;&#21160;&#31383;&#21475;</strong> &#25110; <strong class="mk-p">&#20196;&#29260;&#26742;</strong>&#12290;&#22914;&#26524;&#21482;&#26159;&#31616;&#21333;&#38480;&#27969;&#65292;<strong class="mk-y">&#35745;&#25968;&#22120;</strong> &#23601;&#22815;&#29992;&#20102;&#12290;</p>
 
 		<div class="nearpost-navigation">
     <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">

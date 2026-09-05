@@ -1,0 +1,1321 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>数据库：入门 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/kl9no87vz4.html', function (data, status) {
+            addView('kl9no87vz4.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>数据库：入门</h1><ul>
+<li><a href="kl9no87vz4.html#e05dce83e5129785b9f316978a14b896">简介</a>
+<ul>
+<li><a href="kl9no87vz4.html#224e2ccda861c2514faa683b3683c361">配置</a>
+<ul>
+<li><a href="kl9no87vz4.html#53025b1bd37619736c1cbb670604a7e8">SQLite 配置</a></li>
+<li><a href="kl9no87vz4.html#1c276183dec20ab5206991f1ea863231">Microsoft SQL Server 配置</a></li>
+<li><a href="kl9no87vz4.html#5c9823594b36fc295ab427cc3fe1796e">使用 URL 进行配置</a></li>
+</ul></li>
+<li><a href="kl9no87vz4.html#0d3e3de1e837c093d54989da55537ac3">读写连接</a>
+<ul>
+<li><a href="kl9no87vz4.html#1d8c4c390f10bc602952a5c4b2144e89">sticky 选项</a></li>
+</ul></li>
+<li><a href="kl9no87vz4.html#c9a470e1b3b4c9821e60a92d41259a54">PostgreSQL 连接池</a></li>
+</ul></li>
+<li><a href="kl9no87vz4.html#4b95fd890a508fdf55feeb628954c247">运行 SQL 查询</a>
+<ul>
+<li><a href="kl9no87vz4.html#4fb36a6129282ed34202ac4d096f575a">执行查询</a>
+<ul>
+<li><a href="kl9no87vz4.html#bfaa5f314793ca3d3da147f9e32f417b">选择标量值</a></li>
+<li><a href="kl9no87vz4.html#6e3c36716fd57f07e261465b1355132b">选择多个结果集</a></li>
+<li><a href="kl9no87vz4.html#5be97e9c49b68c70cdc5a782bebb1be8">使用命名绑定</a></li>
+<li><a href="kl9no87vz4.html#67e00289db8b298096ecbccd9b57a535">执行插入语句</a></li>
+<li><a href="kl9no87vz4.html#a0c6a61c341bd437310cbefbf02dcab9">执行更新语句</a></li>
+<li><a href="kl9no87vz4.html#73293c75da2b6fe03e1d42ac87021e39">执行删除语句</a></li>
+<li><a href="kl9no87vz4.html#ee3d94f1016c264cfb34151d818d13b1">执行通用语句</a></li>
+<li><a href="kl9no87vz4.html#b3f0305f3ffad174f67650c40ec281c2">执行未预处理语句</a></li>
+<li><a href="kl9no87vz4.html#73b23379e8c683715b71bd0f470017e4">隐式提交</a></li>
+</ul></li>
+<li><a href="kl9no87vz4.html#60a97ba2508a4e38f6a778f370cc3c27">使用多个数据库连接</a></li>
+<li><a href="kl9no87vz4.html#97d96c4b161f1dcc73c50dab4af93e84">监听查询事件</a></li>
+<li><a href="kl9no87vz4.html#2c1ed25a7f3a816f34f2e3373082353f">监控累计查询时间</a></li>
+</ul></li>
+<li><a href="kl9no87vz4.html#09ddab5d494d5d14d5f3bb8dbcd144a7">数据库事务</a>
+<ul>
+<li><a href="kl9no87vz4.html#0c0abf5123c3ed758f2437b05ec3d9be">处理死锁</a></li>
+<li><a href="kl9no87vz4.html#89e5c204aa40e1ccbf4f4b110c4a8324">手动使用事务</a></li>
+</ul></li>
+<li><a href="kl9no87vz4.html#44a7379078369b9f97e7a06cf30dee78">连接数据库 CLI</a></li>
+<li><a href="kl9no87vz4.html#4253e0a7b27ea5fff9781d4d45f25bdc">检查你的数据库</a>
+<ul>
+<li><a href="kl9no87vz4.html#d492f032892d080e591ee2eb2219a970">表概览</a></li>
+</ul></li>
+<li><a href="kl9no87vz4.html#91066f141b9a06470c881b4ac8ad9497">监控你的数据库</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>&#20960;&#20046;&#27599;&#20010;&#29616;&#20195; Web &#24212;&#29992;&#37117;&#20250;&#19982;&#25968;&#25454;&#24211;&#20132;&#20114;&#12290;Laravel &#20511;&#21161;&#21407;&#29983; SQL&#12289;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queries" target="_blank">&#27969;&#30021;&#30340;&#26597;&#35810;&#26500;&#36896;&#22120;</a>&#20197;&#21450; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent" target="_blank">Eloquent ORM</a>&#65292;&#35753;&#20351;&#29992;&#21508;&#31181;&#21463;&#25903;&#25345;&#30340;&#25968;&#25454;&#24211;&#36827;&#34892;&#20132;&#20114;&#21464;&#24471;&#26497;&#20854;&#31616;&#21333;&#12290;&#30446;&#21069;&#65292;Laravel &#20026;&#20116;&#31181;&#25968;&#25454;&#24211;&#25552;&#20379;&#31532;&#19968;&#26041;&#25903;&#25345;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">MariaDB 10.3+ (<a href="https://mariadb.org/about/#maintenance-policy" target="_blank" rel="noopener noreferrer">&#29256;&#26412;&#31574;&#30053;</a>)</li>
+<li style="list-style-type: disc;">MySQL 5.7+ (<a href="https://en.wikipedia.org/wiki/MySQL#Release_history" target="_blank" rel="noopener noreferrer">&#29256;&#26412;&#31574;&#30053;</a>)</li>
+<li style="list-style-type: disc;">PostgreSQL 10.0+ (<a href="https://www.postgresql.org/support/versioning/" target="_blank" rel="noopener noreferrer">&#29256;&#26412;&#31574;&#30053;</a>)</li>
+<li style="list-style-type: disc;">SQLite 3.26.0+</li>
+<li style="list-style-type: disc;">SQL Server 2017+ (<a href="https://docs.microsoft.com/en-us/lifecycle/products/?products=sql-server" target="_blank" rel="noopener noreferrer">&#29256;&#26412;&#31574;&#30053;</a>)</li>
+</ul><p>&#27492;&#22806;&#65292;MongoDB &#36890;&#36807; <code>mongodb/laravel-mongodb</code> &#21253;&#25552;&#20379;&#25903;&#25345;&#65292;&#35813;&#21253;&#30001; MongoDB &#23448;&#26041;&#32500;&#25252;&#12290;&#27442;&#20102;&#35299;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#26597;&#38405; <a href="https://www.mongodb.com/docs/drivers/php/laravel-mongodb/" target="_blank" rel="noopener noreferrer">Laravel MongoDB</a> &#25991;&#26723;&#12290;</p><h3 id="224e2ccda861c2514faa683b3683c361">&#37197;&#32622;</h3><p>Laravel &#25968;&#25454;&#24211;&#26381;&#21153;&#30340;&#37197;&#32622;&#20301;&#20110;&#24212;&#29992;&#30340; <code>config/database.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#12290;&#22312;&#35813;&#25991;&#20214;&#20013;&#65292;&#20320;&#21487;&#20197;&#23450;&#20041;&#25152;&#26377;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#65292;&#24182;&#25351;&#23450;&#40664;&#35748;&#20351;&#29992;&#21738;&#20010;&#36830;&#25509;&#12290;&#35813;&#25991;&#20214;&#20013;&#30340;&#22823;&#22810;&#25968;&#37197;&#32622;&#36873;&#39033;&#37117;&#30001;&#24212;&#29992;&#29615;&#22659;&#21464;&#37327;&#30340;&#20540;&#39537;&#21160;&#12290;&#25991;&#20214;&#20013;&#25552;&#20379;&#20102; Laravel &#22823;&#22810;&#25968;&#21463;&#25903;&#25345;&#25968;&#25454;&#24211;&#31995;&#32479;&#30340;&#31034;&#20363;&#12290;</p><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Laravel &#30340;&#31034;&#20363;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/configuration#environment-configuration" target="_blank">&#29615;&#22659;&#37197;&#32622;</a>&#24050;&#20934;&#22791;&#22909;&#19982; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sail" target="_blank">Laravel Sail</a>&#65288;&#19968;&#20010;&#29992;&#20110;&#22312;&#26412;&#22320;&#26426;&#22120;&#19978;&#24320;&#21457; Laravel &#24212;&#29992;&#30340; Docker &#37197;&#32622;&#65289;&#37197;&#21512;&#20351;&#29992;&#12290;&#19981;&#36807;&#65292;&#20320;&#21487;&#20197;&#26681;&#25454;&#26412;&#22320;&#25968;&#25454;&#24211;&#30340;&#38656;&#35201;&#33258;&#30001;&#20462;&#25913;&#25968;&#25454;&#24211;&#37197;&#32622;&#12290;</p><h4 id="53025b1bd37619736c1cbb670604a7e8">SQLite &#37197;&#32622;</h4><p>SQLite &#25968;&#25454;&#24211;&#21253;&#21547;&#22312;&#25991;&#20214;&#31995;&#32479;&#19978;&#30340;&#19968;&#20010;&#21333;&#29420;&#25991;&#20214;&#20013;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992;&#32456;&#31471;&#20013;&#30340; <code>touch</code> &#21629;&#20196;&#21019;&#24314;&#19968;&#20010;&#26032; SQLite &#25968;&#25454;&#24211;&#65306;<code>touch database/database.sqlite</code>&#12290;&#21019;&#24314;&#25968;&#25454;&#24211;&#20043;&#21518;&#65292;&#20320;&#21487;&#20197;&#36731;&#26494;&#37197;&#32622;&#29615;&#22659;&#21464;&#37327;&#65292;&#23558;&#25968;&#25454;&#24211;&#30340;&#32477;&#36335;&#24452;&#25918;&#20837; <code>DB_DATABASE</code> &#29615;&#22659;&#21464;&#37327;&#65292;&#20174;&#32780;&#25351;&#21521;&#35813;&#25968;&#25454;&#24211;&#65306;</p><pre><code class="language-ini">DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/database.sqlite</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;SQLite &#36830;&#25509;&#21551;&#29992;&#20102;&#22806;&#38190;&#32422;&#26463;&#12290;&#22914;&#26524;&#20320;&#24819;&#31105;&#29992;&#23427;&#20204;&#65292;&#24212;&#23558; <code>DB_FOREIGN_KEYS</code> &#29615;&#22659;&#21464;&#37327;&#35774;&#32622;&#20026; <code>false</code>&#65306;</p><pre><code class="language-ini">DB_FOREIGN_KEYS=false</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/installation#creating-a-laravel-project" target="_blank">Laravel &#23433;&#35013;&#22120;</a>&#21019;&#24314; Laravel &#24212;&#29992;&#24182;&#36873;&#25321; SQLite &#20316;&#20026;&#25968;&#25454;&#24211;&#65292;Laravel &#20250;&#33258;&#21160;&#21019;&#24314;&#19968;&#20010; <code>database/database.sqlite</code> &#25991;&#20214;&#24182;&#20026;&#20320;&#36816;&#34892;&#40664;&#35748;&#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/migrations" target="_blank">&#25968;&#25454;&#24211;&#36801;&#31227;</a>&#12290;</p>
+</blockquote><h4 id="1c276183dec20ab5206991f1ea863231">Microsoft SQL Server &#37197;&#32622;</h4><p>&#35201;&#20351;&#29992; Microsoft SQL Server &#25968;&#25454;&#24211;&#65292;&#20320;&#24212;&#24403;&#30830;&#20445;&#24050;&#23433;&#35013; <code>sqlsrv</code> &#21644; <code>pdo_sqlsrv</code> PHP &#25193;&#23637;&#65292;&#20197;&#21450;&#23427;&#20204;&#21487;&#33021;&#38656;&#35201;&#30340;&#20219;&#20309;&#20381;&#36182;&#39033;&#65288;&#20363;&#22914; Microsoft SQL ODBC &#39537;&#21160;&#31243;&#24207;&#65289;&#12290;</p><h4 id="5c9823594b36fc295ab427cc3fe1796e">&#20351;&#29992; URL &#36827;&#34892;&#37197;&#32622;</h4><p>&#36890;&#24120;&#65292;&#25968;&#25454;&#24211;&#36830;&#25509;&#20351;&#29992;&#22810;&#20010;&#37197;&#32622;&#20540;&#26469;&#37197;&#32622;&#65292;&#20363;&#22914; <code>host</code>&#12289;<code>database</code>&#12289;<code>username</code>&#12289;<code>password</code> &#31561;&#12290;&#36825;&#20123;&#37197;&#32622;&#20540;&#21508;&#33258;&#37117;&#26377;&#23545;&#24212;&#30340;&#29615;&#22659;&#21464;&#37327;&#12290;&#36825;&#24847;&#21619;&#30528;&#22312;&#29983;&#20135;&#26381;&#21153;&#22120;&#19978;&#37197;&#32622;&#25968;&#25454;&#24211;&#36830;&#25509;&#20449;&#24687;&#26102;&#65292;&#20320;&#38656;&#35201;&#31649;&#29702;&#22810;&#20010;&#29615;&#22659;&#21464;&#37327;&#12290;</p><p>&#19968;&#20123;&#25176;&#31649;&#25968;&#25454;&#24211;&#25552;&#20379;&#21830;&#65288;&#22914; AWS &#21644; Heroku&#65289;&#20250;&#25552;&#20379;&#19968;&#20010;&#21333;&#19968;&#30340;&#25968;&#25454;&#24211;"URL"&#65292;&#20854;&#20013;&#21253;&#21547;&#25152;&#26377;&#36830;&#25509;&#20449;&#24687;&#65292;&#21512;&#24182;&#20026;&#19968;&#20010;&#23383;&#31526;&#20018;&#12290;&#19968;&#20010;&#25968;&#25454;&#24211; URL &#31034;&#20363;&#21487;&#33021;&#22914;&#19979;&#25152;&#31034;&#65306;</p><pre><code class="language-html">mysql://root:password@127.0.0.1/forge?charset=UTF-8</code></pre><p>&#36825;&#20123; URL &#36890;&#24120;&#36981;&#24490;&#19968;&#20010;&#26631;&#20934;&#27169;&#24335;&#32422;&#23450;&#65306;</p><pre><code class="language-html">driver://username:password@host:port/database?options</code></pre><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;Laravel &#25903;&#25345;&#23558;&#36825;&#20123; URL &#20316;&#20026;&#20351;&#29992;&#22810;&#20010;&#37197;&#32622;&#36873;&#39033;&#37197;&#32622;&#25968;&#25454;&#24211;&#30340;&#26367;&#20195;&#26041;&#26696;&#12290;&#22914;&#26524;&#23384;&#22312; <code>url</code>&#65288;&#25110;&#23545;&#24212;&#30340; <code>DB_URL</code> &#29615;&#22659;&#21464;&#37327;&#65289;&#37197;&#32622;&#36873;&#39033;&#65292;&#23427;&#23558;&#34987;&#29992;&#26469;&#25552;&#21462;&#25968;&#25454;&#24211;&#36830;&#25509;&#21644;&#20973;&#25454;&#20449;&#24687;&#12290;</p><h3 id="0d3e3de1e837c093d54989da55537ac3">&#35835;&#20889;&#36830;&#25509;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#20351;&#29992;&#19968;&#20010;&#25968;&#25454;&#24211;&#36830;&#25509;&#26469;&#25191;&#34892; SELECT &#35821;&#21477;&#65292;&#32780;&#20351;&#29992;&#21478;&#19968;&#20010;&#36830;&#25509;&#26469;&#25191;&#34892; INSERT&#12289;UPDATE &#21644; DELETE &#35821;&#21477;&#12290;Laravel &#35753;&#36825;&#20214;&#20107;&#21464;&#24471;&#36731;&#32780;&#26131;&#20030;&#65292;&#26080;&#35770;&#20320;&#20351;&#29992;&#30340;&#26159;&#21407;&#29983;&#26597;&#35810;&#12289;&#26597;&#35810;&#26500;&#36896;&#22120;&#36824;&#26159; Eloquent ORM&#65292;&#37117;&#20250;&#22987;&#32456;&#20351;&#29992;&#27491;&#30830;&#30340;&#36830;&#25509;&#12290;</p><p>&#26469;&#30475;&#36825;&#20010;&#31034;&#20363;&#65292;&#20102;&#35299;&#24212;&#24403;&#22914;&#20309;&#37197;&#32622;&#35835; / &#20889;&#36830;&#25509;&#65306;</p><pre><code class="language-php">'mysql' =&gt; [
+    'driver' =&gt; 'mysql',
+
+    'read' =&gt; [
+        'host' =&gt; [
+            '192.168.1.1',
+            '196.168.1.2',
+        ],
+    ],
+    'write' =&gt; [
+        'host' =&gt; [
+            '192.168.1.3',
+        ],
+    ],
+    'sticky' =&gt; true,
+
+    'port' =&gt; env('DB_PORT', '3306'),
+    'database' =&gt; env('DB_DATABASE', 'laravel'),
+    'username' =&gt; env('DB_USERNAME', 'root'),
+    'password' =&gt; env('DB_PASSWORD', ''),
+    'unix_socket' =&gt; env('DB_SOCKET', ''),
+    'charset' =&gt; env('DB_CHARSET', 'utf8mb4'),
+    'collation' =&gt; env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+    'prefix' =&gt; '',
+    'prefix_indexes' =&gt; true,
+    'strict' =&gt; true,
+    'engine' =&gt; null,
+    'options' =&gt; extension_loaded('pdo_mysql') ? array_filter([
+        (PHP_VERSION_ID &gt;= 80500 ? \Pdo\Mysql::ATTR_SSL_CA : \PDO::MYSQL_ATTR_SSL_CA) =&gt; env('MYSQL_ATTR_SSL_CA'),
+    ]) : [],
+],</code></pre><p>&#27880;&#24847;&#65292;&#37197;&#32622;&#25968;&#32452;&#20013;&#26032;&#22686;&#20102;&#19977;&#20010;&#38190;&#65306;<code>read</code>&#12289;<code>write</code> &#21644; <code>sticky</code>&#12290;<code>read</code> &#21644; <code>write</code> &#38190;&#30340;&#20540;&#37117;&#26159;&#25968;&#32452;&#65292;&#21253;&#21547;&#19968;&#20010;&#21333;&#29420;&#30340;&#38190;&#65306;<code>host</code>&#12290;<code>read</code> &#21644; <code>write</code> &#36830;&#25509;&#30340;&#20854;&#20313;&#25968;&#25454;&#24211;&#36873;&#39033;&#20250;&#20174;&#20027; <code>mysql</code> &#37197;&#32622;&#25968;&#32452;&#21512;&#24182;&#32780;&#26469;&#12290;</p><p>&#21482;&#26377;&#24403;&#20320;&#24076;&#26395;&#35206;&#30422;&#20027; <code>mysql</code> &#25968;&#32452;&#20013;&#30340;&#20540;&#26102;&#65292;&#25165;&#38656;&#35201;&#23558;&#26465;&#30446;&#25918;&#20837; <code>read</code> &#21644; <code>write</code> &#25968;&#32452;&#12290;&#22240;&#27492;&#65292;&#22312;&#26412;&#20363;&#20013;&#65292;<code>192.168.1.1</code> &#20250;&#34987;&#29992;&#20316;"&#35835;"&#36830;&#25509;&#30340;&#20027;&#26426;&#65292;&#32780; <code>192.168.1.3</code> &#20250;&#34987;&#29992;&#20316;"&#20889;"&#36830;&#25509;&#30340;&#20027;&#26426;&#12290;&#25968;&#25454;&#24211;&#20973;&#25454;&#12289;&#21069;&#32512;&#12289;&#23383;&#31526;&#38598;&#20197;&#21450;&#20027; <code>mysql</code> &#25968;&#32452;&#20013;&#30340;&#25152;&#26377;&#20854;&#20182;&#36873;&#39033;&#20250;&#22312;&#20004;&#20010;&#36830;&#25509;&#20043;&#38388;&#20849;&#20139;&#12290;&#24403; <code>host</code> &#37197;&#32622;&#25968;&#32452;&#20013;&#23384;&#22312;&#22810;&#20010;&#20540;&#26102;&#65292;&#27599;&#20010;&#35831;&#27714;&#37117;&#20250;&#38543;&#26426;&#36873;&#25321;&#19968;&#20010;&#25968;&#25454;&#24211;&#20027;&#26426;&#12290;</p><h4 id="1d8c4c390f10bc602952a5c4b2144e89"><code>sticky</code> &#36873;&#39033;</h4><p><code>sticky</code> &#36873;&#39033;&#26159;&#19968;&#20010;<em>&#21487;&#36873;</em>&#20540;&#65292;&#21487;&#29992;&#20110;&#20801;&#35768;&#35835;&#21462;&#22312;&#24403;&#21069;&#35831;&#27714;&#21608;&#26399;&#20869;&#20889;&#20837;&#25968;&#25454;&#24211;&#30340;&#35760;&#24405;&#12290;&#22914;&#26524;&#21551;&#29992;&#20102; <code>sticky</code> &#36873;&#39033;&#65292;&#24182;&#19988;&#24403;&#21069;&#35831;&#27714;&#21608;&#26399;&#20869;&#24050;&#23545;&#25968;&#25454;&#24211;&#25191;&#34892;&#20102;"&#20889;"&#25805;&#20316;&#65292;&#37027;&#20040;&#20219;&#20309;&#21518;&#32493;&#30340;"&#35835;"&#25805;&#20316;&#37117;&#20250;&#20351;&#29992;"&#20889;"&#36830;&#25509;&#12290;&#36825;&#30830;&#20445;&#20102;&#35831;&#27714;&#21608;&#26399;&#20869;&#20889;&#20837;&#30340;&#20219;&#20309;&#25968;&#25454;&#37117;&#33021;&#22312;&#21516;&#19968;&#35831;&#27714;&#20013;&#31435;&#21363;&#20174;&#25968;&#25454;&#24211;&#35835;&#22238;&#12290;&#26159;&#21542;&#37319;&#29992;&#36825;&#31181;&#34892;&#20026;&#30001;&#20320;&#33258;&#34892;&#20915;&#23450;&#12290;</p><h3 id="c9a470e1b3b4c9821e60a92d41259a54">PostgreSQL &#36830;&#25509;&#27744;</h3><p>&#35768;&#22810;&#25176;&#31649;&#30340; PostgreSQL &#25552;&#20379;&#21830;&#36890;&#36807; PgBouncer &#25110;&#36830;&#25509;&#20195;&#29702;&#31561;&#26381;&#21153;&#65292;&#25552;&#20379;&#20107;&#21153;&#27169;&#24335;&#30340;&#36830;&#25509;&#27744;&#12290;&#36825;&#20123;&#36830;&#25509;&#27744;&#38750;&#24120;&#36866;&#21512;&#24212;&#29992;&#26597;&#35810;&#65292;&#20294;&#26576;&#20123;&#32467;&#26500;&#25805;&#20316;&#12289;&#36801;&#31227;&#21644;&#32500;&#25252;&#21629;&#20196;&#38656;&#35201;&#30452;&#25509;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#12290;</p><p>&#35201;&#23558;&#20107;&#21153;&#36830;&#25509;&#27744;&#29992;&#20110; PostgreSQL&#65292;&#20687;&#24448;&#24120;&#19968;&#26679;&#37197;&#32622;&#27744;&#21270;&#36830;&#25509;&#65292;&#24182;&#36890;&#36807; <code>direct</code> &#37197;&#32622;&#36873;&#39033;&#25552;&#20379;&#30452;&#36830;&#35814;&#32454;&#20449;&#24687;&#65306;</p><pre><code class="language-php">'pgsql' =&gt; [
+    'driver' =&gt; 'pgsql',
+    // ...
+    'pooled' =&gt; env('DB_POOLED', false),
+    'direct' =&gt; array_filter([
+        'host' =&gt; env('DB_DIRECT_HOST'),
+        'port' =&gt; env('DB_DIRECT_PORT'),
+        'username' =&gt; env('DB_DIRECT_USERNAME'),
+        'password' =&gt; env('DB_DIRECT_PASSWORD'),
+        'sslmode' =&gt; env('DB_DIRECT_SSLMODE'),
+    ]),
+],</code></pre><p>&#24403; PostgreSQL &#36830;&#25509;&#34987;&#37197;&#32622;&#20026;&#27744;&#21270;&#26102;&#65292;Laravel &#20250;&#33258;&#21160;&#20026;&#27744;&#21270;&#36830;&#25509;&#21551;&#29992;&#27169;&#25311;&#39044;&#22788;&#29702;&#65288;emulated prepares&#65289;&#12290;&#30452;&#36830;&#20250;&#32487;&#25215;&#20219;&#20309;&#26410;&#22312; <code>direct</code> &#37197;&#32622;&#20013;&#26174;&#24335;&#23450;&#20041;&#30340;&#36873;&#39033;&#65292;&#24182;&#40664;&#35748;&#20351;&#29992;&#21407;&#29983;&#39044;&#22788;&#29702;&#65288;native prepares&#65289;&#12290;</p><p>Laravel &#20250;&#33258;&#21160;&#23545;&#36801;&#31227;&#12289;&#32467;&#26500;&#36716;&#20648;&#19982;&#24674;&#22797;&#12289;<code>db:wipe</code>&#12289;<code>db:show</code> &#21644; <code>db:table</code> &#20351;&#29992;&#30452;&#36830;&#12290;&#24403;&#21551;&#29992;&#27744;&#21270;&#27169;&#24335;&#19988;&#37197;&#32622;&#20102;&#30452;&#36830;&#26102;&#65292;<code>db</code> &#21629;&#20196;&#40664;&#35748;&#20063;&#20351;&#29992;&#30452;&#36830;&#65307;&#20320;&#21487;&#20197;&#20256;&#20837; <code>--pooled</code> &#36873;&#39033;&#26469;&#36830;&#25509;&#21040;&#27744;&#21270;&#36830;&#25509;&#65306;</p><pre><code class="language-shell">php artisan db --pooled</code></pre><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#22312;&#24212;&#29992;&#20013;&#26174;&#24335;&#20351;&#29992;&#30452;&#36830;&#65292;&#21487;&#20197;&#22312;&#36830;&#25509;&#21517;&#21518;&#38468;&#21152; <code>::direct</code> &#21518;&#32512;&#65306;</p><pre><code class="language-php">DB::connection('pgsql::direct')-&gt;statement('create extension if not exists "uuid-ossp"');</code></pre><h2 id="4b95fd890a508fdf55feeb628954c247">&#36816;&#34892; SQL &#26597;&#35810;</h2><p>&#37197;&#32622;&#22909;&#25968;&#25454;&#24211;&#36830;&#25509;&#21518;&#65292;&#20320;&#23601;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#26469;&#36816;&#34892;&#26597;&#35810;&#12290;<code>DB</code> facade &#20026;&#27599;&#31181;&#26597;&#35810;&#31867;&#22411;&#37117;&#25552;&#20379;&#20102;&#26041;&#27861;&#65306;<code>select</code>&#12289;<code>update</code>&#12289;<code>insert</code>&#12289;<code>delete</code> &#21644; <code>statement</code>&#12290;</p><h3 id="4fb36a6129282ed34202ac4d096f575a">&#25191;&#34892;&#26597;&#35810;</h3><p>&#35201;&#36816;&#34892;&#19968;&#20010;&#22522;&#30784;&#30340; SELECT &#26597;&#35810;&#65292;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#30340; <code>select</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
+
+class UserController extends Controller
+{
+    /**
+     * &#23637;&#31034;&#24212;&#29992;&#25152;&#26377;&#29992;&#25143;&#30340;&#21015;&#34920;&#12290;
+     */
+    public function index(): View
+    {
+        $users = DB::select('select * from users where active = ?', [1]);
+
+        return view('user.index', ['users' =&gt; $users]);
+    }
+}</code></pre><p>&#20256;&#32473; <code>select</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159; SQL &#26597;&#35810;&#65292;&#31532;&#20108;&#20010;&#21442;&#25968;&#26159;&#38656;&#35201;&#32465;&#23450;&#21040;&#26597;&#35810;&#30340;&#20219;&#20309;&#21442;&#25968;&#32465;&#23450;&#12290;&#36890;&#24120;&#65292;&#36825;&#20123;&#26159; <code>where</code> &#23376;&#21477;&#32422;&#26463;&#30340;&#20540;&#12290;&#21442;&#25968;&#32465;&#23450;&#21487;&#38450;&#27490; SQL &#27880;&#20837;&#12290;</p><p><code>select</code> &#26041;&#27861;&#22987;&#32456;&#36820;&#22238;&#19968;&#20010;&#32467;&#26524;&#25968;&#32452;&#12290;&#25968;&#32452;&#20013;&#30340;&#27599;&#20010;&#32467;&#26524;&#37117;&#26159;&#19968;&#20010;&#34920;&#31034;&#25968;&#25454;&#24211;&#35760;&#24405;&#30340; PHP <code>stdClass</code> &#23545;&#35937;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+$users = DB::select('select * from users');
+
+foreach ($users as $user) {
+    echo $user-&gt;name;
+}</code></pre><h4 id="bfaa5f314793ca3d3da147f9e32f417b">&#36873;&#25321;&#26631;&#37327;&#20540;</h4><p>&#26377;&#26102;&#20320;&#30340;&#25968;&#25454;&#24211;&#26597;&#35810;&#21487;&#33021;&#36820;&#22238;&#19968;&#20010;&#21333;&#29420;&#30340;&#26631;&#37327;&#20540;&#12290;Laravel &#20801;&#35768;&#20320;&#20351;&#29992; <code>scalar</code> &#26041;&#27861;&#30452;&#25509;&#26816;&#32034;&#35813;&#20540;&#65292;&#32780;&#26080;&#38656;&#20174;&#35760;&#24405;&#23545;&#35937;&#20013;&#33719;&#21462;&#26597;&#35810;&#30340;&#26631;&#37327;&#32467;&#26524;&#65306;</p><pre><code class="language-php">$burgers = DB::scalar(
+    "select count(case when food = 'burger' then 1 end) as burgers from menu"
+);</code></pre><h4 id="6e3c36716fd57f07e261465b1355132b">&#36873;&#25321;&#22810;&#20010;&#32467;&#26524;&#38598;</h4><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#35843;&#29992;&#36820;&#22238;&#22810;&#20010;&#32467;&#26524;&#38598;&#30340;&#23384;&#20648;&#36807;&#31243;&#65292;&#21487;&#20197;&#20351;&#29992; <code>selectResultSets</code> &#26041;&#27861;&#26469;&#26816;&#32034;&#23384;&#20648;&#36807;&#31243;&#36820;&#22238;&#30340;&#25152;&#26377;&#32467;&#26524;&#38598;&#65306;</p><pre><code class="language-php">[$options, $notifications] = DB::selectResultSets(
+    "CALL get_user_options_and_notifications(?)", $request-&gt;user()-&gt;id
+);</code></pre><h4 id="5be97e9c49b68c70cdc5a782bebb1be8">&#20351;&#29992;&#21629;&#21517;&#32465;&#23450;</h4><p>&#38500;&#20102;&#20351;&#29992; <code>?</code> &#34920;&#31034;&#21442;&#25968;&#32465;&#23450;&#20043;&#22806;&#65292;&#20320;&#20063;&#21487;&#20197;&#20351;&#29992;&#21629;&#21517;&#32465;&#23450;&#26469;&#25191;&#34892;&#26597;&#35810;&#65306;</p><pre><code class="language-php">$results = DB::select('select * from users where id = :id', ['id' =&gt; 1]);</code></pre><h4 id="67e00289db8b298096ecbccd9b57a535">&#25191;&#34892;&#25554;&#20837;&#35821;&#21477;</h4><p>&#35201;&#25191;&#34892; <code>insert</code> &#35821;&#21477;&#65292;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#30340; <code>insert</code> &#26041;&#27861;&#12290;&#19982; <code>select</code> &#19968;&#26679;&#65292;&#35813;&#26041;&#27861;&#25509;&#21463; SQL &#26597;&#35810;&#20316;&#20026;&#31532;&#19968;&#20010;&#21442;&#25968;&#65292;&#32465;&#23450;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+DB::insert('insert into users (id, name) values (?, ?)', [1, 'Marc']);</code></pre><h4 id="a0c6a61c341bd437310cbefbf02dcab9">&#25191;&#34892;&#26356;&#26032;&#35821;&#21477;</h4><p>&#24212;&#24403;&#20351;&#29992; <code>update</code> &#26041;&#27861;&#26469;&#26356;&#26032;&#25968;&#25454;&#24211;&#20013;&#24050;&#23384;&#22312;&#30340;&#35760;&#24405;&#12290;&#35813;&#26041;&#27861;&#20250;&#36820;&#22238;&#21463;&#35813;&#35821;&#21477;&#24433;&#21709;&#30340;&#34892;&#25968;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+$affected = DB::update(
+    'update users set votes = 100 where name = ?',
+    ['Anita']
+);</code></pre><h4 id="73293c75da2b6fe03e1d42ac87021e39">&#25191;&#34892;&#21024;&#38500;&#35821;&#21477;</h4><p>&#24212;&#24403;&#20351;&#29992; <code>delete</code> &#26041;&#27861;&#26469;&#20174;&#25968;&#25454;&#24211;&#20013;&#21024;&#38500;&#35760;&#24405;&#12290;&#19982; <code>update</code> &#19968;&#26679;&#65292;&#35813;&#26041;&#27861;&#20250;&#36820;&#22238;&#21463;&#24433;&#21709;&#30340;&#34892;&#25968;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+$deleted = DB::delete('delete from users');</code></pre><h4 id="ee3d94f1016c264cfb34151d818d13b1">&#25191;&#34892;&#36890;&#29992;&#35821;&#21477;</h4><p>&#26377;&#20123;&#25968;&#25454;&#24211;&#35821;&#21477;&#19981;&#36820;&#22238;&#20219;&#20309;&#20540;&#12290;&#23545;&#20110;&#36825;&#31867;&#25805;&#20316;&#65292;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#30340; <code>statement</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">DB::statement('drop table users');</code></pre><h4 id="b3f0305f3ffad174f67650c40ec281c2">&#25191;&#34892;&#26410;&#39044;&#22788;&#29702;&#35821;&#21477;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#25191;&#34892;&#19968;&#26465;&#19981;&#32465;&#23450;&#20219;&#20309;&#20540;&#30340; SQL &#35821;&#21477;&#12290;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#30340; <code>unprepared</code> &#26041;&#27861;&#26469;&#23436;&#25104;&#65306;</p><pre><code class="language-php">DB::unprepared('update users set votes = 100 where name = "Dries"');</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#30001;&#20110;&#26410;&#39044;&#22788;&#29702;&#30340;&#35821;&#21477;&#19981;&#20250;&#32465;&#23450;&#21442;&#25968;&#65292;&#23427;&#20204;&#21487;&#33021;&#38754;&#20020; SQL &#27880;&#20837;&#39118;&#38505;&#12290;&#20320;&#32477;&#19981;&#24212;&#22312;&#26410;&#39044;&#22788;&#29702;&#30340;&#35821;&#21477;&#20013;&#20801;&#35768;&#20986;&#29616;&#29992;&#25143;&#25511;&#21046;&#30340;&#20540;&#12290;</p>
+</blockquote><h4 id="73b23379e8c683715b71bd0f470017e4">&#38544;&#24335;&#25552;&#20132;</h4><p>&#22312;&#20107;&#21153;&#20013;&#20351;&#29992; <code>DB</code> facade &#30340; <code>statement</code> &#21644; <code>unprepared</code> &#26041;&#27861;&#26102;&#65292;&#24517;&#39035;&#23567;&#24515;&#36991;&#20813;&#20250;&#23548;&#33268;<a href="https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html" target="_blank" rel="noopener noreferrer">&#38544;&#24335;&#25552;&#20132;</a>&#30340;&#35821;&#21477;&#12290;&#36825;&#20123;&#35821;&#21477;&#20250;&#23548;&#33268;&#25968;&#25454;&#24211;&#24341;&#25806;&#38388;&#25509;&#25552;&#20132;&#25972;&#20010;&#20107;&#21153;&#65292;&#20351; Laravel &#26080;&#27861;&#24863;&#30693;&#25968;&#25454;&#24211;&#30340;&#20107;&#21153;&#32423;&#21035;&#12290;&#36825;&#31867;&#35821;&#21477;&#30340;&#19968;&#20010;&#20363;&#23376;&#26159;&#21019;&#24314;&#25968;&#25454;&#24211;&#34920;&#65306;</p><pre><code class="language-php">DB::unprepared('create table a (col varchar(1) null)');</code></pre><p>&#35831;&#21442;&#38405; MySQL &#25163;&#20876;&#20013;<a href="https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html" target="_blank" rel="noopener noreferrer">&#35302;&#21457;&#38544;&#24335;&#25552;&#20132;&#30340;&#25152;&#26377;&#35821;&#21477;&#21015;&#34920;</a>&#12290;</p><h3 id="60a97ba2508a4e38f6a778f370cc3c27">&#20351;&#29992;&#22810;&#20010;&#25968;&#25454;&#24211;&#36830;&#25509;</h3><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#22312; <code>config/database.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#20102;&#22810;&#20010;&#36830;&#25509;&#65292;&#21487;&#20197;&#36890;&#36807; <code>DB</code> facade &#25552;&#20379;&#30340; <code>connection</code> &#26041;&#27861;&#35775;&#38382;&#27599;&#20010;&#36830;&#25509;&#12290;&#20256;&#32473; <code>connection</code> &#26041;&#27861;&#30340;&#36830;&#25509;&#21517;&#24212;&#24403;&#23545;&#24212;&#20110; <code>config/database.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#21015;&#20986;&#30340;&#26576;&#20010;&#36830;&#25509;&#65292;&#25110;&#32773;&#36890;&#36807; <code>config</code> &#36741;&#21161;&#20989;&#25968;&#22312;&#36816;&#34892;&#26102;&#37197;&#32622;&#30340;&#26576;&#20010;&#36830;&#25509;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+$users = DB::connection('sqlite')-&gt;select(/* ... */);</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992;&#36830;&#25509;&#23454;&#20363;&#19978;&#30340; <code>getPdo</code> &#26041;&#27861;&#35775;&#38382;&#36830;&#25509;&#30340;&#24213;&#23618;&#21407;&#29983; PDO &#23454;&#20363;&#65306;</p><pre><code class="language-php">$pdo = DB::connection()-&gt;getPdo();</code></pre><h3 id="97d96c4b161f1dcc73c50dab4af93e84">&#30417;&#21548;&#26597;&#35810;&#20107;&#20214;</h3><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#25351;&#23450;&#19968;&#20010;&#20026;&#24212;&#29992;&#25191;&#34892;&#30340;&#27599;&#20010; SQL &#26597;&#35810;&#35843;&#29992;&#30340;&#38381;&#21253;&#65292;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#30340; <code>listen</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#21487;&#29992;&#20110;&#35760;&#24405;&#26597;&#35810;&#25110;&#36827;&#34892;&#35843;&#35797;&#12290;&#20320;&#21487;&#20197;&#22312;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/providers" target="_blank">&#26381;&#21153;&#25552;&#20379;&#32773;</a>&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#27880;&#20876;&#20320;&#30340;&#26597;&#35810;&#30417;&#21548;&#22120;&#38381;&#21253;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * &#27880;&#20876;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function register(): void
+    {
+        // ...
+    }
+
+    /**
+     * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function boot(): void
+    {
+        DB::listen(function (QueryExecuted $query) {
+            // $query-&gt;sql;
+            // $query-&gt;bindings;
+            // $query-&gt;time;
+            // $query-&gt;toRawSql();
+        });
+    }
+}</code></pre><h3 id="2c1ed25a7f3a816f34f2e3373082353f">&#30417;&#25511;&#32047;&#35745;&#26597;&#35810;&#26102;&#38388;</h3><p>&#29616;&#20195; Web &#24212;&#29992;&#30340;&#19968;&#20010;&#24120;&#35265;&#24615;&#33021;&#29942;&#39048;&#26159;&#26597;&#35810;&#25968;&#25454;&#24211;&#25152;&#33457;&#36153;&#30340;&#26102;&#38388;&#12290;&#20540;&#24471;&#24198;&#24184;&#30340;&#26159;&#65292;&#24403; Laravel &#22312;&#21333;&#27425;&#35831;&#27714;&#20013;&#26597;&#35810;&#25968;&#25454;&#24211;&#30340;&#26102;&#38388;&#36807;&#38271;&#26102;&#65292;&#23427;&#21487;&#20197;&#35843;&#29992;&#20320;&#36873;&#25321;&#30340;&#38381;&#21253;&#25110;&#22238;&#35843;&#12290;&#39318;&#20808;&#65292;&#20026; <code>whenQueryingForLongerThan</code> &#26041;&#27861;&#25552;&#20379;&#19968;&#20010;&#26597;&#35810;&#26102;&#38388;&#38408;&#20540;&#65288;&#20197;&#27627;&#31186;&#20026;&#21333;&#20301;&#65289;&#21644;&#38381;&#21253;&#12290;&#20320;&#21487;&#20197;&#22312;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/providers" target="_blank">&#26381;&#21153;&#25552;&#20379;&#32773;</a>&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#35813;&#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Events\QueryExecuted;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * &#27880;&#20876;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function register(): void
+    {
+        // ...
+    }
+
+    /**
+     * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function boot(): void
+    {
+        DB::whenQueryingForLongerThan(500, function (Connection $connection, QueryExecuted $event) {
+            // &#36890;&#30693;&#24320;&#21457;&#22242;&#38431;...
+        });
+    }
+}</code></pre><h2 id="09ddab5d494d5d14d5f3bb8dbcd144a7">&#25968;&#25454;&#24211;&#20107;&#21153;</h2><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#25552;&#20379;&#30340; <code>transaction</code> &#26041;&#27861;&#65292;&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#20013;&#36816;&#34892;&#19968;&#32452;&#25805;&#20316;&#12290;&#22914;&#26524;&#20107;&#21153;&#38381;&#21253;&#20013;&#25243;&#20986;&#20102;&#24322;&#24120;&#65292;&#20107;&#21153;&#20250;&#33258;&#21160;&#22238;&#28378;&#65292;&#24182;&#37325;&#26032;&#25243;&#20986;&#24322;&#24120;&#12290;&#22914;&#26524;&#38381;&#21253;&#25104;&#21151;&#25191;&#34892;&#65292;&#20107;&#21153;&#20250;&#33258;&#21160;&#25552;&#20132;&#12290;&#20351;&#29992; <code>transaction</code> &#26041;&#27861;&#26102;&#65292;&#20320;&#26080;&#38656;&#25163;&#21160;&#22238;&#28378;&#25110;&#25552;&#20132;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+DB::transaction(function () {
+    DB::update('update users set votes = 1');
+
+    DB::delete('delete from posts');
+});</code></pre><h4 id="0c0abf5123c3ed758f2437b05ec3d9be">&#22788;&#29702;&#27515;&#38145;</h4><p><code>transaction</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#21487;&#36873;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#65292;&#29992;&#20110;&#23450;&#20041;&#21457;&#29983;&#27515;&#38145;&#26102;&#20107;&#21153;&#24212;&#24403;&#37325;&#35797;&#30340;&#27425;&#25968;&#12290;&#19968;&#26086;&#36825;&#20123;&#23581;&#35797;&#32791;&#23613;&#65292;&#23601;&#20250;&#25243;&#20986;&#24322;&#24120;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+DB::transaction(function () {
+    DB::update('update users set votes = 1');
+
+    DB::delete('delete from posts');
+}, attempts: 5);</code></pre><h4 id="89e5c204aa40e1ccbf4f4b110c4a8324">&#25163;&#21160;&#20351;&#29992;&#20107;&#21153;</h4><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#25163;&#21160;&#24320;&#22987;&#19968;&#20010;&#20107;&#21153;&#65292;&#24182;&#23436;&#20840;&#25511;&#21046;&#22238;&#28378;&#21644;&#25552;&#20132;&#65292;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#25552;&#20379;&#30340; <code>beginTransaction</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+DB::beginTransaction();</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807; <code>rollBack</code> &#26041;&#27861;&#22238;&#28378;&#20107;&#21153;&#65306;</p><pre><code class="language-php">DB::rollBack();</code></pre><p>&#26368;&#21518;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; <code>commit</code> &#26041;&#27861;&#25552;&#20132;&#20107;&#21153;&#65306;</p><pre><code class="language-php">DB::commit();</code></pre><blockquote>
+<p>[!NOTE]<br>
+<code>DB</code> facade &#30340;&#20107;&#21153;&#26041;&#27861;&#25511;&#21046;&#30528;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queries" target="_blank">&#26597;&#35810;&#26500;&#36896;&#22120;</a>&#21644; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent" target="_blank">Eloquent ORM</a> &#30340;&#20107;&#21153;&#12290;</p>
+</blockquote><h2 id="44a7379078369b9f97e7a06cf30dee78">&#36830;&#25509;&#25968;&#25454;&#24211; CLI</h2><p>&#22914;&#26524;&#20320;&#24819;&#36830;&#25509;&#21040;&#25968;&#25454;&#24211;&#30340;&#21629;&#20196;&#34892;&#30028;&#38754;&#65292;&#21487;&#20197;&#20351;&#29992; <code>db</code> Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan db</code></pre><p>&#22914;&#26377;&#38656;&#35201;&#65292;&#20320;&#21487;&#20197;&#25351;&#23450;&#19968;&#20010;&#25968;&#25454;&#24211;&#36830;&#25509;&#21517;&#65292;&#20174;&#32780;&#36830;&#25509;&#21040;&#38750;&#40664;&#35748;&#36830;&#25509;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#65306;</p><pre><code class="language-shell">php artisan db mysql</code></pre><h2 id="4253e0a7b27ea5fff9781d4d45f25bdc">&#26816;&#26597;&#20320;&#30340;&#25968;&#25454;&#24211;</h2><p>&#20351;&#29992; <code>db:show</code> &#21644; <code>db:table</code> Artisan &#21629;&#20196;&#65292;&#20320;&#21487;&#20197;&#33719;&#24471;&#20851;&#20110;&#25968;&#25454;&#24211;&#21450;&#20854;&#30456;&#20851;&#34920;&#30340;&#23453;&#36149;&#27934;&#23519;&#12290;&#35201;&#26597;&#30475;&#25968;&#25454;&#24211;&#30340;&#27010;&#35272;&#65288;&#21253;&#25324;&#20854;&#22823;&#23567;&#12289;&#31867;&#22411;&#12289;&#25171;&#24320;&#30340;&#36830;&#25509;&#25968;&#20197;&#21450;&#34920;&#30340;&#25688;&#35201;&#65289;&#65292;&#21487;&#20197;&#20351;&#29992; <code>db:show</code> &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan db:show</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807; <code>--database</code> &#36873;&#39033;&#21521;&#21629;&#20196;&#25552;&#20379;&#35201;&#26816;&#26597;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#21517;&#65306;</p><pre><code class="language-shell">php artisan db:show --database=pgsql</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#22312;&#21629;&#20196;&#36755;&#20986;&#20013;&#21253;&#21547;&#34920;&#30340;&#34892;&#25968;&#21644;&#25968;&#25454;&#24211;&#35270;&#22270;&#35814;&#24773;&#65292;&#21487;&#20197;&#20998;&#21035;&#25552;&#20379; <code>--counts</code> &#21644; <code>--views</code> &#36873;&#39033;&#12290;&#22312;&#22823;&#22411;&#25968;&#25454;&#24211;&#19978;&#65292;&#26816;&#32034;&#34892;&#25968;&#21644;&#35270;&#22270;&#35814;&#24773;&#21487;&#33021;&#20250;&#24456;&#24930;&#65306;</p><pre><code class="language-shell">php artisan db:show --counts --views</code></pre><p>&#27492;&#22806;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#20197;&#19979; <code>Schema</code> &#26041;&#27861;&#26469;&#26816;&#26597;&#20320;&#30340;&#25968;&#25454;&#24211;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Schema;
+
+$tables = Schema::getTables();
+$views = Schema::getViews();
+$columns = Schema::getColumns('users');
+$indexes = Schema::getIndexes('users');
+$foreignKeys = Schema::getForeignKeys('users');</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#26816;&#26597;&#30340;&#19981;&#26159;&#24212;&#29992;&#40664;&#35748;&#36830;&#25509;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#65292;&#21487;&#20197;&#20351;&#29992; <code>connection</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$columns = Schema::connection('sqlite')-&gt;getColumns('users');</code></pre><h4 id="d492f032892d080e591ee2eb2219a970">&#34920;&#27010;&#35272;</h4><p>&#22914;&#26524;&#20320;&#24819;&#33719;&#24471;&#25968;&#25454;&#24211;&#20013;&#26576;&#20010;&#21333;&#29420;&#34920;&#30340;&#27010;&#35272;&#65292;&#21487;&#20197;&#25191;&#34892; <code>db:table</code> Artisan &#21629;&#20196;&#12290;&#35813;&#21629;&#20196;&#20250;&#25552;&#20379;&#25968;&#25454;&#24211;&#34920;&#30340;&#19968;&#33324;&#27010;&#35272;&#65292;&#21253;&#25324;&#20854;&#21015;&#12289;&#31867;&#22411;&#12289;&#23646;&#24615;&#12289;&#38190;&#21644;&#32034;&#24341;&#65306;</p><pre><code class="language-shell">php artisan db:table users</code></pre><h2 id="91066f141b9a06470c881b4ac8ad9497">&#30417;&#25511;&#20320;&#30340;&#25968;&#25454;&#24211;</h2><p>&#20351;&#29992; <code>db:monitor</code> Artisan &#21629;&#20196;&#65292;&#20320;&#21487;&#20197;&#25351;&#31034; Laravel &#22312;&#25968;&#25454;&#24211;&#31649;&#29702;&#30340;&#25171;&#24320;&#36830;&#25509;&#25968;&#36229;&#36807;&#25351;&#23450;&#25968;&#37327;&#26102;&#27966;&#21457;&#19968;&#20010; <code>Illuminate\Database\Events\DatabaseBusy</code> &#20107;&#20214;&#12290;</p><p>&#39318;&#20808;&#65292;&#20320;&#24212;&#24403;&#23433;&#25490; <code>db:monitor</code> &#21629;&#20196;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/scheduling" target="_blank">&#27599;&#20998;&#38047;&#36816;&#34892;&#19968;&#27425;</a>&#12290;&#35813;&#21629;&#20196;&#25509;&#21463;&#20320;&#24076;&#26395;&#30417;&#25511;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#37197;&#32622;&#21517;&#31216;&#65292;&#20197;&#21450;&#22312;&#27966;&#21457;&#20107;&#20214;&#20043;&#21069;&#21487;&#23481;&#24525;&#30340;&#26368;&#22823;&#25171;&#24320;&#36830;&#25509;&#25968;&#65306;</p><pre><code class="language-shell">php artisan db:monitor --databases=mysql,pgsql --max=100</code></pre><p>&#20165;&#23433;&#25490;&#35813;&#21629;&#20196;&#26412;&#36523;&#24182;&#19981;&#36275;&#20197;&#35302;&#21457;&#36890;&#30693;&#20197;&#25552;&#37266;&#20320;&#25171;&#24320;&#36830;&#25509;&#30340;&#25968;&#37327;&#12290;&#24403;&#21629;&#20196;&#36935;&#21040;&#25171;&#24320;&#36830;&#25509;&#25968;&#36229;&#36807;&#38408;&#20540;&#30340;&#25968;&#25454;&#24211;&#26102;&#65292;&#20250;&#27966;&#21457;&#19968;&#20010; <code>DatabaseBusy</code> &#20107;&#20214;&#12290;&#20320;&#24212;&#24403;&#22312;&#24212;&#29992;&#30340; <code>AppServiceProvider</code> &#20013;&#30417;&#21548;&#35813;&#20107;&#20214;&#65292;&#20197;&#20415;&#21521;&#20320;&#25110;&#20320;&#30340;&#24320;&#21457;&#22242;&#38431;&#21457;&#36865;&#36890;&#30693;&#65306;</p><pre><code class="language-php">use App\Notifications\DatabaseApproachingMaxConnections;
+use Illuminate\Database\Events\DatabaseBusy;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
+
+/**
+ * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Event::listen(function (DatabaseBusy $event) {
+        Notification::route('mail', 'dev@example.com')
+            -&gt;notify(new DatabaseApproachingMaxConnections(
+                $event-&gt;connectionName,
+                $event-&gt;connections
+            ));
+    });
+}</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 流畅的查询构造器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queries" target="_blank">/docs/Laravel 13.x/queries</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Eloquent ORM: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent" target="_blank">/docs/Laravel 13.x/eloquent</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 版本策略: <i><a href="https://mariadb.org/about/#maintenance-policy" target="_blank">https://mariadb.org/about/#maintenance-policy</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> 版本策略: <i><a href="https://en.wikipedia.org/wiki/MySQL#Release_history" target="_blank">https://en.wikipedia.org/wiki/MySQL#Release_history</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> 版本策略: <i><a href="https://www.postgresql.org/support/versioning/" target="_blank">https://www.postgresql.org/support/versioning/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 版本策略: <i><a href="https://docs.microsoft.com/en-us/lifecycle/products/?products=sql-server" target="_blank">https://docs.microsoft.com/en-us/lifecycle/products/?products=sql-server</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> Laravel MongoDB: <i><a href="https://www.mongodb.com/docs/drivers/php/laravel-mongodb/" target="_blank">https://www.mongodb.com/docs/drivers/php/laravel-mongodb/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 环境配置: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/configuration#environment-configuration" target="_blank">/docs/Laravel 13.x/configuration#environment-configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> Laravel Sail: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sail" target="_blank">/docs/Laravel 13.x/sail</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> Laravel 安装器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/installation#creating-a-laravel-project" target="_blank">/docs/Laravel 13.x/installation#creating-a-laravel-project</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> 数据库迁移: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/migrations" target="_blank">/docs/Laravel 13.x/migrations</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> 隐式提交: <i><a href="https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html" target="_blank">https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> 触发隐式提交的所有语句列表: <i><a href="https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html" target="_blank">https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> 服务提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/providers" target="_blank">/docs/Laravel 13.x/providers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 服务提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/providers" target="_blank">/docs/Laravel 13.x/providers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> 查询构造器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queries" target="_blank">/docs/Laravel 13.x/queries</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> Eloquent ORM: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent" target="_blank">/docs/Laravel 13.x/eloquent</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> 每分钟运行一次: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/scheduling" target="_blank">/docs/Laravel 13.x/scheduling</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="4rvgng3ydj.html#blog1054" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">重置密码</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="xpv525gv86.html#blog1056" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">数据库：查询构造器</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

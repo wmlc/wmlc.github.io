@@ -1,0 +1,1404 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Laravel Pulse | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/3oyjdnxyp5.html', function (data, status) {
+            addView('3oyjdnxyp5.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Laravel Pulse</h1><ul>
+<li><a href="3oyjdnxyp5.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="3oyjdnxyp5.html#e655a410ff21cd07e7a0150491e04371">安装</a></li>
+<li><a href="3oyjdnxyp5.html#3fa8b34a2744f62fe93dd599a275af39">仪表盘</a>
+<ul>
+<li><a href="3oyjdnxyp5.html#98a315c0fc7197a70838eeeb474c5a06">授权</a></li>
+<li><a href="3oyjdnxyp5.html#f1d4ff50f3828f9b73412e7d94e6dd6e">自定义</a></li>
+<li><a href="3oyjdnxyp5.html#6db2a6f38a45ab21fa9c9e8b3fe416fc">解析用户</a></li>
+<li><a href="3oyjdnxyp5.html#d87f215d9ac688b1d3399bf575a0ef6f">卡片</a>
+<ul>
+<li><a href="3oyjdnxyp5.html#c566ca59602c7c5c0d3fe5e18ade447d">服务器</a></li>
+<li><a href="3oyjdnxyp5.html#de4579df588225bcbe3e6161df35b164">应用使用情况</a></li>
+<li><a href="3oyjdnxyp5.html#c195df63086a73016c53d6928444a061">异常</a></li>
+<li><a href="3oyjdnxyp5.html#0796f7f8b93ad1204d4769c52aff5284">队列</a></li>
+<li><a href="3oyjdnxyp5.html#b28b2ec08a8409b51b4e71e5d583422c">缓慢请求</a></li>
+<li><a href="3oyjdnxyp5.html#4a24e8e42ebd4ad029e4542b1bef7c59">缓慢任务</a></li>
+<li><a href="3oyjdnxyp5.html#f5bd977e1b483d28d0e96a66041ba93c">缓慢查询</a></li>
+<li><a href="3oyjdnxyp5.html#f08d7428b65694625b634e4650ce5a07">缓慢的出站请求</a></li>
+<li><a href="3oyjdnxyp5.html#e80c310e6ae7ca889532ec40388a497f">缓存</a></li>
+</ul></li>
+</ul></li>
+<li><a href="3oyjdnxyp5.html#94db73d38a4545b4937ec0195fc961e9">捕获条目</a>
+<ul>
+<li><a href="3oyjdnxyp5.html#4eb76c34ddfc492c04291a44a9afd1b0">记录器</a>
+<ul>
+<li><a href="3oyjdnxyp5.html#a9b35463ccb22f0c550298671e8414c3">缓存交互</a></li>
+<li><a href="3oyjdnxyp5.html#c195df63086a73016c53d6928444a061">异常</a></li>
+<li><a href="3oyjdnxyp5.html#0796f7f8b93ad1204d4769c52aff5284">队列</a></li>
+<li><a href="3oyjdnxyp5.html#4a24e8e42ebd4ad029e4542b1bef7c59">缓慢任务</a></li>
+<li><a href="3oyjdnxyp5.html#f08d7428b65694625b634e4650ce5a07">缓慢的出站请求</a></li>
+<li><a href="3oyjdnxyp5.html#f5bd977e1b483d28d0e96a66041ba93c">缓慢查询</a></li>
+<li><a href="3oyjdnxyp5.html#b28b2ec08a8409b51b4e71e5d583422c">缓慢请求</a></li>
+<li><a href="3oyjdnxyp5.html#c566ca59602c7c5c0d3fe5e18ade447d">服务器</a></li>
+<li><a href="3oyjdnxyp5.html#e584cb97eef075be90b5db7ecca82ee7">用户任务</a></li>
+<li><a href="3oyjdnxyp5.html#79eaa4547e7b82a1ae3432298c51a327">用户请求</a></li>
+</ul></li>
+<li><a href="3oyjdnxyp5.html#bb8472c400eb37ea9ee7dda5747059f2">过滤</a></li>
+</ul></li>
+<li><a href="3oyjdnxyp5.html#c3318eaaa3bd15fa40b3a4d381c4ee15">性能</a>
+<ul>
+<li><a href="3oyjdnxyp5.html#17f11030e95d33106f81d727431a6021">使用不同的数据库</a></li>
+<li><a href="3oyjdnxyp5.html#be3d0fbe3767ddf1ba9e683454c72b38">Redis 摄取</a></li>
+<li><a href="3oyjdnxyp5.html#42ac9be904e43d4bf1a2e637ada1e8cf">采样</a></li>
+<li><a href="3oyjdnxyp5.html#3db6e6dd60a5023732f952812eea014c">修剪</a></li>
+<li><a href="3oyjdnxyp5.html#20e140cc40a45caf1b43403fbf2d62b2">处理 Pulse 异常</a></li>
+</ul></li>
+<li><a href="3oyjdnxyp5.html#c817615bfa930244946e1fa0b4a2c564">自定义卡片</a>
+<ul>
+<li><a href="3oyjdnxyp5.html#a401f978723b6770985b420fffa7fc63">卡片组件</a></li>
+<li><a href="3oyjdnxyp5.html#39003734d1d700d5bd97bf1e7a2fcf73">样式</a>
+<ul>
+<li><a href="3oyjdnxyp5.html#cabf1992aa6c5c6e06a4c80760662618">Laravel Vite 集成</a></li>
+<li><a href="3oyjdnxyp5.html#565533763bc876211cde48eb1fbd0744">CSS 文件</a></li>
+<li><a href="3oyjdnxyp5.html#ecaf86f5e62ea88ea9e41e09849358d2">Tailwind CSS</a></li>
+</ul></li>
+<li><a href="3oyjdnxyp5.html#8c6059fb62ed91aa2e00d2a34e3ba9d7">数据捕获与聚合</a>
+<ul>
+<li><a href="3oyjdnxyp5.html#94db73d38a4545b4937ec0195fc961e9">捕获条目</a></li>
+<li><a href="3oyjdnxyp5.html#355a308234be43b5c8a928107934774f">检索聚合数据</a></li>
+<li><a href="3oyjdnxyp5.html#76b1f3d557d9f223ead0bc7ebbb12e2e">展示用户</a></li>
+<li><a href="3oyjdnxyp5.html#1f10dc93619dfa0f6063b4e9459c0a1a">自定义记录器</a></li>
+</ul></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p><a href="https://github.com/laravel/pulse" target="_blank" rel="noopener noreferrer">Laravel Pulse</a> &#21487;&#35753;&#20320;&#19968;&#30524;&#27934;&#23519;&#24212;&#29992;&#30340;&#24615;&#33021;&#19982;&#20351;&#29992;&#24773;&#20917;&#12290;&#20511;&#21161; Pulse&#65292;&#20320;&#21487;&#20197;&#23450;&#20301;&#35832;&#22914;&#32531;&#24930;&#20219;&#21153;&#21644;&#31471;&#28857;&#20043;&#31867;&#30340;&#29942;&#39048;&#65292;&#25214;&#21040;&#26368;&#27963;&#36291;&#30340;&#29992;&#25143;&#65292;&#31561;&#31561;&#12290;</p><p>&#22914;&#38656;&#23545;&#21333;&#20010;&#20107;&#20214;&#36827;&#34892;&#28145;&#20837;&#35843;&#35797;&#65292;&#35831;&#26597;&#38405; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/telescope" target="_blank">Laravel Telescope</a>&#12290;</p><h2 id="e655a410ff21cd07e7a0150491e04371">&#23433;&#35013;</h2><blockquote>
+<p>[!WARNING]<br>
+Pulse &#30340;&#31532;&#19968;&#26041;&#23384;&#20648;&#23454;&#29616;&#24403;&#21069;&#35201;&#27714;&#20351;&#29992; MySQL&#12289;MariaDB &#25110; PostgreSQL &#25968;&#25454;&#24211;&#12290;&#22914;&#26524;&#20320;&#20351;&#29992;&#20854;&#20182;&#25968;&#25454;&#24211;&#24341;&#25806;&#65292;&#21017;&#38656;&#35201;&#20026; Pulse &#25968;&#25454;&#21333;&#29420;&#20934;&#22791;&#19968;&#20010; MySQL&#12289;MariaDB &#25110; PostgreSQL &#25968;&#25454;&#24211;&#12290;</p>
+</blockquote><p>&#20320;&#21487;&#20197;&#20351;&#29992; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013; Pulse&#65306;</p><pre><code class="language-shell">composer require laravel/pulse</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#20320;&#24212;&#24403;&#20351;&#29992; <code>vendor:publish</code> Artisan &#21629;&#20196;&#21457;&#24067; Pulse &#30340;&#37197;&#32622;&#25991;&#20214;&#19982;&#25968;&#25454;&#24211;&#36801;&#31227;&#25991;&#20214;&#65306;</p><pre><code class="language-shell">php artisan vendor:publish --provider="Laravel\Pulse\PulseServiceProvider"</code></pre><p>&#26368;&#21518;&#65292;&#20320;&#24212;&#24403;&#36816;&#34892; <code>migrate</code> &#21629;&#20196;&#20197;&#21019;&#24314;&#23384;&#20648; Pulse &#25968;&#25454;&#25152;&#38656;&#30340;&#34920;&#65306;</p><pre><code class="language-shell">php artisan migrate</code></pre><p>&#36816;&#34892; Pulse &#30340;&#25968;&#25454;&#24211;&#36801;&#31227;&#21518;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; <code>/pulse</code> &#36335;&#30001;&#35775;&#38382; Pulse &#20202;&#34920;&#30424;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#19981;&#24076;&#26395;&#23558; Pulse &#25968;&#25454;&#23384;&#20648;&#22312;&#24212;&#29992;&#30340;&#20027;&#25968;&#25454;&#24211;&#20013;&#65292;&#21487;&#20197;<a href="3oyjdnxyp5.html#using-a-different-database" target="_blank">&#25351;&#23450;&#19987;&#29992;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;</a>&#12290;</p>
+</blockquote><h2 id="3fa8b34a2744f62fe93dd599a275af39">&#20202;&#34920;&#30424;</h2><h3 id="98a315c0fc7197a70838eeeb474c5a06">&#25480;&#26435;</h3><p>Pulse &#20202;&#34920;&#30424;&#21487;&#36890;&#36807; <code>/pulse</code> &#36335;&#30001;&#35775;&#38382;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#20320;&#21482;&#33021;&#22312; <code>local</code> &#29615;&#22659;&#20013;&#35775;&#38382;&#35813;&#20202;&#34920;&#30424;&#65292;&#22240;&#27492;&#38656;&#35201;&#36890;&#36807;&#33258;&#23450;&#20041; <code>'viewPulse'</code> &#25480;&#26435;&#38376;&#38480;&#26469;&#20026;&#29983;&#20135;&#29615;&#22659;&#37197;&#32622;&#25480;&#26435;&#12290;&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>app/Providers/AppServiceProvider.php</code> &#25991;&#20214;&#20013;&#23436;&#25104;&#27492;&#37197;&#32622;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Illuminate\Support\Facades\Gate;
+
+/**
+ * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Gate::define('viewPulse', function (User $user) {
+        return $user-&gt;isAdmin();
+    });
+
+    // ...
+}</code></pre><h3 id="f1d4ff50f3828f9b73412e7d94e6dd6e">&#33258;&#23450;&#20041;</h3><p>&#36890;&#36807;&#21457;&#24067;&#20202;&#34920;&#30424;&#35270;&#22270;&#65292;&#21487;&#20197;&#37197;&#32622; Pulse &#20202;&#34920;&#30424;&#30340;&#21345;&#29255;&#19982;&#24067;&#23616;&#12290;&#35813;&#20202;&#34920;&#30424;&#35270;&#22270;&#20250;&#34987;&#21457;&#24067;&#21040; <code>resources/views/vendor/pulse/dashboard.blade.php</code>&#65306;</p><pre><code class="language-shell">php artisan vendor:publish --tag=pulse-dashboard</code></pre><p>&#35813;&#20202;&#34920;&#30424;&#30001; <a href="https://livewire.laravel.com/" target="_blank" rel="noopener noreferrer">Livewire</a> &#39537;&#21160;&#65292;&#35753;&#20320;&#26080;&#38656;&#37325;&#26032;&#26500;&#24314;&#20219;&#20309; JavaScript &#36164;&#28304;&#21363;&#21487;&#33258;&#23450;&#20041;&#21345;&#29255;&#19982;&#24067;&#23616;&#12290;</p><p>&#22312;&#35813;&#25991;&#20214;&#20013;&#65292;<code>&lt;x-pulse&gt;</code> &#32452;&#20214;&#36127;&#36131;&#28210;&#26579;&#20202;&#34920;&#30424;&#65292;&#24182;&#20026;&#21345;&#29255;&#25552;&#20379;&#32593;&#26684;&#24067;&#23616;&#12290;&#22914;&#26524;&#20320;&#24076;&#26395;&#20202;&#34920;&#30424;&#21344;&#28385;&#25972;&#20010;&#23631;&#24149;&#23485;&#24230;&#65292;&#21487;&#20197;&#20026;&#35813;&#32452;&#20214;&#25552;&#20379; <code>full-width</code> &#23646;&#24615;&#65306;</p><pre><code class="language-blade">&lt;x-pulse full-width&gt;
+    ...
+&lt;/x-pulse&gt;</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>&lt;x-pulse&gt;</code> &#32452;&#20214;&#20250;&#21019;&#24314;&#19968;&#20010; 12 &#21015;&#30340;&#32593;&#26684;&#65292;&#20294;&#20320;&#21487;&#20197;&#20351;&#29992; <code>cols</code> &#23646;&#24615;&#33258;&#23450;&#20041;&#65306;</p><pre><code class="language-blade">&lt;x-pulse cols="16"&gt;
+    ...
+&lt;/x-pulse&gt;</code></pre><p>&#27599;&#24352;&#21345;&#29255;&#37117;&#25509;&#21463; <code>cols</code> &#21644; <code>rows</code> &#23646;&#24615;&#65292;&#29992;&#20110;&#25511;&#21046;&#25152;&#21344;&#31354;&#38388;&#19982;&#20301;&#32622;&#65306;</p><pre><code class="language-blade">&lt;livewire:pulse.usage cols="4" rows="2" /&gt;</code></pre><p>&#22823;&#22810;&#25968;&#21345;&#29255;&#36824;&#25509;&#21463; <code>expand</code> &#23646;&#24615;&#65292;&#29992;&#20110;&#23637;&#31034;&#23436;&#25972;&#21345;&#29255;&#32780;&#38750;&#28378;&#21160;&#26174;&#31034;&#65306;</p><pre><code class="language-blade">&lt;livewire:pulse.slow-queries expand /&gt;</code></pre><h3 id="6db2a6f38a45ab21fa9c9e8b3fe416fc">&#35299;&#26512;&#29992;&#25143;</h3><p>&#23545;&#20110;&#23637;&#31034;&#29992;&#25143;&#20449;&#24687;&#30340;&#21345;&#29255;&#65288;&#20363;&#22914; Application Usage &#21345;&#29255;&#65289;&#65292;Pulse &#21482;&#20250;&#35760;&#24405;&#29992;&#25143;&#30340; ID&#12290;&#22312;&#28210;&#26579;&#20202;&#34920;&#30424;&#26102;&#65292;Pulse &#20250;&#20174;&#20320;&#40664;&#35748;&#30340; <code>Authenticatable</code> &#27169;&#22411;&#20013;&#35299;&#26512; <code>name</code> &#21644; <code>email</code> &#23383;&#27573;&#65292;&#24182;&#20351;&#29992; Gravatar &#32593;&#32476;&#26381;&#21153;&#26174;&#31034;&#22836;&#20687;&#12290;</p><p>&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#20013;&#35843;&#29992; <code>Pulse::user</code> &#26041;&#27861;&#26469;&#33258;&#23450;&#20041;&#23383;&#27573;&#19982;&#22836;&#20687;&#12290;</p><p><code>user</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#65292;&#35813;&#38381;&#21253;&#20250;&#25509;&#25910;&#35201;&#26174;&#31034;&#30340; <code>Authenticatable</code> &#27169;&#22411;&#65292;&#24182;&#24212;&#36820;&#22238;&#19968;&#20010;&#21253;&#21547;&#29992;&#25143; <code>name</code>&#12289;<code>extra</code> &#21644; <code>avatar</code> &#20449;&#24687;&#30340;&#25968;&#32452;&#65306;</p><pre><code class="language-php">use Laravel\Pulse\Facades\Pulse;
+
+/**
+ * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Pulse::user(fn ($user) =&gt; [
+        'name' =&gt; $user-&gt;name,
+        'extra' =&gt; $user-&gt;email,
+        'avatar' =&gt; $user-&gt;avatar_url,
+    ]);
+
+    // ...
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#20320;&#21487;&#20197;&#36890;&#36807;&#23454;&#29616; <code>Laravel\Pulse\Contracts\ResolvesUsers</code> &#22865;&#32422;&#24182;&#23558;&#20854;&#32465;&#23450;&#21040; Laravel &#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/container#binding-a-singleton" target="_blank">&#26381;&#21153;&#23481;&#22120;</a>&#20013;&#65292;&#26469;&#23436;&#20840;&#33258;&#23450;&#20041;&#24050;&#35748;&#35777;&#29992;&#25143;&#30340;&#25429;&#33719;&#19982;&#33719;&#21462;&#26041;&#24335;&#12290;</p>
+</blockquote><h3 id="d87f215d9ac688b1d3399bf575a0ef6f">&#21345;&#29255;</h3><h4 id="c566ca59602c7c5c0d3fe5e18ade447d">&#26381;&#21153;&#22120;</h4><p><code>&lt;livewire:pulse.servers /&gt;</code> &#21345;&#29255;&#23637;&#31034;&#25152;&#26377;&#36816;&#34892; <code>pulse:check</code> &#21629;&#20196;&#30340;&#26381;&#21153;&#22120;&#30340;&#31995;&#32479;&#36164;&#28304;&#20351;&#29992;&#24773;&#20917;&#12290;&#26377;&#20851;&#31995;&#32479;&#36164;&#28304;&#19978;&#25253;&#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405; <a href="3oyjdnxyp5.html#servers-recorder" target="_blank">servers &#35760;&#24405;&#22120;</a> &#25991;&#26723;&#12290;</p><p>&#22914;&#26524;&#20320;&#26356;&#25442;&#20102;&#22522;&#30784;&#35774;&#26045;&#20013;&#30340;&#26576;&#21488;&#26381;&#21153;&#22120;&#65292;&#21487;&#33021;&#24076;&#26395;&#22312;&#19968;&#27573;&#26102;&#38388;&#21518;&#20572;&#27490;&#22312; Pulse &#20202;&#34920;&#30424;&#20013;&#26174;&#31034;&#35813;&#19981;&#27963;&#36291;&#30340;&#26381;&#21153;&#22120;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>ignore-after</code> &#23646;&#24615;&#26469;&#23454;&#29616;&#65292;&#35813;&#23646;&#24615;&#25509;&#21463;&#22833;&#25928;&#26381;&#21153;&#22120;&#24212;&#20174; Pulse &#20202;&#34920;&#30424;&#31227;&#38500;&#30340;&#31186;&#25968;&#12290;&#25110;&#32773;&#65292;&#20320;&#20063;&#21487;&#20197;&#25552;&#20379;&#30456;&#23545;&#26102;&#38388;&#26684;&#24335;&#30340;&#23383;&#31526;&#20018;&#65292;&#20363;&#22914; <code>1 hour</code> &#25110; <code>3 days and 1 hour</code>&#65306;</p><pre><code class="language-blade">&lt;livewire:pulse.servers ignore-after="3 hours" /&gt;</code></pre><h4 id="de4579df588225bcbe3e6161df35b164">&#24212;&#29992;&#20351;&#29992;&#24773;&#20917;</h4><p><code>&lt;livewire:pulse.usage /&gt;</code> &#21345;&#29255;&#23637;&#31034;&#21521;&#20320;&#30340;&#24212;&#29992;&#21457;&#36215;&#35831;&#27714;&#12289;&#27966;&#21457;&#20219;&#21153;&#20197;&#21450;&#36935;&#21040;&#32531;&#24930;&#35831;&#27714;&#26368;&#22810;&#30340;&#21069; 10 &#21517;&#29992;&#25143;&#12290;</p><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#21516;&#26102;&#22312;&#21516;&#19968;&#23631;&#24149;&#19978;&#26597;&#30475;&#25152;&#26377;&#20351;&#29992;&#25351;&#26631;&#65292;&#21487;&#20197;&#22810;&#27425;&#24341;&#20837;&#35813;&#21345;&#29255;&#24182;&#25351;&#23450; <code>type</code> &#23646;&#24615;&#65306;</p><pre><code class="language-blade">&lt;livewire:pulse.usage type="requests" /&gt;
+&lt;livewire:pulse.usage type="slow_requests" /&gt;
+&lt;livewire:pulse.usage type="jobs" /&gt;</code></pre><p>&#35201;&#20102;&#35299;&#22914;&#20309;&#33258;&#23450;&#20041; Pulse &#33719;&#21462;&#19982;&#23637;&#31034;&#29992;&#25143;&#20449;&#24687;&#30340;&#26041;&#24335;&#65292;&#35831;&#21442;&#38405;&#25105;&#20204;&#20851;&#20110;<a href="3oyjdnxyp5.html#dashboard-resolving-users" target="_blank">&#35299;&#26512;&#29992;&#25143;</a>&#30340;&#25991;&#26723;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#25910;&#21040;&#22823;&#37327;&#35831;&#27714;&#25110;&#27966;&#21457;&#22823;&#37327;&#20219;&#21153;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#21551;&#29992;<a href="3oyjdnxyp5.html#sampling" target="_blank">&#37319;&#26679;</a>&#12290;&#35814;&#24773;&#35831;&#21442;&#38405; <a href="3oyjdnxyp5.html#user-requests-recorder" target="_blank">user requests &#35760;&#24405;&#22120;</a>&#12289;<a href="3oyjdnxyp5.html#user-jobs-recorder" target="_blank">user jobs &#35760;&#24405;&#22120;</a> &#21644; <a href="3oyjdnxyp5.html#slow-jobs-recorder" target="_blank">slow jobs &#35760;&#24405;&#22120;</a> &#25991;&#26723;&#12290;</p>
+</blockquote><h4 id="c195df63086a73016c53d6928444a061">&#24322;&#24120;</h4><p><code>&lt;livewire:pulse.exceptions /&gt;</code> &#21345;&#29255;&#23637;&#31034;&#24212;&#29992;&#20013;&#21457;&#29983;&#30340;&#24322;&#24120;&#20986;&#29616;&#30340;&#39057;&#29575;&#19982;&#26368;&#36817;&#21457;&#29983;&#26102;&#38388;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#24322;&#24120;&#20250;&#26681;&#25454;&#24322;&#24120;&#31867;&#21450;&#20854;&#21457;&#29983;&#20301;&#32622;&#36827;&#34892;&#20998;&#32452;&#12290;&#35814;&#24773;&#35831;&#21442;&#38405; <a href="3oyjdnxyp5.html#exceptions-recorder" target="_blank">exceptions &#35760;&#24405;&#22120;</a> &#25991;&#26723;&#12290;</p><h4 id="0796f7f8b93ad1204d4769c52aff5284">&#38431;&#21015;</h4><p><code>&lt;livewire:pulse.queues /&gt;</code> &#21345;&#29255;&#23637;&#31034;&#24212;&#29992;&#20013;&#38431;&#21015;&#30340;&#21534;&#21520;&#37327;&#65292;&#21253;&#25324;&#24050;&#20837;&#38431;&#12289;&#22788;&#29702;&#20013;&#12289;&#24050;&#22788;&#29702;&#12289;&#24050;&#37322;&#25918;&#21644;&#24050;&#22833;&#36133;&#30340;&#20219;&#21153;&#25968;&#37327;&#12290;&#35814;&#24773;&#35831;&#21442;&#38405; <a href="3oyjdnxyp5.html#queues-recorder" target="_blank">queues &#35760;&#24405;&#22120;</a> &#25991;&#26723;&#12290;</p><h4 id="b28b2ec08a8409b51b4e71e5d583422c">&#32531;&#24930;&#35831;&#27714;</h4><p><code>&lt;livewire:pulse.slow-requests /&gt;</code> &#21345;&#29255;&#23637;&#31034;&#24212;&#29992;&#20013;&#36229;&#20986;&#37197;&#32622;&#38408;&#20540;&#30340;&#20256;&#20837;&#35831;&#27714;&#65292;&#35813;&#38408;&#20540;&#40664;&#35748;&#26159; 1,000ms&#12290;&#35814;&#24773;&#35831;&#21442;&#38405; <a href="3oyjdnxyp5.html#slow-requests-recorder" target="_blank">slow requests &#35760;&#24405;&#22120;</a> &#25991;&#26723;&#12290;</p><h4 id="4a24e8e42ebd4ad029e4542b1bef7c59">&#32531;&#24930;&#20219;&#21153;</h4><p><code>&lt;livewire:pulse.slow-jobs /&gt;</code> &#21345;&#29255;&#23637;&#31034;&#24212;&#29992;&#20013;&#36229;&#20986;&#37197;&#32622;&#38408;&#20540;&#30340;&#25490;&#38431;&#20219;&#21153;&#65292;&#35813;&#38408;&#20540;&#40664;&#35748;&#26159; 1,000ms&#12290;&#35814;&#24773;&#35831;&#21442;&#38405; <a href="3oyjdnxyp5.html#slow-jobs-recorder" target="_blank">slow jobs &#35760;&#24405;&#22120;</a> &#25991;&#26723;&#12290;</p><h4 id="f5bd977e1b483d28d0e96a66041ba93c">&#32531;&#24930;&#26597;&#35810;</h4><p><code>&lt;livewire:pulse.slow-queries /&gt;</code> &#21345;&#29255;&#23637;&#31034;&#24212;&#29992;&#20013;&#36229;&#20986;&#37197;&#32622;&#38408;&#20540;&#30340;&#25968;&#25454;&#24211;&#26597;&#35810;&#65292;&#35813;&#38408;&#20540;&#40664;&#35748;&#26159; 1,000ms&#12290;</p><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#32531;&#24930;&#26597;&#35810;&#20250;&#26681;&#25454; SQL &#26597;&#35810;&#65288;&#19981;&#21547;&#32465;&#23450;&#65289;&#21450;&#20854;&#21457;&#29983;&#20301;&#32622;&#36827;&#34892;&#20998;&#32452;&#65292;&#20294;&#22914;&#26524;&#20320;&#24076;&#26395;&#20165;&#25353; SQL &#26597;&#35810;&#20998;&#32452;&#65292;&#21487;&#20197;&#36873;&#25321;&#19981;&#25429;&#33719;&#20301;&#32622;&#12290;</p><p>&#22914;&#26524;&#20320;&#22240;&#36229;&#38271; SQL &#26597;&#35810;&#30340;&#35821;&#27861;&#39640;&#20142;&#32780;&#36935;&#21040;&#28210;&#26579;&#24615;&#33021;&#38382;&#39064;&#65292;&#21487;&#20197;&#36890;&#36807;&#28155;&#21152; <code>without-highlighting</code> &#23646;&#24615;&#26469;&#31105;&#29992;&#39640;&#20142;&#65306;</p><pre><code class="language-blade">&lt;livewire:pulse.slow-queries without-highlighting /&gt;</code></pre><p>&#35814;&#24773;&#35831;&#21442;&#38405; <a href="3oyjdnxyp5.html#slow-queries-recorder" target="_blank">slow queries &#35760;&#24405;&#22120;</a> &#25991;&#26723;&#12290;</p><h4 id="f08d7428b65694625b634e4650ce5a07">&#32531;&#24930;&#30340;&#20986;&#31449;&#35831;&#27714;</h4><p><code>&lt;livewire:pulse.slow-outgoing-requests /&gt;</code> &#21345;&#29255;&#23637;&#31034;&#20351;&#29992; Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/http-client" target="_blank">HTTP &#23458;&#25143;&#31471;</a> &#21457;&#36215;&#12289;&#19988;&#36229;&#20986;&#37197;&#32622;&#38408;&#20540;&#30340;&#20986;&#31449;&#35831;&#27714;&#65292;&#35813;&#38408;&#20540;&#40664;&#35748;&#26159; 1,000ms&#12290;</p><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#26465;&#30446;&#20250;&#25353;&#23436;&#25972; URL &#20998;&#32452;&#12290;&#19981;&#36807;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20351;&#29992;&#27491;&#21017;&#34920;&#36798;&#24335;&#23545;&#30456;&#20284;&#30340;&#20986;&#31449;&#35831;&#27714;&#36827;&#34892;&#24402;&#19968;&#21270;&#25110;&#20998;&#32452;&#12290;&#35814;&#24773;&#35831;&#21442;&#38405; <a href="3oyjdnxyp5.html#slow-outgoing-requests-recorder" target="_blank">slow outgoing requests &#35760;&#24405;&#22120;</a> &#25991;&#26723;&#12290;</p><h4 id="e80c310e6ae7ca889532ec40388a497f">&#32531;&#23384;</h4><p><code>&lt;livewire:pulse.cache /&gt;</code> &#21345;&#29255;&#23637;&#31034;&#24212;&#29992;&#30340;&#32531;&#23384;&#21629;&#20013;&#19982;&#26410;&#21629;&#20013;&#32479;&#35745;&#65292;&#21253;&#25324;&#20840;&#23616;&#21644;&#21333;&#20010;&#38190;&#30340;&#32479;&#35745;&#25968;&#25454;&#12290;</p><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#26465;&#30446;&#20250;&#25353;&#38190;&#20998;&#32452;&#12290;&#19981;&#36807;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20351;&#29992;&#27491;&#21017;&#34920;&#36798;&#24335;&#23545;&#30456;&#20284;&#30340;&#38190;&#36827;&#34892;&#24402;&#19968;&#21270;&#25110;&#20998;&#32452;&#12290;&#35814;&#24773;&#35831;&#21442;&#38405; <a href="3oyjdnxyp5.html#cache-interactions-recorder" target="_blank">cache interactions &#35760;&#24405;&#22120;</a> &#25991;&#26723;&#12290;</p><h2 id="94db73d38a4545b4937ec0195fc961e9">&#25429;&#33719;&#26465;&#30446;</h2><p>&#22823;&#22810;&#25968; Pulse &#35760;&#24405;&#22120;&#20250;&#26681;&#25454; Laravel &#27966;&#21457;&#30340;&#26694;&#26550;&#20107;&#20214;&#33258;&#21160;&#25429;&#33719;&#26465;&#30446;&#12290;&#19981;&#36807;&#65292;<a href="3oyjdnxyp5.html#servers-recorder" target="_blank">servers &#35760;&#24405;&#22120;</a> &#21644;&#19968;&#20123;&#31532;&#19977;&#26041;&#21345;&#29255;&#24517;&#39035;&#23450;&#26399;&#36718;&#35810;&#20449;&#24687;&#12290;&#35201;&#20351;&#29992;&#36825;&#20123;&#21345;&#29255;&#65292;&#20320;&#24517;&#39035;&#22312;&#25152;&#26377;&#24212;&#29992;&#26381;&#21153;&#22120;&#19978;&#36816;&#34892; <code>pulse:check</code> &#23432;&#25252;&#36827;&#31243;&#65306;</p><pre><code class="language-php">php artisan pulse:check</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#35201;&#35753; <code>pulse:check</code> &#36827;&#31243;&#22312;&#21518;&#21488;&#25345;&#32493;&#36816;&#34892;&#65292;&#24212;&#20351;&#29992; Supervisor &#20043;&#31867;&#30340;&#36827;&#31243;&#30417;&#35270;&#22120;&#65292;&#20197;&#30830;&#20445;&#35813;&#21629;&#20196;&#19981;&#20250;&#20572;&#27490;&#36816;&#34892;&#12290;</p>
+</blockquote><p>&#30001;&#20110; <code>pulse:check</code> &#21629;&#20196;&#26159;&#19968;&#20010;&#38271;&#29983;&#21629;&#21608;&#26399;&#36827;&#31243;&#65292;&#22914;&#26524;&#19981;&#37325;&#21551;&#65292;&#23427;&#23558;&#26080;&#27861;&#24863;&#30693;&#20195;&#30721;&#24211;&#30340;&#21464;&#26356;&#12290;&#20320;&#24212;&#22312;&#24212;&#29992;&#37096;&#32626;&#36807;&#31243;&#20013;&#36890;&#36807;&#35843;&#29992; <code>pulse:restart</code> &#21629;&#20196;&#26469;&#20248;&#38597;&#22320;&#37325;&#21551;&#35813;&#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan pulse:restart</code></pre><blockquote>
+<p>[!NOTE]<br>
+Pulse &#20351;&#29992;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/cache" target="_blank">&#32531;&#23384;</a>&#23384;&#20648;&#37325;&#21551;&#20449;&#21495;&#65292;&#22240;&#27492;&#22312;&#20351;&#29992;&#27492;&#21151;&#33021;&#21069;&#65292;&#20320;&#24212;&#30830;&#35748;&#24212;&#29992;&#24050;&#27491;&#30830;&#37197;&#32622;&#20102;&#32531;&#23384;&#39537;&#21160;&#12290;</p>
+</blockquote><h3 id="4eb76c34ddfc492c04291a44a9afd1b0">&#35760;&#24405;&#22120;</h3><p>&#35760;&#24405;&#22120;&#36127;&#36131;&#20174;&#24212;&#29992;&#20013;&#25429;&#33719;&#26465;&#30446;&#24182;&#35760;&#24405;&#21040; Pulse &#25968;&#25454;&#24211;&#12290;&#35760;&#24405;&#22120;&#22312;<a href="3oyjdnxyp5.html#configuration" target="_blank">Pulse &#37197;&#32622;&#25991;&#20214;</a>&#30340; <code>recorders</code> &#37096;&#20998;&#27880;&#20876;&#21644;&#37197;&#32622;&#12290;</p><h4 id="a9b35463ccb22f0c550298671e8414c3">&#32531;&#23384;&#20132;&#20114;</h4><p><code>CacheInteractions</code> &#35760;&#24405;&#22120;&#25429;&#33719;&#24212;&#29992;&#20013;&#21457;&#29983;&#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/cache" target="_blank">&#32531;&#23384;</a>&#21629;&#20013;&#19982;&#26410;&#21629;&#20013;&#20449;&#24687;&#65292;&#29992;&#20110;&#22312; <a href="3oyjdnxyp5.html#cache-card" target="_blank">Cache</a> &#21345;&#29255;&#19978;&#23637;&#31034;&#12290;</p><p>&#20320;&#21487;&#20197;&#36873;&#25321;&#24615;&#22320;&#35843;&#25972;<a href="3oyjdnxyp5.html#sampling" target="_blank">&#37319;&#26679;&#29575;</a>&#21644;&#24573;&#30053;&#30340;&#38190;&#27169;&#24335;&#12290;</p><p>&#20320;&#36824;&#21487;&#20197;&#37197;&#32622;&#38190;&#20998;&#32452;&#65292;&#20351;&#30456;&#20284;&#30340;&#38190;&#34987;&#24402;&#20026;&#21516;&#19968;&#20010;&#26465;&#30446;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20174;&#32531;&#23384;&#21516;&#31867;&#20449;&#24687;&#30340;&#38190;&#20013;&#31227;&#38500;&#21807;&#19968; ID&#12290;&#20998;&#32452;&#36890;&#36807;&#27491;&#21017;&#34920;&#36798;&#24335;&#23545;&#38190;&#30340;&#26576;&#37096;&#20998;&#36827;&#34892;"&#26597;&#25214;&#24182;&#26367;&#25442;"&#26469;&#37197;&#32622;&#12290;&#37197;&#32622;&#25991;&#20214;&#20013;&#21253;&#21547;&#20102;&#19968;&#20010;&#31034;&#20363;&#65306;</p><pre><code class="language-php">Recorders\CacheInteractions::class =&gt; [
+    // ...
+    'groups' =&gt; [
+        // '/:\d+/' =&gt; ':*',
+    ],
+],</code></pre><p>&#31532;&#19968;&#20010;&#21305;&#37197;&#30340;&#27169;&#24335;&#20250;&#34987;&#20351;&#29992;&#12290;&#22914;&#26524;&#27809;&#26377;&#27169;&#24335;&#21305;&#37197;&#65292;&#21017;&#38190;&#20250;&#25353;&#21407;&#26679;&#25429;&#33719;&#12290;</p><h4 id="c195df63086a73016c53d6928444a061">&#24322;&#24120;</h4><p><code>Exceptions</code> &#35760;&#24405;&#22120;&#25429;&#33719;&#24212;&#29992;&#20013;&#21487;&#25253;&#21578;&#30340;&#24322;&#24120;&#20449;&#24687;&#65292;&#29992;&#20110;&#22312; <a href="3oyjdnxyp5.html#exceptions-card" target="_blank">Exceptions</a> &#21345;&#29255;&#19978;&#23637;&#31034;&#12290;</p><p>&#20320;&#21487;&#20197;&#36873;&#25321;&#24615;&#22320;&#35843;&#25972;<a href="3oyjdnxyp5.html#sampling" target="_blank">&#37319;&#26679;&#29575;</a>&#21644;&#24573;&#30053;&#30340;&#24322;&#24120;&#27169;&#24335;&#12290;&#20320;&#36824;&#21487;&#20197;&#37197;&#32622;&#26159;&#21542;&#25429;&#33719;&#24322;&#24120;&#21457;&#29983;&#30340;&#20301;&#32622;&#12290;&#25429;&#33719;&#30340;&#20301;&#32622;&#20250;&#26174;&#31034;&#22312; Pulse &#20202;&#34920;&#30424;&#19978;&#65292;&#26377;&#21161;&#20110;&#23450;&#20301;&#24322;&#24120;&#26469;&#28304;&#65307;&#19981;&#36807;&#65292;&#22914;&#26524;&#21516;&#19968;&#20010;&#24322;&#24120;&#21457;&#29983;&#22312;&#22810;&#20010;&#20301;&#32622;&#65292;&#21017;&#27599;&#20010;&#19981;&#21516;&#20301;&#32622;&#37117;&#20250;&#20986;&#29616;&#19968;&#27425;&#12290;</p><h4 id="0796f7f8b93ad1204d4769c52aff5284">&#38431;&#21015;</h4><p><code>Queues</code> &#35760;&#24405;&#22120;&#25429;&#33719;&#24212;&#29992;&#38431;&#21015;&#30340;&#20449;&#24687;&#65292;&#29992;&#20110;&#22312; <a href="3oyjdnxyp5.html#queues-card" target="_blank">Queues</a> &#21345;&#29255;&#19978;&#23637;&#31034;&#12290;</p><p>&#20320;&#21487;&#20197;&#36873;&#25321;&#24615;&#22320;&#35843;&#25972;<a href="3oyjdnxyp5.html#sampling" target="_blank">&#37319;&#26679;&#29575;</a>&#21644;&#24573;&#30053;&#30340;&#20219;&#21153;&#27169;&#24335;&#12290;</p><h4 id="4a24e8e42ebd4ad029e4542b1bef7c59">&#32531;&#24930;&#20219;&#21153;</h4><p><code>SlowJobs</code> &#35760;&#24405;&#22120;&#25429;&#33719;&#24212;&#29992;&#20013;&#32531;&#24930;&#20219;&#21153;&#30340;&#20449;&#24687;&#65292;&#29992;&#20110;&#22312; <a href="3oyjdnxyp5.html#slow-jobs-recorder" target="_blank">Slow Jobs</a> &#21345;&#29255;&#19978;&#23637;&#31034;&#12290;</p><p>&#20320;&#21487;&#20197;&#36873;&#25321;&#24615;&#22320;&#35843;&#25972;&#32531;&#24930;&#20219;&#21153;&#38408;&#20540;&#12289;<a href="3oyjdnxyp5.html#sampling" target="_blank">&#37319;&#26679;&#29575;</a>&#21644;&#24573;&#30053;&#30340;&#20219;&#21153;&#27169;&#24335;&#12290;</p><p>&#26377;&#20123;&#20219;&#21153;&#20320;&#21487;&#33021;&#39044;&#26399;&#20250;&#27604;&#20854;&#20182;&#30340;&#32791;&#26102;&#26356;&#38271;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20320;&#21487;&#20197;&#37197;&#32622;&#25353;&#20219;&#21153;&#35774;&#23450;&#30340;&#38408;&#20540;&#65306;</p><pre><code class="language-php">Recorders\SlowJobs::class =&gt; [
+    // ...
+    'threshold' =&gt; [
+        '#^App\\Jobs\\GenerateYearlyReports$#' =&gt; 5000,
+        'default' =&gt; env('PULSE_SLOW_JOBS_THRESHOLD', 1000),
+    ],
+],</code></pre><p>&#22914;&#26524;&#27809;&#26377;&#27491;&#21017;&#34920;&#36798;&#24335;&#27169;&#24335;&#21305;&#37197;&#20219;&#21153;&#30340;&#31867;&#21517;&#65292;&#21017;&#20351;&#29992; <code>'default'</code> &#20540;&#12290;</p><h4 id="f08d7428b65694625b634e4650ce5a07">&#32531;&#24930;&#30340;&#20986;&#31449;&#35831;&#27714;</h4><p><code>SlowOutgoingRequests</code> &#35760;&#24405;&#22120;&#25429;&#33719;&#20351;&#29992; Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/http-client" target="_blank">HTTP &#23458;&#25143;&#31471;</a> &#21457;&#36215;&#12289;&#19988;&#36229;&#20986;&#37197;&#32622;&#38408;&#20540;&#30340;&#20986;&#31449; HTTP &#35831;&#27714;&#20449;&#24687;&#65292;&#29992;&#20110;&#22312; <a href="3oyjdnxyp5.html#slow-outgoing-requests-card" target="_blank">Slow Outgoing Requests</a> &#21345;&#29255;&#19978;&#23637;&#31034;&#12290;</p><p>&#20320;&#21487;&#20197;&#36873;&#25321;&#24615;&#22320;&#35843;&#25972;&#32531;&#24930;&#20986;&#31449;&#35831;&#27714;&#38408;&#20540;&#12289;<a href="3oyjdnxyp5.html#sampling" target="_blank">&#37319;&#26679;&#29575;</a>&#21644;&#24573;&#30053;&#30340; URL &#27169;&#24335;&#12290;</p><p>&#26377;&#20123;&#20986;&#31449;&#35831;&#27714;&#20320;&#21487;&#33021;&#39044;&#26399;&#20250;&#27604;&#20854;&#20182;&#30340;&#32791;&#26102;&#26356;&#38271;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20320;&#21487;&#20197;&#37197;&#32622;&#25353;&#35831;&#27714;&#35774;&#23450;&#30340;&#38408;&#20540;&#65306;</p><pre><code class="language-php">Recorders\SlowOutgoingRequests::class =&gt; [
+    // ...
+    'threshold' =&gt; [
+        '#backup.zip$#' =&gt; 5000,
+        'default' =&gt; env('PULSE_SLOW_OUTGOING_REQUESTS_THRESHOLD', 1000),
+    ],
+],</code></pre><p>&#22914;&#26524;&#27809;&#26377;&#27491;&#21017;&#34920;&#36798;&#24335;&#27169;&#24335;&#21305;&#37197;&#35831;&#27714;&#30340; URL&#65292;&#21017;&#20351;&#29992; <code>'default'</code> &#20540;&#12290;</p><p>&#20320;&#36824;&#21487;&#20197;&#37197;&#32622; URL &#20998;&#32452;&#65292;&#20351;&#30456;&#20284;&#30340; URL &#34987;&#24402;&#20026;&#21516;&#19968;&#20010;&#26465;&#30446;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20174; URL &#36335;&#24452;&#20013;&#31227;&#38500;&#21807;&#19968; ID&#65292;&#25110;&#20165;&#25353;&#22495;&#21517;&#20998;&#32452;&#12290;&#20998;&#32452;&#36890;&#36807;&#27491;&#21017;&#34920;&#36798;&#24335;&#23545; URL &#30340;&#26576;&#37096;&#20998;&#36827;&#34892;"&#26597;&#25214;&#24182;&#26367;&#25442;"&#26469;&#37197;&#32622;&#12290;&#37197;&#32622;&#25991;&#20214;&#20013;&#21253;&#21547;&#19968;&#20123;&#31034;&#20363;&#65306;</p><pre><code class="language-php">Recorders\SlowOutgoingRequests::class =&gt; [
+    // ...
+    'groups' =&gt; [
+        // '#^https://api\.github\.com/repos/.*$#' =&gt; 'api.github.com/repos/*',
+        // '#^https?://([^/]*).*$#' =&gt; '\1',
+        // '#/\d+#' =&gt; '/*',
+    ],
+],</code></pre><p>&#31532;&#19968;&#20010;&#21305;&#37197;&#30340;&#27169;&#24335;&#20250;&#34987;&#20351;&#29992;&#12290;&#22914;&#26524;&#27809;&#26377;&#27169;&#24335;&#21305;&#37197;&#65292;&#21017; URL &#20250;&#25353;&#21407;&#26679;&#25429;&#33719;&#12290;</p><h4 id="f5bd977e1b483d28d0e96a66041ba93c">&#32531;&#24930;&#26597;&#35810;</h4><p><code>SlowQueries</code> &#35760;&#24405;&#22120;&#25429;&#33719;&#24212;&#29992;&#20013;&#20219;&#20309;&#36229;&#20986;&#37197;&#32622;&#38408;&#20540;&#30340;&#25968;&#25454;&#24211;&#26597;&#35810;&#65292;&#29992;&#20110;&#22312; <a href="3oyjdnxyp5.html#slow-queries-card" target="_blank">Slow Queries</a> &#21345;&#29255;&#19978;&#23637;&#31034;&#12290;</p><p>&#20320;&#21487;&#20197;&#36873;&#25321;&#24615;&#22320;&#35843;&#25972;&#32531;&#24930;&#26597;&#35810;&#38408;&#20540;&#12289;<a href="3oyjdnxyp5.html#sampling" target="_blank">&#37319;&#26679;&#29575;</a>&#21644;&#24573;&#30053;&#30340;&#26597;&#35810;&#27169;&#24335;&#12290;&#20320;&#36824;&#21487;&#20197;&#37197;&#32622;&#26159;&#21542;&#25429;&#33719;&#26597;&#35810;&#20301;&#32622;&#12290;&#25429;&#33719;&#30340;&#20301;&#32622;&#20250;&#26174;&#31034;&#22312; Pulse &#20202;&#34920;&#30424;&#19978;&#65292;&#26377;&#21161;&#20110;&#23450;&#20301;&#26597;&#35810;&#26469;&#28304;&#65307;&#19981;&#36807;&#65292;&#22914;&#26524;&#21516;&#19968;&#20010;&#26597;&#35810;&#22312;&#22810;&#20010;&#20301;&#32622;&#25191;&#34892;&#65292;&#21017;&#27599;&#20010;&#19981;&#21516;&#20301;&#32622;&#37117;&#20250;&#20986;&#29616;&#19968;&#27425;&#12290;</p><p>&#26377;&#20123;&#26597;&#35810;&#20320;&#21487;&#33021;&#39044;&#26399;&#20250;&#27604;&#20854;&#20182;&#30340;&#32791;&#26102;&#26356;&#38271;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20320;&#21487;&#20197;&#37197;&#32622;&#25353;&#26597;&#35810;&#35774;&#23450;&#30340;&#38408;&#20540;&#65306;</p><pre><code class="language-php">Recorders\SlowQueries::class =&gt; [
+    // ...
+    'threshold' =&gt; [
+        '#^insert into `yearly_reports`#' =&gt; 5000,
+        'default' =&gt; env('PULSE_SLOW_QUERIES_THRESHOLD', 1000),
+    ],
+],</code></pre><p>&#22914;&#26524;&#27809;&#26377;&#27491;&#21017;&#34920;&#36798;&#24335;&#27169;&#24335;&#21305;&#37197;&#26597;&#35810;&#30340; SQL&#65292;&#21017;&#20351;&#29992; <code>'default'</code> &#20540;&#12290;</p><h4 id="b28b2ec08a8409b51b4e71e5d583422c">&#32531;&#24930;&#35831;&#27714;</h4><p><code>Requests</code> &#35760;&#24405;&#22120;&#25429;&#33719;&#21521;&#24212;&#29992;&#21457;&#36215;&#35831;&#27714;&#30340;&#20449;&#24687;&#65292;&#29992;&#20110;&#22312; <a href="3oyjdnxyp5.html#slow-requests-card" target="_blank">Slow Requests</a> &#21644; <a href="3oyjdnxyp5.html#application-usage-card" target="_blank">Application Usage</a> &#21345;&#29255;&#19978;&#23637;&#31034;&#12290;</p><p>&#20320;&#21487;&#20197;&#36873;&#25321;&#24615;&#22320;&#35843;&#25972;&#32531;&#24930;&#36335;&#30001;&#38408;&#20540;&#12289;<a href="3oyjdnxyp5.html#sampling" target="_blank">&#37319;&#26679;&#29575;</a>&#21644;&#24573;&#30053;&#30340;&#36335;&#24452;&#12290;</p><p>&#26377;&#20123;&#35831;&#27714;&#20320;&#21487;&#33021;&#39044;&#26399;&#20250;&#27604;&#20854;&#20182;&#30340;&#32791;&#26102;&#26356;&#38271;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20320;&#21487;&#20197;&#37197;&#32622;&#25353;&#35831;&#27714;&#35774;&#23450;&#30340;&#38408;&#20540;&#65306;</p><pre><code class="language-php">Recorders\SlowRequests::class =&gt; [
+    // ...
+    'threshold' =&gt; [
+        '#^/admin/#' =&gt; 5000,
+        'default' =&gt; env('PULSE_SLOW_REQUESTS_THRESHOLD', 1000),
+    ],
+],</code></pre><p>&#22914;&#26524;&#27809;&#26377;&#27491;&#21017;&#34920;&#36798;&#24335;&#27169;&#24335;&#21305;&#37197;&#35831;&#27714;&#30340; URL&#65292;&#21017;&#20351;&#29992; <code>'default'</code> &#20540;&#12290;</p><h4 id="c566ca59602c7c5c0d3fe5e18ade447d">&#26381;&#21153;&#22120;</h4><p><code>Servers</code> &#35760;&#24405;&#22120;&#25429;&#33719;&#20026;&#24212;&#29992;&#25552;&#20379;&#31639;&#21147;&#30340;&#26381;&#21153;&#22120;&#30340; CPU&#12289;&#20869;&#23384;&#21644;&#23384;&#20648;&#20351;&#29992;&#24773;&#20917;&#65292;&#29992;&#20110;&#22312; <a href="3oyjdnxyp5.html#servers-card" target="_blank">Servers</a> &#21345;&#29255;&#19978;&#23637;&#31034;&#12290;&#35813;&#35760;&#24405;&#22120;&#35201;&#27714;&#22312;&#20320;&#24076;&#26395;&#30417;&#25511;&#30340;&#27599;&#21488;&#26381;&#21153;&#22120;&#19978;&#36816;&#34892; <a href="3oyjdnxyp5.html#capturing-entries" target="_blank">pulse:check &#21629;&#20196;</a>&#12290;</p><p>&#27599;&#21488;&#19978;&#25253;&#30340;&#26381;&#21153;&#22120;&#24517;&#39035;&#26377;&#21807;&#19968;&#30340;&#21517;&#31216;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Pulse &#20250;&#20351;&#29992; PHP &#30340; <code>gethostname</code> &#20989;&#25968;&#36820;&#22238;&#30340;&#20540;&#12290;&#22914;&#26524;&#20320;&#24819;&#33258;&#23450;&#20041;&#65292;&#21487;&#20197;&#35774;&#32622; <code>PULSE_SERVER_NAME</code> &#29615;&#22659;&#21464;&#37327;&#65306;</p><pre><code class="language-env">PULSE_SERVER_NAME=load-balancer</code></pre><p>Pulse &#37197;&#32622;&#25991;&#20214;&#36824;&#20801;&#35768;&#20320;&#33258;&#23450;&#20041;&#34987;&#30417;&#25511;&#30340;&#30446;&#24405;&#12290;</p><h4 id="e584cb97eef075be90b5db7ecca82ee7">&#29992;&#25143;&#20219;&#21153;</h4><p><code>UserJobs</code> &#35760;&#24405;&#22120;&#25429;&#33719;&#24212;&#29992;&#20013;&#27966;&#21457;&#20219;&#21153;&#30340;&#29992;&#25143;&#20449;&#24687;&#65292;&#29992;&#20110;&#22312; <a href="3oyjdnxyp5.html#application-usage-card" target="_blank">Application Usage</a> &#21345;&#29255;&#19978;&#23637;&#31034;&#12290;</p><p>&#20320;&#21487;&#20197;&#36873;&#25321;&#24615;&#22320;&#35843;&#25972;<a href="3oyjdnxyp5.html#sampling" target="_blank">&#37319;&#26679;&#29575;</a>&#21644;&#24573;&#30053;&#30340;&#20219;&#21153;&#27169;&#24335;&#12290;</p><h4 id="79eaa4547e7b82a1ae3432298c51a327">&#29992;&#25143;&#35831;&#27714;</h4><p><code>UserRequests</code> &#35760;&#24405;&#22120;&#25429;&#33719;&#21521;&#24212;&#29992;&#21457;&#36215;&#35831;&#27714;&#30340;&#29992;&#25143;&#20449;&#24687;&#65292;&#29992;&#20110;&#22312; <a href="3oyjdnxyp5.html#application-usage-card" target="_blank">Application Usage</a> &#21345;&#29255;&#19978;&#23637;&#31034;&#12290;</p><p>&#20320;&#21487;&#20197;&#36873;&#25321;&#24615;&#22320;&#35843;&#25972;<a href="3oyjdnxyp5.html#sampling" target="_blank">&#37319;&#26679;&#29575;</a>&#21644;&#24573;&#30053;&#30340; URL &#27169;&#24335;&#12290;</p><h3 id="bb8472c400eb37ea9ee7dda5747059f2">&#36807;&#28388;</h3><p>&#22914;&#21069;&#25152;&#36848;&#65292;&#35768;&#22810;<a href="3oyjdnxyp5.html#recorders" target="_blank">&#35760;&#24405;&#22120;</a>&#37117;&#25552;&#20379;&#36890;&#36807;&#37197;&#32622;&#26681;&#25454;&#26465;&#30446;&#30340;&#20540;&#65288;&#20363;&#22914;&#35831;&#27714;&#30340; URL&#65289;&#26469;"&#24573;&#30053;"&#20256;&#20837;&#26465;&#30446;&#30340;&#33021;&#21147;&#12290;&#20294;&#26377;&#26102;&#26681;&#25454;&#20854;&#20182;&#22240;&#32032;&#65288;&#20363;&#22914;&#24403;&#21069;&#24050;&#35748;&#35777;&#30340;&#29992;&#25143;&#65289;&#36807;&#28388;&#35760;&#24405;&#20250;&#24456;&#26377;&#29992;&#12290;&#35201;&#36807;&#28388;&#36825;&#20123;&#35760;&#24405;&#65292;&#20320;&#21487;&#20197;&#21521; Pulse &#30340; <code>filter</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#38381;&#21253;&#12290;&#36890;&#24120;&#65292;<code>filter</code> &#26041;&#27861;&#24212;&#22312;&#24212;&#29992; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Auth;
+use Laravel\Pulse\Entry;
+use Laravel\Pulse\Facades\Pulse;
+use Laravel\Pulse\Value;
+
+/**
+ * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Pulse::filter(function (Entry|Value $entry) {
+        return Auth::user()-&gt;isNotAdmin();
+    });
+
+    // ...
+}</code></pre><h2 id="c3318eaaa3bd15fa40b3a4d381c4ee15">&#24615;&#33021;</h2><p>Pulse &#30340;&#35774;&#35745;&#21021;&#34935;&#26159;&#26080;&#38656;&#39069;&#22806;&#22522;&#30784;&#35774;&#26045;&#21363;&#21487;&#25509;&#20837;&#29616;&#26377;&#24212;&#29992;&#12290;&#19981;&#36807;&#65292;&#23545;&#20110;&#39640;&#27969;&#37327;&#24212;&#29992;&#65292;&#26377;&#20960;&#31181;&#26041;&#27861;&#21487;&#20197;&#28040;&#38500; Pulse &#21487;&#33021;&#23545;&#24212;&#29992;&#24615;&#33021;&#20135;&#29983;&#30340;&#24433;&#21709;&#12290;</p><h3 id="17f11030e95d33106f81d727431a6021">&#20351;&#29992;&#19981;&#21516;&#30340;&#25968;&#25454;&#24211;</h3><p>&#23545;&#20110;&#39640;&#27969;&#37327;&#24212;&#29992;&#65292;&#20320;&#21487;&#33021;&#20542;&#21521;&#20110;&#20026; Pulse &#20351;&#29992;&#19987;&#29992;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#65292;&#20197;&#36991;&#20813;&#24433;&#21709;&#24212;&#29992;&#25968;&#25454;&#24211;&#12290;</p><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#35774;&#32622; <code>PULSE_DB_CONNECTION</code> &#29615;&#22659;&#21464;&#37327;&#26469;&#33258;&#23450;&#20041; Pulse &#20351;&#29992;&#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/database#configuration" target="_blank">&#25968;&#25454;&#24211;&#36830;&#25509;</a>&#12290;</p><pre><code class="language-env">PULSE_DB_CONNECTION=pulse</code></pre><h3 id="be3d0fbe3767ddf1ba9e683454c72b38">Redis &#25668;&#21462;</h3><blockquote>
+<p>[!WARNING]<br>
+Redis &#25668;&#21462;&#35201;&#27714; Redis 6.2 &#25110;&#26356;&#39640;&#29256;&#26412;&#65292;&#24182;&#19988;&#24212;&#29992;&#30340; Redis &#23458;&#25143;&#31471;&#39537;&#21160;&#38656;&#37197;&#32622;&#20026; <code>phpredis</code> &#25110; <code>predis</code>&#12290;</p>
+</blockquote><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#22312; HTTP &#21709;&#24212;&#21457;&#36865;&#32473;&#23458;&#25143;&#31471;&#25110;&#20219;&#21153;&#22788;&#29702;&#23436;&#25104;&#21518;&#65292;Pulse &#20250;&#23558;&#26465;&#30446;&#30452;&#25509;&#23384;&#20648;&#21040;<a href="3oyjdnxyp5.html#using-a-different-database" target="_blank">&#37197;&#32622;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;</a>&#65307;&#19981;&#36807;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; Pulse &#30340; Redis &#25668;&#21462;&#39537;&#21160;&#23558;&#26465;&#30446;&#21457;&#36865;&#21040; Redis &#27969;&#12290;&#21487;&#20197;&#36890;&#36807;&#37197;&#32622; <code>PULSE_INGEST_DRIVER</code> &#29615;&#22659;&#21464;&#37327;&#26469;&#21551;&#29992;&#65306;</p><pre><code class="language-ini">PULSE_INGEST_DRIVER=redis</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Pulse &#20250;&#20351;&#29992;&#20320;&#40664;&#35748;&#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/redis#configuration" target="_blank">Redis &#36830;&#25509;</a>&#65292;&#20294;&#20320;&#21487;&#20197;&#36890;&#36807; <code>PULSE_REDIS_CONNECTION</code> &#29615;&#22659;&#21464;&#37327;&#33258;&#23450;&#20041;&#65306;</p><pre><code class="language-ini">PULSE_REDIS_CONNECTION=pulse</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#20351;&#29992; Redis &#25668;&#21462;&#39537;&#21160;&#26102;&#65292;&#20320;&#30340; Pulse &#23433;&#35013;&#24212;&#22987;&#32456;&#20351;&#29992;&#19982; Redis &#39537;&#21160;&#30340;&#38431;&#21015;&#19981;&#21516;&#30340; Redis &#36830;&#25509;&#65288;&#22914;&#36866;&#29992;&#65289;&#12290;</p>
+</blockquote><p>&#20351;&#29992; Redis &#25668;&#21462;&#26102;&#65292;&#20320;&#38656;&#35201;&#36816;&#34892; <code>pulse:work</code> &#21629;&#20196;&#26469;&#30417;&#25511;&#27969;&#65292;&#24182;&#23558;&#26465;&#30446;&#20174; Redis &#31227;&#21160;&#21040; Pulse &#30340;&#25968;&#25454;&#24211;&#34920;&#20013;&#12290;</p><pre><code class="language-php">php artisan pulse:work</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#35201;&#35753; <code>pulse:work</code> &#36827;&#31243;&#22312;&#21518;&#21488;&#25345;&#32493;&#36816;&#34892;&#65292;&#24212;&#20351;&#29992; Supervisor &#20043;&#31867;&#30340;&#36827;&#31243;&#30417;&#35270;&#22120;&#65292;&#20197;&#30830;&#20445; Pulse &#24037;&#20316;&#36827;&#31243;&#19981;&#20250;&#20572;&#27490;&#36816;&#34892;&#12290;</p>
+</blockquote><p>&#30001;&#20110; <code>pulse:work</code> &#21629;&#20196;&#26159;&#19968;&#20010;&#38271;&#29983;&#21629;&#21608;&#26399;&#36827;&#31243;&#65292;&#22914;&#26524;&#19981;&#37325;&#21551;&#65292;&#23427;&#23558;&#26080;&#27861;&#24863;&#30693;&#20195;&#30721;&#24211;&#30340;&#21464;&#26356;&#12290;&#20320;&#24212;&#22312;&#24212;&#29992;&#37096;&#32626;&#36807;&#31243;&#20013;&#36890;&#36807;&#35843;&#29992; <code>pulse:restart</code> &#21629;&#20196;&#26469;&#20248;&#38597;&#22320;&#37325;&#21551;&#35813;&#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan pulse:restart</code></pre><blockquote>
+<p>[!NOTE]<br>
+Pulse &#20351;&#29992;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/cache" target="_blank">&#32531;&#23384;</a>&#23384;&#20648;&#37325;&#21551;&#20449;&#21495;&#65292;&#22240;&#27492;&#22312;&#20351;&#29992;&#27492;&#21151;&#33021;&#21069;&#65292;&#20320;&#24212;&#30830;&#35748;&#24212;&#29992;&#24050;&#27491;&#30830;&#37197;&#32622;&#20102;&#32531;&#23384;&#39537;&#21160;&#12290;</p>
+</blockquote><h3 id="42ac9be904e43d4bf1a2e637ada1e8cf">&#37319;&#26679;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Pulse &#20250;&#25429;&#33719;&#24212;&#29992;&#20013;&#21457;&#29983;&#30340;&#27599;&#19968;&#20010;&#30456;&#20851;&#20107;&#20214;&#12290;&#23545;&#20110;&#39640;&#27969;&#37327;&#24212;&#29992;&#65292;&#36825;&#21487;&#33021;&#20250;&#23548;&#33268;&#20202;&#34920;&#30424;&#38656;&#35201;&#32858;&#21512;&#25968;&#20197;&#30334;&#19975;&#35745;&#30340;&#25968;&#25454;&#24211;&#34892;&#65292;&#23588;&#20854;&#26159;&#36739;&#38271;&#30340;&#26102;&#38388;&#27573;&#12290;</p><p>&#20320;&#21487;&#20197;&#25913;&#20026;&#22312;&#26576;&#20123; Pulse &#25968;&#25454;&#35760;&#24405;&#22120;&#19978;&#21551;&#29992;"&#37319;&#26679;"&#12290;&#20363;&#22914;&#65292;&#22312; <a href="3oyjdnxyp5.html#user-requests-recorder" target="_blank">User Requests</a> &#35760;&#24405;&#22120;&#19978;&#23558;&#37319;&#26679;&#29575;&#35774;&#20026; <code>0.1</code>&#65292;&#24847;&#21619;&#30528;&#20320;&#21482;&#35760;&#24405;&#32422; 10% &#30340;&#35775;&#38382;&#20320;&#24212;&#29992;&#30340;&#35831;&#27714;&#12290;&#22312;&#20202;&#34920;&#30424;&#20013;&#65292;&#25968;&#20540;&#20250;&#34987;&#25918;&#22823;&#24182;&#21152;&#19978; <code>~</code> &#21069;&#32512;&#65292;&#34920;&#31034;&#23427;&#20204;&#20026;&#36817;&#20284;&#20540;&#12290;</p><p>&#19968;&#33324;&#26469;&#35828;&#65292;&#26576;&#20010;&#25351;&#26631;&#25317;&#26377;&#30340;&#26465;&#30446;&#36234;&#22810;&#65292;&#20320;&#23601;&#33021;&#22312;&#19981;&#36807;&#22810;&#29306;&#29298;&#20934;&#30830;&#24615;&#30340;&#24773;&#20917;&#19979;&#23558;&#37319;&#26679;&#29575;&#35774;&#24471;&#36234;&#20302;&#12290;</p><h3 id="3db6e6dd60a5023732f952812eea014c">&#20462;&#21098;</h3><p>&#19968;&#26086;&#23384;&#20648;&#30340;&#26465;&#30446;&#36229;&#20986;&#20202;&#34920;&#30424;&#26102;&#38388;&#31383;&#21475;&#65292;Pulse &#20250;&#33258;&#21160;&#20462;&#21098;&#23427;&#20204;&#12290;&#20462;&#21098;&#22312;&#25668;&#21462;&#25968;&#25454;&#26102;&#21457;&#29983;&#65292;&#37319;&#29992;&#21487;&#36890;&#36807; Pulse <a href="3oyjdnxyp5.html#configuration" target="_blank">&#37197;&#32622;&#25991;&#20214;</a>&#33258;&#23450;&#20041;&#30340;&#25277;&#22870;&#26426;&#21046;&#12290;</p><h3 id="20e140cc40a45caf1b43403fbf2d62b2">&#22788;&#29702; Pulse &#24322;&#24120;</h3><p>&#22914;&#26524;&#22312;&#25429;&#33719; Pulse &#25968;&#25454;&#26102;&#21457;&#29983;&#20102;&#24322;&#24120;&#65288;&#20363;&#22914;&#26080;&#27861;&#36830;&#25509;&#21040;&#23384;&#20648;&#25968;&#25454;&#24211;&#65289;&#65292;Pulse &#20250;&#38745;&#40664;&#22833;&#36133;&#65292;&#20197;&#36991;&#20813;&#24433;&#21709;&#20320;&#30340;&#24212;&#29992;&#12290;</p><p>&#22914;&#26524;&#20320;&#24819;&#33258;&#23450;&#20041;&#36825;&#20123;&#24322;&#24120;&#30340;&#22788;&#29702;&#26041;&#24335;&#65292;&#21487;&#20197;&#21521; <code>handleExceptionsUsing</code> &#26041;&#27861;&#25552;&#20379;&#19968;&#20010;&#38381;&#21253;&#65306;</p><pre><code class="language-php">use Laravel\Pulse\Facades\Pulse;
+use Illuminate\Support\Facades\Log;
+
+Pulse::handleExceptionsUsing(function ($e) {
+    Log::debug('An exception happened in Pulse', [
+        'message' =&gt; $e-&gt;getMessage(),
+        'stack' =&gt; $e-&gt;getTraceAsString(),
+    ]);
+});</code></pre><h2 id="c817615bfa930244946e1fa0b4a2c564">&#33258;&#23450;&#20041;&#21345;&#29255;</h2><p>Pulse &#20801;&#35768;&#20320;&#26500;&#24314;&#33258;&#23450;&#20041;&#21345;&#29255;&#26469;&#23637;&#31034;&#19982;&#24212;&#29992;&#29305;&#23450;&#38656;&#27714;&#30456;&#20851;&#30340;&#25968;&#25454;&#12290;Pulse &#20351;&#29992; <a href="https://livewire.laravel.com" target="_blank" rel="noopener noreferrer">Livewire</a>&#65292;&#22240;&#27492;&#22312;&#26500;&#24314;&#20320;&#30340;&#31532;&#19968;&#20010;&#33258;&#23450;&#20041;&#21345;&#29255;&#21069;&#65292;&#20320;&#21487;&#33021;&#24819;<a href="https://livewire.laravel.com/docs" target="_blank" rel="noopener noreferrer">&#26597;&#38405;&#20854;&#25991;&#26723;</a>&#12290;</p><h3 id="a401f978723b6770985b420fffa7fc63">&#21345;&#29255;&#32452;&#20214;</h3><p>&#22312; Laravel Pulse &#20013;&#21019;&#24314;&#33258;&#23450;&#20041;&#21345;&#29255;&#65292;&#39318;&#20808;&#35201;&#32487;&#25215;&#22522;&#30784;&#30340; <code>Card</code> Livewire &#32452;&#20214;&#24182;&#23450;&#20041;&#30456;&#24212;&#30340;&#35270;&#22270;&#65306;</p><pre><code class="language-php">namespace App\Livewire\Pulse;
+
+use Laravel\Pulse\Livewire\Card;
+use Livewire\Attributes\Lazy;
+
+#[Lazy]
+class TopSellers extends Card
+{
+    public function render()
+    {
+        return view('livewire.pulse.top-sellers');
+    }
+}</code></pre><p>&#20351;&#29992; Livewire &#30340; <a href="https://livewire.laravel.com/docs/lazy" target="_blank" rel="noopener noreferrer">&#25042;&#21152;&#36733;</a> &#29305;&#24615;&#26102;&#65292;<code>Card</code> &#32452;&#20214;&#20250;&#33258;&#21160;&#25552;&#20379;&#19968;&#20010;&#21344;&#20301;&#31526;&#65292;&#35813;&#21344;&#20301;&#31526;&#20250;&#36981;&#24490;&#20256;&#20837;&#32452;&#20214;&#30340; <code>cols</code> &#21644; <code>rows</code> &#23646;&#24615;&#12290;</p><p>&#32534;&#20889; Pulse &#21345;&#29255;&#23545;&#24212;&#30340;&#35270;&#22270;&#26102;&#65292;&#20320;&#21487;&#20197;&#21033;&#29992; Pulse &#30340; Blade &#32452;&#20214;&#26469;&#33719;&#24471;&#19968;&#33268;&#30340;&#22806;&#35266;&#19982;&#20307;&#39564;&#65306;</p><pre><code class="language-blade">&lt;x-pulse::card :cols="$cols" :rows="$rows" :class="$class" wire:poll.5s=""&gt;
+    &lt;x-pulse::card-header name="Top Sellers"&gt;
+        &lt;x-slot:icon&gt;
+            ...
+        &lt;/x-slot:icon&gt;
+    &lt;/x-pulse::card-header&gt;
+
+    &lt;x-pulse::scroll :expand="$expand"&gt;
+        ...
+    &lt;/x-pulse::scroll&gt;
+&lt;/x-pulse::card&gt;</code></pre><p><code>$cols</code>&#12289;<code>$rows</code>&#12289;<code>$class</code> &#21644; <code>$expand</code> &#21464;&#37327;&#24212;&#20256;&#36882;&#32473;&#23427;&#20204;&#21508;&#33258;&#30340; Blade &#32452;&#20214;&#65292;&#20197;&#20415;&#20174;&#20202;&#34920;&#30424;&#35270;&#22270;&#33258;&#23450;&#20041;&#21345;&#29255;&#24067;&#23616;&#12290;&#20320;&#21487;&#33021;&#36824;&#24076;&#26395;&#22312;&#35270;&#22270;&#20013;&#21253;&#21547; <code>wire:poll.5s=""</code> &#23646;&#24615;&#65292;&#20351;&#21345;&#29255;&#33258;&#21160;&#26356;&#26032;&#12290;</p><p>&#23450;&#20041;&#22909; Livewire &#32452;&#20214;&#21644;&#27169;&#26495;&#21518;&#65292;&#35813;&#21345;&#29255;&#23601;&#21487;&#20197;&#34987;&#24341;&#20837;&#21040;&#20320;&#30340;<a href="3oyjdnxyp5.html#dashboard-customization" target="_blank">&#20202;&#34920;&#30424;&#35270;&#22270;</a>&#20013;&#65306;</p><pre><code class="language-blade">&lt;x-pulse&gt;
+    ...
+
+    &lt;livewire:pulse.top-sellers cols="4" /&gt;
+&lt;/x-pulse&gt;</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#30340;&#21345;&#29255;&#21253;&#21547;&#22312;&#19968;&#20010;&#25193;&#23637;&#21253;&#20013;&#65292;&#20320;&#38656;&#35201;&#20351;&#29992; <code>Livewire::component</code> &#26041;&#27861;&#21521; Livewire &#27880;&#20876;&#35813;&#32452;&#20214;&#12290;</p>
+</blockquote><h3 id="39003734d1d700d5bd97bf1e7a2fcf73">&#26679;&#24335;</h3><p>&#22914;&#26524;&#20320;&#30340;&#21345;&#29255;&#38656;&#35201; Pulse &#33258;&#24102;&#30340;&#31867;&#21644;&#32452;&#20214;&#20043;&#22806;&#30340;&#39069;&#22806;&#26679;&#24335;&#65292;&#26377;&#20960;&#31181;&#26041;&#24335;&#20026;&#21345;&#29255;&#24341;&#20837;&#33258;&#23450;&#20041; CSS&#12290;</p><h4 id="cabf1992aa6c5c6e06a4c80760662618">Laravel Vite &#38598;&#25104;</h4><p>&#22914;&#26524;&#20320;&#30340;&#33258;&#23450;&#20041;&#21345;&#29255;&#20301;&#20110;&#24212;&#29992;&#20195;&#30721;&#24211;&#20013;&#65292;&#24182;&#19988;&#20320;&#27491;&#22312;&#20351;&#29992; Laravel &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/vite" target="_blank">Vite &#38598;&#25104;</a>&#65292;&#20320;&#21487;&#20197;&#26356;&#26032; <code>vite.config.js</code> &#25991;&#20214;&#65292;&#20026;&#21345;&#29255;&#24341;&#20837;&#19968;&#20010;&#19987;&#29992;&#30340; CSS &#20837;&#21475;&#28857;&#65306;</p><pre><code class="language-js">laravel({
+    input: [
+        'resources/css/pulse/top-sellers.css',
+        // ...
+    ],
+}),</code></pre><p>&#28982;&#21518;&#65292;&#20320;&#21487;&#20197;&#22312;<a href="3oyjdnxyp5.html#dashboard-customization" target="_blank">&#20202;&#34920;&#30424;&#35270;&#22270;</a>&#20013;&#20351;&#29992; <code>@vite</code> Blade &#25351;&#20196;&#65292;&#24182;&#25351;&#23450;&#21345;&#29255;&#30340; CSS &#20837;&#21475;&#65306;</p><pre><code class="language-blade">&lt;x-pulse&gt;
+    @vite('resources/css/pulse/top-sellers.css')
+
+    ...
+&lt;/x-pulse&gt;</code></pre><h4 id="565533763bc876211cde48eb1fbd0744">CSS &#25991;&#20214;</h4><p>&#23545;&#20110;&#20854;&#20182;&#20351;&#29992;&#22330;&#26223;&#65288;&#21253;&#25324;&#21253;&#21547;&#22312;&#25193;&#23637;&#21253;&#20013;&#30340; Pulse &#21345;&#29255;&#65289;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312; Livewire &#32452;&#20214;&#19978;&#23450;&#20041;&#19968;&#20010; <code>css</code> &#26041;&#27861;&#65288;&#36820;&#22238; CSS &#25991;&#20214;&#30340;&#36335;&#24452;&#65289;&#26469;&#25351;&#31034; Pulse &#21152;&#36733;&#39069;&#22806;&#30340;&#26679;&#24335;&#34920;&#65306;</p><pre><code class="language-php">class TopSellers extends Card
+{
+    // ...
+
+    protected function css()
+    {
+        return __DIR__.'/../../dist/top-sellers.css';
+    }
+}</code></pre><p>&#24403;&#35813;&#21345;&#29255;&#34987;&#24341;&#20837;&#21040;&#20202;&#34920;&#30424;&#26102;&#65292;Pulse &#20250;&#33258;&#21160;&#23558;&#35813;&#25991;&#20214;&#30340;&#20869;&#23481;&#21253;&#21547;&#22312;&#19968;&#20010; <code>&lt;style&gt;</code> &#26631;&#31614;&#20013;&#65292;&#22240;&#27492;&#26080;&#38656;&#23558;&#20854;&#21457;&#24067;&#21040; <code>public</code> &#30446;&#24405;&#12290;</p><h4 id="ecaf86f5e62ea88ea9e41e09849358d2">Tailwind CSS</h4><p>&#20351;&#29992; Tailwind CSS &#26102;&#65292;&#20320;&#24212;&#21019;&#24314;&#19968;&#20010;&#19987;&#29992;&#30340; CSS &#20837;&#21475;&#28857;&#12290;&#20197;&#19979;&#31034;&#20363;&#25490;&#38500;&#20102; Tailwind &#30340; <a href="https://tailwindcss.com/docs/preflight" target="_blank" rel="noopener noreferrer">Preflight</a> &#22522;&#30784;&#26679;&#24335;&#65288;Pulse &#24050;&#21253;&#21547;&#65289;&#65292;&#24182;&#20351;&#29992; CSS &#36873;&#25321;&#22120;&#38480;&#23450; Tailwind &#30340;&#20316;&#29992;&#33539;&#22260;&#65292;&#20197;&#36991;&#20813;&#19982; Pulse &#30340; Tailwind &#31867;&#20914;&#31361;&#65306;</p><pre><code class="language-css">@import "tailwindcss/theme.css";
+
+@custom-variant dark (&amp;:where(.dark, .dark *));
+@source "./../../views/livewire/pulse/top-sellers.blade.php";
+
+@theme {
+  /* ... */
+}
+
+#top-sellers {
+  @import "tailwindcss/utilities.css" source(none);
+}</code></pre><p>&#20320;&#36824;&#38656;&#35201;&#22312;&#21345;&#29255;&#35270;&#22270;&#20013;&#21253;&#21547;&#19968;&#20010;&#19982;&#20837;&#21475;&#28857;&#20013; CSS &#36873;&#25321;&#22120;&#21305;&#37197;&#30340; <code>id</code> &#25110; <code>class</code> &#23646;&#24615;&#65306;</p><pre><code class="language-blade">&lt;x-pulse::card id="top-sellers" :cols="$cols" :rows="$rows" class="$class"&gt;
+    ...
+&lt;/x-pulse::card&gt;</code></pre><h3 id="8c6059fb62ed91aa2e00d2a34e3ba9d7">&#25968;&#25454;&#25429;&#33719;&#19982;&#32858;&#21512;</h3><p>&#33258;&#23450;&#20041;&#21345;&#29255;&#21487;&#20197;&#20174;&#20219;&#20309;&#22320;&#26041;&#33719;&#21462;&#24182;&#23637;&#31034;&#25968;&#25454;&#65307;&#19981;&#36807;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#21033;&#29992; Pulse &#24378;&#22823;&#19988;&#39640;&#25928;&#30340;&#25968;&#25454;&#35760;&#24405;&#19982;&#32858;&#21512;&#31995;&#32479;&#12290;</p><h4 id="94db73d38a4545b4937ec0195fc961e9">&#25429;&#33719;&#26465;&#30446;</h4><p>Pulse &#20801;&#35768;&#20320;&#20351;&#29992; <code>Pulse::record</code> &#26041;&#27861;&#35760;&#24405;"&#26465;&#30446;"&#65306;</p><pre><code class="language-php">use Laravel\Pulse\Facades\Pulse;
+
+Pulse::record('user_sale', $user-&gt;id, $sale-&gt;amount)
+    -&gt;sum()
+    -&gt;count();</code></pre><p>&#25552;&#20379;&#32473; <code>record</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#20320;&#27491;&#22312;&#35760;&#24405;&#30340;&#26465;&#30446;&#30340; <code>type</code>&#65292;&#31532;&#20108;&#20010;&#21442;&#25968;&#26159;&#20915;&#23450;&#32858;&#21512;&#25968;&#25454;&#22914;&#20309;&#20998;&#32452;&#30340; <code>key</code>&#12290;&#23545;&#20110;&#22823;&#22810;&#25968;&#32858;&#21512;&#26041;&#27861;&#65292;&#20320;&#36824;&#38656;&#35201;&#25351;&#23450;&#19968;&#20010;&#35201;&#32858;&#21512;&#30340; <code>value</code>&#12290;&#22312;&#19978;&#20363;&#20013;&#65292;&#34987;&#32858;&#21512;&#30340;&#20540;&#26159; <code>$sale-&gt;amount</code>&#12290;&#28982;&#21518;&#20320;&#21487;&#20197;&#35843;&#29992;&#19968;&#20010;&#25110;&#22810;&#20010;&#32858;&#21512;&#26041;&#27861;&#65288;&#20363;&#22914; <code>sum</code>&#65289;&#65292;&#20197;&#20415; Pulse &#23558;&#39044;&#32858;&#21512;&#30340;&#20540;&#25429;&#33719;&#21040;"&#26742;"&#20013;&#65292;&#20415;&#20110;&#21518;&#32493;&#39640;&#25928;&#26816;&#32034;&#12290;</p><p>&#21487;&#29992;&#30340;&#32858;&#21512;&#26041;&#27861;&#26377;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;"><code>avg</code></li>
+<li style="list-style-type: disc;"><code>count</code></li>
+<li style="list-style-type: disc;"><code>max</code></li>
+<li style="list-style-type: disc;"><code>min</code></li>
+<li style="list-style-type: disc;"><code>sum</code></li>
+</ul><blockquote>
+<p>[!NOTE]<br>
+&#22312;&#26500;&#24314;&#25429;&#33719;&#24403;&#21069;&#24050;&#35748;&#35777;&#29992;&#25143; ID &#30340;&#21345;&#29255;&#25193;&#23637;&#21253;&#26102;&#65292;&#20320;&#24212;&#20351;&#29992; <code>Pulse::resolveAuthenticatedUserId()</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#20250;&#36981;&#24490;&#23545;&#24212;&#29992;&#25152;&#20570;&#30340;&#20219;&#20309;<a href="3oyjdnxyp5.html#dashboard-resolving-users" target="_blank">&#29992;&#25143;&#35299;&#26512;&#22120;&#33258;&#23450;&#20041;</a>&#12290;</p>
+</blockquote><h4 id="355a308234be43b5c8a928107934774f">&#26816;&#32034;&#32858;&#21512;&#25968;&#25454;</h4><p>&#32487;&#25215; Pulse &#30340; <code>Card</code> Livewire &#32452;&#20214;&#26102;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>aggregate</code> &#26041;&#27861;&#26816;&#32034;&#20202;&#34920;&#30424;&#24403;&#21069;&#26597;&#30475;&#26102;&#38388;&#27573;&#20869;&#30340;&#32858;&#21512;&#25968;&#25454;&#65306;</p><pre><code class="language-php">class TopSellers extends Card
+{
+    public function render()
+    {
+        return view('livewire.pulse.top-sellers', [
+            'topSellers' =&gt; $this-&gt;aggregate('user_sale', ['sum', 'count'])
+        ]);
+    }
+}</code></pre><p><code>aggregate</code> &#26041;&#27861;&#36820;&#22238;&#19968;&#20010;&#30001; PHP <code>stdClass</code> &#23545;&#35937;&#32452;&#25104;&#30340;&#38598;&#21512;&#12290;&#27599;&#20010;&#23545;&#35937;&#20250;&#21253;&#21547;&#20043;&#21069;&#25429;&#33719;&#30340; <code>key</code> &#23646;&#24615;&#65292;&#20197;&#21450;&#27599;&#20010;&#34987;&#35831;&#27714;&#32858;&#21512;&#23545;&#24212;&#30340;&#38190;&#65306;</p><pre><code class="language-blade">@foreach ($topSellers as $seller)
+    {{ $seller-&gt;key }}
+    {{ $seller-&gt;sum }}
+    {{ $seller-&gt;count }}
+@endforeach</code></pre><p>Pulse &#20027;&#35201;&#20174;&#39044;&#32858;&#21512;&#30340;&#26742;&#20013;&#26816;&#32034;&#25968;&#25454;&#65307;&#22240;&#27492;&#65292;&#25351;&#23450;&#30340;&#32858;&#21512;&#24517;&#39035;&#24050;&#20351;&#29992; <code>Pulse::record</code> &#26041;&#27861;&#39044;&#20808;&#25429;&#33719;&#12290;&#26368;&#26087;&#30340;&#26742;&#36890;&#24120;&#20250;&#37096;&#20998;&#33853;&#22312;&#26102;&#38388;&#27573;&#20043;&#22806;&#65292;&#22240;&#27492; Pulse &#20250;&#32858;&#21512;&#26368;&#26087;&#30340;&#26465;&#30446;&#26469;&#22635;&#34917;&#31354;&#32570;&#65292;&#20174;&#32780;&#24471;&#21040;&#25972;&#20010;&#26102;&#38388;&#27573;&#30340;&#20934;&#30830;&#20540;&#65292;&#32780;&#26080;&#38656;&#22312;&#27599;&#27425;&#36718;&#35810;&#35831;&#27714;&#26102;&#32858;&#21512;&#25972;&#20010;&#26102;&#38388;&#27573;&#12290;</p><p>&#20320;&#36824;&#21487;&#20197;&#20351;&#29992; <code>aggregateTotal</code> &#26041;&#27861;&#26816;&#32034;&#26576;&#20010;&#32473;&#23450;&#31867;&#22411;&#30340;&#24635;&#20540;&#12290;&#20363;&#22914;&#65292;&#20197;&#19979;&#26041;&#27861;&#20250;&#26816;&#32034;&#25152;&#26377;&#29992;&#25143;&#38144;&#21806;&#30340;&#24635;&#21644;&#65292;&#32780;&#19981;&#26159;&#25353;&#29992;&#25143;&#20998;&#32452;&#12290;</p><pre><code class="language-php">$total = $this-&gt;aggregateTotal('user_sale', 'sum');</code></pre><h4 id="76b1f3d557d9f223ead0bc7ebbb12e2e">&#23637;&#31034;&#29992;&#25143;</h4><p>&#24403;&#22788;&#29702;&#20197;&#29992;&#25143; ID &#20316;&#20026;&#38190;&#30340;&#32858;&#21512;&#26102;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Pulse::resolveUsers</code> &#26041;&#27861;&#23558;&#38190;&#35299;&#26512;&#20026;&#29992;&#25143;&#35760;&#24405;&#65306;</p><pre><code class="language-php">$aggregates = $this-&gt;aggregate('user_sale', ['sum', 'count']);
+
+$users = Pulse::resolveUsers($aggregates-&gt;pluck('key'));
+
+return view('livewire.pulse.top-sellers', [
+    'sellers' =&gt; $aggregates-&gt;map(fn ($aggregate) =&gt; (object) [
+        'user' =&gt; $users-&gt;find($aggregate-&gt;key),
+        'sum' =&gt; $aggregate-&gt;sum,
+        'count' =&gt; $aggregate-&gt;count,
+    ])
+]);</code></pre><p><code>find</code> &#26041;&#27861;&#36820;&#22238;&#19968;&#20010;&#21253;&#21547; <code>name</code>&#12289;<code>extra</code> &#21644; <code>avatar</code> &#38190;&#30340;&#23545;&#35937;&#65292;&#20320;&#21487;&#20197;&#36873;&#25321;&#24615;&#22320;&#23558;&#20854;&#30452;&#25509;&#20256;&#36882;&#32473; <code>&lt;x-pulse::user-card&gt;</code> Blade &#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-pulse::user-card :user="{{ $seller-&gt;user }}" :stats="{{ $seller-&gt;sum }}" /&gt;</code></pre><h4 id="1f10dc93619dfa0f6063b4e9459c0a1a">&#33258;&#23450;&#20041;&#35760;&#24405;&#22120;</h4><p>&#25193;&#23637;&#21253;&#20316;&#32773;&#21487;&#33021;&#24076;&#26395;&#25552;&#20379;&#35760;&#24405;&#22120;&#31867;&#65292;&#20197;&#20415;&#29992;&#25143;&#37197;&#32622;&#25968;&#25454;&#30340;&#25429;&#33719;&#12290;</p><p>&#35760;&#24405;&#22120;&#22312;&#24212;&#29992; <code>config/pulse.php</code> &#37197;&#32622;&#25991;&#20214;&#30340; <code>recorders</code> &#37096;&#20998;&#27880;&#20876;&#65306;</p><pre><code class="language-php">[
+    // ...
+    'recorders' =&gt; [
+        Acme\Recorders\Deployments::class =&gt; [
+            // ...
+        ],
+
+        // ...
+    ],
+]</code></pre><p>&#35760;&#24405;&#22120;&#21487;&#20197;&#36890;&#36807;&#25351;&#23450; <code>$listen</code> &#23646;&#24615;&#26469;&#30417;&#21548;&#20107;&#20214;&#12290;Pulse &#20250;&#33258;&#21160;&#27880;&#20876;&#30417;&#21548;&#22120;&#24182;&#35843;&#29992;&#35760;&#24405;&#22120;&#30340; <code>record</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace Acme\Recorders;
+
+use Acme\Events\Deployment;
+use Illuminate\Support\Facades\Config;
+use Laravel\Pulse\Facades\Pulse;
+
+class Deployments
+{
+    /**
+     * &#38656;&#35201;&#30417;&#21548;&#30340;&#20107;&#20214;&#12290;
+     *
+     * @var array&lt;int, class-string&gt;
+     */
+    public array $listen = [
+        Deployment::class,
+    ];
+
+    /**
+     * &#35760;&#24405;&#37096;&#32626;&#12290;
+     */
+    public function record(Deployment $event): void
+    {
+        $config = Config::get('pulse.recorders.'.static::class);
+
+        Pulse::record(
+            // ...
+        );
+    }
+}</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Laravel Pulse: <i><a href="https://github.com/laravel/pulse" target="_blank">https://github.com/laravel/pulse</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Laravel Telescope: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/telescope" target="_blank">/docs/Laravel 13.x/telescope</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 指定专用的数据库连接: <i><a href="3oyjdnxyp5.html#using-a-different-database" target="_blank">#using-a-different-database</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Livewire: <i><a href="https://livewire.laravel.com/" target="_blank">https://livewire.laravel.com/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> 服务容器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/container#binding-a-singleton" target="_blank">/docs/Laravel 13.x/container#binding-a-singleton</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> servers 记录器: <i><a href="3oyjdnxyp5.html#servers-recorder" target="_blank">#servers-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 解析用户: <i><a href="3oyjdnxyp5.html#dashboard-resolving-users" target="_blank">#dashboard-resolving-users</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 采样: <i><a href="3oyjdnxyp5.html#sampling" target="_blank">#sampling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> user requests 记录器: <i><a href="3oyjdnxyp5.html#user-requests-recorder" target="_blank">#user-requests-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> user jobs 记录器: <i><a href="3oyjdnxyp5.html#user-jobs-recorder" target="_blank">#user-jobs-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> slow jobs 记录器: <i><a href="3oyjdnxyp5.html#slow-jobs-recorder" target="_blank">#slow-jobs-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> exceptions 记录器: <i><a href="3oyjdnxyp5.html#exceptions-recorder" target="_blank">#exceptions-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> queues 记录器: <i><a href="3oyjdnxyp5.html#queues-recorder" target="_blank">#queues-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> slow requests 记录器: <i><a href="3oyjdnxyp5.html#slow-requests-recorder" target="_blank">#slow-requests-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> slow jobs 记录器: <i><a href="3oyjdnxyp5.html#slow-jobs-recorder" target="_blank">#slow-jobs-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> slow queries 记录器: <i><a href="3oyjdnxyp5.html#slow-queries-recorder" target="_blank">#slow-queries-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> HTTP 客户端: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/http-client" target="_blank">/docs/Laravel 13.x/http-client</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> slow outgoing requests 记录器: <i><a href="3oyjdnxyp5.html#slow-outgoing-requests-recorder" target="_blank">#slow-outgoing-requests-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> cache interactions 记录器: <i><a href="3oyjdnxyp5.html#cache-interactions-recorder" target="_blank">#cache-interactions-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> servers 记录器: <i><a href="3oyjdnxyp5.html#servers-recorder" target="_blank">#servers-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> 缓存: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/cache" target="_blank">/docs/Laravel 13.x/cache</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> Pulse 配置文件: <i><a href="3oyjdnxyp5.html#configuration" target="_blank">#configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> 缓存: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/cache" target="_blank">/docs/Laravel 13.x/cache</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> Cache: <i><a href="3oyjdnxyp5.html#cache-card" target="_blank">#cache-card</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> 采样率: <i><a href="3oyjdnxyp5.html#sampling" target="_blank">#sampling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> Exceptions: <i><a href="3oyjdnxyp5.html#exceptions-card" target="_blank">#exceptions-card</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> 采样率: <i><a href="3oyjdnxyp5.html#sampling" target="_blank">#sampling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> Queues: <i><a href="3oyjdnxyp5.html#queues-card" target="_blank">#queues-card</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> 采样率: <i><a href="3oyjdnxyp5.html#sampling" target="_blank">#sampling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[30]</code> Slow Jobs: <i><a href="3oyjdnxyp5.html#slow-jobs-recorder" target="_blank">#slow-jobs-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[31]</code> 采样率: <i><a href="3oyjdnxyp5.html#sampling" target="_blank">#sampling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[32]</code> HTTP 客户端: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/http-client" target="_blank">/docs/Laravel 13.x/http-client</a></i><br><code style="font-size: 90%; opacity: 0.6;">[33]</code> Slow Outgoing Requests: <i><a href="3oyjdnxyp5.html#slow-outgoing-requests-card" target="_blank">#slow-outgoing-requests-card</a></i><br><code style="font-size: 90%; opacity: 0.6;">[34]</code> 采样率: <i><a href="3oyjdnxyp5.html#sampling" target="_blank">#sampling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[35]</code> Slow Queries: <i><a href="3oyjdnxyp5.html#slow-queries-card" target="_blank">#slow-queries-card</a></i><br><code style="font-size: 90%; opacity: 0.6;">[36]</code> 采样率: <i><a href="3oyjdnxyp5.html#sampling" target="_blank">#sampling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[37]</code> Slow Requests: <i><a href="3oyjdnxyp5.html#slow-requests-card" target="_blank">#slow-requests-card</a></i><br><code style="font-size: 90%; opacity: 0.6;">[38]</code> Application Usage: <i><a href="3oyjdnxyp5.html#application-usage-card" target="_blank">#application-usage-card</a></i><br><code style="font-size: 90%; opacity: 0.6;">[39]</code> 采样率: <i><a href="3oyjdnxyp5.html#sampling" target="_blank">#sampling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[40]</code> Servers: <i><a href="3oyjdnxyp5.html#servers-card" target="_blank">#servers-card</a></i><br><code style="font-size: 90%; opacity: 0.6;">[41]</code> pulse:check 命令: <i><a href="3oyjdnxyp5.html#capturing-entries" target="_blank">#capturing-entries</a></i><br><code style="font-size: 90%; opacity: 0.6;">[42]</code> Application Usage: <i><a href="3oyjdnxyp5.html#application-usage-card" target="_blank">#application-usage-card</a></i><br><code style="font-size: 90%; opacity: 0.6;">[43]</code> 采样率: <i><a href="3oyjdnxyp5.html#sampling" target="_blank">#sampling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[44]</code> Application Usage: <i><a href="3oyjdnxyp5.html#application-usage-card" target="_blank">#application-usage-card</a></i><br><code style="font-size: 90%; opacity: 0.6;">[45]</code> 采样率: <i><a href="3oyjdnxyp5.html#sampling" target="_blank">#sampling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[46]</code> 记录器: <i><a href="3oyjdnxyp5.html#recorders" target="_blank">#recorders</a></i><br><code style="font-size: 90%; opacity: 0.6;">[47]</code> 数据库连接: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/database#configuration" target="_blank">/docs/Laravel 13.x/database#configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[48]</code> 配置的数据库连接: <i><a href="3oyjdnxyp5.html#using-a-different-database" target="_blank">#using-a-different-database</a></i><br><code style="font-size: 90%; opacity: 0.6;">[49]</code> Redis 连接: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/redis#configuration" target="_blank">/docs/Laravel 13.x/redis#configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[50]</code> 缓存: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/cache" target="_blank">/docs/Laravel 13.x/cache</a></i><br><code style="font-size: 90%; opacity: 0.6;">[51]</code> User Requests: <i><a href="3oyjdnxyp5.html#user-requests-recorder" target="_blank">#user-requests-recorder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[52]</code> 配置文件: <i><a href="3oyjdnxyp5.html#configuration" target="_blank">#configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[53]</code> Livewire: <i><a href="https://livewire.laravel.com" target="_blank">https://livewire.laravel.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[54]</code> 查阅其文档: <i><a href="https://livewire.laravel.com/docs" target="_blank">https://livewire.laravel.com/docs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[55]</code> 懒加载: <i><a href="https://livewire.laravel.com/docs/lazy" target="_blank">https://livewire.laravel.com/docs/lazy</a></i><br><code style="font-size: 90%; opacity: 0.6;">[56]</code> 仪表盘视图: <i><a href="3oyjdnxyp5.html#dashboard-customization" target="_blank">#dashboard-customization</a></i><br><code style="font-size: 90%; opacity: 0.6;">[57]</code> Vite 集成: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/vite" target="_blank">/docs/Laravel 13.x/vite</a></i><br><code style="font-size: 90%; opacity: 0.6;">[58]</code> 仪表盘视图: <i><a href="3oyjdnxyp5.html#dashboard-customization" target="_blank">#dashboard-customization</a></i><br><code style="font-size: 90%; opacity: 0.6;">[59]</code> Preflight: <i><a href="https://tailwindcss.com/docs/preflight" target="_blank">https://tailwindcss.com/docs/preflight</a></i><br><code style="font-size: 90%; opacity: 0.6;">[60]</code> 用户解析器自定义: <i><a href="3oyjdnxyp5.html#dashboard-resolving-users" target="_blank">#dashboard-resolving-users</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="ndvm3oj93j.html#blog1093" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Prompts（交互式提示）</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="2ev868oyor.html#blog1095" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">Laravel Reverb</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

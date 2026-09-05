@@ -70,7 +70,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
 
     
 </head>
@@ -322,6 +322,10 @@
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
                                    href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel&#32;13.x/overview.html">Laravel 13.x</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
@@ -583,6 +587,93 @@
     })();
 </script>
 
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -699,11 +790,11 @@ git reset --hard origin/{&#20998;&#25903;&#21517;}</code></pre><h2 id="53506c531
 &#9500;&#9472;&#9472; .gitignore
 &#9500;&#9472;&#9472; README.md
 &#9492;&#9472;&#9472; ...
-</code></pre><p><strong class="mk-p">2&#12289;assets &#25991;&#20214;&#31034;&#20363;</strong></p><p><code>assets/download/models.txt</code></p><pre><code class="   language-php"># &#35201;&#19979;&#36733;&#21040;&#26412;&#22320;&#30340;&#36828;&#31243;&#25991;&#20214;
+</code></pre><p><strong class="mk-b">2&#12289;assets &#25991;&#20214;&#31034;&#20363;</strong></p><p><code>assets/download/models.txt</code></p><pre><code class="   language-php"># &#35201;&#19979;&#36733;&#21040;&#26412;&#22320;&#30340;&#36828;&#31243;&#25991;&#20214;
 # &#26684;&#24335;: &lt;&#30446;&#26631;&#23376;&#30446;&#24405;&gt; &lt;URL&gt; [unzip]
 models https://cdn.example.com/models/model_v1.zip unzip
 models https://cdn.example.com/models/config.json
-textures https://cdn.example.com/textures/wood.zip unzip</code></pre><p><strong class="mk-g">3&#12289;download_assets.py &#33050;&#26412;</strong></p><p>&#26032;&#24314;&#65306;scripts/download_assets.py</p><pre><code class="language-python">#!/usr/bin/env python3
+textures https://cdn.example.com/textures/wood.zip unzip</code></pre><p><strong class="mk-y">3&#12289;download_assets.py &#33050;&#26412;</strong></p><p>&#26032;&#24314;&#65306;scripts/download_assets.py</p><pre><code class="language-python">#!/usr/bin/env python3
 """
 &#19979;&#36733; assets/download/*.txt &#20013;&#23450;&#20041;&#30340;&#36164;&#28304;&#25991;&#20214;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#35299;&#21387;&#19982;&#28165;&#29702;&#12290;&#26377; unzip &#26631;&#35782;&#38656;&#35201;&#35299;&#21387;
 
@@ -854,12 +945,12 @@ def main():
 
 if __name__ == "__main__":
     main()
-</code></pre><p><strong class="mk-b">4&#12289;.gitignore &#37197;&#32622;</strong></p><p>&#22312; .gitignore &#20013;&#28155;&#21152;&#20197;&#19979;&#20869;&#23481;&#65292;&#30830;&#20445;&#22823;&#25991;&#20214;&#19981;&#20837;&#24211;&#65306;</p><pre><code class="   language-php"># &#24573;&#30053;&#19979;&#36733;&#21518;&#30340;&#36164;&#28304;&#25991;&#20214;
+</code></pre><p><strong class="mk-g">4&#12289;.gitignore &#37197;&#32622;</strong></p><p>&#22312; .gitignore &#20013;&#28155;&#21152;&#20197;&#19979;&#20869;&#23481;&#65292;&#30830;&#20445;&#22823;&#25991;&#20214;&#19981;&#20837;&#24211;&#65306;</p><pre><code class="   language-php"># &#24573;&#30053;&#19979;&#36733;&#21518;&#30340;&#36164;&#28304;&#25991;&#20214;
 *.zip
 *.tar.gz
 *.mp4
 *.onnx
-*.pth</code></pre><p><strong class="mk-y">5&#12289;&#36816;&#34892;&#31034;&#20363;</strong></p><pre><code class="   language-php">python3 scripts/download_assets.py</code></pre><p>&#36755;&#20986;</p><pre><code class="   language-php">&#128230; &#22788;&#29702;&#36164;&#28304;&#28165;&#21333;: assets/download/models.txt
+*.pth</code></pre><p><strong class="mk-b">5&#12289;&#36816;&#34892;&#31034;&#20363;</strong></p><pre><code class="   language-php">python3 scripts/download_assets.py</code></pre><p>&#36755;&#20986;</p><pre><code class="   language-php">&#128230; &#22788;&#29702;&#36164;&#28304;&#28165;&#21333;: assets/download/models.txt
 &#11015;&#65039; &#20849;&#38656;&#19979;&#36733; 3 &#20010;&#25991;&#20214;...
 &#9989; &#19979;&#36733;&#23436;&#25104;: models/model_v1.zip (1024.0 KB)
 &#128230; &#24050;&#35299;&#21387; ZIP: models/model_v1.zip &rarr; models
@@ -871,7 +962,7 @@ if __name__ == "__main__":
 &#128465;&#65039; &#24050;&#21024;&#38500;&#21387;&#32553;&#21253;: textures/wood.zip
 
 &#9989; &#25152;&#26377;&#20219;&#21153;&#23436;&#25104;&#65292;&#36164;&#28304;&#24050;&#20445;&#23384;&#33267; /
-</code></pre><p><strong class="mk-p">6&#12289;&#33258;&#21160;&#21270;&#25191;&#34892;</strong></p><p>&#21518;&#32493;&#21487;&#20197;&#23558;&#36825;&#20010;&#33050;&#26412;&#30340;&#25191;&#34892;&#25918;&#21040; CI/CD &#24037;&#20855;&#20013;&#65292;&#25171;&#21253;&#26500;&#24314;&#26102;&#33258;&#21160;&#25191;&#34892;&#21363;&#21487;</p>
+</code></pre><p><strong class="mk-g">6&#12289;&#33258;&#21160;&#21270;&#25191;&#34892;</strong></p><p>&#21518;&#32493;&#21487;&#20197;&#23558;&#36825;&#20010;&#33050;&#26412;&#30340;&#25191;&#34892;&#25918;&#21040; CI/CD &#24037;&#20855;&#20013;&#65292;&#25171;&#21253;&#26500;&#24314;&#26102;&#33258;&#21160;&#25191;&#34892;&#21363;&#21487;</p>
 
 		<div class="nearpost-navigation">
     <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">

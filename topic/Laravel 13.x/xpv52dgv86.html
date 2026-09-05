@@ -1,0 +1,1174 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>部署 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/xpv52dgv86.html', function (data, status) {
+            addView('xpv52dgv86.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>部署</h1><ul>
+<li><a href="xpv52dgv86.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="xpv52dgv86.html#df1b2890e2a9526d1ad6ca5f32c8075c">服务器要求</a></li>
+<li><a href="xpv52dgv86.html#171f7b4088cd6947f233427fc76d34b0">服务器配置</a>
+<ul>
+<li><a href="xpv52dgv86.html#62e0b5b350c9e3d2c19aa801d9442ba9">Nginx</a></li>
+<li><a href="xpv52dgv86.html#823e02eaeec8582fc88bbb32604f32aa">FrankenPHP</a></li>
+<li><a href="xpv52dgv86.html#d34cbc393c23a2b103744395717e14d7">目录权限</a></li>
+</ul></li>
+<li><a href="xpv52dgv86.html#aa84ec947f0a72b161a8d27598eda21e">优化</a>
+<ul>
+<li><a href="xpv52dgv86.html#40b2eee25483558134a8d6b2dfa2ac7d">缓存配置</a></li>
+<li><a href="xpv52dgv86.html#887aaeba7cea73321438b07c72027fe7">缓存事件</a></li>
+<li><a href="xpv52dgv86.html#e1f076cec98ef04be7d2b3e3d9675c40">缓存路由</a></li>
+<li><a href="xpv52dgv86.html#7526b1a31f16fdd2d75d6c482d063505">缓存视图</a></li>
+</ul></li>
+<li><a href="xpv52dgv86.html#527382bb2ff559e17aa8588b7484d995">重载服务</a></li>
+<li><a href="xpv52dgv86.html#701998cfd3d1ff0378375a9826fd9edd">调试模式</a></li>
+<li><a href="xpv52dgv86.html#fceabd035a28063079b17dfa5a4f3449">健康检查路由</a></li>
+<li><a href="xpv52dgv86.html#b59667193fb383ece4ce9c11d30e4392">使用 Laravel Cloud 或 Forge 部署</a>
+<ul>
+<li><a href="xpv52dgv86.html#12d2f32cfd3b30dc865f294775607d13">Laravel Cloud</a></li>
+<li><a href="xpv52dgv86.html#bcabe3229cd34f912dcedbc736dd4789">Laravel Forge</a></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>&#24403;&#20320;&#20934;&#22791;&#23558; Laravel &#24212;&#29992;&#37096;&#32626;&#21040;&#29983;&#20135;&#29615;&#22659;&#26102;&#65292;&#21487;&#20197;&#37319;&#21462;&#19968;&#20123;&#37325;&#35201;&#25514;&#26045;&#26469;&#30830;&#20445;&#24212;&#29992;&#20197;&#23613;&#21487;&#33021;&#39640;&#30340;&#25928;&#29575;&#36816;&#34892;&#12290;&#22312;&#26412;&#25991;&#20013;&#65292;&#25105;&#20204;&#23558;&#20171;&#32461;&#19968;&#20123;&#30830;&#20445;&#20320;&#30340; Laravel &#24212;&#29992;&#24471;&#21040;&#22949;&#21892;&#37096;&#32626;&#30340;&#33391;&#22909;&#36215;&#28857;&#12290;</p><h2 id="df1b2890e2a9526d1ad6ca5f32c8075c">&#26381;&#21153;&#22120;&#35201;&#27714;</h2><p>Laravel &#26694;&#26550;&#26377;&#19968;&#20123;&#31995;&#32479;&#35201;&#27714;&#12290;&#20320;&#24212;&#24403;&#30830;&#20445; Web &#26381;&#21153;&#22120;&#20855;&#22791;&#20197;&#19979;&#26368;&#20302;&#30340; PHP &#29256;&#26412;&#19982;&#25193;&#23637;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">PHP &gt;= 8.3</li>
+<li style="list-style-type: disc;">Ctype PHP Extension</li>
+<li style="list-style-type: disc;">cURL PHP Extension</li>
+<li style="list-style-type: disc;">DOM PHP Extension</li>
+<li style="list-style-type: disc;">Fileinfo PHP Extension</li>
+<li style="list-style-type: disc;">Filter PHP Extension</li>
+<li style="list-style-type: disc;">Hash PHP Extension</li>
+<li style="list-style-type: disc;">Mbstring PHP Extension</li>
+<li style="list-style-type: disc;">OpenSSL PHP Extension</li>
+<li style="list-style-type: disc;">PCRE PHP Extension</li>
+<li style="list-style-type: disc;">PDO PHP Extension</li>
+<li style="list-style-type: disc;">Session PHP Extension</li>
+<li style="list-style-type: disc;">Tokenizer PHP Extension</li>
+<li style="list-style-type: disc;">XML PHP Extension</li>
+</ul><h2 id="171f7b4088cd6947f233427fc76d34b0">&#26381;&#21153;&#22120;&#37197;&#32622;</h2><h3 id="62e0b5b350c9e3d2c19aa801d9442ba9">Nginx</h3><p>&#22914;&#26524;&#20320;&#35201;&#23558;&#24212;&#29992;&#37096;&#32626;&#21040;&#36816;&#34892; Nginx &#30340;&#26381;&#21153;&#22120;&#19978;&#65292;&#21487;&#20197;&#20351;&#29992;&#20197;&#19979;&#37197;&#32622;&#25991;&#20214;&#20316;&#20026;&#37197;&#32622; Web &#26381;&#21153;&#22120;&#30340;&#36215;&#28857;&#12290;&#26681;&#25454;&#20320;&#30340;&#26381;&#21153;&#22120;&#37197;&#32622;&#65292;&#36825;&#20010;&#25991;&#20214;&#24456;&#21487;&#33021;&#38656;&#35201;&#36827;&#34892;&#33258;&#23450;&#20041;&#12290;<strong class="mk-b">&#22914;&#26524;&#20320;&#24076;&#26395;&#33719;&#24471;&#31649;&#29702;&#26381;&#21153;&#22120;&#30340;&#24110;&#21161;&#65292;&#21487;&#20197;&#32771;&#34385;&#20351;&#29992;&#20687; <a href="https://cloud.laravel.com" target="_blank" rel="noopener noreferrer">Laravel Cloud</a> &#36825;&#26679;&#30340;&#20840;&#25176;&#31649; Laravel &#24179;&#21488;&#12290;</strong></p><p>&#35831;&#30830;&#20445;&#20687;&#19979;&#38754;&#30340;&#37197;&#32622;&#37027;&#26679;&#65292;&#20320;&#30340; Web &#26381;&#21153;&#22120;&#23558;&#25152;&#26377;&#35831;&#27714;&#37117;&#25351;&#21521;&#24212;&#29992;&#30340; <code>public/index.php</code> &#25991;&#20214;&#12290;&#20320;&#32477;&#19981;&#24212;&#23581;&#35797;&#23558; <code>index.php</code> &#25991;&#20214;&#31227;&#21160;&#21040;&#39033;&#30446;&#30340;&#26681;&#30446;&#24405;&#65292;&#22240;&#20026;&#20174;&#39033;&#30446;&#26681;&#30446;&#24405;&#25552;&#20379;&#24212;&#29992;&#26381;&#21153;&#20250;&#23558;&#35768;&#22810;&#25935;&#24863;&#30340;&#37197;&#32622;&#25991;&#20214;&#26292;&#38706;&#22312;&#20844;&#20849;&#20114;&#32852;&#32593;&#19978;&#65306;</p><pre><code class="language-nginx">server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com;
+    root /srv/example.com/public;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    index index.php;
+
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_buffer_size 32k;
+        fastcgi_buffers 8 32k;
+        fastcgi_busy_buffers_size 64k;
+        fastcgi_hide_header X-Powered-By;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}</code></pre><h3 id="823e02eaeec8582fc88bbb32604f32aa">FrankenPHP</h3><p><a href="https://frankenphp.dev/" target="_blank" rel="noopener noreferrer">FrankenPHP</a> &#20063;&#21487;&#29992;&#20110;&#20026;&#20320;&#30340; Laravel &#24212;&#29992;&#25552;&#20379;&#26381;&#21153;&#12290;FrankenPHP &#26159;&#19968;&#20010;&#20351;&#29992; Go &#32534;&#20889;&#30340;&#29616;&#20195;&#21270; PHP &#24212;&#29992;&#26381;&#21153;&#22120;&#12290;&#35201;&#20351;&#29992; FrankenPHP &#20026; Laravel PHP &#24212;&#29992;&#25552;&#20379;&#26381;&#21153;&#65292;&#21482;&#38656;&#35843;&#29992;&#20854; <code>php-server</code> &#21629;&#20196;&#65306;</p><pre><code class="language-shell">frankenphp php-server -r public/</code></pre><p>&#35201;&#21033;&#29992; FrankenPHP &#25903;&#25345;&#30340;&#26356;&#24378;&#22823;&#30340;&#29305;&#24615;&#65292;&#20363;&#22914;&#20854; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/octane" target="_blank">Laravel Octane</a> &#38598;&#25104;&#12289;HTTP/3&#12289;&#29616;&#20195;&#21387;&#32553;&#65292;&#25110;&#32773;&#23558; Laravel &#24212;&#29992;&#25171;&#21253;&#20026;&#29420;&#31435;&#20108;&#36827;&#21046;&#25991;&#20214;&#30340;&#33021;&#21147;&#65292;&#35831;&#21442;&#38405; FrankenPHP &#30340; <a href="https://frankenphp.dev/docs/laravel/" target="_blank" rel="noopener noreferrer">Laravel &#25991;&#26723;</a>&#12290;</p><h3 id="d34cbc393c23a2b103744395717e14d7">&#30446;&#24405;&#26435;&#38480;</h3><p>Laravel &#38656;&#35201;&#21521; <code>bootstrap/cache</code> &#21644; <code>storage</code> &#30446;&#24405;&#20889;&#20837;&#25968;&#25454;&#65292;&#22240;&#27492;&#20320;&#24212;&#24403;&#30830;&#20445; Web &#26381;&#21153;&#22120;&#36827;&#31243;&#30340;&#25152;&#26377;&#32773;&#25317;&#26377;&#20889;&#20837;&#36825;&#20123;&#30446;&#24405;&#30340;&#26435;&#38480;&#12290;</p><h2 id="aa84ec947f0a72b161a8d27598eda21e">&#20248;&#21270;</h2><p>&#22312;&#23558;&#24212;&#29992;&#37096;&#32626;&#21040;&#29983;&#20135;&#29615;&#22659;&#26102;&#65292;&#26377;&#22810;&#31181;&#25991;&#20214;&#24212;&#24403;&#34987;&#32531;&#23384;&#65292;&#21253;&#25324;&#37197;&#32622;&#12289;&#20107;&#20214;&#12289;&#36335;&#30001;&#21644;&#35270;&#22270;&#12290;Laravel &#25552;&#20379;&#20102;&#19968;&#20010;&#20415;&#25463;&#32479;&#19968;&#30340; <code>optimize</code> Artisan &#21629;&#20196;&#26469;&#32531;&#23384;&#25152;&#26377;&#36825;&#20123;&#25991;&#20214;&#12290;&#35813;&#21629;&#20196;&#36890;&#24120;&#24212;&#20316;&#20026;&#24212;&#29992;&#37096;&#32626;&#27969;&#31243;&#30340;&#19968;&#37096;&#20998;&#34987;&#35843;&#29992;&#65306;</p><pre><code class="language-shell">php artisan optimize</code></pre><p><code>optimize:clear</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#31227;&#38500; <code>optimize</code> &#21629;&#20196;&#29983;&#25104;&#30340;&#25152;&#26377;&#32531;&#23384;&#25991;&#20214;&#65292;&#20197;&#21450;&#40664;&#35748;&#32531;&#23384;&#39537;&#21160;&#20013;&#30340;&#25152;&#26377;&#38190;&#65306;</p><pre><code class="language-shell">php artisan optimize:clear</code></pre><p>&#22312;&#19979;&#25991;&#20013;&#65292;&#25105;&#20204;&#23558;&#35752;&#35770; <code>optimize</code> &#21629;&#20196;&#25152;&#25191;&#34892;&#30340;&#21508;&#20010;&#32454;&#31890;&#24230;&#20248;&#21270;&#21629;&#20196;&#12290;</p><h3 id="40b2eee25483558134a8d6b2dfa2ac7d">&#32531;&#23384;&#37197;&#32622;</h3><p>&#22312;&#23558;&#24212;&#29992;&#37096;&#32626;&#21040;&#29983;&#20135;&#29615;&#22659;&#26102;&#65292;&#20320;&#24212;&#24403;&#30830;&#20445;&#22312;&#37096;&#32626;&#27969;&#31243;&#20013;&#36816;&#34892; <code>config:cache</code> Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan config:cache</code></pre><p>&#35813;&#21629;&#20196;&#20250;&#23558; Laravel &#30340;&#25152;&#26377;&#37197;&#32622;&#25991;&#20214;&#21512;&#24182;&#21040;&#19968;&#20010;&#32531;&#23384;&#25991;&#20214;&#20013;&#65292;&#20174;&#32780;&#22823;&#24133;&#20943;&#23569;&#26694;&#26550;&#22312;&#21152;&#36733;&#37197;&#32622;&#20540;&#26102;&#35775;&#38382;&#25991;&#20214;&#31995;&#32479;&#30340;&#27425;&#25968;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#22914;&#26524;&#20320;&#22312;&#37096;&#32626;&#27969;&#31243;&#20013;&#25191;&#34892;&#20102; <code>config:cache</code> &#21629;&#20196;&#65292;&#24212;&#24403;&#30830;&#20445;&#21482;&#22312;&#37197;&#32622;&#25991;&#20214;&#20013;&#35843;&#29992; <code>env</code> &#20989;&#25968;&#12290;&#19968;&#26086;&#37197;&#32622;&#34987;&#32531;&#23384;&#65292;<code>.env</code> &#25991;&#20214;&#23558;&#19981;&#20250;&#34987;&#21152;&#36733;&#65292;&#25152;&#26377;&#38024;&#23545; <code>.env</code> &#21464;&#37327;&#30340; <code>env</code> &#20989;&#25968;&#35843;&#29992;&#37117;&#23558;&#36820;&#22238; <code>null</code>&#12290;</p>
+</blockquote><h3 id="887aaeba7cea73321438b07c72027fe7">&#32531;&#23384;&#20107;&#20214;</h3><p>&#22312;&#37096;&#32626;&#27969;&#31243;&#20013;&#65292;&#20320;&#24212;&#24403;&#32531;&#23384;&#24212;&#29992;&#33258;&#21160;&#21457;&#29616;&#30340;"&#20107;&#20214;&#21040;&#30417;&#21548;&#22120;"&#26144;&#23556;&#12290;&#36825;&#21487;&#20197;&#36890;&#36807;&#22312;&#37096;&#32626;&#26102;&#35843;&#29992; <code>event:cache</code> Artisan &#21629;&#20196;&#26469;&#23436;&#25104;&#65306;</p><pre><code class="language-shell">php artisan event:cache</code></pre><h3 id="e1f076cec98ef04be7d2b3e3d9675c40">&#32531;&#23384;&#36335;&#30001;</h3><p>&#22914;&#26524;&#20320;&#27491;&#22312;&#26500;&#24314;&#19968;&#20010;&#21253;&#21547;&#22823;&#37327;&#36335;&#30001;&#30340;&#22823;&#22411;&#24212;&#29992;&#65292;&#24212;&#24403;&#30830;&#20445;&#22312;&#37096;&#32626;&#27969;&#31243;&#20013;&#36816;&#34892; <code>route:cache</code> Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan route:cache</code></pre><p>&#35813;&#21629;&#20196;&#20250;&#23558;&#20320;&#25152;&#26377;&#30340;&#36335;&#30001;&#27880;&#20876;&#32553;&#20943;&#20026;&#32531;&#23384;&#25991;&#20214;&#20013;&#30340;&#21333;&#27425;&#26041;&#27861;&#35843;&#29992;&#65292;&#20174;&#32780;&#22312;&#27880;&#20876;&#25104;&#30334;&#19978;&#21315;&#20010;&#36335;&#30001;&#26102;&#25552;&#21319;&#36335;&#30001;&#27880;&#20876;&#30340;&#24615;&#33021;&#12290;</p><h3 id="7526b1a31f16fdd2d75d6c482d063505">&#32531;&#23384;&#35270;&#22270;</h3><p>&#22312;&#23558;&#24212;&#29992;&#37096;&#32626;&#21040;&#29983;&#20135;&#29615;&#22659;&#26102;&#65292;&#20320;&#24212;&#24403;&#30830;&#20445;&#22312;&#37096;&#32626;&#27969;&#31243;&#20013;&#36816;&#34892; <code>view:cache</code> Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan view:cache</code></pre><p>&#35813;&#21629;&#20196;&#20250;&#39044;&#32534;&#35793;&#20320;&#25152;&#26377;&#30340; Blade &#35270;&#22270;&#65292;&#20351;&#23427;&#20204;&#26080;&#38656;&#25353;&#38656;&#32534;&#35793;&#65292;&#20174;&#32780;&#25552;&#21319;&#27599;&#20010;&#36820;&#22238;&#35270;&#22270;&#30340;&#35831;&#27714;&#30340;&#24615;&#12290;</p><h2 id="527382bb2ff559e17aa8588b7484d995">&#37325;&#36733;&#26381;&#21153;</h2><blockquote>
+<p>[!NOTE]<br>
+&#22312;&#37096;&#32626;&#21040; <a href="https://cloud.laravel.com" target="_blank" rel="noopener noreferrer">Laravel Cloud</a> &#26102;&#65292;&#26080;&#38656;&#20351;&#29992; <code>reload</code> &#21629;&#20196;&#65292;&#22240;&#20026;&#25152;&#26377;&#26381;&#21153;&#30340;&#20248;&#38597;&#37325;&#36733;&#37117;&#20250;&#33258;&#21160;&#22788;&#29702;&#12290;</p>
+</blockquote><p>&#37096;&#32626;&#26032;&#29256;&#26412;&#30340;&#24212;&#29992;&#21518;&#65292;&#20219;&#20309;&#38271;&#26399;&#36816;&#34892;&#30340;&#26381;&#21153;&#65288;&#20363;&#22914;&#38431;&#21015; worker&#12289;Laravel Reverb &#25110; Laravel Octane&#65289;&#37117;&#24212;&#24403;&#34987;&#37325;&#36733; / &#37325;&#21551;&#65292;&#20197;&#20351;&#29992;&#26032;&#20195;&#30721;&#12290;Laravel &#25552;&#20379;&#20102;&#19968;&#20010;&#32479;&#19968;&#30340; <code>reload</code> Artisan &#21629;&#20196;&#26469;&#32456;&#27490;&#36825;&#20123;&#26381;&#21153;&#65306;</p><pre><code class="language-shell">php artisan reload</code></pre><p>&#22914;&#26524;&#20320;&#27809;&#26377;&#20351;&#29992; <a href="https://cloud.laravel.com" target="_blank" rel="noopener noreferrer">Laravel Cloud</a>&#65292;&#24212;&#24403;&#25163;&#21160;&#37197;&#32622;&#19968;&#20010;&#36827;&#31243;&#30417;&#35270;&#22120;&#65292;&#23427;&#33021;&#22815;&#26816;&#27979;&#21040;&#21487;&#37325;&#36733;&#36827;&#31243;&#36864;&#20986;&#24182;&#33258;&#21160;&#37325;&#21551;&#23427;&#20204;&#12290;</p><h2 id="701998cfd3d1ff0378375a9826fd9edd">&#35843;&#35797;&#27169;&#24335;</h2><p><code>config/app.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; debug &#36873;&#39033;&#20915;&#23450;&#20102;&#21521;&#29992;&#25143;&#23637;&#31034;&#22810;&#23569;&#20851;&#20110;&#38169;&#35823;&#30340;&#20449;&#24687;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#35813;&#36873;&#39033;&#20250;&#36981;&#24490;&#23384;&#20648;&#22312;&#24212;&#29992; <code>.env</code> &#25991;&#20214;&#20013;&#30340; <code>APP_DEBUG</code> &#29615;&#22659;&#21464;&#37327;&#30340;&#20540;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+<strong class="mk-b">&#22312;&#29983;&#20135;&#29615;&#22659;&#20013;&#65292;&#35813;&#20540;&#24212;&#22987;&#32456;&#20026; <code>false</code>&#12290;&#22914;&#26524;&#22312;&#29983;&#20135;&#29615;&#22659;&#20013;&#23558; <code>APP_DEBUG</code> &#21464;&#37327;&#35774;&#32622;&#20026; <code>true</code>&#65292;&#20320;&#23558;&#38754;&#20020;&#21521;&#24212;&#29992;&#26368;&#32456;&#29992;&#25143;&#26292;&#38706;&#25935;&#24863;&#37197;&#32622;&#20540;&#30340;&#39118;&#38505;&#12290;</strong></p>
+</blockquote><h2 id="fceabd035a28063079b17dfa5a4f3449">&#20581;&#24247;&#26816;&#26597;&#36335;&#30001;</h2><p>Laravel &#20869;&#32622;&#20102;&#19968;&#20010;&#20581;&#24247;&#26816;&#26597;&#36335;&#30001;&#65292;&#21487;&#29992;&#20110;&#30417;&#25511;&#24212;&#29992;&#30340;&#29366;&#24577;&#12290;&#22312;&#29983;&#20135;&#29615;&#22659;&#20013;&#65292;&#35813;&#36335;&#30001;&#21487;&#29992;&#20110;&#21521;&#27491;&#24120;&#36816;&#34892;&#26102;&#38388;&#30417;&#35270;&#22120;&#12289;&#36127;&#36733;&#22343;&#34913;&#22120;&#25110; Kubernetes &#20043;&#31867;&#30340;&#32534;&#25490;&#31995;&#32479;&#25253;&#21578;&#24212;&#29992;&#29366;&#24577;&#12290;</p><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#20581;&#24247;&#26816;&#26597;&#36335;&#30001;&#22312; <code>/up</code> &#25552;&#20379;&#26381;&#21153;&#65292;&#22914;&#26524;&#24212;&#29992;&#22312;&#27809;&#26377;&#25243;&#20986;&#24322;&#24120;&#30340;&#24773;&#20917;&#19979;&#23436;&#25104;&#20102;&#24341;&#23548;&#65288;bootstrap&#65289;&#65292;&#21017;&#36820;&#22238; 200 HTTP &#21709;&#24212;&#65307;&#21542;&#21017;&#36820;&#22238; 500 HTTP &#21709;&#24212;&#12290;&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>bootstrap/app</code> &#25991;&#20214;&#20013;&#37197;&#32622;&#35813;&#36335;&#30001;&#30340; URI&#65306;</p><pre><code class="language-php">-&gt;withRouting(
+    web: __DIR__.'/../routes/web.php',
+    commands: __DIR__.'/../routes/console.php',
+    health: '/up', // [tl! remove]
+    health: '/status', // [tl! add]
+)</code></pre><p>&#24403;&#21521;&#35813;&#36335;&#30001;&#21457;&#36215; HTTP &#35831;&#27714;&#26102;&#65292;Laravel &#36824;&#20250;&#27966;&#21457;&#19968;&#20010; <code>Illuminate\Foundation\Events\DiagnosingHealth</code> &#20107;&#20214;&#65292;&#35753;&#20320;&#21487;&#20197;&#25191;&#34892;&#19982;&#24212;&#29992;&#30456;&#20851;&#30340;&#39069;&#22806;&#20581;&#24247;&#26816;&#26597;&#12290;&#22312;&#35813;&#20107;&#20214;&#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#30417;&#21548;&#22120;</a>&#20013;&#65292;&#20320;&#21487;&#20197;&#26816;&#26597;&#24212;&#29992;&#30340;&#25968;&#25454;&#24211;&#25110;&#32531;&#23384;&#29366;&#24577;&#12290;&#22914;&#26524;&#20320;&#26816;&#27979;&#21040;&#24212;&#29992;&#23384;&#22312;&#38382;&#39064;&#65292;&#21482;&#38656;&#20174;&#35813;&#30417;&#21548;&#22120;&#20013;&#25243;&#20986;&#19968;&#20010;&#24322;&#24120;&#21363;&#21487;&#12290;</p><h2 id="b59667193fb383ece4ce9c11d30e4392">&#20351;&#29992; Laravel Cloud &#25110; Forge &#37096;&#32626;</h2><h3 id="12d2f32cfd3b30dc865f294775607d13">Laravel Cloud</h3><p>&#22914;&#26524;&#20320;&#24819;&#35201;&#19968;&#20010;&#20026; Laravel &#37327;&#36523;&#25171;&#36896;&#12289;&#20840;&#25176;&#31649;&#19988;&#21487;&#33258;&#21160;&#25193;&#23481;&#30340;&#37096;&#32626;&#24179;&#21488;&#65292;&#21487;&#20197;&#20102;&#35299;&#19968;&#19979; <a href="https://cloud.laravel.com" target="_blank" rel="noopener noreferrer">Laravel Cloud</a>&#12290;Laravel Cloud &#26159;&#19968;&#20010;&#20581;&#22766;&#30340; Laravel &#37096;&#32626;&#24179;&#21488;&#65292;&#25552;&#20379;&#25176;&#31649;&#30340;&#31639;&#21147;&#12289;&#25968;&#25454;&#24211;&#12289;&#32531;&#23384;&#21644;&#23545;&#35937;&#23384;&#20648;&#12290;</p><p>&#22312; Cloud &#19978;&#21551;&#21160;&#20320;&#30340; Laravel &#24212;&#29992;&#65292;&#29233;&#19978;&#36825;&#31181;&#21487;&#24377;&#24615;&#25193;&#23481;&#30340;&#31616;&#27905;&#12290;Laravel Cloud &#30001; Laravel &#30340;&#21019;&#36896;&#32773;&#31934;&#24515;&#35843;&#20248;&#65292;&#33021;&#22815;&#19982;&#26694;&#26550;&#26080;&#32541;&#21327;&#20316;&#65292;&#35753;&#20320;&#33021;&#22815;&#32487;&#32493;&#20687;&#24448;&#24120;&#19968;&#26679;&#32534;&#20889; Laravel &#24212;&#29992;&#12290;</p><h3 id="bcabe3229cd34f912dcedbc736dd4789">Laravel Forge</h3><p>&#22914;&#26524;&#20320;&#20542;&#21521;&#20110;&#31649;&#29702;&#33258;&#24049;&#30340;&#26381;&#21153;&#22120;&#65292;&#20294;&#21448;&#19981;&#22826;&#20064;&#24815;&#37197;&#32622;&#36816;&#34892;&#19968;&#20010;&#20581;&#22766; Laravel &#24212;&#29992;&#25152;&#38656;&#30340;&#21508;&#31181;&#26381;&#21153;&#65292;<a href="https://forge.laravel.com" target="_blank" rel="noopener noreferrer">Laravel Forge</a> &#26159;&#19968;&#20010;&#38754;&#21521; Laravel &#24212;&#29992;&#30340; VPS &#26381;&#21153;&#22120;&#31649;&#29702;&#24179;&#21488;&#12290;</p><p>Laravel Forge &#21487;&#20197;&#22312;&#21508;&#31181;&#22522;&#30784;&#35774;&#26045;&#25552;&#20379;&#21830;&#65288;&#22914; DigitalOcean&#12289;Linode&#12289;AWS &#31561;&#65289;&#19978;&#21019;&#24314;&#26381;&#21153;&#22120;&#12290;&#27492;&#22806;&#65292;Forge &#36824;&#20250;&#23433;&#35013;&#24182;&#31649;&#29702;&#26500;&#24314;&#20581;&#22766; Laravel &#24212;&#29992;&#25152;&#38656;&#30340;&#20840;&#37096;&#24037;&#20855;&#65292;&#20363;&#22914; Nginx&#12289;MySQL&#12289;Redis&#12289;Memcached&#12289;Beanstalk &#31561;&#12290;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Laravel Cloud: <i><a href="https://cloud.laravel.com" target="_blank">https://cloud.laravel.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> FrankenPHP: <i><a href="https://frankenphp.dev/" target="_blank">https://frankenphp.dev/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Laravel Octane: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/octane" target="_blank">/docs/Laravel 13.x/octane</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Laravel 文档: <i><a href="https://frankenphp.dev/docs/laravel/" target="_blank">https://frankenphp.dev/docs/laravel/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> Laravel Cloud: <i><a href="https://cloud.laravel.com" target="_blank">https://cloud.laravel.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Laravel Cloud: <i><a href="https://cloud.laravel.com" target="_blank">https://cloud.laravel.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 监听器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> Laravel Cloud: <i><a href="https://cloud.laravel.com" target="_blank">https://cloud.laravel.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> Laravel Forge: <i><a href="https://forge.laravel.com" target="_blank">https://forge.laravel.com</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="kl9nop7vz4.html#blog1007" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">入门套件</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="3xyq4o4vmq.html#blog1009" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">请求生命周期</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

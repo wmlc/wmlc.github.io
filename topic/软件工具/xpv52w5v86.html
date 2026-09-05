@@ -70,7 +70,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
 
     
 </head>
@@ -322,6 +322,10 @@
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
                                    href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel&#32;13.x/overview.html">Laravel 13.x</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
@@ -679,6 +683,93 @@
     })();
 </script>
 
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -700,8 +791,8 @@ var _hmt = _hmt || [];
 <li><a href="xpv52w5v86.html#7e8b2fa2745e37dfe2e609baf04e319f">效果</a></li>
 <li><a href="xpv52w5v86.html#dcada8f37903bfafc4c8d3fb483a6980">一句话总结</a></li>
 </ul><?xml encoding="UTF-8"><blockquote>
-<p><strong class="mk-p">&#26680;&#24515;&#38382;&#39064;</strong>&#65306;&#26412;&#22320; Mac &#19978;&#27809;&#26377; PHP &#29615;&#22659;&#65292;&#24320;&#21457;&#29615;&#22659;&#22312; Docker &#23481;&#22120;&#65288;Ubuntu&#65289;&#37324;&#12290;&#27599;&#27425;&#24320;&#32456;&#31471;&#37117;&#24471;&#25163;&#21160; SSH &#36827;&#21435;&#65292;&#22826;&#40635;&#28902;&#12290;</p>
-</blockquote><hr><h2 id="851edd112cca0542c796e3f250e50f32">&#38382;&#39064;&#32972;&#26223;</h2><p>&#25105;&#26412;&#22320;&#24320;&#21457;&#29992;&#30340;&#26159; Mac Pro&#65292;&#20294; Mac &#19978;&#24182;&#27809;&#26377;&#25645;&#24314; PHP &#24320;&#21457;&#29615;&#22659;&#65292;<strong class="mk-g">&#25152;&#26377;&#24320;&#21457;&#29615;&#22659;&#37117;&#36305;&#22312;&#26412;&#26426;&#30340; Docker &#23481;&#22120;&#20013;&#65288;Ubuntu&#65289;</strong>&#12290;</p><p>&#26085;&#24120;&#24320;&#21457;&#32463;&#24120;&#38656;&#35201;&#29992;&#32456;&#31471;&#25191;&#34892;&#21629;&#20196;&#65292;&#20294; PhpStorm &#40664;&#35748;&#25171;&#24320;&#30340;&#32456;&#31471;&#36827;&#20837;&#30340;&#26159;&#26412;&#22320; Mac &#29615;&#22659;&#65292;&#19981;&#26159;&#25105;&#24819;&#35201;&#30340; Docker &#29615;&#22659;&#12290;&#27599;&#27425;&#37117;&#35201;&#25163;&#21160; <code>ssh</code> &#36827;&#21435;&#65292;&#25928;&#29575;&#24456;&#20302;&#12290;</p><hr><h2 id="de842a6c80128bf1587c7cd451914e7a">&#35299;&#20915;&#26041;&#26696;</h2><p><strong class="mk-p">&#36335;&#24452;&#65306;PhpStorm &rarr; &#35774;&#32622; &rarr; &#24037;&#20855; &rarr; &#32456;&#31471;</strong></p><p><img src="../../storage/images/2026/06/e3pyRfR25jczTns5Plq1AAcEpdmCa6UN3cz8RDiN.png" alt=""></p><p>&#25226; <strong class="mk-g">Shell &#36335;&#24452;</strong> &#37197;&#32622;&#20026;&#20197;&#19979;&#21629;&#20196;&#65306;</p><pre><code class="language-bash">bash -lc 'ssh -t -o ServerAliveInterval=15 -i ~/.ssh/id_rsa username@localhost "cd $(pwd);bash -l"'</code></pre><hr><h2 id="95744805f595943228c9158ce540d99e">&#20851;&#38190;&#37197;&#32622;&#35828;&#26126;&#65288;&#37325;&#28857;&#65289;</h2><table>
+<p><strong class="mk-b">&#26680;&#24515;&#38382;&#39064;</strong>&#65306;&#26412;&#22320; Mac &#19978;&#27809;&#26377; PHP &#29615;&#22659;&#65292;&#24320;&#21457;&#29615;&#22659;&#22312; Docker &#23481;&#22120;&#65288;Ubuntu&#65289;&#37324;&#12290;&#27599;&#27425;&#24320;&#32456;&#31471;&#37117;&#24471;&#25163;&#21160; SSH &#36827;&#21435;&#65292;&#22826;&#40635;&#28902;&#12290;</p>
+</blockquote><hr><h2 id="851edd112cca0542c796e3f250e50f32">&#38382;&#39064;&#32972;&#26223;</h2><p>&#25105;&#26412;&#22320;&#24320;&#21457;&#29992;&#30340;&#26159; Mac Pro&#65292;&#20294; Mac &#19978;&#24182;&#27809;&#26377;&#25645;&#24314; PHP &#24320;&#21457;&#29615;&#22659;&#65292;<strong class="mk-b">&#25152;&#26377;&#24320;&#21457;&#29615;&#22659;&#37117;&#36305;&#22312;&#26412;&#26426;&#30340; Docker &#23481;&#22120;&#20013;&#65288;Ubuntu&#65289;</strong>&#12290;</p><p>&#26085;&#24120;&#24320;&#21457;&#32463;&#24120;&#38656;&#35201;&#29992;&#32456;&#31471;&#25191;&#34892;&#21629;&#20196;&#65292;&#20294; PhpStorm &#40664;&#35748;&#25171;&#24320;&#30340;&#32456;&#31471;&#36827;&#20837;&#30340;&#26159;&#26412;&#22320; Mac &#29615;&#22659;&#65292;&#19981;&#26159;&#25105;&#24819;&#35201;&#30340; Docker &#29615;&#22659;&#12290;&#27599;&#27425;&#37117;&#35201;&#25163;&#21160; <code>ssh</code> &#36827;&#21435;&#65292;&#25928;&#29575;&#24456;&#20302;&#12290;</p><hr><h2 id="de842a6c80128bf1587c7cd451914e7a">&#35299;&#20915;&#26041;&#26696;</h2><p><strong class="mk-b">&#36335;&#24452;&#65306;PhpStorm &rarr; &#35774;&#32622; &rarr; &#24037;&#20855; &rarr; &#32456;&#31471;</strong></p><p><img src="../../storage/images/2026/06/e3pyRfR25jczTns5Plq1AAcEpdmCa6UN3cz8RDiN.png" alt=""></p><p>&#25226; <strong class="mk-y">Shell &#36335;&#24452;</strong> &#37197;&#32622;&#20026;&#20197;&#19979;&#21629;&#20196;&#65306;</p><pre><code class="language-bash">bash -lc 'ssh -t -o ServerAliveInterval=15 -i ~/.ssh/id_rsa username@localhost "cd $(pwd);bash -l"'</code></pre><hr><h2 id="95744805f595943228c9158ce540d99e">&#20851;&#38190;&#37197;&#32622;&#35828;&#26126;&#65288;&#37325;&#28857;&#65289;</h2><table>
 <thead>
 <tr>
 <th>&#37197;&#32622;&#39033;</th>
@@ -735,8 +826,8 @@ var _hmt = _hmt || [];
 </tr>
 </tbody>
 </table><hr><h2 id="bf600cd2056ec19e47424b13a164b77d">&#29983;&#25928;&#21069;&#25552;&#65288;&#37325;&#28857; &#9888;&#65039;&#65289;</h2><p>&#36825;&#20010;&#26041;&#26696;&#33021;&#27491;&#24120;&#24037;&#20316;&#65292;&#20381;&#36182;&#19968;&#20010;&#20851;&#38190;&#26465;&#20214;&#65306;</p><blockquote>
-<p><strong class="mk-g">&#26412;&#22320;&#39033;&#30446;&#30446;&#24405;&#21644; Docker &#23481;&#22120;&#20013;&#30340;&#39033;&#30446;&#30446;&#24405;&#20570;&#20102;&#21516;&#30446;&#24405;&#30340;&#25991;&#20214;&#26144;&#23556;&#65288;volume &#25346;&#36733;&#65289;</strong></p>
-</blockquote><p>&#27604;&#22914;&#26412;&#22320;&#26159; <code>/Users/me/projects/myapp</code>&#65292;Docker &#37324;&#20063;&#26144;&#23556;&#21040; <code>/home/user/projects/myapp</code>&#65292;&#36825;&#26679; <code>cd $(pwd)</code> &#25165;&#33021;&#27491;&#30830;&#23450;&#20301;&#12290;</p><hr><h2 id="7e8b2fa2745e37dfe2e609baf04e319f">&#25928;&#26524;</h2><p>&#37197;&#32622;&#23436;&#25104;&#21518;&#65292;&#22312; PhpStorm &#20013;&#25171;&#24320;&#20219;&#24847;&#39033;&#30446;&#30340;&#32456;&#31471;&#65292;<strong class="mk-b">&#20250;&#33258;&#21160; SSH &#36827;&#20837; Docker &#23481;&#22120;&#65292;&#24182;&#19988;&#30452;&#25509;&#36827;&#20837;&#24403;&#21069;&#39033;&#30446;&#30446;&#24405;</strong>&#65292;&#21644;&#22312;&#26412;&#22320;&#25805;&#20316;&#32456;&#31471;&#20960;&#20046;&#26080;&#24863;&#12290;</p><hr><h2 id="dcada8f37903bfafc4c8d3fb483a6980">&#19968;&#21477;&#35805;&#24635;&#32467;</h2><p><strong class="mk-p">&#36890;&#36807;&#33258;&#23450;&#20041; Shell &#36335;&#24452; + SSH &#38567;&#36947; + &#30446;&#24405;&#26144;&#23556;&#65292;&#35753; PhpStorm &#32456;&#31471;&#40664;&#35748;&#33853;&#22320;&#21040; Docker &#23481;&#22120;&#20869;&#65292;&#30465;&#21435;&#27599;&#27425;&#25163;&#21160;&#36830;&#25509;&#30340;&#27493;&#39588;&#12290;</strong></p>
+<p><strong class="mk-b">&#26412;&#22320;&#39033;&#30446;&#30446;&#24405;&#21644; Docker &#23481;&#22120;&#20013;&#30340;&#39033;&#30446;&#30446;&#24405;&#20570;&#20102;&#21516;&#30446;&#24405;&#30340;&#25991;&#20214;&#26144;&#23556;&#65288;volume &#25346;&#36733;&#65289;</strong></p>
+</blockquote><p>&#27604;&#22914;&#26412;&#22320;&#26159; <code>/Users/me/projects/myapp</code>&#65292;Docker &#37324;&#20063;&#26144;&#23556;&#21040; <code>/home/user/projects/myapp</code>&#65292;&#36825;&#26679; <code>cd $(pwd)</code> &#25165;&#33021;&#27491;&#30830;&#23450;&#20301;&#12290;</p><hr><h2 id="7e8b2fa2745e37dfe2e609baf04e319f">&#25928;&#26524;</h2><p>&#37197;&#32622;&#23436;&#25104;&#21518;&#65292;&#22312; PhpStorm &#20013;&#25171;&#24320;&#20219;&#24847;&#39033;&#30446;&#30340;&#32456;&#31471;&#65292;<strong class="mk-b">&#20250;&#33258;&#21160; SSH &#36827;&#20837; Docker &#23481;&#22120;&#65292;&#24182;&#19988;&#30452;&#25509;&#36827;&#20837;&#24403;&#21069;&#39033;&#30446;&#30446;&#24405;</strong>&#65292;&#21644;&#22312;&#26412;&#22320;&#25805;&#20316;&#32456;&#31471;&#20960;&#20046;&#26080;&#24863;&#12290;</p><hr><h2 id="dcada8f37903bfafc4c8d3fb483a6980">&#19968;&#21477;&#35805;&#24635;&#32467;</h2><p><strong class="mk-g">&#36890;&#36807;&#33258;&#23450;&#20041; Shell &#36335;&#24452; + SSH &#38567;&#36947; + &#30446;&#24405;&#26144;&#23556;&#65292;&#35753; PhpStorm &#32456;&#31471;&#40664;&#35748;&#33853;&#22320;&#21040; Docker &#23481;&#22120;&#20869;&#65292;&#30465;&#21435;&#27599;&#27425;&#25163;&#21160;&#36830;&#25509;&#30340;&#27493;&#39588;&#12290;</strong></p>
 
 		<div class="nearpost-navigation">
     <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">

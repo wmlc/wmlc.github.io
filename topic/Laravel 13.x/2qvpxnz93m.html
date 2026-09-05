@@ -1,0 +1,1847 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Eloquent：API 资源 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/2qvpxnz93m.html', function (data, status) {
+            addView('2qvpxnz93m.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Eloquent：API 资源</h1><ul>
+<li><a href="2qvpxnz93m.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="2qvpxnz93m.html#7ac9a0bd0ed6cbdf6d588522aff771f6">生成资源</a>
+<ul>
+<li><a href="2qvpxnz93m.html#f35fe07868c93f06033c9db1f4cd7b53">资源集合</a></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#ab575525277dfc9a204e8db154c16737">概念概览</a>
+<ul>
+<li><a href="2qvpxnz93m.html#f35fe07868c93f06033c9db1f4cd7b53">资源集合</a>
+<ul>
+<li><a href="2qvpxnz93m.html#adedcd7b8a5de59e055f0093c1cd85ef">自定义资源集合</a></li>
+<li><a href="2qvpxnz93m.html#7f2925c8ffcfa75be426b0d6c2e12c38">保留集合键</a></li>
+<li><a href="2qvpxnz93m.html#525256649968d07d77add36664133a75">自定义底层资源类</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#c61683f332ec085fc1bc0ab828c6ca70">编写资源</a>
+<ul>
+<li><a href="2qvpxnz93m.html#1c3cf7f5f085596674018f3efc645be5">关联</a></li>
+<li><a href="2qvpxnz93m.html#f35fe07868c93f06033c9db1f4cd7b53">资源集合</a>
+<ul>
+<li><a href="2qvpxnz93m.html#e64d94d11ed049508c070ddb903719e8">数据包裹</a></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#66fff375a15f0d8f8659ce24b89d178d">包裹嵌套资源</a></li>
+<li><a href="2qvpxnz93m.html#db043e1634d27497f0917eb6d1b532b3">数据包裹与分页</a>
+<ul>
+<li><a href="2qvpxnz93m.html#3862626c138ce5945e0e273a1bdfbad0">分页</a></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#fd78f20b207f1f44f035e26c7830898d">自定义分页信息</a>
+<ul>
+<li><a href="2qvpxnz93m.html#80dc2e0e0f069b007a1033ee772d518a">条件属性</a></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#dfe75fb36b969397380a6eeae2779943">合并条件属性</a>
+<ul>
+<li><a href="2qvpxnz93m.html#ba38db7a3ab9ad6b6cad5bfca02b873e">条件关联</a></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#4b7fc3405f88c500a2e58d51c12144ce">条件关联计数</a></li>
+<li><a href="2qvpxnz93m.html#8229cdaca35fd3a4847a415999597fdf">条件中间表信息</a>
+<ul>
+<li><a href="2qvpxnz93m.html#152058942f2646f9ca157d14d7e57821">添加元数据</a></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#6f4f8cfdc4c16d2f3cfac6002dace71b">顶层元数据</a></li>
+<li><a href="2qvpxnz93m.html#c2cbeaf6c1deb6f5e9de1a1b5ffdb4b2">在构建资源时添加元数据</a></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#e596de12a33ca59a624fa4d19f5e424d">JSON:API 资源</a>
+<ul>
+<li><a href="2qvpxnz93m.html#fba5d6d843d70b00aa4970fe606d81b8">生成 JSON:API 资源</a></li>
+<li><a href="2qvpxnz93m.html#6c978f735ca7fdca30e5a0041fc70bd7">定义属性</a></li>
+<li><a href="2qvpxnz93m.html#9caa682ca4a5a4e5e671685dcfbc0d93">定义关联</a>
+<ul>
+<li><a href="2qvpxnz93m.html#56bbe4452f45f26839dfac71efb24206">$relationships 属性</a></li>
+<li><a href="2qvpxnz93m.html#4a98dcd84454b2c203ae8c4f20b97e11">包含关联</a></li>
+<li><a href="2qvpxnz93m.html#a5e0f0da13e425c4099d19d5d60f6a76">关联深度</a></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#5c6d9df181f96a5c20fd0ff1b6fe2448">资源类型与 ID</a></li>
+<li><a href="2qvpxnz93m.html#efcb9806266976939a9f6900245479b1">稀疏字段集与包含</a>
+<ul>
+<li><a href="2qvpxnz93m.html#23951450083119862844baba2760bc6c">忽略查询字符串</a></li>
+<li><a href="2qvpxnz93m.html#ddb1565638aca0a27713aa276fcdb008">包含先前已加载的关联</a></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#81f2c1b497f99eed8ff7af3bae14d46c">链接与元数据</a></li>
+</ul></li>
+<li><a href="2qvpxnz93m.html#ed7975a814003d6832284db05e4be165">资源响应</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>&#22312;&#26500;&#24314; API &#26102;&#65292;&#20320;&#21487;&#33021;&#38656;&#35201;&#22312; Eloquent &#27169;&#22411;&#19982;&#30495;&#27491;&#36820;&#22238;&#32473;&#24212;&#29992;&#29992;&#25143;&#30340; JSON &#21709;&#24212;&#20043;&#38388;&#65292;&#25918;&#32622;&#19968;&#20010;&#36716;&#25442;&#23618;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20026;&#19968;&#37096;&#20998;&#29992;&#25143;&#26174;&#31034;&#26576;&#20123;&#23646;&#24615;&#65292;&#32780;&#19981;&#20026;&#20854;&#20182;&#29992;&#25143;&#26174;&#31034;&#65307;&#25110;&#32773;&#20320;&#21487;&#33021;&#24076;&#26395;&#22987;&#32456;&#22312;&#27169;&#22411;&#30340; JSON &#34920;&#31034;&#20013;&#21253;&#21547;&#26576;&#20123;&#20851;&#32852;&#12290;Eloquent &#30340;&#36164;&#28304;&#65288;resource&#65289;&#31867;&#35753;&#20320;&#21487;&#20197;&#23500;&#26377;&#34920;&#29616;&#21147;&#19988;&#36731;&#26494;&#22320;&#23558;&#27169;&#22411;&#21644;&#38598;&#21512;&#36716;&#25442;&#20026; JSON&#12290;</p><p>&#24403;&#28982;&#65292;&#20320;&#38543;&#26102;&#21487;&#20197;&#20351;&#29992; <code>toJson</code> &#26041;&#27861;&#23558; Eloquent &#27169;&#22411;&#25110;&#38598;&#21512;&#36716;&#25442;&#20026; JSON&#65307;&#19981;&#36807;&#65292;Eloquent &#36164;&#28304;&#65288;resource&#65289;&#23545;&#20320;&#27169;&#22411;&#21644;&#20851;&#32852;&#30340; JSON &#24207;&#21015;&#21270;&#25552;&#20379;&#20102;&#26356;&#32454;&#31890;&#24230;&#12289;&#26356;&#24378;&#22823;&#30340;&#25511;&#21046;&#12290;</p><h2 id="7ac9a0bd0ed6cbdf6d588522aff771f6">&#29983;&#25104;&#36164;&#28304;</h2><p>&#35201;&#29983;&#25104;&#19968;&#20010;&#36164;&#28304;&#31867;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>make:resource</code> Artisan &#21629;&#20196;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#36164;&#28304;&#20250;&#34987;&#25918;&#32622;&#22312;&#24212;&#29992;&#30340; <code>app/Http/Resources</code> &#30446;&#24405;&#20013;&#12290;&#36164;&#28304;&#32487;&#25215;&#33258; <code>Illuminate\Http\Resources\Json\JsonResource</code> &#31867;&#65306;</p><pre><code class="language-shell">php artisan make:resource UserResource</code></pre><h4 id="f35fe07868c93f06033c9db1f4cd7b53">&#36164;&#28304;&#38598;&#21512;</h4><p>&#38500;&#20102;&#29983;&#25104;&#29992;&#20110;&#36716;&#25442;&#21333;&#20010;&#27169;&#22411;&#30340;&#36164;&#28304;&#20043;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#29983;&#25104;&#36127;&#36131;&#36716;&#25442;&#27169;&#22411;&#38598;&#21512;&#30340;&#36164;&#28304;&#12290;&#36825;&#33021;&#35753;&#20320;&#30340; JSON &#21709;&#24212;&#21253;&#21547;&#19982;&#25972;&#20010;&#32473;&#23450;&#36164;&#28304;&#38598;&#21512;&#30456;&#20851;&#30340;&#38142;&#25509;&#21644;&#20854;&#20182;&#20803;&#25968;&#25454;&#12290;</p><p>&#35201;&#21019;&#24314;&#36164;&#28304;&#38598;&#21512;&#65292;&#20320;&#24212;&#35813;&#22312;&#21019;&#24314;&#36164;&#28304;&#26102;&#20351;&#29992; <code>--collection</code> &#26631;&#24535;&#12290;&#25110;&#32773;&#65292;&#22312;&#36164;&#28304;&#21517;&#20013;&#21253;&#21547; <code>Collection</code> &#19968;&#35789;&#65292;&#20250;&#25351;&#31034; Laravel &#21019;&#24314;&#19968;&#20010;&#38598;&#21512;&#36164;&#28304;&#12290;&#38598;&#21512;&#36164;&#28304;&#32487;&#25215;&#33258; <code>Illuminate\Http\Resources\Json\ResourceCollection</code> &#31867;&#65306;</p><pre><code class="language-shell">php artisan make:resource User --collection
+
+php artisan make:resource UserCollection</code></pre><h2 id="ab575525277dfc9a204e8db154c16737">&#27010;&#24565;&#27010;&#35272;</h2><blockquote>
+<p>[!NOTE]<br>
+&#36825;&#26159;&#23545;&#36164;&#28304;&#21644;&#36164;&#28304;&#38598;&#21512;&#30340;&#27010;&#35201;&#20171;&#32461;&#12290;&#25105;&#20204;&#24378;&#28872;&#24314;&#35758;&#20320;&#38405;&#35835;&#26412;&#25991;&#26723;&#30340;&#20854;&#20182;&#31456;&#33410;&#65292;&#20197;&#26356;&#28145;&#20837;&#22320;&#20102;&#35299;&#36164;&#28304;&#20026;&#20320;&#25552;&#20379;&#30340;&#23450;&#21046;&#33021;&#21147;&#19982;&#20854;&#24378;&#22823;&#20043;&#22788;&#12290;</p>
+</blockquote><p>&#22312;&#28145;&#20837;&#20102;&#35299;&#32534;&#20889;&#36164;&#28304;&#26102;&#25152;&#26377;&#21487;&#29992;&#36873;&#39033;&#20043;&#21069;&#65292;&#25105;&#20204;&#20808;&#20174;&#36739;&#39640;&#23618;&#38754;&#30475;&#30475;&#36164;&#28304;&#22312; Laravel &#20013;&#26159;&#22914;&#20309;&#20351;&#29992;&#30340;&#12290;&#19968;&#20010;&#36164;&#28304;&#31867;&#34920;&#31034;&#38656;&#35201;&#36716;&#25442;&#20026; JSON &#32467;&#26500;&#30340;&#21333;&#20010;&#27169;&#22411;&#12290;&#20363;&#22914;&#65292;&#19979;&#38754;&#26159;&#19968;&#20010;&#31616;&#21333;&#30340; <code>UserResource</code> &#36164;&#28304;&#31867;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class UserResource extends JsonResource
+{
+    /**
+     * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+     *
+     * @return array&lt;string, mixed&gt;
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' =&gt; $this-&gt;id,
+            'name' =&gt; $this-&gt;name,
+            'email' =&gt; $this-&gt;email,
+            'created_at' =&gt; $this-&gt;created_at,
+            'updated_at' =&gt; $this-&gt;updated_at,
+        ];
+    }
+}</code></pre><p>&#27599;&#20010;&#36164;&#28304;&#31867;&#37117;&#23450;&#20041;&#20102;&#19968;&#20010; <code>toArray</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#36820;&#22238;&#24403;&#36164;&#28304;&#20316;&#20026;&#21709;&#24212;&#20174;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#26041;&#27861;&#36820;&#22238;&#26102;&#65292;&#24212;&#34987;&#36716;&#25442;&#20026; JSON &#30340;&#23646;&#24615;&#25968;&#32452;&#12290;</p><p>&#27880;&#24847;&#65292;&#25105;&#20204;&#21487;&#20197;&#30452;&#25509;&#36890;&#36807; <code>$this</code> &#21464;&#37327;&#35775;&#38382;&#27169;&#22411;&#23646;&#24615;&#12290;&#36825;&#26159;&#22240;&#20026;&#36164;&#28304;&#31867;&#20250;&#33258;&#21160;&#23558;&#23646;&#24615;&#21644;&#26041;&#27861;&#30340;&#35775;&#38382;&#20195;&#29702;&#21040;&#24213;&#23618;&#27169;&#22411;&#65292;&#20197;&#20415;&#20415;&#25463;&#35775;&#38382;&#12290;&#36164;&#28304;&#23450;&#20041;&#22909;&#21518;&#65292;&#23601;&#21487;&#20197;&#20174;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#36820;&#22238;&#23427;&#12290;&#36164;&#28304;&#36890;&#36807;&#26500;&#36896;&#20989;&#25968;&#25509;&#25910;&#24213;&#23618;&#27169;&#22411;&#23454;&#20363;&#65306;</p><pre><code class="language-php">use App\Http\Resources\UserResource;
+use App\Models\User;
+
+Route::get('/user/{id}', function (string $id) {
+    return new UserResource(User::findOrFail($id));
+});</code></pre><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#27169;&#22411;&#30340; <code>toResource</code> &#26041;&#27861;&#65292;&#23427;&#20250;&#20351;&#29992;&#26694;&#26550;&#32422;&#23450;&#33258;&#21160;&#21457;&#29616;&#27169;&#22411;&#24213;&#23618;&#30340;&#36164;&#28304;&#65306;</p><pre><code class="language-php">return User::findOrFail($id)-&gt;toResource();</code></pre><p>&#35843;&#29992; <code>toResource</code> &#26041;&#27861;&#26102;&#65292;Laravel &#20250;&#23581;&#35797;&#22312;&#26368;&#25509;&#36817;&#27169;&#22411;&#21629;&#21517;&#31354;&#38388;&#30340; <code>Http\Resources</code> &#21629;&#21517;&#31354;&#38388;&#20013;&#65292;&#25214;&#21040;&#19968;&#20010;&#19982;&#27169;&#22411;&#21517;&#21305;&#37197;&#12289;&#24182;&#21487;&#36873;&#25321;&#38468;&#21152; <code>Resource</code> &#21518;&#32512;&#30340;&#36164;&#28304;&#12290;</p><p>&#22914;&#26524;&#20320;&#30340;&#36164;&#28304;&#31867;&#19981;&#36981;&#24490;&#36825;&#31181;&#21629;&#21517;&#32422;&#23450;&#65292;&#25110;&#32773;&#20301;&#20110;&#19981;&#21516;&#30340;&#21629;&#21517;&#31354;&#38388;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>UseResource</code> &#23646;&#24615;&#20026;&#27169;&#22411;&#25351;&#23450;&#40664;&#35748;&#36164;&#28304;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use App\Http\Resources\CustomUserResource;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
+
+#[UseResource(CustomUserResource::class)]
+class User extends Model
+{
+    // ...
+}</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#23558;&#36164;&#28304;&#31867;&#20256;&#32473; <code>toResource</code> &#26041;&#27861;&#26469;&#25351;&#23450;&#36164;&#28304;&#31867;&#65306;</p><pre><code class="language-php">return User::findOrFail($id)-&gt;toResource(CustomUserResource::class);</code></pre><h3 id="f35fe07868c93f06033c9db1f4cd7b53">&#36164;&#28304;&#38598;&#21512;</h3><p>&#22914;&#26524;&#20320;&#36820;&#22238;&#30340;&#26159;&#36164;&#28304;&#30340;&#38598;&#21512;&#25110;&#20998;&#39029;&#21709;&#24212;&#65292;&#22312;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#20013;&#21019;&#24314;&#36164;&#28304;&#23454;&#20363;&#26102;&#65292;&#24212;&#35813;&#20351;&#29992;&#36164;&#28304;&#31867;&#25552;&#20379;&#30340; <code>collection</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use App\Http\Resources\UserResource;
+use App\Models\User;
+
+Route::get('/users', function () {
+    return UserResource::collection(User::all());
+});</code></pre><p>&#25110;&#32773;&#65292;&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; Eloquent &#38598;&#21512;&#30340; <code>toResourceCollection</code> &#26041;&#27861;&#65292;&#23427;&#20250;&#20351;&#29992;&#26694;&#26550;&#32422;&#23450;&#33258;&#21160;&#21457;&#29616;&#27169;&#22411;&#24213;&#23618;&#30340;&#36164;&#28304;&#38598;&#21512;&#65306;</p><pre><code class="language-php">return User::all()-&gt;toResourceCollection();</code></pre><p>&#35843;&#29992; <code>toResourceCollection</code> &#26041;&#27861;&#26102;&#65292;Laravel &#20250;&#23581;&#35797;&#22312;&#26368;&#25509;&#36817;&#27169;&#22411;&#21629;&#21517;&#31354;&#38388;&#30340; <code>Http\Resources</code> &#21629;&#21517;&#31354;&#38388;&#20013;&#65292;&#25214;&#21040;&#19968;&#20010;&#19982;&#27169;&#22411;&#21517;&#21305;&#37197;&#12289;&#24182;&#20197; <code>Collection</code> &#20026;&#21518;&#32512;&#30340;&#36164;&#28304;&#38598;&#21512;&#12290;</p><p>&#22914;&#26524;&#20320;&#30340;&#36164;&#28304;&#38598;&#21512;&#31867;&#19981;&#36981;&#24490;&#36825;&#31181;&#21629;&#21517;&#32422;&#23450;&#65292;&#25110;&#32773;&#20301;&#20110;&#19981;&#21516;&#30340;&#21629;&#21517;&#31354;&#38388;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>UseResourceCollection</code> &#23646;&#24615;&#20026;&#27169;&#22411;&#25351;&#23450;&#40664;&#35748;&#36164;&#28304;&#38598;&#21512;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use App\Http\Resources\CustomUserCollection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\UseResourceCollection;
+
+#[UseResourceCollection(CustomUserCollection::class)]
+class User extends Model
+{
+    // ...
+}</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#23558;&#36164;&#28304;&#38598;&#21512;&#31867;&#20256;&#32473; <code>toResourceCollection</code> &#26041;&#27861;&#26469;&#25351;&#23450;&#23427;&#65306;</p><pre><code class="language-php">return User::all()-&gt;toResourceCollection(CustomUserCollection::class);</code></pre><h4 id="adedcd7b8a5de59e055f0093c1cd85ef">&#33258;&#23450;&#20041;&#36164;&#28304;&#38598;&#21512;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#36164;&#28304;&#38598;&#21512;&#19981;&#20801;&#35768;&#28155;&#21152;&#20219;&#20309;&#21487;&#33021;&#38656;&#35201;&#38543;&#38598;&#21512;&#19968;&#36215;&#36820;&#22238;&#30340;&#33258;&#23450;&#20041;&#20803;&#25968;&#25454;&#12290;&#22914;&#26524;&#20320;&#24076;&#26395;&#33258;&#23450;&#20041;&#36164;&#28304;&#38598;&#21512;&#21709;&#24212;&#65292;&#21487;&#20197;&#21019;&#24314;&#19968;&#20010;&#19987;&#38376;&#30340;&#36164;&#28304;&#26469;&#34920;&#31034;&#35813;&#38598;&#21512;&#65306;</p><pre><code class="language-shell">php artisan make:resource UserCollection</code></pre><p>&#36164;&#28304;&#38598;&#21512;&#31867;&#29983;&#25104;&#21518;&#65292;&#20320;&#23601;&#21487;&#20197;&#36731;&#26494;&#23450;&#20041;&#21709;&#24212;&#20013;&#24212;&#21253;&#21547;&#30340;&#20219;&#24847;&#20803;&#25968;&#25454;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+
+class UserCollection extends ResourceCollection
+{
+    /**
+     * &#23558;&#36164;&#28304;&#38598;&#21512;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+     *
+     * @return array&lt;int|string, mixed&gt;
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'data' =&gt; $this-&gt;collection,
+            'links' =&gt; [
+                'self' =&gt; 'link-value',
+            ],
+        ];
+    }
+}</code></pre><p>&#23450;&#20041;&#22909;&#36164;&#28304;&#38598;&#21512;&#21518;&#65292;&#23601;&#21487;&#20197;&#20174;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#36820;&#22238;&#23427;&#65306;</p><pre><code class="language-php">use App\Http\Resources\UserCollection;
+use App\Models\User;
+
+Route::get('/users', function () {
+    return new UserCollection(User::all());
+});</code></pre><p>&#25110;&#32773;&#65292;&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; Eloquent &#38598;&#21512;&#30340; <code>toResourceCollection</code> &#26041;&#27861;&#65292;&#23427;&#20250;&#20351;&#29992;&#26694;&#26550;&#32422;&#23450;&#33258;&#21160;&#21457;&#29616;&#27169;&#22411;&#24213;&#23618;&#30340;&#36164;&#28304;&#38598;&#21512;&#65306;</p><pre><code class="language-php">return User::all()-&gt;toResourceCollection();</code></pre><p>&#35843;&#29992; <code>toResourceCollection</code> &#26041;&#27861;&#26102;&#65292;Laravel &#20250;&#23581;&#35797;&#22312;&#26368;&#25509;&#36817;&#27169;&#22411;&#21629;&#21517;&#31354;&#38388;&#30340; <code>Http\Resources</code> &#21629;&#21517;&#31354;&#38388;&#20013;&#65292;&#25214;&#21040;&#19968;&#20010;&#19982;&#27169;&#22411;&#21517;&#21305;&#37197;&#12289;&#24182;&#20197; <code>Collection</code> &#20026;&#21518;&#32512;&#30340;&#36164;&#28304;&#38598;&#21512;&#12290;</p><h4 id="7f2925c8ffcfa75be426b0d6c2e12c38">&#20445;&#30041;&#38598;&#21512;&#38190;</h4><p>&#24403;&#20174;&#36335;&#30001;&#36820;&#22238;&#36164;&#28304;&#38598;&#21512;&#26102;&#65292;Laravel &#20250;&#37325;&#32622;&#38598;&#21512;&#30340;&#38190;&#65292;&#20351;&#23427;&#20204;&#25353;&#25968;&#23383;&#39034;&#24207;&#25490;&#21015;&#12290;&#19981;&#36807;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#36164;&#28304;&#31867;&#19978;&#30340; <code>PreserveKeys</code> &#23646;&#24615;&#26469;&#25351;&#31034;&#26159;&#21542;&#24212;&#20445;&#30041;&#38598;&#21512;&#30340;&#21407;&#22987;&#38190;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Attributes\PreserveKeys;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+#[PreserveKeys]
+class UserResource extends JsonResource
+{
+    // ...
+}</code></pre><p>&#24403; <code>preserveKeys</code> &#23646;&#24615;&#34987;&#35774;&#32622;&#20026; <code>true</code> &#26102;&#65292;&#20174;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#36820;&#22238;&#38598;&#21512;&#26102;&#20250;&#20445;&#30041;&#38598;&#21512;&#30340;&#38190;&#65306;</p><pre><code class="language-php">use App\Http\Resources\UserResource;
+use App\Models\User;
+
+Route::get('/users', function () {
+    return UserResource::collection(User::all()-&gt;keyBy-&gt;id);
+});</code></pre><h4 id="525256649968d07d77add36664133a75">&#33258;&#23450;&#20041;&#24213;&#23618;&#36164;&#28304;&#31867;</h4><p>&#36890;&#24120;&#24773;&#20917;&#19979;&#65292;&#36164;&#28304;&#38598;&#21512;&#30340; <code>$this-&gt;collection</code> &#23646;&#24615;&#20250;&#33258;&#21160;&#22635;&#20805;&#23558;&#38598;&#21512;&#20013;&#27599;&#19968;&#39033;&#26144;&#23556;&#21040;&#20854;&#21333;&#25968;&#36164;&#28304;&#31867;&#30340;&#32467;&#26524;&#12290;&#21333;&#25968;&#36164;&#28304;&#31867;&#34987;&#20551;&#23450;&#20026;&#21435;&#25481;&#20102;&#31867;&#21517;&#26411;&#23614; <code>Collection</code> &#37096;&#20998;&#30340;&#38598;&#21512;&#31867;&#21517;&#12290;&#27492;&#22806;&#65292;&#26681;&#25454;&#20320;&#20010;&#20154;&#30340;&#20559;&#22909;&#65292;&#21333;&#25968;&#36164;&#28304;&#31867;&#21487;&#20197;&#26377;&#20063;&#21487;&#20197;&#27809;&#26377; <code>Resource</code> &#21518;&#32512;&#12290;</p><p>&#20363;&#22914;&#65292;<code>UserCollection</code> &#20250;&#23581;&#35797;&#23558;&#32473;&#23450;&#30340;&#29992;&#25143;&#23454;&#20363;&#26144;&#23556;&#21040; <code>UserResource</code> &#36164;&#28304;&#12290;&#35201;&#33258;&#23450;&#20041;&#36825;&#31181;&#34892;&#20026;&#65292;&#20320;&#21487;&#20197;&#22312;&#36164;&#28304;&#38598;&#21512;&#19978;&#20351;&#29992; <code>Collects</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Attributes\Collects;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+
+#[Collects(Member::class)]
+class UserCollection extends ResourceCollection
+{
+    // ...
+}</code></pre><h2 id="c61683f332ec085fc1bc0ab828c6ca70">&#32534;&#20889;&#36164;&#28304;</h2><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#36824;&#27809;&#26377;&#38405;&#35835; <a href="2qvpxnz93m.html#concept-overview" target="_blank">&#27010;&#24565;&#27010;&#35272;</a>&#65292;&#25105;&#20204;&#24378;&#28872;&#24314;&#35758;&#20320;&#22312;&#32487;&#32493;&#38405;&#35835;&#26412;&#25991;&#26723;&#20043;&#21069;&#20808;&#38405;&#35835;&#23427;&#12290;</p>
+</blockquote><p>&#36164;&#28304;&#21482;&#38656;&#35201;&#23558;&#32473;&#23450;&#30340;&#27169;&#22411;&#36716;&#25442;&#20026;&#19968;&#20010;&#25968;&#32452;&#12290;&#22240;&#27492;&#65292;&#27599;&#20010;&#36164;&#28304;&#37117;&#21253;&#21547;&#19968;&#20010; <code>toArray</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#23558;&#27169;&#22411;&#30340;&#23646;&#24615;&#36716;&#25442;&#20026;&#19968;&#32452;&#23545; API &#21451;&#22909;&#30340;&#25968;&#32452;&#65292;&#21487;&#30001;&#24212;&#29992;&#30340;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#36820;&#22238;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class UserResource extends JsonResource
+{
+    /**
+     * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+     *
+     * @return array&lt;string, mixed&gt;
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' =&gt; $this-&gt;id,
+            'name' =&gt; $this-&gt;name,
+            'email' =&gt; $this-&gt;email,
+            'created_at' =&gt; $this-&gt;created_at,
+            'updated_at' =&gt; $this-&gt;updated_at,
+        ];
+    }
+}</code></pre><p>&#36164;&#28304;&#23450;&#20041;&#22909;&#21518;&#65292;&#23601;&#21487;&#20197;&#30452;&#25509;&#20174;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#36820;&#22238;&#65306;</p><pre><code class="language-php">use App\Models\User;
+
+Route::get('/user/{id}', function (string $id) {
+    return User::findOrFail($id)-&gt;toUserResource();
+});</code></pre><h4 id="1c3cf7f5f085596674018f3efc645be5">&#20851;&#32852;</h4><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#22312;&#21709;&#24212;&#20013;&#21253;&#21547;&#30456;&#20851;&#36164;&#28304;&#65292;&#21487;&#20197;&#23558;&#23427;&#20204;&#28155;&#21152;&#21040;&#36164;&#28304; <code>toArray</code> &#26041;&#27861;&#36820;&#22238;&#30340;&#25968;&#32452;&#20013;&#12290;&#22312;&#27492;&#31034;&#20363;&#20013;&#65292;&#25105;&#20204;&#23558;&#20351;&#29992; <code>PostResource</code> &#36164;&#28304;&#30340; <code>collection</code> &#26041;&#27861;&#65292;&#23558;&#29992;&#25143;&#30340;&#21338;&#23458;&#25991;&#31456;&#28155;&#21152;&#21040;&#36164;&#28304;&#21709;&#24212;&#20013;&#65306;</p><pre><code class="language-php">use App\Http\Resources\PostResource;
+use Illuminate\Http\Request;
+
+/**
+ * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toArray(Request $request): array
+{
+    return [
+        'id' =&gt; $this-&gt;id,
+        'name' =&gt; $this-&gt;name,
+        'email' =&gt; $this-&gt;email,
+        'posts' =&gt; PostResource::collection($this-&gt;posts),
+        'created_at' =&gt; $this-&gt;created_at,
+        'updated_at' =&gt; $this-&gt;updated_at,
+    ];
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#24076;&#26395;&#20165;&#22312;&#20851;&#32852;&#24050;&#34987;&#21152;&#36733;&#26102;&#25165;&#21253;&#21547;&#23427;&#20204;&#65292;&#35831;&#26597;&#38405; <a href="2qvpxnz93m.html#conditional-relationships" target="_blank">&#26465;&#20214;&#20851;&#32852;</a> &#25991;&#26723;&#12290;</p>
+</blockquote><h4 id="f35fe07868c93f06033c9db1f4cd7b53">&#36164;&#28304;&#38598;&#21512;</h4><p>&#34429;&#28982;&#36164;&#28304;&#23558;&#21333;&#20010;&#27169;&#22411;&#36716;&#25442;&#20026;&#25968;&#32452;&#65292;&#20294;&#36164;&#28304;&#38598;&#21512;&#23558;&#27169;&#22411;&#38598;&#21512;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;&#19981;&#36807;&#65292;&#20320;&#24182;&#19981;&#19968;&#23450;&#35201;&#20026;&#27599;&#20010;&#27169;&#22411;&#37117;&#23450;&#20041;&#19968;&#20010;&#36164;&#28304;&#38598;&#21512;&#31867;&#65292;&#22240;&#20026;&#25152;&#26377; Eloquent &#27169;&#22411;&#38598;&#21512;&#37117;&#25552;&#20379;&#20102; <code>toResourceCollection</code> &#26041;&#27861;&#65292;&#21487;&#20197;&#21363;&#26102;&#29983;&#25104;"&#21363;&#24109;"&#30340;&#36164;&#28304;&#38598;&#21512;&#65306;</p><pre><code class="language-php">use App\Models\User;
+
+Route::get('/users', function () {
+    return User::all()-&gt;toResourceCollection();
+});</code></pre><p>&#19981;&#36807;&#65292;&#22914;&#26524;&#20320;&#38656;&#35201;&#33258;&#23450;&#20041;&#38543;&#38598;&#21512;&#36820;&#22238;&#30340;&#20803;&#25968;&#25454;&#65292;&#23601;&#26377;&#24517;&#35201;&#23450;&#20041;&#33258;&#24049;&#30340;&#36164;&#28304;&#38598;&#21512;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+
+class UserCollection extends ResourceCollection
+{
+    /**
+     * &#23558;&#36164;&#28304;&#38598;&#21512;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+     *
+     * @return array&lt;string, mixed&gt;
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'data' =&gt; $this-&gt;collection,
+            'links' =&gt; [
+                'self' =&gt; 'link-value',
+            ],
+        ];
+    }
+}</code></pre><p>&#19982;&#21333;&#25968;&#36164;&#28304;&#19968;&#26679;&#65292;&#36164;&#28304;&#38598;&#21512;&#20063;&#21487;&#20197;&#30452;&#25509;&#20174;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#36820;&#22238;&#65306;</p><pre><code class="language-php">use App\Http\Resources\UserCollection;
+use App\Models\User;
+
+Route::get('/users', function () {
+    return new UserCollection(User::all());
+});</code></pre><p>&#25110;&#32773;&#65292;&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; Eloquent &#38598;&#21512;&#30340; <code>toResourceCollection</code> &#26041;&#27861;&#65292;&#23427;&#20250;&#20351;&#29992;&#26694;&#26550;&#32422;&#23450;&#33258;&#21160;&#21457;&#29616;&#27169;&#22411;&#24213;&#23618;&#30340;&#36164;&#28304;&#38598;&#21512;&#65306;</p><pre><code class="language-php">return User::all()-&gt;toResourceCollection();</code></pre><p>&#35843;&#29992; <code>toResourceCollection</code> &#26041;&#27861;&#26102;&#65292;Laravel &#20250;&#23581;&#35797;&#22312;&#26368;&#25509;&#36817;&#27169;&#22411;&#21629;&#21517;&#31354;&#38388;&#30340; <code>Http\Resources</code> &#21629;&#21517;&#31354;&#38388;&#20013;&#65292;&#25214;&#21040;&#19968;&#20010;&#19982;&#27169;&#22411;&#21517;&#21305;&#37197;&#12289;&#24182;&#20197; <code>Collection</code> &#20026;&#21518;&#32512;&#30340;&#36164;&#28304;&#38598;&#21512;&#12290;</p><h3 id="e64d94d11ed049508c070ddb903719e8">&#25968;&#25454;&#21253;&#35065;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#24403;&#36164;&#28304;&#21709;&#24212;&#34987;&#36716;&#25442;&#20026; JSON &#26102;&#65292;&#20320;&#26368;&#22806;&#23618;&#30340;&#36164;&#28304;&#20250;&#34987;&#21253;&#35065;&#22312; <code>data</code> &#38190;&#20013;&#12290;&#25152;&#20197;&#65292;&#20363;&#22914;&#19968;&#20010;&#20856;&#22411;&#30340;&#36164;&#28304;&#38598;&#21512;&#21709;&#24212;&#30475;&#36215;&#26469;&#22914;&#19979;&#65306;</p><pre><code class="language-json">{
+    "data": [
+        {
+            "id": 1,
+            "name": "Eladio Schroeder Sr.",
+            "email": "therese28@example.com"
+        },
+        {
+            "id": 2,
+            "name": "Liliana Mayert",
+            "email": "evandervort@example.com"
+        }
+    ]
+}</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#31105;&#29992;&#26368;&#22806;&#23618;&#36164;&#28304;&#30340;&#21253;&#35065;&#65292;&#24212;&#35813;&#22312;&#22522;&#30784;&#30340; <code>Illuminate\Http\Resources\Json\JsonResource</code> &#31867;&#19978;&#35843;&#29992; <code>withoutWrapping</code> &#26041;&#27861;&#12290;&#36890;&#24120;&#65292;&#20320;&#24212;&#35813;&#22312; <code>AppServiceProvider</code> &#25110;&#22312;&#27599;&#27425;&#35831;&#27714;&#20320;&#30340;&#24212;&#29992;&#26102;&#37117;&#20250;&#21152;&#36733;&#30340;&#20854;&#20182; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/providers" target="_blank">&#26381;&#21153;&#25552;&#20379;&#32773;&#65288;Service Provider&#65289;</a> &#20013;&#35843;&#29992;&#27492;&#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * &#27880;&#20876;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function register(): void
+    {
+        // ...
+    }
+
+    /**
+     * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function boot(): void
+    {
+        JsonResource::withoutWrapping();
+    }
+}</code></pre><blockquote>
+<p>[!WARNING]<br>
+<code>withoutWrapping</code> &#26041;&#27861;&#21482;&#24433;&#21709;&#26368;&#22806;&#23618;&#30340;&#21709;&#24212;&#65292;&#19981;&#20250;&#31227;&#38500;&#20320;&#25163;&#21160;&#28155;&#21152;&#21040;&#33258;&#24049;&#36164;&#28304;&#38598;&#21512;&#20013;&#30340; <code>data</code> &#38190;&#12290;</p>
+</blockquote><h4 id="66fff375a15f0d8f8659ce24b89d178d">&#21253;&#35065;&#23884;&#22871;&#36164;&#28304;</h4><p>&#20320;&#21487;&#20197;&#23436;&#20840;&#33258;&#30001;&#22320;&#20915;&#23450;&#36164;&#28304;&#30340;&#20851;&#32852;&#22914;&#20309;&#34987;&#21253;&#35065;&#12290;&#22914;&#26524;&#20320;&#24076;&#26395;&#25152;&#26377;&#36164;&#28304;&#38598;&#21512;&#37117;&#34987;&#21253;&#35065;&#22312; <code>data</code> &#38190;&#20013;&#65292;&#26080;&#35770;&#23427;&#20204;&#30340;&#23884;&#22871;&#23618;&#32423;&#22914;&#20309;&#65292;&#20320;&#24212;&#35813;&#20026;&#27599;&#20010;&#36164;&#28304;&#23450;&#20041;&#19968;&#20010;&#36164;&#28304;&#38598;&#21512;&#31867;&#65292;&#24182;&#22312; <code>data</code> &#38190;&#20869;&#36820;&#22238;&#35813;&#38598;&#21512;&#12290;</p><p>&#20320;&#21487;&#33021;&#20250;&#25285;&#24515;&#36825;&#26159;&#21542;&#20250;&#23548;&#33268;&#20320;&#26368;&#22806;&#23618;&#30340;&#36164;&#28304;&#34987;&#21253;&#35065;&#36827;&#20004;&#20010; <code>data</code> &#38190;&#20013;&#12290;&#21035;&#25285;&#24515;&#65292;Laravel &#32477;&#19981;&#20250;&#35753;&#20320;&#30340;&#36164;&#28304;&#34987;&#24847;&#22806;&#22320;&#21452;&#37325;&#21253;&#35065;&#65292;&#22240;&#27492;&#20320;&#19981;&#24517;&#25285;&#24515;&#25152;&#36716;&#25442;&#36164;&#28304;&#38598;&#21512;&#30340;&#23884;&#22871;&#23618;&#32423;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Json\ResourceCollection;
+
+class CommentsCollection extends ResourceCollection
+{
+    /**
+     * &#23558;&#36164;&#28304;&#38598;&#21512;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+     *
+     * @return array&lt;string, mixed&gt;
+     */
+    public function toArray(Request $request): array
+    {
+        return ['data' =&gt; $this-&gt;collection];
+    }
+}</code></pre><h4 id="db043e1634d27497f0917eb6d1b532b3">&#25968;&#25454;&#21253;&#35065;&#19982;&#20998;&#39029;</h4><p>&#24403;&#36890;&#36807;&#36164;&#28304;&#21709;&#24212;&#36820;&#22238;&#20998;&#39029;&#38598;&#21512;&#26102;&#65292;&#21363;&#20351;&#24050;&#32463;&#35843;&#29992;&#20102; <code>withoutWrapping</code> &#26041;&#27861;&#65292;Laravel &#20063;&#20250;&#23558;&#20320;&#30340;&#36164;&#28304;&#25968;&#25454;&#21253;&#35065;&#22312; <code>data</code> &#38190;&#20013;&#12290;&#36825;&#26159;&#22240;&#20026;&#20998;&#39029;&#21709;&#24212;&#22987;&#32456;&#21253;&#21547;&#24102;&#26377;&#20998;&#39029;&#22120;&#29366;&#24577;&#20449;&#24687;&#30340; <code>meta</code> &#21644; <code>links</code> &#38190;&#65306;</p><pre><code class="language-json">{
+    "data": [
+        {
+            "id": 1,
+            "name": "Eladio Schroeder Sr.",
+            "email": "therese28@example.com"
+        },
+        {
+            "id": 2,
+            "name": "Liliana Mayert",
+            "email": "evandervort@example.com"
+        }
+    ],
+    "links":{
+        "first": "http://example.com/users?page=1",
+        "last": "http://example.com/users?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta":{
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "path": "http://example.com/users",
+        "per_page": 15,
+        "to": 10,
+        "total": 10
+    }
+}</code></pre><h3 id="3862626c138ce5945e0e273a1bdfbad0">&#20998;&#39029;</h3><p>&#20320;&#21487;&#20197;&#23558;&#19968;&#20010; Laravel &#20998;&#39029;&#22120;&#23454;&#20363;&#20256;&#32473;&#36164;&#28304;&#30340; <code>collection</code> &#26041;&#27861;&#65292;&#25110;&#20256;&#32473;&#19968;&#20010;&#33258;&#23450;&#20041;&#36164;&#28304;&#38598;&#21512;&#65306;</p><pre><code class="language-php">use App\Http\Resources\UserCollection;
+use App\Models\User;
+
+Route::get('/users', function () {
+    return new UserCollection(User::paginate());
+});</code></pre><p>&#25110;&#32773;&#65292;&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#20998;&#39029;&#22120;&#30340; <code>toResourceCollection</code> &#26041;&#27861;&#65292;&#23427;&#20250;&#20351;&#29992;&#26694;&#26550;&#32422;&#23450;&#33258;&#21160;&#21457;&#29616;&#20998;&#39029;&#27169;&#22411;&#30340;&#24213;&#23618;&#36164;&#28304;&#38598;&#21512;&#65306;</p><pre><code class="language-php">return User::paginate()-&gt;toResourceCollection();</code></pre><p>&#20998;&#39029;&#21709;&#24212;&#22987;&#32456;&#21253;&#21547;&#24102;&#26377;&#20998;&#39029;&#22120;&#29366;&#24577;&#20449;&#24687;&#30340; <code>meta</code> &#21644; <code>links</code> &#38190;&#65306;</p><pre><code class="language-json">{
+    "data": [
+        {
+            "id": 1,
+            "name": "Eladio Schroeder Sr.",
+            "email": "therese28@example.com"
+        },
+        {
+            "id": 2,
+            "name": "Liliana Mayert",
+            "email": "evandervort@example.com"
+        }
+    ],
+    "links":{
+        "first": "http://example.com/users?page=1",
+        "last": "http://example.com/users?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta":{
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "path": "http://example.com/users",
+        "per_page": 15,
+        "to": 10,
+        "total": 10
+    }
+}</code></pre><h4 id="fd78f20b207f1f44f035e26c7830898d">&#33258;&#23450;&#20041;&#20998;&#39029;&#20449;&#24687;</h4><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#33258;&#23450;&#20041;&#20998;&#39029;&#21709;&#24212;&#20013; <code>links</code> &#25110; <code>meta</code> &#38190;&#25152;&#21253;&#21547;&#30340;&#20449;&#24687;&#65292;&#21487;&#20197;&#22312;&#36164;&#28304;&#19978;&#23450;&#20041;&#19968;&#20010; <code>paginationInformation</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#20250;&#25509;&#25910; <code>$paginated</code> &#25968;&#25454;&#21644; <code>$default</code> &#20449;&#24687;&#25968;&#32452;&#65292;&#35813;&#25968;&#32452;&#26159;&#19968;&#20010;&#21253;&#21547; <code>links</code> &#21644; <code>meta</code> &#38190;&#30340;&#25968;&#32452;&#65306;</p><pre><code class="language-php">/**
+ * &#20026;&#36164;&#28304;&#33258;&#23450;&#20041;&#20998;&#39029;&#20449;&#24687;&#12290;
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @param  array  $paginated
+ * @param  array  $default
+ * @return array
+ */
+public function paginationInformation($request, $paginated, $default)
+{
+    $default['links']['custom'] = 'https://example.com';
+
+    return $default;
+}</code></pre><h3 id="80dc2e0e0f069b007a1033ee772d518a">&#26465;&#20214;&#23646;&#24615;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#20165;&#22312;&#28385;&#36275;&#26576;&#20010;&#32473;&#23450;&#26465;&#20214;&#26102;&#25165;&#22312;&#36164;&#28304;&#21709;&#24212;&#20013;&#21253;&#21547;&#26576;&#20010;&#23646;&#24615;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20165;&#22312;&#24403;&#21069;&#29992;&#25143;&#26159;"&#31649;&#29702;&#21592;"&#26102;&#25165;&#21253;&#21547;&#26576;&#20010;&#20540;&#12290;Laravel &#25552;&#20379;&#20102;&#19968;&#31995;&#21015;&#36741;&#21161;&#26041;&#27861;&#26469;&#24110;&#21161;&#20320;&#24212;&#23545;&#36825;&#31181;&#24773;&#20917;&#12290;<code>when</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26377;&#26465;&#20214;&#22320;&#21521;&#36164;&#28304;&#21709;&#24212;&#28155;&#21152;&#23646;&#24615;&#65306;</p><pre><code class="language-php">/**
+ * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toArray(Request $request): array
+{
+    return [
+        'id' =&gt; $this-&gt;id,
+        'name' =&gt; $this-&gt;name,
+        'email' =&gt; $this-&gt;email,
+        'secret' =&gt; $this-&gt;when($request-&gt;user()-&gt;isAdmin(), 'secret-value'),
+        'created_at' =&gt; $this-&gt;created_at,
+        'updated_at' =&gt; $this-&gt;updated_at,
+    ];
+}</code></pre><p>&#22312;&#27492;&#31034;&#20363;&#20013;&#65292;&#21482;&#26377;&#24403;&#35748;&#35777;&#29992;&#25143;&#30340; <code>isAdmin</code> &#26041;&#27861;&#36820;&#22238; <code>true</code> &#26102;&#65292;<code>secret</code> &#38190;&#25165;&#20250;&#20986;&#29616;&#22312;&#26368;&#32456;&#36164;&#28304;&#21709;&#24212;&#20013;&#12290;&#22914;&#26524;&#35813;&#26041;&#27861;&#36820;&#22238; <code>false</code>&#65292;&#22312;&#21457;&#36865;&#32473;&#23458;&#25143;&#31471;&#20043;&#21069;&#65292;<code>secret</code> &#38190;&#20250;&#20174;&#36164;&#28304;&#21709;&#24212;&#20013;&#31227;&#38500;&#12290;<code>when</code> &#26041;&#27861;&#35753;&#20320;&#22312;&#26500;&#24314;&#25968;&#32452;&#26102;&#26080;&#38656;&#20511;&#21161;&#26465;&#20214;&#35821;&#21477;&#65292;&#23601;&#33021;&#23500;&#26377;&#34920;&#29616;&#21147;&#22320;&#23450;&#20041;&#36164;&#28304;&#12290;</p><p><code>when</code> &#26041;&#27861;&#36824;&#25509;&#21463;&#20197;&#19968;&#20010;&#38381;&#21253;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#65292;&#35753;&#20320;&#20165;&#22312;&#32473;&#23450;&#26465;&#20214;&#20026; <code>true</code> &#26102;&#25165;&#35745;&#31639;&#25152;&#24471;&#30340;&#20540;&#65306;</p><pre><code class="language-php">'secret' =&gt; $this-&gt;when($request-&gt;user()-&gt;isAdmin(), function () {
+    return 'secret-value';
+}),</code></pre><p><code>whenHas</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#22312;&#24213;&#23618;&#27169;&#22411;&#19978;&#30830;&#23454;&#23384;&#22312;&#26576;&#23646;&#24615;&#26102;&#25165;&#21253;&#21547;&#23427;&#65306;</p><pre><code class="language-php">'name' =&gt; $this-&gt;whenHas('name'),</code></pre><p>&#27492;&#22806;&#65292;<code>whenNotNull</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#22312;&#23646;&#24615;&#19981;&#20026; null &#26102;&#23558;&#20854;&#21253;&#21547;&#22312;&#36164;&#28304;&#21709;&#24212;&#20013;&#65306;</p><pre><code class="language-php">'name' =&gt; $this-&gt;whenNotNull($this-&gt;name),</code></pre><h4 id="dfe75fb36b969397380a6eeae2779943">&#21512;&#24182;&#26465;&#20214;&#23646;&#24615;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#26377;&#22810;&#20010;&#23646;&#24615;&#65292;&#23427;&#20204;&#37117;&#21482;&#24212;&#22312;&#28385;&#36275;&#30456;&#21516;&#26465;&#20214;&#26102;&#25165;&#21253;&#21547;&#22312;&#36164;&#28304;&#21709;&#24212;&#20013;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>mergeWhen</code> &#26041;&#27861;&#65292;&#20165;&#22312;&#32473;&#23450;&#26465;&#20214;&#20026; <code>true</code> &#26102;&#25165;&#23558;&#36825;&#20123;&#23646;&#24615;&#21253;&#21547;&#22312;&#21709;&#24212;&#20013;&#65306;</p><pre><code class="language-php">/**
+ * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toArray(Request $request): array
+{
+    return [
+        'id' =&gt; $this-&gt;id,
+        'name' =&gt; $this-&gt;name,
+        'email' =&gt; $this-&gt;email,
+        $this-&gt;mergeWhen($request-&gt;user()-&gt;isAdmin(), [
+            'first-secret' =&gt; 'value',
+            'second-secret' =&gt; 'value',
+        ]),
+        'created_at' =&gt; $this-&gt;created_at,
+        'updated_at' =&gt; $this-&gt;updated_at,
+    ];
+}</code></pre><p>&#21516;&#26679;&#65292;&#22914;&#26524;&#32473;&#23450;&#26465;&#20214;&#20026; <code>false</code>&#65292;&#36825;&#20123;&#23646;&#24615;&#20250;&#22312;&#21457;&#36865;&#32473;&#23458;&#25143;&#31471;&#20043;&#21069;&#20174;&#36164;&#28304;&#21709;&#24212;&#20013;&#31227;&#38500;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+<code>mergeWhen</code> &#26041;&#27861;&#19981;&#24212;&#22312;&#28151;&#21512;&#20102;&#23383;&#31526;&#20018;&#38190;&#21644;&#25968;&#23383;&#38190;&#30340;&#25968;&#32452;&#20013;&#20351;&#29992;&#12290;&#27492;&#22806;&#65292;&#23427;&#20063;&#19981;&#24212;&#22312;&#25968;&#23383;&#38190;&#26410;&#25353;&#39034;&#24207;&#25490;&#21015;&#30340;&#25968;&#32452;&#20013;&#20351;&#29992;&#12290;</p>
+</blockquote><h3 id="ba38db7a3ab9ad6b6cad5bfca02b873e">&#26465;&#20214;&#20851;&#32852;</h3><p>&#38500;&#20102;&#26377;&#26465;&#20214;&#22320;&#21152;&#36733;&#23646;&#24615;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#26681;&#25454;&#20851;&#32852;&#26159;&#21542;&#24050;&#22312;&#27169;&#22411;&#19978;&#21152;&#36733;&#65292;&#26377;&#26465;&#20214;&#22320;&#22312;&#36164;&#28304;&#21709;&#24212;&#20013;&#21253;&#21547;&#20851;&#32852;&#12290;&#36825;&#35753;&#20320;&#30340;&#25511;&#21046;&#22120;&#33021;&#22815;&#20915;&#23450;&#24212;&#35813;&#22312;&#27169;&#22411;&#19978;&#21152;&#36733;&#21738;&#20123;&#20851;&#32852;&#65292;&#32780;&#20320;&#30340;&#36164;&#28304;&#21487;&#20197;&#36731;&#26494;&#22320;&#22312;&#20851;&#32852;&#30830;&#23454;&#24050;&#34987;&#21152;&#36733;&#26102;&#25165;&#21253;&#21547;&#23427;&#20204;&#12290;&#26368;&#32456;&#65292;&#36825;&#35753;&#20320;&#26356;&#23481;&#26131;&#36991;&#20813;&#36164;&#28304;&#20013;&#30340;"N+1"&#26597;&#35810;&#38382;&#39064;&#12290;</p><p><code>whenLoaded</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26377;&#26465;&#20214;&#22320;&#21152;&#36733;&#20851;&#32852;&#12290;&#20026;&#20102;&#36991;&#20813;&#19981;&#24517;&#35201;&#22320;&#21152;&#36733;&#20851;&#32852;&#65292;&#35813;&#26041;&#27861;&#25509;&#21463;&#20851;&#32852;&#30340;&#21517;&#31216;&#65292;&#32780;&#19981;&#26159;&#20851;&#32852;&#26412;&#36523;&#65306;</p><pre><code class="language-php">use App\Http\Resources\PostResource;
+
+/**
+ * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toArray(Request $request): array
+{
+    return [
+        'id' =&gt; $this-&gt;id,
+        'name' =&gt; $this-&gt;name,
+        'email' =&gt; $this-&gt;email,
+        'posts' =&gt; PostResource::collection($this-&gt;whenLoaded('posts')),
+        'created_at' =&gt; $this-&gt;created_at,
+        'updated_at' =&gt; $this-&gt;updated_at,
+    ];
+}</code></pre><p>&#22312;&#27492;&#31034;&#20363;&#20013;&#65292;&#22914;&#26524;&#20851;&#32852;&#23578;&#26410;&#34987;&#21152;&#36733;&#65292;&#22312;&#21457;&#36865;&#32473;&#23458;&#25143;&#31471;&#20043;&#21069;&#65292;<code>posts</code> &#38190;&#20250;&#20174;&#36164;&#28304;&#21709;&#24212;&#20013;&#31227;&#38500;&#12290;</p><h4 id="4b7fc3405f88c500a2e58d51c12144ce">&#26465;&#20214;&#20851;&#32852;&#35745;&#25968;</h4><p>&#38500;&#20102;&#26377;&#26465;&#20214;&#22320;&#21253;&#21547;&#20851;&#32852;&#20043;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#26681;&#25454;&#20851;&#32852;&#30340;&#35745;&#25968;&#26159;&#21542;&#24050;&#22312;&#27169;&#22411;&#19978;&#21152;&#36733;&#65292;&#26377;&#26465;&#20214;&#22320;&#22312;&#36164;&#28304;&#21709;&#24212;&#20013;&#21253;&#21547;&#20851;&#32852;&#30340;"&#35745;&#25968;"&#65306;</p><pre><code class="language-php">new UserResource($user-&gt;loadCount('posts'));</code></pre><p><code>whenCounted</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26377;&#26465;&#20214;&#22320;&#22312;&#36164;&#28304;&#21709;&#24212;&#20013;&#21253;&#21547;&#20851;&#32852;&#30340;&#35745;&#25968;&#12290;&#22914;&#26524;&#20851;&#32852;&#30340;&#35745;&#25968;&#19981;&#23384;&#22312;&#65292;&#35813;&#26041;&#27861;&#20250;&#36991;&#20813;&#19981;&#24517;&#35201;&#22320;&#21253;&#21547;&#35813;&#23646;&#24615;&#65306;</p><pre><code class="language-php">/**
+ * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toArray(Request $request): array
+{
+    return [
+        'id' =&gt; $this-&gt;id,
+        'name' =&gt; $this-&gt;name,
+        'email' =&gt; $this-&gt;email,
+        'posts_count' =&gt; $this-&gt;whenCounted('posts'),
+        'created_at' =&gt; $this-&gt;created_at,
+        'updated_at' =&gt; $this-&gt;updated_at,
+    ];
+}</code></pre><p>&#22312;&#27492;&#31034;&#20363;&#20013;&#65292;&#22914;&#26524; <code>posts</code> &#20851;&#32852;&#30340;&#35745;&#25968;&#23578;&#26410;&#34987;&#21152;&#36733;&#65292;&#22312;&#21457;&#36865;&#32473;&#23458;&#25143;&#31471;&#20043;&#21069;&#65292;<code>posts_count</code> &#38190;&#20250;&#20174;&#36164;&#28304;&#21709;&#24212;&#20013;&#31227;&#38500;&#12290;</p><p>&#20854;&#23427;&#31867;&#22411;&#30340;&#32858;&#21512;&#65288;&#20363;&#22914; <code>avg</code>&#12289;<code>sum</code>&#12289;<code>min</code> &#21644; <code>max</code>&#65289;&#20063;&#21487;&#20197;&#20351;&#29992; <code>whenAggregated</code> &#26041;&#27861;&#26377;&#26465;&#20214;&#22320;&#21152;&#36733;&#65306;</p><pre><code class="language-php">'words_avg' =&gt; $this-&gt;whenAggregated('posts', 'words', 'avg'),
+'words_sum' =&gt; $this-&gt;whenAggregated('posts', 'words', 'sum'),
+'words_min' =&gt; $this-&gt;whenAggregated('posts', 'words', 'min'),
+'words_max' =&gt; $this-&gt;whenAggregated('posts', 'words', 'max'),</code></pre><h4 id="8229cdaca35fd3a4847a415999597fdf">&#26465;&#20214;&#20013;&#38388;&#34920;&#20449;&#24687;</h4><p>&#38500;&#20102;&#26377;&#26465;&#20214;&#22320;&#22312;&#36164;&#28304;&#21709;&#24212;&#20013;&#21253;&#21547;&#20851;&#32852;&#20449;&#24687;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#20351;&#29992; <code>whenPivotLoaded</code> &#26041;&#27861;&#65292;&#26377;&#26465;&#20214;&#22320;&#21253;&#21547;&#26469;&#33258; many-to-many &#20851;&#32852;&#20013;&#38388;&#34920;&#30340;&#25968;&#25454;&#12290;<code>whenPivotLoaded</code> &#26041;&#27861;&#25509;&#21463;&#20013;&#38388;&#34920;&#30340;&#21517;&#31216;&#20316;&#20026;&#31532;&#19968;&#20010;&#21442;&#25968;&#12290;&#31532;&#20108;&#20010;&#21442;&#25968;&#24212;&#26159;&#19968;&#20010;&#38381;&#21253;&#65292;&#24403;&#27169;&#22411;&#19978;&#21487;&#29992;&#20013;&#38388;&#34920;&#20449;&#24687;&#26102;&#65292;&#36820;&#22238;&#35201;&#36820;&#22238;&#30340;&#20540;&#65306;</p><pre><code class="language-php">/**
+ * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toArray(Request $request): array
+{
+    return [
+        'id' =&gt; $this-&gt;id,
+        'name' =&gt; $this-&gt;name,
+        'expires_at' =&gt; $this-&gt;whenPivotLoaded('role_user', function () {
+            return $this-&gt;pivot-&gt;expires_at;
+        }),
+    ];
+}</code></pre><p>&#22914;&#26524;&#20320;&#30340;&#20851;&#32852;&#20351;&#29992;&#20102; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent-relationships#defining-custom-intermediate-table-models" target="_blank">&#33258;&#23450;&#20041;&#20013;&#38388;&#34920;&#27169;&#22411;</a>&#65292;&#21487;&#20197;&#23558;&#20013;&#38388;&#34920;&#27169;&#22411;&#30340;&#23454;&#20363;&#20316;&#20026;&#31532;&#19968;&#20010;&#21442;&#25968;&#20256;&#32473; <code>whenPivotLoaded</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">'expires_at' =&gt; $this-&gt;whenPivotLoaded(new Membership, function () {
+    return $this-&gt;pivot-&gt;expires_at;
+}),</code></pre><p>&#22914;&#26524;&#20320;&#30340;&#20013;&#38388;&#34920;&#20351;&#29992;&#30340;&#35775;&#38382;&#22120;&#19981;&#26159; <code>pivot</code>&#65292;&#21487;&#20197;&#20351;&#29992; <code>whenPivotLoadedAs</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toArray(Request $request): array
+{
+    return [
+        'id' =&gt; $this-&gt;id,
+        'name' =&gt; $this-&gt;name,
+        'expires_at' =&gt; $this-&gt;whenPivotLoadedAs('subscription', 'role_user', function () {
+            return $this-&gt;subscription-&gt;expires_at;
+        }),
+    ];
+}</code></pre><h3 id="152058942f2646f9ca157d14d7e57821">&#28155;&#21152;&#20803;&#25968;&#25454;</h3><p>&#19968;&#20123; JSON API &#26631;&#20934;&#35201;&#27714;&#20026;&#20320;&#30340;&#36164;&#28304;&#21450;&#36164;&#28304;&#38598;&#21512;&#21709;&#24212;&#28155;&#21152;&#20803;&#25968;&#25454;&#12290;&#36825;&#36890;&#24120;&#21253;&#21547;&#25351;&#21521;&#36164;&#28304;&#25110;&#30456;&#20851;&#36164;&#28304;&#30340; <code>links</code>&#65292;&#25110;&#26159;&#20851;&#20110;&#36164;&#28304;&#26412;&#36523;&#30340;&#20803;&#25968;&#25454;&#12290;&#22914;&#26524;&#20320;&#38656;&#35201;&#36820;&#22238;&#20851;&#20110;&#36164;&#28304;&#30340;&#39069;&#22806;&#20803;&#25968;&#25454;&#65292;&#35831;&#23558;&#23427;&#21253;&#21547;&#22312;&#20320;&#30340; <code>toArray</code> &#26041;&#27861;&#20013;&#12290;&#20363;&#22914;&#65292;&#20320;&#22312;&#36716;&#25442;&#36164;&#28304;&#38598;&#21512;&#26102;&#21487;&#20197;&#21253;&#21547; <code>links</code> &#20449;&#24687;&#65306;</p><pre><code class="language-php">/**
+ * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toArray(Request $request): array
+{
+    return [
+        'data' =&gt; $this-&gt;collection,
+        'links' =&gt; [
+            'self' =&gt; 'link-value',
+        ],
+    ];
+}</code></pre><p>&#20174;&#36164;&#28304;&#36820;&#22238;&#39069;&#22806;&#20803;&#25968;&#25454;&#26102;&#65292;&#20320;&#27704;&#36828;&#19981;&#24517;&#25285;&#24515;&#20250;&#24847;&#22806;&#35206;&#30422; Laravel &#22312;&#36820;&#22238;&#20998;&#39029;&#21709;&#24212;&#26102;&#33258;&#21160;&#28155;&#21152;&#30340; <code>links</code> &#25110; <code>meta</code> &#38190;&#12290;&#20320;&#23450;&#20041;&#30340;&#20219;&#20309;&#39069;&#22806; <code>links</code> &#37117;&#20250;&#19982;&#20998;&#39029;&#22120;&#25552;&#20379;&#30340;&#38142;&#25509;&#21512;&#24182;&#12290;</p><h4 id="6f4f8cfdc4c16d2f3cfac6002dace71b">&#39030;&#23618;&#20803;&#25968;&#25454;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#20165;&#22312;&#36164;&#28304;&#26159;&#26368;&#22806;&#23618;&#36820;&#22238;&#30340;&#36164;&#28304;&#26102;&#65292;&#25165;&#22312;&#36164;&#28304;&#21709;&#24212;&#20013;&#21253;&#21547;&#26576;&#20123;&#20803;&#25968;&#25454;&#12290;&#36890;&#24120;&#65292;&#36825;&#21253;&#25324;&#20851;&#20110;&#25972;&#20010;&#21709;&#24212;&#30340;&#20803;&#20449;&#24687;&#12290;&#35201;&#23450;&#20041;&#36825;&#20123;&#20803;&#25968;&#25454;&#65292;&#35831;&#22312;&#20320;&#30340;&#36164;&#28304;&#31867;&#19978;&#28155;&#21152;&#19968;&#20010; <code>with</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#24212;&#36820;&#22238;&#19968;&#20010;&#20803;&#25968;&#25454;&#25968;&#32452;&#65292;&#20165;&#22312;&#36164;&#28304;&#26159;&#34987;&#36716;&#25442;&#30340;&#26368;&#22806;&#23618;&#36164;&#28304;&#26102;&#25165;&#38543;&#36164;&#28304;&#21709;&#24212;&#19968;&#36215;&#21253;&#21547;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Json\ResourceCollection;
+
+class UserCollection extends ResourceCollection
+{
+    /**
+     * &#23558;&#36164;&#28304;&#38598;&#21512;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+     *
+     * @return array&lt;string, mixed&gt;
+     */
+    public function toArray(Request $request): array
+    {
+        return parent::toArray($request);
+    }
+
+    /**
+     * &#33719;&#21462;&#24212;&#38543;&#36164;&#28304;&#25968;&#32452;&#19968;&#36215;&#36820;&#22238;&#30340;&#39069;&#22806;&#25968;&#25454;&#12290;
+     *
+     * @return array&lt;string, mixed&gt;
+     */
+    public function with(Request $request): array
+    {
+        return [
+            'meta' =&gt; [
+                'key' =&gt; 'value',
+            ],
+        ];
+    }
+}</code></pre><h4 id="c2cbeaf6c1deb6f5e9de1a1b5ffdb4b2">&#22312;&#26500;&#24314;&#36164;&#28304;&#26102;&#28155;&#21152;&#20803;&#25968;&#25454;</h4><p>&#20320;&#20063;&#21487;&#20197;&#22312;&#36335;&#30001;&#25110;&#25511;&#21046;&#22120;&#20013;&#26500;&#24314;&#36164;&#28304;&#23454;&#20363;&#26102;&#28155;&#21152;&#39030;&#23618;&#25968;&#25454;&#12290;&#25152;&#26377;&#36164;&#28304;&#19978;&#37117;&#21487;&#29992;&#30340; <code>additional</code> &#26041;&#27861;&#65292;&#25509;&#21463;&#19968;&#20010;&#24212;&#34987;&#28155;&#21152;&#21040;&#36164;&#28304;&#21709;&#24212;&#20013;&#30340;&#25968;&#25454;&#25968;&#32452;&#65306;</p><pre><code class="language-php">return User::all()
+    -&gt;load('roles')
+    -&gt;toResourceCollection()
+    -&gt;additional(['meta' =&gt; [
+        'key' =&gt; 'value',
+    ]]);</code></pre><h2 id="e596de12a33ca59a624fa4d19f5e424d">JSON:API &#36164;&#28304;</h2><p>Laravel &#33258;&#24102; <code>JsonApiResource</code>&#65292;&#36825;&#26159;&#19968;&#20010;&#33021;&#22815;&#29983;&#25104;&#31526;&#21512; <a href="https://jsonapi.org/" target="_blank" rel="noopener noreferrer">JSON:API &#35268;&#33539;</a> &#30340;&#21709;&#24212;&#30340;&#36164;&#28304;&#31867;&#12290;&#23427;&#32487;&#25215;&#33258;&#26631;&#20934;&#30340; <code>JsonResource</code> &#31867;&#65292;&#20250;&#33258;&#21160;&#22788;&#29702;&#36164;&#28304;&#23545;&#35937;&#32467;&#26500;&#12289;&#20851;&#32852;&#12289;&#31232;&#30095;&#23383;&#27573;&#38598;&#12289;&#21253;&#21547;&#65288;includes&#65289;&#12289;&#24816;&#24615;&#23646;&#24615;&#27714;&#20540;&#65292;&#24182;&#23558; <code>Content-Type</code> &#22836;&#35774;&#32622;&#20026; <code>application/vnd.api+json</code>&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+Laravel &#30340; JSON:API &#36164;&#28304;&#36127;&#36131;&#21709;&#24212;&#30340;&#24207;&#21015;&#21270;&#12290;&#22914;&#26524;&#20320;&#36824;&#38656;&#35201;&#35299;&#26512;&#20256;&#20837;&#30340; JSON:API &#26597;&#35810;&#21442;&#25968;&#65288;&#20363;&#22914;&#36807;&#28388;&#21644;&#25490;&#24207;&#65289;&#65292;<a href="https://spatie.be/docs/laravel-query-builder" target="_blank" rel="noopener noreferrer">Spatie &#30340; Laravel Query Builder</a> &#26159;&#19968;&#20010;&#24456;&#22909;&#30340;&#37197;&#22871;&#21253;&#12290;</p>
+</blockquote><h3 id="fba5d6d843d70b00aa4970fe606d81b8">&#29983;&#25104; JSON:API &#36164;&#28304;</h3><p>&#35201;&#29983;&#25104; JSON:API &#36164;&#28304;&#65292;&#35831;&#20351;&#29992;&#24102; <code>--json-api</code> &#26631;&#24535;&#30340; <code>make:resource</code> Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan make:resource PostResource --json-api</code></pre><p>&#29983;&#25104;&#30340;&#31867;&#20250;&#32487;&#25215;&#33258; <code>Illuminate\Http\Resources\JsonApi\JsonApiResource</code>&#65292;&#24182;&#21253;&#21547;&#20379;&#20320;&#23450;&#20041;&#30340; <code>$attributes</code> &#21644; <code>$relationships</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\JsonApi\JsonApiResource;
+
+class PostResource extends JsonApiResource
+{
+    /**
+     * &#36164;&#28304;&#30340;&#23646;&#24615;&#12290;
+     */
+    public $attributes = [
+        // ...
+    ];
+
+    /**
+     * &#36164;&#28304;&#30340;&#20851;&#32852;&#12290;
+     */
+    public $relationships = [
+        // ...
+    ];
+}</code></pre><p>JSON:API &#36164;&#28304;&#21487;&#20197;&#20687;&#26631;&#20934;&#36164;&#28304;&#19968;&#26679;&#20174;&#36335;&#30001;&#21644;&#25511;&#21046;&#22120;&#36820;&#22238;&#65306;</p><pre><code class="language-php">use App\Http\Resources\PostResource;
+use App\Models\Post;
+
+Route::get('/api/posts/{post}', function (Post $post) {
+    return new PostResource($post);
+});</code></pre><p>&#25110;&#32773;&#65292;&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#27169;&#22411;&#30340; <code>toResource</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Route::get('/api/posts/{post}', function (Post $post) {
+    return $post-&gt;toResource();
+});</code></pre><p>&#36825;&#23558;&#20135;&#29983;&#19968;&#20010;&#31526;&#21512; JSON:API &#30340;&#21709;&#24212;&#65306;</p><pre><code class="language-json">{
+    "data": {
+        "id": "1",
+        "type": "posts",
+        "attributes": {
+            "title": "Hello World",
+            "body": "This is my first post."
+        }
+    }
+}</code></pre><p>&#35201;&#36820;&#22238; JSON:API &#36164;&#28304;&#30340;&#38598;&#21512;&#65292;&#21487;&#20197;&#20351;&#29992; <code>collection</code> &#26041;&#27861;&#25110; <code>toResourceCollection</code> &#20415;&#25463;&#26041;&#27861;&#65306;</p><pre><code class="language-php">return PostResource::collection(Post::all());
+
+return Post::all()-&gt;toResourceCollection();</code></pre><h3 id="6c978f735ca7fdca30e5a0041fc70bd7">&#23450;&#20041;&#23646;&#24615;</h3><p>&#26377;&#20004;&#31181;&#26041;&#24335;&#21487;&#20197;&#23450;&#20041; JSON:API &#36164;&#28304;&#20013;&#21253;&#21547;&#21738;&#20123;&#23646;&#24615;&#12290;</p><p>&#26368;&#31616;&#21333;&#30340;&#26041;&#24335;&#26159;&#22312;&#20320;&#30340;&#36164;&#28304;&#19978;&#23450;&#20041;&#19968;&#20010; <code>$attributes</code> &#23646;&#24615;&#12290;&#20320;&#21487;&#20197;&#23558;&#23646;&#24615;&#21517;&#20316;&#20026;&#20540;&#21015;&#20986;&#65292;&#23427;&#20204;&#20250;&#30452;&#25509;&#20174;&#24213;&#23618;&#27169;&#22411;&#35835;&#21462;&#65306;</p><pre><code class="language-php">public $attributes = [
+    'title',
+    'body',
+    'created_at',
+];</code></pre><p>&#22914;&#26524;&#26576;&#20010;&#23646;&#24615;&#30340;&#35745;&#31639;&#24320;&#38144;&#24456;&#22823;&#65292;&#20320;&#21487;&#20197;&#20174; <code>toAttributes</code> &#20013;&#20197;&#38381;&#21253;&#30340;&#24418;&#24335;&#36820;&#22238;&#23427;&#65292;&#36825;&#26679;&#23427;&#21482;&#20250;&#22312;&#21709;&#24212;&#20013;&#30495;&#27491;&#38656;&#35201;&#35813;&#23646;&#24615;&#26102;&#25165;&#34987;&#27714;&#20540;&#12290;</p><p>&#25110;&#32773;&#65292;&#20026;&#20102;&#23545;&#36164;&#28304;&#30340;&#23646;&#24615;&#25317;&#26377;&#23436;&#20840;&#25511;&#21046;&#65292;&#20320;&#21487;&#20197;&#37325;&#20889;&#36164;&#28304;&#19978;&#30340; <code>toAttributes</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#36164;&#28304;&#30340;&#23646;&#24615;&#12290;
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toAttributes(Request $request): array
+{
+    return [
+        'title' =&gt; $this-&gt;title,
+        'body' =&gt; $this-&gt;body,
+        'is_published' =&gt; fn () =&gt; $this-&gt;published_at !== null,
+        'created_at' =&gt; $this-&gt;created_at,
+        'updated_at' =&gt; $this-&gt;updated_at,
+    ];
+}</code></pre><h3 id="9caa682ca4a5a4e5e671685dcfbc0d93">&#23450;&#20041;&#20851;&#32852;</h3><p>JSON:API &#36164;&#28304;&#25903;&#25345;&#23450;&#20041;&#31526;&#21512; JSON:API &#35268;&#33539;&#30340;&#20851;&#32852;&#12290;&#20851;&#32852;&#20165;&#22312;&#23458;&#25143;&#31471;&#36890;&#36807; <code>include</code> &#26597;&#35810;&#21442;&#25968;&#35831;&#27714;&#26102;&#25165;&#20250;&#34987;&#24207;&#21015;&#21270;&#12290;</p><h4 id="56bbe4452f45f26839dfac71efb24206"><code>$relationships</code> &#23646;&#24615;</h4><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#36164;&#28304;&#19978;&#30340; <code>$relationships</code> &#23646;&#24615;&#23450;&#20041;&#36164;&#28304;&#21487;&#21253;&#21547;&#30340;&#20851;&#32852;&#65306;</p><pre><code class="language-php">public $relationships = [
+    'author',
+    'comments',
+];</code></pre><p>&#24403;&#20197;&#20540;&#30340;&#24418;&#24335;&#21015;&#20986;&#20851;&#32852;&#21517;&#26102;&#65292;Laravel &#20250;&#35299;&#26512;&#23545;&#24212;&#30340; Eloquent &#20851;&#32852;&#65292;&#24182;&#33258;&#21160;&#21457;&#29616;&#21512;&#36866;&#30340;&#36164;&#28304;&#31867;&#12290;&#22914;&#26524;&#20320;&#38656;&#35201;&#26174;&#24335;&#25351;&#23450;&#36164;&#28304;&#31867;&#65292;&#21487;&#20197;&#23558;&#20851;&#32852;&#23450;&#20041;&#20026;&#38190; / &#31867;&#23545;&#65306;</p><pre><code class="language-php">use App\Http\Resources\UserResource;
+
+public $relationships = [
+    'author' =&gt; UserResource::class,
+    'comments',
+];</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#37325;&#20889;&#36164;&#28304;&#19978;&#30340; <code>toRelationships</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#36164;&#28304;&#30340;&#20851;&#32852;&#12290;
+ */
+public function toRelationships(Request $request): array
+{
+    return [
+        'author' =&gt; UserResource::class,
+        'comments' =&gt; fn () =&gt; CommentResource::collection(
+            $request-&gt;user()-&gt;is($this-&gt;resource)
+                ? $this-&gt;comments
+                : $this-&gt;comments-&gt;where('is_public', true),
+        ),
+    ];
+}</code></pre><p>&#20351;&#29992;&#38381;&#21253;&#35753;&#20320;&#21487;&#20197;&#26356;&#31934;&#32454;&#22320;&#25511;&#21046;&#20851;&#32852;&#30340;&#36733;&#33655;&#65292;&#21516;&#26102;&#20173;&#28982;&#21482;&#22312;&#23458;&#25143;&#31471;&#35831;&#27714;&#26102;&#25165;&#35299;&#26512;&#35813;&#20851;&#32852;&#12290;</p><h4 id="4a98dcd84454b2c203ae8c4f20b97e11">&#21253;&#21547;&#20851;&#32852;</h4><p>&#23458;&#25143;&#31471;&#21487;&#20197;&#20351;&#29992; <code>include</code> &#26597;&#35810;&#21442;&#25968;&#26469;&#35831;&#27714;&#30456;&#20851;&#36164;&#28304;&#65306;</p><pre><code class="   language-php">GET /api/posts/1?include=author,comments</code></pre><p>&#36825;&#20250;&#20135;&#29983;&#19968;&#20010;&#22312; <code>relationships</code> &#38190;&#20013;&#21253;&#21547;&#36164;&#28304;&#26631;&#35782;&#31526;&#23545;&#35937;&#12289;&#24182;&#22312;&#39030;&#23618; <code>included</code> &#25968;&#32452;&#20013;&#21253;&#21547;&#23436;&#25972;&#36164;&#28304;&#23545;&#35937;&#30340;&#21709;&#24212;&#65306;</p><pre><code class="language-json">{
+    "data": {
+        "id": "1",
+        "type": "posts",
+        "attributes": {
+            "title": "Hello World"
+        },
+        "relationships": {
+            "author": {
+                "data": {
+                    "id": "1",
+                    "type": "users"
+                }
+            },
+            "comments": {
+                "data": [
+                    {
+                        "id": "1",
+                        "type": "comments"
+                    }
+                ]
+            }
+        }
+    },
+    "included": [
+        {
+            "id": "1",
+            "type": "users",
+            "attributes": {
+                "name": "Taylor Otwell"
+            }
+        },
+        {
+            "id": "1",
+            "type": "comments",
+            "attributes": {
+                "body": "Great post!"
+            }
+        }
+    ]
+}</code></pre><p>&#23884;&#22871;&#20851;&#32852;&#21487;&#20197;&#20351;&#29992;&#28857;&#34920;&#31034;&#27861;&#26469;&#21253;&#21547;&#65306;</p><pre><code class="   language-php">GET /api/posts/1?include=comments.author</code></pre><h4 id="a5e0f0da13e425c4099d19d5d60f6a76">&#20851;&#32852;&#28145;&#24230;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#23884;&#22871;&#20851;&#32852;&#30340;&#21253;&#21547;&#34987;&#38480;&#21046;&#20026;&#26368;&#22823;&#28145;&#24230;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>maxRelationshipDepth</code> &#26041;&#27861;&#33258;&#23450;&#20041;&#36825;&#20010;&#38480;&#21046;&#65292;&#36890;&#24120;&#25918;&#22312;&#24212;&#29992;&#30340;&#26576;&#20010;&#26381;&#21153;&#25552;&#20379;&#32773;&#20013;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Resources\JsonApi\JsonApiResource;
+
+JsonApiResource::maxRelationshipDepth(3);</code></pre><h3 id="5c6d9df181f96a5c20fd0ff1b6fe2448">&#36164;&#28304;&#31867;&#22411;&#19982; ID</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#36164;&#28304;&#30340; <code>type</code> &#27966;&#29983;&#33258;&#36164;&#28304;&#31867;&#21517;&#12290;&#20363;&#22914;&#65292;<code>PostResource</code> &#20135;&#29983;&#31867;&#22411; <code>posts</code>&#65292;&#32780; <code>BlogPostResource</code> &#20135;&#29983; <code>blog-posts</code>&#12290;&#36164;&#28304;&#30340; <code>id</code> &#20174;&#27169;&#22411;&#30340;&#20027;&#38190;&#35299;&#26512;&#32780;&#26469;&#12290;</p><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#33258;&#23450;&#20041;&#36825;&#20123;&#20540;&#65292;&#21487;&#20197;&#37325;&#20889;&#36164;&#28304;&#19978;&#30340; <code>toType</code> &#21644; <code>toId</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#36164;&#28304;&#30340;&#31867;&#22411;&#12290;
+ */
+public function toType(Request $request): string
+{
+    return 'articles';
+}
+
+/**
+ * &#33719;&#21462;&#36164;&#28304;&#30340; ID&#12290;
+ */
+public function toId(Request $request): string
+{
+    return (string) $this-&gt;uuid;
+}</code></pre><p>&#24403;&#36164;&#28304;&#30340;&#31867;&#22411;&#24212;&#35813;&#19982;&#20854;&#31867;&#21517;&#19981;&#21516;&#26102;&#65292;&#36825;&#20250;&#29305;&#21035;&#26377;&#29992;&#65292;&#20363;&#22914;&#24403; <code>AuthorResource</code> &#21253;&#35013;&#20102;&#19968;&#20010; <code>User</code> &#27169;&#22411;&#12289;&#24182;&#19988;&#24212;&#36755;&#20986;&#31867;&#22411; <code>authors</code> &#26102;&#12290;</p><h3 id="efcb9806266976939a9f6900245479b1">&#31232;&#30095;&#23383;&#27573;&#38598;&#19982;&#21253;&#21547;</h3><p>JSON:API &#36164;&#28304;&#25903;&#25345; <a href="https://jsonapi.org/format/#fetching-sparse-fieldsets" target="_blank" rel="noopener noreferrer">&#31232;&#30095;&#23383;&#27573;&#38598;</a>&#65292;&#20801;&#35768;&#23458;&#25143;&#31471;&#20351;&#29992; <code>fields</code> &#26597;&#35810;&#21442;&#25968;&#65292;&#20165;&#20026;&#27599;&#31181;&#36164;&#28304;&#31867;&#22411;&#35831;&#27714;&#29305;&#23450;&#30340;&#23646;&#24615;&#65306;</p><pre><code class="   language-php">GET /api/posts?fields[posts]=title,created_at&amp;fields[users]=name</code></pre><p>&#36825;&#21482;&#20250;&#21253;&#21547; <code>posts</code> &#36164;&#28304;&#30340; <code>title</code> &#21644; <code>created_at</code> &#23646;&#24615;&#65292;&#20197;&#21450; <code>users</code> &#36164;&#28304;&#30340; <code>name</code> &#23646;&#24615;&#12290;</p><h4 id="23951450083119862844baba2760bc6c">&#24573;&#30053;&#26597;&#35810;&#23383;&#31526;&#20018;</h4><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#38024;&#23545;&#32473;&#23450;&#30340;&#36164;&#28304;&#21709;&#24212;&#31105;&#29992;&#31232;&#30095;&#23383;&#27573;&#38598;&#36807;&#28388;&#65292;&#21487;&#20197;&#35843;&#29992; <code>ignoreFieldsAndIncludesInQueryString</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">return $post-&gt;toResource()
+    -&gt;ignoreFieldsAndIncludesInQueryString();</code></pre><h4 id="ddb1565638aca0a27713aa276fcdb008">&#21253;&#21547;&#20808;&#21069;&#24050;&#21152;&#36733;&#30340;&#20851;&#32852;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#20851;&#32852;&#20165;&#22312;&#36890;&#36807; <code>include</code> &#26597;&#35810;&#21442;&#25968;&#35831;&#27714;&#26102;&#25165;&#34987;&#21253;&#21547;&#22312;&#21709;&#24212;&#20013;&#12290;&#22914;&#26524;&#20320;&#24076;&#26395;&#26080;&#35270;&#26597;&#35810;&#23383;&#31526;&#20018;&#12289;&#21253;&#21547;&#25152;&#26377;&#20808;&#21069;&#24050;&#39044;&#20808;&#21152;&#36733;&#30340;&#20851;&#32852;&#65292;&#21487;&#20197;&#35843;&#29992; <code>includePreviouslyLoadedRelationships</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">return $post-&gt;load('author', 'comments')
+    -&gt;toResource()
+    -&gt;includePreviouslyLoadedRelationships();</code></pre><h3 id="81f2c1b497f99eed8ff7af3bae14d46c">&#38142;&#25509;&#19982;&#20803;&#25968;&#25454;</h3><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#37325;&#20889;&#36164;&#28304;&#19978;&#30340; <code>toLinks</code> &#21644; <code>toMeta</code> &#26041;&#27861;&#65292;&#20026;&#20320;&#30340; JSON:API &#36164;&#28304;&#23545;&#35937;&#28155;&#21152;&#38142;&#25509;&#21644;&#20803;&#25968;&#25454;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#36164;&#28304;&#30340;&#38142;&#25509;&#12290;
+ */
+public function toLinks(Request $request): array
+{
+    return [
+        'self' =&gt; route('api.posts.show', $this-&gt;resource),
+    ];
+}
+
+/**
+ * &#33719;&#21462;&#36164;&#28304;&#30340;&#20803;&#25968;&#25454;&#12290;
+ */
+public function toMeta(Request $request): array
+{
+    return [
+        'readable_created_at' =&gt; $this-&gt;created_at-&gt;diffForHumans(),
+    ];
+}</code></pre><p>&#36825;&#20250;&#32473;&#21709;&#24212;&#20013;&#30340;&#36164;&#28304;&#23545;&#35937;&#28155;&#21152; <code>links</code> &#21644; <code>meta</code> &#38190;&#65306;</p><pre><code class="language-json">{
+    "data": {
+        "id": "1",
+        "type": "posts",
+        "attributes": {
+            "title": "Hello World"
+        },
+        "links": {
+            "self": "https://example.com/api/posts/1"
+        },
+        "meta": {
+            "readable_created_at": "2 hours ago"
+        }
+    }
+}</code></pre><h2 id="ed7975a814003d6832284db05e4be165">&#36164;&#28304;&#21709;&#24212;</h2><p>&#27491;&#22914;&#20320;&#24050;&#32463;&#35835;&#21040;&#30340;&#65292;&#36164;&#28304;&#21487;&#20197;&#30452;&#25509;&#20174;&#36335;&#30001;&#21644;&#25511;&#21046;&#22120;&#36820;&#22238;&#65306;</p><pre><code class="language-php">use App\Models\User;
+
+Route::get('/user/{id}', function (string $id) {
+    return User::findOrFail($id)-&gt;toResource();
+});</code></pre><p>&#19981;&#36807;&#65292;&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#22312;&#21457;&#36865;&#32473;&#23458;&#25143;&#31471;&#20043;&#21069;&#65292;&#23450;&#21046;&#20256;&#20986;&#30340; HTTP &#21709;&#24212;&#12290;&#26377;&#20004;&#31181;&#26041;&#24335;&#21487;&#20197;&#23454;&#29616;&#36825;&#19968;&#28857;&#12290;&#39318;&#20808;&#65292;&#20320;&#21487;&#20197;&#22312;&#36164;&#28304;&#19978;&#38142;&#24335;&#35843;&#29992; <code>response</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#20250;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Http\JsonResponse</code> &#23454;&#20363;&#65292;&#35753;&#20320;&#21487;&#20197;&#23436;&#20840;&#25511;&#21046;&#21709;&#24212;&#30340;&#22836;&#65306;</p><pre><code class="language-php">use App\Http\Resources\UserResource;
+use App\Models\User;
+
+Route::get('/user', function () {
+    return User::find(1)
+        -&gt;toResource()
+        -&gt;response()
+        -&gt;header('X-Value', 'True');
+});</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#22312;&#36164;&#28304;&#26412;&#36523;&#20869;&#37096;&#23450;&#20041;&#19968;&#20010; <code>withResponse</code> &#26041;&#27861;&#12290;&#24403;&#36164;&#28304;&#20316;&#20026;&#21709;&#24212;&#20013;&#26368;&#22806;&#23618;&#30340;&#36164;&#28304;&#34987;&#36820;&#22238;&#26102;&#65292;&#20250;&#35843;&#29992;&#35813;&#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class UserResource extends JsonResource
+{
+    /**
+     * &#23558;&#36164;&#28304;&#36716;&#25442;&#20026;&#25968;&#32452;&#12290;
+     *
+     * @return array&lt;string, mixed&gt;
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' =&gt; $this-&gt;id,
+        ];
+    }
+
+    /**
+     * &#20026;&#36164;&#28304;&#23450;&#21046;&#20256;&#20986;&#30340;&#21709;&#24212;&#12290;
+     */
+    public function withResponse(Request $request, JsonResponse $response): void
+    {
+        $response-&gt;header('X-Value', 'True');
+    }
+}</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 概念概览: <i><a href="2qvpxnz93m.html#concept-overview" target="_blank">#concept-overview</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 条件关联: <i><a href="2qvpxnz93m.html#conditional-relationships" target="_blank">#conditional-relationships</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 服务提供者（Service Provider）: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/providers" target="_blank">/docs/Laravel 13.x/providers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> 自定义中间表模型: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent-relationships#defining-custom-intermediate-table-models" target="_blank">/docs/Laravel 13.x/eloquent-relationships#defining-custom-intermediate-table-models</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> JSON:API 规范: <i><a href="https://jsonapi.org/" target="_blank">https://jsonapi.org/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Spatie 的 Laravel Query Builder: <i><a href="https://spatie.be/docs/laravel-query-builder" target="_blank">https://spatie.be/docs/laravel-query-builder</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 稀疏字段集: <i><a href="https://jsonapi.org/format/#fetching-sparse-fieldsets" target="_blank">https://jsonapi.org/format/#fetching-sparse-fieldsets</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="2ky04kl9z8.html#blog1065" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Eloquent：修改器与类型转换</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="m892ge6y01.html#blog1067" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">Eloquent：序列化</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,1988 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>邮件 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/d6vro0rv3g.html', function (data, status) {
+            addView('d6vro0rv3g.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>邮件</h1><ul>
+<li><a href="d6vro0rv3g.html#e05dce83e5129785b9f316978a14b896">简介</a>
+<ul>
+<li><a href="d6vro0rv3g.html#224e2ccda861c2514faa683b3683c361">配置</a></li>
+<li><a href="d6vro0rv3g.html#ac942506e7ad38494c8a5481e8279c65">驱动 / 传输前置条件</a>
+<ul>
+<li><a href="d6vro0rv3g.html#4cd5aa488c6a1eafc685eccc32ed9a6c">Cloudflare 驱动</a></li>
+<li><a href="d6vro0rv3g.html#bf7c2a89cdd6785965c2d0e2b5e70c00">Mailgun 驱动</a></li>
+<li><a href="d6vro0rv3g.html#068e40c23a8b1722548a04c64b52bd4d">Postmark 驱动</a></li>
+<li><a href="d6vro0rv3g.html#e1d3ecfddfd9c554d707b234437c45dc">Resend 驱动</a></li>
+<li><a href="d6vro0rv3g.html#f2772d5721b347ab27915b025535e4fe">SES 驱动</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#8c7cc2d653b2b8a47aa3826679438fc7">故障转移配置</a></li>
+<li><a href="d6vro0rv3g.html#55042bebe3962c11202bbf51be167fad">轮询配置</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#0392f7588f0c627663cc6a27c14c6555">生成 Mailable</a></li>
+<li><a href="d6vro0rv3g.html#5082be528d4a51f968993f7dda2d7b1b">编写 Mailable</a>
+<ul>
+<li><a href="d6vro0rv3g.html#0959a75205d35b800be9263ec2f7bb04">配置发件人</a>
+<ul>
+<li><a href="d6vro0rv3g.html#2102f81cb7ed2e1ce70e562b96f026f1">使用 Envelope</a></li>
+<li><a href="d6vro0rv3g.html#e47cde1aca3553f2f28d3a84373912c4">使用全局 from 地址</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#7ab88bd09ff99ec238c05d932f45eac4">配置视图</a>
+<ul>
+<li><a href="d6vro0rv3g.html#d0229b69d7b61c947a7882c049e7acf8">纯文本邮件</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#c5ba8bc72b7e2234b8f2fb95724a0a2d">视图数据</a>
+<ul>
+<li><a href="d6vro0rv3g.html#c2bc6fcf5c7235423e77b0d908e1bc3e">通过公共属性</a></li>
+<li><a href="d6vro0rv3g.html#f627b245d387295221dbd1538fa95878">通过 with 参数</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#c9a6ee90f5d43732e3f6cf4dcaa8493c">附件</a>
+<ul>
+<li><a href="d6vro0rv3g.html#8791af691c6c683ea70d1bae10ca3463">从磁盘附加文件</a></li>
+<li><a href="d6vro0rv3g.html#18d4869a9cb8bb58614abc764975af0c">原始数据附件</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#b16c62d45b7b7b88fedea3464b7bfdeb">内联附件</a>
+<ul>
+<li><a href="d6vro0rv3g.html#96f9f4685bc731401038d3484a2f4d82">嵌入原始数据附件</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#f56958ef1c1dab8284b8528cc6b8e08a">可附加对象</a></li>
+<li><a href="d6vro0rv3g.html#be47bd270e7756d4233e59bbe4cd5b96">请求头</a></li>
+<li><a href="d6vro0rv3g.html#512b80017900ee7ab3524e4145cd9dab">标签与元数据</a></li>
+<li><a href="d6vro0rv3g.html#25ab34a15a297701ab9dcb178fbce60b">自定义 Symfony Message</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#1df0f1ebd0167ed1f048989e156633a6">Markdown Mailable</a>
+<ul>
+<li><a href="d6vro0rv3g.html#1f92238276048b786389b9ee949b8d96">生成 Markdown Mailable</a></li>
+<li><a href="d6vro0rv3g.html#0ff73b9572b22d548bc38deb60410500">编写 Markdown 消息</a>
+<ul>
+<li><a href="d6vro0rv3g.html#27ffe95c5b2569b835a070cbaf0b4ddf">按钮组件</a></li>
+<li><a href="d6vro0rv3g.html#d2869eb323a099bcdcf60d2fa5f78388">面板组件</a></li>
+<li><a href="d6vro0rv3g.html#85654e5abb8a6897140f0db644cff733">表格组件</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#6fce1c9aa3654ae2f0eedcc068a7e189">自定义组件</a>
+<ul>
+<li><a href="d6vro0rv3g.html#76c43b23829c7d0629e04bae0f6918de">自定义 CSS</a></li>
+</ul></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#f4f76ad4fcd0e14cd14f8afbcc95fa6e">发送邮件</a>
+<ul>
+<li><a href="d6vro0rv3g.html#d6ea901ae80e7d96b3aecdc0a07d6367">遍历收件人</a></li>
+<li><a href="d6vro0rv3g.html#fed18f7093dccbd9c464d61039a98617">通过指定 Mailer 发送邮件</a>
+<ul>
+<li><a href="d6vro0rv3g.html#eca47260af31c2919d35bfba3421bae7">将邮件加入队列</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#2899b10f4fd66a7ec0b42f86a3fa7d75">将邮件消息加入队列</a></li>
+<li><a href="d6vro0rv3g.html#7e1ae4f50fe6b7569b27f078644bd483">延迟消息队列</a></li>
+<li><a href="d6vro0rv3g.html#c5cc146242de9fa3cd5b1fe5ca28e23d">推送到特定队列</a></li>
+<li><a href="d6vro0rv3g.html#608119db4b6f55b253e769895923466d">默认加入队列</a></li>
+<li><a href="d6vro0rv3g.html#9e5347c58faf551213dfc36019672d52">队列 Mailable 与数据库事务</a></li>
+<li><a href="d6vro0rv3g.html#c5a16beaa819f9a9f98a27abb1efd0fb">队列邮件失败</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#501efc273b84df3984f3bb28cf93b17b">渲染 Mailable</a>
+<ul>
+<li><a href="d6vro0rv3g.html#d8b5f88af905355bfcfa87314071a876">在浏览器中预览 Mailable</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#15f737c72582d78fed8c7d61d028fa79">本地化 Mailable</a>
+<ul>
+<li><a href="d6vro0rv3g.html#a9cb744f7bc33cb4f90945b6ae952d63">用户首选语言</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#db06c78d1e24cf708a14ce81c9b617ec">测试</a>
+<ul>
+<li><a href="d6vro0rv3g.html#3935ca649141169ab514d1e9b1226bec">测试 Mailable 内容</a></li>
+<li><a href="d6vro0rv3g.html#e30bd94f35b57fce0cee409ea0097a57">测试 Mailable 发送</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#57720b473824e2f554bac9b9e018b9a8">邮件与本地开发</a>
+<ul>
+<li><a href="d6vro0rv3g.html#c2c092817fa105340f2497b4d4ded2a9">Log 驱动</a></li>
+<li><a href="d6vro0rv3g.html#7d954bfc08d2261a4e19660ed5de2e07">HELO / Mailtrap / Mailpit</a></li>
+<li><a href="d6vro0rv3g.html#2be488e1b0a4a6b3d2faeebd401e4f18">使用全局 to 地址</a></li>
+</ul></li>
+<li><a href="d6vro0rv3g.html#10b2761db5a8e089049df39675abc550">事件</a></li>
+<li><a href="d6vro0rv3g.html#23153d6bd4e8f6a6cf5db7c8a9a6b751">自定义传输方式</a>
+<ul>
+<li><a href="d6vro0rv3g.html#3ef4eb4a347de90938bc69256b5ddd68">其他 Symfony 传输方式</a></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>&#21457;&#36865;&#30005;&#23376;&#37038;&#20214;&#26410;&#24517;&#22797;&#26434;&#12290;Laravel &#25552;&#20379;&#20102;&#19968;&#20010;&#31616;&#27905;&#12289;&#26131;&#29992;&#30340;&#37038;&#20214; API&#65292;&#30001;&#27969;&#34892;&#30340; <a href="https://symfony.com/doc/current/mailer.html" target="_blank" rel="noopener noreferrer">Symfony Mailer</a> &#32452;&#20214;&#39537;&#21160;&#12290;Laravel &#19982; Symfony Mailer &#20026;&#36890;&#36807; SMTP&#12289;Cloudflare&#12289;Mailgun&#12289;Postmark&#12289;Resend&#12289;Amazon SES &#20197;&#21450; <code>sendmail</code> &#21457;&#36865;&#37038;&#20214;&#25552;&#20379;&#20102;&#39537;&#21160;&#65292;&#35753;&#20320;&#33021;&#22815;&#24555;&#36895;&#19978;&#25163;&#65292;&#36890;&#36807;&#20320;&#36873;&#25321;&#30340;&#26412;&#22320;&#25110;&#20113;&#26381;&#21153;&#21457;&#36865;&#37038;&#20214;&#12290;</p><h3 id="224e2ccda861c2514faa683b3683c361">&#37197;&#32622;</h3><p>Laravel &#30340;&#37038;&#20214;&#26381;&#21153;&#21487;&#20197;&#36890;&#36807;&#24212;&#29992;&#30340; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#36827;&#34892;&#37197;&#32622;&#12290;&#35813;&#25991;&#20214;&#20013;&#37197;&#32622;&#30340;&#27599;&#20010;&#37038;&#20214;&#21457;&#36865;&#22120;&#65288;mailer&#65289;&#37117;&#21487;&#20197;&#25317;&#26377;&#33258;&#24049;&#29420;&#29305;&#30340;&#37197;&#32622;&#65292;&#29978;&#33267;&#33258;&#24049;&#29420;&#29305;&#30340;"&#20256;&#36755;&#65288;transport&#65289;"&#65292;&#20351;&#20320;&#30340;&#24212;&#29992;&#33021;&#22815;&#20351;&#29992;&#19981;&#21516;&#30340;&#37038;&#20214;&#26381;&#21153;&#26469;&#21457;&#36865;&#29305;&#23450;&#31867;&#22411;&#30340;&#37038;&#20214;&#12290;&#20363;&#22914;&#65292;&#20320;&#30340;&#24212;&#29992;&#21487;&#20197;&#20351;&#29992; Postmark &#21457;&#36865;&#20107;&#21153;&#24615;&#37038;&#20214;&#65292;&#21516;&#26102;&#20351;&#29992; Amazon SES &#21457;&#36865;&#25209;&#37327;&#37038;&#20214;&#12290;</p><p>&#22312; <code>mail</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#65292;&#20320;&#20250;&#30475;&#21040;&#19968;&#20010; <code>mailers</code> &#37197;&#32622;&#25968;&#32452;&#12290;&#35813;&#25968;&#32452;&#21253;&#21547; Laravel &#25903;&#25345;&#30340;&#21508;&#22823;&#37038;&#20214;&#39537;&#21160; / &#20256;&#36755;&#65288;transport&#65289;&#30340;&#31034;&#20363;&#37197;&#32622;&#39033;&#65292;&#32780; <code>default</code> &#37197;&#32622;&#20540;&#20915;&#23450;&#20102;&#24403;&#24212;&#29992;&#38656;&#35201;&#21457;&#36865;&#37038;&#20214;&#26102;&#40664;&#35748;&#20351;&#29992;&#21738;&#20010;&#37038;&#20214;&#21457;&#36865;&#22120;&#12290;</p><h3 id="ac942506e7ad38494c8a5481e8279c65">&#39537;&#21160; / &#20256;&#36755;&#21069;&#32622;&#26465;&#20214;</h3><p>&#22522;&#20110; API &#30340;&#39537;&#21160;&#65288;&#22914; Mailgun&#12289;Postmark &#21644; Resend&#65289;&#36890;&#24120;&#27604;&#36890;&#36807; SMTP &#26381;&#21153;&#22120;&#21457;&#36865;&#37038;&#20214;&#26356;&#31616;&#21333;&#12289;&#26356;&#24555;&#36895;&#12290;&#21482;&#35201;&#26465;&#20214;&#20801;&#35768;&#65292;&#25105;&#20204;&#24314;&#35758;&#20320;&#20351;&#29992;&#20854;&#20013;&#20043;&#19968;&#12290;</p><h4 id="4cd5aa488c6a1eafc685eccc32ed9a6c">Cloudflare &#39537;&#21160;</h4><p>&#35201;&#20351;&#29992; Cloudflare &#39537;&#21160;&#65292;&#36890;&#36807; Composer &#23433;&#35013; Symfony &#30340; HTTP Client&#65306;</p><pre><code class="language-shell">composer require symfony/http-client</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#20320;&#38656;&#35201;&#23545;&#24212;&#29992;&#30340; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20570;&#20004;&#22788;&#20462;&#25913;&#12290;&#39318;&#20808;&#65292;&#23558;&#40664;&#35748;&#37038;&#20214;&#21457;&#36865;&#22120;&#65288;mailer&#65289;&#35774;&#20026; <code>cloudflare</code>&#65306;</p><pre><code class="language-php">'default' =&gt; env('MAIL_MAILER', 'cloudflare'),</code></pre><p>&#20854;&#27425;&#65292;&#21521;&#20320;&#30340; <code>mailers</code> &#25968;&#32452;&#20013;&#28155;&#21152;&#20197;&#19979;&#37197;&#32622;&#25968;&#32452;&#65306;</p><pre><code class="language-php">'cloudflare' =&gt; [
+    'transport' =&gt; 'cloudflare',
+],</code></pre><p>&#37197;&#32622;&#22909;&#24212;&#29992;&#30340;&#40664;&#35748;&#37038;&#20214;&#21457;&#36865;&#22120;&#21518;&#65292;&#23558;&#20197;&#19979;&#36873;&#39033;&#28155;&#21152;&#21040; <code>config/services.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#65306;</p><pre><code class="language-php">'cloudflare' =&gt; [
+    'account_id' =&gt; env('CLOUDFLARE_ACCOUNT_ID'),
+    'key' =&gt; env('CLOUDFLARE_KEY'),
+],</code></pre><h4 id="bf7c2a89cdd6785965c2d0e2b5e70c00">Mailgun &#39537;&#21160;</h4><p>&#35201;&#20351;&#29992; Mailgun &#39537;&#21160;&#65292;&#36890;&#36807; Composer &#23433;&#35013; Symfony &#30340; Mailgun Mailer &#20256;&#36755;&#65306;</p><pre><code class="language-shell">composer require symfony/mailgun-mailer symfony/http-client</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#20320;&#38656;&#35201;&#23545;&#24212;&#29992;&#30340; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20570;&#20004;&#22788;&#20462;&#25913;&#12290;&#39318;&#20808;&#65292;&#23558;&#40664;&#35748;&#37038;&#20214;&#21457;&#36865;&#22120;&#35774;&#20026; <code>mailgun</code>&#65306;</p><pre><code class="language-php">'default' =&gt; env('MAIL_MAILER', 'mailgun'),</code></pre><p>&#20854;&#27425;&#65292;&#21521;&#20320;&#30340; <code>mailers</code> &#25968;&#32452;&#20013;&#28155;&#21152;&#20197;&#19979;&#37197;&#32622;&#25968;&#32452;&#65306;</p><pre><code class="language-php">'mailgun' =&gt; [
+    'transport' =&gt; 'mailgun',
+    // 'client' =&gt; [
+    //     'timeout' =&gt; 5,
+    // ],
+],</code></pre><p>&#37197;&#32622;&#22909;&#24212;&#29992;&#30340;&#40664;&#35748;&#37038;&#20214;&#21457;&#36865;&#22120;&#21518;&#65292;&#35831;&#30830;&#20445; <code>config/services.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#21253;&#21547;&#20197;&#19979;&#36873;&#39033;&#65306;</p><pre><code class="language-php">'mailgun' =&gt; [
+    'domain' =&gt; env('MAILGUN_DOMAIN'),
+    'secret' =&gt; env('MAILGUN_SECRET'),
+    'endpoint' =&gt; env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+    'scheme' =&gt; 'https',
+],</code></pre><p>&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#19981;&#26159;&#32654;&#22269; <a href="https://documentation.mailgun.com/docs/mailgun/api-reference/api-overview#mailgun-regions" target="_blank" rel="noopener noreferrer">Mailgun &#21306;&#22495;</a>&#65292;&#21487;&#20197;&#22312; <code>services</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#20320;&#25152;&#22312;&#21306;&#22495;&#30340;&#31471;&#28857;&#65288;endpoint&#65289;&#65306;</p><pre><code class="language-php">'mailgun' =&gt; [
+    'domain' =&gt; env('MAILGUN_DOMAIN'),
+    'secret' =&gt; env('MAILGUN_SECRET'),
+    'endpoint' =&gt; env('MAILGUN_ENDPOINT', 'api.eu.mailgun.net'),
+    'scheme' =&gt; 'https',
+],</code></pre><h4 id="068e40c23a8b1722548a04c64b52bd4d">Postmark &#39537;&#21160;</h4><p>&#35201;&#20351;&#29992; <a href="https://postmarkapp.com/" target="_blank" rel="noopener noreferrer">Postmark</a> &#39537;&#21160;&#65292;&#36890;&#36807; Composer &#23433;&#35013; Symfony &#30340; Postmark Mailer &#20256;&#36755;&#65306;</p><pre><code class="language-shell">composer require symfony/postmark-mailer symfony/http-client</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#23558;&#24212;&#29992;&#30340; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; <code>default</code> &#36873;&#39033;&#35774;&#20026; <code>postmark</code>&#12290;&#37197;&#32622;&#22909;&#24212;&#29992;&#30340;&#40664;&#35748;&#37038;&#20214;&#21457;&#36865;&#22120;&#21518;&#65292;&#35831;&#30830;&#20445; <code>config/services.php</code> &#37197;&#32622;&#25991;&#20214;&#21253;&#21547;&#20197;&#19979;&#36873;&#39033;&#65306;</p><pre><code class="language-php">'postmark' =&gt; [
+    'key' =&gt; env('POSTMARK_API_KEY'),
+],</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#25351;&#23450;&#26576;&#20010;&#37038;&#20214;&#21457;&#36865;&#22120;&#24212;&#20351;&#29992;&#30340; Postmark &#28040;&#24687;&#27969;&#65288;message stream&#65289;&#65292;&#21487;&#20197;&#21521;&#35813;&#37038;&#20214;&#21457;&#36865;&#22120;&#30340;&#37197;&#32622;&#25968;&#32452;&#20013;&#28155;&#21152; <code>message_stream_id</code> &#37197;&#32622;&#39033;&#12290;&#35813;&#37197;&#32622;&#25968;&#32452;&#20301;&#20110;&#24212;&#29992;&#30340; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#65306;</p><pre><code class="language-php">'postmark' =&gt; [
+    'transport' =&gt; 'postmark',
+    'message_stream_id' =&gt; env('POSTMARK_MESSAGE_STREAM_ID'),
+    // 'client' =&gt; [
+    //     'timeout' =&gt; 5,
+    // ],
+],</code></pre><p>&#36825;&#26679;&#65292;&#20320;&#36824;&#21487;&#20197;&#35774;&#32622;&#22810;&#20010;&#20351;&#29992;&#19981;&#21516;&#28040;&#24687;&#27969;&#30340; Postmark &#37038;&#20214;&#21457;&#36865;&#22120;&#12290;</p><h4 id="e1d3ecfddfd9c554d707b234437c45dc">Resend &#39537;&#21160;</h4><p>&#35201;&#20351;&#29992; <a href="https://resend.com/" target="_blank" rel="noopener noreferrer">Resend</a> &#39537;&#21160;&#65292;&#36890;&#36807; Composer &#23433;&#35013; Resend &#30340; PHP SDK&#65306;</p><pre><code class="language-shell">composer require resend/resend-php</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#23558;&#24212;&#29992;&#30340; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; <code>default</code> &#36873;&#39033;&#35774;&#20026; <code>resend</code>&#12290;&#37197;&#32622;&#22909;&#24212;&#29992;&#30340;&#40664;&#35748;&#37038;&#20214;&#21457;&#36865;&#22120;&#21518;&#65292;&#35831;&#30830;&#20445; <code>config/services.php</code> &#37197;&#32622;&#25991;&#20214;&#21253;&#21547;&#20197;&#19979;&#36873;&#39033;&#65306;</p><pre><code class="language-php">'resend' =&gt; [
+    'key' =&gt; env('RESEND_API_KEY'),
+],</code></pre><h4 id="f2772d5721b347ab27915b025535e4fe">SES &#39537;&#21160;</h4><p>&#35201;&#20351;&#29992; Amazon SES &#39537;&#21160;&#65292;&#20320;&#39318;&#20808;&#24517;&#39035;&#23433;&#35013; Amazon AWS SDK for PHP&#12290;&#20320;&#21487;&#20197;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013;&#36825;&#20010;&#24211;&#65306;</p><pre><code class="language-shell">composer require aws/aws-sdk-php</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#23558; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; <code>default</code> &#36873;&#39033;&#35774;&#20026; <code>ses</code>&#65292;&#24182;&#30830;&#35748; <code>config/services.php</code> &#37197;&#32622;&#25991;&#20214;&#21253;&#21547;&#20197;&#19979;&#36873;&#39033;&#65306;</p><pre><code class="language-php">'ses' =&gt; [
+    'key' =&gt; env('AWS_ACCESS_KEY_ID'),
+    'secret' =&gt; env('AWS_SECRET_ACCESS_KEY'),
+    'region' =&gt; env('AWS_DEFAULT_REGION', 'us-east-1'),
+],</code></pre><p>&#35201;&#36890;&#36807;&#20250;&#35805;&#20196;&#29260;&#20351;&#29992; AWS <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_use-resources.html" target="_blank" rel="noopener noreferrer">&#20020;&#26102;&#20973;&#25454;</a>&#65292;&#21487;&#20197;&#21521;&#24212;&#29992;&#30340; SES &#37197;&#32622;&#20013;&#28155;&#21152;&#19968;&#20010; <code>token</code> &#38190;&#65306;</p><pre><code class="language-php">'ses' =&gt; [
+    'key' =&gt; env('AWS_ACCESS_KEY_ID'),
+    'secret' =&gt; env('AWS_SECRET_ACCESS_KEY'),
+    'region' =&gt; env('AWS_DEFAULT_REGION', 'us-east-1'),
+    'token' =&gt; env('AWS_SESSION_TOKEN'),
+],</code></pre><p>&#35201;&#19982; SES &#30340;<a href="https://docs.aws.amazon.com/ses/latest/dg/sending-email-subscription-management.html" target="_blank" rel="noopener noreferrer">&#35746;&#38405;&#31649;&#29702;&#21151;&#33021;</a>&#20132;&#20114;&#65292;&#21487;&#20197;&#22312;&#37038;&#20214;&#28040;&#24687;&#30340; <code>headers</code> &#26041;&#27861;&#36820;&#22238;&#30340;&#25968;&#32452;&#20013;&#36820;&#22238; <code>X-Ses-List-Management-Options</code> &#26631;&#22836;&#65288;header&#65289;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#28040;&#24687;&#26631;&#22836;&#12290;
+ */
+public function headers(): Headers
+{
+    return new Headers(
+        text: [
+            'X-Ses-List-Management-Options' =&gt; 'contactListName=MyContactList;topicName=MyTopic',
+        ],
+    );
+}</code></pre><p>&#35201;&#36890;&#36807; SES <a href="https://docs.aws.amazon.com/ses/latest/dg/tenants.html" target="_blank" rel="noopener noreferrer">&#31199;&#25143;&#65288;tenant&#65289;</a>&#21457;&#36865;&#37038;&#20214;&#65292;&#21487;&#20197;&#20174; <code>headers</code> &#26041;&#27861;&#36820;&#22238; <code>X-Ses-Tenant-Name</code> &#26631;&#22836;&#12290;&#21457;&#36865;&#37038;&#20214;&#26102;&#65292;Laravel &#20250;&#23558;&#35813;&#26631;&#22836;&#30340;&#20540;&#20316;&#20026; <code>TenantName</code> &#36873;&#39033;&#20256;&#36882;&#32473; SES&#65306;</p><pre><code class="language-php">public function headers(): Headers
+{
+    return new Headers(
+        text: [
+            'X-Ses-Tenant-Name' =&gt; 'tenant-id',
+        ],
+    );
+}</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#23450;&#20041;&#39069;&#22806;&#30340;&#36873;&#39033;&#65292;&#35753; Laravel &#22312;&#21457;&#36865;&#37038;&#20214;&#26102;&#23558;&#20854;&#20256;&#32473; AWS SDK &#30340; <code>SendEmail</code> &#26041;&#27861;&#65292;&#21487;&#20197;&#22312; <code>ses</code> &#37197;&#32622;&#20013;&#23450;&#20041;&#19968;&#20010; <code>options</code> &#25968;&#32452;&#65306;</p><pre><code class="language-php">'ses' =&gt; [
+    'key' =&gt; env('AWS_ACCESS_KEY_ID'),
+    'secret' =&gt; env('AWS_SECRET_ACCESS_KEY'),
+    'region' =&gt; env('AWS_DEFAULT_REGION', 'us-east-1'),
+    'options' =&gt; [
+        'ConfigurationSetName' =&gt; 'MyConfigurationSet',
+        'EmailTags' =&gt; [
+            ['Name' =&gt; 'foo', 'Value' =&gt; 'bar'],
+        ],
+    ],
+],</code></pre><h3 id="8c7cc2d653b2b8a47aa3826679438fc7">&#25925;&#38556;&#36716;&#31227;&#37197;&#32622;</h3><p>&#26377;&#26102;&#65292;&#20320;&#37197;&#32622;&#29992;&#26469;&#21457;&#36865;&#24212;&#29992;&#37038;&#20214;&#30340;&#22806;&#37096;&#26381;&#21153;&#21487;&#33021;&#20250;&#23445;&#26426;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#23450;&#20041;&#19968;&#20010;&#25110;&#22810;&#20010;&#22791;&#29992;&#30340;&#37038;&#20214;&#21457;&#36865;&#37197;&#32622;&#20250;&#24456;&#26377;&#29992;&#65292;&#20197;&#20415;&#24403;&#20027;&#21457;&#36865;&#39537;&#21160;&#19981;&#21487;&#29992;&#26102;&#20351;&#29992;&#12290;</p><p>&#20026;&#27492;&#65292;&#20320;&#24212;&#22312;&#24212;&#29992;&#30340; <code>mail</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#19968;&#20010;&#20351;&#29992; <code>failover</code> &#20256;&#36755;&#65288;transport&#65289;&#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#12290;&#35813; failover &#37038;&#20214;&#21457;&#36865;&#22120;&#30340;&#37197;&#32622;&#25968;&#32452;&#24212;&#21253;&#21547;&#19968;&#20010; <code>mailers</code> &#25968;&#32452;&#65292;&#29992;&#20110;&#25351;&#26126;&#22312;&#21457;&#36865;&#26102;&#24212;&#25353;&#20309;&#31181;&#39034;&#24207;&#36873;&#25321;&#24050;&#37197;&#32622;&#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#65306;</p><pre><code class="language-php">'mailers' =&gt; [
+    'failover' =&gt; [
+        'transport' =&gt; 'failover',
+        'mailers' =&gt; [
+            'postmark',
+            'mailgun',
+            'sendmail',
+        ],
+        'retry_after' =&gt; 60,
+    ],
+
+    // ...
+],</code></pre><p>&#37197;&#32622;&#22909;&#20351;&#29992; <code>failover</code> &#20256;&#36755;&#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#21518;&#65292;&#20320;&#38656;&#35201;&#22312;&#24212;&#29992;&#30340; <code>.env</code> &#25991;&#20214;&#20013;&#23558;&#35813; failover &#37038;&#20214;&#21457;&#36865;&#22120;&#35774;&#20026;&#40664;&#35748;&#37038;&#20214;&#21457;&#36865;&#22120;&#65292;&#25165;&#33021;&#20351;&#29992;&#25925;&#38556;&#36716;&#31227;&#21151;&#33021;&#65306;</p><pre><code class="language-ini">MAIL_MAILER=failover</code></pre><h3 id="55042bebe3962c11202bbf51be167fad">&#36718;&#35810;&#37197;&#32622;</h3><p><code>roundrobin</code> &#20256;&#36755;&#65288;transport&#65289;&#20801;&#35768;&#20320;&#23558;&#37038;&#20214;&#21457;&#36865;&#24037;&#20316;&#36127;&#36733;&#20998;&#24067;&#21040;&#22810;&#20010;&#37038;&#20214;&#21457;&#36865;&#22120;&#19978;&#12290;&#39318;&#20808;&#65292;&#22312;&#24212;&#29992;&#30340; <code>mail</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#19968;&#20010;&#20351;&#29992; <code>roundrobin</code> &#20256;&#36755;&#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#12290;&#35813; roundrobin &#37038;&#20214;&#21457;&#36865;&#22120;&#30340;&#37197;&#32622;&#25968;&#32452;&#24212;&#21253;&#21547;&#19968;&#20010; <code>mailers</code> &#25968;&#32452;&#65292;&#29992;&#20110;&#25351;&#26126;&#24212;&#20351;&#29992;&#21738;&#20123;&#24050;&#37197;&#32622;&#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#36827;&#34892;&#21457;&#36865;&#65306;</p><pre><code class="language-php">'mailers' =&gt; [
+    'roundrobin' =&gt; [
+        'transport' =&gt; 'roundrobin',
+        'mailers' =&gt; [
+            'ses',
+            'postmark',
+        ],
+        'retry_after' =&gt; 60,
+    ],
+
+    // ...
+],</code></pre><p>&#23450;&#20041;&#22909; round robin &#37038;&#20214;&#21457;&#36865;&#22120;&#21518;&#65292;&#24212;&#36890;&#36807;&#22312;&#20854;&#21517;&#31216;&#20316;&#20026;&#24212;&#29992; <code>mail</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>default</code> &#37197;&#32622;&#38190;&#30340;&#20540;&#65292;&#23558;&#23427;&#35774;&#20026;&#24212;&#29992;&#20351;&#29992;&#30340;&#40664;&#35748;&#37038;&#20214;&#21457;&#36865;&#22120;&#65306;</p><pre><code class="language-php">'default' =&gt; env('MAIL_MAILER', 'roundrobin'),</code></pre><p>roundrobin &#20256;&#36755;&#20250;&#20174;&#24050;&#37197;&#32622;&#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#21015;&#34920;&#20013;&#38543;&#26426;&#36873;&#25321;&#19968;&#20010;&#65292;&#24182;&#22312;&#27599;&#23553;&#21518;&#32493;&#37038;&#20214;&#26102;&#20999;&#25442;&#21040;&#19979;&#19968;&#20010;&#21487;&#29992;&#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#12290;&#19982;&#29992;&#20110;&#23454;&#29616;<a href="https://en.wikipedia.org/wiki/High_availability" target="_blank" rel="noopener noreferrer">&#39640;&#21487;&#29992;&#24615;</a>&#30340; <code>failover</code> &#20256;&#36755;&#19981;&#21516;&#65292;<code>roundrobin</code> &#20256;&#36755;&#25552;&#20379;&#30340;&#26159;<a href="https://en.wikipedia.org/wiki/Load_balancing_(computing)" target="_blank" rel="noopener noreferrer">&#36127;&#36733;&#22343;&#34913;</a>&#12290;</p><h2 id="0392f7588f0c627663cc6a27c14c6555">&#29983;&#25104; Mailable</h2><p>&#22312;&#26500;&#24314; Laravel &#24212;&#29992;&#26102;&#65292;&#24212;&#29992;&#21457;&#36865;&#30340;&#27599;&#31181;&#37038;&#20214;&#37117;&#30001;&#19968;&#20010;"&#21487;&#37038;&#23492;&#31867;&#65288;Mailable&#65289;"&#26469;&#34920;&#31034;&#12290;&#36825;&#20123;&#31867;&#23384;&#25918;&#22312; <code>app/Mail</code> &#30446;&#24405;&#20013;&#12290;&#21363;&#20351;&#20320;&#30340;&#24212;&#29992;&#20013;&#27809;&#26377;&#30475;&#21040;&#36825;&#20010;&#30446;&#24405;&#20063;&#19981;&#24517;&#25285;&#24515;&#65292;&#22240;&#20026;&#24403;&#20320;&#20351;&#29992; <code>make:mail</code> Artisan &#21629;&#20196;&#21019;&#24314;&#31532;&#19968;&#20010;&#21487;&#37038;&#23492;&#31867;&#26102;&#65292;&#23427;&#20250;&#33258;&#21160;&#20026;&#20320;&#29983;&#25104;&#65306;</p><pre><code class="language-shell">php artisan make:mail OrderShipped</code></pre><h2 id="5082be528d4a51f968993f7dda2d7b1b">&#32534;&#20889; Mailable</h2><p>&#19968;&#26086;&#29983;&#25104;&#20102;&#21487;&#37038;&#23492;&#31867;&#65292;&#25171;&#24320;&#23427;&#25105;&#20204;&#23601;&#33021;&#26597;&#30475;&#20854;&#20869;&#23481;&#12290;&#21487;&#37038;&#23492;&#31867;&#30340;&#37197;&#32622;&#26159;&#22312;&#22810;&#20010;&#26041;&#27861;&#20013;&#23436;&#25104;&#30340;&#65292;&#21253;&#25324; <code>envelope</code>&#12289;<code>content</code> &#21644; <code>attachments</code> &#26041;&#27861;&#12290;</p><p><code>envelope</code> &#26041;&#27861;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Mail\Mailables\Envelope</code> &#23545;&#35937;&#65292;&#35813;&#23545;&#35937;&#23450;&#20041;&#20102;&#37038;&#20214;&#30340;&#20027;&#39064;&#65292;&#26377;&#26102;&#20063;&#21253;&#25324;&#25910;&#20214;&#20154;&#12290;<code>content</code> &#26041;&#27861;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Mail\Mailables\Content</code> &#23545;&#35937;&#65292;&#35813;&#23545;&#35937;&#23450;&#20041;&#20102;&#23558;&#29992;&#20110;&#29983;&#25104;&#37038;&#20214;&#20869;&#23481;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/blade" target="_blank">Blade &#27169;&#26495;</a>&#12290;</p><h3 id="0959a75205d35b800be9263ec2f7bb04">&#37197;&#32622;&#21457;&#20214;&#20154;</h3><h4 id="2102f81cb7ed2e1ce70e562b96f026f1">&#20351;&#29992; Envelope</h4><p>&#39318;&#20808;&#65292;&#25105;&#20204;&#26469;&#20102;&#35299;&#22914;&#20309;&#37197;&#32622;&#37038;&#20214;&#30340;&#21457;&#36865;&#32773;&#12290;&#25442;&#21477;&#35805;&#35828;&#65292;&#23601;&#26159;&#37038;&#20214;&#30340;"&#21457;&#20214;&#20154;"&#26159;&#35841;&#12290;&#37197;&#32622;&#21457;&#36865;&#32773;&#26377;&#20004;&#31181;&#26041;&#24335;&#12290;&#39318;&#20808;&#65292;&#20320;&#21487;&#20197;&#22312;&#37038;&#20214;&#30340; envelope &#19978;&#25351;&#23450; "from" &#22320;&#22336;&#65306;</p><pre><code class="language-php">use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Envelope;
+
+/**
+ * &#33719;&#21462;&#28040;&#24687;&#20449;&#23553;&#12290;
+ */
+public function envelope(): Envelope
+{
+    return new Envelope(
+        from: new Address('jeffrey@example.com', 'Jeffrey Way'),
+        subject: 'Order Shipped',
+    );
+}</code></pre><p>&#22914;&#26524;&#20320;&#24895;&#24847;&#65292;&#36824;&#21487;&#20197;&#25351;&#23450;&#19968;&#20010; <code>replyTo</code> &#22320;&#22336;&#65306;</p><pre><code class="language-php">return new Envelope(
+    from: new Address('jeffrey@example.com', 'Jeffrey Way'),
+    replyTo: [
+        new Address('taylor@example.com', 'Taylor Otwell'),
+    ],
+    subject: 'Order Shipped',
+);</code></pre><h4 id="e47cde1aca3553f2f28d3a84373912c4">&#20351;&#29992;&#20840;&#23616; <code>from</code> &#22320;&#22336;</h4><p>&#19981;&#36807;&#65292;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#25152;&#26377;&#37038;&#20214;&#37117;&#20351;&#29992;&#21516;&#19968;&#20010; "from" &#22320;&#22336;&#65292;&#37027;&#20040;&#20026;&#27599;&#27425;&#29983;&#25104;&#30340;&#21487;&#37038;&#23492;&#31867;&#37117;&#28155;&#21152;&#35813;&#22320;&#22336;&#20250;&#21464;&#24471;&#32321;&#29712;&#12290;&#30456;&#21453;&#65292;&#20320;&#21487;&#20197;&#22312; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#25351;&#23450;&#19968;&#20010;&#20840;&#23616; "from" &#22320;&#22336;&#12290;&#22914;&#26524;&#22312;&#21487;&#37038;&#23492;&#31867;&#20013;&#27809;&#26377;&#25351;&#23450;&#20854;&#20182; "from" &#22320;&#22336;&#65292;&#23601;&#20250;&#20351;&#29992;&#36825;&#20010;&#22320;&#22336;&#65306;</p><pre><code class="language-php">'from' =&gt; [
+    'address' =&gt; env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+    'name' =&gt; env('MAIL_FROM_NAME', 'Example'),
+],</code></pre><p>&#27492;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#22312; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#19968;&#20010;&#20840;&#23616; "reply_to" &#22320;&#22336;&#65306;</p><pre><code class="language-php">'reply_to' =&gt; [
+    'address' =&gt; 'example@example.com',
+    'name' =&gt; 'App Name',
+],</code></pre><h3 id="7ab88bd09ff99ec238c05d932f45eac4">&#37197;&#32622;&#35270;&#22270;</h3><p>&#22312;&#21487;&#37038;&#23492;&#31867;&#30340; <code>content</code> &#26041;&#27861;&#20013;&#65292;&#20320;&#21487;&#20197;&#23450;&#20041; <code>view</code>&#65292;&#21363;&#28210;&#26579;&#37038;&#20214;&#20869;&#23481;&#26102;&#24212;&#20351;&#29992;&#30340;&#27169;&#26495;&#12290;&#30001;&#20110;&#27599;&#23553;&#37038;&#20214;&#36890;&#24120;&#37117;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/blade" target="_blank">Blade &#27169;&#26495;</a>&#26469;&#28210;&#26579;&#20869;&#23481;&#65292;&#22312;&#26500;&#24314;&#37038;&#20214;&#30340; HTML &#26102;&#65292;&#20320;&#21487;&#20197;&#20805;&#20998;&#21033;&#29992; Blade &#27169;&#26495;&#24341;&#25806;&#30340;&#20840;&#37096;&#33021;&#21147;&#19982;&#20415;&#21033;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#28040;&#24687;&#20869;&#23481;&#23450;&#20041;&#12290;
+ */
+public function content(): Content
+{
+    return new Content(
+        view: 'mail.orders.shipped',
+    );
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#20320;&#21487;&#20197;&#21019;&#24314;&#19968;&#20010; <code>resources/views/mail</code> &#30446;&#24405;&#26469;&#23384;&#25918;&#25152;&#26377;&#37038;&#20214;&#27169;&#26495;&#65307;&#19981;&#36807;&#65292;&#20320;&#20063;&#21487;&#20197;&#33258;&#30001;&#22320;&#23558;&#23427;&#20204;&#25918;&#22312; <code>resources/views</code> &#30446;&#24405;&#20013;&#30340;&#20219;&#24847;&#20301;&#32622;&#12290;</p>
+</blockquote><h4 id="d0229b69d7b61c947a7882c049e7acf8">&#32431;&#25991;&#26412;&#37038;&#20214;</h4><p>&#22914;&#26524;&#20320;&#24819;&#23450;&#20041;&#37038;&#20214;&#30340;&#32431;&#25991;&#26412;&#29256;&#26412;&#65292;&#21487;&#20197;&#22312;&#21019;&#24314;&#37038;&#20214;&#30340; <code>Content</code> &#23450;&#20041;&#26102;&#25351;&#23450;&#32431;&#25991;&#26412;&#27169;&#26495;&#12290;&#19982; <code>view</code> &#21442;&#25968;&#19968;&#26679;&#65292;<code>text</code> &#21442;&#25968;&#20063;&#24212;&#26159;&#19968;&#20010;&#29992;&#20110;&#28210;&#26579;&#37038;&#20214;&#20869;&#23481;&#30340;&#27169;&#26495;&#21517;&#12290;&#20320;&#21487;&#20197;&#33258;&#30001;&#22320;&#21516;&#26102;&#23450;&#20041;&#37038;&#20214;&#30340; HTML &#29256;&#26412;&#21644;&#32431;&#25991;&#26412;&#29256;&#26412;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#28040;&#24687;&#20869;&#23481;&#23450;&#20041;&#12290;
+ */
+public function content(): Content
+{
+    return new Content(
+        view: 'mail.orders.shipped',
+        text: 'mail.orders.shipped-text'
+    );
+}</code></pre><p>&#20026;&#20102;&#34920;&#36848;&#28165;&#26224;&#65292;<code>html</code> &#21442;&#25968;&#21487;&#20316;&#20026; <code>view</code> &#21442;&#25968;&#30340;&#21035;&#21517;&#20351;&#29992;&#65306;</p><pre><code class="language-php">return new Content(
+    html: 'mail.orders.shipped',
+    text: 'mail.orders.shipped-text'
+);</code></pre><h3 id="c5ba8bc72b7e2234b8f2fb95724a0a2d">&#35270;&#22270;&#25968;&#25454;</h3><h4 id="c2bc6fcf5c7235423e77b0d908e1bc3e">&#36890;&#36807;&#20844;&#20849;&#23646;&#24615;</h4><p>&#36890;&#24120;&#65292;&#20320;&#20250;&#24076;&#26395;&#21521;&#35270;&#22270;&#20256;&#36882;&#19968;&#20123;&#25968;&#25454;&#65292;&#20197;&#20415;&#22312;&#28210;&#26579;&#37038;&#20214; HTML &#26102;&#20351;&#29992;&#12290;&#35753;&#25968;&#25454;&#23545;&#35270;&#22270;&#21487;&#29992;&#26377;&#20004;&#31181;&#26041;&#24335;&#12290;&#39318;&#20808;&#65292;&#22312;&#21487;&#37038;&#23492;&#31867;&#19978;&#23450;&#20041;&#30340;&#20219;&#20309;&#20844;&#20849;&#23646;&#24615;&#37117;&#20250;&#33258;&#21160;&#23545;&#35270;&#22270;&#21487;&#29992;&#12290;&#22240;&#27492;&#65292;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#23558;&#25968;&#25454;&#20256;&#20837;&#21487;&#37038;&#23492;&#31867;&#30340;&#26500;&#36896;&#20989;&#25968;&#65292;&#24182;&#23558;&#20854;&#36171;&#32473;&#31867;&#20013;&#23450;&#20041;&#30340;&#20844;&#20849;&#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mail;
+
+use App\Models\Order;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Queue\SerializesModels;
+
+class OrderShipped extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    /**
+     * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#28040;&#24687;&#23454;&#20363;&#12290;
+     */
+    public function __construct(
+        public Order $order,
+    ) {}
+
+    /**
+     * &#33719;&#21462;&#28040;&#24687;&#20869;&#23481;&#23450;&#20041;&#12290;
+     */
+    public function content(): Content
+    {
+        return new Content(
+            view: 'mail.orders.shipped',
+        );
+    }
+}</code></pre><p>&#19968;&#26086;&#23558;&#25968;&#25454;&#36171;&#32473;&#20844;&#20849;&#23646;&#24615;&#65292;&#23427;&#23601;&#20250;&#33258;&#21160;&#22312;&#35270;&#22270;&#20013;&#21487;&#29992;&#65292;&#22240;&#27492;&#20320;&#21487;&#20197;&#20687;&#35775;&#38382; Blade &#27169;&#26495;&#20013;&#20219;&#20309;&#20854;&#20182;&#25968;&#25454;&#19968;&#26679;&#35775;&#38382;&#23427;&#65306;</p><pre><code class="language-blade">&lt;div&gt;
+    Price: {{ $order-&gt;price }}
+&lt;/div&gt;</code></pre><h4 id="f627b245d387295221dbd1538fa95878">&#36890;&#36807; <code>with</code> &#21442;&#25968;</h4><p>&#22914;&#26524;&#20320;&#24819;&#22312;&#23558;&#25968;&#25454;&#21457;&#36865;&#21040;&#27169;&#26495;&#20043;&#21069;&#33258;&#23450;&#20041;&#37038;&#20214;&#25968;&#25454;&#30340;&#26684;&#24335;&#65292;&#21487;&#20197;&#36890;&#36807; <code>Content</code> &#23450;&#20041;&#30340; <code>with</code> &#21442;&#25968;&#25163;&#21160;&#23558;&#25968;&#25454;&#20256;&#32473;&#35270;&#22270;&#12290;&#36890;&#24120;&#65292;&#20320;&#20173;&#28982;&#20250;&#36890;&#36807;&#21487;&#37038;&#23492;&#31867;&#30340;&#26500;&#36896;&#20989;&#25968;&#20256;&#20837;&#25968;&#25454;&#65307;&#19981;&#36807;&#65292;&#24212;&#23558;&#25968;&#25454;&#35774;&#20026; <code>protected</code> &#25110; <code>private</code> &#23646;&#24615;&#65292;&#36825;&#26679;&#25968;&#25454;&#23601;&#19981;&#20250;&#33258;&#21160;&#23545;&#27169;&#26495;&#21487;&#29992;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mail;
+
+use App\Models\Order;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Queue\SerializesModels;
+
+class OrderShipped extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    /**
+     * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#28040;&#24687;&#23454;&#20363;&#12290;
+     */
+    public function __construct(
+        protected Order $order,
+    ) {}
+
+    /**
+     * &#33719;&#21462;&#28040;&#24687;&#20869;&#23481;&#23450;&#20041;&#12290;
+     */
+    public function content(): Content
+    {
+        return new Content(
+            view: 'mail.orders.shipped',
+            with: [
+                'orderName' =&gt; $this-&gt;order-&gt;name,
+                'orderPrice' =&gt; $this-&gt;order-&gt;price,
+            ],
+        );
+    }
+}</code></pre><p>&#19968;&#26086;&#36890;&#36807; <code>with</code> &#21442;&#25968;&#20256;&#20837;&#25968;&#25454;&#65292;&#23427;&#23601;&#20250;&#33258;&#21160;&#22312;&#35270;&#22270;&#20013;&#21487;&#29992;&#65292;&#22240;&#27492;&#20320;&#21487;&#20197;&#20687;&#35775;&#38382; Blade &#27169;&#26495;&#20013;&#20219;&#20309;&#20854;&#20182;&#25968;&#25454;&#19968;&#26679;&#35775;&#38382;&#23427;&#65306;</p><pre><code class="language-blade">&lt;div&gt;
+    Price: {{ $orderPrice }}
+&lt;/div&gt;</code></pre><h3 id="c9a6ee90f5d43732e3f6cf4dcaa8493c">&#38468;&#20214;</h3><p>&#35201;&#20026;&#37038;&#20214;&#28155;&#21152;&#38468;&#20214;&#65292;&#20320;&#38656;&#35201;&#23558;&#38468;&#20214;&#28155;&#21152;&#21040;&#37038;&#20214;&#28040;&#24687;&#30340; <code>attachments</code> &#26041;&#27861;&#25152;&#36820;&#22238;&#30340;&#25968;&#32452;&#20013;&#12290;&#39318;&#20808;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; <code>Attachment</code> &#31867;&#25552;&#20379;&#30340; <code>fromPath</code> &#26041;&#27861;&#65292;&#24182;&#20256;&#20837;&#25991;&#20214;&#36335;&#24452;&#26469;&#28155;&#21152;&#38468;&#20214;&#65306;</p><pre><code class="language-php">use Illuminate\Mail\Mailables\Attachment;
+
+/**
+ * &#33719;&#21462;&#28040;&#24687;&#30340;&#38468;&#20214;&#12290;
+ *
+ * @return array&lt;int, \Illuminate\Mail\Mailables\Attachment&gt;
+ */
+public function attachments(): array
+{
+    return [
+        Attachment::fromPath('/path/to/file'),
+    ];
+}</code></pre><p>&#20026;&#28040;&#24687;&#38468;&#21152;&#25991;&#20214;&#26102;&#65292;&#20320;&#36824;&#21487;&#20197;&#20351;&#29992; <code>as</code> &#21644; <code>withMime</code> &#26041;&#27861;&#25351;&#23450;&#38468;&#20214;&#30340;&#26174;&#31034;&#21517;&#31216;&#21644; / &#25110; MIME &#31867;&#22411;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#28040;&#24687;&#30340;&#38468;&#20214;&#12290;
+ *
+ * @return array&lt;int, \Illuminate\Mail\Mailables\Attachment&gt;
+ */
+public function attachments(): array
+{
+    return [
+        Attachment::fromPath('/path/to/file')
+            -&gt;as('name.pdf')
+            -&gt;withMime('application/pdf'),
+    ];
+}</code></pre><h4 id="8791af691c6c683ea70d1bae10ca3463">&#20174;&#30913;&#30424;&#38468;&#21152;&#25991;&#20214;</h4><p>&#22914;&#26524;&#20320;&#24050;&#23558;&#25991;&#20214;&#23384;&#20648;&#22312;&#26576;&#20010;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/filesystem" target="_blank">&#25991;&#20214;&#31995;&#32479;&#30913;&#30424;</a>&#19978;&#65292;&#21487;&#20197;&#20351;&#29992; <code>fromStorage</code> &#38468;&#20214;&#26041;&#27861;&#23558;&#20854;&#38468;&#21152;&#21040;&#37038;&#20214;&#20013;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#28040;&#24687;&#30340;&#38468;&#20214;&#12290;
+ *
+ * @return array&lt;int, \Illuminate\Mail\Mailables\Attachment&gt;
+ */
+public function attachments(): array
+{
+    return [
+        Attachment::fromStorage('/path/to/file'),
+    ];
+}</code></pre><p>&#24403;&#28982;&#65292;&#20320;&#20063;&#21487;&#20197;&#25351;&#23450;&#38468;&#20214;&#30340;&#21517;&#31216;&#21644; MIME &#31867;&#22411;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#28040;&#24687;&#30340;&#38468;&#20214;&#12290;
+ *
+ * @return array&lt;int, \Illuminate\Mail\Mailables\Attachment&gt;
+ */
+public function attachments(): array
+{
+    return [
+        Attachment::fromStorage('/path/to/file')
+            -&gt;as('name.pdf')
+            -&gt;withMime('application/pdf'),
+    ];
+}</code></pre><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#25351;&#23450;&#40664;&#35748;&#30913;&#30424;&#20197;&#22806;&#30340;&#23384;&#20648;&#30913;&#30424;&#65292;&#21487;&#20197;&#20351;&#29992; <code>fromStorageDisk</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#28040;&#24687;&#30340;&#38468;&#20214;&#12290;
+ *
+ * @return array&lt;int, \Illuminate\Mail\Mailables\Attachment&gt;
+ */
+public function attachments(): array
+{
+    return [
+        Attachment::fromStorageDisk('s3', '/path/to/file')
+            -&gt;as('name.pdf')
+            -&gt;withMime('application/pdf'),
+    ];
+}</code></pre><h4 id="18d4869a9cb8bb58614abc764975af0c">&#21407;&#22987;&#25968;&#25454;&#38468;&#20214;</h4><p><code>fromData</code> &#38468;&#20214;&#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#21407;&#22987;&#23383;&#33410;&#23383;&#31526;&#20018;&#20316;&#20026;&#38468;&#20214;&#38468;&#21152;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#20320;&#22312;&#20869;&#23384;&#20013;&#29983;&#25104;&#20102;&#19968;&#20010; PDF&#65292;&#24182;&#24076;&#26395;&#23558;&#20854;&#20316;&#20026;&#38468;&#20214;&#28155;&#21152;&#21040;&#37038;&#20214;&#20013;&#32780;&#19981;&#20889;&#20837;&#30913;&#30424;&#65292;&#23601;&#21487;&#20197;&#20351;&#29992;&#36825;&#20010;&#26041;&#27861;&#12290;<code>fromData</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#65292;&#35813;&#38381;&#21253;&#29992;&#20110;&#35299;&#26512;&#21407;&#22987;&#25968;&#25454;&#23383;&#33410;&#65292;&#20197;&#21450;&#38468;&#20214;&#24212;&#34987;&#36171;&#20104;&#30340;&#21517;&#31216;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#28040;&#24687;&#30340;&#38468;&#20214;&#12290;
+ *
+ * @return array&lt;int, \Illuminate\Mail\Mailables\Attachment&gt;
+ */
+public function attachments(): array
+{
+    return [
+        Attachment::fromData(fn () =&gt; $this-&gt;pdf, 'Report.pdf')
+            -&gt;withMime('application/pdf'),
+    ];
+}</code></pre><h3 id="b16c62d45b7b7b88fedea3464b7bfdeb">&#20869;&#32852;&#38468;&#20214;</h3><p>&#23558;&#20869;&#32852;&#22270;&#29255;&#23884;&#20837;&#37038;&#20214;&#36890;&#24120;&#27604;&#36739;&#40635;&#28902;&#65307;&#19981;&#36807;&#65292;Laravel &#25552;&#20379;&#20102;&#19968;&#31181;&#20415;&#25463;&#30340;&#26041;&#24335;&#26469;&#20026;&#37038;&#20214;&#38468;&#21152;&#22270;&#29255;&#12290;&#35201;&#23884;&#20837;&#20869;&#32852;&#22270;&#29255;&#65292;&#21487;&#20197;&#22312;&#37038;&#20214;&#27169;&#26495;&#20013;&#20351;&#29992; <code>$message</code> &#21464;&#37327;&#19978;&#30340; <code>embed</code> &#26041;&#27861;&#12290;Laravel &#20250;&#33258;&#21160;&#35753; <code>$message</code> &#21464;&#37327;&#23545;&#25152;&#26377;&#37038;&#20214;&#27169;&#26495;&#21487;&#29992;&#65292;&#22240;&#27492;&#20320;&#26080;&#38656;&#25163;&#21160;&#20256;&#20837;&#65306;</p><pre><code class="language-blade">&lt;body&gt;
+    Here is an image:
+
+    &lt;img src="{{ $message-&gt;embed($pathToImage) }}"&gt;
+&lt;/body&gt;</code></pre><blockquote>
+<p>[!WARNING]<br>
+<code>$message</code> &#21464;&#37327;&#22312;&#32431;&#25991;&#26412;&#28040;&#24687;&#27169;&#26495;&#20013;&#19981;&#21487;&#29992;&#65292;&#22240;&#20026;&#32431;&#25991;&#26412;&#28040;&#24687;&#19981;&#20351;&#29992;&#20869;&#32852;&#38468;&#20214;&#12290;</p>
+</blockquote><h4 id="96f9f4685bc731401038d3484a2f4d82">&#23884;&#20837;&#21407;&#22987;&#25968;&#25454;&#38468;&#20214;</h4><p>&#22914;&#26524;&#20320;&#24050;&#32463;&#26377;&#19968;&#20010;&#24076;&#26395;&#23884;&#20837;&#37038;&#20214;&#27169;&#26495;&#30340;&#21407;&#22987;&#22270;&#29255;&#25968;&#25454;&#23383;&#31526;&#20018;&#65292;&#21487;&#20197;&#35843;&#29992; <code>$message</code> &#21464;&#37327;&#19978;&#30340; <code>embedData</code> &#26041;&#27861;&#12290;&#35843;&#29992; <code>embedData</code> &#26041;&#27861;&#26102;&#65292;&#20320;&#38656;&#35201;&#25552;&#20379;&#19968;&#20010;&#24212;&#36171;&#20104;&#23884;&#20837;&#22270;&#29255;&#30340;&#25991;&#20214;&#21517;&#65306;</p><pre><code class="language-blade">&lt;body&gt;
+    Here is an image from raw data:
+
+    &lt;img src="{{ $message-&gt;embedData($data, 'example-image.jpg') }}"&gt;
+&lt;/body&gt;</code></pre><h3 id="f56958ef1c1dab8284b8528cc6b8e08a">&#21487;&#38468;&#21152;&#23545;&#35937;</h3><p>&#34429;&#28982;&#36890;&#36807;&#31616;&#21333;&#30340;&#23383;&#31526;&#20018;&#36335;&#24452;&#20026;&#28040;&#24687;&#38468;&#21152;&#25991;&#20214;&#24448;&#24448;&#24050;&#32463;&#36275;&#22815;&#65292;&#20294;&#22312;&#35768;&#22810;&#24773;&#20917;&#19979;&#65292;&#24212;&#29992;&#20013;&#21487;&#38468;&#21152;&#30340;&#23454;&#20307;&#26159;&#30001;&#31867;&#26469;&#34920;&#31034;&#30340;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#35201;&#23558;&#19968;&#24352;&#29031;&#29255;&#38468;&#21152;&#21040;&#28040;&#24687;&#20013;&#65292;&#20320;&#30340;&#24212;&#29992;&#21487;&#33021;&#36824;&#26377;&#19968;&#20010;&#20195;&#34920;&#35813;&#29031;&#29255;&#30340; <code>Photo</code> &#27169;&#22411;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#22914;&#26524;&#33021;&#30452;&#25509;&#23558; <code>Photo</code> &#27169;&#22411;&#20256;&#32473; <code>attach</code> &#26041;&#27861;&#65292;&#23682;&#19981;&#26159;&#24456;&#26041;&#20415;&#65311;&#21487;&#38468;&#21152;&#23545;&#35937;&#65288;Attachable&#65289;&#35753;&#20320;&#21487;&#20197;&#20570;&#21040;&#36825;&#19968;&#28857;&#12290;</p><p>&#39318;&#20808;&#65292;&#22312;&#21487;&#38468;&#21152;&#21040;&#28040;&#24687;&#30340;&#23545;&#35937;&#19978;&#23454;&#29616; <code>Illuminate\Contracts\Mail\Attachable</code> &#25509;&#21475;&#12290;&#35813;&#25509;&#21475;&#35201;&#27714;&#20320;&#30340;&#31867;&#23450;&#20041;&#19968;&#20010; <code>toMailAttachment</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Mail\Attachment</code> &#23454;&#20363;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Contracts\Mail\Attachable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Mail\Attachment;
+
+class Photo extends Model implements Attachable
+{
+    /**
+     * &#33719;&#21462;&#27169;&#22411;&#30340;&#38468;&#20214;&#34920;&#29616;&#24418;&#24335;&#12290;
+     */
+    public function toMailAttachment(): Attachment
+    {
+        return Attachment::fromPath('/path/to/file');
+    }
+}</code></pre><p>&#23450;&#20041;&#22909;&#21487;&#38468;&#21152;&#23545;&#35937;&#21518;&#65292;&#22312;&#26500;&#24314;&#37038;&#20214;&#28040;&#24687;&#26102;&#65292;&#20320;&#21487;&#20197;&#20174; <code>attachments</code> &#26041;&#27861;&#36820;&#22238;&#35813;&#23545;&#35937;&#30340;&#19968;&#20010;&#23454;&#20363;&#65306;</p><pre><code class="language-php">/**
+ * &#33719;&#21462;&#28040;&#24687;&#30340;&#38468;&#20214;&#12290;
+ *
+ * @return array&lt;int, \Illuminate\Mail\Mailables\Attachment&gt;
+ */
+public function attachments(): array
+{
+    return [$this-&gt;photo];
+}</code></pre><p>&#24403;&#28982;&#65292;&#38468;&#20214;&#25968;&#25454;&#20063;&#21487;&#33021;&#23384;&#20648;&#22312; Amazon S3 &#31561;&#36828;&#31243;&#25991;&#20214;&#23384;&#20648;&#26381;&#21153;&#19978;&#12290;&#22240;&#27492;&#65292;Laravel &#20063;&#20801;&#35768;&#20320;&#26681;&#25454;&#24212;&#29992;&#26576;&#20010;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/filesystem" target="_blank">&#25991;&#20214;&#31995;&#32479;&#30913;&#30424;</a>&#19978;&#23384;&#20648;&#30340;&#25968;&#25454;&#26469;&#29983;&#25104;&#38468;&#20214;&#23454;&#20363;&#65306;</p><pre><code class="language-php">// &#20174;&#40664;&#35748;&#30913;&#30424;&#19978;&#30340;&#25991;&#20214;&#21019;&#24314;&#38468;&#20214;...
+return Attachment::fromStorage($this-&gt;path);
+
+// &#20174;&#29305;&#23450;&#30913;&#30424;&#19978;&#30340;&#25991;&#20214;&#21019;&#24314;&#38468;&#20214;...
+return Attachment::fromStorageDisk('backblaze', $this-&gt;path);</code></pre><p>&#27492;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#26681;&#25454;&#20869;&#23384;&#20013;&#24050;&#26377;&#30340;&#25968;&#25454;&#21019;&#24314;&#38468;&#20214;&#23454;&#20363;&#12290;&#20026;&#27492;&#65292;&#21521; <code>fromData</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#38381;&#21253;&#12290;&#35813;&#38381;&#21253;&#24212;&#36820;&#22238;&#20195;&#34920;&#38468;&#20214;&#30340;&#21407;&#22987;&#25968;&#25454;&#65306;</p><pre><code class="language-php">return Attachment::fromData(fn () =&gt; $this-&gt;content, 'Photo Name');</code></pre><p>Laravel &#36824;&#25552;&#20379;&#20102;&#20854;&#20182;&#19968;&#20123;&#21487;&#29992;&#20110;&#33258;&#23450;&#20041;&#38468;&#20214;&#30340;&#26041;&#27861;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>as</code> &#21644; <code>withMime</code> &#26041;&#27861;&#33258;&#23450;&#20041;&#25991;&#20214;&#30340;&#21517;&#31216;&#21644; MIME &#31867;&#22411;&#65306;</p><pre><code class="language-php">return Attachment::fromPath('/path/to/file')
+    -&gt;as('Photo Name')
+    -&gt;withMime('image/jpeg');</code></pre><h3 id="be47bd270e7756d4233e59bbe4cd5b96">&#35831;&#27714;&#22836;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#20026;&#22806;&#21457;&#28040;&#24687;&#38468;&#21152;&#39069;&#22806;&#30340;&#26631;&#22836;&#65288;header&#65289;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#38656;&#35201;&#35774;&#32622;&#33258;&#23450;&#20041;&#30340; <code>Message-Id</code> &#25110;&#20854;&#20182;&#20219;&#24847;&#25991;&#26412;&#26631;&#22836;&#12290;</p><p>&#20026;&#27492;&#65292;&#21487;&#20197;&#22312;&#21487;&#37038;&#23492;&#31867;&#19978;&#23450;&#20041;&#19968;&#20010; <code>headers</code> &#26041;&#27861;&#12290;<code>headers</code> &#26041;&#27861;&#24212;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Mail\Mailables\Headers</code> &#23454;&#20363;&#12290;&#35813;&#31867;&#25509;&#21463; <code>messageId</code>&#12289;<code>references</code> &#21644; <code>text</code> &#21442;&#25968;&#12290;&#24403;&#28982;&#65292;&#20320;&#21482;&#38656;&#25552;&#20379;&#29305;&#23450;&#28040;&#24687;&#25152;&#38656;&#30340;&#21442;&#25968;&#21363;&#21487;&#65306;</p><pre><code class="language-php">use Illuminate\Mail\Mailables\Headers;
+
+/**
+ * &#33719;&#21462;&#28040;&#24687;&#26631;&#22836;&#12290;
+ */
+public function headers(): Headers
+{
+    return new Headers(
+        messageId: 'custom-message-id@example.com',
+        references: ['previous-message@example.com'],
+        text: [
+            'X-Custom-Header' =&gt; 'Custom Value',
+        ],
+    );
+}</code></pre><h3 id="512b80017900ee7ab3524e4145cd9dab">&#26631;&#31614;&#19982;&#20803;&#25968;&#25454;</h3><p>&#19968;&#20123;&#31532;&#19977;&#26041;&#37038;&#20214;&#26381;&#21153;&#21830;&#65288;&#22914; Mailgun &#21644; Postmark&#65289;&#25903;&#25345;&#28040;&#24687;&#30340;"&#26631;&#31614;&#65288;tag&#65289;"&#21644;"&#20803;&#25968;&#25454;&#65288;metadata&#65289;"&#65292;&#21487;&#29992;&#20110;&#23545;&#24212;&#29992;&#21457;&#36865;&#30340;&#37038;&#20214;&#36827;&#34892;&#20998;&#32452;&#21644;&#36319;&#36394;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807; <code>Envelope</code> &#23450;&#20041;&#20026;&#37038;&#20214;&#28040;&#24687;&#28155;&#21152;&#26631;&#31614;&#21644;&#20803;&#25968;&#25454;&#65306;</p><pre><code class="language-php">use Illuminate\Mail\Mailables\Envelope;
+
+/**
+ * &#33719;&#21462;&#28040;&#24687;&#20449;&#23553;&#12290;
+ *
+ * @return \Illuminate\Mail\Mailables\Envelope
+ */
+public function envelope(): Envelope
+{
+    return new Envelope(
+        subject: 'Order Shipped',
+        tags: ['shipment'],
+        metadata: [
+            'order_id' =&gt; $this-&gt;order-&gt;id,
+        ],
+    );
+}</code></pre><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20351;&#29992;&#30340;&#26159; Mailgun &#39537;&#21160;&#65292;&#21487;&#20197;&#26597;&#38405; Mailgun &#30340;&#25991;&#26723;&#65292;&#20102;&#35299;&#26377;&#20851;<a href="https://documentation.mailgun.com/docs/mailgun/user-manual/tracking-messages/#tags" target="_blank" rel="noopener noreferrer">&#26631;&#31614;</a>&#21644;<a href="https://documentation.mailgun.com/docs/mailgun/user-manual/sending-messages/#attaching-metadata-to-messages" target="_blank" rel="noopener noreferrer">&#20803;&#25968;&#25454;</a>&#30340;&#26356;&#22810;&#20449;&#24687;&#12290;&#21516;&#29702;&#65292;&#20063;&#21487;&#20197;&#26597;&#38405; Postmark &#30340;&#25991;&#26723;&#65292;&#20102;&#35299;&#20854;&#25903;&#25345;&#30340;<a href="https://postmarkapp.com/blog/tags-support-for-smtp" target="_blank" rel="noopener noreferrer">&#26631;&#31614;</a>&#21644;<a href="https://postmarkapp.com/support/article/1125-custom-metadata-faq" target="_blank" rel="noopener noreferrer">&#20803;&#25968;&#25454;</a>&#12290;</p><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20351;&#29992; Amazon SES &#21457;&#36865;&#37038;&#20214;&#65292;&#24212;&#20351;&#29992; <code>metadata</code> &#26041;&#27861;&#23558; SES &#30340;<a href="https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html" target="_blank" rel="noopener noreferrer">&#26631;&#31614;</a>&#38468;&#21152;&#21040;&#28040;&#24687;&#19978;&#12290;</p><h3 id="25ab34a15a297701ab9dcb178fbce60b">&#33258;&#23450;&#20041; Symfony Message</h3><p>Laravel &#30340;&#37038;&#20214;&#33021;&#21147;&#30001; Symfony Mailer &#39537;&#21160;&#12290;Laravel &#20801;&#35768;&#20320;&#27880;&#20876;&#33258;&#23450;&#20041;&#22238;&#35843;&#65292;&#36825;&#20123;&#22238;&#35843;&#20250;&#22312;&#21457;&#36865;&#28040;&#24687;&#20043;&#21069;&#20351;&#29992; Symfony Message &#23454;&#20363;&#34987;&#35843;&#29992;&#12290;&#36825;&#35753;&#20320;&#21487;&#20197;&#28145;&#20837;&#22320;&#33258;&#23450;&#20041;&#28040;&#24687;&#21518;&#20877;&#21457;&#36865;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#22312; <code>Envelope</code> &#23450;&#20041;&#20013;&#28155;&#21152;&#19968;&#20010; <code>using</code> &#21442;&#25968;&#65306;</p><pre><code class="language-php">use Illuminate\Mail\Mailables\Envelope;
+use Symfony\Component\Mime\Email;
+
+/**
+ * &#33719;&#21462;&#28040;&#24687;&#20449;&#23553;&#12290;
+ */
+public function envelope(): Envelope
+{
+    return new Envelope(
+        subject: 'Order Shipped',
+        using: [
+            function (Email $message) {
+                // ...
+            },
+        ]
+    );
+}</code></pre><h2 id="1df0f1ebd0167ed1f048989e156633a6">Markdown Mailable</h2><p>Markdown &#21487;&#37038;&#23492;&#31867;&#28040;&#24687;&#35753;&#20320;&#33021;&#22815;&#22312;&#21487;&#37038;&#23492;&#31867;&#20013;&#20351;&#29992;&#37038;&#20214;&#36890;&#30693;&#65288;mail notifications&#65289;&#39044;&#32622;&#30340;&#27169;&#26495;&#19982;&#32452;&#20214;&#12290;&#30001;&#20110;&#28040;&#24687;&#26159;&#29992; Markdown &#32534;&#20889;&#30340;&#65292;Laravel &#33021;&#22815;&#20026;&#28040;&#24687;&#28210;&#26579;&#32654;&#35266;&#12289;&#21709;&#24212;&#24335;&#30340; HTML &#27169;&#26495;&#65292;&#21516;&#26102;&#36824;&#20250;&#33258;&#21160;&#29983;&#25104;&#23545;&#24212;&#30340;&#32431;&#25991;&#26412;&#29256;&#26412;&#12290;</p><h3 id="1f92238276048b786389b9ee949b8d96">&#29983;&#25104; Markdown Mailable</h3><p>&#35201;&#29983;&#25104;&#19968;&#20010;&#24102;&#26377;&#23545;&#24212; Markdown &#27169;&#26495;&#30340;&#21487;&#37038;&#23492;&#31867;&#65292;&#21487;&#20197;&#20351;&#29992; <code>make:mail</code> Artisan &#21629;&#20196;&#30340; <code>--markdown</code> &#36873;&#39033;&#65306;</p><pre><code class="language-shell">php artisan make:mail OrderShipped --markdown=mail.orders.shipped</code></pre><p>&#28982;&#21518;&#65292;&#22312;&#21487;&#37038;&#23492;&#31867;&#30340; <code>content</code> &#26041;&#27861;&#20013;&#37197;&#32622; <code>Content</code> &#23450;&#20041;&#26102;&#65292;&#20351;&#29992; <code>markdown</code> &#21442;&#25968;&#20195;&#26367; <code>view</code> &#21442;&#25968;&#65306;</p><pre><code class="language-php">use Illuminate\Mail\Mailables\Content;
+
+/**
+ * &#33719;&#21462;&#28040;&#24687;&#20869;&#23481;&#23450;&#20041;&#12290;
+ */
+public function content(): Content
+{
+    return new Content(
+        markdown: 'mail.orders.shipped',
+        with: [
+            'url' =&gt; $this-&gt;orderUrl,
+        ],
+    );
+}</code></pre><h3 id="0ff73b9572b22d548bc38deb60410500">&#32534;&#20889; Markdown &#28040;&#24687;</h3><p>Markdown &#21487;&#37038;&#23492;&#31867;&#32467;&#21512;&#20102; Blade &#32452;&#20214;&#19982; Markdown &#35821;&#27861;&#65292;&#35753;&#20320;&#22312;&#21033;&#29992; Laravel &#39044;&#32622;&#30340;&#37038;&#20214; UI &#32452;&#20214;&#30340;&#21516;&#26102;&#65292;&#36731;&#26494;&#26500;&#24314;&#37038;&#20214;&#28040;&#24687;&#65306;</p><pre><code class="language-blade">&lt;x-mail::message&gt;
+# &#35746;&#21333;&#24050;&#21457;&#36135;
+
+Your order has been shipped!
+
+&lt;x-mail::button :url="$url"&gt;
+View Order
+&lt;/x-mail::button&gt;
+
+Thanks,&lt;br&gt;
+{{ config('app.name') }}
+&lt;/x-mail::message&gt;</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#32534;&#20889; Markdown &#37038;&#20214;&#26102;&#19981;&#35201;&#20351;&#29992;&#36807;&#22810;&#30340;&#32553;&#36827;&#12290;&#25353;&#29031; Markdown &#26631;&#20934;&#65292;Markdown &#35299;&#26512;&#22120;&#20250;&#23558;&#32553;&#36827;&#30340;&#20869;&#23481;&#28210;&#26579;&#20026;&#20195;&#30721;&#22359;&#12290;</p>
+</blockquote><h4 id="27ffe95c5b2569b835a070cbaf0b4ddf">&#25353;&#38062;&#32452;&#20214;</h4><p>&#25353;&#38062;&#32452;&#20214;&#20250;&#28210;&#26579;&#19968;&#20010;&#23621;&#20013;&#30340;&#25353;&#38062;&#38142;&#25509;&#12290;&#35813;&#32452;&#20214;&#25509;&#21463;&#20004;&#20010;&#21442;&#25968;&#65306;<code>url</code> &#21644;&#19968;&#20010;&#21487;&#36873;&#30340; <code>color</code>&#12290;&#25903;&#25345;&#30340;&#39068;&#33394;&#26377; <code>primary</code>&#12289;<code>success</code> &#21644; <code>error</code>&#12290;&#20320;&#21487;&#20197;&#26681;&#25454;&#38656;&#35201;&#21521;&#28040;&#24687;&#20013;&#28155;&#21152;&#20219;&#24847;&#25968;&#37327;&#30340;&#25353;&#38062;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-mail::button :url="$url" color="success"&gt;
+View Order
+&lt;/x-mail::button&gt;</code></pre><h4 id="d2869eb323a099bcdcf60d2fa5f78388">&#38754;&#26495;&#32452;&#20214;</h4><p>&#38754;&#26495;&#32452;&#20214;&#20250;&#23558;&#32473;&#23450;&#30340;&#25991;&#26412;&#22359;&#28210;&#26579;&#22312;&#19968;&#20010;&#32972;&#26223;&#33394;&#19982;&#28040;&#24687;&#20854;&#20313;&#37096;&#20998;&#30053;&#26377;&#19981;&#21516;&#30340;&#38754;&#26495;&#20013;&#12290;&#36825;&#35753;&#20320;&#33021;&#22815;&#21560;&#24341;&#35835;&#32773;&#20851;&#27880;&#26576;&#20010;&#29305;&#23450;&#30340;&#25991;&#26412;&#22359;&#65306;</p><pre><code class="language-blade">&lt;x-mail::panel&gt;
+This is the panel content.
+&lt;/x-mail::panel&gt;</code></pre><h4 id="85654e5abb8a6897140f0db644cff733">&#34920;&#26684;&#32452;&#20214;</h4><p>&#34920;&#26684;&#32452;&#20214;&#20801;&#35768;&#20320;&#23558; Markdown &#34920;&#26684;&#36716;&#25442;&#20026; HTML &#34920;&#26684;&#12290;&#35813;&#32452;&#20214;&#25509;&#21463; Markdown &#34920;&#26684;&#20316;&#20026;&#20854;&#20869;&#23481;&#12290;&#20351;&#29992;&#40664;&#35748;&#30340; Markdown &#34920;&#26684;&#23545;&#40784;&#35821;&#27861;&#21363;&#21487;&#25903;&#25345;&#34920;&#26684;&#21015;&#30340;&#23545;&#40784;&#65306;</p><pre><code class="language-blade">&lt;x-mail::table&gt;
+| Laravel       | Table         | Example       |
+| ------------- | :-----------: | ------------: |
+| Col 2 is      | Centered      | $10           |
+| Col 3 is      | Right-Aligned | $20           |
+&lt;/x-mail::table&gt;</code></pre><h3 id="6fce1c9aa3654ae2f0eedcc068a7e189">&#33258;&#23450;&#20041;&#32452;&#20214;</h3><p>&#20320;&#21487;&#20197;&#23558;&#25152;&#26377; Markdown &#37038;&#20214;&#32452;&#20214;&#23548;&#20986;&#21040;&#20320;&#33258;&#24049;&#30340;&#24212;&#29992;&#20013;&#36827;&#34892;&#33258;&#23450;&#20041;&#12290;&#35201;&#23548;&#20986;&#32452;&#20214;&#65292;&#21487;&#20197;&#20351;&#29992; <code>vendor:publish</code> Artisan &#21629;&#20196;&#21457;&#24067; <code>laravel-mail</code> &#36164;&#28304;&#26631;&#31614;&#65288;asset tag&#65289;&#65306;</p><pre><code class="language-shell">php artisan vendor:publish --tag=laravel-mail</code></pre><p>&#35813;&#21629;&#20196;&#20250;&#23558; Markdown &#37038;&#20214;&#32452;&#20214;&#21457;&#24067;&#21040; <code>resources/views/vendor/mail</code> &#30446;&#24405;&#12290;<code>mail</code> &#30446;&#24405;&#20013;&#20250;&#21253;&#21547; <code>html</code> &#21644; <code>text</code> &#20004;&#20010;&#23376;&#30446;&#24405;&#65292;&#20998;&#21035;&#23384;&#25918;&#27599;&#20010;&#21487;&#29992;&#32452;&#20214;&#30340;&#23545;&#24212;&#24418;&#24577;&#12290;&#20320;&#21487;&#20197;&#38543;&#24515;&#25152;&#27442;&#22320;&#33258;&#23450;&#20041;&#36825;&#20123;&#32452;&#20214;&#12290;</p><h4 id="76c43b23829c7d0629e04bae0f6918de">&#33258;&#23450;&#20041; CSS</h4><p>&#23548;&#20986;&#32452;&#20214;&#21518;&#65292;<code>resources/views/vendor/mail/html/themes</code> &#30446;&#24405;&#20013;&#20250;&#21253;&#21547;&#19968;&#20010; <code>default.css</code> &#25991;&#20214;&#12290;&#20320;&#21487;&#20197;&#33258;&#23450;&#20041;&#35813;&#25991;&#20214;&#20013;&#30340; CSS&#65292;&#36825;&#20123;&#26679;&#24335;&#20250;&#33258;&#21160;&#36716;&#25442;&#20026; Markdown &#37038;&#20214;&#28040;&#24687; HTML &#24418;&#24577;&#20013;&#30340;&#20869;&#32852; CSS &#26679;&#24335;&#12290;</p><p>&#22914;&#26524;&#20320;&#24819;&#20026; Laravel &#30340; Markdown &#32452;&#20214;&#26500;&#24314;&#19968;&#22871;&#20840;&#26032;&#30340;&#20027;&#39064;&#65288;theme&#65289;&#65292;&#21487;&#20197;&#23558;&#19968;&#20010; CSS &#25991;&#20214;&#25918;&#22312; <code>html/themes</code> &#30446;&#24405;&#20013;&#12290;&#21629;&#21517;&#24182;&#20445;&#23384; CSS &#25991;&#20214;&#21518;&#65292;&#26356;&#26032;&#24212;&#29992; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; <code>theme</code> &#36873;&#39033;&#65292;&#20351;&#20854;&#19982;&#26032;&#20027;&#39064;&#30340;&#21517;&#31216;&#19968;&#33268;&#12290;</p><p>&#35201;&#20026;&#21333;&#20010;&#21487;&#37038;&#23492;&#31867;&#33258;&#23450;&#20041;&#20027;&#39064;&#65288;theme&#65289;&#65292;&#21487;&#20197;&#23558;&#21487;&#37038;&#23492;&#31867;&#30340; <code>$theme</code> &#23646;&#24615;&#35774;&#20026;&#21457;&#36865;&#35813;&#21487;&#37038;&#23492;&#31867;&#26102;&#24212;&#20351;&#29992;&#30340;&#20027;&#39064;&#21517;&#31216;&#12290;</p><h2 id="f4f76ad4fcd0e14cd14f8afbcc95fa6e">&#21457;&#36865;&#37038;&#20214;</h2><p>&#35201;&#21457;&#36865;&#28040;&#24687;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Mail</code> Facade &#19978;&#30340; <code>to</code> &#26041;&#27861;&#12290;<code>to</code> &#26041;&#27861;&#25509;&#21463;&#30005;&#23376;&#37038;&#20214;&#22320;&#22336;&#12289;&#29992;&#25143;&#23454;&#20363;&#25110;&#29992;&#25143;&#38598;&#21512;&#12290;&#22914;&#26524;&#20320;&#20256;&#20837;&#23545;&#35937;&#25110;&#23545;&#35937;&#38598;&#21512;&#65292;&#37038;&#20214;&#21457;&#36865;&#22120;&#65288;mailer&#65289;&#20250;&#22312;&#30830;&#23450;&#37038;&#20214;&#25910;&#20214;&#20154;&#26102;&#33258;&#21160;&#20351;&#29992;&#23427;&#20204;&#30340; <code>email</code> &#21644; <code>name</code> &#23646;&#24615;&#65292;&#22240;&#27492;&#35831;&#30830;&#20445;&#36825;&#20123;&#23646;&#24615;&#22312;&#20320;&#30340;&#23545;&#35937;&#19978;&#21487;&#29992;&#12290;&#25351;&#23450;&#25910;&#20214;&#20154;&#21518;&#65292;&#20320;&#23601;&#21487;&#20197;&#23558;&#21487;&#37038;&#23492;&#31867;&#30340;&#23454;&#20363;&#20256;&#32473; <code>send</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Mail\OrderShipped;
+use App\Models\Order;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+
+class OrderShipmentController extends Controller
+{
+    /**
+     * &#21457;&#36135;&#32473;&#23450;&#35746;&#21333;&#12290;
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $order = Order::findOrFail($request-&gt;order_id);
+
+        // &#21457;&#36135;...
+
+        Mail::to($request-&gt;user())-&gt;send(new OrderShipped($order));
+
+        return redirect('/orders');
+    }
+}</code></pre><p>&#22312;&#21457;&#36865;&#28040;&#24687;&#26102;&#65292;&#20320;&#24182;&#19981;&#23616;&#38480;&#20110;&#21482;&#25351;&#23450; "to" &#25910;&#20214;&#20154;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#38142;&#24335;&#35843;&#29992;&#21508;&#33258;&#30340;&#26041;&#27861;&#65292;&#33258;&#30001;&#22320;&#35774;&#32622; "to"&#12289;"cc" &#21644; "bcc" &#25910;&#20214;&#20154;&#65306;</p><pre><code class="language-php">Mail::to($request-&gt;user())
+    -&gt;cc($moreUsers)
+    -&gt;bcc($evenMoreUsers)
+    -&gt;send(new OrderShipped($order));</code></pre><h4 id="d6ea901ae80e7d96b3aecdc0a07d6367">&#36941;&#21382;&#25910;&#20214;&#20154;</h4><p>&#26377;&#26102;&#65292;&#20320;&#21487;&#33021;&#38656;&#35201;&#36941;&#21382;&#25910;&#20214;&#20154;&#25968;&#32452; / &#30005;&#23376;&#37038;&#20214;&#22320;&#22336;&#21015;&#34920;&#65292;&#23558;&#21487;&#37038;&#23492;&#31867;&#21457;&#36865;&#32473;&#19968;&#32452;&#25910;&#20214;&#20154;&#12290;&#28982;&#32780;&#65292;&#30001;&#20110; <code>to</code> &#26041;&#27861;&#20250;&#23558;&#30005;&#23376;&#37038;&#20214;&#22320;&#22336;&#36861;&#21152;&#21040;&#21487;&#37038;&#23492;&#31867;&#30340;&#25910;&#20214;&#20154;&#21015;&#34920;&#20013;&#65292;&#24490;&#29615;&#20013;&#30340;&#27599;&#27425;&#36845;&#20195;&#37117;&#20250;&#21521;&#20043;&#21069;&#30340;&#27599;&#20010;&#25910;&#20214;&#20154;&#20877;&#21457;&#36865;&#19968;&#23553;&#37038;&#20214;&#12290;&#22240;&#27492;&#65292;&#20320;&#24212;&#35813;&#22987;&#32456;&#20026;&#27599;&#20010;&#25910;&#20214;&#20154;&#37325;&#26032;&#21019;&#24314;&#21487;&#37038;&#23492;&#31867;&#23454;&#20363;&#65306;</p><pre><code class="language-php">foreach (['taylor@example.com', 'dries@example.com'] as $recipient) {
+    Mail::to($recipient)-&gt;send(new OrderShipped($order));
+}</code></pre><h4 id="fed18f7093dccbd9c464d61039a98617">&#36890;&#36807;&#25351;&#23450; Mailer &#21457;&#36865;&#37038;&#20214;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Laravel &#20250;&#20351;&#29992;&#22312;&#24212;&#29992; <code>mail</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#34987;&#35774;&#20026; <code>default</code> &#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#26469;&#21457;&#36865;&#37038;&#20214;&#12290;&#19981;&#36807;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>mailer</code> &#26041;&#27861;&#65292;&#36890;&#36807;&#29305;&#23450;&#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#37197;&#32622;&#26469;&#21457;&#36865;&#28040;&#24687;&#65306;</p><pre><code class="language-php">Mail::mailer('postmark')
+    -&gt;to($request-&gt;user())
+    -&gt;send(new OrderShipped($order));</code></pre><h3 id="eca47260af31c2919d35bfba3421bae7">&#23558;&#37038;&#20214;&#21152;&#20837;&#38431;&#21015;</h3><h4 id="2899b10f4fd66a7ec0b42f86a3fa7d75">&#23558;&#37038;&#20214;&#28040;&#24687;&#21152;&#20837;&#38431;&#21015;</h4><p>&#30001;&#20110;&#21457;&#36865;&#30005;&#23376;&#37038;&#20214;&#20250;&#23545;&#24212;&#29992;&#30340;&#21709;&#24212;&#26102;&#38388;&#20135;&#29983;&#36127;&#38754;&#24433;&#21709;&#65292;&#35768;&#22810;&#24320;&#21457;&#32773;&#36873;&#25321;&#23558;&#30005;&#23376;&#37038;&#20214;&#28040;&#24687;&#21152;&#20837;&#38431;&#21015;&#20197;&#20415;&#22312;&#21518;&#21488;&#21457;&#36865;&#12290;Laravel &#36890;&#36807;&#20854;&#20869;&#32622;&#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues" target="_blank">&#32479;&#19968;&#38431;&#21015; API</a>&#35753;&#36825;&#19968;&#20999;&#21464;&#24471;&#31616;&#21333;&#12290;&#35201;&#23558;&#37038;&#20214;&#28040;&#24687;&#21152;&#20837;&#38431;&#21015;&#65292;&#21487;&#20197;&#22312;&#25351;&#23450;&#28040;&#24687;&#25910;&#20214;&#20154;&#21518;&#65292;&#20351;&#29992; <code>Mail</code> Facade &#19978;&#30340; <code>queue</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Mail::to($request-&gt;user())
+    -&gt;cc($moreUsers)
+    -&gt;bcc($evenMoreUsers)
+    -&gt;queue(new OrderShipped($order));</code></pre><p>&#35813;&#26041;&#27861;&#20250;&#33258;&#21160;&#36127;&#36131;&#23558;&#20219;&#21153;&#25512;&#20837;&#38431;&#21015;&#65292;&#20174;&#32780;&#20351;&#28040;&#24687;&#22312;&#21518;&#21488;&#21457;&#36865;&#12290;&#22312;&#20351;&#29992;&#27492;&#21151;&#33021;&#20043;&#21069;&#65292;&#20320;&#38656;&#35201;&#20808;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues" target="_blank">&#37197;&#32622;&#38431;&#21015;</a>&#12290;</p><h4 id="7e1ae4f50fe6b7569b27f078644bd483">&#24310;&#36831;&#28040;&#24687;&#38431;&#21015;</h4><p>&#22914;&#26524;&#20320;&#24819;&#24310;&#36831;&#24050;&#20837;&#38431;&#37038;&#20214;&#28040;&#24687;&#30340;&#25237;&#36882;&#65292;&#21487;&#20197;&#20351;&#29992; <code>later</code> &#26041;&#27861;&#12290;<code>later</code> &#26041;&#27861;&#25509;&#21463;&#30340;&#31532;&#19968;&#21442;&#25968;&#26159;&#19968;&#20010; <code>DateTime</code> &#23454;&#20363;&#65292;&#29992;&#20110;&#25351;&#26126;&#28040;&#24687;&#24212;&#22312;&#20309;&#26102;&#21457;&#36865;&#65306;</p><pre><code class="language-php">Mail::to($request-&gt;user())
+    -&gt;cc($moreUsers)
+    -&gt;bcc($evenMoreUsers)
+    -&gt;later(now()-&gt;plus(minutes: 10), new OrderShipped($order));</code></pre><h4 id="c5cc146242de9fa3cd5b1fe5ca28e23d">&#25512;&#36865;&#21040;&#29305;&#23450;&#38431;&#21015;</h4><p>&#30001;&#20110;&#25152;&#26377;&#20351;&#29992; <code>make:mail</code> &#21629;&#20196;&#29983;&#25104;&#30340;&#21487;&#37038;&#23492;&#31867;&#37117;&#20351;&#29992;&#20102; <code>Illuminate\Bus\Queueable</code> Trait&#65292;&#20320;&#21487;&#20197;&#22312;&#20219;&#20309;&#21487;&#37038;&#23492;&#31867;&#23454;&#20363;&#19978;&#35843;&#29992; <code>onQueue</code> &#21644; <code>onConnection</code> &#26041;&#27861;&#65292;&#20174;&#32780;&#25351;&#23450;&#28040;&#24687;&#30340;&#36830;&#25509;&#21644;&#38431;&#21015;&#21517;&#31216;&#65306;</p><pre><code class="language-php">$message = (new OrderShipped($order))
+    -&gt;onConnection('sqs')
+    -&gt;onQueue('emails');
+
+Mail::to($request-&gt;user())
+    -&gt;cc($moreUsers)
+    -&gt;bcc($evenMoreUsers)
+    -&gt;queue($message);</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#20063;&#21487;&#20197;&#20351;&#29992;&#21487;&#37038;&#23492;&#31867;&#19978;&#30340; <code>Connection</code> &#21644; <code>Queue</code> &#23646;&#24615;&#26469;&#25351;&#23450;&#36830;&#25509;&#21644;&#38431;&#21015;&#65306;</p><pre><code class="language-php">use Illuminate\Queue\Attributes\Connection;
+use Illuminate\Queue\Attributes\Queue;
+
+#[Connection('sqs')]
+#[Queue('emails')]
+class OrderShipped extends Mailable
+{
+    // ...
+}</code></pre><h4 id="608119db4b6f55b253e769895923466d">&#40664;&#35748;&#21152;&#20837;&#38431;&#21015;</h4><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#26576;&#20123;&#21487;&#37038;&#23492;&#31867;&#22987;&#32456;&#34987;&#21152;&#20837;&#38431;&#21015;&#65292;&#21487;&#20197;&#22312;&#31867;&#19978;&#23454;&#29616; <code>ShouldQueue</code> &#22865;&#32422;&#65288;contract&#65289;&#12290;&#36825;&#26679;&#19968;&#26469;&#65292;&#21363;&#20351;&#22312;&#21457;&#36865;&#26102;&#35843;&#29992;&#30340;&#26159; <code>send</code> &#26041;&#27861;&#65292;&#30001;&#20110;&#35813;&#31867;&#23454;&#29616;&#20102;&#35813;&#22865;&#32422;&#65292;&#21487;&#37038;&#23492;&#31867;&#20173;&#20250;&#34987;&#21152;&#20837;&#38431;&#21015;&#65306;</p><pre><code class="language-php">use Illuminate\Contracts\Queue\ShouldQueue;
+
+class OrderShipped extends Mailable implements ShouldQueue
+{
+    // ...
+}</code></pre><h4 id="9e5347c58faf551213dfc36019672d52">&#38431;&#21015; Mailable &#19982;&#25968;&#25454;&#24211;&#20107;&#21153;</h4><p>&#24403;&#38431;&#21015;&#21270;&#30340;&#21487;&#37038;&#23492;&#31867;&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#20013;&#34987;&#27966;&#21457;&#26102;&#65292;&#23427;&#20204;&#21487;&#33021;&#20250;&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#25552;&#20132;&#20043;&#21069;&#23601;&#34987;&#38431;&#21015;&#22788;&#29702;&#12290;&#21457;&#29983;&#36825;&#31181;&#24773;&#20917;&#26102;&#65292;&#20320;&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#26399;&#38388;&#23545;&#27169;&#22411;&#25110;&#25968;&#25454;&#24211;&#35760;&#24405;&#25152;&#20570;&#30340;&#20219;&#20309;&#26356;&#26032;&#21487;&#33021;&#36824;&#27809;&#26377;&#21453;&#26144;&#21040;&#25968;&#25454;&#24211;&#20013;&#12290;&#27492;&#22806;&#65292;&#20107;&#21153;&#20869;&#21019;&#24314;&#30340;&#20219;&#20309;&#27169;&#22411;&#25110;&#25968;&#25454;&#24211;&#35760;&#24405;&#21487;&#33021;&#36824;&#19981;&#23384;&#22312;&#20110;&#25968;&#25454;&#24211;&#20013;&#12290;&#22914;&#26524;&#20320;&#30340;&#21487;&#37038;&#23492;&#31867;&#20381;&#36182;&#36825;&#20123;&#27169;&#22411;&#65292;&#37027;&#20040;&#22312;&#21457;&#36865;&#38431;&#21015;&#21270;&#21487;&#37038;&#23492;&#31867;&#30340;&#20219;&#21153;&#34987;&#22788;&#29702;&#26102;&#65292;&#23601;&#21487;&#33021;&#20986;&#29616;&#24847;&#22806;&#38169;&#35823;&#12290;</p><p>&#22914;&#26524;&#20320;&#30340;&#38431;&#21015;&#36830;&#25509;&#30340; <code>after_commit</code> &#37197;&#32622;&#36873;&#39033;&#34987;&#35774;&#20026; <code>false</code>&#65292;&#20320;&#20173;&#28982;&#21487;&#20197;&#36890;&#36807;&#22312;&#21457;&#36865;&#37038;&#20214;&#28040;&#24687;&#26102;&#35843;&#29992; <code>afterCommit</code> &#26041;&#27861;&#65292;&#25351;&#31034;&#26576;&#20010;&#29305;&#23450;&#30340;&#38431;&#21015;&#21270;&#21487;&#37038;&#23492;&#31867;&#24212;&#22312;&#25152;&#26377;&#24050;&#25171;&#24320;&#30340;&#25968;&#25454;&#24211;&#20107;&#21153;&#25552;&#20132;&#21518;&#20877;&#27966;&#21457;&#65306;</p><pre><code class="language-php">Mail::to($request-&gt;user())-&gt;send(
+    (new OrderShipped($order))-&gt;afterCommit()
+);</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#20063;&#21487;&#20197;&#20174;&#21487;&#37038;&#23492;&#31867;&#30340;&#26500;&#36896;&#20989;&#25968;&#20013;&#35843;&#29992; <code>afterCommit</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class OrderShipped extends Mailable implements ShouldQueue
+{
+    use Queueable, SerializesModels;
+
+    /**
+     * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#28040;&#24687;&#23454;&#20363;&#12290;
+     */
+    public function __construct()
+    {
+        $this-&gt;afterCommit();
+    }
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#35201;&#20102;&#35299;&#22914;&#20309;&#35268;&#36991;&#36825;&#20123;&#38382;&#39064;&#65292;&#35831;&#26597;&#38405;&#26377;&#20851;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues#jobs-and-database-transactions" target="_blank">&#38431;&#21015;&#20219;&#21153;&#19982;&#25968;&#25454;&#24211;&#20107;&#21153;</a>&#30340;&#25991;&#26723;&#12290;</p>
+</blockquote><h4 id="c5a16beaa819f9a9f98a27abb1efd0fb">&#38431;&#21015;&#37038;&#20214;&#22833;&#36133;</h4><p>&#24403;&#38431;&#21015;&#21270;&#30340;&#30005;&#23376;&#37038;&#20214;&#22833;&#36133;&#26102;&#65292;&#22914;&#26524;&#38431;&#21015;&#21270;&#21487;&#37038;&#23492;&#31867;&#19978;&#23450;&#20041;&#20102; <code>failed</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#20250;&#34987;&#35843;&#29992;&#12290;&#23548;&#33268;&#38431;&#21015;&#21270;&#37038;&#20214;&#22833;&#36133;&#30340; <code>Throwable</code> &#23454;&#20363;&#20250;&#34987;&#20256;&#32473; <code>failed</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mail;
+
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+use Throwable;
+
+class OrderDelayed extends Mailable implements ShouldQueue
+{
+    use SerializesModels;
+
+    /**
+     * &#22788;&#29702;&#38431;&#21015;&#21270;&#37038;&#20214;&#30340;&#22833;&#36133;&#12290;
+     */
+    public function failed(Throwable $exception): void
+    {
+        // ...
+    }
+}</code></pre><h2 id="501efc273b84df3984f3bb28cf93b17b">&#28210;&#26579; Mailable</h2><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#22312;&#19981;&#21457;&#36865;&#30340;&#24773;&#20917;&#19979;&#25429;&#33719;&#21487;&#37038;&#23492;&#31867;&#30340; HTML &#20869;&#23481;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#35843;&#29992;&#21487;&#37038;&#23492;&#31867;&#30340; <code>render</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#20250;&#20197;&#23383;&#31526;&#20018;&#24418;&#24335;&#36820;&#22238;&#21487;&#37038;&#23492;&#31867;&#34987;&#27714;&#20540;&#21518;&#30340; HTML &#20869;&#23481;&#65306;</p><pre><code class="language-php">use App\Mail\InvoicePaid;
+use App\Models\Invoice;
+
+$invoice = Invoice::find(1);
+
+return (new InvoicePaid($invoice))-&gt;render();</code></pre><h3 id="d8b5f88af905355bfcfa87314071a876">&#22312;&#27983;&#35272;&#22120;&#20013;&#39044;&#35272; Mailable</h3><p>&#22312;&#35774;&#35745;&#21487;&#37038;&#23492;&#31867;&#30340;&#27169;&#26495;&#26102;&#65292;&#33021;&#20687;&#26222;&#36890; Blade &#27169;&#26495;&#19968;&#26679;&#22312;&#27983;&#35272;&#22120;&#20013;&#24555;&#36895;&#39044;&#35272;&#28210;&#26579;&#21518;&#30340;&#21487;&#37038;&#23492;&#31867;&#20250;&#24456;&#26041;&#20415;&#12290;&#22240;&#27492;&#65292;Laravel &#20801;&#35768;&#20320;&#30452;&#25509;&#20174;&#36335;&#30001;&#38381;&#21253;&#25110;&#25511;&#21046;&#22120;&#36820;&#22238;&#20219;&#20309;&#21487;&#37038;&#23492;&#31867;&#12290;&#24403;&#36820;&#22238;&#21487;&#37038;&#23492;&#31867;&#26102;&#65292;&#23427;&#20250;&#34987;&#28210;&#26579;&#24182;&#26174;&#31034;&#22312;&#27983;&#35272;&#22120;&#20013;&#65292;&#35753;&#20320;&#26080;&#38656;&#23558;&#20854;&#21457;&#36865;&#21040;&#30495;&#23454;&#30340;&#30005;&#23376;&#37038;&#20214;&#22320;&#22336;&#23601;&#33021;&#24555;&#36895;&#39044;&#35272;&#20854;&#35774;&#35745;&#65306;</p><pre><code class="language-php">Route::get('/mailable', function () {
+    $invoice = App\Models\Invoice::find(1);
+
+    return new App\Mail\InvoicePaid($invoice);
+});</code></pre><h2 id="15f737c72582d78fed8c7d61d028fa79">&#26412;&#22320;&#21270; Mailable</h2><p>Laravel &#20801;&#35768;&#20320;&#20197;&#35831;&#27714;&#24403;&#21069;&#21306;&#22495;&#35774;&#32622;&#65288;locale&#65289;&#20197;&#22806;&#30340;&#35821;&#35328;&#21457;&#36865;&#21487;&#37038;&#23492;&#31867;&#65292;&#24182;&#19988;&#21363;&#20351;&#37038;&#20214;&#34987;&#21152;&#20837;&#38431;&#21015;&#65292;&#20063;&#20250;&#35760;&#20303;&#35813;&#21306;&#22495;&#35774;&#32622;&#12290;</p><p>&#20026;&#27492;&#65292;<code>Mail</code> Facade &#25552;&#20379;&#20102; <code>locale</code> &#26041;&#27861;&#26469;&#35774;&#32622;&#25152;&#38656;&#30340;&#35821;&#35328;&#12290;&#22312;&#21487;&#37038;&#23492;&#31867;&#30340;&#27169;&#26495;&#34987;&#27714;&#20540;&#26102;&#65292;&#24212;&#29992;&#20250;&#20999;&#25442;&#21040;&#35813;&#21306;&#22495;&#35774;&#32622;&#65307;&#27714;&#20540;&#23436;&#25104;&#21518;&#65292;&#20877;&#20999;&#25442;&#22238;&#20043;&#21069;&#30340;&#21306;&#22495;&#35774;&#32622;&#65306;</p><pre><code class="language-php">Mail::to($request-&gt;user())-&gt;locale('es')-&gt;send(
+    new OrderShipped($order)
+);</code></pre><h4 id="a9cb744f7bc33cb4f90945b6ae952d63">&#29992;&#25143;&#39318;&#36873;&#35821;&#35328;</h4><p>&#26377;&#26102;&#65292;&#24212;&#29992;&#20250;&#23384;&#20648;&#27599;&#20010;&#29992;&#25143;&#30340;&#20559;&#22909;&#21306;&#22495;&#35774;&#32622;&#12290;&#36890;&#36807;&#22312;&#19968;&#20010;&#25110;&#22810;&#20010;&#27169;&#22411;&#19978;&#23454;&#29616; <code>HasLocalePreference</code> &#22865;&#32422;&#65288;contract&#65289;&#65292;&#20320;&#21487;&#20197;&#25351;&#31034; Laravel &#22312;&#21457;&#36865;&#37038;&#20214;&#26102;&#20351;&#29992;&#36825;&#20010;&#23384;&#20648;&#30340;&#21306;&#22495;&#35774;&#32622;&#65306;</p><pre><code class="language-php">use Illuminate\Contracts\Translation\HasLocalePreference;
+
+class User extends Model implements HasLocalePreference
+{
+    /**
+     * &#33719;&#21462;&#29992;&#25143;&#30340;&#20559;&#22909;&#21306;&#22495;&#35774;&#32622;&#12290;
+     */
+    public function preferredLocale(): string
+    {
+        return $this-&gt;locale;
+    }
+}</code></pre><p>&#19968;&#26086;&#23454;&#29616;&#20102;&#35813;&#25509;&#21475;&#65292;Laravel &#22312;&#21521;&#35813;&#27169;&#22411;&#21457;&#36865;&#21487;&#37038;&#23492;&#31867;&#21644;&#36890;&#30693;&#26102;&#20250;&#33258;&#21160;&#20351;&#29992;&#20854;&#20559;&#22909;&#21306;&#22495;&#35774;&#32622;&#12290;&#22240;&#27492;&#65292;&#22312;&#20351;&#29992;&#35813;&#25509;&#21475;&#26102;&#26080;&#38656;&#20877;&#35843;&#29992; <code>locale</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Mail::to($request-&gt;user())-&gt;send(new OrderShipped($order));</code></pre><h2 id="db06c78d1e24cf708a14ce81c9b617ec">&#27979;&#35797;</h2><h3 id="3935ca649141169ab514d1e9b1226bec">&#27979;&#35797; Mailable &#20869;&#23481;</h3><p>Laravel &#25552;&#20379;&#20102;&#22810;&#31181;&#26041;&#27861;&#26469;&#26816;&#26597;&#21487;&#37038;&#23492;&#31867;&#30340;&#32467;&#26500;&#12290;&#27492;&#22806;&#65292;Laravel &#36824;&#25552;&#20379;&#20102;&#33509;&#24178;&#20415;&#25463;&#26041;&#27861;&#65292;&#29992;&#20110;&#27979;&#35797;&#21487;&#37038;&#23492;&#31867;&#26159;&#21542;&#21253;&#21547;&#20320;&#26399;&#26395;&#30340;&#20869;&#23481;&#65306;</p><pre><code class="language-php">use App\Mail\InvoicePaid;
+use App\Models\User;
+
+test('mailable content', function () {
+    $user = User::factory()-&gt;create();
+
+    $mailable = new InvoicePaid($user);
+
+    $mailable-&gt;assertFrom('jeffrey@example.com');
+    $mailable-&gt;assertTo('taylor@example.com');
+    $mailable-&gt;assertHasCc('abigail@example.com');
+    $mailable-&gt;assertHasBcc('victoria@example.com');
+    $mailable-&gt;assertHasReplyTo('tyler@example.com');
+    $mailable-&gt;assertHasSubject('Invoice Paid');
+    $mailable-&gt;assertHasTag('example-tag');
+    $mailable-&gt;assertHasMetadata('key', 'value');
+
+    $mailable-&gt;assertSeeInHtml($user-&gt;email);
+    $mailable-&gt;assertDontSeeInHtml('Invoice Not Paid');
+    $mailable-&gt;assertSeeInOrderInHtml(['Invoice Paid', 'Thanks']);
+
+    $mailable-&gt;assertSeeInText($user-&gt;email);
+    $mailable-&gt;assertDontSeeInText('Invoice Not Paid');
+    $mailable-&gt;assertSeeInOrderInText(['Invoice Paid', 'Thanks']);
+
+    $mailable-&gt;assertHasAttachment('/path/to/file');
+    $mailable-&gt;assertHasAttachment(Attachment::fromPath('/path/to/file'));
+    $mailable-&gt;assertHasAttachedData($pdfData, 'name.pdf', ['mime' =&gt; 'application/pdf']);
+    $mailable-&gt;assertHasAttachmentFromStorage('/path/to/file', 'name.pdf', ['mime' =&gt; 'application/pdf']);
+    $mailable-&gt;assertHasAttachmentFromStorageDisk('s3', '/path/to/file', 'name.pdf', ['mime' =&gt; 'application/pdf']);
+});</code></pre><pre><code class="language-php">use App\Mail\InvoicePaid;
+use App\Models\User;
+
+public function test_mailable_content(): void
+{
+    $user = User::factory()-&gt;create();
+
+    $mailable = new InvoicePaid($user);
+
+    $mailable-&gt;assertFrom('jeffrey@example.com');
+    $mailable-&gt;assertTo('taylor@example.com');
+    $mailable-&gt;assertHasCc('abigail@example.com');
+    $mailable-&gt;assertHasBcc('victoria@example.com');
+    $mailable-&gt;assertHasReplyTo('tyler@example.com');
+    $mailable-&gt;assertHasSubject('Invoice Paid');
+    $mailable-&gt;assertHasTag('example-tag');
+    $mailable-&gt;assertHasMetadata('key', 'value');
+
+    $mailable-&gt;assertSeeInHtml($user-&gt;email);
+    $mailable-&gt;assertDontSeeInHtml('Invoice Not Paid');
+    $mailable-&gt;assertSeeInOrderInHtml(['Invoice Paid', 'Thanks']);
+
+    $mailable-&gt;assertSeeInText($user-&gt;email);
+    $mailable-&gt;assertDontSeeInText('Invoice Not Paid');
+    $mailable-&gt;assertSeeInOrderInText(['Invoice Paid', 'Thanks']);
+
+    $mailable-&gt;assertHasAttachment('/path/to/file');
+    $mailable-&gt;assertHasAttachment(Attachment::fromPath('/path/to/file'));
+    $mailable-&gt;assertHasAttachedData($pdfData, 'name.pdf', ['mime' =&gt; 'application/pdf']);
+    $mailable-&gt;assertHasAttachmentFromStorage('/path/to/file', 'name.pdf', ['mime' =&gt; 'application/pdf']);
+    $mailable-&gt;assertHasAttachmentFromStorageDisk('s3', '/path/to/file', 'name.pdf', ['mime' =&gt; 'application/pdf']);
+}</code></pre><p>&#27491;&#22914;&#20320;&#25152;&#39044;&#26399;&#30340;&#65292;"HTML" &#26029;&#35328;&#29992;&#20110;&#21028;&#26029;&#21487;&#37038;&#23492;&#31867;&#30340; HTML &#29256;&#26412;&#26159;&#21542;&#21253;&#21547;&#32473;&#23450;&#23383;&#31526;&#20018;&#65292;&#32780; "text" &#26029;&#35328;&#21017;&#29992;&#20110;&#21028;&#26029;&#21487;&#37038;&#23492;&#31867;&#30340;&#32431;&#25991;&#26412;&#29256;&#26412;&#26159;&#21542;&#21253;&#21547;&#32473;&#23450;&#23383;&#31526;&#20018;&#12290;</p><h3 id="e30bd94f35b57fce0cee409ea0097a57">&#27979;&#35797; Mailable &#21457;&#36865;</h3><p>&#25105;&#20204;&#24314;&#35758;&#23558;&#21487;&#37038;&#23492;&#31867;&#20869;&#23481;&#30340;&#27979;&#35797;&#65292;&#19982;&#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#24050;&#34987; "&#21457;&#36865;" &#32473;&#29305;&#23450;&#29992;&#25143;&#30340;&#27979;&#35797;&#20998;&#24320;&#36827;&#34892;&#12290;&#36890;&#24120;&#65292;&#21487;&#37038;&#23492;&#31867;&#30340;&#20869;&#23481;&#19982;&#20320;&#27491;&#22312;&#27979;&#35797;&#30340;&#20195;&#30721;&#26080;&#20851;&#65292;&#21482;&#38656;&#31616;&#21333;&#22320;&#26029;&#35328; Laravel &#24050;&#25910;&#21040;&#21457;&#36865;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#30340;&#25351;&#20196;&#21363;&#21487;&#12290;</p><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>Mail</code> Facade &#30340; <code>fake</code> &#26041;&#27861;&#26469;&#38459;&#27490;&#37038;&#20214;&#34987;&#23454;&#38469;&#21457;&#36865;&#12290;&#35843;&#29992; <code>Mail</code> Facade &#30340; <code>fake</code> &#26041;&#27861;&#21518;&#65292;&#20320;&#23601;&#21487;&#20197;&#26029;&#35328;&#21487;&#37038;&#23492;&#31867;&#24050;&#34987;&#25351;&#31034;&#21457;&#36865;&#32473;&#29992;&#25143;&#65292;&#29978;&#33267;&#21487;&#20197;&#26816;&#26597;&#21487;&#37038;&#23492;&#31867;&#25509;&#25910;&#21040;&#30340;&#25968;&#25454;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use App\Mail\OrderShipped;
+use Illuminate\Support\Facades\Mail;
+
+test('orders can be shipped', function () {
+    Mail::fake();
+
+    // &#25191;&#34892;&#35746;&#21333;&#21457;&#36135;...
+
+    // &#26029;&#35328;&#27809;&#26377;&#20219;&#20309;&#21487;&#37038;&#23492;&#31867;&#34987;&#21457;&#36865;...
+    Mail::assertNothingSent();
+
+    // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#24050;&#34987;&#21457;&#36865;...
+    Mail::assertSent(OrderShipped::class);
+
+    // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#34987;&#21457;&#36865;&#20102;&#20004;&#27425;...
+    Mail::assertSent(OrderShipped::class, 2);
+
+    // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#34987;&#21457;&#36865;&#21040;&#20102;&#19968;&#20010;&#30005;&#23376;&#37038;&#20214;&#22320;&#22336;...
+    Mail::assertSent(OrderShipped::class, 'example@laravel.com');
+
+    // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#34987;&#21457;&#36865;&#21040;&#20102;&#22810;&#20010;&#30005;&#23376;&#37038;&#20214;&#22320;&#22336;...
+    Mail::assertSent(OrderShipped::class, ['example@laravel.com', '...']);
+
+    // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#26410;&#34987;&#21457;&#36865;...
+    Mail::assertNotSent(AnotherMailable::class);
+
+    // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#34987;&#21457;&#36865;&#20102;&#20004;&#27425;...
+    Mail::assertSentTimes(OrderShipped::class, 2);
+
+    // &#26029;&#35328;&#24635;&#20849;&#21457;&#36865;&#20102; 3 &#20010;&#21487;&#37038;&#23492;&#31867;...
+    Mail::assertSentCount(3);
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use App\Mail\OrderShipped;
+use Illuminate\Support\Facades\Mail;
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    public function test_orders_can_be_shipped(): void
+    {
+        Mail::fake();
+
+        // &#25191;&#34892;&#35746;&#21333;&#21457;&#36135;...
+
+        // &#26029;&#35328;&#27809;&#26377;&#20219;&#20309;&#21487;&#37038;&#23492;&#31867;&#34987;&#21457;&#36865;...
+        Mail::assertNothingSent();
+
+        // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#24050;&#34987;&#21457;&#36865;...
+        Mail::assertSent(OrderShipped::class);
+
+        // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#34987;&#21457;&#36865;&#20102;&#20004;&#27425;...
+        Mail::assertSent(OrderShipped::class, 2);
+
+        // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#34987;&#21457;&#36865;&#21040;&#20102;&#19968;&#20010;&#30005;&#23376;&#37038;&#20214;&#22320;&#22336;...
+        Mail::assertSent(OrderShipped::class, 'example@laravel.com');
+
+        // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#34987;&#21457;&#36865;&#21040;&#20102;&#22810;&#20010;&#30005;&#23376;&#37038;&#20214;&#22320;&#22336;...
+        Mail::assertSent(OrderShipped::class, ['example@laravel.com', '...']);
+
+        // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#26410;&#34987;&#21457;&#36865;...
+        Mail::assertNotSent(AnotherMailable::class);
+
+        // &#26029;&#35328;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#34987;&#21457;&#36865;&#20102;&#20004;&#27425;...
+        Mail::assertSentTimes(OrderShipped::class, 2);
+
+        // &#26029;&#35328;&#24635;&#20849;&#21457;&#36865;&#20102; 3 &#20010;&#21487;&#37038;&#23492;&#31867;...
+        Mail::assertSentCount(3);
+    }
+}</code></pre><p>&#22914;&#26524;&#20320;&#23558;&#21487;&#37038;&#23492;&#31867;&#21152;&#20837;&#38431;&#21015;&#20197;&#20415;&#22312;&#21518;&#21488;&#25237;&#36882;&#65292;&#24212;&#35813;&#20351;&#29992; <code>assertQueued</code> &#26041;&#27861;&#32780;&#19981;&#26159; <code>assertSent</code>&#65306;</p><pre><code class="language-php">Mail::assertQueued(OrderShipped::class);
+Mail::assertNotQueued(OrderShipped::class);
+Mail::assertNothingQueued();
+Mail::assertQueuedCount(3);</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#20351;&#29992; <code>assertOutgoingCount</code> &#26041;&#27861;&#26029;&#35328;&#24050;&#21457;&#36865;&#25110;&#24050;&#21152;&#20837;&#38431;&#21015;&#30340;&#21487;&#37038;&#23492;&#31867;&#24635;&#25968;&#65306;</p><pre><code class="language-php">Mail::assertOutgoingCount(3);</code></pre><p>&#20320;&#21487;&#20197;&#21521; <code>assertSent</code>&#12289;<code>assertNotSent</code>&#12289;<code>assertQueued</code> &#25110; <code>assertNotQueued</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#38381;&#21253;&#65292;&#20197;&#26029;&#35328;&#34987;&#21457;&#36865;&#30340;&#26576;&#20010;&#21487;&#37038;&#23492;&#31867;&#36890;&#36807;&#20102;&#32473;&#23450;&#30340; "&#30495;&#20540;&#27979;&#35797;&#65288;truth test&#65289;"&#12290;&#21482;&#35201;&#33267;&#23569;&#26377;&#19968;&#20010;&#21487;&#37038;&#23492;&#31867;&#36890;&#36807;&#20102;&#35813;&#30495;&#20540;&#27979;&#35797;&#65292;&#26029;&#35328;&#23601;&#20250;&#25104;&#21151;&#65306;</p><pre><code class="language-php">Mail::assertSent(function (OrderShipped $mail) use ($order) {
+    return $mail-&gt;order-&gt;id === $order-&gt;id;
+});</code></pre><p>&#22312;&#35843;&#29992; <code>Mail</code> Facade &#30340;&#26029;&#35328;&#26041;&#27861;&#26102;&#65292;&#25152;&#25552;&#20379;&#30340;&#38381;&#21253;&#25152;&#25509;&#21463;&#30340;&#21487;&#37038;&#23492;&#31867;&#23454;&#20363;&#26292;&#38706;&#20102;&#19968;&#20123;&#29992;&#20110;&#26816;&#26597;&#35813;&#21487;&#37038;&#23492;&#31867;&#30340;&#23454;&#29992;&#26041;&#27861;&#65306;</p><pre><code class="language-php">Mail::assertSent(OrderShipped::class, function (OrderShipped $mail) use ($user) {
+    return $mail-&gt;hasTo($user-&gt;email) &amp;&amp;
+           $mail-&gt;hasCc('...') &amp;&amp;
+           $mail-&gt;hasBcc('...') &amp;&amp;
+           $mail-&gt;hasReplyTo('...') &amp;&amp;
+           $mail-&gt;hasFrom('...') &amp;&amp;
+           $mail-&gt;hasSubject('...') &amp;&amp;
+           $mail-&gt;hasMetadata('order_id', $mail-&gt;order-&gt;id);
+           $mail-&gt;usesMailer('ses');
+});</code></pre><p>&#35813;&#21487;&#37038;&#23492;&#31867;&#23454;&#20363;&#36824;&#21253;&#21547;&#20960;&#20010;&#29992;&#20110;&#26816;&#26597;&#21487;&#37038;&#23492;&#31867;&#38468;&#20214;&#30340;&#23454;&#29992;&#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Mail\Mailables\Attachment;
+
+Mail::assertSent(OrderShipped::class, function (OrderShipped $mail) {
+    return $mail-&gt;hasAttachment(
+        Attachment::fromPath('/path/to/file')
+            -&gt;as('name.pdf')
+            -&gt;withMime('application/pdf')
+    );
+});
+
+Mail::assertSent(OrderShipped::class, function (OrderShipped $mail) {
+    return $mail-&gt;hasAttachment(
+        Attachment::fromStorageDisk('s3', '/path/to/file')
+    );
+});
+
+Mail::assertSent(OrderShipped::class, function (OrderShipped $mail) use ($pdfData) {
+    return $mail-&gt;hasAttachment(
+        Attachment::fromData(fn () =&gt; $pdfData, 'name.pdf')
+    );
+});</code></pre><p>&#20320;&#21487;&#33021;&#24050;&#32463;&#27880;&#24847;&#21040;&#65292;&#26377;&#20004;&#20010;&#26041;&#27861;&#29992;&#20110;&#26029;&#35328;&#37038;&#20214;&#26410;&#34987;&#21457;&#36865;&#65306;<code>assertNotSent</code> &#21644; <code>assertNotQueued</code>&#12290;&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#26029;&#35328;&#27809;&#26377;&#20219;&#20309;&#37038;&#20214;&#34987;<strong class="mk-b">&#21457;&#36865;&#25110;</strong>&#21152;&#20837;&#38431;&#21015;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#20351;&#29992; <code>assertNothingOutgoing</code> &#21644; <code>assertNotOutgoing</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Mail::assertNothingOutgoing();
+
+Mail::assertNotOutgoing(function (OrderShipped $mail) use ($order) {
+    return $mail-&gt;order-&gt;id === $order-&gt;id;
+});</code></pre><h2 id="57720b473824e2f554bac9b9e018b9a8">&#37038;&#20214;&#19982;&#26412;&#22320;&#24320;&#21457;</h2><p>&#22312;&#24320;&#21457;&#20250;&#21457;&#36865;&#37038;&#20214;&#30340;&#24212;&#29992;&#26102;&#65292;&#20320;&#21487;&#33021;&#24182;&#19981;&#24819;&#30495;&#27491;&#23558;&#37038;&#20214;&#21457;&#36865;&#21040;&#30495;&#23454;&#30340;&#30005;&#23376;&#37038;&#20214;&#22320;&#22336;&#12290;Laravel &#25552;&#20379;&#20102;&#20960;&#31181;&#22312;&#26412;&#22320;&#24320;&#21457;&#26399;&#38388; "&#31105;&#29992;" &#37038;&#20214;&#23454;&#38469;&#21457;&#36865;&#30340;&#26041;&#24335;&#12290;</p><h4 id="c2c092817fa105340f2497b4d4ded2a9">Log &#39537;&#21160;</h4><p><code>log</code> &#37038;&#20214;&#39537;&#21160;&#19981;&#20250;&#30495;&#27491;&#21457;&#36865;&#37038;&#20214;&#65292;&#32780;&#26159;&#23558;&#25152;&#26377;&#37038;&#20214;&#28040;&#24687;&#20889;&#20837;&#26085;&#24535;&#25991;&#20214;&#20197;&#20379;&#26816;&#26597;&#12290;&#36890;&#24120;&#65292;&#36825;&#20010;&#39537;&#21160;&#21482;&#20250;&#22312;&#26412;&#22320;&#24320;&#21457;&#26399;&#38388;&#20351;&#29992;&#12290;&#26377;&#20851;&#25353;&#29615;&#22659;&#37197;&#32622;&#24212;&#29992;&#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/configuration#environment-configuration" target="_blank">&#37197;&#32622;&#25991;&#26723;</a>&#12290;</p><h4 id="7d954bfc08d2261a4e19660ed5de2e07">HELO / Mailtrap / Mailpit</h4><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <a href="https://usehelo.com" target="_blank" rel="noopener noreferrer">HELO</a> &#25110; <a href="https://mailtrap.io" target="_blank" rel="noopener noreferrer">Mailtrap</a> &#36825;&#31867;&#26381;&#21153;&#65292;&#37197;&#21512; <code>smtp</code> &#39537;&#21160;&#65292;&#23558;&#37038;&#20214;&#28040;&#24687;&#21457;&#36865;&#21040;&#19968;&#20010; "&#34394;&#25311;" &#37038;&#31665;&#65292;&#28982;&#21518;&#20320;&#23601;&#21487;&#20197;&#22312;&#30495;&#23454;&#30340;&#37038;&#20214;&#23458;&#25143;&#31471;&#20013;&#26597;&#30475;&#23427;&#20204;&#12290;&#36825;&#31181;&#26041;&#27861;&#30340;&#20248;&#28857;&#26159;&#65292;&#20320;&#21487;&#20197;&#23454;&#38469;&#22312; Mailtrap &#30340;&#28040;&#24687;&#26597;&#30475;&#22120;&#20013;&#26816;&#26597;&#26368;&#32456;&#30340;&#37038;&#20214;&#12290;</p><p>&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sail" target="_blank">Laravel Sail</a>&#65292;&#21487;&#20197;&#20351;&#29992; <a href="https://github.com/axllent/mailpit" target="_blank" rel="noopener noreferrer">Mailpit</a> &#39044;&#35272;&#20320;&#30340;&#28040;&#24687;&#12290;&#24403; Sail &#36816;&#34892;&#26102;&#65292;&#20320;&#21487;&#20197;&#22312;&#20197;&#19979;&#22320;&#22336;&#35775;&#38382; Mailpit &#30028;&#38754;&#65306;<code>http://localhost:8025</code>&#12290;</p><h4 id="2be488e1b0a4a6b3d2faeebd401e4f18">&#20351;&#29992;&#20840;&#23616; <code>to</code> &#22320;&#22336;</h4><p>&#26368;&#21518;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#35843;&#29992; <code>Mail</code> Facade &#25552;&#20379;&#30340; <code>alwaysTo</code> &#26041;&#27861;&#65292;&#25351;&#23450;&#19968;&#20010;&#20840;&#23616; "&#25910;&#20214;&#20154;&#65288;to&#65289;" &#22320;&#22336;&#12290;&#36890;&#24120;&#65292;&#36825;&#20010;&#26041;&#27861;&#24212;&#35813;&#20174;&#24212;&#29992;&#26576;&#20010;&#26381;&#21153;&#25552;&#20379;&#32773;&#65288;service provider&#65289;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Mail;
+
+/**
+ * &#24341;&#23548;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    if ($this-&gt;app-&gt;environment('local')) {
+        Mail::alwaysTo('taylor@example.com');
+    }
+}</code></pre><p>&#20351;&#29992; <code>alwaysTo</code> &#26041;&#27861;&#26102;&#65292;&#37038;&#20214;&#28040;&#24687;&#19978;&#30340;&#20219;&#20309;&#39069;&#22806; "cc" &#25110; "bcc" &#22320;&#22336;&#37117;&#20250;&#34987;&#31227;&#38500;&#12290;</p><h2 id="10b2761db5a8e089049df39675abc550">&#20107;&#20214;</h2><p>&#22312;&#21457;&#36865;&#37038;&#20214;&#28040;&#24687;&#26102;&#65292;Laravel &#20250;&#27966;&#21457;&#20004;&#20010;&#20107;&#20214;&#65288;event&#65289;&#12290;<code>MessageSending</code> &#20107;&#20214;&#22312;&#28040;&#24687;&#21457;&#36865;&#20043;&#21069;&#27966;&#21457;&#65292;&#32780; <code>MessageSent</code> &#20107;&#20214;&#22312;&#28040;&#24687;&#21457;&#36865;&#20043;&#21518;&#27966;&#21457;&#12290;&#35201;&#27880;&#24847;&#65292;&#36825;&#20123;&#20107;&#20214;&#26159;&#22312;&#37038;&#20214;<em>&#21457;&#36865;</em>&#26102;&#27966;&#21457;&#30340;&#65292;&#32780;&#19981;&#26159;&#22312;&#20837;&#38431;&#26102;&#12290;&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#20013;&#20026;&#36825;&#20123;&#20107;&#20214;&#21019;&#24314;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#20107;&#20214;&#30417;&#21548;&#22120;</a>&#65306;</p><pre><code class="language-php">use Illuminate\Mail\Events\MessageSending;
+// use Illuminate\Mail\Events\MessageSent;
+
+class LogMessage
+{
+    /**
+     * &#22788;&#29702;&#20107;&#20214;&#12290;
+     */
+    public function handle(MessageSending $event): void
+    {
+        // ...
+    }
+}</code></pre><h2 id="23153d6bd4e8f6a6cf5db7c8a9a6b751">&#33258;&#23450;&#20041;&#20256;&#36755;&#26041;&#24335;</h2><p>Laravel &#20869;&#32622;&#20102;&#22810;&#31181;&#37038;&#20214;&#20256;&#36755;&#65288;transport&#65289;&#65307;&#19981;&#36807;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#32534;&#20889;&#33258;&#24049;&#30340;&#20256;&#36755;&#65292;&#20197;&#20415;&#36890;&#36807; Laravel &#24320;&#31665;&#21363;&#19981;&#25903;&#25345;&#30340;&#20854;&#20182;&#26381;&#21153;&#26469;&#25237;&#36882;&#37038;&#20214;&#12290;&#39318;&#20808;&#65292;&#23450;&#20041;&#19968;&#20010;&#32487;&#25215;&#33258; <code>Symfony\Component\Mailer\Transport\AbstractTransport</code> &#31867;&#30340;&#31867;&#12290;&#28982;&#21518;&#65292;&#22312;&#35813;&#20256;&#36755;&#19978;&#23454;&#29616; <code>doSend</code> &#21644; <code>__toString</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mail;
+
+use MailchimpTransactional\ApiClient;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\AbstractTransport;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\MessageConverter;
+
+class MailchimpTransport extends AbstractTransport
+{
+    /**
+     * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340; Mailchimp &#20256;&#36755;&#23454;&#20363;&#12290;
+     */
+    public function __construct(
+        protected ApiClient $client,
+    ) {
+        parent::__construct();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function doSend(SentMessage $message): void
+    {
+        $email = MessageConverter::toEmail($message-&gt;getOriginalMessage());
+
+        $this-&gt;client-&gt;messages-&gt;send(['message' =&gt; [
+            'from_email' =&gt; $email-&gt;getFrom(),
+            'to' =&gt; collect($email-&gt;getTo())-&gt;map(function (Address $email) {
+                return ['email' =&gt; $email-&gt;getAddress(), 'type' =&gt; 'to'];
+            })-&gt;all(),
+            'subject' =&gt; $email-&gt;getSubject(),
+            'text' =&gt; $email-&gt;getTextBody(),
+        ]]);
+    }
+
+    /**
+     * &#33719;&#21462;&#35813;&#20256;&#36755;&#30340;&#23383;&#31526;&#20018;&#34920;&#31034;&#24418;&#24335;&#12290;
+     */
+    public function __toString(): string
+    {
+        return 'mailchimp';
+    }
+}</code></pre><p>&#23450;&#20041;&#22909;&#33258;&#23450;&#20041;&#20256;&#36755;&#21518;&#65292;&#21487;&#20197;&#36890;&#36807; <code>Mail</code> Facade &#25552;&#20379;&#30340; <code>extend</code> &#26041;&#27861;&#27880;&#20876;&#23427;&#12290;&#36890;&#24120;&#65292;&#36825;&#24212;&#22312;&#24212;&#29992; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#23436;&#25104;&#12290;&#19968;&#20010; <code>$config</code> &#21442;&#25968;&#20250;&#34987;&#20256;&#32473; <code>extend</code> &#26041;&#27861;&#25152;&#25509;&#21463;&#30340;&#38381;&#21253;&#12290;&#35813;&#21442;&#25968;&#21253;&#21547;&#24212;&#29992;&#22312; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#20026;&#35813;&#37038;&#20214;&#21457;&#36865;&#22120;&#23450;&#20041;&#30340;&#37197;&#32622;&#25968;&#32452;&#65306;</p><pre><code class="language-php">use App\Mail\MailchimpTransport;
+use Illuminate\Support\Facades\Mail;
+use MailchimpTransactional\ApiClient;
+
+/**
+ * &#24341;&#23548;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Mail::extend('mailchimp', function (array $config = []) {
+        $client = new ApiClient;
+
+        $client-&gt;setApiKey($config['key']);
+
+        return new MailchimpTransport($client);
+    });
+}</code></pre><p>&#23450;&#20041;&#24182;&#27880;&#20876;&#22909;&#33258;&#23450;&#20041;&#20256;&#36755;&#21518;&#65292;&#20320;&#23601;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#21019;&#24314;&#19968;&#20010;&#20351;&#29992;&#35813;&#26032;&#20256;&#36755;&#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#23450;&#20041;&#65306;</p><pre><code class="language-php">'mailchimp' =&gt; [
+    'transport' =&gt; 'mailchimp',
+    'key' =&gt; env('MAILCHIMP_API_KEY'),
+    // ...
+],</code></pre><h3 id="3ef4eb4a347de90938bc69256b5ddd68">&#20854;&#20182; Symfony &#20256;&#36755;&#26041;&#24335;</h3><p>Laravel &#24050;&#25903;&#25345;&#19968;&#20123;&#30001; Symfony &#32500;&#25252;&#30340;&#29616;&#26377;&#37038;&#20214;&#20256;&#36755;&#65292;&#22914; Mailgun &#21644; Postmark&#12290;&#19981;&#36807;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20026; Laravel &#25193;&#23637;&#23545;&#20854;&#20182; Symfony &#32500;&#25252;&#30340;&#20256;&#36755;&#30340;&#25903;&#25345;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807; Composer &#24341;&#20837;&#25152;&#38656;&#30340; Symfony &#37038;&#20214;&#32452;&#20214;&#65292;&#24182;&#23558;&#35813;&#20256;&#36755;&#27880;&#20876;&#21040; Laravel &#26469;&#23454;&#29616;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#23433;&#35013;&#24182;&#27880;&#20876; "Brevo"&#65288;&#21407;&#21517; "Sendinblue"&#65289;&#36825;&#20010; Symfony &#37038;&#20214;&#32452;&#20214;&#65306;</p><pre><code class="language-shell">composer require symfony/brevo-mailer symfony/http-client</code></pre><p>&#23433;&#35013;&#22909; Brevo &#37038;&#20214;&#32452;&#20214;&#21253;&#21518;&#65292;&#20320;&#21487;&#20197;&#23558; Brevo API &#20973;&#25454;&#30340;&#26465;&#30446;&#28155;&#21152;&#21040;&#24212;&#29992;&#30340; <code>services</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#65306;</p><pre><code class="language-php">'brevo' =&gt; [
+    'key' =&gt; env('BREVO_API_KEY'),
+],</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Mail</code> Facade &#30340; <code>extend</code> &#26041;&#27861;&#23558;&#35813;&#20256;&#36755;&#27880;&#20876;&#21040; Laravel&#12290;&#36890;&#24120;&#65292;&#36825;&#24212;&#22312;&#26576;&#20010;&#26381;&#21153;&#25552;&#20379;&#32773;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#23436;&#25104;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Mailer\Bridge\Brevo\Transport\BrevoTransportFactory;
+use Symfony\Component\Mailer\Transport\Dsn;
+
+/**
+ * &#24341;&#23548;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Mail::extend('brevo', function () {
+        return (new BrevoTransportFactory)-&gt;create(
+            new Dsn(
+                'brevo+api',
+                'default',
+                config('services.brevo.key')
+            )
+        );
+    });
+}</code></pre><p>&#27880;&#20876;&#22909;&#20256;&#36755;&#21518;&#65292;&#20320;&#23601;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#21019;&#24314;&#19968;&#20010;&#20351;&#29992;&#35813;&#26032;&#20256;&#36755;&#30340;&#37038;&#20214;&#21457;&#36865;&#22120;&#23450;&#20041;&#65306;</p><pre><code class="language-php">'brevo' =&gt; [
+    'transport' =&gt; 'brevo',
+    // ...
+],</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Symfony Mailer: <i><a href="https://symfony.com/doc/current/mailer.html" target="_blank">https://symfony.com/doc/current/mailer.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Mailgun 区域: <i><a href="https://documentation.mailgun.com/docs/mailgun/api-reference/api-overview#mailgun-regions" target="_blank">https://documentation.mailgun.com/docs/mailgun/api-reference/api-overview#mailgun-regions</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Postmark: <i><a href="https://postmarkapp.com/" target="_blank">https://postmarkapp.com/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Resend: <i><a href="https://resend.com/" target="_blank">https://resend.com/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> 临时凭据: <i><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_use-resources.html" target="_blank">https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_use-resources.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 订阅管理功能: <i><a href="https://docs.aws.amazon.com/ses/latest/dg/sending-email-subscription-management.html" target="_blank">https://docs.aws.amazon.com/ses/latest/dg/sending-email-subscription-management.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 租户（tenant）: <i><a href="https://docs.aws.amazon.com/ses/latest/dg/tenants.html" target="_blank">https://docs.aws.amazon.com/ses/latest/dg/tenants.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 高可用性: <i><a href="https://en.wikipedia.org/wiki/High_availability" target="_blank">https://en.wikipedia.org/wiki/High_availability</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> 负载均衡: <i><a href="https://en.wikipedia.org/wiki/Load_balancing_(computing" target="_blank">https://en.wikipedia.org/wiki/Load_balancing_(computing</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> Blade 模板: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/blade" target="_blank">/docs/Laravel 13.x/blade</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> Blade 模板: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/blade" target="_blank">/docs/Laravel 13.x/blade</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> 文件系统磁盘: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/filesystem" target="_blank">/docs/Laravel 13.x/filesystem</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> 文件系统磁盘: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/filesystem" target="_blank">/docs/Laravel 13.x/filesystem</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> 标签: <i><a href="https://documentation.mailgun.com/docs/mailgun/user-manual/tracking-messages/#tags" target="_blank">https://documentation.mailgun.com/docs/mailgun/user-manual/tracking-messages/#tags</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 元数据: <i><a href="https://documentation.mailgun.com/docs/mailgun/user-manual/sending-messages/#attaching-metadata-to-messages" target="_blank">https://documentation.mailgun.com/docs/mailgun/user-manual/sending-messages/#attaching-metadata-to-messages</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> 标签: <i><a href="https://postmarkapp.com/blog/tags-support-for-smtp" target="_blank">https://postmarkapp.com/blog/tags-support-for-smtp</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> 元数据: <i><a href="https://postmarkapp.com/support/article/1125-custom-metadata-faq" target="_blank">https://postmarkapp.com/support/article/1125-custom-metadata-faq</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> 标签: <i><a href="https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html" target="_blank">https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> 统一队列 API: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues" target="_blank">/docs/Laravel 13.x/queues</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> 配置队列: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues" target="_blank">/docs/Laravel 13.x/queues</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> 队列任务与数据库事务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues#jobs-and-database-transactions" target="_blank">/docs/Laravel 13.x/queues#jobs-and-database-transactions</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> 配置文档: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/configuration#environment-configuration" target="_blank">/docs/Laravel 13.x/configuration#environment-configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> HELO: <i><a href="https://usehelo.com" target="_blank">https://usehelo.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> Mailtrap: <i><a href="https://mailtrap.io" target="_blank">https://mailtrap.io</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> Laravel Sail: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sail" target="_blank">/docs/Laravel 13.x/sail</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> Mailpit: <i><a href="https://github.com/axllent/mailpit" target="_blank">https://github.com/axllent/mailpit</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> 事件监听器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="kpv13q298w.html#blog1039" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">本地化</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="2ky045l9z8.html#blog1041" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">通知</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

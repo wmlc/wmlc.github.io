@@ -70,7 +70,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
 
     
 </head>
@@ -322,6 +322,10 @@
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
                                    href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel&#32;13.x/overview.html">Laravel 13.x</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
@@ -589,6 +593,93 @@
     })();
 </script>
 
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -827,9 +918,9 @@ Started Sonatype Nexus OSS 3.30.0-01
 </code></pre><p>&#22914;&#26524;&#20320;&#30475;&#21040;&#20197;&#19978;&#20869;&#23481;&#65292;&#35828;&#26126; <code>Nexus</code> &#24050;&#32463;&#21551;&#21160;&#25104;&#21151;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#27983;&#35272;&#22120;&#25171;&#24320; <code>http://YourIP:8081</code> &#35775;&#38382; <code>Nexus</code> &#20102;&#12290;</p><p>&#39318;&#27425;&#36816;&#34892;&#35831;&#36890;&#36807;&#20197;&#19979;&#21629;&#20196;&#33719;&#21462;&#21021;&#22987;&#23494;&#30721;&#65306;</p><pre><code class="language-bash">$ docker exec nexus3 cat /nexus-data/admin.password
 
 9266139e-41a2-4abb-92ec-e4142a3532cb</code></pre><p>&#39318;&#27425;&#21551;&#21160; Nexus &#30340;&#40664;&#35748;&#24080;&#21495;&#26159; <code>admin</code> &#65292;&#23494;&#30721;&#21017;&#26159;&#19978;&#36793;&#21629;&#20196;&#33719;&#21462;&#21040;&#30340;&#65292;&#28857;&#20987;&#21491;&#19978;&#35282;&#30331;&#24405;&#65292;&#39318;&#27425;&#30331;&#24405;&#38656;&#26356;&#25913;&#21021;&#22987;&#23494;&#30721;&#12290;</p><p>&#30331;&#24405;&#20043;&#21518;&#21487;&#20197;&#28857;&#20987;&#39029;&#38754;&#19978;&#26041;&#30340;&#40831;&#36718;&#25353;&#38062;&#25353;&#29031;&#19979;&#38754;&#30340;&#26041;&#27861;&#36827;&#34892;&#35774;&#32622;&#12290;</p><h3 id="28d3d0cf48fc1ddb0ae45a876066de7f">&#21019;&#24314;&#20179;&#24211;</h3><p>&#21019;&#24314;&#19968;&#20010;&#31169;&#26377;&#20179;&#24211;&#30340;&#26041;&#27861;&#65306; <code>Repository-&gt;Repositories</code> &#28857;&#20987;&#21491;&#36793;&#33756;&#21333; <code>Create repository</code> &#36873;&#25321; <code>docker (hosted)</code></p><ul style="padding-left: 1.5em;">
-<li style="list-style-type: disc;"><strong class="mk-b">Name</strong>: &#20179;&#24211;&#30340;&#21517;&#31216;</li>
-<li style="list-style-type: disc;"><strong class="mk-g">HTTP</strong>: &#20179;&#24211;&#21333;&#29420;&#30340;&#35775;&#38382;&#31471;&#21475;&#65288;&#20363;&#22914;&#65306;<strong class="mk-y">5001</strong>&#65289;</li>
-<li style="list-style-type: disc;"><strong class="mk-y">Hosted -&gt; Deployment pollcy</strong>: &#35831;&#36873;&#25321; <strong class="mk-g">Allow redeploy</strong> &#21542;&#21017;&#26080;&#27861;&#19978;&#20256; Docker &#38236;&#20687;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-p">Name</strong>: &#20179;&#24211;&#30340;&#21517;&#31216;</li>
+<li style="list-style-type: disc;"><strong class="mk-p">HTTP</strong>: &#20179;&#24211;&#21333;&#29420;&#30340;&#35775;&#38382;&#31471;&#21475;&#65288;&#20363;&#22914;&#65306;<strong class="mk-y">5001</strong>&#65289;</li>
+<li style="list-style-type: disc;"><strong class="mk-p">Hosted -&gt; Deployment pollcy</strong>: &#35831;&#36873;&#25321; <strong class="mk-g">Allow redeploy</strong> &#21542;&#21017;&#26080;&#27861;&#19978;&#20256; Docker &#38236;&#20687;&#12290;</li>
 </ul><p>&#20854;&#23427;&#30340;&#20179;&#24211;&#21019;&#24314;&#26041;&#27861;&#35831;&#21508;&#20301;&#33258;&#24049;&#25720;&#32034;&#65292;&#36824;&#21487;&#20197;&#21019;&#24314;&#19968;&#20010; <code>docker (proxy)</code> &#31867;&#22411;&#30340;&#20179;&#24211;&#38142;&#25509;&#21040; DockerHub &#19978;&#12290;&#20877;&#21019;&#24314;&#19968;&#20010; <code>docker (group)</code> &#31867;&#22411;&#30340;&#20179;&#24211;&#25226;&#21018;&#25165;&#30340; <code>hosted</code> &#19982; <code>proxy</code> &#28155;&#21152;&#22312;&#19968;&#36215;&#12290;&#20027;&#26426;&#22312;&#35775;&#38382;&#30340;&#26102;&#20505;&#40664;&#35748;&#19979;&#36733;&#31169;&#26377;&#20179;&#24211;&#20013;&#30340;&#38236;&#20687;&#65292;&#22914;&#26524;&#27809;&#26377;&#23558;&#38142;&#25509;&#21040; DockerHub &#20013;&#19979;&#36733;&#24182;&#32531;&#23384;&#21040; Nexus &#20013;&#12290;</p><h3 id="71806c582107cfe834607a1612163cfa">&#28155;&#21152;&#35775;&#38382;&#26435;&#38480;</h3><p>&#33756;&#21333; <code>Security-&gt;Realms</code> &#25226; Docker Bearer Token Realm &#31227;&#21040;&#21491;&#36793;&#30340;&#26694;&#20013;&#20445;&#23384;&#12290;</p><p>&#28155;&#21152;&#29992;&#25143;&#35268;&#21017;&#65306;&#33756;&#21333; <code>Security-&gt;Roles</code>-&gt;<code>Create role</code>  &#22312; <code>Privlleges</code> &#36873;&#39033;&#25628;&#32034; docker &#25226;&#30456;&#24212;&#30340;&#35268;&#21017;&#31227;&#21160;&#21040;&#21491;&#36793;&#30340;&#26694;&#20013;&#28982;&#21518;&#20445;&#23384;&#12290;</p><p>&#28155;&#21152;&#29992;&#25143;&#65306;&#33756;&#21333; <code>Security-&gt;Users</code>-&gt;<code>Create local user</code> &#22312; <code>Roles</code> &#36873;&#39033;&#20013;&#36873;&#20013;&#21018;&#25165;&#21019;&#24314;&#30340;&#35268;&#21017;&#31227;&#21160;&#21040;&#21491;&#36793;&#30340;&#31383;&#21475;&#20445;&#23384;&#12290;</p><h3 id="31694d6af99809a601cc3e6f177a690b">NGINX &#21152;&#23494;&#20195;&#29702;</h3><p>&#35777;&#20070;&#30340;&#29983;&#25104;&#35831;&#21442;&#35265; <a href="https://wangmaolin.net/topic/Docker/registry_auth.md" target="_blank"><code>&#31169;&#26377;&#20179;&#24211;&#39640;&#32423;&#37197;&#32622;</code></a> &#37324;&#38754;&#35777;&#20070;&#29983;&#25104;&#19968;&#33410;&#12290;</p><p>NGINX &#31034;&#20363;&#37197;&#32622;&#22914;&#19979;</p><pre><code class="language-nginx">upstream register
 {
     server "YourHostName OR IP":5001; #&#31471;&#21475;&#20026;&#19978;&#38754;&#28155;&#21152;&#31169;&#26377;&#38236;&#20687;&#20179;&#24211;&#26102;&#35774;&#32622;&#30340; HTTP &#36873;&#39033;&#30340;&#31471;&#21475;&#21495;

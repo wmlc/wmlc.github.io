@@ -1,0 +1,1494 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>文件存储 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/qk9428ovw1.html', function (data, status) {
+            addView('qk9428ovw1.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>文件存储</h1><ul>
+<li><a href="qk9428ovw1.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="qk9428ovw1.html#224e2ccda861c2514faa683b3683c361">配置</a>
+<ul>
+<li><a href="qk9428ovw1.html#3370e92597af41beac265e327106ffc4">本地驱动</a></li>
+<li><a href="qk9428ovw1.html#69e36ec742b1e4bec5d350b59e6ecfc1">公共磁盘</a></li>
+<li><a href="qk9428ovw1.html#934c47f8569f6de4389638e42069a4e1">驱动前置条件</a>
+<ul>
+<li><a href="qk9428ovw1.html#66a37f29cb6c82a218866beecc9d9d28">S3 驱动配置</a></li>
+<li><a href="qk9428ovw1.html#635e3a2e8e83f3be2a5eab1b35c480e0">FTP 驱动配置</a></li>
+<li><a href="qk9428ovw1.html#c77e809d0d88cdd4eb1cb11499196bbf">SFTP 驱动配置</a></li>
+</ul></li>
+<li><a href="qk9428ovw1.html#b3f09171f69882d567e8a2777f298437">作用域、只读与读穿文件系统</a></li>
+<li><a href="qk9428ovw1.html#b1dc405868eaad03341c529315041a48">兼容 Amazon S3 的文件系统</a></li>
+</ul></li>
+<li><a href="qk9428ovw1.html#cc3955a1a33e9331cc8a5d79e896d948">获取磁盘实例</a>
+<ul>
+<li><a href="qk9428ovw1.html#d64aab89226598c7f03c4bc7c80d6373">按需磁盘</a></li>
+</ul></li>
+<li><a href="qk9428ovw1.html#ad19d47bb5ce91c5ece5fc1ad58ce3b1">检索文件</a>
+<ul>
+<li><a href="qk9428ovw1.html#5dfd5a78e2ba1bc8afb482a8745454ea">下载文件</a></li>
+<li><a href="qk9428ovw1.html#bffce7c49edebfa8202bab3bf9109a91">文件 URL</a>
+<ul>
+<li><a href="qk9428ovw1.html#d0256c309c31a9353bacd2fb05c2d633">URL 主机定制</a></li>
+</ul></li>
+<li><a href="qk9428ovw1.html#c80c5eca257b21db8700357b0054c2db">临时 URL</a>
+<ul>
+<li><a href="qk9428ovw1.html#7622beaa2b01e30781102cdd06c8a5e5">启用本地临时 URL</a></li>
+<li><a href="qk9428ovw1.html#65716927631e7e39552409f1ffe3a2c0">S3 请求参数</a></li>
+<li><a href="qk9428ovw1.html#91599b7a5a4362ac02a42e5b1de2a0a6">定制临时 URL</a></li>
+<li><a href="qk9428ovw1.html#863529aabb901759d5ef0c24b96b219f">临时上传 URL</a></li>
+</ul></li>
+<li><a href="qk9428ovw1.html#5142ab909e7d5cf19fa0ff040fc1d125">文件元数据</a>
+<ul>
+<li><a href="qk9428ovw1.html#de6104ca3fb5cb87820add115857409f">文件路径</a></li>
+</ul></li>
+</ul></li>
+<li><a href="qk9428ovw1.html#0fa85fd676b449a2841a01e22e235fb7">存储文件</a>
+<ul>
+<li><a href="qk9428ovw1.html#21642b34075301315d978561d350329a">写入失败</a>
+<ul>
+<li><a href="qk9428ovw1.html#a02b71e34967bf2beaec9fc8045fd712">向文件开头前置与向末尾追加内容</a></li>
+<li><a href="qk9428ovw1.html#7c2da971ba19c1917c308c398dd6542a">复制与移动文件</a></li>
+<li><a href="qk9428ovw1.html#19fdaeaff21be8c4a245ed1b8cc1a77b">自动流式传输</a></li>
+<li><a href="qk9428ovw1.html#481e034e6026969aae4ce7ce7c8a7b6f">文件上传</a></li>
+</ul></li>
+<li><a href="qk9428ovw1.html#4b4f49c5241f4e7c03a074db4077a137">指定文件名</a></li>
+<li><a href="qk9428ovw1.html#387ad799bdb555570e1f9a082766026e">指定磁盘</a></li>
+<li><a href="qk9428ovw1.html#077c9e8cd721a6bb8e4e92f7ab7ea7c5">其他上传文件信息</a>
+<ul>
+<li><a href="qk9428ovw1.html#fdb4eb3dfd838821063ecc54eda4ceb1">文件可见性</a></li>
+<li><a href="qk9428ovw1.html#7808a68ee1b34dab43011429a12de19e">图像处理</a></li>
+</ul></li>
+<li><a href="qk9428ovw1.html#2be64862bd8b80edfffb3bab3c5be775">本地文件与可见性</a></li>
+</ul></li>
+<li><a href="qk9428ovw1.html#53518c22f5529ff13cb3af383ed407c4">删除文件</a></li>
+<li><a href="qk9428ovw1.html#767fa455bb6826f4b550c21a6bca7182">目录</a>
+<ul>
+<li><a href="qk9428ovw1.html#43b439b5fae161c03d52e4da68c357dd">获取目录内的所有文件</a></li>
+<li><a href="qk9428ovw1.html#124f74a58dd5d39a8774a57da14d6dc8">获取目录内的所有子目录</a></li>
+<li><a href="qk9428ovw1.html#be749cba847528da27f9ecdbde24124e">创建目录</a></li>
+<li><a href="qk9428ovw1.html#34f1aa00b285bbb3f4bbe19339b3e535">删除目录</a></li>
+</ul></li>
+<li><a href="qk9428ovw1.html#db06c78d1e24cf708a14ce81c9b617ec">测试</a></li>
+<li><a href="qk9428ovw1.html#f5b6a44f095a9d5afc47be30db752fc6">自定义文件系统</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>Laravel &#20511;&#21161; Frank de Jonge &#24320;&#21457;&#30340;&#20248;&#31168; PHP &#21253; <a href="https://github.com/thephpleague/flysystem" target="_blank" rel="noopener noreferrer">Flysystem</a>&#65292;&#25552;&#20379;&#20102;&#19968;&#22871;&#24378;&#22823;&#30340;&#25991;&#20214;&#31995;&#32479;&#25277;&#35937;&#23618;&#12290;Laravel &#30340; Flysystem &#38598;&#25104;&#25552;&#20379;&#20102;&#29992;&#20110;&#25805;&#20316;&#26412;&#22320;&#25991;&#20214;&#31995;&#32479;&#12289;SFTP &#21644; Amazon S3 &#30340;&#31616;&#21333;&#39537;&#21160;&#65288;driver&#65289;&#12290;&#26356;&#26834;&#30340;&#26159;&#65292;&#30001;&#20110;&#27599;&#31181;&#23384;&#20648;&#26041;&#24335;&#30340; API &#37117;&#30456;&#21516;&#65292;&#22312;&#26412;&#22320;&#24320;&#21457;&#26426;&#19982;&#29983;&#20135;&#26381;&#21153;&#22120;&#20043;&#38388;&#20999;&#25442;&#36825;&#20123;&#23384;&#20648;&#36873;&#39033;&#24322;&#24120;&#31616;&#21333;&#12290;</p><h2 id="224e2ccda861c2514faa683b3683c361">&#37197;&#32622;</h2><p>Laravel &#30340;&#25991;&#20214;&#31995;&#32479;&#37197;&#32622;&#25991;&#20214;&#20301;&#20110; <code>config/filesystems.php</code>&#12290;&#22312;&#35813;&#25991;&#20214;&#20013;&#65292;&#20320;&#21487;&#20197;&#37197;&#32622;&#25152;&#26377;&#30340;&#25991;&#20214;&#31995;&#32479;"&#30913;&#30424;"&#65288;disks&#65289;&#12290;&#27599;&#20010;&#30913;&#30424;&#20195;&#34920;&#19968;&#20010;&#29305;&#23450;&#30340;&#23384;&#20648;&#39537;&#21160;&#19982;&#23384;&#20648;&#20301;&#32622;&#12290;&#37197;&#32622;&#25991;&#20214;&#20013;&#21253;&#21547;&#20102;&#27599;&#31181;&#21463;&#25903;&#25345;&#39537;&#21160;&#30340;&#31034;&#20363;&#37197;&#32622;&#65292;&#20320;&#21487;&#20197;&#20462;&#25913;&#36825;&#20123;&#37197;&#32622;&#20197;&#21453;&#26144;&#20320;&#30340;&#23384;&#20648;&#20559;&#22909;&#19982;&#20973;&#25454;&#12290;</p><p><code>local</code> &#39537;&#21160;&#25805;&#20316;&#30340;&#26159;&#36816;&#34892; Laravel &#24212;&#29992;&#30340;&#26381;&#21153;&#22120;&#26412;&#22320;&#23384;&#20648;&#30340;&#25991;&#20214;&#65292;&#32780; <code>sftp</code> &#23384;&#20648;&#39537;&#21160;&#29992;&#20110;&#22522;&#20110; SSH &#23494;&#38053;&#30340; FTP&#12290;<code>s3</code> &#39537;&#21160;&#21017;&#29992;&#20110;&#20889;&#20837; Amazon &#30340; S3 &#20113;&#23384;&#20648;&#26381;&#21153;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#20320;&#21487;&#20197;&#25353;&#38656;&#37197;&#32622;&#20219;&#24847;&#25968;&#37327;&#30340;&#30913;&#30424;&#65292;&#29978;&#33267;&#21487;&#20197;&#37197;&#32622;&#22810;&#20010;&#20351;&#29992;&#21516;&#19968;&#39537;&#21160;&#30340;&#30913;&#30424;&#12290;</p>
+</blockquote><h3 id="3370e92597af41beac265e327106ffc4">&#26412;&#22320;&#39537;&#21160;</h3><p>&#20351;&#29992; <code>local</code> &#39537;&#21160;&#26102;&#65292;&#25152;&#26377;&#25991;&#20214;&#25805;&#20316;&#37117;&#30456;&#23545;&#20110;&#20320; <code>filesystems</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#30340; <code>root</code> &#30446;&#24405;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#35813;&#20540;&#35774;&#20026; <code>storage/app/private</code> &#30446;&#24405;&#12290;&#22240;&#27492;&#65292;&#19979;&#38754;&#30340;&#26041;&#27861;&#20250;&#20889;&#20837; <code>storage/app/private/example.txt</code>&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+Storage::disk('local')-&gt;put('example.txt', 'Contents');</code></pre><h3 id="69e36ec742b1e4bec5d350b59e6ecfc1">&#20844;&#20849;&#30913;&#30424;</h3><p>&#24212;&#29992; <code>filesystems</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#33258;&#24102;&#30340; <code>public</code> &#30913;&#30424;&#29992;&#20110;&#23384;&#25918;&#37027;&#20123;&#38656;&#35201;&#20844;&#24320;&#35775;&#38382;&#30340;&#25991;&#20214;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>public</code> &#30913;&#30424;&#20351;&#29992; <code>local</code> &#39537;&#21160;&#65292;&#24182;&#23558;&#25991;&#20214;&#23384;&#20648;&#22312; <code>storage/app/public</code> &#20013;&#12290;</p><p>&#22914;&#26524;&#20320;&#30340; <code>public</code> &#30913;&#30424;&#20351;&#29992; <code>local</code> &#39537;&#21160;&#65292;&#19988;&#24076;&#26395;&#36825;&#20123;&#25991;&#20214;&#33021;&#36890;&#36807; Web &#35775;&#38382;&#65292;&#24212;&#24403;&#21019;&#24314;&#19968;&#20010;&#20174;&#28304;&#30446;&#24405; <code>storage/app/public</code> &#25351;&#21521;&#30446;&#26631;&#30446;&#24405; <code>public/storage</code> &#30340;&#31526;&#21495;&#38142;&#25509;&#65306;</p><p>&#35201;&#21019;&#24314;&#31526;&#21495;&#38142;&#25509;&#65292;&#21487;&#20197;&#20351;&#29992; <code>storage:link</code> &#36825;&#20010; Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan storage:link</code></pre><p>&#25991;&#20214;&#23384;&#20648;&#23436;&#25104;&#19988;&#31526;&#21495;&#38142;&#25509;&#21019;&#24314;&#20043;&#21518;&#65292;&#23601;&#21487;&#20197;&#20351;&#29992; <code>asset</code> &#36741;&#21161;&#20989;&#25968;&#29983;&#25104;&#25351;&#21521;&#35813;&#25991;&#20214;&#30340; URL&#65306;</p><pre><code class="language-php">echo asset('storage/file.txt');</code></pre><p>&#20320;&#21487;&#20197;&#22312; <code>filesystems</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#37197;&#32622;&#39069;&#22806;&#30340;&#31526;&#21495;&#38142;&#25509;&#12290;&#36816;&#34892; <code>storage:link</code> &#21629;&#20196;&#26102;&#65292;&#25152;&#26377;&#37197;&#32622;&#22909;&#30340;&#38142;&#25509;&#37117;&#20250;&#34987;&#21019;&#24314;&#65306;</p><pre><code class="language-php">'links' =&gt; [
+    public_path('storage') =&gt; storage_path('app/public'),
+    public_path('images') =&gt; storage_path('app/images'),
+],</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>storage:unlink</code> &#21629;&#20196;&#26469;&#21024;&#38500;&#20320;&#37197;&#32622;&#30340;&#31526;&#21495;&#38142;&#25509;&#65306;</p><pre><code class="language-shell">php artisan storage:unlink</code></pre><h3 id="934c47f8569f6de4389638e42069a4e1">&#39537;&#21160;&#21069;&#32622;&#26465;&#20214;</h3><h4 id="66a37f29cb6c82a218866beecc9d9d28">S3 &#39537;&#21160;&#37197;&#32622;</h4><p>&#22312;&#20351;&#29992; S3 &#39537;&#21160;&#20043;&#21069;&#65292;&#20320;&#38656;&#35201;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013; Flysystem &#30340; S3 &#21253;&#65306;</p><pre><code class="language-shell">composer require league/flysystem-aws-s3-v3 "^3.0" --with-all-dependencies</code></pre><p>&#19968;&#20010; S3 &#30913;&#30424;&#30340;&#37197;&#32622;&#25968;&#32452;&#20301;&#20110;&#20320;&#30340; <code>config/filesystems.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#12290;&#36890;&#24120;&#65292;&#20320;&#24212;&#35813;&#20351;&#29992; <code>config/filesystems.php</code> &#37197;&#32622;&#25991;&#20214;&#25152;&#24341;&#29992;&#30340;&#20197;&#19979;&#29615;&#22659;&#21464;&#37327;&#26469;&#37197;&#32622; S3 &#30340;&#30456;&#20851;&#20449;&#24687;&#19982;&#20973;&#25454;&#65306;</p><pre><code class="language-ini">AWS_ACCESS_KEY_ID=&lt;your-key-id&gt;
+AWS_SECRET_ACCESS_KEY=&lt;your-secret-access-key&gt;
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=&lt;your-bucket-name&gt;
+AWS_USE_PATH_STYLE_ENDPOINT=false</code></pre><p>&#20026;&#20102;&#20415;&#20110;&#20351;&#29992;&#65292;&#36825;&#20123;&#29615;&#22659;&#21464;&#37327;&#30340;&#21629;&#21517;&#35268;&#33539;&#19982; AWS CLI &#20445;&#25345;&#19968;&#33268;&#12290;</p><h4 id="635e3a2e8e83f3be2a5eab1b35c480e0">FTP &#39537;&#21160;&#37197;&#32622;</h4><p>&#22312;&#20351;&#29992; FTP &#39537;&#21160;&#20043;&#21069;&#65292;&#20320;&#38656;&#35201;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013; Flysystem &#30340; FTP &#21253;&#65306;</p><pre><code class="language-shell">composer require league/flysystem-ftp "^3.0"</code></pre><p>Laravel &#30340; Flysystem &#38598;&#25104;&#19982; FTP &#37197;&#21512;&#24471;&#24456;&#22909;&#65307;&#19981;&#36807;&#65292;&#26694;&#26550;&#40664;&#35748;&#30340; <code>config/filesystems.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#27809;&#26377;&#25552;&#20379;&#31034;&#20363;&#37197;&#32622;&#12290;&#22914;&#26524;&#20320;&#38656;&#35201;&#37197;&#32622; FTP &#25991;&#20214;&#31995;&#32479;&#65292;&#21487;&#20197;&#20351;&#29992;&#19979;&#38754;&#30340;&#37197;&#32622;&#31034;&#20363;&#65306;</p><pre><code class="language-php">'ftp' =&gt; [
+    'driver' =&gt; 'ftp',
+    'host' =&gt; env('FTP_HOST'),
+    'username' =&gt; env('FTP_USERNAME'),
+    'password' =&gt; env('FTP_PASSWORD'),
+
+    // FTP &#21487;&#36873;&#37197;&#32622;&hellip;&hellip;
+    // 'port' =&gt; env('FTP_PORT', 21),
+    // 'root' =&gt; env('FTP_ROOT'),
+    // 'passive' =&gt; true,
+    // 'ssl' =&gt; true,
+    // 'timeout' =&gt; 30,
+],</code></pre><h4 id="c77e809d0d88cdd4eb1cb11499196bbf">SFTP &#39537;&#21160;&#37197;&#32622;</h4><p>&#22312;&#20351;&#29992; SFTP &#39537;&#21160;&#20043;&#21069;&#65292;&#20320;&#38656;&#35201;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013; Flysystem &#30340; SFTP &#21253;&#65306;</p><pre><code class="language-shell">composer require league/flysystem-sftp-v3 "^3.0"</code></pre><p>Laravel &#30340; Flysystem &#38598;&#25104;&#19982; SFTP &#37197;&#21512;&#24471;&#24456;&#22909;&#65307;&#19981;&#36807;&#65292;&#26694;&#26550;&#40664;&#35748;&#30340; <code>config/filesystems.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#27809;&#26377;&#25552;&#20379;&#31034;&#20363;&#37197;&#32622;&#12290;&#22914;&#26524;&#20320;&#38656;&#35201;&#37197;&#32622; SFTP &#25991;&#20214;&#31995;&#32479;&#65292;&#21487;&#20197;&#20351;&#29992;&#19979;&#38754;&#30340;&#37197;&#32622;&#31034;&#20363;&#65306;</p><pre><code class="language-php">'sftp' =&gt; [
+    'driver' =&gt; 'sftp',
+    'host' =&gt; env('SFTP_HOST'),
+
+    // &#29992;&#20110;&#22522;&#30784;&#35748;&#35777;&#30340;&#37197;&#32622;&hellip;&hellip;
+    'username' =&gt; env('SFTP_USERNAME'),
+    'password' =&gt; env('SFTP_PASSWORD'),
+
+    // &#29992;&#20110;&#22522;&#20110; SSH &#23494;&#38053;&#65288;&#24102;&#21152;&#23494;&#23494;&#30721;&#65289;&#35748;&#35777;&#30340;&#37197;&#32622;&hellip;&hellip;
+    'privateKey' =&gt; env('SFTP_PRIVATE_KEY'),
+    'passphrase' =&gt; env('SFTP_PASSPHRASE'),
+
+    // &#29992;&#20110;&#25991;&#20214; / &#30446;&#24405;&#26435;&#38480;&#30340;&#37197;&#32622;&hellip;&hellip;
+    'visibility' =&gt; 'private', // `private` = 0600, `public` = 0644
+    'directory_visibility' =&gt; 'private', // `private` = 0700, `public` = 0755
+
+    // SFTP &#21487;&#36873;&#37197;&#32622;&hellip;&hellip;
+    // 'hostFingerprint' =&gt; env('SFTP_HOST_FINGERPRINT'),
+    // 'maxTries' =&gt; 4,
+    // 'passphrase' =&gt; env('SFTP_PASSPHRASE'),
+    // 'port' =&gt; env('SFTP_PORT', 22),
+    // 'root' =&gt; env('SFTP_ROOT', ''),
+    // 'timeout' =&gt; 30,
+    // 'useAgent' =&gt; true,
+],</code></pre><h3 id="b3f09171f69882d567e8a2777f298437">&#20316;&#29992;&#22495;&#12289;&#21482;&#35835;&#19982;&#35835;&#31359;&#25991;&#20214;&#31995;&#32479;</h3><p>&#20316;&#29992;&#22495;&#65288;scoped&#65289;&#30913;&#30424;&#20801;&#35768;&#20320;&#23450;&#20041;&#19968;&#20010;&#25991;&#20214;&#31995;&#32479;&#65292;&#20854;&#20013;&#25152;&#26377;&#36335;&#24452;&#37117;&#20250;&#33258;&#21160;&#21152;&#19978;&#32473;&#23450;&#30340;&#36335;&#24452;&#21069;&#32512;&#12290;&#22312;&#21019;&#24314;&#20316;&#29992;&#22495;&#25991;&#20214;&#31995;&#32479;&#30913;&#30424;&#20043;&#21069;&#65292;&#20320;&#38656;&#35201;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013;&#19968;&#20010;&#39069;&#22806;&#30340; Flysystem &#21253;&#65306;</p><pre><code class="language-shell">composer require league/flysystem-path-prefixing "^3.0"</code></pre><p>&#20320;&#21487;&#20197;&#23450;&#20041;&#19968;&#20010;&#20351;&#29992; <code>scoped</code> &#39537;&#21160;&#30340;&#30913;&#30424;&#65292;&#20174;&#32780;&#20026;&#20219;&#24847;&#24050;&#26377;&#30340;&#25991;&#20214;&#31995;&#32479;&#30913;&#30424;&#21019;&#24314;&#19968;&#20010;&#36335;&#24452;&#20316;&#29992;&#22495;&#23454;&#20363;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#21019;&#24314;&#19968;&#20010;&#23558;&#29616;&#26377; <code>s3</code> &#30913;&#30424;&#38480;&#23450;&#21040;&#26576;&#20010;&#29305;&#23450;&#36335;&#24452;&#21069;&#32512;&#30340;&#30913;&#30424;&#65292;&#20043;&#21518;&#25152;&#26377;&#20351;&#29992;&#35813;&#20316;&#29992;&#22495;&#30913;&#30424;&#30340;&#25991;&#20214;&#25805;&#20316;&#37117;&#20250;&#20351;&#29992;&#25351;&#23450;&#30340;&#21069;&#32512;&#65306;</p><pre><code class="language-php">'s3-videos' =&gt; [
+    'driver' =&gt; 'scoped',
+    'disk' =&gt; 's3',
+    'prefix' =&gt; 'path/to/videos',
+],</code></pre><p>"&#21482;&#35835;"&#65288;read-only&#65289;&#30913;&#30424;&#20801;&#35768;&#20320;&#21019;&#24314;&#19981;&#20801;&#35768;&#20889;&#20837;&#25805;&#20316;&#30340;&#25991;&#20214;&#31995;&#32479;&#30913;&#30424;&#12290;&#22312;&#20351;&#29992; <code>read-only</code> &#37197;&#32622;&#39033;&#20043;&#21069;&#65292;&#20320;&#38656;&#35201;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013;&#19968;&#20010;&#39069;&#22806;&#30340; Flysystem &#21253;&#65306;</p><pre><code class="language-shell">composer require league/flysystem-read-only "^3.0"</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#20320;&#21487;&#20197;&#22312;&#19968;&#20010;&#25110;&#22810;&#20010;&#30913;&#30424;&#30340;&#37197;&#32622;&#25968;&#32452;&#20013;&#21152;&#20837; <code>read-only</code> &#37197;&#32622;&#39033;&#65306;</p><pre><code class="language-php">'s3-videos' =&gt; [
+    'driver' =&gt; 's3',
+    // ...
+    'read-only' =&gt; true,
+],</code></pre><p>&#35835;&#31359;&#65288;read-through&#65289;&#30913;&#30424;&#20801;&#35768;&#20320;&#22312;&#38646;&#20572;&#26426;&#30340;&#29366;&#24577;&#19979;&#22312;&#30913;&#30424;&#20043;&#38388;&#36801;&#31227;&#25991;&#20214;&#12290;&#35835;&#21462;&#25991;&#20214;&#26102;&#65292;Laravel &#20250;&#20808;&#26816;&#26597;&#20027;&#30913;&#30424;&#12290;&#22914;&#26524;&#25991;&#20214;&#20165;&#23384;&#22312;&#20110;&#22791;&#29992;&#30913;&#30424;&#19978;&#65292;Laravel &#20250;&#20174;&#22791;&#29992;&#30913;&#30424;&#35835;&#21462;&#35813;&#25991;&#20214;&#65292;&#24182;&#23558;&#20854;&#22797;&#21046;&#21040;&#20027;&#30913;&#30424;&#65292;&#20197;&#22791;&#21518;&#32493;&#35831;&#27714;&#20351;&#29992;&#65306;</p><pre><code class="language-php">'assets' =&gt; [
+    'driver' =&gt; 'read-through',
+    'primary' =&gt; 's3',
+    'fallback' =&gt; 'legacy-s3',
+],</code></pre><p>&#20889;&#20837;&#19982;&#30446;&#24405;&#21015;&#34920;&#37117;&#20197;&#20027;&#30913;&#30424;&#20026;&#30446;&#26631;&#12290;&#25991;&#20214;&#23384;&#22312;&#24615;&#19982;&#20803;&#25968;&#25454;&#30340;&#26816;&#26597;&#20250;&#20351;&#29992;&#20219;&#19968;&#30913;&#30424;&#65292;&#32780;&#19981;&#20250;&#23558;&#25991;&#20214;&#22797;&#21046;&#21040;&#20027;&#30913;&#30424;&#12290;&#22914;&#26524;&#23558;&#34987;&#29992;&#30913;&#30424;&#19978;&#30340;&#25991;&#20214;&#22797;&#21046;&#21040;&#20027;&#30913;&#30424;&#26102;&#22833;&#36133;&#65292;&#40664;&#35748;&#24773;&#20917;&#19979;&#35835;&#21462;&#20173;&#28982;&#25104;&#21151;&#12290;&#33509;&#24076;&#26395;&#22312;&#22833;&#36133;&#26102;&#25243;&#20986;&#24322;&#24120;&#65292;&#21487;&#23558; <code>throw_on_promotion_failure</code> &#37197;&#32622;&#39033;&#35774;&#20026; <code>true</code>&#12290;</p><h3 id="b1dc405868eaad03341c529315041a48">&#20860;&#23481; Amazon S3 &#30340;&#25991;&#20214;&#31995;&#32479;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#24212;&#29992;&#30340; <code>filesystems</code> &#37197;&#32622;&#25991;&#20214;&#21253;&#21547; <code>s3</code> &#30913;&#30424;&#30340;&#37197;&#32622;&#12290;&#38500;&#20102;&#20351;&#29992;&#35813;&#30913;&#30424;&#19982; <a href="https://aws.amazon.com/s3/" target="_blank" rel="noopener noreferrer">Amazon S3</a> &#20132;&#20114;&#20043;&#22806;&#65292;&#20320;&#20063;&#21487;&#20197;&#29992;&#23427;&#19982;&#20219;&#20309;&#20860;&#23481; S3 &#30340;&#25991;&#20214;&#23384;&#20648;&#26381;&#21153;&#20132;&#20114;&#65292;&#20363;&#22914; <a href="https://github.com/rustfs/rustfs" target="_blank" rel="noopener noreferrer">RustFS</a>&#12289;<a href="https://www.digitalocean.com/products/spaces/" target="_blank" rel="noopener noreferrer">DigitalOcean Spaces</a>&#12289;<a href="https://www.vultr.com/products/object-storage/" target="_blank" rel="noopener noreferrer">Vultr Object Storage</a>&#12289;<a href="https://www.cloudflare.com/developer-platform/products/r2/" target="_blank" rel="noopener noreferrer">Cloudflare R2</a> &#25110; <a href="https://www.hetzner.com/storage/object-storage/" target="_blank" rel="noopener noreferrer">Hetzner Cloud Storage</a>&#12290;</p><p>&#36890;&#24120;&#65292;&#22312;&#23558;&#30913;&#30424;&#30340;&#20973;&#25454;&#26356;&#26032;&#20026;&#20320;&#35201;&#20351;&#29992;&#30340;&#26381;&#21153;&#30340;&#20973;&#25454;&#20043;&#21518;&#65292;&#20320;&#21482;&#38656;&#26356;&#26032; <code>endpoint</code> &#37197;&#32622;&#39033;&#30340;&#20540;&#12290;&#35813;&#36873;&#39033;&#30340;&#20540;&#36890;&#24120;&#36890;&#36807; <code>AWS_ENDPOINT</code> &#29615;&#22659;&#21464;&#37327;&#23450;&#20041;&#65306;</p><pre><code class="language-php">'endpoint' =&gt; env('AWS_ENDPOINT', 'https://rustfs:9000'),</code></pre><h2 id="cc3955a1a33e9331cc8a5d79e896d948">&#33719;&#21462;&#30913;&#30424;&#23454;&#20363;</h2><p><code>Storage</code> Facade &#21487;&#29992;&#20110;&#19982;&#20219;&#24847;&#24050;&#37197;&#32622;&#30340;&#30913;&#30424;&#20132;&#20114;&#12290;&#20363;&#22914;&#65292;&#21487;&#20197;&#20351;&#29992;&#35813; Facade &#19978;&#30340; <code>put</code> &#26041;&#27861;&#23558;&#22836;&#20687;&#23384;&#20648;&#21040;&#40664;&#35748;&#30913;&#30424;&#19978;&#12290;&#22914;&#26524;&#22312; <code>Storage</code> Facade &#19978;&#35843;&#29992;&#26041;&#27861;&#26102;&#27809;&#26377;&#20808;&#35843;&#29992; <code>disk</code> &#26041;&#27861;&#65292;&#37027;&#20040;&#35813;&#26041;&#27861;&#20250;&#33258;&#21160;&#36716;&#21457;&#32473;&#40664;&#35748;&#30913;&#30424;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+Storage::put('avatars/1', $content);</code></pre><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#38656;&#35201;&#19982;&#22810;&#20010;&#30913;&#30424;&#20132;&#20114;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Storage</code> Facade &#19978;&#30340; <code>disk</code> &#26041;&#27861;&#26469;&#25805;&#20316;&#29305;&#23450;&#30913;&#30424;&#19978;&#30340;&#25991;&#20214;&#65306;</p><pre><code class="language-php">Storage::disk('s3')-&gt;put('avatars/1', $content);</code></pre><h3 id="d64aab89226598c7f03c4bc7c80d6373">&#25353;&#38656;&#30913;&#30424;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#20351;&#29992;&#32473;&#23450;&#30340;&#37197;&#32622;&#22312;&#36816;&#34892;&#26102;&#21019;&#24314;&#19968;&#20010;&#30913;&#30424;&#65292;&#32780;&#35813;&#37197;&#32622;&#23454;&#38469;&#19978;&#24182;&#19981;&#23384;&#22312;&#20110;&#24212;&#29992;&#30340; <code>filesystems</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#21521; <code>Storage</code> Facade &#30340; <code>build</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#37197;&#32622;&#25968;&#32452;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+$disk = Storage::build([
+    'driver' =&gt; 'local',
+    'root' =&gt; '/path/to/root',
+]);
+
+$disk-&gt;put('image.jpg', $content);</code></pre><h2 id="ad19d47bb5ce91c5ece5fc1ad58ce3b1">&#26816;&#32034;&#25991;&#20214;</h2><p>&#21487;&#20197;&#20351;&#29992; <code>get</code> &#26041;&#27861;&#26816;&#32034;&#25991;&#20214;&#30340;&#20869;&#23481;&#12290;&#35813;&#26041;&#27861;&#20250;&#36820;&#22238;&#25991;&#20214;&#30340;&#21407;&#22987;&#23383;&#31526;&#20018;&#20869;&#23481;&#12290;&#27880;&#24847;&#65292;&#25152;&#26377;&#25991;&#20214;&#36335;&#24452;&#37117;&#24212;&#30456;&#23545;&#20110;&#30913;&#30424;&#30340;"root"&#20301;&#32622;&#25351;&#23450;&#65306;</p><pre><code class="language-php">$contents = Storage::get('file.jpg');</code></pre><p>&#22914;&#26524;&#20320;&#35201;&#26816;&#32034;&#30340;&#25991;&#20214;&#21253;&#21547; JSON&#65292;&#21487;&#20197;&#20351;&#29992; <code>json</code> &#26041;&#27861;&#26469;&#33719;&#21462;&#25991;&#20214;&#24182;&#35299;&#30721;&#20854;&#20869;&#23481;&#65306;</p><pre><code class="language-php">$orders = Storage::json('orders.json');</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>exists</code> &#26041;&#27861;&#21028;&#26029;&#30913;&#30424;&#19978;&#26159;&#21542;&#23384;&#22312;&#26576;&#20010;&#25991;&#20214;&#65306;</p><pre><code class="language-php">if (Storage::disk('s3')-&gt;exists('file.jpg')) {
+    // ...
+}</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>missing</code> &#26041;&#27861;&#21028;&#26029;&#30913;&#30424;&#19978;&#26159;&#21542;&#32570;&#23569;&#26576;&#20010;&#25991;&#20214;&#65306;</p><pre><code class="language-php">if (Storage::disk('s3')-&gt;missing('file.jpg')) {
+    // ...
+}</code></pre><h3 id="5dfd5a78e2ba1bc8afb482a8745454ea">&#19979;&#36733;&#25991;&#20214;</h3><p><code>download</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#29983;&#25104;&#19968;&#20010;&#21709;&#24212;&#65292;&#24378;&#21046;&#29992;&#25143;&#30340;&#27983;&#35272;&#22120;&#19979;&#36733;&#25351;&#23450;&#36335;&#24452;&#19979;&#30340;&#25991;&#20214;&#12290;<code>download</code> &#26041;&#27861;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#25509;&#21463;&#19968;&#20010;&#25991;&#20214;&#21517;&#65292;&#23427;&#23558;&#20915;&#23450;&#19979;&#36733;&#25991;&#20214;&#30340;&#29992;&#25143;&#25152;&#30475;&#21040;&#30340;&#25991;&#20214;&#21517;&#12290;&#26368;&#21518;&#65292;&#20320;&#36824;&#21487;&#20197;&#23558;&#19968;&#32452; HTTP &#22836;&#20316;&#20026;&#31532;&#19977;&#20010;&#21442;&#25968;&#20256;&#32473;&#35813;&#26041;&#27861;&#65306;</p><pre><code class="language-php">return Storage::download('file.jpg');
+
+return Storage::download('file.jpg', $name, $headers);</code></pre><h3 id="bffce7c49edebfa8202bab3bf9109a91">&#25991;&#20214; URL</h3><p>&#21487;&#20197;&#20351;&#29992; <code>url</code> &#26041;&#27861;&#33719;&#21462;&#25351;&#23450;&#25991;&#20214;&#30340; URL&#12290;&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159; <code>local</code> &#39537;&#21160;&#65292;&#35813;&#26041;&#27861;&#36890;&#24120;&#21482;&#20250;&#22312;&#32473;&#23450;&#36335;&#24452;&#21069;&#21152;&#19978; <code>/storage</code> &#24182;&#36820;&#22238;&#35813;&#25991;&#20214;&#30340;&#30456;&#23545; URL&#12290;&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159; <code>s3</code> &#39537;&#21160;&#65292;&#21017;&#20250;&#36820;&#22238;&#23436;&#25972;&#30340;&#36828;&#31243; URL&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+$url = Storage::url('file.jpg');</code></pre><p>&#20351;&#29992; <code>local</code> &#39537;&#21160;&#26102;&#65292;&#25152;&#26377;&#38656;&#35201;&#20844;&#24320;&#35775;&#38382;&#30340;&#25991;&#20214;&#37117;&#24212;&#25918;&#22312; <code>storage/app/public</code> &#30446;&#24405;&#20013;&#12290;&#27492;&#22806;&#65292;&#20320;&#36824;&#24212;&#24403;&#22312; <code>public/storage</code> &#22788;<a href="qk9428ovw1.html#the-public-disk" target="_blank">&#21019;&#24314;&#31526;&#21495;&#38142;&#25509;</a>&#65292;&#25351;&#21521; <code>storage/app/public</code> &#30446;&#24405;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#20351;&#29992; <code>local</code> &#39537;&#21160;&#26102;&#65292;<code>url</code> &#30340;&#36820;&#22238;&#20540;&#24182;&#26410;&#32463;&#36807; URL &#32534;&#30721;&#12290;&#22240;&#27492;&#65292;&#25105;&#20204;&#24314;&#35758;&#22987;&#32456;&#20351;&#29992;&#33021;&#22815;&#29983;&#25104;&#26377;&#25928; URL &#30340;&#21517;&#31216;&#26469;&#23384;&#20648;&#25991;&#20214;&#12290;</p>
+</blockquote><h4 id="d0256c309c31a9353bacd2fb05c2d633">URL &#20027;&#26426;&#23450;&#21046;</h4><p>&#22914;&#26524;&#20320;&#24819;&#20462;&#25913;&#20351;&#29992; <code>Storage</code> Facade &#29983;&#25104;&#30340; URL &#30340;&#20027;&#26426;&#65288;host&#65289;&#65292;&#21487;&#20197;&#22312;&#30913;&#30424;&#30340;&#37197;&#32622;&#25968;&#32452;&#20013;&#28155;&#21152;&#25110;&#20462;&#25913; <code>url</code> &#36873;&#39033;&#65306;</p><pre><code class="language-php">'public' =&gt; [
+    'driver' =&gt; 'local',
+    'root' =&gt; storage_path('app/public'),
+    'url' =&gt; env('APP_URL').'/storage',
+    'visibility' =&gt; 'public',
+    'throw' =&gt; false,
+],</code></pre><h3 id="c80c5eca257b21db8700357b0054c2db">&#20020;&#26102; URL</h3><p>&#20351;&#29992; <code>temporaryUrl</code> &#26041;&#27861;&#65292;&#20320;&#21487;&#20197;&#20026;&#20351;&#29992; <code>local</code> &#21644; <code>s3</code> &#39537;&#21160;&#23384;&#20648;&#30340;&#25991;&#20214;&#21019;&#24314;&#20020;&#26102; URL&#12290;&#35813;&#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#36335;&#24452;&#21644;&#19968;&#20010; <code>DateTime</code> &#23454;&#20363;&#65292;&#29992;&#20110;&#25351;&#23450; URL &#30340;&#36807;&#26399;&#26102;&#38388;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+$url = Storage::temporaryUrl(
+    'file.jpg', now()-&gt;plus(minutes: 5)
+);</code></pre><h4 id="7622beaa2b01e30781102cdd06c8a5e5">&#21551;&#29992;&#26412;&#22320;&#20020;&#26102; URL</h4><p>&#22914;&#26524;&#20320;&#22312; <code>local</code> &#39537;&#21160;&#25903;&#25345;&#20020;&#26102; URL &#20043;&#21069;&#23601;&#24320;&#22987;&#24320;&#21457;&#24212;&#29992;&#65292;&#21487;&#33021;&#38656;&#35201;&#25163;&#21160;&#21551;&#29992;&#26412;&#22320;&#20020;&#26102; URL&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#22312; <code>config/filesystems.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#65292;&#21521; <code>local</code> &#30913;&#30424;&#30340;&#37197;&#32622;&#25968;&#32452;&#28155;&#21152; <code>serve</code> &#36873;&#39033;&#65306;</p><pre><code class="language-php">'local' =&gt; [
+    'driver' =&gt; 'local',
+    'root' =&gt; storage_path('app/private'),
+    'serve' =&gt; true, // [tl! add]
+    'throw' =&gt; false,
+],</code></pre><h4 id="65716927631e7e39552409f1ffe3a2c0">S3 &#35831;&#27714;&#21442;&#25968;</h4><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#25351;&#23450;&#39069;&#22806;&#30340; <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectGET.html#RESTObjectGET-requests" target="_blank" rel="noopener noreferrer">S3 &#35831;&#27714;&#21442;&#25968;</a>&#65292;&#21487;&#20197;&#23558;&#35831;&#27714;&#21442;&#25968;&#25968;&#32452;&#20316;&#20026;&#31532;&#19977;&#20010;&#21442;&#25968;&#20256;&#32473; <code>temporaryUrl</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$url = Storage::temporaryUrl(
+    'file.jpg',
+    now()-&gt;plus(minutes: 5),
+    [
+        'ResponseContentType' =&gt; 'application/octet-stream',
+        'ResponseContentDisposition' =&gt; 'attachment; filename=file2.jpg',
+    ]
+);</code></pre><h4 id="91599b7a5a4362ac02a42e5b1de2a0a6">&#23450;&#21046;&#20020;&#26102; URL</h4><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#20026;&#26576;&#20010;&#29305;&#23450;&#30340;&#23384;&#20648;&#30913;&#30424;&#23450;&#21046;&#20020;&#26102; URL &#30340;&#29983;&#25104;&#26041;&#24335;&#65292;&#21487;&#20197;&#20351;&#29992; <code>buildTemporaryUrlsUsing</code> &#26041;&#27861;&#12290;&#20363;&#22914;&#65292;&#24403;&#20320;&#26377;&#19968;&#20010;&#25511;&#21046;&#22120;&#65292;&#20801;&#35768;&#19979;&#36733;&#36890;&#36807;&#26576;&#20010;&#36890;&#24120;&#19981;&#25903;&#25345;&#20020;&#26102; URL &#30340;&#30913;&#30424;&#23384;&#20648;&#30340;&#25991;&#20214;&#26102;&#65292;&#36825;&#23601;&#20250;&#24456;&#26377;&#29992;&#12290;&#36890;&#24120;&#65292;&#35813;&#26041;&#27861;&#24212;&#24403;&#20174;&#26576;&#20010;&#26381;&#21153;&#25552;&#20379;&#32773;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use DateTime;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function boot(): void
+    {
+        Storage::disk('local')-&gt;buildTemporaryUrlsUsing(
+            function (string $path, DateTime $expiration, array $options) {
+                return URL::temporarySignedRoute(
+                    'files.download',
+                    $expiration,
+                    array_merge($options, ['path' =&gt; $path])
+                );
+            }
+        );
+    }
+}</code></pre><h4 id="863529aabb901759d5ef0c24b96b219f">&#20020;&#26102;&#19978;&#20256; URL</h4><blockquote>
+<p>[!WARNING]<br>
+&#29983;&#25104;&#20020;&#26102;&#19978;&#20256; URL &#30340;&#33021;&#21147;&#20165;&#21463; <code>s3</code> &#21644; <code>local</code> &#39537;&#21160;&#25903;&#25345;&#12290;</p>
+</blockquote><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#29983;&#25104;&#19968;&#20010;&#21487;&#29992;&#20110;&#20174;&#23458;&#25143;&#31471;&#24212;&#29992;&#30452;&#25509;&#19978;&#20256;&#25991;&#20214;&#30340;&#20020;&#26102; URL&#65292;&#21487;&#20197;&#20351;&#29992; <code>temporaryUploadUrl</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#36335;&#24452;&#21644;&#19968;&#20010; <code>DateTime</code> &#23454;&#20363;&#65292;&#29992;&#20110;&#25351;&#23450; URL &#30340;&#36807;&#26399;&#26102;&#38388;&#12290;<code>temporaryUploadUrl</code> &#26041;&#27861;&#20250;&#36820;&#22238;&#19968;&#20010;&#20851;&#32852;&#25968;&#32452;&#65292;&#21487;&#23558;&#20854;&#35299;&#26500;&#20026;&#19978;&#20256; URL &#20197;&#21450;&#24212;&#24403;&#38543;&#19978;&#20256;&#35831;&#27714;&#19968;&#36215;&#21457;&#36865;&#30340;&#22836;&#37096;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+['url' =&gt; $url, 'headers' =&gt; $headers] = Storage::temporaryUploadUrl(
+    'file.jpg', now()-&gt;plus(minutes: 5)
+);</code></pre><p>&#35813;&#26041;&#27861;&#20027;&#35201;&#22312;&#26080;&#26381;&#21153;&#22120;&#65288;serverless&#65289;&#29615;&#22659;&#20013;&#24456;&#26377;&#29992;&#65292;&#36825;&#31867;&#29615;&#22659;&#35201;&#27714;&#23458;&#25143;&#31471;&#24212;&#29992;&#30452;&#25509;&#23558;&#25991;&#20214;&#19978;&#20256;&#21040; Amazon S3 &#20043;&#31867;&#30340;&#20113;&#23384;&#20648;&#31995;&#32479;&#12290;</p><h3 id="5142ab909e7d5cf19fa0ff040fc1d125">&#25991;&#20214;&#20803;&#25968;&#25454;</h3><p>&#38500;&#20102;&#35835;&#20889;&#25991;&#20214;&#65292;Laravel &#36824;&#33021;&#25552;&#20379;&#25991;&#20214;&#26412;&#36523;&#30340;&#30456;&#20851;&#20449;&#24687;&#12290;&#20363;&#22914;&#65292;&#21487;&#20197;&#20351;&#29992; <code>size</code> &#26041;&#27861;&#33719;&#21462;&#25991;&#20214;&#30340;&#22823;&#23567;&#65288;&#20197;&#23383;&#33410;&#20026;&#21333;&#20301;&#65289;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+$size = Storage::size('file.jpg');</code></pre><p><code>lastModified</code> &#26041;&#27861;&#36820;&#22238;&#25991;&#20214;&#26368;&#21518;&#19968;&#27425;&#34987;&#20462;&#25913;&#26102;&#30340; UNIX &#26102;&#38388;&#25139;&#65306;</p><pre><code class="language-php">$time = Storage::lastModified('file.jpg');</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>mimeType</code> &#26041;&#27861;&#33719;&#21462;&#25351;&#23450;&#25991;&#20214;&#30340; MIME &#31867;&#22411;&#65306;</p><pre><code class="language-php">$mime = Storage::mimeType('file.jpg');</code></pre><h4 id="de6104ca3fb5cb87820add115857409f">&#25991;&#20214;&#36335;&#24452;</h4><p>&#21487;&#20197;&#20351;&#29992; <code>path</code> &#26041;&#27861;&#33719;&#21462;&#25351;&#23450;&#25991;&#20214;&#30340;&#36335;&#24452;&#12290;&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159; <code>local</code> &#39537;&#21160;&#65292;&#35813;&#26041;&#27861;&#20250;&#36820;&#22238;&#25991;&#20214;&#30340;&#32477;&#23545;&#36335;&#24452;&#12290;&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159; <code>s3</code> &#39537;&#21160;&#65292;&#35813;&#26041;&#27861;&#20250;&#36820;&#22238;&#25991;&#20214;&#22312; S3 &#26742;&#20013;&#30340;&#30456;&#23545;&#36335;&#24452;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+$path = Storage::path('file.jpg');</code></pre><h2 id="0fa85fd676b449a2841a01e22e235fb7">&#23384;&#20648;&#25991;&#20214;</h2><p>&#21487;&#20197;&#20351;&#29992; <code>put</code> &#26041;&#27861;&#23558;&#25991;&#20214;&#20869;&#23481;&#23384;&#20648;&#21040;&#30913;&#30424;&#19978;&#12290;&#20320;&#36824;&#21487;&#20197;&#21521; <code>put</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010; PHP <code>resource</code>&#65292;&#36825;&#20250;&#29992;&#19978; Flysystem &#24213;&#23618;&#30340;&#27969;&#25903;&#25345;&#12290;&#27880;&#24847;&#65292;&#25152;&#26377;&#25991;&#20214;&#36335;&#24452;&#37117;&#24212;&#30456;&#23545;&#20110;&#20026;&#30913;&#30424;&#37197;&#32622;&#30340;"root"&#20301;&#32622;&#25351;&#23450;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+Storage::put('file.jpg', $contents);
+
+Storage::put('file.jpg', $resource);</code></pre><h4 id="21642b34075301315d978561d350329a">&#20889;&#20837;&#22833;&#36133;</h4><p>&#22914;&#26524; <code>put</code> &#26041;&#27861;&#65288;&#25110;&#20854;&#20182;"&#20889;&#20837;"&#25805;&#20316;&#65289;&#26080;&#27861;&#23558;&#25991;&#20214;&#20889;&#20837;&#30913;&#30424;&#65292;&#20250;&#36820;&#22238; <code>false</code>&#65306;</p><pre><code class="language-php">if (! Storage::put('file.jpg', $contents)) {
+    // &#25991;&#20214;&#26080;&#27861;&#20889;&#20837;&#30913;&#30424;&hellip;&hellip;
+}</code></pre><p>&#22914;&#26524;&#20320;&#24895;&#24847;&#65292;&#21487;&#20197;&#22312;&#25991;&#20214;&#31995;&#32479;&#30913;&#30424;&#30340;&#37197;&#32622;&#25968;&#32452;&#20013;&#23450;&#20041; <code>throw</code> &#36873;&#39033;&#12290;&#24403;&#35813;&#36873;&#39033;&#35774;&#20026; <code>true</code> &#26102;&#65292;&#20687; <code>put</code> &#36825;&#26679;&#30340;"&#20889;&#20837;"&#26041;&#27861;&#20250;&#22312;&#20889;&#20837;&#25805;&#20316;&#22833;&#36133;&#26102;&#25243;&#20986; <code>League\Flysystem\UnableToWriteFile</code> &#30340;&#23454;&#20363;&#65306;</p><pre><code class="language-php">'public' =&gt; [
+    'driver' =&gt; 'local',
+    // ...
+    'throw' =&gt; true,
+],</code></pre><h3 id="a02b71e34967bf2beaec9fc8045fd712">&#21521;&#25991;&#20214;&#24320;&#22836;&#21069;&#32622;&#19982;&#21521;&#26411;&#23614;&#36861;&#21152;&#20869;&#23481;</h3><p><code>prepend</code> &#21644; <code>append</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#21521;&#25991;&#20214;&#30340;&#24320;&#22836;&#25110;&#26411;&#23614;&#20889;&#20837;&#20869;&#23481;&#65306;</p><pre><code class="language-php">Storage::prepend('file.log', 'Prepended Text');
+
+Storage::append('file.log', 'Appended Text');</code></pre><h3 id="7c2da971ba19c1917c308c398dd6542a">&#22797;&#21046;&#19982;&#31227;&#21160;&#25991;&#20214;</h3><p><code>copy</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#24050;&#26377;&#25991;&#20214;&#22797;&#21046;&#21040;&#30913;&#30424;&#19978;&#30340;&#26032;&#20301;&#32622;&#65292;&#32780; <code>move</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#24050;&#26377;&#25991;&#20214;&#37325;&#21629;&#21517;&#25110;&#31227;&#21160;&#21040;&#26032;&#20301;&#32622;&#65306;</p><pre><code class="language-php">Storage::copy('old/file.jpg', 'new/file.jpg');
+
+Storage::move('old/file.jpg', 'new/file.jpg');</code></pre><h3 id="19fdaeaff21be8c4a245ed1b8cc1a77b">&#33258;&#21160;&#27969;&#24335;&#20256;&#36755;</h3><p>&#23558;&#25991;&#20214;&#27969;&#24335;&#20256;&#36755;&#21040;&#23384;&#20648;&#20301;&#32622;&#33021;&#26174;&#33879;&#38477;&#20302;&#20869;&#23384;&#21344;&#29992;&#12290;&#22914;&#26524;&#20320;&#24819;&#35753; Laravel &#33258;&#21160;&#31649;&#29702;&#23558;&#32473;&#23450;&#25991;&#20214;&#27969;&#24335;&#20256;&#36755;&#21040;&#23384;&#20648;&#20301;&#32622;&#30340;&#36807;&#31243;&#65292;&#21487;&#20197;&#20351;&#29992; <code>putFile</code> &#25110; <code>putFileAs</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#25509;&#21463; <code>Illuminate\Http\File</code> &#25110; <code>Illuminate\Http\UploadedFile</code> &#23454;&#20363;&#65292;&#24182;&#20250;&#33258;&#21160;&#23558;&#25991;&#20214;&#27969;&#24335;&#20256;&#36755;&#21040;&#30446;&#26631;&#20301;&#32622;&#65306;</p><pre><code class="language-php">use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
+
+// &#33258;&#21160;&#29983;&#25104;&#21807;&#19968; ID &#20316;&#20026;&#25991;&#20214;&#21517;&hellip;&hellip;
+$path = Storage::putFile('photos', new File('/path/to/photo'));
+
+// &#25163;&#21160;&#25351;&#23450;&#25991;&#20214;&#21517;&hellip;&hellip;
+$path = Storage::putFileAs('photos', new File('/path/to/photo'), 'photo.jpg');</code></pre><p>&#20851;&#20110; <code>putFile</code> &#26041;&#27861;&#65292;&#26377;&#20960;&#28857;&#38656;&#35201;&#27880;&#24847;&#12290;&#27880;&#24847;&#65292;&#25105;&#20204;&#21482;&#25351;&#23450;&#20102;&#30446;&#24405;&#21517;&#65292;&#32780;&#27809;&#26377;&#25351;&#23450;&#25991;&#20214;&#21517;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>putFile</code> &#26041;&#27861;&#20250;&#29983;&#25104;&#19968;&#20010;&#21807;&#19968; ID &#20316;&#20026;&#25991;&#20214;&#21517;&#12290;&#25991;&#20214;&#30340;&#25193;&#23637;&#21517;&#23558;&#26681;&#25454;&#25991;&#20214;&#30340; MIME &#31867;&#22411;&#26469;&#30830;&#23450;&#12290;<code>putFile</code> &#26041;&#27861;&#20250;&#36820;&#22238;&#25991;&#20214;&#30340;&#36335;&#24452;&#65292;&#22240;&#27492;&#20320;&#21487;&#20197;&#23558;&#21253;&#21547;&#25152;&#29983;&#25104;&#25991;&#20214;&#21517;&#30340;&#36335;&#24452;&#23384;&#20837;&#25968;&#25454;&#24211;&#12290;</p><p><code>putFile</code> &#21644; <code>putFileAs</code> &#26041;&#27861;&#36824;&#25509;&#21463;&#19968;&#20010;&#21442;&#25968;&#26469;&#25351;&#23450;&#25152;&#23384;&#20648;&#25991;&#20214;&#30340;"&#21487;&#35265;&#24615;"&#65288;visibility&#65289;&#12290;&#22914;&#26524;&#20320;&#23558;&#25991;&#20214;&#23384;&#20648;&#22312; Amazon S3 &#36825;&#31867;&#20113;&#30913;&#30424;&#19978;&#65292;&#24182;&#24076;&#26395;&#25991;&#20214;&#33021;&#36890;&#36807;&#29983;&#25104;&#30340; URL &#20844;&#24320;&#35775;&#38382;&#65292;&#36825;&#19968;&#28857;&#23588;&#20854;&#26377;&#29992;&#65306;</p><pre><code class="language-php">Storage::putFile('photos', new File('/path/to/photo'), 'public');</code></pre><h3 id="481e034e6026969aae4ce7ce7c8a7b6f">&#25991;&#20214;&#19978;&#20256;</h3><p>&#22312; Web &#24212;&#29992;&#20013;&#65292;&#23384;&#20648;&#25991;&#20214;&#26368;&#24120;&#35265;&#30340;&#29992;&#36884;&#20043;&#19968;&#23601;&#26159;&#20445;&#23384;&#29992;&#25143;&#19978;&#20256;&#30340;&#25991;&#20214;&#65292;&#20363;&#22914;&#29031;&#29255;&#21644;&#25991;&#26723;&#12290;Laravel &#35753;&#23384;&#20648;&#19978;&#20256;&#25991;&#20214;&#21464;&#24471;&#38750;&#24120;&#23481;&#26131;&#65292;&#21482;&#38656;&#20351;&#29992;&#19978;&#20256;&#25991;&#20214;&#23454;&#20363;&#19978;&#30340; <code>store</code> &#26041;&#27861;&#21363;&#21487;&#12290;&#35843;&#29992; <code>store</code> &#26041;&#27861;&#26102;&#65292;&#20256;&#20837;&#20320;&#24076;&#26395;&#23384;&#20648;&#35813;&#19978;&#20256;&#25991;&#20214;&#30340;&#36335;&#24452;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserAvatarController extends Controller
+{
+    /**
+     * &#26356;&#26032;&#29992;&#25143;&#30340;&#22836;&#20687;&#12290;
+     */
+    public function update(Request $request): string
+    {
+        $path = $request-&gt;file('avatar')-&gt;store('avatars');
+
+        return $path;
+    }
+}</code></pre><p>&#20851;&#20110;&#36825;&#20010;&#31034;&#20363;&#65292;&#26377;&#20960;&#28857;&#38656;&#35201;&#27880;&#24847;&#12290;&#27880;&#24847;&#65292;&#25105;&#20204;&#21482;&#25351;&#23450;&#20102;&#30446;&#24405;&#21517;&#65292;&#32780;&#27809;&#26377;&#25351;&#23450;&#25991;&#20214;&#21517;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>store</code> &#26041;&#27861;&#20250;&#29983;&#25104;&#19968;&#20010;&#21807;&#19968; ID &#20316;&#20026;&#25991;&#20214;&#21517;&#12290;&#25991;&#20214;&#30340;&#25193;&#23637;&#21517;&#23558;&#26681;&#25454;&#25991;&#20214;&#30340; MIME &#31867;&#22411;&#26469;&#30830;&#23450;&#12290;<code>store</code> &#26041;&#27861;&#20250;&#36820;&#22238;&#25991;&#20214;&#30340;&#36335;&#24452;&#65292;&#22240;&#27492;&#20320;&#21487;&#20197;&#23558;&#21253;&#21547;&#25152;&#29983;&#25104;&#25991;&#20214;&#21517;&#30340;&#36335;&#24452;&#23384;&#20837;&#25968;&#25454;&#24211;&#12290;</p><p>&#20320;&#20063;&#21487;&#20197;&#35843;&#29992; <code>Storage</code> Facade &#19978;&#30340; <code>putFile</code> &#26041;&#27861;&#26469;&#25191;&#34892;&#19982;&#19978;&#38754;&#31034;&#20363;&#30456;&#21516;&#30340;&#25991;&#20214;&#23384;&#20648;&#25805;&#20316;&#65306;</p><pre><code class="language-php">$path = Storage::putFile('avatars', $request-&gt;file('avatar'));</code></pre><h4 id="4b4f49c5241f4e7c03a074db4077a137">&#25351;&#23450;&#25991;&#20214;&#21517;</h4><p>&#22914;&#26524;&#20320;&#19981;&#24076;&#26395;&#20026;&#23384;&#20648;&#30340;&#25991;&#20214;&#33258;&#21160;&#20998;&#37197;&#25991;&#20214;&#21517;&#65292;&#21487;&#20197;&#20351;&#29992; <code>storeAs</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#25509;&#25910;&#36335;&#24452;&#12289;&#25991;&#20214;&#21517;&#20197;&#21450;&#65288;&#21487;&#36873;&#30340;&#65289;&#30913;&#30424;&#20316;&#20026;&#21442;&#25968;&#65306;</p><pre><code class="language-php">$path = $request-&gt;file('avatar')-&gt;storeAs(
+    'avatars', $request-&gt;user()-&gt;id
+);</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#20351;&#29992;&#35813; <code>Storage</code> Facade &#19978;&#30340; <code>putFileAs</code> &#26041;&#27861;&#65292;&#23427;&#20250;&#25191;&#34892;&#19982;&#19978;&#38754;&#31034;&#20363;&#30456;&#21516;&#30340;&#25991;&#20214;&#23384;&#20648;&#25805;&#20316;&#65306;</p><pre><code class="language-php">$path = Storage::putFileAs(
+    'avatars', $request-&gt;file('avatar'), $request-&gt;user()-&gt;id
+);</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#19981;&#21487;&#25171;&#21360;&#21450;&#26080;&#25928;&#30340; Unicode &#23383;&#31526;&#20250;&#20174;&#25991;&#20214;&#36335;&#24452;&#20013;&#33258;&#21160;&#31227;&#38500;&#12290;&#22240;&#27492;&#65292;&#22312;&#23558;&#25991;&#20214;&#36335;&#24452;&#20256;&#32473; Laravel &#30340;&#25991;&#20214;&#23384;&#20648;&#26041;&#27861;&#20043;&#21069;&#65292;&#20320;&#21487;&#33021;&#38656;&#35201;&#20808;&#23545;&#36335;&#24452;&#36827;&#34892;&#28165;&#29702;&#12290;&#25991;&#20214;&#36335;&#24452;&#20250;&#20351;&#29992; <code>League\Flysystem\WhitespacePathNormalizer::normalizePath</code> &#26041;&#27861;&#36827;&#34892;&#35268;&#33539;&#21270;&#12290;</p>
+</blockquote><h4 id="387ad799bdb555570e1f9a082766026e">&#25351;&#23450;&#30913;&#30424;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#35813;&#19978;&#20256;&#25991;&#20214;&#30340; <code>store</code> &#26041;&#27861;&#20250;&#20351;&#29992;&#20320;&#30340;&#40664;&#35748;&#30913;&#30424;&#12290;&#22914;&#26524;&#20320;&#24819;&#25351;&#23450;&#20854;&#20182;&#30913;&#30424;&#65292;&#21487;&#20197;&#23558;&#30913;&#30424;&#21517;&#31216;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#32473; <code>store</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$path = $request-&gt;file('avatar')-&gt;store(
+    'avatars/'.$request-&gt;user()-&gt;id, 's3'
+);</code></pre><p>&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159; <code>storeAs</code> &#26041;&#27861;&#65292;&#21487;&#20197;&#23558;&#30913;&#30424;&#21517;&#31216;&#20316;&#20026;&#31532;&#19977;&#20010;&#21442;&#25968;&#20256;&#32473;&#35813;&#26041;&#27861;&#65306;</p><pre><code class="language-php">$path = $request-&gt;file('avatar')-&gt;storeAs(
+    'avatars',
+    $request-&gt;user()-&gt;id,
+    's3'
+);</code></pre><h4 id="077c9e8cd721a6bb8e4e92f7ab7ea7c5">&#20854;&#20182;&#19978;&#20256;&#25991;&#20214;&#20449;&#24687;</h4><p>&#22914;&#26524;&#20320;&#24819;&#33719;&#21462;&#19978;&#20256;&#25991;&#20214;&#30340;&#21407;&#22987;&#21517;&#31216;&#19982;&#25193;&#23637;&#21517;&#65292;&#21487;&#20197;&#20351;&#29992; <code>getClientOriginalName</code> &#21644; <code>getClientOriginalExtension</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$file = $request-&gt;file('avatar');
+
+$name = $file-&gt;getClientOriginalName();
+$extension = $file-&gt;getClientOriginalExtension();</code></pre><p>&#19981;&#36807;&#35201;&#27880;&#24847;&#65292;<code>getClientOriginalName</code> &#21644; <code>getClientOriginalExtension</code> &#26041;&#27861;&#34987;&#35748;&#20026;&#26159;&#19981;&#23433;&#20840;&#30340;&#65292;&#22240;&#20026;&#25991;&#20214;&#21517;&#21644;&#25193;&#23637;&#21517;&#21487;&#33021;&#34987;&#24694;&#24847;&#29992;&#25143;&#31713;&#25913;&#12290;&#22240;&#27492;&#65292;&#36890;&#24120;&#20320;&#24212;&#24403;&#20248;&#20808;&#20351;&#29992; <code>hashName</code> &#21644; <code>extension</code> &#26041;&#27861;&#26469;&#33719;&#21462;&#35813;&#19978;&#20256;&#25991;&#20214;&#30340;&#21517;&#31216;&#19982;&#25193;&#23637;&#21517;&#65306;</p><pre><code class="language-php">$file = $request-&gt;file('avatar');
+
+$name = $file-&gt;hashName(); // &#29983;&#25104;&#21807;&#19968;&#12289;&#38543;&#26426;&#30340;&#21517;&#31216;&hellip;&hellip;
+$extension = $file-&gt;extension(); // &#26681;&#25454;&#25991;&#20214;&#30340; MIME &#31867;&#22411;&#21028;&#26029;&#20854;&#25193;&#23637;&#21517;&hellip;&hellip;</code></pre><h3 id="fdb4eb3dfd838821063ecc54eda4ceb1">&#25991;&#20214;&#21487;&#35265;&#24615;</h3><p>&#22312; Laravel &#30340; Flysystem &#38598;&#25104;&#20013;&#65292;"&#21487;&#35265;&#24615;"&#65288;visibility&#65289;&#26159;&#23545;&#36328;&#24179;&#21488;&#25991;&#20214;&#26435;&#38480;&#30340;&#25277;&#35937;&#12290;&#25991;&#20214;&#21487;&#20197;&#34987;&#22768;&#26126;&#20026; <code>public</code> &#25110; <code>private</code>&#12290;&#24403;&#25991;&#20214;&#34987;&#22768;&#26126;&#20026; <code>public</code> &#26102;&#65292;&#34920;&#31034;&#35813;&#25991;&#20214;&#36890;&#24120;&#24212;&#24403;&#21487;&#34987;&#20854;&#20182;&#20154;&#35775;&#38382;&#12290;&#20363;&#22914;&#65292;&#20351;&#29992; S3 &#39537;&#21160;&#26102;&#65292;&#20320;&#21487;&#20197;&#33719;&#21462; <code>public</code> &#25991;&#20214;&#30340; URL&#12290;</p><p>&#22312;&#36890;&#36807; <code>put</code> &#26041;&#27861;&#20889;&#20837;&#25991;&#20214;&#26102;&#65292;&#20320;&#21487;&#20197;&#35774;&#32622;&#20854;&#21487;&#35265;&#24615;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+Storage::put('file.jpg', $contents, 'public');</code></pre><p>&#22914;&#26524;&#25991;&#20214;&#24050;&#32463;&#23384;&#20648;&#65292;&#23601;&#21487;&#20197;&#36890;&#36807; <code>getVisibility</code> &#21644; <code>setVisibility</code> &#26041;&#27861;&#33719;&#21462;&#19982;&#35774;&#32622;&#20854;&#21487;&#35265;&#24615;&#65306;</p><pre><code class="language-php">$visibility = Storage::getVisibility('file.jpg');
+
+Storage::setVisibility('file.jpg', 'public');</code></pre><p>&#22312;&#22788;&#29702;&#19978;&#20256;&#25991;&#20214;&#26102;&#65292;&#21487;&#20197;&#20351;&#29992; <code>storePublicly</code> &#21644; <code>storePubliclyAs</code> &#26041;&#27861;&#65292;&#20197; <code>public</code> &#21487;&#35265;&#24615;&#26469;&#23384;&#20648;&#19978;&#20256;&#30340;&#25991;&#20214;&#65306;</p><pre><code class="language-php">$path = $request-&gt;file('avatar')-&gt;storePublicly('avatars', 's3');
+
+$path = $request-&gt;file('avatar')-&gt;storePubliclyAs(
+    'avatars',
+    $request-&gt;user()-&gt;id,
+    's3'
+);</code></pre><h3 id="7808a68ee1b34dab43011429a12de19e">&#22270;&#20687;&#22788;&#29702;</h3><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#22312;&#23384;&#20648;&#19978;&#20256;&#30340;&#22270;&#29255;&#20043;&#21069;&#23545;&#20854;&#35843;&#25972;&#22823;&#23567;&#12289;&#35009;&#21098;&#25110;&#36716;&#25442;&#26684;&#24335;&#65292;&#21487;&#20197;&#20351;&#29992; Laravel &#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/images" target="_blank">&#22270;&#20687;&#22788;&#29702;&#21151;&#33021;</a>&#65306;</p><pre><code class="language-php">$path = $request-&gt;image('avatar')
+    -&gt;cover(400, 400)
+    -&gt;toWebp()
+    -&gt;storePublicly('avatars', 'public');</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#20174;&#24050;&#23384;&#20648;&#22312;&#26576;&#20010;&#25991;&#20214;&#31995;&#32479;&#30913;&#30424;&#19978;&#30340;&#25991;&#20214;&#21019;&#24314;&#22270;&#20687;&#23454;&#20363;&#65306;</p><pre><code class="language-php">$image = Storage::disk('public')-&gt;image('avatars/photo.jpg');</code></pre><h4 id="2be64862bd8b80edfffb3bab3c5be775">&#26412;&#22320;&#25991;&#20214;&#19982;&#21487;&#35265;&#24615;</h4><p>&#20351;&#29992; <code>local</code> &#39537;&#21160;&#26102;&#65292;<code>public</code> <a href="qk9428ovw1.html#file-visibility" target="_blank">&#21487;&#35265;&#24615;</a>&#20250;&#36716;&#25442;&#20026;&#30446;&#24405;&#30340; <code>0755</code> &#26435;&#38480;&#19982;&#25991;&#20214;&#30340; <code>0644</code> &#26435;&#38480;&#12290;&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>filesystems</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#20462;&#25913;&#36825;&#20123;&#26435;&#38480;&#26144;&#23556;&#65306;</p><pre><code class="language-php">'local' =&gt; [
+    'driver' =&gt; 'local',
+    'root' =&gt; storage_path('app'),
+    'permissions' =&gt; [
+        'file' =&gt; [
+            'public' =&gt; 0644,
+            'private' =&gt; 0600,
+        ],
+        'dir' =&gt; [
+            'public' =&gt; 0755,
+            'private' =&gt; 0700,
+        ],
+    ],
+    'throw' =&gt; false,
+],</code></pre><h2 id="53518c22f5529ff13cb3af383ed407c4">&#21024;&#38500;&#25991;&#20214;</h2><p><code>delete</code> &#26041;&#27861;&#25509;&#21463;&#21333;&#20010;&#25991;&#20214;&#21517;&#25110;&#19968;&#20010;&#24453;&#21024;&#38500;&#25991;&#20214;&#25968;&#32452;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+Storage::delete('file.jpg');
+
+Storage::delete(['file.jpg', 'file2.jpg']);</code></pre><p>&#22914;&#26377;&#38656;&#35201;&#65292;&#20320;&#21487;&#20197;&#25351;&#23450;&#21024;&#38500;&#25991;&#20214;&#26102;&#25152;&#22312;&#30340;&#30913;&#30424;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+Storage::disk('s3')-&gt;delete('path/file.jpg');</code></pre><h2 id="767fa455bb6826f4b550c21a6bca7182">&#30446;&#24405;</h2><h4 id="43b439b5fae161c03d52e4da68c357dd">&#33719;&#21462;&#30446;&#24405;&#20869;&#30340;&#25152;&#26377;&#25991;&#20214;</h4><p><code>files</code> &#26041;&#27861;&#36820;&#22238;&#32473;&#23450;&#30446;&#24405;&#20869;&#25152;&#26377;&#25991;&#20214;&#30340;&#25968;&#32452;&#12290;&#22914;&#26524;&#20320;&#24819;&#33719;&#21462;&#32473;&#23450;&#30446;&#24405;&#65288;&#21253;&#21547;&#23376;&#30446;&#24405;&#65289;&#20869;&#25152;&#26377;&#25991;&#20214;&#30340;&#21015;&#34920;&#65292;&#21487;&#20197;&#20351;&#29992; <code>allFiles</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Storage;
+
+$files = Storage::files($directory);
+
+$files = Storage::allFiles($directory);</code></pre><h4 id="124f74a58dd5d39a8774a57da14d6dc8">&#33719;&#21462;&#30446;&#24405;&#20869;&#30340;&#25152;&#26377;&#23376;&#30446;&#24405;</h4><p><code>directories</code> &#26041;&#27861;&#36820;&#22238;&#32473;&#23450;&#30446;&#24405;&#20869;&#25152;&#26377;&#23376;&#30446;&#24405;&#30340;&#25968;&#32452;&#12290;&#22914;&#26524;&#20320;&#24819;&#33719;&#21462;&#32473;&#23450;&#30446;&#24405;&#65288;&#21253;&#21547;&#23376;&#30446;&#24405;&#65289;&#20869;&#25152;&#26377;&#23376;&#30446;&#24405;&#30340;&#21015;&#34920;&#65292;&#21487;&#20197;&#20351;&#29992; <code>allDirectories</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$directories = Storage::directories($directory);
+
+$directories = Storage::allDirectories($directory);</code></pre><h4 id="be749cba847528da27f9ecdbde24124e">&#21019;&#24314;&#30446;&#24405;</h4><p><code>makeDirectory</code> &#26041;&#27861;&#20250;&#21019;&#24314;&#32473;&#23450;&#30446;&#24405;&#65292;&#21253;&#25324;&#25152;&#26377;&#24517;&#38656;&#30340;&#23376;&#30446;&#24405;&#65306;</p><pre><code class="language-php">Storage::makeDirectory($directory);</code></pre><h4 id="34f1aa00b285bbb3f4bbe19339b3e535">&#21024;&#38500;&#30446;&#24405;</h4><p>&#26368;&#21518;&#65292;<code>deleteDirectory</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#21024;&#38500;&#19968;&#20010;&#30446;&#24405;&#21450;&#20854;&#25152;&#26377;&#25991;&#20214;&#65306;</p><pre><code class="language-php">Storage::deleteDirectory($directory);</code></pre><h2 id="db06c78d1e24cf708a14ce81c9b617ec">&#27979;&#35797;</h2><p><code>Storage</code> Facade &#30340; <code>fake</code> &#26041;&#27861;&#35753;&#20320;&#21487;&#20197;&#36731;&#26494;&#29983;&#25104;&#19968;&#20010;&#20266;&#30913;&#30424;&#65292;&#32467;&#21512; <code>Illuminate\Http\UploadedFile</code> &#31867;&#30340;&#25991;&#20214;&#29983;&#25104;&#24037;&#20855;&#65292;&#33021;&#26497;&#22823;&#22320;&#31616;&#21270;&#25991;&#20214;&#19978;&#20256;&#30340;&#27979;&#35797;&#12290;&#20363;&#22914;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+
+test('albums can be uploaded', function () {
+    Storage::fake('photos');
+
+    $response = $this-&gt;json('POST', '/photos', [
+        UploadedFile::fake()-&gt;image('photo1.jpg'),
+        UploadedFile::fake()-&gt;image('photo2.jpg')
+    ]);
+
+    // &#26029;&#35328;&#19968;&#20010;&#25110;&#22810;&#20010;&#25991;&#20214;&#24050;&#23384;&#20648;&hellip;&hellip;
+    Storage::disk('photos')-&gt;assertExists('photo1.jpg');
+    Storage::disk('photos')-&gt;assertExists(['photo1.jpg', 'photo2.jpg']);
+
+    // &#26029;&#35328;&#19968;&#20010;&#25110;&#22810;&#20010;&#25991;&#20214;&#26410;&#23384;&#20648;&hellip;&hellip;
+    Storage::disk('photos')-&gt;assertMissing('missing.jpg');
+    Storage::disk('photos')-&gt;assertMissing(['missing.jpg', 'non-existing.jpg']);
+
+    // &#26029;&#35328;&#32473;&#23450;&#30446;&#24405;&#20013;&#30340;&#25991;&#20214;&#25968;&#37327;&#19982;&#39044;&#26399;&#25968;&#37327;&#19968;&#33268;&hellip;&hellip;
+    Storage::disk('photos')-&gt;assertCount('/wallpapers', 2);
+
+    // &#26029;&#35328;&#32473;&#23450;&#30446;&#24405;&#20026;&#31354;&hellip;&hellip;
+    Storage::disk('photos')-&gt;assertDirectoryEmpty('/wallpapers');
+
+    // &#26029;&#35328;&#35813;&#30913;&#30424;&#19981;&#21253;&#21547;&#20219;&#20309;&#25991;&#20214;&hellip;&hellip;
+    Storage::disk('photos')-&gt;assertEmpty();
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    public function test_albums_can_be_uploaded(): void
+    {
+        Storage::fake('photos');
+
+        $response = $this-&gt;json('POST', '/photos', [
+            UploadedFile::fake()-&gt;image('photo1.jpg'),
+            UploadedFile::fake()-&gt;image('photo2.jpg')
+        ]);
+
+        // &#26029;&#35328;&#19968;&#20010;&#25110;&#22810;&#20010;&#25991;&#20214;&#24050;&#23384;&#20648;&hellip;&hellip;
+        Storage::disk('photos')-&gt;assertExists('photo1.jpg');
+        Storage::disk('photos')-&gt;assertExists(['photo1.jpg', 'photo2.jpg']);
+
+        // &#26029;&#35328;&#19968;&#20010;&#25110;&#22810;&#20010;&#25991;&#20214;&#26410;&#23384;&#20648;&hellip;&hellip;
+        Storage::disk('photos')-&gt;assertMissing('missing.jpg');
+        Storage::disk('photos')-&gt;assertMissing(['missing.jpg', 'non-existing.jpg']);
+
+        // &#26029;&#35328;&#32473;&#23450;&#30446;&#24405;&#20013;&#30340;&#25991;&#20214;&#25968;&#37327;&#19982;&#39044;&#26399;&#25968;&#37327;&#19968;&#33268;&hellip;&hellip;
+        Storage::disk('photos')-&gt;assertCount('/wallpapers', 2);
+
+        // &#26029;&#35328;&#32473;&#23450;&#30446;&#24405;&#20026;&#31354;&hellip;&hellip;
+        Storage::disk('photos')-&gt;assertDirectoryEmpty('/wallpapers');
+
+        // &#26029;&#35328;&#35813;&#30913;&#30424;&#19981;&#21253;&#21547;&#20219;&#20309;&#25991;&#20214;&hellip;&hellip;
+        Storage::disk('photos')-&gt;assertEmpty();
+    }
+}</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>fake</code> &#26041;&#27861;&#20250;&#21024;&#38500;&#20854;&#20020;&#26102;&#30446;&#24405;&#20013;&#30340;&#25152;&#26377;&#25991;&#20214;&#12290;&#22914;&#26524;&#20320;&#24819;&#20445;&#30041;&#36825;&#20123;&#25991;&#20214;&#65292;&#21487;&#20197;&#20351;&#29992; "persistentFake" &#26041;&#27861;&#12290;&#20851;&#20110;&#25991;&#20214;&#19978;&#20256;&#27979;&#35797;&#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#21487;&#20197;&#26597;&#38405; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/http-tests#testing-file-uploads" target="_blank">HTTP &#27979;&#35797;&#25991;&#26723;&#20013;&#20851;&#20110;&#25991;&#20214;&#19978;&#20256;&#30340;&#31456;&#33410;</a>&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+<code>image</code> &#26041;&#27861;&#38656;&#35201; <a href="https://www.php.net/manual/en/book.image.php" target="_blank" rel="noopener noreferrer">GD &#25193;&#23637;</a>&#12290;</p>
+</blockquote><h2 id="f5b6a44f095a9d5afc47be30db752fc6">&#33258;&#23450;&#20041;&#25991;&#20214;&#31995;&#32479;</h2><p>Laravel &#30340; Flysystem &#38598;&#25104;&#24320;&#31665;&#21363;&#29992;&#22320;&#25903;&#25345;&#22810;&#31181;"&#39537;&#21160;"&#65288;drivers&#65289;&#65307;&#19981;&#36807;&#65292;Flysystem &#24182;&#19981;&#38480;&#20110;&#36825;&#20123;&#65292;&#23427;&#36824;&#25552;&#20379;&#20102;&#35768;&#22810;&#20854;&#20182;&#23384;&#20648;&#31995;&#32479;&#30340;&#36866;&#37197;&#22120;&#65288;adapter&#65289;&#12290;&#22914;&#26524;&#20320;&#24819;&#22312; Laravel &#24212;&#29992;&#20013;&#20351;&#29992;&#36825;&#20123;&#39069;&#22806;&#30340;&#36866;&#37197;&#22120;&#20043;&#19968;&#65292;&#21487;&#20197;&#21019;&#24314;&#19968;&#20010;&#33258;&#23450;&#20041;&#39537;&#21160;&#12290;</p><p>&#35201;&#23450;&#20041;&#33258;&#23450;&#20041;&#25991;&#20214;&#31995;&#32479;&#65292;&#20320;&#38656;&#35201;&#19968;&#20010; Flysystem &#36866;&#37197;&#22120;&#12290;&#25105;&#20204;&#26469;&#32473;&#39033;&#30446;&#28155;&#21152;&#19968;&#20010;&#30001;&#31038;&#21306;&#32500;&#25252;&#30340; Dropbox &#36866;&#37197;&#22120;&#65306;</p><pre><code class="language-shell">composer require spatie/flysystem-dropbox</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#21487;&#20197;&#22312;&#24212;&#29992;&#26576;&#20010;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/providers" target="_blank">&#26381;&#21153;&#25552;&#20379;&#32773;</a>&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#27880;&#20876;&#35813;&#39537;&#21160;&#12290;&#20026;&#27492;&#65292;&#24212;&#24403;&#20351;&#29992; <code>Storage</code> Facade &#30340; <code>extend</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\ServiceProvider;
+use League\Flysystem\Filesystem;
+use Spatie\Dropbox\Client as DropboxClient;
+use Spatie\FlysystemDropbox\DropboxAdapter;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * &#27880;&#20876;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function register(): void
+    {
+        // ...
+    }
+
+    /**
+     * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function boot(): void
+    {
+        Storage::extend('dropbox', function (Application $app, array $config) {
+            $adapter = new DropboxAdapter(new DropboxClient(
+                $config['authorization_token']
+            ));
+
+            return new FilesystemAdapter(
+                new Filesystem($adapter, $config),
+                $adapter,
+                $config
+            );
+        });
+    }
+}</code></pre><p><code>extend</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#39537;&#21160;&#21517;&#31216;&#65292;&#31532;&#20108;&#20010;&#26159;&#19968;&#20010;&#25509;&#25910; <code>$app</code> &#21644; <code>$config</code> &#21464;&#37327;&#30340;&#38381;&#21253;&#12290;&#35813;&#38381;&#21253;&#24517;&#39035;&#36820;&#22238; <code>Illuminate\Filesystem\FilesystemAdapter</code> &#30340;&#23454;&#20363;&#12290;<code>$config</code> &#21464;&#37327;&#21253;&#21547; <code>config/filesystems.php</code> &#20013;&#20026;&#25351;&#23450;&#30913;&#30424;&#23450;&#20041;&#30340;&#20540;&#12290;</p><p>&#19968;&#26086;&#20320;&#21019;&#24314;&#24182;&#27880;&#20876;&#20102;&#35813;&#25193;&#23637;&#30340;&#26381;&#21153;&#25552;&#20379;&#32773;&#65292;&#23601;&#21487;&#20197;&#22312; <code>config/filesystems.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#20351;&#29992; <code>dropbox</code> &#39537;&#21160;&#20102;&#12290;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Flysystem: <i><a href="https://github.com/thephpleague/flysystem" target="_blank">https://github.com/thephpleague/flysystem</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Amazon S3: <i><a href="https://aws.amazon.com/s3/" target="_blank">https://aws.amazon.com/s3/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> RustFS: <i><a href="https://github.com/rustfs/rustfs" target="_blank">https://github.com/rustfs/rustfs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> DigitalOcean Spaces: <i><a href="https://www.digitalocean.com/products/spaces/" target="_blank">https://www.digitalocean.com/products/spaces/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> Vultr Object Storage: <i><a href="https://www.vultr.com/products/object-storage/" target="_blank">https://www.vultr.com/products/object-storage/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Cloudflare R2: <i><a href="https://www.cloudflare.com/developer-platform/products/r2/" target="_blank">https://www.cloudflare.com/developer-platform/products/r2/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> Hetzner Cloud Storage: <i><a href="https://www.hetzner.com/storage/object-storage/" target="_blank">https://www.hetzner.com/storage/object-storage/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 创建符号链接: <i><a href="qk9428ovw1.html#the-public-disk" target="_blank">#the-public-disk</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> S3 请求参数: <i><a href="https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectGET.html#RESTObjectGET-requests" target="_blank">https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectGET.html#RESTObjectGET-requests</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> 图像处理功能: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/images" target="_blank">/docs/Laravel 13.x/images</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> 可见性: <i><a href="qk9428ovw1.html#file-visibility" target="_blank">#file-visibility</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> HTTP 测试文档中关于文件上传的章节: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/http-tests#testing-file-uploads" target="_blank">/docs/Laravel 13.x/http-tests#testing-file-uploads</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> GD 扩展: <i><a href="https://www.php.net/manual/en/book.image.php" target="_blank">https://www.php.net/manual/en/book.image.php</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> 服务提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/providers" target="_blank">/docs/Laravel 13.x/providers</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="x3vo0l4vm1.html#blog1034" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">事件</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="569x5d8yep.html#blog1036" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">辅助函数</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

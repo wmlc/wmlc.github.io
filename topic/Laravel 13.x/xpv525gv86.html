@@ -1,0 +1,1847 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>数据库：查询构造器 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/xpv525gv86.html', function (data, status) {
+            addView('xpv525gv86.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>数据库：查询构造器</h1><ul>
+<li><a href="xpv525gv86.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="xpv525gv86.html#56c09cc44b5233593062b1a83195aef5">运行数据库查询</a>
+<ul>
+<li><a href="xpv525gv86.html#25340484cdb7afc653ca812acd51cd46">从表中检索所有行</a></li>
+<li><a href="xpv525gv86.html#a59cdd5acf7c87a65db93573dc10c3ec">从表中检索单行 / 单列</a></li>
+<li><a href="xpv525gv86.html#51b63c643d5628a87e63f5ee61a81d19">检索列值列表</a>
+<ul>
+<li><a href="xpv525gv86.html#68ea79dd24e0ed6211d7fc9cf74e61b8">结果分块</a></li>
+<li><a href="xpv525gv86.html#92fe01514cfc5cd870dd3bce2ce17bda">惰性流式拉取结果</a></li>
+<li><a href="xpv525gv86.html#7bf69ce8f497625e108f80aee857d7b7">聚合查询</a></li>
+</ul></li>
+<li><a href="xpv525gv86.html#bb9663abaec8c43db284418ac190b934">判断记录是否存在</a></li>
+</ul></li>
+<li><a href="xpv525gv86.html#951730c518f732d1cda878dc104238c3">Select 语句</a>
+<ul>
+<li><a href="xpv525gv86.html#fed59f613e250e3b9698bc30e20db0a7">指定 Select 子句</a></li>
+</ul></li>
+<li><a href="xpv525gv86.html#8837c5afa033617a3ad5d46d28771a6e">原生表达式</a>
+<ul>
+<li><a href="xpv525gv86.html#3446b9f1c423a7721b5c007ff8f0a932">原生方法</a>
+<ul>
+<li><a href="xpv525gv86.html#418cb5b3fa573650995223fb25f67fed">selectRaw</a></li>
+<li><a href="xpv525gv86.html#f935136d4c56b99272829a139dba9394">whereRaw / orWhereRaw</a></li>
+<li><a href="xpv525gv86.html#071159eb853e0c7a2fd79a8000c7394d">havingRaw / orHavingRaw</a></li>
+<li><a href="xpv525gv86.html#c17483eab499c34b1d2c2d74d1ad694b">orderByRaw</a></li>
+<li><a href="xpv525gv86.html#1c2ab31fe77d6542a31f740412ba8cf4">groupByRaw</a></li>
+</ul></li>
+</ul></li>
+<li><a href="xpv525gv86.html#854e025da93747dab5c33949ecb15bce">Joins（连接）</a>
+<ul>
+<li><a href="xpv525gv86.html#ad3d62d0f4cee41d03573dae9e659d9b">Inner Join 子句</a></li>
+<li><a href="xpv525gv86.html#8f4608e9426e3ff991b3970d291a86a2">Left Join / Right Join 子句</a></li>
+<li><a href="xpv525gv86.html#dd0985cca9b9d704067f833fb0c1bc04">Cross Join 子句</a></li>
+<li><a href="xpv525gv86.html#ff87bd6156cfa5a80f90b86a407141ca">高级 Join 子句</a></li>
+<li><a href="xpv525gv86.html#403c81d935008fc17e94527ac9de9ff6">子查询连接</a></li>
+<li><a href="xpv525gv86.html#68a6d9453655ad0b9c9ed8648caa4b19">Lateral 连接</a></li>
+</ul></li>
+<li><a href="xpv525gv86.html#1d61b2a5f69c23b5c6edb6bb9b07f9e2">Unions（联合）</a></li>
+<li><a href="xpv525gv86.html#606e89ce56b7ec6aa3feb3a6558d6e03">基础 Where 子句</a>
+<ul>
+<li><a href="xpv525gv86.html#f21faee8511c01b691ffe808aab11806">Where 子句</a></li>
+<li><a href="xpv525gv86.html#7038c80504f7f4560de57177ce2e2a52">Or Where 子句</a></li>
+<li><a href="xpv525gv86.html#fac4df0f8b386f2fc4f7bd3fb4b4482c">Where Not 子句</a></li>
+<li><a href="xpv525gv86.html#77e045ae2324a36fbc959a9b4a0745fc">Where Any / All / None 子句</a></li>
+<li><a href="xpv525gv86.html#eac851f8dccdd3e0aab7ee63250f947f">JSON Where 子句</a></li>
+<li><a href="xpv525gv86.html#aa7748f6823a6d3d829beb9044e10a6c">其它 Where 子句</a></li>
+<li><a href="xpv525gv86.html#094d212ac170bc4fb3e400577ac59ede">逻辑分组</a></li>
+</ul></li>
+<li><a href="xpv525gv86.html#433b7d18d63e5cc64f44b07f9abf5ec5">高级 Where 子句</a>
+<ul>
+<li><a href="xpv525gv86.html#605c984097fb008bb87d7a5411ca3e33">Where Exists 子句</a></li>
+<li><a href="xpv525gv86.html#f882a277bb22f4d74715f4c7576b278b">子查询 Where 子句</a></li>
+<li><a href="xpv525gv86.html#bd9b36f90bc6c96b185e8c8089add2ce">全文检索 Where 子句</a></li>
+<li><a href="xpv525gv86.html#dae09fb519826da8989f7de4e25d4132">向量相似度子句</a></li>
+</ul></li>
+<li><a href="xpv525gv86.html#40236cd24a2bb6eb7aa45152a71677f2">排序、分组、Limit 与 Offset</a>
+<ul>
+<li><a href="xpv525gv86.html#c360e994dbcffdf31e86d2d8875370e1">排序</a>
+<ul>
+<li><a href="xpv525gv86.html#bf98a1d72fbb8fa0b497381f263e7cd5">orderBy 方法</a></li>
+<li><a href="xpv525gv86.html#42510fd8585f961390996da945699e08">latest 与 oldest 方法</a></li>
+<li><a href="xpv525gv86.html#ae974cf99ca3396d9728470eaa7ad751">随机排序</a></li>
+<li><a href="xpv525gv86.html#29b9a15ac9e51a19afbf53e8eb49d2c2">移除已有排序</a></li>
+</ul></li>
+<li><a href="xpv525gv86.html#829abe5a8dcd0579a340d20636b59276">分组</a>
+<ul>
+<li><a href="xpv525gv86.html#e856318515593d3d76721a0834548511">groupBy 与 having 方法</a></li>
+</ul></li>
+<li><a href="xpv525gv86.html#41a8118e602311f028e40293d96115c1">Limit 与 Offset</a></li>
+</ul></li>
+<li><a href="xpv525gv86.html#c91fac98d8ffb0bb4137ff19c37f017d">条件子句</a></li>
+<li><a href="xpv525gv86.html#ecde95331beb492bbbff235dff3d1c8b">Insert 语句</a>
+<ul>
+<li><a href="xpv525gv86.html#651e9925806112e4d0db9015e45cb5bf">自增 ID</a>
+<ul>
+<li><a href="xpv525gv86.html#492cd2826f5ccc3f955cea25a606588a">Upserts</a></li>
+</ul></li>
+</ul></li>
+<li><a href="xpv525gv86.html#7f873d4e832f63b45c80804e76bf49c1">Update 语句</a>
+<ul>
+<li><a href="xpv525gv86.html#5dc86a48ad2ed372d0508c8aca36cb9a">Update or Insert</a>
+<ul>
+<li><a href="xpv525gv86.html#16564778b4b4adc59f3fe796c03de389">更新 JSON 列</a></li>
+<li><a href="xpv525gv86.html#fb59ec56b07e89d7976cbbd8bb4df3cf">自增与自减</a></li>
+</ul></li>
+</ul></li>
+<li><a href="xpv525gv86.html#bd7f8b597a7e9924a4e9b0f3f7cd03f1">Delete 语句</a></li>
+<li><a href="xpv525gv86.html#891f975efa0ad8ed8582636e0bd98e41">悲观锁</a></li>
+<li><a href="xpv525gv86.html#06d2e65801f744b8b3302cd4932437e0">可复用的查询组件</a>
+<ul>
+<li><a href="xpv525gv86.html#77dcaa2f297c8d3187284a6997c91ec1">查询管道</a></li>
+</ul></li>
+<li><a href="xpv525gv86.html#b7c0bfff1b6f1cc255716a1cb8b68011">调试</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>Laravel &#30340;&#25968;&#25454;&#24211;&#26597;&#35810;&#26500;&#36896;&#22120;&#65288;Query Builder&#65289;&#20026;&#21019;&#24314;&#21644;&#36816;&#34892;&#25968;&#25454;&#24211;&#26597;&#35810;&#25552;&#20379;&#20102;&#19968;&#20010;&#20415;&#25463;&#12289;&#27969;&#30021;&#30340;&#25509;&#21475;&#12290;&#23427;&#21487;&#29992;&#20110;&#22312;&#24212;&#29992;&#20013;&#25191;&#34892;&#22823;&#22810;&#25968;&#25968;&#25454;&#24211;&#25805;&#20316;&#65292;&#24182;&#19982; Laravel &#25903;&#25345;&#30340;&#25152;&#26377;&#25968;&#25454;&#24211;&#31995;&#32479;&#23436;&#32654;&#20860;&#23481;&#12290;</p><p>Laravel &#26597;&#35810;&#26500;&#36896;&#22120;&#20351;&#29992; PDO &#21442;&#25968;&#32465;&#23450;&#26469;&#20445;&#25252;&#24212;&#29992;&#20813;&#21463; SQL &#27880;&#20837;&#25915;&#20987;&#12290;&#22240;&#27492;&#65292;&#20316;&#20026;&#26597;&#35810;&#32465;&#23450;&#20256;&#20837;&#30340;&#23383;&#31526;&#20018;&#26080;&#38656;&#25163;&#21160;&#28165;&#29702;&#25110;&#36716;&#20041;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+PDO &#19981;&#25903;&#25345;&#23545;&#21015;&#21517;&#36827;&#34892;&#21442;&#25968;&#32465;&#23450;&#12290;&#22240;&#27492;&#65292;&#32477;&#19981;&#24212;&#35813;&#35753;&#29992;&#25143;&#36755;&#20837;&#20915;&#23450;&#26597;&#35810;&#25152;&#24341;&#29992;&#30340;&#21015;&#21517;&#65288;&#21253;&#25324;&#12300;order by&#12301;&#21015;&#65289;&#12290;</p>
+</blockquote><h2 id="56c09cc44b5233593062b1a83195aef5">&#36816;&#34892;&#25968;&#25454;&#24211;&#26597;&#35810;</h2><h4 id="25340484cdb7afc653ca812acd51cd46">&#20174;&#34920;&#20013;&#26816;&#32034;&#25152;&#26377;&#34892;</h4><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#25552;&#20379;&#30340; <code>table</code> &#26041;&#27861;&#26469;&#24320;&#21551;&#19968;&#26465;&#26597;&#35810;&#12290;<code>table</code> &#26041;&#27861;&#20250;&#20026;&#25351;&#23450;&#34920;&#36820;&#22238;&#19968;&#20010;&#27969;&#24335;&#26597;&#35810;&#26500;&#36896;&#22120;&#23454;&#20363;&#65292;&#20415;&#20110;&#20320;&#32487;&#32493;&#38142;&#24335;&#36861;&#21152;&#26356;&#22810;&#32422;&#26463;&#65292;&#26368;&#21518;&#36890;&#36807; <code>get</code> &#26041;&#27861;&#21462;&#20986;&#26597;&#35810;&#32467;&#26524;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
+
+class UserController extends Controller
+{
+    /**
+     * &#23637;&#31034;&#24212;&#29992;&#25152;&#26377;&#29992;&#25143;&#30340;&#21015;&#34920;&#12290;
+     */
+    public function index(): View
+    {
+        $users = DB::table('users')-&gt;get();
+
+        return view('user.index', ['users' =&gt; $users]);
+    }
+}</code></pre><p><code>get</code> &#26041;&#27861;&#20250;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Support\Collection</code> &#23454;&#20363;&#65292;&#20854;&#20013;&#21253;&#21547;&#26597;&#35810;&#32467;&#26524;&#65292;&#27599;&#26465;&#32467;&#26524;&#37117;&#26159; PHP <code>stdClass</code> &#23545;&#35937;&#30340;&#19968;&#20010;&#23454;&#20363;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#23558;&#21015;&#20316;&#20026;&#23545;&#35937;&#23646;&#24615;&#35775;&#38382;&#26469;&#33719;&#21462;&#27599;&#20010;&#21015;&#30340;&#20540;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+$users = DB::table('users')-&gt;get();
+
+foreach ($users as $user) {
+    echo $user-&gt;name;
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+Laravel &#38598;&#21512;&#25552;&#20379;&#20102;&#35768;&#22810;&#38750;&#24120;&#24378;&#22823;&#30340;&#26041;&#27861;&#29992;&#20110;&#26144;&#23556;&#19982;&#24402;&#32422;&#25968;&#25454;&#12290;&#26356;&#22810;&#20449;&#24687;&#35831;&#26597;&#38405; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/collections" target="_blank">&#38598;&#21512;&#25991;&#26723;</a>&#12290;</p>
+</blockquote><h4 id="a59cdd5acf7c87a65db93573dc10c3ec">&#20174;&#34920;&#20013;&#26816;&#32034;&#21333;&#34892; / &#21333;&#21015;</h4><p>&#22914;&#26524;&#21482;&#38656;&#35201;&#20174;&#25968;&#25454;&#24211;&#34920;&#20013;&#33719;&#21462;&#19968;&#34892;&#25968;&#25454;&#65292;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#30340; <code>first</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#20250;&#36820;&#22238;&#19968;&#20010; <code>stdClass</code> &#23545;&#35937;&#65306;</p><pre><code class="language-php">$user = DB::table('users')-&gt;where('name', 'John')-&gt;first();
+
+return $user-&gt;email;</code></pre><p>&#22914;&#26524;&#24819;&#20174;&#25968;&#25454;&#24211;&#34920;&#20013;&#21462;&#20986;&#19968;&#34892;&#25968;&#25454;&#65292;&#20294;&#22312;&#27809;&#26377;&#21305;&#37197;&#34892;&#26102;&#25243;&#20986; <code>Illuminate\Database\RecordNotFoundException</code>&#65292;&#21487;&#20197;&#20351;&#29992; <code>firstOrFail</code> &#26041;&#27861;&#12290;&#22914;&#26524;&#26410;&#25429;&#33719; <code>RecordNotFoundException</code>&#65292;&#26694;&#26550;&#20250;&#33258;&#21160;&#21521;&#23458;&#25143;&#31471;&#36820;&#22238; 404 HTTP &#21709;&#24212;&#65306;</p><pre><code class="language-php">$user = DB::table('users')-&gt;where('name', 'John')-&gt;firstOrFail();</code></pre><p>&#22914;&#26524;&#19981;&#38656;&#35201;&#25972;&#34892;&#35760;&#24405;&#65292;&#21487;&#20197;&#20351;&#29992; <code>value</code> &#26041;&#27861;&#20174;&#35760;&#24405;&#20013;&#21462;&#20986;&#21333;&#20010;&#23383;&#27573;&#20540;&#12290;&#23427;&#20250;&#30452;&#25509;&#36820;&#22238;&#35813;&#21015;&#30340;&#20540;&#65306;</p><pre><code class="language-php">$email = DB::table('users')-&gt;where('name', 'John')-&gt;value('email');</code></pre><p>&#35201;&#25353; <code>id</code> &#21015;&#30340;&#20540;&#21462;&#20986;&#19968;&#34892;&#35760;&#24405;&#65292;&#35831;&#20351;&#29992; <code>find</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$user = DB::table('users')-&gt;find(3);</code></pre><h4 id="51b63c643d5628a87e63f5ee61a81d19">&#26816;&#32034;&#21015;&#20540;&#21015;&#34920;</h4><p>&#22914;&#26524;&#20320;&#24819;&#21462;&#20986;&#19968;&#20010;&#21253;&#21547;&#21333;&#21015;&#21462;&#20540;&#30340; <code>Illuminate\Support\Collection</code> &#23454;&#20363;&#65292;&#21487;&#20197;&#20351;&#29992; <code>pluck</code> &#26041;&#27861;&#12290;&#22312;&#19979;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#25105;&#20204;&#20250;&#21462;&#20986;&#19968;&#32452;&#29992;&#25143;&#22836;&#34900;&#30340;&#38598;&#21512;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+$titles = DB::table('users')-&gt;pluck('title');
+
+foreach ($titles as $title) {
+    echo $title;
+}</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#21521; <code>pluck</code> &#26041;&#27861;&#20256;&#20837;&#31532;&#20108;&#20010;&#21442;&#25968;&#65292;&#25351;&#23450;&#32467;&#26524;&#38598;&#21512;&#20351;&#29992;&#30340;&#38190;&#23545;&#24212;&#30340;&#21015;&#65306;</p><pre><code class="language-php">$titles = DB::table('users')-&gt;pluck('title', 'name');
+
+foreach ($titles as $name =&gt; $title) {
+    echo $title;
+}</code></pre><h3 id="68ea79dd24e0ed6211d7fc9cf74e61b8">&#32467;&#26524;&#20998;&#22359;</h3><p>&#22914;&#26524;&#38656;&#35201;&#22788;&#29702;&#25104;&#21315;&#19978;&#19975;&#26465;&#25968;&#25454;&#24211;&#35760;&#24405;&#65292;&#21487;&#20197;&#32771;&#34385;&#20351;&#29992; <code>DB</code> facade &#25552;&#20379;&#30340; <code>chunk</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#27599;&#27425;&#21462;&#20986;&#19968;&#23567;&#22359;&#32467;&#26524;&#65292;&#24182;&#23558;&#27599;&#20010;&#20998;&#22359;&#20256;&#36882;&#32473;&#19968;&#20010;&#38381;&#21253;&#36827;&#34892;&#22788;&#29702;&#12290;&#20363;&#22914;&#65292;&#19979;&#38754;&#30340;&#31034;&#20363;&#20250;&#20197; 100 &#26465;&#35760;&#24405;&#20026;&#19968;&#22359;&#65292;&#36880;&#22359;&#26816;&#32034;&#25972;&#20010; <code>users</code> &#34920;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+
+DB::table('users')-&gt;orderBy('id')-&gt;chunk(100, function (Collection $users) {
+    foreach ($users as $user) {
+        // ...
+    }
+});</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#38381;&#21253;&#20013;&#36820;&#22238; <code>false</code> &#26469;&#20572;&#27490;&#32487;&#32493;&#22788;&#29702;&#21518;&#32493;&#20998;&#22359;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;orderBy('id')-&gt;chunk(100, function (Collection $users) {
+    // &#22788;&#29702;&#35760;&#24405;...
+
+    return false;
+});</code></pre><p>&#22914;&#26524;&#20320;&#22312;&#20998;&#22359;&#21462;&#20986;&#32467;&#26524;&#26102;&#21516;&#26102;&#26356;&#26032;&#25968;&#25454;&#24211;&#35760;&#24405;&#65292;&#20998;&#22359;&#32467;&#26524;&#21487;&#33021;&#20250;&#20197;&#39044;&#26399;&#20043;&#22806;&#30340;&#26041;&#24335;&#21457;&#29983;&#21464;&#21270;&#12290;&#22914;&#26524;&#20320;&#35745;&#21010;&#22312;&#20998;&#22359;&#36807;&#31243;&#20013;&#26356;&#26032;&#21462;&#20986;&#30340;&#35760;&#24405;&#65292;&#37027;&#20040;&#26368;&#20339;&#20570;&#27861;&#26159;&#25913;&#29992; <code>chunkById</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#20250;&#33258;&#21160;&#22522;&#20110;&#35760;&#24405;&#30340;&#20027;&#38190;&#23545;&#32467;&#26524;&#36827;&#34892;&#20998;&#39029;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;where('active', false)
+    -&gt;chunkById(100, function (Collection $users) {
+        foreach ($users as $user) {
+            DB::table('users')
+                -&gt;where('id', $user-&gt;id)
+                -&gt;update(['active' =&gt; true]);
+        }
+    });</code></pre><p>&#30001;&#20110; <code>chunkById</code> &#21644; <code>lazyById</code> &#26041;&#27861;&#20250;&#22312;&#25191;&#34892;&#30340;&#26597;&#35810;&#19978;&#28155;&#21152;&#23427;&#20204;&#33258;&#24049;&#30340;&#12300;where&#12301;&#26465;&#20214;&#65292;&#20320;&#36890;&#24120;&#24212;&#23558;&#33258;&#24049;&#30340;&#26465;&#20214; <a href="xpv525gv86.html#logical-grouping" target="_blank">&#36923;&#36753;&#20998;&#32452;</a> &#21040;&#19968;&#20010;&#38381;&#21253;&#20869;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;where(function ($query) {
+    $query-&gt;where('credits', 1)-&gt;orWhere('credits', 2);
+})-&gt;chunkById(100, function (Collection $users) {
+    foreach ($users as $user) {
+        DB::table('users')
+            -&gt;where('id', $user-&gt;id)
+            -&gt;update(['credits' =&gt; 3]);
+    }
+});</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22312;&#20998;&#22359;&#22238;&#35843;&#20869;&#26356;&#26032;&#25110;&#21024;&#38500;&#35760;&#24405;&#26102;&#65292;&#23545;&#20027;&#38190;&#25110;&#22806;&#38190;&#30340;&#20219;&#20309;&#25913;&#21160;&#37117;&#21487;&#33021;&#24433;&#21709;&#20998;&#22359;&#26597;&#35810;&#65292;&#36827;&#32780;&#21487;&#33021;&#23548;&#33268;&#37096;&#20998;&#35760;&#24405;&#27809;&#26377;&#21253;&#21547;&#22312;&#20998;&#22359;&#32467;&#26524;&#20013;&#12290;</p>
+</blockquote><h3 id="92fe01514cfc5cd870dd3bce2ce17bda">&#24816;&#24615;&#27969;&#24335;&#25289;&#21462;&#32467;&#26524;</h3><p><code>lazy</code> &#26041;&#27861;&#22312;&#20197;&#20998;&#22359;&#26041;&#24335;&#25191;&#34892;&#26597;&#35810;&#36825;&#19968;&#28857;&#19978;&#19982; <a href="xpv525gv86.html#chunking-results" target="_blank">chunk &#26041;&#27861;</a> &#31867;&#20284;&#12290;&#19981;&#21516;&#20043;&#22788;&#22312;&#20110;&#65292;<code>lazy()</code> &#26041;&#27861;&#20250;&#36820;&#22238;&#19968;&#20010; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/collections#lazy-collections" target="_blank">LazyCollection</a>&#65292;&#35753;&#20320;&#20687;&#25805;&#20316;&#21333;&#19968;&#25968;&#25454;&#27969;&#19968;&#26679;&#22788;&#29702;&#32467;&#26524;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+DB::table('users')-&gt;orderBy('id')-&gt;lazy()-&gt;each(function (object $user) {
+    // ...
+});</code></pre><p>&#21516;&#26679;&#22320;&#65292;&#22914;&#26524;&#20320;&#35745;&#21010;&#22312;&#36941;&#21382;&#36807;&#31243;&#20013;&#26356;&#26032;&#21462;&#20986;&#30340;&#35760;&#24405;&#65292;&#26368;&#22909;&#25913;&#29992; <code>lazyById</code> &#25110; <code>lazyByIdDesc</code> &#26041;&#27861;&#12290;&#36825;&#20123;&#26041;&#27861;&#20250;&#33258;&#21160;&#22522;&#20110;&#35760;&#24405;&#30340;&#20027;&#38190;&#23545;&#32467;&#26524;&#36827;&#34892;&#20998;&#39029;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;where('active', false)
+    -&gt;lazyById()-&gt;each(function (object $user) {
+        DB::table('users')
+            -&gt;where('id', $user-&gt;id)
+            -&gt;update(['active' =&gt; true]);
+    });</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22312;&#36941;&#21382;&#36807;&#31243;&#20013;&#26356;&#26032;&#25110;&#21024;&#38500;&#35760;&#24405;&#26102;&#65292;&#23545;&#20027;&#38190;&#25110;&#22806;&#38190;&#30340;&#20219;&#20309;&#25913;&#21160;&#37117;&#21487;&#33021;&#24433;&#21709;&#20998;&#22359;&#26597;&#35810;&#65292;&#36827;&#32780;&#21487;&#33021;&#23548;&#33268;&#37096;&#20998;&#35760;&#24405;&#27809;&#26377;&#21253;&#21547;&#22312;&#32467;&#26524;&#20013;&#12290;</p>
+</blockquote><h3 id="7bf69ce8f497625e108f80aee857d7b7">&#32858;&#21512;&#26597;&#35810;</h3><p>&#26597;&#35810;&#26500;&#36896;&#22120;&#36824;&#25552;&#20379;&#20102;&#22810;&#31181;&#26041;&#27861;&#26469;&#33719;&#21462; <code>count</code>&#12289;<code>max</code>&#12289;<code>min</code>&#12289;<code>avg</code> &#21644; <code>sum</code> &#31561;&#32858;&#21512;&#20540;&#12290;&#21487;&#20197;&#22312;&#26500;&#24314;&#26597;&#35810;&#21518;&#35843;&#29992;&#36825;&#20123;&#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+$users = DB::table('users')-&gt;count();
+
+$price = DB::table('orders')-&gt;max('price');</code></pre><p>&#24403;&#28982;&#65292;&#20320;&#20063;&#21487;&#20197;&#23558;&#36825;&#20123;&#26041;&#27861;&#19982;&#20854;&#23427;&#23376;&#21477;&#32452;&#21512;&#20351;&#29992;&#65292;&#20174;&#32780;&#26356;&#31934;&#32454;&#22320;&#25511;&#21046;&#32858;&#21512;&#20540;&#30340;&#35745;&#31639;&#26041;&#24335;&#65306;</p><pre><code class="language-php">$price = DB::table('orders')
+    -&gt;where('finalized', 1)
+    -&gt;avg('price');</code></pre><h4 id="bb9663abaec8c43db284418ac190b934">&#21028;&#26029;&#35760;&#24405;&#26159;&#21542;&#23384;&#22312;</h4><p>&#38500;&#20102;&#20351;&#29992; <code>count</code> &#26041;&#27861;&#21028;&#26029;&#26159;&#21542;&#26377;&#21305;&#37197;&#26597;&#35810;&#32422;&#26463;&#30340;&#35760;&#24405;&#22806;&#65292;&#20063;&#21487;&#20197;&#20351;&#29992; <code>exists</code> &#21644; <code>doesntExist</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">if (DB::table('orders')-&gt;where('finalized', 1)-&gt;exists()) {
+    // ...
+}
+
+if (DB::table('orders')-&gt;where('finalized', 1)-&gt;doesntExist()) {
+    // ...
+}</code></pre><h2 id="951730c518f732d1cda878dc104238c3">Select &#35821;&#21477;</h2><h4 id="fed59f613e250e3b9698bc30e20db0a7">&#25351;&#23450; Select &#23376;&#21477;</h4><p>&#20320;&#21487;&#33021;&#24182;&#19981;&#24635;&#26159;&#24076;&#26395;&#20174;&#25968;&#25454;&#24211;&#34920;&#20013;&#36873;&#25321;&#25152;&#26377;&#21015;&#12290;&#20351;&#29992; <code>select</code> &#26041;&#27861;&#65292;&#20320;&#21487;&#20197;&#20026;&#26597;&#35810;&#25351;&#23450;&#19968;&#20010;&#33258;&#23450;&#20041;&#30340;&#12300;select&#12301;&#23376;&#21477;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+$users = DB::table('users')
+    -&gt;select('name', 'email as user_email')
+    -&gt;get();</code></pre><p><code>distinct</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#24378;&#21046;&#35753;&#26597;&#35810;&#36820;&#22238;&#19981;&#37325;&#22797;&#30340;&#32467;&#26524;&#65306;</p><pre><code class="language-php">$users = DB::table('users')-&gt;distinct()-&gt;get();</code></pre><p>&#22914;&#26524;&#24050;&#32463;&#26377;&#19968;&#20010;&#26597;&#35810;&#26500;&#36896;&#22120;&#23454;&#20363;&#65292;&#24182;&#19988;&#24076;&#26395;&#21521;&#20854;&#24050;&#26377;&#30340; select &#23376;&#21477;&#36861;&#21152;&#19968;&#21015;&#65292;&#21487;&#20197;&#20351;&#29992; <code>addSelect</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$query = DB::table('users')-&gt;select('name');
+
+$users = $query-&gt;addSelect('age')-&gt;get();</code></pre><h2 id="8837c5afa033617a3ad5d46d28771a6e">&#21407;&#29983;&#34920;&#36798;&#24335;</h2><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#22312;&#26597;&#35810;&#20013;&#25554;&#20837;&#20219;&#24847;&#23383;&#31526;&#20018;&#12290;&#35201;&#21019;&#24314;&#19968;&#20010;&#21407;&#29983;&#23383;&#31526;&#20018;&#34920;&#36798;&#24335;&#65292;&#21487;&#20197;&#20351;&#29992; <code>DB</code> facade &#25552;&#20379;&#30340; <code>raw</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;select(DB::raw('count(*) as user_count, status'))
+    -&gt;where('status', '&lt;&gt;', 1)
+    -&gt;groupBy('status')
+    -&gt;get();</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#21407;&#29983;&#35821;&#21477;&#20250;&#20316;&#20026;&#23383;&#31526;&#20018;&#27880;&#20837;&#21040;&#26597;&#35810;&#20013;&#65292;&#22240;&#27492;&#24517;&#39035;&#26684;&#22806;&#23567;&#24515;&#65292;&#36991;&#20813;&#24341;&#20837; SQL &#27880;&#20837;&#28431;&#27934;&#12290;</p>
+</blockquote><h3 id="3446b9f1c423a7721b5c007ff8f0a932">&#21407;&#29983;&#26041;&#27861;</h3><p>&#38500;&#20102;&#20351;&#29992; <code>DB::raw</code> &#26041;&#27861;&#22806;&#65292;&#36824;&#21487;&#20197;&#20351;&#29992;&#20197;&#19979;&#26041;&#27861;&#23558;&#21407;&#29983;&#34920;&#36798;&#24335;&#25554;&#20837;&#26597;&#35810;&#30340;&#19981;&#21516;&#37096;&#20998;&#12290;<strong class="mk-y">&#35831;&#35760;&#20303;&#65292;Laravel &#26080;&#27861;&#20445;&#35777;&#20351;&#29992;&#21407;&#29983;&#34920;&#36798;&#24335;&#30340;&#26597;&#35810;&#33021;&#22815;&#38450;&#24481; SQL &#27880;&#20837;&#28431;&#27934;&#12290;</strong></p><h4 id="418cb5b3fa573650995223fb25f67fed"><code>selectRaw</code></h4><p><code>selectRaw</code> &#26041;&#27861;&#21487;&#20197;&#26367;&#20195; <code>addSelect(DB::raw(/* ... */))</code> &#30340;&#20889;&#27861;&#12290;&#35813;&#26041;&#27861;&#25509;&#25910;&#19968;&#20010;&#21487;&#36873;&#30340;&#32465;&#23450;&#25968;&#32452;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#65306;</p><pre><code class="language-php">$orders = DB::table('orders')
+    -&gt;selectRaw('price * ? as price_with_tax', [1.0825])
+    -&gt;get();</code></pre><h4 id="f935136d4c56b99272829a139dba9394"><code>whereRaw / orWhereRaw</code></h4><p><code>whereRaw</code> &#21644; <code>orWhereRaw</code> &#26041;&#27861;&#21487;&#20197;&#23558;&#21407;&#29983;&#12300;where&#12301;&#23376;&#21477;&#27880;&#20837;&#26597;&#35810;&#12290;&#36825;&#20004;&#20010;&#26041;&#27861;&#37117;&#25509;&#25910;&#19968;&#20010;&#21487;&#36873;&#30340;&#32465;&#23450;&#25968;&#32452;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#65306;</p><pre><code class="language-php">$orders = DB::table('orders')
+    -&gt;whereRaw('price &gt; IF(state = "TX", ?, 100)', [200])
+    -&gt;get();</code></pre><h4 id="071159eb853e0c7a2fd79a8000c7394d"><code>havingRaw / orHavingRaw</code></h4><p><code>havingRaw</code> &#21644; <code>orHavingRaw</code> &#26041;&#27861;&#21487;&#20197;&#23558;&#21407;&#29983;&#23383;&#31526;&#20018;&#20316;&#20026;&#12300;having&#12301;&#23376;&#21477;&#30340;&#20540;&#12290;&#36825;&#20004;&#20010;&#26041;&#27861;&#37117;&#25509;&#25910;&#19968;&#20010;&#21487;&#36873;&#30340;&#32465;&#23450;&#25968;&#32452;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#65306;</p><pre><code class="language-php">$orders = DB::table('orders')
+    -&gt;select('department', DB::raw('SUM(price) as total_sales'))
+    -&gt;groupBy('department')
+    -&gt;havingRaw('SUM(price) &gt; ?', [2500])
+    -&gt;get();</code></pre><h4 id="c17483eab499c34b1d2c2d74d1ad694b"><code>orderByRaw</code></h4><p><code>orderByRaw</code> &#26041;&#27861;&#21487;&#20197;&#23558;&#21407;&#29983;&#23383;&#31526;&#20018;&#20316;&#20026;&#12300;order by&#12301;&#23376;&#21477;&#30340;&#20540;&#65306;</p><pre><code class="language-php">$orders = DB::table('orders')
+    -&gt;orderByRaw('updated_at - created_at DESC')
+    -&gt;get();</code></pre><h4 id="1c2ab31fe77d6542a31f740412ba8cf4"><code>groupByRaw</code></h4><p><code>groupByRaw</code> &#26041;&#27861;&#21487;&#20197;&#23558;&#21407;&#29983;&#23383;&#31526;&#20018;&#20316;&#20026; <code>group by</code> &#23376;&#21477;&#30340;&#20540;&#65306;</p><pre><code class="language-php">$orders = DB::table('orders')
+    -&gt;select('city', 'state')
+    -&gt;groupByRaw('city, state')
+    -&gt;get();</code></pre><h2 id="854e025da93747dab5c33949ecb15bce">Joins&#65288;&#36830;&#25509;&#65289;</h2><h4 id="ad3d62d0f4cee41d03573dae9e659d9b">Inner Join &#23376;&#21477;</h4><p>&#26597;&#35810;&#26500;&#36896;&#22120;&#20063;&#21487;&#20197;&#29992;&#20110;&#21521;&#26597;&#35810;&#28155;&#21152; join &#23376;&#21477;&#12290;&#35201;&#25191;&#34892;&#22522;&#26412;&#30340;&#12300;inner join&#12301;&#65292;&#21487;&#20197;&#22312;&#26597;&#35810;&#26500;&#36896;&#22120;&#23454;&#20363;&#19978;&#20351;&#29992; <code>join</code> &#26041;&#27861;&#12290;<code>join</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#38656;&#35201;&#36830;&#25509;&#30340;&#34920;&#21517;&#65292;&#20854;&#20313;&#21442;&#25968;&#25351;&#23450;&#36830;&#25509;&#30340;&#21015;&#32422;&#26463;&#12290;&#20320;&#29978;&#33267;&#21487;&#20197;&#22312;&#19968;&#26465;&#26597;&#35810;&#20013;&#36830;&#25509;&#22810;&#24352;&#34920;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+$users = DB::table('users')
+    -&gt;join('contacts', 'users.id', '=', 'contacts.user_id')
+    -&gt;join('orders', 'users.id', '=', 'orders.user_id')
+    -&gt;select('users.*', 'contacts.phone', 'orders.price')
+    -&gt;get();</code></pre><h4 id="8f4608e9426e3ff991b3970d291a86a2">Left Join / Right Join &#23376;&#21477;</h4><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#25191;&#34892;&#12300;left join&#12301;&#25110;&#12300;right join&#12301;&#32780;&#38750;&#12300;inner join&#12301;&#65292;&#35831;&#20351;&#29992; <code>leftJoin</code> &#25110; <code>rightJoin</code> &#26041;&#27861;&#12290;&#36825;&#20123;&#26041;&#27861;&#30340;&#31614;&#21517;&#19982; <code>join</code> &#26041;&#27861;&#30456;&#21516;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;leftJoin('posts', 'users.id', '=', 'posts.user_id')
+    -&gt;get();
+
+$users = DB::table('users')
+    -&gt;rightJoin('posts', 'users.id', '=', 'posts.user_id')
+    -&gt;get();</code></pre><h4 id="dd0985cca9b9d704067f833fb0c1bc04">Cross Join &#23376;&#21477;</h4><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>crossJoin</code> &#26041;&#27861;&#25191;&#34892;&#12300;cross join&#12301;&#12290;Cross join &#20250;&#29983;&#25104;&#31532;&#19968;&#24352;&#34920;&#19982;&#34987;&#36830;&#25509;&#34920;&#20043;&#38388;&#30340;&#31515;&#21345;&#23572;&#31215;&#65306;</p><pre><code class="language-php">$sizes = DB::table('sizes')
+    -&gt;crossJoin('colors')
+    -&gt;get();</code></pre><h4 id="ff87bd6156cfa5a80f90b86a407141ca">&#39640;&#32423; Join &#23376;&#21477;</h4><p>&#20320;&#36824;&#21487;&#20197;&#25351;&#23450;&#26356;&#39640;&#32423;&#30340; join &#23376;&#21477;&#12290;&#24320;&#22987;&#26102;&#65292;&#21487;&#20197;&#23558;&#19968;&#20010;&#38381;&#21253;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#20837; <code>join</code> &#26041;&#27861;&#12290;&#35813;&#38381;&#21253;&#20250;&#25509;&#25910;&#19968;&#20010; <code>Illuminate\Database\Query\JoinClause</code> &#23454;&#20363;&#65292;&#20801;&#35768;&#20320;&#22312;&#12300;join&#12301;&#23376;&#21477;&#19978;&#25351;&#23450;&#32422;&#26463;&#65306;</p><pre><code class="language-php">DB::table('users')
+    -&gt;join('contacts', function (JoinClause $join) {
+        $join-&gt;on('users.id', '=', 'contacts.user_id')-&gt;orOn(/* ... */);
+    })
+    -&gt;get();</code></pre><p>&#22914;&#26524;&#24819;&#22312; join &#19978;&#20351;&#29992;&#12300;where&#12301;&#23376;&#21477;&#65292;&#21487;&#20197;&#20351;&#29992; <code>JoinClause</code> &#23454;&#20363;&#25552;&#20379;&#30340; <code>where</code> &#19982; <code>orWhere</code> &#26041;&#27861;&#12290;&#36825;&#20123;&#26041;&#27861;&#20250;&#23558;&#21015;&#19982;&#20540;&#36827;&#34892;&#27604;&#36739;&#65292;&#32780;&#19981;&#26159;&#27604;&#36739;&#20004;&#20010;&#21015;&#65306;</p><pre><code class="language-php">DB::table('users')
+    -&gt;join('contacts', function (JoinClause $join) {
+        $join-&gt;on('users.id', '=', 'contacts.user_id')
+            -&gt;where('contacts.user_id', '&gt;', 5);
+    })
+    -&gt;get();</code></pre><h4 id="403c81d935008fc17e94527ac9de9ff6">&#23376;&#26597;&#35810;&#36830;&#25509;</h4><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>joinSub</code>&#12289;<code>leftJoinSub</code> &#19982; <code>rightJoinSub</code> &#26041;&#27861;&#23558;&#19968;&#20010;&#26597;&#35810;&#36830;&#25509;&#21040;&#23376;&#26597;&#35810;&#19978;&#12290;&#27599;&#20010;&#26041;&#27861;&#37117;&#25509;&#25910;&#19977;&#20010;&#21442;&#25968;&#65306;&#23376;&#26597;&#35810;&#26412;&#36523;&#12289;&#23427;&#30340;&#34920;&#21035;&#21517;&#65292;&#20197;&#21450;&#19968;&#20010;&#29992;&#20110;&#23450;&#20041;&#20851;&#32852;&#21015;&#30340;&#38381;&#21253;&#12290;&#22312;&#19979;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#25105;&#20204;&#20250;&#21462;&#20986;&#19968;&#32452;&#29992;&#25143;&#65292;&#27599;&#20010;&#29992;&#25143;&#35760;&#24405;&#20013;&#36824;&#20250;&#38468;&#24102;&#35813;&#29992;&#25143;&#26368;&#36817;&#21457;&#24067;&#30340;&#21338;&#23458;&#25991;&#31456;&#30340; <code>created_at</code> &#26102;&#38388;&#25139;&#65306;</p><pre><code class="language-php">$latestPosts = DB::table('posts')
+    -&gt;select('user_id', DB::raw('MAX(created_at) as last_post_created_at'))
+    -&gt;where('is_published', true)
+    -&gt;groupBy('user_id');
+
+$users = DB::table('users')
+    -&gt;joinSub($latestPosts, 'latest_posts', function (JoinClause $join) {
+        $join-&gt;on('users.id', '=', 'latest_posts.user_id');
+    })-&gt;get();</code></pre><h4 id="68a6d9453655ad0b9c9ed8648caa4b19">Lateral &#36830;&#25509;</h4><blockquote>
+<p>[!WARNING]<br>
+Lateral join &#30446;&#21069;&#30001; PostgreSQL&#12289;MySQL &gt;= 8.0.14 &#21644; SQL Server &#25903;&#25345;&#12290;</p>
+</blockquote><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>joinLateral</code> &#21644; <code>leftJoinLateral</code> &#26041;&#27861;&#23545;&#23376;&#26597;&#35810;&#25191;&#34892;&#12300;lateral join&#12301;&#12290;&#27599;&#20010;&#26041;&#27861;&#25509;&#25910;&#20004;&#20010;&#21442;&#25968;&#65306;&#23376;&#26597;&#35810;&#26412;&#36523;&#19982;&#23427;&#30340;&#34920;&#21035;&#21517;&#12290;join &#26465;&#20214;&#24212;&#22312;&#25152;&#32473;&#23376;&#26597;&#35810;&#30340; <code>where</code> &#23376;&#21477;&#20869;&#25351;&#23450;&#12290;Lateral join &#20250;&#38024;&#23545;&#27599;&#19968;&#34892;&#36827;&#34892;&#27714;&#20540;&#65292;&#24182;&#19988;&#21487;&#20197;&#24341;&#29992;&#23376;&#26597;&#35810;&#20043;&#22806;&#30340;&#21015;&#12290;</p><p>&#22312;&#19979;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#25105;&#20204;&#20250;&#21462;&#20986;&#19968;&#32452;&#29992;&#25143;&#20197;&#21450;&#27599;&#20301;&#29992;&#25143;&#30340;&#26368;&#36817;&#19977;&#31687;&#21338;&#23458;&#25991;&#31456;&#12290;&#27599;&#20010;&#29992;&#25143;&#26368;&#22810;&#20250;&#22312;&#32467;&#26524;&#38598;&#20013;&#20135;&#29983;&#19977;&#34892;&mdash;&mdash;&#23545;&#24212;&#20854;&#26368;&#36817;&#30340;&#27599;&#31687;&#21338;&#23458;&#25991;&#31456;&#12290;join &#26465;&#20214;&#22312;&#23376;&#26597;&#35810;&#20869;&#36890;&#36807; <code>whereColumn</code> &#23376;&#21477;&#25351;&#23450;&#65292;&#24341;&#29992;&#24403;&#21069;&#30340;&#29992;&#25143;&#34892;&#65306;</p><pre><code class="language-php">$latestPosts = DB::table('posts')
+    -&gt;select('id as post_id', 'title as post_title', 'created_at as post_created_at')
+    -&gt;whereColumn('user_id', 'users.id')
+    -&gt;orderBy('created_at', 'desc')
+    -&gt;limit(3);
+
+$users = DB::table('users')
+    -&gt;joinLateral($latestPosts, 'latest_posts')
+    -&gt;get();</code></pre><h2 id="1d61b2a5f69c23b5c6edb6bb9b07f9e2">Unions&#65288;&#32852;&#21512;&#65289;</h2><p>&#26597;&#35810;&#26500;&#36896;&#22120;&#36824;&#25552;&#20379;&#20102;&#19968;&#20010;&#20415;&#25463;&#26041;&#27861;&#65292;&#23558;&#20004;&#26465;&#25110;&#22810;&#26465;&#26597;&#35810;&#12300;&#32852;&#21512;&#12301;&#36215;&#26469;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#20808;&#21019;&#24314;&#19968;&#26465;&#21021;&#22987;&#26597;&#35810;&#65292;&#28982;&#21518;&#36890;&#36807; <code>union</code> &#26041;&#27861;&#23558;&#20854;&#19982;&#20854;&#23427;&#26597;&#35810;&#32852;&#21512;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\DB;
+
+$usersWithoutFirstName = DB::table('users')
+    -&gt;whereNull('first_name');
+
+$users = DB::table('users')
+    -&gt;whereNull('last_name')
+    -&gt;union($usersWithoutFirstName)
+    -&gt;get();</code></pre><p>&#38500;&#20102; <code>union</code> &#26041;&#27861;&#65292;&#26597;&#35810;&#26500;&#36896;&#22120;&#36824;&#25552;&#20379;&#20102; <code>unionAll</code> &#26041;&#27861;&#12290;&#20351;&#29992; <code>unionAll</code> &#26041;&#27861;&#32852;&#21512;&#30340;&#26597;&#35810;&#19981;&#20250;&#21435;&#38500;&#37325;&#22797;&#34892;&#12290;<code>unionAll</code> &#26041;&#27861;&#30340;&#31614;&#21517;&#19982; <code>union</code> &#26041;&#27861;&#30456;&#21516;&#12290;</p><h2 id="606e89ce56b7ec6aa3feb3a6558d6e03">&#22522;&#30784; Where &#23376;&#21477;</h2><h3 id="f21faee8511c01b691ffe808aab11806">Where &#23376;&#21477;</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992;&#26597;&#35810;&#26500;&#36896;&#22120;&#30340; <code>where</code> &#26041;&#27861;&#21521;&#26597;&#35810;&#28155;&#21152;&#12300;where&#12301;&#23376;&#21477;&#12290;&#26368;&#22522;&#26412;&#30340; <code>where</code> &#26041;&#27861;&#35843;&#29992;&#38656;&#35201;&#19977;&#20010;&#21442;&#25968;&#65306;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#21015;&#21517;&#65292;&#31532;&#20108;&#20010;&#21442;&#25968;&#26159;&#36816;&#31639;&#31526;&#65288;&#21487;&#20197;&#26159;&#25968;&#25454;&#24211;&#25903;&#25345;&#30340;&#20219;&#24847;&#36816;&#31639;&#31526;&#65289;&#65292;&#31532;&#19977;&#20010;&#21442;&#25968;&#26159;&#19982;&#21015;&#20540;&#27604;&#36739;&#30340;&#20540;&#12290;</p><p>&#20363;&#22914;&#65292;&#19979;&#38754;&#30340;&#26597;&#35810;&#20250;&#21462;&#20986; <code>votes</code> &#21015;&#20540;&#31561;&#20110; <code>100</code> &#19988; <code>age</code> &#21015;&#20540;&#22823;&#20110; <code>35</code> &#30340;&#25152;&#26377;&#29992;&#25143;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;where('votes', '=', 100)
+    -&gt;where('age', '&gt;', 35)
+    -&gt;get();</code></pre><p>&#20026;&#20102;&#26041;&#20415;&#36215;&#35265;&#65292;&#22914;&#26524;&#20320;&#21482;&#24819;&#39564;&#35777;&#26576;&#21015; <code>=</code> &#26576;&#20010;&#20540;&#65292;&#21487;&#20197;&#25226;&#35813;&#20540;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#32473; <code>where</code> &#26041;&#27861;&#65292;Laravel &#20250;&#40664;&#35748;&#20351;&#29992; <code>=</code> &#36816;&#31639;&#31526;&#65306;</p><pre><code class="language-php">$users = DB::table('users')-&gt;where('votes', 100)-&gt;get();</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#21521; <code>where</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#20851;&#32852;&#25968;&#32452;&#65292;&#20197;&#20415;&#24555;&#36895;&#25353;&#22810;&#20010;&#21015;&#26597;&#35810;&#65306;</p><pre><code class="language-php">$users = DB::table('users')-&gt;where([
+    'first_name' =&gt; 'Jane',
+    'last_name' =&gt; 'Doe',
+])-&gt;get();</code></pre><p>&#22914;&#21069;&#25152;&#36848;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#25968;&#25454;&#24211;&#31995;&#32479;&#25903;&#25345;&#30340;&#20219;&#24847;&#36816;&#31639;&#31526;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;where('votes', '&gt;=', 100)
+    -&gt;get();
+
+$users = DB::table('users')
+    -&gt;where('votes', '&lt;&gt;', 100)
+    -&gt;get();
+
+$users = DB::table('users')
+    -&gt;where('name', 'like', 'T%')
+    -&gt;get();</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#21521; <code>where</code> &#20989;&#25968;&#20256;&#20837;&#19968;&#20010;&#26465;&#20214;&#25968;&#32452;&#65292;&#25968;&#32452;&#30340;&#27599;&#20010;&#20803;&#32032;&#37117;&#24212;&#35813;&#26159;&#19968;&#20010;&#21253;&#21547;&#19977;&#20010;&#21442;&#25968;&#30340;&#25968;&#32452;&#65288;&#21363;&#36890;&#24120;&#20256;&#32473; <code>where</code> &#26041;&#27861;&#30340;&#19977;&#20010;&#21442;&#25968;&#65289;&#65306;</p><pre><code class="language-php">$users = DB::table('users')-&gt;where([
+    ['status', '=', '1'],
+    ['subscribed', '&lt;&gt;', '1'],
+])-&gt;get();</code></pre><blockquote>
+<p>[!WARNING]<br>
+PDO &#19981;&#25903;&#25345;&#23545;&#21015;&#21517;&#36827;&#34892;&#21442;&#25968;&#32465;&#23450;&#12290;&#22240;&#27492;&#65292;&#32477;&#19981;&#24212;&#35813;&#35753;&#29992;&#25143;&#36755;&#20837;&#20915;&#23450;&#26597;&#35810;&#25152;&#24341;&#29992;&#30340;&#21015;&#21517;&#65288;&#21253;&#25324;&#12300;order by&#12301;&#21015;&#65289;&#12290;</p>
+<p>[!WARNING]<br>
+MySQL &#21644; MariaDB &#22312;&#23383;&#31526;&#20018;&#19982;&#25968;&#23383;&#27604;&#36739;&#26102;&#20250;&#33258;&#21160;&#23558;&#23383;&#31526;&#20018;&#31867;&#22411;&#36716;&#25442;&#20026;&#25972;&#25968;&#12290;&#22312;&#27492;&#36807;&#31243;&#20013;&#65292;&#38750;&#25968;&#23383;&#23383;&#31526;&#20018;&#20250;&#34987;&#36716;&#25442;&#20026; <code>0</code>&#65292;&#36825;&#21487;&#33021;&#20250;&#23548;&#33268;&#24847;&#22806;&#32467;&#26524;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#20320;&#30340;&#34920;&#20013;&#26377;&#19968;&#20010; <code>secret</code> &#21015;&#65292;&#20540;&#20026; <code>aaa</code>&#65292;&#20294;&#20320;&#25191;&#34892; <code>User::where('secret', 0)</code>&#65292;&#37027;&#19968;&#34892;&#20250;&#34987;&#36820;&#22238;&#12290;&#20026;&#36991;&#20813;&#36825;&#31181;&#24773;&#20917;&#65292;&#35831;&#30830;&#20445;&#22312;&#26597;&#35810;&#20013;&#20351;&#29992;&#20043;&#21069;&#23558;&#25152;&#26377;&#20540;&#31867;&#22411;&#36716;&#25442;&#20026;&#21512;&#36866;&#30340;&#31867;&#22411;&#12290;</p>
+</blockquote><h3 id="7038c80504f7f4560de57177ce2e2a52">Or Where &#23376;&#21477;</h3><p>&#38142;&#24335;&#35843;&#29992;&#26597;&#35810;&#26500;&#36896;&#22120;&#30340; <code>where</code> &#26041;&#27861;&#26102;&#65292;&#21508;&#12300;where&#12301;&#23376;&#21477;&#20043;&#38388;&#20250;&#20197; <code>and</code> &#36816;&#31639;&#31526;&#36830;&#25509;&#12290;&#20294;&#20320;&#21487;&#20197;&#20351;&#29992; <code>orWhere</code> &#26041;&#27861;&#65292;&#29992; <code>or</code> &#36816;&#31639;&#31526;&#23558;&#23376;&#21477;&#36830;&#25509;&#21040;&#26597;&#35810;&#20013;&#12290;<code>orWhere</code> &#26041;&#27861;&#25509;&#25910;&#30340;&#21442;&#25968;&#19982; <code>where</code> &#26041;&#27861;&#30456;&#21516;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;where('votes', '&gt;', 100)
+    -&gt;orWhere('name', 'John')
+    -&gt;get();</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#23558;&#12300;or&#12301;&#26465;&#20214;&#29992;&#25324;&#21495;&#20998;&#32452;&#65292;&#21487;&#20197;&#23558;&#19968;&#20010;&#38381;&#21253;&#20316;&#20026;&#31532;&#19968;&#20010;&#21442;&#25968;&#20256;&#32473; <code>orWhere</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Query\Builder;
+
+$users = DB::table('users')
+    -&gt;where('votes', '&gt;', 100)
+    -&gt;orWhere(function (Builder $query) {
+        $query-&gt;where('name', 'Abigail')
+            -&gt;where('votes', '&gt;', 50);
+        })
+    -&gt;get();</code></pre><p>&#19978;&#38754;&#30340;&#31034;&#20363;&#20250;&#29983;&#25104;&#22914;&#19979; SQL&#65306;</p><pre><code class="language-sql">select * from users where votes &gt; 100 or (name = 'Abigail' and votes &gt; 50)</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#20026;&#36991;&#20813;&#22312;&#20840;&#23616;&#20316;&#29992;&#22495;&#29983;&#25928;&#26102;&#20986;&#29616;&#24847;&#22806;&#34892;&#20026;&#65292;&#24212;&#24403;&#22987;&#32456;&#23558; <code>orWhere</code> &#35843;&#29992;&#20998;&#32452;&#12290;</p>
+</blockquote><h3 id="fac4df0f8b386f2fc4f7bd3fb4b4482c">Where Not &#23376;&#21477;</h3><p><code>whereNot</code> &#19982; <code>orWhereNot</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23545;&#19968;&#32452;&#26597;&#35810;&#32422;&#26463;&#21462;&#21453;&#12290;&#20363;&#22914;&#65292;&#19979;&#38754;&#30340;&#26597;&#35810;&#20250;&#25490;&#38500;&#22788;&#20110;&#28165;&#20179;&#29366;&#24577;&#25110;&#20215;&#26684;&#20302;&#20110; 10 &#30340;&#21830;&#21697;&#65306;</p><pre><code class="language-php">$products = DB::table('products')
+    -&gt;whereNot(function (Builder $query) {
+        $query-&gt;where('clearance', true)
+            -&gt;orWhere('price', '&lt;', 10);
+        })
+    -&gt;get();</code></pre><h3 id="77e045ae2324a36fbc959a9b4a0745fc">Where Any / All / None &#23376;&#21477;</h3><p>&#26377;&#26102;&#20320;&#38656;&#35201;&#23558;&#21516;&#26679;&#30340;&#26597;&#35810;&#32422;&#26463;&#24212;&#29992;&#21040;&#22810;&#20010;&#21015;&#12290;&#20363;&#22914;&#65292;&#20320;&#24076;&#26395;&#21462;&#20986;&#25351;&#23450;&#21015;&#34920;&#20013;&#30340;&#20219;&#19968;&#21015; <code>LIKE</code> &#26576;&#20010;&#20540;&#30340;&#25152;&#26377;&#35760;&#24405;&#12290;&#21487;&#20197;&#20351;&#29992; <code>whereAny</code> &#26041;&#27861;&#26469;&#23454;&#29616;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;where('active', true)
+    -&gt;whereAny([
+        'name',
+        'email',
+        'phone',
+    ], 'like', 'Example%')
+    -&gt;get();</code></pre><p>&#19978;&#38754;&#30340;&#26597;&#35810;&#20250;&#29983;&#25104;&#22914;&#19979; SQL&#65306;</p><pre><code class="language-sql">SELECT *
+FROM users
+WHERE active = true AND (
+    name LIKE 'Example%' OR
+    email LIKE 'Example%' OR
+    phone LIKE 'Example%'
+)</code></pre><p>&#31867;&#20284;&#22320;&#65292;<code>whereAll</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#21462;&#20986;&#25152;&#26377;&#32473;&#23450;&#21015;&#37117;&#28385;&#36275;&#25351;&#23450;&#32422;&#26463;&#30340;&#35760;&#24405;&#65306;</p><pre><code class="language-php">$posts = DB::table('posts')
+    -&gt;where('published', true)
+    -&gt;whereAll([
+        'title',
+        'content',
+    ], 'like', '%Laravel%')
+    -&gt;get();</code></pre><p>&#19978;&#38754;&#30340;&#26597;&#35810;&#20250;&#29983;&#25104;&#22914;&#19979; SQL&#65306;</p><pre><code class="language-sql">SELECT *
+FROM posts
+WHERE published = true AND (
+    title LIKE '%Laravel%' AND
+    content LIKE '%Laravel%'
+)</code></pre><p><code>whereNone</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#21462;&#20986;&#25152;&#26377;&#32473;&#23450;&#21015;&#37117;&#19981;&#28385;&#36275;&#25351;&#23450;&#32422;&#26463;&#30340;&#35760;&#24405;&#65306;</p><pre><code class="language-php">$albums = DB::table('albums')
+    -&gt;where('published', true)
+    -&gt;whereNone([
+        'title',
+        'lyrics',
+        'tags',
+    ], 'like', '%explicit%')
+    -&gt;get();</code></pre><p>&#19978;&#38754;&#30340;&#26597;&#35810;&#20250;&#29983;&#25104;&#22914;&#19979; SQL&#65306;</p><pre><code class="language-sql">SELECT *
+FROM albums
+WHERE published = true AND NOT (
+    title LIKE '%explicit%' OR
+    lyrics LIKE '%explicit%' OR
+    tags LIKE '%explicit%'
+)</code></pre><h3 id="eac851f8dccdd3e0aab7ee63250f947f">JSON Where &#23376;&#21477;</h3><p>Laravel &#20063;&#25903;&#25345;&#22312;&#25552;&#20379; JSON &#21015;&#31867;&#22411;&#25903;&#25345;&#30340;&#25968;&#25454;&#24211;&#19978;&#26597;&#35810; JSON &#21015;&#31867;&#22411;&#12290;&#30446;&#21069;&#21253;&#25324; MariaDB 10.3+&#12289;MySQL 8.0+&#12289;PostgreSQL 12.0+&#12289;SQL Server 2017+ &#20197;&#21450; SQLite 3.39.0+&#12290;&#35201;&#26597;&#35810; JSON &#21015;&#65292;&#35831;&#20351;&#29992; <code>-&gt;</code> &#36816;&#31639;&#31526;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;where('preferences-&gt;dining-&gt;meal', 'salad')
+    -&gt;get();
+
+$users = DB::table('users')
+    -&gt;whereIn('preferences-&gt;dining-&gt;meal', ['pasta', 'salad', 'sandwiches'])
+    -&gt;get();</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>whereJsonContains</code> &#19982; <code>whereJsonDoesntContain</code> &#26041;&#27861;&#26469;&#26597;&#35810; JSON &#25968;&#32452;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereJsonContains('options-&gt;languages', 'en')
+    -&gt;get();
+
+$users = DB::table('users')
+    -&gt;whereJsonDoesntContain('options-&gt;languages', 'en')
+    -&gt;get();</code></pre><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20351;&#29992; MariaDB&#12289;MySQL &#25110; PostgreSQL &#25968;&#25454;&#24211;&#65292;&#21487;&#20197;&#21521; <code>whereJsonContains</code> &#19982; <code>whereJsonDoesntContain</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#20540;&#25968;&#32452;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereJsonContains('options-&gt;languages', ['en', 'de'])
+    -&gt;get();
+
+$users = DB::table('users')
+    -&gt;whereJsonDoesntContain('options-&gt;languages', ['en', 'de'])
+    -&gt;get();</code></pre><p>&#27492;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#20351;&#29992; <code>whereJsonContainsKey</code> &#25110; <code>whereJsonDoesntContainKey</code> &#26041;&#27861;&#26469;&#26816;&#32034;&#21253;&#21547;&#25110;&#19981;&#21253;&#21547;&#26576;&#20010; JSON &#38190;&#30340;&#32467;&#26524;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereJsonContainsKey('preferences-&gt;dietary_requirements')
+    -&gt;get();
+
+$users = DB::table('users')
+    -&gt;whereJsonDoesntContainKey('preferences-&gt;dietary_requirements')
+    -&gt;get();</code></pre><p>&#26368;&#21518;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>whereJsonLength</code> &#26041;&#27861;&#25353;&#38271;&#24230;&#26597;&#35810; JSON &#25968;&#32452;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereJsonLength('options-&gt;languages', 0)
+    -&gt;get();
+
+$users = DB::table('users')
+    -&gt;whereJsonLength('options-&gt;languages', '&gt;', 1)
+    -&gt;get();</code></pre><h3 id="aa7748f6823a6d3d829beb9044e10a6c">&#20854;&#23427; Where &#23376;&#21477;</h3><p><strong class="mk-y">whereLike / orWhereLike / whereNotLike / orWhereNotLike</strong></p><p><code>whereLike</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#21521;&#26597;&#35810;&#28155;&#21152;&#12300;LIKE&#12301;&#23376;&#21477;&#20197;&#36827;&#34892;&#27169;&#24335;&#21305;&#37197;&#12290;&#36825;&#20123;&#26041;&#27861;&#20197;&#19982;&#20855;&#20307;&#25968;&#25454;&#24211;&#26080;&#20851;&#30340;&#26041;&#24335;&#25191;&#34892;&#23383;&#31526;&#20018;&#21305;&#37197;&#26597;&#35810;&#65292;&#24182;&#21487;&#20999;&#25442;&#22823;&#23567;&#20889;&#25935;&#24863;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#23383;&#31526;&#20018;&#21305;&#37197;&#26159;&#22823;&#23567;&#20889;&#19981;&#25935;&#24863;&#30340;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereLike('name', '%John%')
+    -&gt;get();</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807; <code>caseSensitive</code> &#21442;&#25968;&#21551;&#29992;&#22823;&#23567;&#20889;&#25935;&#24863;&#25628;&#32034;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereLike('name', '%John%', caseSensitive: true)
+    -&gt;get();</code></pre><p><code>orWhereLike</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#28155;&#21152;&#24102; LIKE &#26465;&#20214;&#30340;&#12300;or&#12301;&#23376;&#21477;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;where('votes', '&gt;', 100)
+    -&gt;orWhereLike('name', '%John%')
+    -&gt;get();</code></pre><p><code>whereNotLike</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#21521;&#26597;&#35810;&#28155;&#21152;&#12300;NOT LIKE&#12301;&#23376;&#21477;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereNotLike('name', '%John%')
+    -&gt;get();</code></pre><p>&#31867;&#20284;&#22320;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>orWhereNotLike</code> &#28155;&#21152;&#24102; NOT LIKE &#26465;&#20214;&#30340;&#12300;or&#12301;&#23376;&#21477;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;where('votes', '&gt;', 100)
+    -&gt;orWhereNotLike('name', '%John%')
+    -&gt;get();</code></pre><blockquote>
+<p>[!WARNING]<br>
+<code>whereLike</code> &#30340;&#22823;&#23567;&#20889;&#25935;&#24863;&#36873;&#39033;&#24403;&#21069;&#22312; SQL Server &#19978;&#19981;&#21463;&#25903;&#25345;&#12290;</p>
+</blockquote><p><strong class="mk-y">whereIn / whereNotIn / orWhereIn / orWhereNotIn</strong></p><p><code>whereIn</code> &#26041;&#27861;&#29992;&#20110;&#26657;&#39564;&#26576;&#21015;&#30340;&#20540;&#26159;&#21542;&#21253;&#21547;&#22312;&#32473;&#23450;&#25968;&#32452;&#20013;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereIn('id', [1, 2, 3])
+    -&gt;get();</code></pre><p><code>whereNotIn</code> &#26041;&#27861;&#29992;&#20110;&#26657;&#39564;&#26576;&#21015;&#30340;&#20540;&#26159;&#21542;&#19981;&#22312;&#32473;&#23450;&#25968;&#32452;&#20013;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereNotIn('id', [1, 2, 3])
+    -&gt;get();</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#23558;&#19968;&#20010;&#26597;&#35810;&#23545;&#35937;&#20316;&#20026; <code>whereIn</code> &#26041;&#27861;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#20837;&#65306;</p><pre><code class="language-php">$activeUsers = DB::table('users')-&gt;select('id')-&gt;where('is_active', 1);
+
+$comments = DB::table('comments')
+    -&gt;whereIn('user_id', $activeUsers)
+    -&gt;get();</code></pre><p>&#19978;&#38754;&#30340;&#31034;&#20363;&#20250;&#29983;&#25104;&#22914;&#19979; SQL&#65306;</p><pre><code class="language-sql">select * from comments where user_id in (
+    select id
+    from users
+    where is_active = 1
+)</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22914;&#26524;&#20320;&#35201;&#21521;&#26597;&#35810;&#20013;&#20256;&#20837;&#19968;&#20010;&#24456;&#22823;&#30340;&#25972;&#22411;&#32465;&#23450;&#25968;&#32452;&#65292;&#21487;&#20197;&#20351;&#29992; <code>whereIntegerInRaw</code> &#25110; <code>whereIntegerNotInRaw</code> &#26041;&#27861;&#20197;&#26174;&#33879;&#38477;&#20302;&#20869;&#23384;&#21344;&#29992;&#12290;</p>
+</blockquote><p><strong class="mk-y">whereBetween / orWhereBetween</strong></p><p><code>whereBetween</code> &#26041;&#27861;&#29992;&#20110;&#26657;&#39564;&#26576;&#21015;&#30340;&#20540;&#26159;&#21542;&#22312;&#20004;&#20010;&#20540;&#20043;&#38388;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereBetween('votes', [1, 100])
+    -&gt;get();</code></pre><p><strong class="mk-p">whereNotBetween / orWhereNotBetween</strong></p><p><code>whereNotBetween</code> &#26041;&#27861;&#29992;&#20110;&#26657;&#39564;&#26576;&#21015;&#30340;&#20540;&#26159;&#21542;&#19981;&#22312;&#20004;&#20010;&#20540;&#20043;&#38388;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereNotBetween('votes', [1, 100])
+    -&gt;get();</code></pre><p><strong class="mk-y">whereBetweenColumns / whereNotBetweenColumns / orWhereBetweenColumns / orWhereNotBetweenColumns</strong></p><p><code>whereBetweenColumns</code> &#26041;&#27861;&#29992;&#20110;&#26657;&#39564;&#26576;&#21015;&#30340;&#20540;&#26159;&#21542;&#20301;&#20110;&#21516;&#19968;&#34892;&#20869;&#21478;&#22806;&#20004;&#21015;&#23545;&#24212;&#30340;&#20004;&#20010;&#20540;&#20043;&#38388;&#65306;</p><pre><code class="language-php">$patients = DB::table('patients')
+    -&gt;whereBetweenColumns('weight', ['minimum_allowed_weight', 'maximum_allowed_weight'])
+    -&gt;get();</code></pre><p><code>whereNotBetweenColumns</code> &#26041;&#27861;&#29992;&#20110;&#26657;&#39564;&#26576;&#21015;&#30340;&#20540;&#26159;&#21542;&#19981;&#22312;&#21516;&#19968;&#34892;&#20869;&#21478;&#22806;&#20004;&#21015;&#23545;&#24212;&#30340;&#20004;&#20010;&#20540;&#20043;&#38388;&#65306;</p><pre><code class="language-php">$patients = DB::table('patients')
+    -&gt;whereNotBetweenColumns('weight', ['minimum_allowed_weight', 'maximum_allowed_weight'])
+    -&gt;get();</code></pre><p><strong class="mk-b">whereValueBetween / whereValueNotBetween / orWhereValueBetween / orWhereValueNotBetween</strong></p><p><code>whereValueBetween</code> &#26041;&#27861;&#29992;&#20110;&#26657;&#39564;&#26576;&#20010;&#32473;&#23450;&#20540;&#26159;&#21542;&#20301;&#20110;&#21516;&#19968;&#34892;&#20869;&#20004;&#21015;&#23545;&#24212;&#30340;&#20004;&#20010;&#20540;&#20043;&#38388;&#65288;&#20004;&#21015;&#31867;&#22411;&#30456;&#21516;&#65289;&#65306;</p><pre><code class="language-php">$products = DB::table('products')
+    -&gt;whereValueBetween(100, ['min_price', 'max_price'])
+    -&gt;get();</code></pre><p><code>whereValueNotBetween</code> &#26041;&#27861;&#29992;&#20110;&#26657;&#39564;&#26576;&#20010;&#20540;&#26159;&#21542;&#19981;&#22312;&#21516;&#19968;&#34892;&#20869;&#20004;&#21015;&#23545;&#24212;&#30340;&#20004;&#20010;&#20540;&#20043;&#38388;&#65306;</p><pre><code class="language-php">$products = DB::table('products')
+    -&gt;whereValueNotBetween(100, ['min_price', 'max_price'])
+    -&gt;get();</code></pre><p><strong class="mk-p">whereNull / whereNotNull / orWhereNull / orWhereNotNull</strong></p><p><code>whereNull</code> &#26041;&#27861;&#29992;&#20110;&#26657;&#39564;&#32473;&#23450;&#21015;&#30340;&#20540;&#26159;&#21542;&#20026; <code>NULL</code>&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereNull('updated_at')
+    -&gt;get();</code></pre><p><code>whereNotNull</code> &#26041;&#27861;&#29992;&#20110;&#26657;&#39564;&#26576;&#21015;&#30340;&#20540;&#26159;&#21542;&#19981;&#20026; <code>NULL</code>&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereNotNull('updated_at')
+    -&gt;get();</code></pre><p><strong class="mk-b">whereNullSafeEquals / orWhereNullSafeEquals</strong></p><p><code>whereNullSafeEquals</code> &#19982; <code>orWhereNullSafeEquals</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#26576;&#21015;&#30340;&#20540;&#19982;&#32473;&#23450;&#20540;&#27604;&#36739;&#65292;&#24182;&#23558;&#20004;&#20010; <code>NULL</code> &#35270;&#20026;&#30456;&#31561;&#65306;</p><pre><code class="language-php">$lastLoginIp = $request-&gt;input('last_login_ip');
+
+$users = DB::table('users')
+    -&gt;whereNullSafeEquals('last_login_ip', $lastLoginIp)
+    -&gt;get();</code></pre><p><strong class="mk-y">whereDate / whereMonth / whereDay / whereYear / whereTime</strong></p><p><code>whereDate</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#26576;&#21015;&#30340;&#20540;&#19982;&#26085;&#26399;&#27604;&#36739;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereDate('created_at', '2016-12-31')
+    -&gt;get();</code></pre><p><code>whereMonth</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#26576;&#21015;&#30340;&#20540;&#19982;&#29305;&#23450;&#26376;&#20221;&#27604;&#36739;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereMonth('created_at', '12')
+    -&gt;get();</code></pre><p><code>whereDay</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#26576;&#21015;&#30340;&#20540;&#19982;&#19968;&#20010;&#26376;&#20013;&#30340;&#26576;&#19968;&#22825;&#27604;&#36739;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereDay('created_at', '31')
+    -&gt;get();</code></pre><p><code>whereYear</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#26576;&#21015;&#30340;&#20540;&#19982;&#29305;&#23450;&#24180;&#20221;&#27604;&#36739;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereYear('created_at', '2016')
+    -&gt;get();</code></pre><p><code>whereTime</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#26576;&#21015;&#30340;&#20540;&#19982;&#29305;&#23450;&#26102;&#38388;&#27604;&#36739;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereTime('created_at', '=', '11:20:45')
+    -&gt;get();</code></pre><p><strong class="mk-y">wherePast / whereFuture / whereToday / whereBeforeToday / whereAfterToday</strong></p><p><code>wherePast</code> &#19982; <code>whereFuture</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#21028;&#26029;&#26576;&#21015;&#30340;&#20540;&#26159;&#21542;&#22312;&#36807;&#21435;&#25110;&#23558;&#26469;&#65306;</p><pre><code class="language-php">$invoices = DB::table('invoices')
+    -&gt;wherePast('due_at')
+    -&gt;get();
+
+$invoices = DB::table('invoices')
+    -&gt;whereFuture('due_at')
+    -&gt;get();</code></pre><p><code>whereNowOrPast</code> &#19982; <code>whereNowOrFuture</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#21028;&#26029;&#26576;&#21015;&#30340;&#20540;&#22312;&#36807;&#21435;&#25110;&#23558;&#26469;&#65288;&#21547;&#24403;&#21069;&#26102;&#21051;&#65289;&#65306;</p><pre><code class="language-php">$invoices = DB::table('invoices')
+    -&gt;whereNowOrPast('due_at')
+    -&gt;get();
+
+$invoices = DB::table('invoices')
+    -&gt;whereNowOrFuture('due_at')
+    -&gt;get();</code></pre><p><code>whereToday</code>&#12289;<code>whereBeforeToday</code> &#19982; <code>whereAfterToday</code> &#26041;&#27861;&#20998;&#21035;&#29992;&#20110;&#21028;&#26029;&#26576;&#21015;&#30340;&#20540;&#26159;&#21542;&#20026;&#20170;&#22825;&#12289;&#20170;&#22825;&#20043;&#21069;&#25110;&#20170;&#22825;&#20043;&#21518;&#65306;</p><pre><code class="language-php">$invoices = DB::table('invoices')
+    -&gt;whereToday('due_at')
+    -&gt;get();
+
+$invoices = DB::table('invoices')
+    -&gt;whereBeforeToday('due_at')
+    -&gt;get();
+
+$invoices = DB::table('invoices')
+    -&gt;whereAfterToday('due_at')
+    -&gt;get();</code></pre><p>&#31867;&#20284;&#22320;&#65292;<code>whereTodayOrBefore</code> &#19982; <code>whereTodayOrAfter</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#21028;&#26029;&#26576;&#21015;&#30340;&#20540;&#26159;&#21542;&#22312;&#20170;&#22825;&#20043;&#21069;&#65288;&#21547;&#20170;&#22825;&#65289;&#25110;&#20170;&#22825;&#20043;&#21518;&#65288;&#21547;&#20170;&#22825;&#65289;&#65306;</p><pre><code class="language-php">$invoices = DB::table('invoices')
+    -&gt;whereTodayOrBefore('due_at')
+    -&gt;get();
+
+$invoices = DB::table('invoices')
+    -&gt;whereTodayOrAfter('due_at')
+    -&gt;get();</code></pre><p><strong class="mk-b">whereColumn / orWhereColumn</strong></p><p><code>whereColumn</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26657;&#39564;&#20004;&#21015;&#26159;&#21542;&#30456;&#31561;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereColumn('first_name', 'last_name')
+    -&gt;get();</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#21521; <code>whereColumn</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#27604;&#36739;&#36816;&#31639;&#31526;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereColumn('updated_at', '&gt;', 'created_at')
+    -&gt;get();</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#21521; <code>whereColumn</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#32452;&#21015;&#27604;&#36739;&#26465;&#20214;&#25968;&#32452;&#12290;&#36825;&#20123;&#26465;&#20214;&#20043;&#38388;&#20250;&#20197; <code>and</code> &#36816;&#31639;&#31526;&#36830;&#25509;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereColumn([
+        ['first_name', '=', 'last_name'],
+        ['updated_at', '&gt;', 'created_at'],
+    ])-&gt;get();</code></pre><h3 id="094d212ac170bc4fb3e400577ac59ede">&#36923;&#36753;&#20998;&#32452;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#23558;&#33509;&#24178;&#12300;where&#12301;&#23376;&#21477;&#29992;&#25324;&#21495;&#20998;&#32452;&#65292;&#20197;&#23454;&#29616;&#26597;&#35810;&#25152;&#38656;&#30340;&#36923;&#36753;&#20998;&#32452;&#12290;&#20107;&#23454;&#19978;&#65292;&#36890;&#24120;&#24212;&#24403;&#22987;&#32456;&#23558; <code>orWhere</code> &#35843;&#29992;&#29992;&#25324;&#21495;&#20998;&#32452;&#65292;&#20197;&#36991;&#20813;&#20986;&#29616;&#24847;&#22806;&#30340;&#26597;&#35810;&#34892;&#20026;&#12290;&#35201;&#23454;&#29616;&#36825;&#19968;&#28857;&#65292;&#21487;&#20197;&#21521; <code>where</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#38381;&#21253;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;where('name', '=', 'John')
+    -&gt;where(function (Builder $query) {
+        $query-&gt;where('votes', '&gt;', 100)
+            -&gt;orWhere('title', '=', 'Admin');
+    })
+    -&gt;get();</code></pre><p>&#22914;&#20320;&#25152;&#35265;&#65292;&#21521; <code>where</code> &#26041;&#27861;&#20256;&#20837;&#38381;&#21253;&#20250;&#25351;&#31034;&#26597;&#35810;&#26500;&#36896;&#22120;&#24320;&#22987;&#19968;&#20010;&#32422;&#26463;&#20998;&#32452;&#12290;&#35813;&#38381;&#21253;&#20250;&#25509;&#25910;&#19968;&#20010;&#26597;&#35810;&#26500;&#36896;&#22120;&#23454;&#20363;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#23427;&#26469;&#35774;&#32622;&#38656;&#35201;&#34987;&#21253;&#21547;&#22312;&#25324;&#21495;&#20998;&#32452;&#20869;&#30340;&#32422;&#26463;&#12290;&#19978;&#38754;&#30340;&#31034;&#20363;&#20250;&#29983;&#25104;&#22914;&#19979; SQL&#65306;</p><pre><code class="language-sql">select * from users where name = 'John' and (votes &gt; 100 or title = 'Admin')</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#20026;&#36991;&#20813;&#22312;&#20840;&#23616;&#20316;&#29992;&#22495;&#29983;&#25928;&#26102;&#20986;&#29616;&#24847;&#22806;&#34892;&#20026;&#65292;&#24212;&#24403;&#22987;&#32456;&#23558; <code>orWhere</code> &#35843;&#29992;&#20998;&#32452;&#12290;</p>
+</blockquote><h2 id="433b7d18d63e5cc64f44b07f9abf5ec5">&#39640;&#32423; Where &#23376;&#21477;</h2><h3 id="605c984097fb008bb87d7a5411ca3e33">Where Exists &#23376;&#21477;</h3><p><code>whereExists</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#32534;&#20889;&#12300;where exists&#12301;SQL &#23376;&#21477;&#12290;<code>whereExists</code> &#26041;&#27861;&#25509;&#25910;&#19968;&#20010;&#38381;&#21253;&#65292;&#38381;&#21253;&#20250;&#25509;&#25910;&#19968;&#20010;&#26597;&#35810;&#26500;&#36896;&#22120;&#23454;&#20363;&#65292;&#20415;&#20110;&#20320;&#23450;&#20041;&#24212;&#24403;&#25918;&#22312;&#12300;exists&#12301;&#23376;&#21477;&#20869;&#30340;&#26597;&#35810;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereExists(function (Builder $query) {
+        $query-&gt;select(DB::raw(1))
+            -&gt;from('orders')
+            -&gt;whereColumn('orders.user_id', 'users.id');
+    })
+    -&gt;get();</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#20063;&#21487;&#20197;&#21521; <code>whereExists</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#26597;&#35810;&#23545;&#35937;&#65292;&#32780;&#38750;&#38381;&#21253;&#65306;</p><pre><code class="language-php">$orders = DB::table('orders')
+    -&gt;select(DB::raw(1))
+    -&gt;whereColumn('orders.user_id', 'users.id');
+
+$users = DB::table('users')
+    -&gt;whereExists($orders)
+    -&gt;get();</code></pre><p>&#19978;&#36848;&#20004;&#20010;&#31034;&#20363;&#37117;&#20250;&#29983;&#25104;&#22914;&#19979; SQL&#65306;</p><pre><code class="language-sql">select * from users
+where exists (
+    select 1
+    from orders
+    where orders.user_id = users.id
+)</code></pre><h3 id="f882a277bb22f4d74715f4c7576b278b">&#23376;&#26597;&#35810; Where &#23376;&#21477;</h3><p>&#26377;&#26102;&#20320;&#38656;&#35201;&#26500;&#36896;&#19968;&#20010;&#12300;where&#12301;&#23376;&#21477;&#65292;&#23558;&#23376;&#26597;&#35810;&#30340;&#32467;&#26524;&#19982;&#32473;&#23450;&#20540;&#36827;&#34892;&#27604;&#36739;&#12290;&#21487;&#20197;&#36890;&#36807;&#21521; <code>where</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#38381;&#21253;&#21644;&#19968;&#20010;&#20540;&#26469;&#23454;&#29616;&#12290;&#20363;&#22914;&#65292;&#19979;&#38754;&#30340;&#26597;&#35810;&#20250;&#21462;&#20986;&#25152;&#26377;&#25345;&#26377;&#25351;&#23450;&#31867;&#22411;&#36817;&#26399;&#12300;membership&#12301;&#30340;&#29992;&#25143;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Illuminate\Database\Query\Builder;
+
+$users = User::where(function (Builder $query) {
+    $query-&gt;select('type')
+        -&gt;from('membership')
+        -&gt;whereColumn('membership.user_id', 'users.id')
+        -&gt;orderByDesc('membership.start_date')
+        -&gt;limit(1);
+}, 'Pro')-&gt;get();</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#33021;&#38656;&#35201;&#26500;&#36896;&#19968;&#20010;&#12300;where&#12301;&#23376;&#21477;&#65292;&#23558;&#26576;&#21015;&#19982;&#23376;&#26597;&#35810;&#30340;&#32467;&#26524;&#36827;&#34892;&#27604;&#36739;&#12290;&#21487;&#20197;&#36890;&#36807;&#21521; <code>where</code> &#26041;&#27861;&#20256;&#20837;&#21015;&#21517;&#12289;&#36816;&#31639;&#31526;&#21644;&#38381;&#21253;&#26469;&#23454;&#29616;&#12290;&#20363;&#22914;&#65292;&#19979;&#38754;&#30340;&#26597;&#35810;&#20250;&#21462;&#20986;&#25152;&#26377;&#37329;&#39069;&#23567;&#20110;&#24179;&#22343;&#20540;&#30340;&#25910;&#20837;&#35760;&#24405;&#65306;</p><pre><code class="language-php">use App\Models\Income;
+use Illuminate\Database\Query\Builder;
+
+$incomes = Income::where('amount', '&lt;', function (Builder $query) {
+    $query-&gt;selectRaw('avg(i.amount)')-&gt;from('incomes as i');
+})-&gt;get();</code></pre><h3 id="bd9b36f90bc6c96b185e8c8089add2ce">&#20840;&#25991;&#26816;&#32034; Where &#23376;&#21477;</h3><blockquote>
+<p>[!WARNING]<br>
+&#20840;&#25991;&#26816;&#32034; where &#23376;&#21477;&#30446;&#21069;&#30001; MariaDB&#12289;MySQL &#21644; PostgreSQL &#25903;&#25345;&#12290;</p>
+</blockquote><p><code>whereFullText</code> &#21644; <code>orWhereFullText</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#20026;&#24050;&#32463;&#24314;&#26377; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/migrations#available-index-types" target="_blank">&#20840;&#25991;&#32034;&#24341;</a> &#30340;&#21015;&#28155;&#21152;&#20840;&#25991;&#12300;where&#12301;&#23376;&#21477;&#12290;Laravel &#20250;&#33258;&#21160;&#23558;&#36825;&#20123;&#26041;&#27861;&#36716;&#25442;&#20026;&#24213;&#23618;&#25968;&#25454;&#24211;&#31995;&#32479;&#25152;&#25903;&#25345;&#30340; SQL&#12290;&#20363;&#22914;&#65292;&#20351;&#29992; MariaDB &#25110; MySQL &#30340;&#24212;&#29992;&#20250;&#29983;&#25104; <code>MATCH AGAINST</code> &#23376;&#21477;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;whereFullText('bio', 'web developer')
+    -&gt;get();</code></pre><h3 id="dae09fb519826da8989f7de4e25d4132">&#21521;&#37327;&#30456;&#20284;&#24230;&#23376;&#21477;</h3><blockquote>
+<p>[!NOTE]<br>
+&#21521;&#37327;&#30456;&#20284;&#24230;&#23376;&#21477;&#30446;&#21069;&#22312;&#20351;&#29992; <code>pgvector</code> &#25193;&#23637;&#30340; PostgreSQL &#36830;&#25509;&#20197;&#21450; MariaDB 11.7 &#25110;&#26356;&#39640;&#29256;&#26412;&#19978;&#21463;&#25903;&#25345;&#12290;&#26377;&#20851;&#23450;&#20041;&#21521;&#37327;&#21015;&#19982;&#32034;&#24341;&#30340;&#20449;&#24687;&#65292;&#35831;&#26597;&#38405; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/migrations#available-column-types" target="_blank">&#36801;&#31227;&#25991;&#26723;</a>&#12290;</p>
+</blockquote><p><code>whereVectorSimilarTo</code> &#26041;&#27861;&#25353;&#19982;&#32473;&#23450;&#21521;&#37327;&#30340;&#20313;&#24358;&#30456;&#20284;&#24230;&#36807;&#28388;&#32467;&#26524;&#65292;&#24182;&#25353;&#30456;&#20851;&#24230;&#25490;&#24207;&#12290;<code>minSimilarity</code> &#38408;&#20540;&#24212;&#20026; <code>0.0</code> &#21040; <code>1.0</code> &#20043;&#38388;&#30340;&#20540;&#65292;<code>1.0</code> &#34920;&#31034;&#23436;&#20840;&#30456;&#21516;&#65306;</p><pre><code class="language-php">$documents = DB::table('documents')
+    -&gt;whereVectorSimilarTo('embedding', $queryEmbedding, minSimilarity: 0.4)
+    -&gt;limit(10)
+    -&gt;get();</code></pre><p>&#24403;&#20197;&#26222;&#36890;&#23383;&#31526;&#20018;&#20316;&#20026;&#21521;&#37327;&#21442;&#25968;&#26102;&#65292;Laravel &#20250;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/ai-sdk#embeddings" target="_blank">Laravel AI SDK</a> &#33258;&#21160;&#20026;&#20854;&#29983;&#25104;&#23884;&#20837;&#21521;&#37327;&#65306;</p><pre><code class="language-php">$documents = DB::table('documents')
+    -&gt;whereVectorSimilarTo('embedding', 'Best wineries in Napa Valley')
+    -&gt;limit(10)
+    -&gt;get();</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>whereVectorSimilarTo</code> &#36824;&#20250;&#25353;&#36317;&#31163;&#65288;&#26368;&#30456;&#20284;&#20248;&#20808;&#65289;&#23545;&#32467;&#26524;&#25490;&#24207;&#12290;&#21487;&#20197;&#36890;&#36807;&#20256;&#20837; <code>false</code> &#20316;&#20026; <code>order</code> &#21442;&#25968;&#26469;&#31105;&#29992;&#35813;&#25490;&#24207;&#65306;</p><pre><code class="language-php">$documents = DB::table('documents')
+    -&gt;whereVectorSimilarTo('embedding', $queryEmbedding, minSimilarity: 0.4, order: false)
+    -&gt;orderBy('created_at', 'desc')
+    -&gt;limit(10)
+    -&gt;get();</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#26356;&#32454;&#31890;&#24230;&#30340;&#25511;&#21046;&#65292;&#21487;&#20197;&#20998;&#21035;&#29420;&#31435;&#20351;&#29992; <code>selectVectorDistance</code>&#12289;<code>whereVectorDistanceLessThan</code> &#19982; <code>orderByVectorDistance</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$documents = DB::table('documents')
+    -&gt;select('*')
+    -&gt;selectVectorDistance('embedding', $queryEmbedding, as: 'distance')
+    -&gt;whereVectorDistanceLessThan('embedding', $queryEmbedding, maxDistance: 0.3)
+    -&gt;orderByVectorDistance('embedding', $queryEmbedding)
+    -&gt;limit(10)
+    -&gt;get();</code></pre><p>&#22312;&#20351;&#29992; PostgreSQL &#26102;&#65292;&#24517;&#39035;&#20808;&#21152;&#36733; <code>pgvector</code> &#25193;&#23637;&#25165;&#33021;&#21019;&#24314; <code>vector</code> &#21015;&#65306;</p><pre><code class="language-php">Schema::ensureVectorExtensionExists();</code></pre><h2 id="40236cd24a2bb6eb7aa45152a71677f2">&#25490;&#24207;&#12289;&#20998;&#32452;&#12289;Limit &#19982; Offset</h2><h3 id="c360e994dbcffdf31e86d2d8875370e1">&#25490;&#24207;</h3><h4 id="bf98a1d72fbb8fa0b497381f263e7cd5"><code>orderBy</code> &#26041;&#27861;</h4><p><code>orderBy</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#25353;&#25351;&#23450;&#21015;&#23545;&#26597;&#35810;&#32467;&#26524;&#36827;&#34892;&#25490;&#24207;&#12290;<code>orderBy</code> &#26041;&#27861;&#25509;&#25910;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#20320;&#24076;&#26395;&#25490;&#24207;&#30340;&#21015;&#65292;&#31532;&#20108;&#20010;&#21442;&#25968;&#20915;&#23450;&#25490;&#24207;&#26041;&#21521;&#65292;&#21487;&#20197;&#26159; <code>asc</code> &#25110; <code>desc</code>&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;orderBy('name', 'desc')
+    -&gt;get();</code></pre><p>&#35201;&#25353;&#22810;&#21015;&#25490;&#24207;&#65292;&#21482;&#38656;&#25353;&#38656;&#22810;&#27425;&#35843;&#29992; <code>orderBy</code> &#21363;&#21487;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;orderBy('name', 'desc')
+    -&gt;orderBy('email', 'asc')
+    -&gt;get();</code></pre><p>&#25490;&#24207;&#26041;&#21521;&#26159;&#21487;&#36873;&#30340;&#65292;&#40664;&#35748;&#20026;&#21319;&#24207;&#12290;&#22914;&#26524;&#24076;&#26395;&#25353;&#38477;&#24207;&#25490;&#24207;&#65292;&#21487;&#20197;&#20026; <code>orderBy</code> &#26041;&#27861;&#25351;&#23450;&#31532;&#20108;&#20010;&#21442;&#25968;&#65292;&#25110;&#32773;&#30452;&#25509;&#20351;&#29992; <code>orderByDesc</code>&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;orderByDesc('verified_at')
+    -&gt;get();</code></pre><p>&#26368;&#21518;&#65292;&#20351;&#29992; <code>-&gt;</code> &#36816;&#31639;&#31526;&#65292;&#20320;&#36824;&#21487;&#20197;&#25353; JSON &#21015;&#20013;&#26576;&#20010;&#20540;&#36827;&#34892;&#25490;&#24207;&#65306;</p><pre><code class="language-php">$corporations = DB::table('corporations')
+    -&gt;where('country', 'US')
+    -&gt;orderBy('location-&gt;state')
+    -&gt;get();</code></pre><h4 id="42510fd8585f961390996da945699e08"><code>latest</code> &#19982; <code>oldest</code> &#26041;&#27861;</h4><p><code>latest</code> &#19982; <code>oldest</code> &#26041;&#27861;&#21487;&#20197;&#35753;&#20320;&#26041;&#20415;&#22320;&#25353;&#26085;&#26399;&#23545;&#32467;&#26524;&#36827;&#34892;&#25490;&#24207;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#32467;&#26524;&#20250;&#25353;&#34920;&#30340; <code>created_at</code> &#21015;&#25490;&#24207;&#12290;&#20320;&#20063;&#21487;&#20197;&#20256;&#20837;&#24076;&#26395;&#25490;&#24207;&#30340;&#21015;&#21517;&#65306;</p><pre><code class="language-php">$user = DB::table('users')
+    -&gt;latest()
+    -&gt;first();</code></pre><h4 id="ae974cf99ca3396d9728470eaa7ad751">&#38543;&#26426;&#25490;&#24207;</h4><p><code>inRandomOrder</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#26597;&#35810;&#32467;&#26524;&#38543;&#26426;&#25490;&#24207;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#35813;&#26041;&#27861;&#38543;&#26426;&#21462;&#20986;&#19968;&#20010;&#29992;&#25143;&#65306;</p><pre><code class="language-php">$randomUser = DB::table('users')
+    -&gt;inRandomOrder()
+    -&gt;first();</code></pre><h4 id="29b9a15ac9e51a19afbf53e8eb49d2c2">&#31227;&#38500;&#24050;&#26377;&#25490;&#24207;</h4><p><code>reorder</code> &#26041;&#27861;&#20250;&#31227;&#38500;&#20043;&#21069;&#24050;&#24212;&#29992;&#21040;&#26597;&#35810;&#30340;&#20840;&#37096;&#12300;order by&#12301;&#23376;&#21477;&#65306;</p><pre><code class="language-php">$query = DB::table('users')-&gt;orderBy('name');
+
+$unorderedUsers = $query-&gt;reorder()-&gt;get();</code></pre><p>&#35843;&#29992; <code>reorder</code> &#26041;&#27861;&#26102;&#65292;&#20320;&#21487;&#20197;&#20256;&#20837;&#21015;&#21517;&#19982;&#25490;&#24207;&#26041;&#21521;&#65292;&#20174;&#32780;&#31227;&#38500;&#20840;&#37096;&#24050;&#26377;&#12300;order by&#12301;&#23376;&#21477;&#24182;&#20026;&#26597;&#35810;&#24212;&#29992;&#19968;&#20010;&#20840;&#26032;&#30340;&#25490;&#24207;&#65306;</p><pre><code class="language-php">$query = DB::table('users')-&gt;orderBy('name');
+
+$usersOrderedByEmail = $query-&gt;reorder('email', 'desc')-&gt;get();</code></pre><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>reorderDesc</code> &#26041;&#27861;&#25353;&#38477;&#24207;&#37325;&#26032;&#25490;&#24207;&#26597;&#35810;&#32467;&#26524;&#65306;</p><pre><code class="language-php">$query = DB::table('users')-&gt;orderBy('name');
+
+$usersOrderedByEmail = $query-&gt;reorderDesc('email')-&gt;get();</code></pre><h3 id="829abe5a8dcd0579a340d20636b59276">&#20998;&#32452;</h3><h4 id="e856318515593d3d76721a0834548511"><code>groupBy</code> &#19982; <code>having</code> &#26041;&#27861;</h4><p>&#22914;&#20320;&#25152;&#26009;&#65292;<code>groupBy</code> &#19982; <code>having</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23545;&#26597;&#35810;&#32467;&#26524;&#36827;&#34892;&#20998;&#32452;&#12290;<code>having</code> &#26041;&#27861;&#30340;&#31614;&#21517;&#19982; <code>where</code> &#26041;&#27861;&#31867;&#20284;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;groupBy('account_id')
+    -&gt;having('account_id', '&gt;', 100)
+    -&gt;get();</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>havingBetween</code> &#26041;&#27861;&#25353;&#32473;&#23450;&#21306;&#38388;&#36807;&#28388;&#32467;&#26524;&#65306;</p><pre><code class="language-php">$report = DB::table('orders')
+    -&gt;selectRaw('count(id) as number_of_orders, customer_id')
+    -&gt;groupBy('customer_id')
+    -&gt;havingBetween('number_of_orders', [5, 15])
+    -&gt;get();</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#21521; <code>groupBy</code> &#26041;&#27861;&#20256;&#20837;&#22810;&#20010;&#21442;&#25968;&#65292;&#20197;&#25353;&#22810;&#21015;&#20998;&#32452;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;groupBy('first_name', 'status')
+    -&gt;having('account_id', '&gt;', 100)
+    -&gt;get();</code></pre><p>&#35201;&#26500;&#36896;&#26356;&#39640;&#32423;&#30340; <code>having</code> &#35821;&#21477;&#65292;&#35831;&#21442;&#38405; <a href="xpv525gv86.html#raw-methods" target="_blank">havingRaw</a> &#26041;&#27861;&#12290;</p><h3 id="41a8118e602311f028e40293d96115c1">Limit &#19982; Offset</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>limit</code> &#19982; <code>offset</code> &#26041;&#27861;&#38480;&#21046;&#26597;&#35810;&#36820;&#22238;&#30340;&#32467;&#26524;&#25968;&#37327;&#65292;&#25110;&#22312;&#26597;&#35810;&#20013;&#36339;&#36807;&#25351;&#23450;&#25968;&#37327;&#30340;&#32467;&#26524;&#65306;</p><pre><code class="language-php">$users = DB::table('users')
+    -&gt;offset(10)
+    -&gt;limit(5)
+    -&gt;get();</code></pre><h2 id="c91fac98d8ffb0bb4137ff19c37f017d">&#26465;&#20214;&#23376;&#21477;</h2><p>&#26377;&#26102;&#20320;&#24076;&#26395;&#26681;&#25454;&#20854;&#20182;&#26465;&#20214;&#20915;&#23450;&#26159;&#21542;&#21521;&#26597;&#35810;&#24212;&#29992;&#26576;&#20123;&#23376;&#21477;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20165;&#22312;&#20256;&#20837;&#30340; HTTP &#35831;&#27714;&#20013;&#21253;&#21547;&#26576;&#20010;&#36755;&#20837;&#20540;&#26102;&#25165;&#24212;&#29992; <code>where</code> &#23376;&#21477;&#12290;&#21487;&#20197;&#20351;&#29992; <code>when</code> &#26041;&#27861;&#26469;&#23454;&#29616;&#65306;</p><pre><code class="language-php">$role = $request-&gt;input('role');
+
+$users = DB::table('users')
+    -&gt;when($role, function (Builder $query, string $role) {
+        $query-&gt;where('role_id', $role);
+    })
+    -&gt;get();</code></pre><p><code>when</code> &#26041;&#27861;&#20165;&#22312;&#31532;&#19968;&#20010;&#21442;&#25968;&#20026; <code>true</code> &#26102;&#25191;&#34892;&#32473;&#23450;&#30340;&#38381;&#21253;&#12290;&#33509;&#31532;&#19968;&#20010;&#21442;&#25968;&#20026; <code>false</code>&#65292;&#21017;&#19981;&#20250;&#25191;&#34892;&#35813;&#38381;&#21253;&#12290;&#22240;&#27492;&#65292;&#22312;&#19978;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#20256;&#20837; <code>when</code> &#26041;&#27861;&#30340;&#38381;&#21253;&#20165;&#22312;&#35831;&#27714;&#20013;&#23384;&#22312; <code>role</code> &#23383;&#27573;&#19988;&#20854;&#20540;&#20026;&#30495;&#20540;&#26102;&#25165;&#20250;&#34987;&#35843;&#29992;&#12290;</p><p>&#20320;&#20063;&#21487;&#20197;&#21521; <code>when</code> &#26041;&#27861;&#20256;&#20837;&#31532;&#19977;&#20010;&#21442;&#25968;&mdash;&mdash;&#21478;&#19968;&#20010;&#38381;&#21253;&#12290;&#35813;&#38381;&#21253;&#20165;&#22312;&#31532;&#19968;&#20010;&#21442;&#25968;&#27714;&#20540;&#20026; <code>false</code> &#26102;&#25191;&#34892;&#12290;&#20026;&#35828;&#26126;&#35813;&#29305;&#24615;&#30340;&#29992;&#27861;&#65292;&#19979;&#38754;&#29992;&#23427;&#26469;&#37197;&#32622;&#26597;&#35810;&#30340;&#40664;&#35748;&#25490;&#24207;&#65306;</p><pre><code class="language-php">$sortByVotes = $request-&gt;boolean('sort_by_votes');
+
+$users = DB::table('users')
+    -&gt;when($sortByVotes, function (Builder $query, bool $sortByVotes) {
+        $query-&gt;orderBy('votes');
+    }, function (Builder $query) {
+        $query-&gt;orderBy('name');
+    })
+    -&gt;get();</code></pre><h2 id="ecde95331beb492bbbff235dff3d1c8b">Insert &#35821;&#21477;</h2><p>&#26597;&#35810;&#26500;&#36896;&#22120;&#36824;&#25552;&#20379;&#20102; <code>insert</code> &#26041;&#27861;&#65292;&#21487;&#29992;&#20110;&#21521;&#25968;&#25454;&#24211;&#34920;&#20013;&#25554;&#20837;&#35760;&#24405;&#12290;<code>insert</code> &#26041;&#27861;&#25509;&#25910;&#19968;&#20010;&#30001;&#21015;&#21517;&#19982;&#20540;&#32452;&#25104;&#30340;&#25968;&#32452;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;insert([
+    'email' =&gt; 'kayla@example.com',
+    'votes' =&gt; 0
+]);</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#20256;&#20837;&#19968;&#20010;&#20108;&#32500;&#25968;&#32452;&#26469;&#19968;&#27425;&#25554;&#20837;&#22810;&#26465;&#35760;&#24405;&#12290;&#25968;&#32452;&#20013;&#30340;&#27599;&#20010;&#23376;&#25968;&#32452;&#23545;&#24212;&#19968;&#26465;&#35201;&#25554;&#20837;&#30340;&#35760;&#24405;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;insert([
+    ['email' =&gt; 'picard@example.com', 'votes' =&gt; 0],
+    ['email' =&gt; 'janeway@example.com', 'votes' =&gt; 0],
+]);</code></pre><p><code>insertOrIgnore</code> &#26041;&#27861;&#20250;&#22312;&#25554;&#20837;&#25968;&#25454;&#24211;&#35760;&#24405;&#26102;&#24573;&#30053;&#38169;&#35823;&#12290;&#20351;&#29992;&#35813;&#26041;&#27861;&#26102;&#65292;&#35831;&#27880;&#24847;&#65306;&#37325;&#22797;&#35760;&#24405;&#38169;&#35823;&#20250;&#34987;&#24573;&#30053;&#65292;&#20854;&#23427;&#31867;&#22411;&#30340;&#38169;&#35823;&#20063;&#21487;&#33021;&#34987;&#24573;&#30053;&#65292;&#20855;&#20307;&#21462;&#20915;&#20110;&#25968;&#25454;&#24211;&#24341;&#25806;&#12290;&#20363;&#22914;&#65292;<code>insertOrIgnore</code> &#20250; <a href="https://dev.mysql.com/doc/refman/en/sql-mode.html#ignore-effect-on-execution" target="_blank" rel="noopener noreferrer">&#32469;&#36807; MySQL &#30340;&#20005;&#26684;&#27169;&#24335;</a>&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;insertOrIgnore([
+    ['id' =&gt; 1, 'email' =&gt; 'sisko@example.com'],
+    ['id' =&gt; 2, 'email' =&gt; 'archer@example.com'],
+]);</code></pre><p><code>insertUsing</code> &#26041;&#27861;&#20250;&#22312;&#25554;&#20837;&#26032;&#35760;&#24405;&#26102;&#20351;&#29992;&#23376;&#26597;&#35810;&#26469;&#30830;&#23450;&#35201;&#25554;&#20837;&#30340;&#25968;&#25454;&#65306;</p><pre><code class="language-php">DB::table('pruned_users')-&gt;insertUsing([
+    'id', 'name', 'email', 'email_verified_at'
+], DB::table('users')-&gt;select(
+    'id', 'name', 'email', 'email_verified_at'
+)-&gt;where('updated_at', '&lt;=', now()-&gt;minus(months: 1)));</code></pre><h4 id="651e9925806112e4d0db9015e45cb5bf">&#33258;&#22686; ID</h4><p>&#22914;&#26524;&#34920;&#26377;&#33258;&#22686; id&#65292;&#21487;&#20197;&#20351;&#29992; <code>insertGetId</code> &#26041;&#27861;&#25554;&#20837;&#19968;&#26465;&#35760;&#24405;&#24182;&#36820;&#22238;&#35813;&#35760;&#24405;&#30340; ID&#65306;</p><pre><code class="language-php">$id = DB::table('users')-&gt;insertGetId(
+    ['email' =&gt; 'john@example.com', 'votes' =&gt; 0]
+);</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22312;&#20351;&#29992; PostgreSQL &#26102;&#65292;<code>insertGetId</code> &#26041;&#27861;&#35201;&#27714;&#33258;&#22686;&#21015;&#21629;&#21517;&#20026; <code>id</code>&#12290;&#22914;&#26524;&#20320;&#24076;&#26395;&#20174;&#20854;&#20182;&#12300;sequence&#12301;&#20013;&#33719;&#21462; ID&#65292;&#21487;&#20197;&#23558;&#21015;&#21517;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#32473; <code>insertGetId</code> &#26041;&#27861;&#12290;</p>
+</blockquote><h3 id="492cd2826f5ccc3f955cea25a606588a">Upserts</h3><p><code>upsert</code> &#26041;&#27861;&#20250;&#25554;&#20837;&#23578;&#19981;&#23384;&#22312;&#30340;&#35760;&#24405;&#65292;&#24182;&#20351;&#29992;&#20320;&#25351;&#23450;&#30340;&#26032;&#20540;&#26356;&#26032;&#24050;&#23384;&#22312;&#30340;&#35760;&#24405;&#12290;&#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#35201;&#25554;&#20837;&#25110;&#26356;&#26032;&#30340;&#20540;&#65292;&#31532;&#20108;&#20010;&#21442;&#25968;&#21015;&#20986;&#22312;&#20851;&#32852;&#34920;&#20013;&#33021;&#21807;&#19968;&#26631;&#35782;&#35760;&#24405;&#30340;&#21015;&#65292;&#31532;&#19977;&#20010;&#65288;&#20063;&#26159;&#26368;&#21518;&#19968;&#20010;&#65289;&#21442;&#25968;&#26159;&#19968;&#20010;&#25968;&#32452;&#65292;&#21015;&#20986;&#24403;&#25968;&#25454;&#24211;&#20013;&#24050;&#23384;&#22312;&#21305;&#37197;&#35760;&#24405;&#26102;&#24212;&#26356;&#26032;&#30340;&#21015;&#65306;</p><pre><code class="language-php">DB::table('flights')-&gt;upsert(
+    [
+        ['departure' =&gt; 'Oakland', 'destination' =&gt; 'San Diego', 'price' =&gt; 99],
+        ['departure' =&gt; 'Chicago', 'destination' =&gt; 'New York', 'price' =&gt; 150]
+    ],
+    ['departure', 'destination'],
+    ['price']
+);</code></pre><p>&#22312;&#19978;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;Laravel &#20250;&#23581;&#35797;&#25554;&#20837;&#20004;&#26465;&#35760;&#24405;&#12290;&#22914;&#26524;&#24050;&#23384;&#22312; <code>departure</code> &#19982; <code>destination</code> &#21015;&#20540;&#30456;&#21516;&#30340;&#35760;&#24405;&#65292;Laravel &#20250;&#26356;&#26032;&#37027;&#26465;&#35760;&#24405;&#30340; <code>price</code> &#21015;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#38500; SQL Server &#20043;&#22806;&#30340;&#25152;&#26377;&#25968;&#25454;&#24211;&#65292;&#37117;&#35201;&#27714; <code>upsert</code> &#26041;&#27861;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#20013;&#30340;&#21015;&#20855;&#26377;&#12300;primary&#12301;&#25110;&#12300;unique&#12301;&#32034;&#24341;&#12290;&#27492;&#22806;&#65292;MariaDB &#19982; MySQL &#25968;&#25454;&#24211;&#39537;&#21160;&#20250;&#24573;&#30053; <code>upsert</code> &#26041;&#27861;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#65292;&#24182;&#22987;&#32456;&#20351;&#29992;&#34920;&#30340;&#12300;primary&#12301;&#19982;&#12300;unique&#12301;&#32034;&#24341;&#26469;&#26816;&#27979;&#24050;&#23384;&#22312;&#30340;&#35760;&#24405;&#12290;</p>
+</blockquote><h2 id="7f873d4e832f63b45c80804e76bf49c1">Update &#35821;&#21477;</h2><p>&#38500;&#20102;&#21521;&#25968;&#25454;&#24211;&#25554;&#20837;&#35760;&#24405;&#22806;&#65292;&#26597;&#35810;&#26500;&#36896;&#22120;&#36824;&#21487;&#20197;&#20351;&#29992; <code>update</code> &#26041;&#27861;&#26356;&#26032;&#24050;&#26377;&#35760;&#24405;&#12290;<code>update</code> &#26041;&#27861;&#19982; <code>insert</code> &#26041;&#27861;&#19968;&#26679;&#65292;&#25509;&#25910;&#19968;&#20010;&#30001;&#21015;&#19982;&#20540;&#32452;&#25104;&#30340;&#25968;&#32452;&#65292;&#29992;&#20110;&#25351;&#23450;&#35201;&#26356;&#26032;&#30340;&#21015;&#12290;<code>update</code> &#26041;&#27861;&#36820;&#22238;&#21463;&#24433;&#21709;&#30340;&#34892;&#25968;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>where</code> &#23376;&#21477;&#26469;&#38480;&#23450; <code>update</code> &#26597;&#35810;&#65306;</p><pre><code class="language-php">$affected = DB::table('users')
+    -&gt;where('id', 1)
+    -&gt;update(['votes' =&gt; 1]);</code></pre><h4 id="5dc86a48ad2ed372d0508c8aca36cb9a">Update or Insert</h4><p>&#26377;&#26102;&#20320;&#24076;&#26395;&#26356;&#26032;&#25968;&#25454;&#24211;&#20013;&#24050;&#23384;&#22312;&#30340;&#35760;&#24405;&#65292;&#22914;&#26524;&#19981;&#23384;&#22312;&#21017;&#21019;&#24314;&#19968;&#26465;&#26032;&#35760;&#24405;&#12290;&#36825;&#31181;&#22330;&#26223;&#19979;&#21487;&#20197;&#20351;&#29992; <code>updateOrInsert</code> &#26041;&#27861;&#12290;<code>updateOrInsert</code> &#26041;&#27861;&#25509;&#25910;&#20004;&#20010;&#21442;&#25968;&#65306;&#19968;&#20010;&#29992;&#20110;&#26597;&#25214;&#35760;&#24405;&#30340;&#21015;&#19982;&#20540;&#23545;&#25968;&#32452;&#65292;&#20197;&#21450;&#19968;&#20010;&#29992;&#20110;&#25351;&#23450;&#35201;&#26356;&#26032;&#21015;&#19982;&#20540;&#30340;&#25968;&#32452;&#12290;</p><p><code>updateOrInsert</code> &#26041;&#27861;&#20250;&#20808;&#20351;&#29992;&#31532;&#19968;&#20010;&#21442;&#25968;&#20013;&#30340;&#21015;&#19982;&#20540;&#23545;&#26469;&#23450;&#20301;&#21305;&#37197;&#30340;&#25968;&#25454;&#24211;&#35760;&#24405;&#12290;&#22914;&#26524;&#35760;&#24405;&#23384;&#22312;&#65292;&#21017;&#20351;&#29992;&#31532;&#20108;&#20010;&#21442;&#25968;&#20013;&#30340;&#20540;&#26356;&#26032;&#35813;&#35760;&#24405;&#12290;&#22914;&#26524;&#25214;&#19981;&#21040;&#35760;&#24405;&#65292;&#21017;&#20250;&#25554;&#20837;&#19968;&#26465;&#26032;&#35760;&#24405;&#65292;&#20854;&#23646;&#24615;&#30001;&#20004;&#20010;&#21442;&#25968;&#21512;&#24182;&#32780;&#25104;&#65306;</p><pre><code class="language-php">DB::table('users')
+    -&gt;updateOrInsert(
+        ['email' =&gt; 'john@example.com', 'name' =&gt; 'John'],
+        ['votes' =&gt; '2']
+    );</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#21521; <code>updateOrInsert</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#38381;&#21253;&#65292;&#26681;&#25454;&#21305;&#37197;&#35760;&#24405;&#26159;&#21542;&#23384;&#22312;&#65292;&#33258;&#23450;&#20041;&#35201;&#26356;&#26032;&#25110;&#25554;&#20837;&#21040;&#25968;&#25454;&#24211;&#20013;&#30340;&#23646;&#24615;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;updateOrInsert(
+    ['user_id' =&gt; $user_id],
+    fn ($exists) =&gt; $exists ? [
+        'name' =&gt; $data['name'],
+        'email' =&gt; $data['email'],
+    ] : [
+        'name' =&gt; $data['name'],
+        'email' =&gt; $data['email'],
+        'marketable' =&gt; true,
+    ],
+);</code></pre><h3 id="16564778b4b4adc59f3fe796c03de389">&#26356;&#26032; JSON &#21015;</h3><p>&#26356;&#26032; JSON &#21015;&#26102;&#65292;&#24212;&#20351;&#29992; <code>-&gt;</code> &#35821;&#27861;&#26469;&#26356;&#26032; JSON &#23545;&#35937;&#20013;&#23545;&#24212;&#30340;&#38190;&#12290;&#35813;&#25805;&#20316;&#22312; MariaDB 10.3+&#12289;MySQL 5.7+ &#19982; PostgreSQL 9.5+ &#19978;&#21463;&#25903;&#25345;&#65306;</p><pre><code class="language-php">$affected = DB::table('users')
+    -&gt;where('id', 1)
+    -&gt;update(['options-&gt;enabled' =&gt; true]);</code></pre><h3 id="fb59ec56b07e89d7976cbbd8bb4df3cf">&#33258;&#22686;&#19982;&#33258;&#20943;</h3><p>&#26597;&#35810;&#26500;&#36896;&#22120;&#36824;&#25552;&#20379;&#20102;&#20415;&#25463;&#26041;&#27861;&#26469;&#23545;&#25351;&#23450;&#21015;&#30340;&#20540;&#36827;&#34892;&#33258;&#22686;&#25110;&#33258;&#20943;&#12290;&#36825;&#20004;&#20010;&#26041;&#27861;&#33267;&#23569;&#37117;&#25509;&#25910;&#19968;&#20010;&#21442;&#25968;&mdash;&mdash;&#35201;&#20462;&#25913;&#30340;&#21015;&#12290;&#31532;&#20108;&#20010;&#21442;&#25968;&#26159;&#21487;&#36873;&#30340;&#65292;&#29992;&#20110;&#25351;&#23450;&#33258;&#22686;&#25110;&#33258;&#20943;&#30340;&#27493;&#38271;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;increment('votes');
+
+DB::table('users')-&gt;increment('votes', 5);
+
+DB::table('users')-&gt;decrement('votes');
+
+DB::table('users')-&gt;decrement('votes', 5);</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#20320;&#36824;&#21487;&#20197;&#25351;&#23450;&#22312;&#33258;&#22686;&#25110;&#33258;&#20943;&#25805;&#20316;&#26399;&#38388;&#19968;&#24182;&#26356;&#26032;&#30340;&#20854;&#20182;&#21015;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;increment('votes', 1, ['name' =&gt; 'John']);</code></pre><p>&#27492;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#20351;&#29992; <code>incrementEach</code> &#19982; <code>decrementEach</code> &#26041;&#27861;&#19968;&#27425;&#23545;&#22810;&#20010;&#21015;&#36827;&#34892;&#33258;&#22686;&#25110;&#33258;&#20943;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;incrementEach([
+    'votes' =&gt; 5,
+    'balance' =&gt; 100,
+]);</code></pre><h2 id="bd7f8b597a7e9924a4e9b0f3f7cd03f1">Delete &#35821;&#21477;</h2><p>&#26597;&#35810;&#26500;&#36896;&#22120;&#30340; <code>delete</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#20174;&#34920;&#20013;&#21024;&#38500;&#35760;&#24405;&#12290;<code>delete</code> &#26041;&#27861;&#36820;&#22238;&#21463;&#24433;&#21709;&#30340;&#34892;&#25968;&#12290;&#20320;&#21487;&#20197;&#22312;&#35843;&#29992; <code>delete</code> &#26041;&#27861;&#20043;&#21069;&#28155;&#21152;&#12300;where&#12301;&#23376;&#21477;&#26469;&#38480;&#23450; <code>delete</code> &#35821;&#21477;&#65306;</p><pre><code class="language-php">$deleted = DB::table('users')-&gt;delete();
+
+$deleted = DB::table('users')-&gt;where('votes', '&gt;', 100)-&gt;delete();</code></pre><h2 id="891f975efa0ad8ed8582636e0bd98e41">&#24754;&#35266;&#38145;</h2><p>&#26597;&#35810;&#26500;&#36896;&#22120;&#36824;&#21253;&#21547;&#19968;&#20123;&#20989;&#25968;&#65292;&#21487;&#24110;&#21161;&#20320;&#22312;&#25191;&#34892; <code>select</code> &#35821;&#21477;&#26102;&#23454;&#29616;&#12300;&#24754;&#35266;&#38145;&#12301;&#12290;&#35201;&#20351;&#29992;&#12300;shared lock&#12301;&#25191;&#34892;&#35821;&#21477;&#65292;&#21487;&#20197;&#35843;&#29992; <code>sharedLock</code> &#26041;&#27861;&#12290;&#20849;&#20139;&#38145;&#20250;&#38459;&#27490;&#25152;&#36873;&#34892;&#34987;&#20462;&#25913;&#65292;&#30452;&#21040;&#20107;&#21153;&#25552;&#20132;&#65306;</p><pre><code class="language-php">DB::table('users')
+    -&gt;where('votes', '&gt;', 100)
+    -&gt;sharedLock()
+    -&gt;get();</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#20351;&#29992; <code>lockForUpdate</code> &#26041;&#27861;&#12290;&#12300;for update&#12301;&#38145;&#20250;&#38459;&#27490;&#25152;&#36873;&#35760;&#24405;&#34987;&#20462;&#25913;&#65292;&#25110;&#34987;&#21478;&#19968;&#20010;&#20849;&#20139;&#38145;&#36873;&#20013;&#65306;</p><pre><code class="language-php">DB::table('users')
+    -&gt;where('votes', '&gt;', 100)
+    -&gt;lockForUpdate()
+    -&gt;get();</code></pre><p>&#34429;&#28982;&#19981;&#26159;&#24517;&#39035;&#30340;&#65292;&#20294;&#24314;&#35758;&#23558;&#24754;&#35266;&#38145;&#21253;&#22312; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/database#database-transactions" target="_blank">&#20107;&#21153;</a> &#20869;&#20351;&#29992;&#12290;&#36825;&#26679;&#21487;&#20197;&#20445;&#35777;&#25152;&#21462;&#20986;&#30340;&#25968;&#25454;&#22312;&#25972;&#20010;&#25805;&#20316;&#36807;&#31243;&#20013;&#22987;&#32456;&#19981;&#34987;&#26410;&#20462;&#25913;&mdash;&mdash;&#33509;&#20986;&#29616;&#38382;&#39064;&#65292;&#20107;&#21153;&#20250;&#22238;&#28378;&#25152;&#26377;&#26356;&#25913;&#24182;&#33258;&#21160;&#37322;&#25918;&#38145;&#65306;</p><pre><code class="language-php">DB::transaction(function () {
+    $sender = DB::table('users')
+        -&gt;lockForUpdate()
+        -&gt;find(1);
+
+    $receiver = DB::table('users')
+        -&gt;lockForUpdate()
+        -&gt;find(2);
+
+    if ($sender-&gt;balance &lt; 100) {
+        throw new RuntimeException('Balance too low.');
+    }
+
+    DB::table('users')
+        -&gt;where('id', $sender-&gt;id)
+        -&gt;update([
+            'balance' =&gt; $sender-&gt;balance - 100
+        ]);
+
+    DB::table('users')
+        -&gt;where('id', $receiver-&gt;id)
+        -&gt;update([
+            'balance' =&gt; $receiver-&gt;balance + 100
+        ]);
+});</code></pre><h2 id="06d2e65801f744b8b3302cd4932437e0">&#21487;&#22797;&#29992;&#30340;&#26597;&#35810;&#32452;&#20214;</h2><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20013;&#23384;&#22312;&#37325;&#22797;&#30340;&#26597;&#35810;&#36923;&#36753;&#65292;&#21487;&#20197;&#20351;&#29992;&#26597;&#35810;&#26500;&#36896;&#22120;&#30340; <code>tap</code> &#19982; <code>pipe</code> &#26041;&#27861;&#23558;&#36923;&#36753;&#25552;&#21462;&#20026;&#21487;&#22797;&#29992;&#23545;&#35937;&#12290;&#20551;&#35774;&#20320;&#30340;&#24212;&#29992;&#20013;&#26377;&#19979;&#38754;&#36825;&#20004;&#26465;&#19981;&#21516;&#30340;&#26597;&#35810;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
+
+$destination = $request-&gt;query('destination');
+
+DB::table('flights')
+    -&gt;when($destination, function (Builder $query, string $destination) {
+        $query-&gt;where('destination', $destination);
+    })
+    -&gt;orderByDesc('price')
+    -&gt;get();
+
+// ...
+
+$destination = $request-&gt;query('destination');
+
+DB::table('flights')
+    -&gt;when($destination, function (Builder $query, string $destination) {
+        $query-&gt;where('destination', $destination);
+    })
+    -&gt;where('user', $request-&gt;user()-&gt;id)
+    -&gt;orderBy('destination')
+    -&gt;get();</code></pre><p>&#20320;&#21487;&#33021;&#24076;&#26395;&#25226;&#36825;&#20004;&#26465;&#26597;&#35810;&#20013;&#20849;&#29992;&#30340;&#30446;&#30340;&#22320;&#36807;&#28388;&#36923;&#36753;&#25552;&#21462;&#20026;&#19968;&#20010;&#21487;&#22797;&#29992;&#23545;&#35937;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Scopes;
+
+use Illuminate\Database\Query\Builder;
+
+class DestinationFilter
+{
+    public function __construct(
+        private ?string $destination,
+    ) {
+        //
+    }
+
+    public function __invoke(Builder $query): void
+    {
+        $query-&gt;when($this-&gt;destination, function (Builder $query) {
+            $query-&gt;where('destination', $this-&gt;destination);
+        });
+    }
+}</code></pre><p>&#28982;&#21518;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#26597;&#35810;&#26500;&#36896;&#22120;&#30340; <code>tap</code> &#26041;&#27861;&#23558;&#35813;&#23545;&#35937;&#30340;&#36923;&#36753;&#24212;&#29992;&#21040;&#26597;&#35810;&#19978;&#65306;</p><pre><code class="language-php">use App\Scopes\DestinationFilter;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
+
+DB::table('flights')
+    -&gt;when($destination, function (Builder $query, string $destination) { // [tl! remove]
+        $query-&gt;where('destination', $destination); // [tl! remove]
+    }) // [tl! remove]
+    -&gt;tap(new DestinationFilter($destination)) // [tl! add]
+    -&gt;orderByDesc('price')
+    -&gt;get();
+
+// ...
+
+DB::table('flights')
+    -&gt;when($destination, function (Builder $query, string $destination) { // [tl! remove]
+        $query-&gt;where('destination', $destination); // [tl! remove]
+    }) // [tl! remove]
+    -&gt;tap(new DestinationFilter($destination)) // [tl! add]
+    -&gt;where('user', $request-&gt;user()-&gt;id)
+    -&gt;orderBy('destination')
+    -&gt;get();</code></pre><h4 id="77dcaa2f297c8d3187284a6997c91ec1">&#26597;&#35810;&#31649;&#36947;</h4><p><code>tap</code> &#26041;&#27861;&#22987;&#32456;&#20250;&#36820;&#22238;&#26597;&#35810;&#26500;&#36896;&#22120;&#12290;&#22914;&#26524;&#20320;&#24076;&#26395;&#25552;&#21462;&#19968;&#20010;&#20250;&#25191;&#34892;&#26597;&#35810;&#24182;&#36820;&#22238;&#21478;&#19968;&#20010;&#20540;&#30340;&#23545;&#35937;&#65292;&#21487;&#20197;&#20351;&#29992; <code>pipe</code> &#26041;&#27861;&#12290;</p><p>&#32771;&#34385;&#20197;&#19979;&#26597;&#35810;&#23545;&#35937;&#65292;&#23427;&#21253;&#21547;&#25972;&#20010;&#24212;&#29992;&#20013;&#20849;&#20139;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/pagination" target="_blank">&#20998;&#39029;</a> &#36923;&#36753;&#12290;&#19982; <code>DestinationFilter</code> &#19981;&#21516;&#30340;&#26159;&#65288;<code>DestinationFilter</code> &#32473;&#26597;&#35810;&#28155;&#21152;&#26597;&#35810;&#26465;&#20214;&#65289;&#65292;<code>Paginate</code> &#23545;&#35937;&#20250;&#25191;&#34892;&#26597;&#35810;&#24182;&#36820;&#22238;&#19968;&#20010;&#20998;&#39029;&#22120;&#23454;&#20363;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Scopes;
+
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Query\Builder;
+
+class Paginate
+{
+    public function __construct(
+        private string $sortBy = 'timestamp',
+        private string $sortDirection = 'desc',
+        private int $perPage = 25,
+    ) {
+        //
+    }
+
+    public function __invoke(Builder $query): LengthAwarePaginator
+    {
+        return $query-&gt;orderBy($this-&gt;sortBy, $this-&gt;sortDirection)
+            -&gt;paginate($this-&gt;perPage, pageName: 'p');
+    }
+}</code></pre><p>&#20511;&#21161;&#26597;&#35810;&#26500;&#36896;&#22120;&#30340; <code>pipe</code> &#26041;&#27861;&#65292;&#25105;&#20204;&#21487;&#20197;&#21033;&#29992;&#35813;&#23545;&#35937;&#24212;&#29992;&#20849;&#20139;&#30340;&#20998;&#39029;&#36923;&#36753;&#65306;</p><pre><code class="language-php">$flights = DB::table('flights')
+    -&gt;tap(new DestinationFilter($destination))
+    -&gt;pipe(new Paginate);</code></pre><h2 id="b7c0bfff1b6f1cc255716a1cb8b68011">&#35843;&#35797;</h2><p>&#20320;&#21487;&#20197;&#22312;&#26500;&#24314;&#26597;&#35810;&#26102;&#20351;&#29992; <code>dd</code> &#19982; <code>dump</code> &#26041;&#27861;&#26469;&#25171;&#21360;&#24403;&#21069;&#30340;&#26597;&#35810;&#32465;&#23450;&#19982; SQL&#12290;<code>dd</code> &#26041;&#27861;&#20250;&#36755;&#20986;&#35843;&#35797;&#20449;&#24687;&#24182;&#31435;&#21363;&#20572;&#27490;&#35831;&#27714;&#65307;<code>dump</code> &#26041;&#27861;&#20250;&#36755;&#20986;&#35843;&#35797;&#20449;&#24687;&#20294;&#20801;&#35768;&#35831;&#27714;&#32487;&#32493;&#25191;&#34892;&#65306;</p><pre><code class="language-php">DB::table('users')-&gt;where('votes', '&gt;', 100)-&gt;dd();
+
+DB::table('users')-&gt;where('votes', '&gt;', 100)-&gt;dump();</code></pre><p>&#21487;&#20197;&#22312;&#26597;&#35810;&#19978;&#35843;&#29992; <code>dumpRawSql</code> &#19982; <code>ddRawSql</code> &#26041;&#27861;&#65292;&#25171;&#21360;&#20986;&#25152;&#26377;&#21442;&#25968;&#32465;&#23450;&#24050;&#34987;&#27491;&#30830;&#20195;&#20837;&#30340; SQL&#65306;</p><pre><code class="language-php">
+DB::table('users')-&gt;where('votes', '&gt;', 100)-&gt;dumpRawSql();
+
+DB::table('users')-&gt;where('votes', '&gt;', 100)-&gt;ddRawSql();</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 集合文档: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/collections" target="_blank">/docs/Laravel 13.x/collections</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 逻辑分组: <i><a href="xpv525gv86.html#logical-grouping" target="_blank">#logical-grouping</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> chunk 方法: <i><a href="xpv525gv86.html#chunking-results" target="_blank">#chunking-results</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> LazyCollection: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/collections#lazy-collections" target="_blank">/docs/Laravel 13.x/collections#lazy-collections</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> 全文索引: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/migrations#available-index-types" target="_blank">/docs/Laravel 13.x/migrations#available-index-types</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 迁移文档: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/migrations#available-column-types" target="_blank">/docs/Laravel 13.x/migrations#available-column-types</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> Laravel AI SDK: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/ai-sdk#embeddings" target="_blank">/docs/Laravel 13.x/ai-sdk#embeddings</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> havingRaw: <i><a href="xpv525gv86.html#raw-methods" target="_blank">#raw-methods</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> 绕过 MySQL 的严格模式: <i><a href="https://dev.mysql.com/doc/refman/en/sql-mode.html#ignore-effect-on-execution" target="_blank">https://dev.mysql.com/doc/refman/en/sql-mode.html#ignore-effect-on-execution</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> 事务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/database#database-transactions" target="_blank">/docs/Laravel 13.x/database#database-transactions</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> 分页: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/pagination" target="_blank">/docs/Laravel 13.x/pagination</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="kl9no87vz4.html#blog1055" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">数据库：入门</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="3xyq454vmq.html#blog1057" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">数据库：分页</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

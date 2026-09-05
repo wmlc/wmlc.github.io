@@ -70,7 +70,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
 
     
 </head>
@@ -322,6 +322,10 @@
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
                                    href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel&#32;13.x/overview.html">Laravel 13.x</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
@@ -586,6 +590,93 @@
     })();
 </script>
 
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -601,7 +692,7 @@ var _hmt = _hmt || [];
 	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
 		<h1>站内全文搜索引擎 Sphinx/coreseek 安装使用教程</h1><?xml encoding="UTF-8"><p>Sphinx&#26159;&#24320;&#28304;&#30340;&#25628;&#32034;&#24341;&#25806;&#65292;&#23427;&#25903;&#25345;&#33521;&#25991;&#30340;&#20840;&#25991;&#26816;&#32034;&#12290;&#25152;&#20197;&#22914;&#26524;&#21333;&#29420;&#25645;&#24314;Sphinx&#65292;&#20320;&#23601;&#24050;&#32463;&#21487;&#20197;&#20351;&#29992;&#20840;&#25991;&#32034;&#24341;&#20102;&#12290;&#20294;&#26159;&#24448;&#24448;&#25105;&#20204;&#35201;&#27714;&#30340;&#26159;&#20013;&#25991;&#32034;&#24341;&#65292;&#24590;&#20040;&#20570;&#21602;&#65311;&#22269;&#20154;&#25552;&#20379;&#20102;&#19968;&#20010;&#21487;&#20379;&#20225;&#19994;&#20351;&#29992;&#30340;&#65292;&#22522;&#20110;Sphinx&#30340;&#20013;&#25991;&#20840;&#25991;&#26816;&#32034;&#24341;&#25806;&#12290;&#20063;&#23601;&#26159;&#35828;Coreseek&#23454;&#38469;&#19978;&#30340;&#20869;&#26680;&#36824;&#26159;Sphinx&#12290;</p><p>sphinx&#21487;&#20197;&#36890;&#36807;&#35774;&#32622;&#20026;&ldquo;&#19968;&#20803;&#20999;&#20998;&#27169;&#24335;&rdquo;&#26469;&#25903;&#25345;&#25628;&#32034;&#20013;&#25991;&#22312;&#23454;&#38469;&#20351;&#29992;&#20013;&#65292;&#25628;&#32034;&#38750;&#20013;&#25991;&#30340;&#35805;&#65292;sphinx&#27604;coreseek&#35201;&#24555;&#65307;&#25628;&#32034;&#30701;&#20013;&#25991;&#23383;&#31526;&#20018;&#30340;&#35805;&#65292;&#24320;&#21551;&#20102;&ldquo;&#19968;&#20803;&#20999;&#20998;&#27169;&#24335;&rdquo;&#30340;sphinx&#27604;coreseek&#35201;&#24555;&#65307;&#21482;&#26377;&#22312;&#25628;&#32034;&#38271;&#20013;&#25991;&#23383;&#20018;&#26102;&#65292;coreseek&#30340;&#20998;&#35789;&#20248;&#21183;&#25165;&#33021;&#26174;&#29616;&#65292;&#27604;sphinx&#35201;&#24555;</p><p>&#26681;&#25454;&#20320;&#30340;&#24212;&#29992;&#22330;&#26223;&#26469;&#36873;&#25321;&#29992;&#21738;&#20010;&#65292;&#22914;&#26524;&#26159;&#32034;&#24341;&#33521;&#25991;&#12289;&#25968;&#23383;&#12289;&#23383;&#31526;&#36739;&#22810;&#30340;&#25968;&#25454;&#65292;&#23601;&#29992;&#28304;&#29983;sphinx&#65307;&#22914;&#26524;&#26159;&#32034;&#24341;&#20013;&#25991;&#38750;&#24120;&#22810;&#38750;&#24120;&#38271;&#30340;&#25968;&#25454;&#65292;&#36824;&#26159;&#29992;coreseek&#21543;&#12290;Coreseek&#26159;&#22522;&#20110;Sphinx&#24320;&#21457;&#30340;&#19968;&#27454;&#36719;&#20214;&#65292;&#23545;Sphinx&#20570;&#20102;&#19968;&#20123;&#25913;&#21160;&#65292;&#22312;&#20013;&#25991;&#26041;&#38754;&#25903;&#25345;&#24471;&#27604;Sphinx&#22909;</p><p>&#23433;&#35013;&#27880;&#24847;</p><p>Coreseek&#21457;&#24067;&#20102;3.2.14&#29256;&#26412;&#21644;4.1&#29256;&#26412;&#31561;&#22810;&#20010;&#29256;&#26412;</p><p>3.2.14&#29256;&#26412;&#26159;2010&#24180;&#21457;&#24067;&#30340;&#65292;&#23427;&#26159;&#22522;&#20110;Sphinx0.9.9&#25628;&#32034;&#24341;&#25806;&#30340;&#12290;4.1&#29256;&#26412;&#26159;2011&#24180;&#21457;&#24067;&#30340;&#65292;&#23427;&#26159;&#22522;&#20110;Sphinx2.0.2&#20197;&#21518;&#30340;</p><p>&#26412;&#25991;&#31456;&#20197;&#23433;&#35013; &nbsp;coreseek-4.1-beta &#29256;&#26412;&#20026;&#20363;&#65306;<br>
 &#23433;&#35013;&#21253;&#19979;&#36733;&#22320;&#22336; &#65306;</p><pre><code class="language-bash">http://dl.download.csdn.net/down11/20160530/de90462e2cf8350cbd4ad0f758105c9d.gz?response-content-disposition=attachment%3Bfilename%3D%22coreseek-4.1-beta.tar.gz%22&amp;OSSAccessKeyId=9q6nvzoJGowBj4q1&amp;Expires=1474535438&amp;Signature=8jae9H6dIfmd7zHRs72qcgi4Q1k%3D</code></pre><p>3.2.14 &nbsp;&#31283;&#23450;&#29256;&#65288;&#32447;&#19978;&#29615;&#22659;&#29992;&#27492;&#29256;&#26412;&#65289;</p><pre><code class="language-bash">http://124.202.166.45/file3.data.weipan.cn/76885328/d22215f7ac79a8eff90a6eec0d7ccdc7f86048b6?ip=1490457292,118.144.20.162&amp;ssig=z3aZVW70%2FY&amp;Expires=1490457892&amp;KID=sae,l30zoo1wmz&amp;fn=coreseek-3.2.14.tar.gz&amp;skiprd=2&amp;se_ip_debug=118.144.20.162&amp;corp=2&amp;from=1221134&amp;wshc_tag=0&amp;wsts_tag=58d68e1c&amp;wsid_tag=75647862&amp;wsiphost=ipdbm</code></pre><p><strong class="mk-g">&#31532;&#19968;&#27493;&#65306;&#23433;&#35013;&#21319;&#32423;autoconf</strong></p><p>&#22240;&#20026;coreseek&#38656;&#35201;autoconf 2.64&#20197;&#19978;&#29256;&#26412;&#65292;&#22240;&#27492;&#38656;&#35201;&#21319;&#32423;autoconf&#65292;&#19981;&#28982;&#20250;&#25253;&#38169;<br>
-&#23433;&#35013;&#26041;&#27861;&#22914;&#19979;&#65306;</p><pre><code class="language-bash">yum -y install glibc-common libtool autoconf automake mysql-devel expat-devel</code></pre><p><strong class="mk-p">&#31532;&#20108;&#27493;&#65306;&#23433;&#35013;mmseg(coreseek&#25152;&#20351;&#29992;&#30340;&#35789;&#20856;)</strong></p><pre><code class="language-bash">tar -zxvf coreseek-4.1-beta.tar.gz
+&#23433;&#35013;&#26041;&#27861;&#22914;&#19979;&#65306;</p><pre><code class="language-bash">yum -y install glibc-common libtool autoconf automake mysql-devel expat-devel</code></pre><p><strong class="mk-g">&#31532;&#20108;&#27493;&#65306;&#23433;&#35013;mmseg(coreseek&#25152;&#20351;&#29992;&#30340;&#35789;&#20856;)</strong></p><pre><code class="language-bash">tar -zxvf coreseek-4.1-beta.tar.gz
 cd coreseek-4.1-beta
 cd mmseg-4.1-beta/
 ./bootstrap    #&#36755;&#20986;&#30340;warning&#20449;&#24687;&#21487;&#20197;&#24573;&#30053;&#65292;&#22914;&#26524;&#20986;&#29616;error&#21017;&#38656;&#35201;&#35299;&#20915;
@@ -677,7 +768,7 @@ seperate_number_ascii=0;    ;&#23558;&#23383;&#27597;&#21644;&#25968;&#23383;&#2
 cp etc/mmseg.ini /usr/local/sphinx/dict/mmseg.ini
 
 # &#22797;&#21046;&#21040;sphinx/dict&#30446;&#24405;
-cp etc/unigram.txt /usr/local/sphinx/dict/uni.lib</code></pre><p><strong class="mk-p">&#31532;&#20116;&#27493;&#65306;&#37197;&#32622;sphinx</strong></p><pre><code class="language-bash"># &#21019;&#24314;&#37197;&#32622;&#25991;&#20214;
+cp etc/unigram.txt /usr/local/sphinx/dict/uni.lib</code></pre><p><strong class="mk-y">&#31532;&#20116;&#27493;&#65306;&#37197;&#32622;sphinx</strong></p><pre><code class="language-bash"># &#21019;&#24314;&#37197;&#32622;&#25991;&#20214;
 mkdir -p /usr/local/sphinx/etc/conf.d/
 vim /usr/local/sphinx/etc/conf.d/sphinx.conf</code></pre><p>sphinx.conf &#37197;&#32622;&#25991;&#20214;&#20869;&#23481;</p><pre><code class="language-bash">#&#37197;&#32622;&#25968;&#25454;&#28304;&#65292;&#21487;&#20197;&#26377;&#22810;&#20010;
 source src_blog
@@ -777,7 +868,7 @@ searchd
 cp /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib/
 
 # 64&#20301;&#31995;&#32479;&#38656;&#35201;&#22312;&#21019;&#24314;&#19968;&#20010;&#36719;&#36830;&#25509;
-ln -s /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib64</code></pre><p>&#26381;&#21153;&#22120;&#25152;&#29992;MySQL&#22312;&#24403;&#26102;&#32534;&#35793;&#26102;&#24182;&#27809;&#26377;&#32534;&#35793;Sphinx&#25193;&#23637;,&#32780;&#37325;&#26032;&#32534;&#35793;mysql&#24182;&#21152;&#20837;Sphinx&#26242;&#26102;&#21448;&#26080;&#27861;&#23454;&#29616;(&#39033;&#30446;&#29992;&#21040;&#20102;&#22810;&#21488;&#26381;&#21153;&#22120;,&#22312;&#19981;&#24433;&#21709;&#29616;&#26377;&#19994;&#21153;&#30340;&#24773;&#20917;&#19979;&#19981;&#21487;&#33021;&#21435;&#37325;&#26032;&#32534;&#35793;MySQL&#30340;),&#25152;&#20197;&#37319;&#29992;&#30340;&#26159;&#31243;&#24207;&#36890;&#36807;API&#26469;&#22806;&#37096;&#35843;&#29992;Sphinx.Sphinx&#33258;&#24102;&#30340;API&#26377;PHP,Python,Ruby,Java&#31561;&#20247;&#22810;&#29256;&#26412;,&#25152;&#20197;&#22522;&#26412;&#20063;&#22815;&#29992;&#20102;,&#26412;&#20154;&#20351;&#29992;&#30340;&#32534;&#31243;&#35821;&#35328;&#26159;php&#25152;&#20197;&#19979;&#25991;&#30340;&#26465;&#29992;&#31034;&#20363;&#37319;&#29992;&#30340;&#26159;PHP&#29256;&#30340;API.</p><p><strong class="mk-y">&#20197;&#19979;&#27493;&#39588;&#19981;&#38656;&#35201;&#25191;&#34892;&#65292;&#21407;&#22240;&#22914;&#19978;&#65306;</strong></p><p><strong class="mk-b">&#31532;&#20845;&#27493;&#65306;&#23433;&#35013;sphinxclient</strong></p><p>php&#27169;&#22359;&#20381;&#36182;&#20110;libsphinxclient&#21253;</p><pre><code class="language-bash"># &#36827;&#20837;sphinx &#28304;&#30721;&#21253;&#30340;api&#30446;&#24405;
+ln -s /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib64</code></pre><p>&#26381;&#21153;&#22120;&#25152;&#29992;MySQL&#22312;&#24403;&#26102;&#32534;&#35793;&#26102;&#24182;&#27809;&#26377;&#32534;&#35793;Sphinx&#25193;&#23637;,&#32780;&#37325;&#26032;&#32534;&#35793;mysql&#24182;&#21152;&#20837;Sphinx&#26242;&#26102;&#21448;&#26080;&#27861;&#23454;&#29616;(&#39033;&#30446;&#29992;&#21040;&#20102;&#22810;&#21488;&#26381;&#21153;&#22120;,&#22312;&#19981;&#24433;&#21709;&#29616;&#26377;&#19994;&#21153;&#30340;&#24773;&#20917;&#19979;&#19981;&#21487;&#33021;&#21435;&#37325;&#26032;&#32534;&#35793;MySQL&#30340;),&#25152;&#20197;&#37319;&#29992;&#30340;&#26159;&#31243;&#24207;&#36890;&#36807;API&#26469;&#22806;&#37096;&#35843;&#29992;Sphinx.Sphinx&#33258;&#24102;&#30340;API&#26377;PHP,Python,Ruby,Java&#31561;&#20247;&#22810;&#29256;&#26412;,&#25152;&#20197;&#22522;&#26412;&#20063;&#22815;&#29992;&#20102;,&#26412;&#20154;&#20351;&#29992;&#30340;&#32534;&#31243;&#35821;&#35328;&#26159;php&#25152;&#20197;&#19979;&#25991;&#30340;&#26465;&#29992;&#31034;&#20363;&#37319;&#29992;&#30340;&#26159;PHP&#29256;&#30340;API.</p><p><strong class="mk-p">&#20197;&#19979;&#27493;&#39588;&#19981;&#38656;&#35201;&#25191;&#34892;&#65292;&#21407;&#22240;&#22914;&#19978;&#65306;</strong></p><p><strong class="mk-g">&#31532;&#20845;&#27493;&#65306;&#23433;&#35013;sphinxclient</strong></p><p>php&#27169;&#22359;&#20381;&#36182;&#20110;libsphinxclient&#21253;</p><pre><code class="language-bash"># &#36827;&#20837;sphinx &#28304;&#30721;&#21253;&#30340;api&#30446;&#24405;
 cd coreseek-4.1/csft-4.1/api/libsphinxclient
 ./configure --prefix=/usr/local/libsphinxclient
 #&#33509;&#25253;&#19968;&#19979;&#38169;&#35823;
@@ -803,7 +894,7 @@ tar -zxvf sphinx-1.3.0.tgz
 cd sphinx-1.3.0
 /usr/local/php/bin/phpize ./configure --with-php-config=/usr/local/php/bin/php-config --with-sphinx=/usr/local/libsphinxclient/
 make &amp;&amp; make install
-# &#23433;&#35013;&#22909;&#21518;&#65292;&#22312;&#23433;&#35013;&#30446;&#24405;&#19979;etc&#30446;&#24405;&#19979;&#65292;&#26377;&#20221;&#27979;&#35797;&#25968;&#25454;&#21644;&#37197;&#32622;&#30340;&#26679;&#26412;</code></pre><p><strong class="mk-b">&#31532;&#20843;&#27493;&#65306;&#37197;&#32622;PHP&#25903;&#25345;Sphinx</strong></p><p>&#32534;&#36753;php.ini&#25991;&#20214;</p><pre><code class="language-bash">vim /usr/local/php/etc/php.ini
+# &#23433;&#35013;&#22909;&#21518;&#65292;&#22312;&#23433;&#35013;&#30446;&#24405;&#19979;etc&#30446;&#24405;&#19979;&#65292;&#26377;&#20221;&#27979;&#35797;&#25968;&#25454;&#21644;&#37197;&#32622;&#30340;&#26679;&#26412;</code></pre><p><strong class="mk-p">&#31532;&#20843;&#27493;&#65306;&#37197;&#32622;PHP&#25903;&#25345;Sphinx</strong></p><p>&#32534;&#36753;php.ini&#25991;&#20214;</p><pre><code class="language-bash">vim /usr/local/php/etc/php.ini
 
 # &#20462;&#25913;&#20197;&#19979;&#20869;&#23481;
 extension_dir = "/usr/local/php/lib/php/extensions/no-debug-non-zts-20100525/"
@@ -819,7 +910,7 @@ extension = sphinx.so
 &lt;?php
 echo phpinfo();</code></pre><p>&#27983;&#35272;&#22120;&#36755;&#20837;&#22320;&#22336;&#35775;&#38382;<br>
 &#30475;&#21040;sphinx&#34920;&#31034;&#25193;&#23637;&#23433;&#35013;&#25104;&#21151;<br>
-<img src="https://wangmaolin.net/usr/uploads/2020/03/2710629680.png#alt=20160922184509832.png" alt=""></p><p><strong class="mk-g">&#31532;&#20061;&#27493;&#65306;php&#20351;&#29992;sphinx</strong></p><pre><code class="language-php">&lt;?php
+<img src="https://wangmaolin.net/usr/uploads/2020/03/2710629680.png#alt=20160922184509832.png" alt=""></p><p><strong class="mk-p">&#31532;&#20061;&#27493;&#65306;php&#20351;&#29992;sphinx</strong></p><pre><code class="language-php">&lt;?php
 // --------------------------------------------------------------------------
 // File name   : test_coreseek.php
 // Description : coreseek&#20013;&#25991;&#20840;&#25991;&#26816;&#32034;&#31995;&#32479;&#27979;&#35797;&#31243;&#24207;

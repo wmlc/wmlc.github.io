@@ -1,0 +1,1450 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Laravel Homestead | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/dgy7x25vw2.html', function (data, status) {
+            addView('dgy7x25vw2.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Laravel Homestead</h1><ul>
+<li><a href="dgy7x25vw2.html#a35b3fa05224712faa05783d9365808b">内置软件</a></li>
+<li><a href="dgy7x25vw2.html#21a001feb3a6c8e2391dd68d75cac536">可选软件</a></li>
+<li><a href="dgy7x25vw2.html#487e82b9d99a9c89933e19584bbaf446">安装与设置</a>
+<ul>
+<li><a href="dgy7x25vw2.html#863a8583132d087e57aebb7d89e18a50">第一步</a>
+<ul>
+<li><a href="dgy7x25vw2.html#ebf359adb5a429ff24920936597cb6dd">安装 Homestead</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#f84790b47534e86d4979c752f5904d44">配置 Homestead</a>
+<ul>
+<li><a href="dgy7x25vw2.html#4ca2d57479f067b99349b16427154ec8">设置服务商</a></li>
+<li><a href="dgy7x25vw2.html#81fc4fb2b1ddcee4e66eb1846c6fa74d">配置共享目录</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#451e8a1b43d4b2e28cd0764e2590d2b7">配置 Nginx 站点</a>
+<ul>
+<li><a href="dgy7x25vw2.html#f0e283198cedb1225d40d20137a45e84">主机名解析</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#b39b9268fae08350ff19a676d0c7f514">配置服务</a></li>
+<li><a href="dgy7x25vw2.html#7c1c140dbb02d9fbea631f5aed3c5c81">启动 Vagrant Box</a></li>
+<li><a href="dgy7x25vw2.html#4d2f454879f26c2e03688d5e851c604e">按项目安装</a></li>
+<li><a href="dgy7x25vw2.html#27cabdb0a206bc8290e859efb59a64dd">安装可选功能</a>
+<ul>
+<li><a href="dgy7x25vw2.html#45e23a169652aaf95ce80da844f3df0d">Elasticsearch</a></li>
+<li><a href="dgy7x25vw2.html#7f9733e208088b1ce6df3d4be1765396">MariaDB</a></li>
+<li><a href="dgy7x25vw2.html#206e3718af092fd1d12f80cae771ccac">MongoDB</a></li>
+<li><a href="dgy7x25vw2.html#4f16d2b1f38f316b477da6dbf0e9bc79">Neo4j</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#6dc7a717efc15adf80699301b55eb635">别名</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#4307638a97f62f41b396181afa5d86af">更新 Homestead</a></li>
+<li><a href="dgy7x25vw2.html#f3b9a019aedd265c26adfc2ca927eeee">日常使用</a>
+<ul>
+<li><a href="dgy7x25vw2.html#ac7989ca5dcb2481bf1065a955f7aaaa">通过 SSH 连接</a></li>
+<li><a href="dgy7x25vw2.html#9d0706b0a5e99664bedd34a572576ff0">添加额外站点</a>
+<ul>
+<li><a href="dgy7x25vw2.html#8681e13d3e4bc5ec8862defd2963ba5e">站点类型</a></li>
+<li><a href="dgy7x25vw2.html#f81a43d252e6b2ebcc9ea44ec148f7e3">站点参数</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#3867e350ebb33a487c4ac5f7787e1c29">环境变量</a></li>
+<li><a href="dgy7x25vw2.html#c76cfefe72716629558a5cc0148355b0">端口</a>
+<ul>
+<li><a href="dgy7x25vw2.html#a415ead87ee547b1ab8d554d469ff5ea">转发额外端口</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#1f5acb3ba7b228dfccd69c98857206d2">PHP 版本</a></li>
+<li><a href="dgy7x25vw2.html#a29c5a85488d9bafd38b1b83199220f6">连接数据库</a></li>
+<li><a href="dgy7x25vw2.html#62d8f8c4de6653027070b3f934e3ff23">数据库备份</a></li>
+<li><a href="dgy7x25vw2.html#eff4c14b5c88fed3652266f734101aa2">配置 Cron 计划任务</a></li>
+<li><a href="dgy7x25vw2.html#17078ef8936ee931c68647dc9ca11b1f">配置 Mailpit</a></li>
+<li><a href="dgy7x25vw2.html#5a8c2fe141f44e38e3498d8cb2cd1210">配置 Minio</a></li>
+<li><a href="dgy7x25vw2.html#97418f775c5c2676e88bb969556d8a30">Laravel Dusk</a></li>
+<li><a href="dgy7x25vw2.html#8c7b792b0a18b27d6f8dddc35ab0d002">共享你的环境</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#72425038478d357f7310aec89f973d4b">调试与性能分析</a>
+<ul>
+<li><a href="dgy7x25vw2.html#4e91fb111af014b23b733cba3bd9145e">使用 Xdebug 调试 Web 请求</a>
+<ul>
+<li><a href="dgy7x25vw2.html#326b33c3005aab93ab043eea192f9cc8">自动启动 Xdebug</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#8da9637b16b699b30b32d39ac28ca32d">调试 CLI 应用</a></li>
+<li><a href="dgy7x25vw2.html#7e2ac9bbc7b44afe1c5910135fd57ac8">使用 Blackfire 分析应用性能</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#84db2fd22b1fb3928ca8f2ed7179c7ff">网络接口</a></li>
+<li><a href="dgy7x25vw2.html#74bfd85b5313baf40d40d70440ad84cd">扩展 Homestead</a>
+<ul>
+<li><a href="dgy7x25vw2.html#2dbb3e25a90424d991a346b0bca2c26a">用户自定义</a></li>
+</ul></li>
+<li><a href="dgy7x25vw2.html#1ae40b8b260bb00d9a0c446abd4f1f71">服务商专属设置</a>
+<ul>
+<li><a href="dgy7x25vw2.html#e8e4d1f0fe99af04575c1e0815054845">VirtualBox</a>
+<ul>
+<li><a href="dgy7x25vw2.html#9a57d99dffad9b86229e4339dfc49065">natdnshostresolver</a></li>
+</ul></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><blockquote>
+<p>[!WARNING]<br>
+Laravel Homestead &#26159;&#19968;&#20010;&#24050;&#20572;&#27490;&#20027;&#21160;&#32500;&#25252;&#30340;&#26087;&#29256;&#36719;&#20214;&#21253;&#12290;&#21487;&#20197;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sail" target="_blank">Laravel Sail</a> &#20316;&#20026;&#29616;&#20195;&#21270;&#30340;&#26367;&#20195;&#26041;&#26696;&#12290;</p>
+</blockquote><p>Laravel &#33268;&#21147;&#20110;&#35753;&#25972;&#20010; PHP &#24320;&#21457;&#20307;&#39564;&#37117;&#20196;&#20154;&#24841;&#24742;&#65292;&#21253;&#25324;&#26412;&#22320;&#24320;&#21457;&#29615;&#22659;&#12290;<a href="https://github.com/laravel/homestead" target="_blank" rel="noopener noreferrer">Laravel Homestead</a> &#26159;&#19968;&#20010;&#23448;&#26041;&#25552;&#20379;&#30340;&#39044;&#25171;&#21253; Vagrant box&#65292;&#23427;&#33021;&#22312;&#19981;&#35201;&#27714;&#20320;&#22312;&#26412;&#22320;&#26426;&#22120;&#19978;&#23433;&#35013; PHP&#12289;Web &#26381;&#21153;&#22120;&#25110;&#20854;&#20182;&#20219;&#20309;&#26381;&#21153;&#22120;&#36719;&#20214;&#30340;&#24773;&#20917;&#19979;&#65292;&#20026;&#20320;&#25552;&#20379;&#20986;&#33394;&#30340;&#24320;&#21457;&#29615;&#22659;&#12290;</p><p><a href="https://www.vagrantup.com" target="_blank" rel="noopener noreferrer">Vagrant</a> &#25552;&#20379;&#20102;&#19968;&#22871;&#31616;&#21333;&#12289;&#20248;&#38597;&#30340;&#26041;&#24335;&#26469;&#31649;&#29702;&#21644;&#37197;&#32622;&#34394;&#25311;&#26426;&#12290;Vagrant box &#23436;&#20840;&#21487;&#38543;&#26102;&#20002;&#24323;&#12290;&#19968;&#26086;&#20986;&#29616;&#38382;&#39064;&#65292;&#20320;&#21487;&#20197;&#22312;&#20960;&#20998;&#38047;&#20869;&#38144;&#27585;&#24182;&#37325;&#24314;&#35813; box&#65281;</p><p>Homestead &#21487;&#36816;&#34892;&#22312;&#20219;&#24847; Windows&#12289;macOS &#25110; Linux &#31995;&#32479;&#19978;&#65292;&#24182;&#21253;&#21547; Nginx&#12289;PHP&#12289;MySQL&#12289;PostgreSQL&#12289;Redis&#12289;Memcached&#12289;Node&#65292;&#20197;&#21450;&#24320;&#21457;&#20986;&#33394; Laravel &#24212;&#29992;&#25152;&#38656;&#30340;&#25152;&#26377;&#20854;&#20182;&#36719;&#20214;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159; Windows&#65292;&#21487;&#33021;&#38656;&#35201;&#21551;&#29992;&#30828;&#20214;&#34394;&#25311;&#21270;&#65288;VT-x&#65289;&#12290;&#36890;&#24120;&#21487;&#20197;&#36890;&#36807; BIOS &#26469;&#21551;&#29992;&#12290;&#22914;&#26524;&#20320;&#22312; UEFI &#31995;&#32479;&#19978;&#20351;&#29992; Hyper-V&#65292;&#21487;&#33021;&#36824;&#38656;&#35201;&#39069;&#22806;&#31105;&#29992; Hyper-V &#25165;&#33021;&#35775;&#38382; VT-x&#12290;</p>
+</blockquote><h2 id="a35b3fa05224712faa05783d9365808b">&#20869;&#32622;&#36719;&#20214;</h2><style>
+    #software-list > ul {
+        column-count: 2; -moz-column-count: 2; -webkit-column-count: 2;
+        column-gap: 5em; -moz-column-gap: 5em; -webkit-column-gap: 5em;
+        line-height: 1.9;
+    }
+</style><div id="software-list">
+<ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">Ubuntu 22.04</li>
+<li style="list-style-type: disc;">Git</li>
+<li style="list-style-type: disc;">PHP 8.3</li>
+<li style="list-style-type: disc;">PHP 8.2</li>
+<li style="list-style-type: disc;">PHP 8.1</li>
+<li style="list-style-type: disc;">PHP 8.0</li>
+<li style="list-style-type: disc;">PHP 7.4</li>
+<li style="list-style-type: disc;">PHP 7.3</li>
+<li style="list-style-type: disc;">PHP 7.2</li>
+<li style="list-style-type: disc;">PHP 7.1</li>
+<li style="list-style-type: disc;">PHP 7.0</li>
+<li style="list-style-type: disc;">PHP 5.6</li>
+<li style="list-style-type: disc;">Nginx</li>
+<li style="list-style-type: disc;">MySQL 8.0</li>
+<li style="list-style-type: disc;">lmm</li>
+<li style="list-style-type: disc;">Sqlite3</li>
+<li style="list-style-type: disc;">PostgreSQL 15</li>
+<li style="list-style-type: disc;">Composer</li>
+<li style="list-style-type: disc;">Docker</li>
+<li style="list-style-type: disc;">Node&#65288;&#21547; Yarn&#12289;Bower&#12289;Grunt &#21644; Gulp&#65289;</li>
+<li style="list-style-type: disc;">Redis</li>
+<li style="list-style-type: disc;">Memcached</li>
+<li style="list-style-type: disc;">Beanstalkd</li>
+<li style="list-style-type: disc;">Mailpit</li>
+<li style="list-style-type: disc;">avahi</li>
+<li style="list-style-type: disc;">ngrok</li>
+<li style="list-style-type: disc;">Xdebug</li>
+<li style="list-style-type: disc;">XHProf / Tideways / XHGui</li>
+<li style="list-style-type: disc;">wp-cli</li>
+</ul>
+</div><h2 id="21a001feb3a6c8e2391dd68d75cac536">&#21487;&#36873;&#36719;&#20214;</h2><style>
+    #software-list > ul {
+        column-count: 2; -moz-column-count: 2; -webkit-column-count: 2;
+        column-gap: 5em; -moz-column-gap: 5em; -webkit-column-gap: 5em;
+        line-height: 1.9;
+    }
+</style><div id="software-list">
+<ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">Apache</li>
+<li style="list-style-type: disc;">Blackfire</li>
+<li style="list-style-type: disc;">Cassandra</li>
+<li style="list-style-type: disc;">Chronograf</li>
+<li style="list-style-type: disc;">CouchDB</li>
+<li style="list-style-type: disc;">Crystal &amp; Lucky Framework</li>
+<li style="list-style-type: disc;">Elasticsearch</li>
+<li style="list-style-type: disc;">EventStoreDB</li>
+<li style="list-style-type: disc;">Flyway</li>
+<li style="list-style-type: disc;">Gearman</li>
+<li style="list-style-type: disc;">Go</li>
+<li style="list-style-type: disc;">Grafana</li>
+<li style="list-style-type: disc;">InfluxDB</li>
+<li style="list-style-type: disc;">Logstash</li>
+<li style="list-style-type: disc;">MariaDB</li>
+<li style="list-style-type: disc;">Meilisearch</li>
+<li style="list-style-type: disc;">MinIO</li>
+<li style="list-style-type: disc;">MongoDB</li>
+<li style="list-style-type: disc;">Neo4j</li>
+<li style="list-style-type: disc;">Oh My Zsh</li>
+<li style="list-style-type: disc;">Open Resty</li>
+<li style="list-style-type: disc;">PM2</li>
+<li style="list-style-type: disc;">Python</li>
+<li style="list-style-type: disc;">R</li>
+<li style="list-style-type: disc;">RabbitMQ</li>
+<li style="list-style-type: disc;">Rust</li>
+<li style="list-style-type: disc;">RVM&#65288;Ruby Version Manager&#65289;</li>
+<li style="list-style-type: disc;">Solr</li>
+<li style="list-style-type: disc;">TimescaleDB</li>
+<li style="list-style-type: disc;">Trader <small>&#65288;PHP &#25193;&#23637;&#65289;</small></li>
+<li style="list-style-type: disc;">Webdriver &amp; Laravel Dusk Utilities</li>
+</ul>
+</div><h2 id="487e82b9d99a9c89933e19584bbaf446">&#23433;&#35013;&#19982;&#35774;&#32622;</h2><h3 id="863a8583132d087e57aebb7d89e18a50">&#31532;&#19968;&#27493;</h3><p>&#22312;&#21551;&#21160;&#20320;&#30340; Homestead &#29615;&#22659;&#20043;&#21069;&#65292;&#24517;&#39035;&#20808;&#23433;&#35013; <a href="https://developer.hashicorp.com/vagrant/downloads" target="_blank" rel="noopener noreferrer">Vagrant</a>&#65292;&#20197;&#21450;&#20197;&#19979;&#21463;&#25903;&#25345; provider &#20013;&#30340;&#20219;&#24847;&#19968;&#20010;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;"><a href="https://www.virtualbox.org/wiki/Download_Old_Builds_6_1" target="_blank" rel="noopener noreferrer">VirtualBox 6.1.x</a></li>
+<li style="list-style-type: disc;"><a href="https://www.parallels.com/products/desktop/" target="_blank" rel="noopener noreferrer">Parallels</a></li>
+</ul><p>&#25152;&#26377;&#36825;&#20123;&#36719;&#20214;&#21253;&#37117;&#20026;&#21508;&#31181;&#27969;&#34892;&#30340;&#25805;&#20316;&#31995;&#32479;&#25552;&#20379;&#20102;&#26131;&#20110;&#20351;&#29992;&#30340;&#21487;&#35270;&#21270;&#23433;&#35013;&#31243;&#24207;&#12290;</p><p>&#35201;&#20351;&#29992; Parallels provider&#65292;&#38656;&#35201;&#23433;&#35013; <a href="https://github.com/Parallels/vagrant-parallels" target="_blank" rel="noopener noreferrer">Parallels Vagrant &#25554;&#20214;</a>&#12290;&#23427;&#26159;&#20813;&#36153;&#30340;&#12290;</p><h4 id="ebf359adb5a429ff24920936597cb6dd">&#23433;&#35013; Homestead</h4><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#25226; Homestead &#20179;&#24211;&#20811;&#38534;&#21040;&#23487;&#20027;&#26426;&#19978;&#26469;&#23433;&#35013; Homestead&#12290;&#24314;&#35758;&#23558;&#20179;&#24211;&#20811;&#38534;&#21040;"&#20027;&#30446;&#24405;"&#19979;&#30340;&#19968;&#20010;&#21517;&#20026; <code>Homestead</code> &#30340;&#25991;&#20214;&#22841;&#20013;&#65292;&#22240;&#20026; Homestead &#34394;&#25311;&#26426;&#23558;&#20316;&#20026;&#20320;&#25152;&#26377; Laravel &#24212;&#29992;&#30340;&#23487;&#20027;&#12290;&#22312;&#26412;&#25991;&#26723;&#20013;&#65292;&#25105;&#20204;&#23558;&#27492;&#30446;&#24405;&#31216;&#20026;&#20320;&#30340;"Homestead &#30446;&#24405;"&#65306;</p><pre><code class="language-shell">git clone https://github.com/laravel/homestead.git ~/Homestead</code></pre><p>&#20811;&#38534; Laravel Homestead &#20179;&#24211;&#21518;&#65292;&#24212;&#35813;&#20999;&#25442;&#21040; <code>release</code> &#20998;&#25903;&#12290;&#35813;&#20998;&#25903;&#22987;&#32456;&#21253;&#21547; Homestead &#26368;&#26032;&#30340;&#31283;&#23450;&#21457;&#24067;&#29256;&#26412;&#65306;</p><pre><code class="language-shell">cd ~/Homestead
+
+git checkout release</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#22312; Homestead &#30446;&#24405;&#20013;&#25191;&#34892; <code>bash init.sh</code> &#21629;&#20196;&#20197;&#21019;&#24314; <code>Homestead.yaml</code> &#37197;&#32622;&#25991;&#20214;&#12290;<code>Homestead.yaml</code> &#25991;&#20214;&#29992;&#20110;&#37197;&#32622; Homestead &#23433;&#35013;&#30340;&#25152;&#26377;&#35774;&#32622;&#12290;&#35813;&#25991;&#20214;&#20250;&#34987;&#25918;&#32622;&#22312; Homestead &#30446;&#24405;&#20013;&#65306;</p><pre><code class="language-shell"># macOS / Linux...
+bash init.sh
+
+# Windows...
+init.bat</code></pre><h3 id="f84790b47534e86d4979c752f5904d44">&#37197;&#32622; Homestead</h3><h4 id="4ca2d57479f067b99349b16427154ec8">&#35774;&#32622;&#26381;&#21153;&#21830;</h4><p><code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#30340; <code>provider</code> &#38190;&#29992;&#20110;&#25351;&#26126;&#24212;&#20351;&#29992;&#21738;&#20010; Vagrant provider&#65306;<code>virtualbox</code> &#25110; <code>parallels</code>&#65306;</p><pre><code class="   language-php">provider: virtualbox</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159; Apple Silicon&#65292;&#21017;&#24517;&#39035;&#20351;&#29992; Parallels provider&#12290;</p>
+</blockquote><h4 id="81fc4fb2b1ddcee4e66eb1846c6fa74d">&#37197;&#32622;&#20849;&#20139;&#30446;&#24405;</h4><p><code>Homestead.yaml</code> &#25991;&#20214;&#30340; <code>folders</code> &#23646;&#24615;&#21015;&#20986;&#20102;&#20320;&#24076;&#26395;&#19982; Homestead &#29615;&#22659;&#20849;&#20139;&#30340;&#25152;&#26377;&#25991;&#20214;&#22841;&#12290;&#24403;&#36825;&#20123;&#25991;&#20214;&#22841;&#20013;&#30340;&#25991;&#20214;&#21457;&#29983;&#21464;&#26356;&#26102;&#65292;&#23427;&#20204;&#20250;&#22312;&#26412;&#22320;&#26426;&#22120;&#19982; Homestead &#34394;&#25311;&#29615;&#22659;&#20043;&#38388;&#20445;&#25345;&#21516;&#27493;&#12290;&#20320;&#21487;&#20197;&#25353;&#38656;&#37197;&#32622;&#20219;&#24847;&#25968;&#37327;&#30340;&#20849;&#20139;&#25991;&#20214;&#22841;&#65306;</p><pre><code class="language-yaml">folders:
+    - map: ~/code/project1
+      to: /home/vagrant/project1</code></pre><blockquote>
+<p>[!WARNING]<br>
+Windows &#29992;&#25143;&#19981;&#24212;&#20351;&#29992; <code>~/</code> &#36335;&#24452;&#35821;&#27861;&#65292;&#32780;&#24212;&#20351;&#29992;&#39033;&#30446;&#30340;&#23436;&#25972;&#36335;&#24452;&#65292;&#20363;&#22914; <code>C:\Users\user\Code\project1</code>&#12290;</p>
+</blockquote><p>&#20320;&#24212;&#35813;&#22987;&#32456;&#23558;&#21508;&#20010;&#24212;&#29992;&#26144;&#23556;&#21040;&#23427;&#20204;&#21508;&#33258;&#30340;&#25991;&#20214;&#22841;&#26144;&#23556;&#65292;&#32780;&#19981;&#35201;&#26144;&#23556;&#19968;&#20010;&#21253;&#21547;&#25152;&#26377;&#24212;&#29992;&#30340;&#22823;&#22411;&#21333;&#19968;&#30446;&#24405;&#12290;&#26144;&#23556;&#25991;&#20214;&#22841;&#26102;&#65292;&#34394;&#25311;&#26426;&#24517;&#39035;&#36319;&#36394;&#35813;&#25991;&#20214;&#22841;&#20013;<em>&#27599;&#19968;&#20010;</em>&#25991;&#20214;&#30340;&#20840;&#37096;&#30913;&#30424; IO&#12290;&#22914;&#26524;&#25991;&#20214;&#22841;&#20013;&#21253;&#21547;&#22823;&#37327;&#25991;&#20214;&#65292;&#24615;&#33021;&#21487;&#33021;&#20250;&#19979;&#38477;&#65306;</p><pre><code class="language-yaml">folders:
+    - map: ~/code/project1
+      to: /home/vagrant/project1
+    - map: ~/code/project2
+      to: /home/vagrant/project2</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#20351;&#29992; Homestead &#26102;&#32477;&#19981;&#33021;&#25346;&#36733; <code>.</code>&#65288;&#24403;&#21069;&#30446;&#24405;&#65289;&#12290;&#36825;&#20250;&#23548;&#33268; Vagrant &#26080;&#27861;&#23558;&#24403;&#21069;&#25991;&#20214;&#22841;&#26144;&#23556;&#21040; <code>/vagrant</code>&#65292;&#24182;&#20250;&#30772;&#22351;&#21487;&#36873;&#21151;&#33021;&#65292;&#22312;&#37197;&#32622;&#36807;&#31243;&#20013;&#20135;&#29983;&#24847;&#22806;&#32467;&#26524;&#12290;</p>
+</blockquote><p>&#35201;&#21551;&#29992; <a href="https://developer.hashicorp.com/vagrant/docs/synced-folders/nfs" target="_blank" rel="noopener noreferrer">NFS</a>&#65292;&#21487;&#20197;&#22312;&#25991;&#20214;&#22841;&#26144;&#23556;&#20013;&#28155;&#21152;&#19968;&#20010; <code>type</code> &#36873;&#39033;&#65306;</p><pre><code class="language-yaml">folders:
+    - map: ~/code/project1
+      to: /home/vagrant/project1
+      type: "nfs"</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22312; Windows &#19978;&#20351;&#29992; NFS &#26102;&#65292;&#24314;&#35758;&#23433;&#35013; <a href="https://github.com/winnfsd/vagrant-winnfsd" target="_blank" rel="noopener noreferrer">vagrant-winnfsd</a> &#25554;&#20214;&#12290;&#35813;&#25554;&#20214;&#20250;&#32500;&#25252; Homestead &#34394;&#25311;&#26426;&#20869;&#25991;&#20214;&#21644;&#30446;&#24405;&#30340;&#27491;&#30830;&#29992;&#25143; / &#32452;&#26435;&#38480;&#12290;</p>
+</blockquote><p>&#20320;&#36824;&#21487;&#20197;&#36890;&#36807;&#22312; <code>options</code> &#38190;&#19979;&#21015;&#20986;&#20219;&#24847;&#21463; Vagrant <a href="https://developer.hashicorp.com/vagrant/docs/synced-folders/basic_usage" target="_blank" rel="noopener noreferrer">Synced Folders</a> &#25903;&#25345;&#30340;&#36873;&#39033;&#26469;&#20256;&#36882;&#23427;&#20204;&#65306;</p><pre><code class="language-yaml">folders:
+    - map: ~/code/project1
+      to: /home/vagrant/project1
+      type: "rsync"
+      options:
+          rsync__args: ["--verbose", "--archive", "--delete", "-zz"]
+          rsync__exclude: ["node_modules"]</code></pre><h3 id="451e8a1b43d4b2e28cd0764e2590d2b7">&#37197;&#32622; Nginx &#31449;&#28857;</h3><p>&#19981;&#29087;&#24713; Nginx&#65311;&#27809;&#38382;&#39064;&#12290;<code>Homestead.yaml</code> &#25991;&#20214;&#30340; <code>sites</code> &#23646;&#24615;&#21487;&#20197;&#35753;&#20320;&#36731;&#26494;&#22320;&#23558;&#19968;&#20010;"&#22495;&#21517;"&#26144;&#23556;&#21040; Homestead &#29615;&#22659;&#20013;&#30340;&#19968;&#20010;&#25991;&#20214;&#22841;&#12290;<code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#24050;&#21253;&#21547;&#19968;&#20010;&#31034;&#20363;&#31449;&#28857;&#37197;&#32622;&#12290;&#21516;&#26679;&#65292;&#20320;&#21487;&#20197;&#25353;&#38656;&#21521; Homestead &#29615;&#22659;&#20013;&#28155;&#21152;&#20219;&#24847;&#25968;&#37327;&#30340;&#31449;&#28857;&#12290;Homestead &#21487;&#20197;&#20316;&#20026;&#20320;&#27491;&#22312;&#24320;&#21457;&#30340;&#27599;&#20010; Laravel &#24212;&#29992;&#30340;&#20415;&#25463;&#34394;&#25311;&#21270;&#29615;&#22659;&#65306;</p><pre><code class="language-yaml">sites:
+    - map: homestead.test
+      to: /home/vagrant/project1/public</code></pre><p>&#22914;&#26524;&#22312;&#37197;&#32622; Homestead &#34394;&#25311;&#26426;&#20043;&#21518;&#26356;&#25913;&#20102; <code>sites</code> &#23646;&#24615;&#65292;&#24212;&#35813;&#22312;&#32456;&#31471;&#20013;&#25191;&#34892; <code>vagrant reload --provision</code> &#21629;&#20196;&#20197;&#26356;&#26032;&#34394;&#25311;&#26426;&#19978;&#30340; Nginx &#37197;&#32622;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+Homestead &#33050;&#26412;&#22312;&#26500;&#24314;&#26102;&#24050;&#23613;&#21487;&#33021;&#20570;&#21040;&#24130;&#31561;&#12290;&#19981;&#36807;&#65292;&#22914;&#26524;&#22312;&#37197;&#32622;&#36807;&#31243;&#20013;&#36935;&#21040;&#38382;&#39064;&#65292;&#24212;&#35813;&#36890;&#36807;&#25191;&#34892; <code>vagrant destroy &amp;&amp; vagrant up</code> &#21629;&#20196;&#26469;&#38144;&#27585;&#24182;&#37325;&#24314;&#26426;&#22120;&#12290;</p>
+</blockquote><h4 id="f0e283198cedb1225d40d20137a45e84">&#20027;&#26426;&#21517;&#35299;&#26512;</h4><p>Homestead &#20351;&#29992; <code>mDNS</code> &#21457;&#24067;&#20027;&#26426;&#21517;&#65292;&#20197;&#23454;&#29616;&#33258;&#21160;&#20027;&#26426;&#35299;&#26512;&#12290;&#22914;&#26524;&#22312; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#35774;&#32622;&#20102; <code>hostname: homestead</code>&#65292;&#37027;&#20040;&#35813;&#20027;&#26426;&#23558;&#21487;&#20197;&#36890;&#36807; <code>homestead.local</code> &#35775;&#38382;&#12290;macOS&#12289;iOS &#21644; Linux &#26700;&#38754;&#21457;&#34892;&#29256;&#40664;&#35748;&#21253;&#21547; <code>mDNS</code> &#25903;&#25345;&#12290;&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159; Windows&#65292;&#24517;&#39035;&#23433;&#35013; <a href="https://support.apple.com/kb/DL999?viewlocale=en_US&amp;locale=en_US" target="_blank" rel="noopener noreferrer">Bonjour Print Services for Windows</a>&#12290;</p><p>&#33258;&#21160;&#20027;&#26426;&#21517;&#26368;&#36866;&#29992;&#20110; Homestead &#30340;<a href="dgy7x25vw2.html#per-project-installation" target="_blank">&#25353;&#39033;&#30446;&#23433;&#35013;</a>&#12290;&#22914;&#26524;&#22312;&#21333;&#20010; Homestead &#23454;&#20363;&#19978;&#25176;&#31649;&#22810;&#20010;&#31449;&#28857;&#65292;&#21487;&#20197;&#23558;&#31449;&#28857;&#30340;"&#22495;&#21517;"&#28155;&#21152;&#21040;&#26426;&#22120;&#19978;&#30340; <code>hosts</code> &#25991;&#20214;&#12290;&#35813; <code>hosts</code> &#25991;&#20214;&#20250;&#25226;&#23545; Homestead &#31449;&#28857;&#30340;&#35831;&#27714;&#37325;&#23450;&#21521;&#21040; Homestead &#34394;&#25311;&#26426;&#12290;&#22312; macOS &#21644; Linux &#19978;&#65292;&#35813;&#25991;&#20214;&#20301;&#20110; <code>/etc/hosts</code>&#65307;&#22312; Windows &#19978;&#65292;&#23427;&#20301;&#20110; <code>C:\Windows\System32\drivers\etc\hosts</code>&#12290;&#20320;&#28155;&#21152;&#21040;&#35813;&#25991;&#20214;&#20013;&#30340;&#20869;&#23481;&#31867;&#20284;&#20110;&#20197;&#19979;&#20869;&#23481;&#65306;</p><pre><code class="language-text">192.168.56.56  homestead.test</code></pre><p>&#30830;&#20445;&#21015;&#20986;&#30340; IP &#22320;&#22336;&#19982; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#35774;&#32622;&#30340;&#22320;&#22336;&#19968;&#33268;&#12290;&#23558;&#22495;&#21517;&#28155;&#21152;&#21040; <code>hosts</code> &#25991;&#20214;&#24182;&#21551;&#21160; Vagrant box &#21518;&#65292;&#20320;&#23601;&#21487;&#20197;&#36890;&#36807; Web &#27983;&#35272;&#22120;&#35775;&#38382;&#35813;&#31449;&#28857;&#65306;</p><pre><code class="language-shell">http://homestead.test</code></pre><h3 id="b39b9268fae08350ff19a676d0c7f514">&#37197;&#32622;&#26381;&#21153;</h3><p>Homestead &#40664;&#35748;&#20250;&#21551;&#21160;&#33509;&#24178;&#26381;&#21153;&#65307;&#19981;&#36807;&#65292;&#20320;&#21487;&#20197;&#33258;&#23450;&#20041;&#22312;&#37197;&#32622;&#36807;&#31243;&#20013;&#21551;&#29992;&#25110;&#31105;&#29992;&#21738;&#20123;&#26381;&#21153;&#12290;&#20363;&#22914;&#65292;&#21487;&#20197;&#36890;&#36807;&#20462;&#25913; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#30340; <code>services</code> &#36873;&#39033;&#26469;&#21551;&#29992; PostgreSQL &#24182;&#31105;&#29992; MySQL&#65306;</p><pre><code class="language-yaml">services:
+    - enabled:
+        - "postgresql"
+    - disabled:
+        - "mysql"</code></pre><p>&#25351;&#23450;&#30340;&#26381;&#21153;&#20250;&#26681;&#25454;&#20854;&#22312; <code>enabled</code> &#21644; <code>disabled</code> &#25351;&#20196;&#20013;&#30340;&#39034;&#24207;&#21551;&#21160;&#25110;&#20572;&#27490;&#12290;</p><h3 id="7c1c140dbb02d9fbea631f5aed3c5c81">&#21551;&#21160; Vagrant Box</h3><p>&#22312;&#25353;&#29031;&#20320;&#30340;&#21916;&#22909;&#32534;&#36753;&#22909; <code>Homestead.yaml</code> &#20043;&#21518;&#65292;&#22312; Homestead &#30446;&#24405;&#20013;&#36816;&#34892; <code>vagrant up</code> &#21629;&#20196;&#12290;Vagrant &#20250;&#21551;&#21160;&#34394;&#25311;&#26426;&#24182;&#33258;&#21160;&#37197;&#32622;&#20849;&#20139;&#25991;&#20214;&#22841;&#21644; Nginx &#31449;&#28857;&#12290;</p><p>&#35201;&#38144;&#27585;&#35813;&#26426;&#22120;&#65292;&#21487;&#20197;&#20351;&#29992; <code>vagrant destroy</code> &#21629;&#20196;&#12290;</p><h3 id="4d2f454879f26c2e03688d5e851c604e">&#25353;&#39033;&#30446;&#23433;&#35013;</h3><p>&#20320;&#21487;&#20197;&#19981;&#20026;&#25152;&#26377;&#39033;&#30446;&#20840;&#23616;&#23433;&#35013; Homestead &#24182;&#20849;&#20139;&#21516;&#19968;&#20010; Homestead &#34394;&#25311;&#26426;&#65292;&#32780;&#26159;&#20026;&#20320;&#31649;&#29702;&#30340;&#27599;&#20010;&#39033;&#30446;&#21333;&#29420;&#37197;&#32622;&#19968;&#20010; Homestead &#23454;&#20363;&#12290;&#22914;&#26524;&#27599;&#20010;&#39033;&#30446;&#37117;&#21333;&#29420;&#23433;&#35013; Homestead&#65292;&#24182;&#19988;&#38543;&#39033;&#30446;&#19968;&#36215;&#21457;&#24067;&#19968;&#20010; <code>Vagrantfile</code>&#65292;&#37027;&#20040;&#20854;&#20182;&#21442;&#19982;&#35813;&#39033;&#30446;&#30340;&#20154;&#22312;&#20811;&#38534;&#20179;&#24211;&#21518;&#21487;&#20197;&#31435;&#21363;&#25191;&#34892; <code>vagrant up</code>&#65292;&#36825;&#20250;&#24456;&#26041;&#20415;&#12290;</p><p>&#20320;&#21487;&#20197;&#20351;&#29992; Composer &#21253;&#31649;&#29702;&#22120;&#23558; Homestead &#23433;&#35013;&#21040;&#39033;&#30446;&#20013;&#65306;</p><pre><code class="language-shell">composer require laravel/homestead --dev</code></pre><p>&#23433;&#35013; Homestead &#21518;&#65292;&#35843;&#29992; Homestead &#30340; <code>make</code> &#21629;&#20196;&#20026;&#39033;&#30446;&#29983;&#25104; <code>Vagrantfile</code> &#21644; <code>Homestead.yaml</code> &#25991;&#20214;&#12290;&#36825;&#20123;&#25991;&#20214;&#20250;&#34987;&#25918;&#32622;&#22312;&#39033;&#30446;&#30340;&#26681;&#30446;&#24405;&#12290;<code>make</code> &#21629;&#20196;&#20250;&#33258;&#21160;&#37197;&#32622; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#30340; <code>sites</code> &#21644; <code>folders</code> &#25351;&#20196;&#65306;</p><pre><code class="language-shell"># macOS / Linux...
+php vendor/bin/homestead make
+
+# Windows...
+vendor\\bin\\homestead make</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#22312;&#32456;&#31471;&#20013;&#36816;&#34892; <code>vagrant up</code> &#21629;&#20196;&#65292;&#24182;&#36890;&#36807;&#27983;&#35272;&#22120;&#22312; <code>http://homestead.test</code> &#35775;&#38382;&#20320;&#30340;&#39033;&#30446;&#12290;&#35831;&#35760;&#20303;&#65292;&#22914;&#26524;&#20320;&#27809;&#26377;&#20351;&#29992;&#33258;&#21160;<a href="dgy7x25vw2.html#hostname-resolution" target="_blank">&#20027;&#26426;&#21517;&#35299;&#26512;</a>&#65292;&#20173;&#28982;&#38656;&#35201;&#20026; <code>homestead.test</code> &#25110;&#20320;&#36873;&#25321;&#30340;&#22495;&#21517;&#28155;&#21152;&#19968;&#26465; <code>/etc/hosts</code> &#25991;&#20214;&#35760;&#24405;&#12290;</p><h3 id="27cabdb0a206bc8290e859efb59a64dd">&#23433;&#35013;&#21487;&#36873;&#21151;&#33021;</h3><p>&#21487;&#36873;&#36719;&#20214;&#36890;&#36807; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#30340; <code>features</code> &#36873;&#39033;&#26469;&#23433;&#35013;&#12290;&#22823;&#22810;&#25968;&#21151;&#33021;&#21487;&#20197;&#29992;&#24067;&#23572;&#20540;&#21551;&#29992;&#25110;&#31105;&#29992;&#65292;&#32780;&#26377;&#20123;&#21151;&#33021;&#20801;&#35768;&#22810;&#31181;&#37197;&#32622;&#36873;&#39033;&#65306;</p><pre><code class="language-yaml">features:
+    - blackfire:
+        server_id: "server_id"
+        server_token: "server_value"
+        client_id: "client_id"
+        client_token: "client_value"
+    - cassandra: true
+    - chronograf: true
+    - couchdb: true
+    - crystal: true
+    - dragonflydb: true
+    - elasticsearch:
+        version: 7.9.0
+    - eventstore: true
+        version: 21.2.0
+    - flyway: true
+    - gearman: true
+    - golang: true
+    - grafana: true
+    - influxdb: true
+    - logstash: true
+    - mariadb: true
+    - meilisearch: true
+    - minio: true
+    - mongodb: true
+    - neo4j: true
+    - ohmyzsh: true
+    - openresty: true
+    - pm2: true
+    - python: true
+    - r-base: true
+    - rabbitmq: true
+    - rustc: true
+    - rvm: true
+    - solr: true
+    - timescaledb: true
+    - trader: true
+    - webdriver: true</code></pre><h4 id="45e23a169652aaf95ce80da844f3df0d">Elasticsearch</h4><p>&#20320;&#21487;&#20197;&#25351;&#23450;&#19968;&#20010;&#21463;&#25903;&#25345;&#30340; Elasticsearch &#29256;&#26412;&#65292;&#24517;&#39035;&#26159;&#31934;&#30830;&#30340;&#29256;&#26412;&#21495;&#65288;&#20027;&#29256;&#26412;.&#27425;&#29256;&#26412;.&#20462;&#35746;&#29256;&#26412;&#65289;&#12290;&#40664;&#35748;&#23433;&#35013;&#20250;&#21019;&#24314;&#19968;&#20010;&#21517;&#20026; <code>homestead</code> &#30340;&#38598;&#32676;&#12290;&#32477;&#19981;&#24212;&#35813;&#32473; Elasticsearch &#20998;&#37197;&#36229;&#36807;&#25805;&#20316;&#31995;&#32479;&#20869;&#23384;&#19968;&#21322;&#30340;&#20869;&#23384;&#65292;&#22240;&#27492;&#35831;&#30830;&#20445; Homestead &#34394;&#25311;&#26426;&#30340;&#20869;&#23384;&#33267;&#23569;&#26159; Elasticsearch &#20998;&#37197;&#37327;&#30340;&#20004;&#20493;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#35831;&#26597;&#30475; <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current" target="_blank" rel="noopener noreferrer">Elasticsearch &#25991;&#26723;</a> &#20102;&#35299;&#22914;&#20309;&#33258;&#23450;&#20041;&#20320;&#30340;&#37197;&#32622;&#12290;</p>
+</blockquote><h4 id="7f9733e208088b1ce6df3d4be1765396">MariaDB</h4><p>&#21551;&#29992; MariaDB &#20250;&#31227;&#38500; MySQL &#24182;&#23433;&#35013; MariaDB&#12290;MariaDB &#36890;&#24120;&#21487;&#20316;&#20026; MySQL &#30340;&#30452;&#25509;&#26367;&#20195;&#21697;&#65292;&#22240;&#27492;&#20320;&#20173;&#24212;&#22312;&#24212;&#29992;&#30340;&#25968;&#25454;&#24211;&#37197;&#32622;&#20013;&#20351;&#29992; <code>mysql</code> &#25968;&#25454;&#24211;&#39537;&#21160;&#12290;</p><h4 id="206e3718af092fd1d12f80cae771ccac">MongoDB</h4><p>&#40664;&#35748;&#30340; MongoDB &#23433;&#35013;&#20250;&#23558;&#25968;&#25454;&#24211;&#29992;&#25143;&#21517;&#35774;&#32622;&#20026; <code>homestead</code>&#65292;&#23545;&#24212;&#30340;&#23494;&#30721;&#35774;&#32622;&#20026; <code>secret</code>&#12290;</p><h4 id="4f16d2b1f38f316b477da6dbf0e9bc79">Neo4j</h4><p>&#40664;&#35748;&#30340; Neo4j &#23433;&#35013;&#20250;&#23558;&#25968;&#25454;&#24211;&#29992;&#25143;&#21517;&#35774;&#32622;&#20026; <code>homestead</code>&#65292;&#23545;&#24212;&#30340;&#23494;&#30721;&#35774;&#32622;&#20026; <code>secret</code>&#12290;&#35201;&#35775;&#38382; Neo4j &#27983;&#35272;&#22120;&#65292;&#35831;&#36890;&#36807; Web &#27983;&#35272;&#22120;&#35775;&#38382; <code>http://homestead.test:7474</code>&#12290;&#31471;&#21475; <code>7687</code>&#65288;Bolt&#65289;&#12289;<code>7474</code>&#65288;HTTP&#65289;&#21644; <code>7473</code>&#65288;HTTPS&#65289;&#24050;&#20934;&#22791;&#22909;&#20026;&#26469;&#33258; Neo4j &#23458;&#25143;&#31471;&#30340;&#35831;&#27714;&#25552;&#20379;&#26381;&#21153;&#12290;</p><h3 id="6dc7a717efc15adf80699301b55eb635">&#21035;&#21517;</h3><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#20462;&#25913; Homestead &#30446;&#24405;&#20013;&#30340; <code>aliases</code> &#25991;&#20214;&#26469;&#21521; Homestead &#34394;&#25311;&#26426;&#28155;&#21152; Bash &#21035;&#21517;&#65306;</p><pre><code class="language-shell">alias c='clear'
+alias ..='cd ..'</code></pre><p>&#26356;&#26032; <code>aliases</code> &#25991;&#20214;&#21518;&#65292;&#24212;&#35813;&#20351;&#29992; <code>vagrant reload --provision</code> &#21629;&#20196;&#37325;&#26032;&#37197;&#32622; Homestead &#34394;&#25311;&#26426;&#12290;&#36825;&#20250;&#30830;&#20445;&#20320;&#30340;&#26032;&#21035;&#21517;&#22312;&#26426;&#22120;&#19978;&#21487;&#29992;&#12290;</p><h2 id="4307638a97f62f41b396181afa5d86af">&#26356;&#26032; Homestead</h2><p>&#22312;&#24320;&#22987;&#26356;&#26032; Homestead &#20043;&#21069;&#65292;&#24212;&#30830;&#20445;&#22312; Homestead &#30446;&#24405;&#20013;&#36816;&#34892;&#20197;&#19979;&#21629;&#20196;&#26469;&#31227;&#38500;&#24403;&#21069;&#30340;&#34394;&#25311;&#26426;&#65306;</p><pre><code class="language-shell">vagrant destroy</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#38656;&#35201;&#26356;&#26032; Homestead &#28304;&#20195;&#30721;&#12290;&#22914;&#26524;&#20320;&#26159;&#20811;&#38534;&#20179;&#24211;&#23433;&#35013;&#30340;&#65292;&#21487;&#20197;&#22312;&#26368;&#21021;&#20811;&#38534;&#20179;&#24211;&#30340;&#20301;&#32622;&#25191;&#34892;&#20197;&#19979;&#21629;&#20196;&#65306;</p><pre><code class="language-shell">git fetch
+
+git pull origin release</code></pre><p>&#36825;&#20123;&#21629;&#20196;&#20250;&#20174; GitHub &#20179;&#24211;&#25289;&#21462;&#26368;&#26032;&#30340; Homestead &#20195;&#30721;&#12289;&#33719;&#21462;&#26368;&#26032;&#30340;&#26631;&#31614;&#65292;&#28982;&#21518;&#20999;&#25442;&#21040;&#26368;&#26032;&#30340;&#24102;&#26631;&#31614;&#21457;&#24067;&#29256;&#26412;&#12290;&#20320;&#21487;&#20197;&#22312; Homestead &#30340; <a href="https://github.com/laravel/homestead/releases" target="_blank" rel="noopener noreferrer">GitHub releases &#39029;&#38754;</a> &#25214;&#21040;&#26368;&#26032;&#30340;&#31283;&#23450;&#21457;&#24067;&#29256;&#26412;&#12290;</p><p>&#22914;&#26524;&#20320;&#26159;&#36890;&#36807;&#39033;&#30446;&#30340; <code>composer.json</code> &#25991;&#20214;&#23433;&#35013;&#30340; Homestead&#65292;&#24212;&#30830;&#20445; <code>composer.json</code> &#25991;&#20214;&#20013;&#21253;&#21547; <code>"laravel/homestead": "^12"</code> &#24182;&#26356;&#26032;&#20381;&#36182;&#65306;</p><pre><code class="language-shell">composer update</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#24212;&#35813;&#20351;&#29992; <code>vagrant box update</code> &#21629;&#20196;&#26356;&#26032; Vagrant box&#65306;</p><pre><code class="language-shell">vagrant box update</code></pre><p>&#26356;&#26032; Vagrant box &#21518;&#65292;&#24212;&#35813;&#22312; Homestead &#30446;&#24405;&#20013;&#36816;&#34892; <code>bash init.sh</code> &#21629;&#20196;&#20197;&#26356;&#26032; Homestead &#30340;&#20854;&#20182;&#37197;&#32622;&#25991;&#20214;&#12290;&#31995;&#32479;&#20250;&#35810;&#38382;&#20320;&#26159;&#21542;&#35201;&#35206;&#30422;&#29616;&#26377;&#30340; <code>Homestead.yaml</code>&#12289;<code>after.sh</code> &#21644; <code>aliases</code> &#25991;&#20214;&#65306;</p><pre><code class="language-shell"># macOS / Linux...
+bash init.sh
+
+# Windows...
+init.bat</code></pre><p>&#26368;&#21518;&#65292;&#38656;&#35201;&#37325;&#26032;&#29983;&#25104; Homestead &#34394;&#25311;&#26426;&#20197;&#20351;&#29992;&#26368;&#26032;&#30340; Vagrant &#23433;&#35013;&#65306;</p><pre><code class="language-shell">vagrant up</code></pre><h2 id="f3b9a019aedd265c26adfc2ca927eeee">&#26085;&#24120;&#20351;&#29992;</h2><h3 id="ac7989ca5dcb2481bf1065a955f7aaaa">&#36890;&#36807; SSH &#36830;&#25509;</h3><p>&#20320;&#21487;&#20197;&#22312; Homestead &#30446;&#24405;&#20013;&#25191;&#34892; <code>vagrant ssh</code> &#32456;&#31471;&#21629;&#20196;&#65292;&#36890;&#36807; SSH &#36827;&#20837;&#20320;&#30340;&#34394;&#25311;&#26426;&#12290;</p><h3 id="9d0706b0a5e99664bedd34a572576ff0">&#28155;&#21152;&#39069;&#22806;&#31449;&#28857;</h3><p>&#19968;&#26086;&#20320;&#30340; Homestead &#29615;&#22659;&#37197;&#32622;&#23436;&#25104;&#24182;&#36816;&#34892;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20026;&#20854;&#20182; Laravel &#39033;&#30446;&#28155;&#21152;&#39069;&#22806;&#30340; Nginx &#31449;&#28857;&#12290;&#20320;&#21487;&#20197;&#22312;&#21333;&#20010; Homestead &#29615;&#22659;&#20013;&#36816;&#34892;&#20219;&#24847;&#25968;&#37327;&#30340; Laravel &#39033;&#30446;&#12290;&#35201;&#28155;&#21152;&#39069;&#22806;&#31449;&#28857;&#65292;&#35831;&#23558;&#31449;&#28857;&#28155;&#21152;&#21040; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#12290;</p><pre><code class="language-yaml">sites:
+    - map: homestead.test
+      to: /home/vagrant/project1/public
+    - map: another.test
+      to: /home/vagrant/project2/public</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22312;&#28155;&#21152;&#31449;&#28857;&#20043;&#21069;&#65292;&#24212;&#30830;&#20445;&#24050;&#20026;&#35813;&#39033;&#30446;&#30340;&#30446;&#24405;&#37197;&#32622;&#20102;<a href="dgy7x25vw2.html#configuring-shared-folders" target="_blank">&#25991;&#20214;&#22841;&#26144;&#23556;</a>&#12290;</p>
+</blockquote><p>&#22914;&#26524; Vagrant &#27809;&#26377;&#33258;&#21160;&#31649;&#29702;&#20320;&#30340; <code>hosts</code> &#25991;&#20214;&#65292;&#20320;&#21487;&#33021;&#36824;&#38656;&#35201;&#23558;&#26032;&#31449;&#28857;&#28155;&#21152;&#21040;&#35813;&#25991;&#20214;&#20013;&#12290;&#22312; macOS &#21644; Linux &#19978;&#65292;&#35813;&#25991;&#20214;&#20301;&#20110; <code>/etc/hosts</code>&#65307;&#22312; Windows &#19978;&#65292;&#23427;&#20301;&#20110; <code>C:\Windows\System32\drivers\etc\hosts</code>&#65306;</p><pre><code class="language-text">192.168.56.56  homestead.test
+192.168.56.56  another.test</code></pre><p>&#28155;&#21152;&#31449;&#28857;&#21518;&#65292;&#22312; Homestead &#30446;&#24405;&#20013;&#25191;&#34892; <code>vagrant reload --provision</code> &#32456;&#31471;&#21629;&#20196;&#12290;</p><h4 id="8681e13d3e4bc5ec8862defd2963ba5e">&#31449;&#28857;&#31867;&#22411;</h4><p>Homestead &#25903;&#25345;&#22810;&#31181;"&#31867;&#22411;"&#30340;&#31449;&#28857;&#65292;&#35753;&#20320;&#21487;&#20197;&#36731;&#26494;&#36816;&#34892;&#38750;&#22522;&#20110; Laravel &#30340;&#39033;&#30446;&#12290;&#20363;&#22914;&#65292;&#25105;&#20204;&#21487;&#20197;&#20351;&#29992; <code>statamic</code> &#31449;&#28857;&#31867;&#22411;&#36731;&#26494;&#22320;&#21521; Homestead &#28155;&#21152;&#19968;&#20010; Statamic &#24212;&#29992;&#65306;</p><pre><code class="language-yaml">sites:
+    - map: statamic.test
+      to: /home/vagrant/my-symfony-project/web
+      type: "statamic"</code></pre><p>&#21487;&#29992;&#30340;&#31449;&#28857;&#31867;&#22411;&#26377;&#65306;<code>apache</code>&#12289;<code>apache-proxy</code>&#12289;<code>apigility</code>&#12289;<code>expressive</code>&#12289;<code>laravel</code>&#65288;&#40664;&#35748;&#65289;&#12289;<code>proxy</code>&#65288;&#29992;&#20110; nginx&#65289;&#12289;<code>silverstripe</code>&#12289;<code>statamic</code>&#12289;<code>symfony2</code>&#12289;<code>symfony4</code> &#21644; <code>zf</code>&#12290;</p><h4 id="f81a43d252e6b2ebcc9ea44ec148f7e3">&#31449;&#28857;&#21442;&#25968;</h4><p>&#20320;&#21487;&#20197;&#36890;&#36807; <code>params</code> &#31449;&#28857;&#25351;&#20196;&#20026;&#31449;&#28857;&#28155;&#21152;&#39069;&#22806;&#30340; Nginx <code>fastcgi_param</code> &#20540;&#65306;</p><pre><code class="language-yaml">sites:
+    - map: homestead.test
+      to: /home/vagrant/project1/public
+      params:
+          - key: FOO
+            value: BAR</code></pre><h3 id="3867e350ebb33a487c4ac5f7787e1c29">&#29615;&#22659;&#21464;&#37327;</h3><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#23558;&#20840;&#23616;&#29615;&#22659;&#21464;&#37327;&#28155;&#21152;&#21040; <code>Homestead.yaml</code> &#25991;&#20214;&#26469;&#23450;&#20041;&#23427;&#20204;&#65306;</p><pre><code class="language-yaml">variables:
+    - key: APP_ENV
+      value: local
+    - key: FOO
+      value: bar</code></pre><p>&#26356;&#26032; <code>Homestead.yaml</code> &#25991;&#20214;&#21518;&#65292;&#21153;&#24517;&#36890;&#36807;&#25191;&#34892; <code>vagrant reload --provision</code> &#21629;&#20196;&#37325;&#26032;&#37197;&#32622;&#26426;&#22120;&#12290;&#36825;&#20250;&#26356;&#26032;&#25152;&#26377;&#24050;&#23433;&#35013; PHP &#29256;&#26412;&#30340; PHP-FPM &#37197;&#32622;&#65292;&#24182;&#26356;&#26032; <code>vagrant</code> &#29992;&#25143;&#30340;&#29615;&#22659;&#12290;</p><h3 id="c76cfefe72716629558a5cc0148355b0">&#31471;&#21475;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#20197;&#19979;&#31471;&#21475;&#20250;&#34987;&#36716;&#21457;&#21040;&#20320;&#30340; Homestead &#29615;&#22659;&#65306;</p><div class="content-list">
+<ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;"><strong class="mk-p">HTTP&#65306;</strong> 8000 &rarr; Forwards To 80</li>
+<li style="list-style-type: disc;"><strong class="mk-g">HTTPS&#65306;</strong> 44300 &rarr; Forwards To 443</li>
+</ul>
+</div><h4 id="a415ead87ee547b1ab8d554d469ff5ea">&#36716;&#21457;&#39069;&#22806;&#31471;&#21475;</h4><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#36890;&#36807;&#22312; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#23450;&#20041; <code>ports</code> &#37197;&#32622;&#39033;&#26469;&#23558;&#39069;&#22806;&#31471;&#21475;&#36716;&#21457;&#21040; Vagrant box&#12290;&#26356;&#26032; <code>Homestead.yaml</code> &#25991;&#20214;&#21518;&#65292;&#21153;&#24517;&#25191;&#34892; <code>vagrant reload --provision</code> &#21629;&#20196;&#37325;&#26032;&#37197;&#32622;&#26426;&#22120;&#65306;</p><pre><code class="language-yaml">ports:
+    - send: 50000
+      to: 5000
+    - send: 7777
+      to: 777
+      protocol: udp</code></pre><p>&#20197;&#19979;&#26159;&#20320;&#21487;&#33021;&#38656;&#35201;&#20174;&#23487;&#20027;&#26426;&#26144;&#23556;&#21040; Vagrant box &#30340;&#39069;&#22806; Homestead &#26381;&#21153;&#31471;&#21475;&#21015;&#34920;&#65306;</p><div class="content-list">
+<ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;"><strong class="mk-g">SSH&#65306;</strong> 2222 &rarr; To 22</li>
+<li style="list-style-type: disc;"><strong class="mk-y">ngrok UI&#65306;</strong> 4040 &rarr; To 4040</li>
+<li style="list-style-type: disc;"><strong class="mk-b">MySQL&#65306;</strong> 33060 &rarr; To 3306</li>
+<li style="list-style-type: disc;"><strong class="mk-g">PostgreSQL&#65306;</strong> 54320 &rarr; To 5432</li>
+<li style="list-style-type: disc;"><strong class="mk-y">MongoDB&#65306;</strong> 27017 &rarr; To 27017</li>
+<li style="list-style-type: disc;"><strong class="mk-b">Mailpit&#65306;</strong> 8025 &rarr; To 8025</li>
+<li style="list-style-type: disc;"><strong class="mk-g">Minio&#65306;</strong> 9600 &rarr; To 9600</li>
+</ul>
+</div><h3 id="1f5acb3ba7b228dfccd69c98857206d2">PHP &#29256;&#26412;</h3><p>Homestead &#25903;&#25345;&#22312;&#21516;&#19968;&#34394;&#25311;&#26426;&#19978;&#36816;&#34892;&#22810;&#20010; PHP &#29256;&#26412;&#12290;&#20320;&#21487;&#20197;&#22312; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#25351;&#23450;&#26576;&#20010;&#31449;&#28857;&#20351;&#29992;&#30340; PHP &#29256;&#26412;&#12290;&#21487;&#29992;&#30340; PHP &#29256;&#26412;&#26377;&#65306;"5.6"&#12289;"7.0"&#12289;"7.1"&#12289;"7.2"&#12289;"7.3"&#12289;"7.4"&#12289;"8.0"&#12289;"8.1"&#12289;"8.2" &#21644; "8.3"&#65288;&#40664;&#35748;&#65289;&#65306;</p><pre><code class="language-yaml">sites:
+    - map: homestead.test
+      to: /home/vagrant/project1/public
+      php: "7.1"</code></pre><p><a href="dgy7x25vw2.html#connecting-via-ssh" target="_blank">&#22312;&#20320;&#30340; Homestead &#34394;&#25311;&#26426;&#20869;</a>&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; CLI &#20351;&#29992;&#20219;&#24847;&#21463;&#25903;&#25345;&#30340; PHP &#29256;&#26412;&#65306;</p><pre><code class="language-shell">php5.6 artisan list
+php7.0 artisan list
+php7.1 artisan list
+php7.2 artisan list
+php7.3 artisan list
+php7.4 artisan list
+php8.0 artisan list
+php8.1 artisan list
+php8.2 artisan list
+php8.3 artisan list</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312; Homestead &#34394;&#25311;&#26426;&#20869;&#25191;&#34892;&#20197;&#19979;&#21629;&#20196;&#26469;&#26356;&#25913; CLI &#20351;&#29992;&#30340;&#40664;&#35748; PHP &#29256;&#26412;&#65306;</p><pre><code class="language-shell">php56
+php70
+php71
+php72
+php73
+php74
+php80
+php81
+php82
+php83</code></pre><h3 id="a29c5a85488d9bafd38b1b83199220f6">&#36830;&#25509;&#25968;&#25454;&#24211;</h3><p>&#24320;&#31665;&#21363;&#29992;&#30340;&#24773;&#20917;&#19979;&#65292;MySQL &#21644; PostgreSQL &#37117;&#37197;&#32622;&#20102;&#19968;&#20010;&#21517;&#20026; <code>homestead</code> &#30340;&#25968;&#25454;&#24211;&#12290;&#35201;&#20174;&#23487;&#20027;&#26426;&#30340;&#25968;&#25454;&#24211;&#23458;&#25143;&#31471;&#36830;&#25509;&#21040; MySQL &#25110; PostgreSQL &#25968;&#25454;&#24211;&#65292;&#20320;&#24212;&#35813;&#36830;&#25509;&#21040; <code>127.0.0.1</code> &#30340; <code>33060</code>&#65288;MySQL&#65289;&#25110; <code>54320</code>&#65288;PostgreSQL&#65289;&#31471;&#21475;&#12290;&#20004;&#20010;&#25968;&#25454;&#24211;&#30340;&#29992;&#25143;&#21517;&#21644;&#23494;&#30721;&#37117;&#26159; <code>homestead</code> / <code>secret</code>&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#21482;&#26377;&#22312;&#20174;&#23487;&#20027;&#26426;&#36830;&#25509;&#25968;&#25454;&#24211;&#26102;&#25165;&#24212;&#20351;&#29992;&#36825;&#20123;&#38750;&#26631;&#20934;&#31471;&#21475;&#12290;&#22312; Laravel &#24212;&#29992;&#30340; <code>database</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#65292;&#24212;&#20351;&#29992;&#40664;&#35748;&#30340; 3306 &#21644; 5432 &#31471;&#21475;&#65292;&#22240;&#20026; Laravel &#36816;&#34892;&#22312;&#34394;&#25311;&#26426;<em>&#20869;&#37096;</em>&#12290;</p>
+</blockquote><h3 id="62d8f8c4de6653027070b3f934e3ff23">&#25968;&#25454;&#24211;&#22791;&#20221;</h3><p>&#24403; Homestead &#34394;&#25311;&#26426;&#34987;&#38144;&#27585;&#26102;&#65292;Homestead &#21487;&#20197;&#33258;&#21160;&#22791;&#20221;&#20320;&#30340;&#25968;&#25454;&#24211;&#12290;&#35201;&#20351;&#29992;&#27492;&#21151;&#33021;&#65292;&#24517;&#39035;&#20351;&#29992; Vagrant 2.1.0 &#25110;&#26356;&#39640;&#29256;&#26412;&#12290;&#25110;&#32773;&#65292;&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159;&#36739;&#26087;&#30340; Vagrant &#29256;&#26412;&#65292;&#24517;&#39035;&#23433;&#35013; <code>vagrant-triggers</code> &#25554;&#20214;&#12290;&#35201;&#21551;&#29992;&#33258;&#21160;&#25968;&#25454;&#24211;&#22791;&#20221;&#65292;&#35831;&#22312; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#28155;&#21152;&#20197;&#19979;&#34892;&#65306;</p><pre><code class="language-yaml">backup: true</code></pre><p>&#37197;&#32622;&#23436;&#25104;&#21518;&#65292;&#24403;&#25191;&#34892; <code>vagrant destroy</code> &#21629;&#20196;&#26102;&#65292;Homestead &#20250;&#23558;&#25968;&#25454;&#24211;&#23548;&#20986;&#21040; <code>.backup/mysql_backup</code> &#21644; <code>.backup/postgres_backup</code> &#30446;&#24405;&#12290;&#36825;&#20123;&#30446;&#24405;&#21487;&#20197;&#22312;&#20320;&#23433;&#35013; Homestead &#30340;&#25991;&#20214;&#22841;&#20013;&#25214;&#21040;&#65292;&#25110;&#32773;&#22312;&#20351;&#29992;<a href="dgy7x25vw2.html#per-project-installation" target="_blank">&#25353;&#39033;&#30446;&#23433;&#35013;</a>&#26041;&#24335;&#26102;&#20301;&#20110;&#39033;&#30446;&#30340;&#26681;&#30446;&#24405;&#12290;</p><h3 id="eff4c14b5c88fed3652266f734101aa2">&#37197;&#32622; Cron &#35745;&#21010;&#20219;&#21153;</h3><p>Laravel &#25552;&#20379;&#20102;&#19968;&#31181;&#20415;&#25463;&#30340;&#26041;&#24335;&#26469;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/scheduling" target="_blank">&#35843;&#24230; cron &#20219;&#21153;</a>&#65292;&#21482;&#38656;&#35843;&#24230;&#19968;&#20010;&#27599;&#20998;&#38047;&#36816;&#34892;&#19968;&#27425;&#30340; <code>schedule:run</code> Artisan &#21629;&#20196;&#12290;&#35813; <code>schedule:run</code> &#21629;&#20196;&#20250;&#26816;&#26597; <code>routes/console.php</code> &#25991;&#20214;&#20013;&#23450;&#20041;&#30340;&#20219;&#21153;&#35843;&#24230;&#65292;&#20197;&#30830;&#23450;&#35201;&#36816;&#34892;&#21738;&#20123;&#35745;&#21010;&#20219;&#21153;&#12290;</p><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#20026;&#26576;&#20010; Homestead &#31449;&#28857;&#36816;&#34892; <code>schedule:run</code> &#21629;&#20196;&#65292;&#21487;&#20197;&#22312;&#23450;&#20041;&#35813;&#31449;&#28857;&#26102;&#23558; <code>schedule</code> &#36873;&#39033;&#35774;&#20026; <code>true</code>&#65306;</p><pre><code class="language-yaml">sites:
+    - map: homestead.test
+      to: /home/vagrant/project1/public
+      schedule: true</code></pre><p>&#35813;&#31449;&#28857;&#30340; cron &#20219;&#21153;&#23558;&#23450;&#20041;&#22312; Homestead &#34394;&#25311;&#26426;&#30340; <code>/etc/cron.d</code> &#30446;&#24405;&#20013;&#12290;</p><h3 id="17078ef8936ee931c68647dc9ca11b1f">&#37197;&#32622; Mailpit</h3><p><a href="https://github.com/axllent/mailpit" target="_blank" rel="noopener noreferrer">Mailpit</a> &#35753;&#20320;&#21487;&#20197;&#25318;&#25130;&#22806;&#21457;&#30340;&#30005;&#23376;&#37038;&#20214;&#24182;&#26816;&#26597;&#23427;&#65292;&#32780;&#26080;&#38656;&#30495;&#27491;&#23558;&#37038;&#20214;&#21457;&#36865;&#32473;&#25910;&#20214;&#20154;&#12290;&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#35831;&#26356;&#26032;&#24212;&#29992;&#30340; <code>.env</code> &#25991;&#20214;&#20197;&#20351;&#29992;&#20197;&#19979;&#37038;&#20214;&#35774;&#32622;&#65306;</p><pre><code class="language-ini">MAIL_MAILER=smtp
+MAIL_HOST=localhost
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null</code></pre><p>&#37197;&#32622;&#22909; Mailpit &#21518;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; <code>http://localhost:8025</code> &#35775;&#38382; Mailpit &#20202;&#34920;&#30424;&#12290;</p><h3 id="5a8c2fe141f44e38e3498d8cb2cd1210">&#37197;&#32622; Minio</h3><p><a href="https://github.com/minio/minio" target="_blank" rel="noopener noreferrer">Minio</a> &#26159;&#19968;&#20010;&#24320;&#28304;&#30340;&#23545;&#35937;&#23384;&#20648;&#26381;&#21153;&#22120;&#65292;&#25552;&#20379;&#19982; Amazon S3 &#20860;&#23481;&#30340; API&#12290;&#35201;&#23433;&#35013; Minio&#65292;&#35831;&#22312; <code>Homestead.yaml</code> &#25991;&#20214;&#30340; <a href="dgy7x25vw2.html#installing-optional-features" target="_blank">features</a> &#37096;&#20998;&#28155;&#21152;&#20197;&#19979;&#37197;&#32622;&#36873;&#39033;&#65306;</p><pre><code class="   language-php">minio: true</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Minio &#22312;&#31471;&#21475; 9600 &#19978;&#21487;&#29992;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#35775;&#38382; <code>http://localhost:9600</code> &#26469;&#35775;&#38382; Minio &#25511;&#21046;&#38754;&#26495;&#12290;&#40664;&#35748;&#35775;&#38382;&#23494;&#38053;&#20026; <code>homestead</code>&#65292;&#40664;&#35748;&#31192;&#23494;&#23494;&#38053;&#20026; <code>secretkey</code>&#12290;&#35775;&#38382; Minio &#26102;&#65292;&#24212;&#22987;&#32456;&#20351;&#29992; <code>us-east-1</code> &#21306;&#22495;&#12290;</p><p>&#35201;&#20351;&#29992; Minio&#65292;&#35831;&#30830;&#20445; <code>.env</code> &#25991;&#20214;&#21253;&#21547;&#20197;&#19979;&#36873;&#39033;&#65306;</p><pre><code class="language-ini">AWS_USE_PATH_STYLE_ENDPOINT=true
+AWS_ENDPOINT=http://localhost:9600
+AWS_ACCESS_KEY_ID=homestead
+AWS_SECRET_ACCESS_KEY=secretkey
+AWS_DEFAULT_REGION=us-east-1</code></pre><p>&#35201;&#37197;&#32622;&#30001; Minio &#25552;&#20379;&#25903;&#25345;&#30340;"S3"&#23384;&#20648;&#26742;&#65292;&#35831;&#22312; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#28155;&#21152; <code>buckets</code> &#25351;&#20196;&#12290;&#23450;&#20041;&#22909;&#23384;&#20648;&#26742;&#21518;&#65292;&#24212;&#35813;&#22312;&#32456;&#31471;&#25191;&#34892; <code>vagrant reload --provision</code> &#21629;&#20196;&#65306;</p><pre><code class="language-yaml">buckets:
+    - name: your-bucket
+      policy: public
+    - name: your-private-bucket
+      policy: none</code></pre><p>&#21463;&#25903;&#25345;&#30340; <code>policy</code> &#20540;&#21253;&#25324;&#65306;<code>none</code>&#12289;<code>download</code>&#12289;<code>upload</code> &#21644; <code>public</code>&#12290;</p><h3 id="97418f775c5c2676e88bb969556d8a30">Laravel Dusk</h3><p>&#35201;&#22312; Homestead &#20013;&#36816;&#34892; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/dusk" target="_blank">Laravel Dusk</a> &#27979;&#35797;&#65292;&#24212;&#35813;&#22312; Homestead &#37197;&#32622;&#20013;&#21551;&#29992; <a href="dgy7x25vw2.html#installing-optional-features" target="_blank">webdriver &#21151;&#33021;</a>&#65306;</p><pre><code class="language-yaml">features:
+    - webdriver: true</code></pre><p>&#21551;&#29992; <code>webdriver</code> &#21151;&#33021;&#21518;&#65292;&#24212;&#35813;&#22312;&#32456;&#31471;&#25191;&#34892; <code>vagrant reload --provision</code> &#21629;&#20196;&#12290;</p><h3 id="8c7b792b0a18b27d6f8dddc35ab0d002">&#20849;&#20139;&#20320;&#30340;&#29615;&#22659;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#19982;&#21516;&#20107;&#25110;&#23458;&#25143;&#20998;&#20139;&#20320;&#24403;&#21069;&#30340;&#24037;&#20316;&#20869;&#23481;&#12290;Vagrant &#36890;&#36807; <code>vagrant share</code> &#21629;&#20196;&#20869;&#32622;&#20102;&#23545;&#36825;&#19968;&#21151;&#33021;&#30340;&#25903;&#25345;&#65307;&#19981;&#36807;&#65292;&#22914;&#26524;&#20320;&#30340; <code>Homestead.yaml</code> &#25991;&#20214;&#20013;&#37197;&#32622;&#20102;&#22810;&#20010;&#31449;&#28857;&#65292;&#35813;&#21629;&#20196;&#23558;&#26080;&#27861;&#24037;&#20316;&#12290;</p><p>&#20026;&#20102;&#35299;&#20915;&#36825;&#20010;&#38382;&#39064;&#65292;Homestead &#33258;&#24102;&#19968;&#20010; <code>share</code> &#21629;&#20196;&#12290;&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#35831;&#36890;&#36807; <code>vagrant ssh</code> <a href="dgy7x25vw2.html#connecting-via-ssh" target="_blank">SSH &#36827;&#20837;&#20320;&#30340; Homestead &#34394;&#25311;&#26426;</a> &#24182;&#25191;&#34892; <code>share homestead.test</code> &#21629;&#20196;&#12290;&#35813;&#21629;&#20196;&#20250;&#20998;&#20139;&#20320; <code>Homestead.yaml</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#21517;&#20026; <code>homestead.test</code> &#30340;&#31449;&#28857;&#12290;&#20320;&#21487;&#20197;&#23558; <code>homestead.test</code> &#26367;&#25442;&#20026;&#20219;&#20309;&#20854;&#20182;&#24050;&#37197;&#32622;&#30340;&#31449;&#28857;&#65306;</p><pre><code class="language-shell">share homestead.test</code></pre><p>&#36816;&#34892;&#35813;&#21629;&#20196;&#21518;&#65292;&#20320;&#20250;&#30475;&#21040;&#19968;&#20010; Ngrok &#23631;&#24149;&#20986;&#29616;&#65292;&#20854;&#20013;&#21253;&#21547;&#27963;&#21160;&#26085;&#24535;&#20197;&#21450;&#35813;&#20849;&#20139;&#31449;&#28857;&#30340;&#20844;&#24320;&#21487;&#35775;&#38382; URL&#12290;&#22914;&#26524;&#35201;&#25351;&#23450;&#33258;&#23450;&#20041;&#21306;&#22495;&#12289;&#23376;&#22495;&#21517;&#25110;&#20854;&#20182; Ngrok &#36816;&#34892;&#26102;&#36873;&#39033;&#65292;&#21487;&#20197;&#23558;&#23427;&#20204;&#28155;&#21152;&#21040; <code>share</code> &#21629;&#20196;&#20013;&#65306;</p><pre><code class="language-shell">share homestead.test -region=eu -subdomain=laravel</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#29992; HTTPS &#32780;&#19981;&#26159; HTTP &#20998;&#20139;&#20869;&#23481;&#65292;&#21487;&#20197;&#20351;&#29992; <code>sshare</code> &#21629;&#20196;&#20195;&#26367; <code>share</code> &#26469;&#21551;&#29992;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#35831;&#35760;&#20303;&#65292;Vagrant &#26412;&#36136;&#19978;&#26159;&#19981;&#23433;&#20840;&#30340;&#65292;&#36816;&#34892; <code>share</code> &#21629;&#20196;&#26102;&#20250;&#23558;&#20320;&#30340;&#34394;&#25311;&#26426;&#26292;&#38706;&#21040;&#20114;&#32852;&#32593;&#19978;&#12290;</p>
+</blockquote><h2 id="72425038478d357f7310aec89f973d4b">&#35843;&#35797;&#19982;&#24615;&#33021;&#20998;&#26512;</h2><h3 id="4e91fb111af014b23b733cba3bd9145e">&#20351;&#29992; Xdebug &#35843;&#35797; Web &#35831;&#27714;</h3><p>Homestead &#21253;&#21547;&#23545;&#20351;&#29992; <a href="https://xdebug.org" target="_blank" rel="noopener noreferrer">Xdebug</a> &#36827;&#34892;&#21333;&#27493;&#35843;&#35797;&#30340;&#25903;&#25345;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#22312;&#27983;&#35272;&#22120;&#20013;&#35775;&#38382;&#19968;&#20010;&#39029;&#38754;&#65292;PHP &#20250;&#36830;&#25509;&#21040;&#20320;&#30340; IDE&#65292;&#20197;&#20415;&#26816;&#26597;&#21644;&#20462;&#25913;&#27491;&#22312;&#36816;&#34892;&#30340;&#20195;&#30721;&#12290;</p><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Xdebug &#24050;&#32463;&#22312;&#36816;&#34892;&#24182;&#20934;&#22791;&#25509;&#21463;&#36830;&#25509;&#12290;&#22914;&#26524;&#38656;&#35201;&#22312; CLI &#19978;&#21551;&#29992; Xdebug&#65292;&#35831;&#22312; Homestead &#34394;&#25311;&#26426;&#20869;&#25191;&#34892; <code>sudo phpenmod xdebug</code> &#21629;&#20196;&#12290;&#25509;&#19979;&#26469;&#65292;&#25353;&#29031;&#20320;&#30340; IDE &#30340;&#35828;&#26126;&#21551;&#29992;&#35843;&#35797;&#12290;&#26368;&#21518;&#65292;&#23558;&#27983;&#35272;&#22120;&#37197;&#32622;&#20026;&#36890;&#36807;&#25193;&#23637;&#25110; <a href="https://www.jetbrains.com/phpstorm/marklets/" target="_blank" rel="noopener noreferrer">bookmarklet</a> &#35302;&#21457; Xdebug&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+Xdebug &#20250;&#23548;&#33268; PHP &#36816;&#34892;&#36895;&#24230;&#26174;&#33879;&#21464;&#24930;&#12290;&#35201;&#31105;&#29992; Xdebug&#65292;&#35831;&#22312; Homestead &#34394;&#25311;&#26426;&#20869;&#36816;&#34892; <code>sudo phpdismod xdebug</code> &#24182;&#37325;&#21551; FPM &#26381;&#21153;&#12290;</p>
+</blockquote><h4 id="326b33c3005aab93ab043eea192f9cc8">&#33258;&#21160;&#21551;&#21160; Xdebug</h4><p>&#22312;&#35843;&#35797;&#21521; Web &#26381;&#21153;&#22120;&#21457;&#36215;&#35831;&#27714;&#30340;&#21151;&#33021;&#27979;&#35797;&#26102;&#65292;&#33258;&#21160;&#21551;&#21160;&#35843;&#35797;&#27604;&#20462;&#25913;&#27979;&#35797;&#20197;&#20256;&#36882;&#33258;&#23450;&#20041; Header &#25110; Cookie &#26469;&#35302;&#21457;&#35843;&#35797;&#26356;&#26041;&#20415;&#12290;&#35201;&#24378;&#21046; Xdebug &#33258;&#21160;&#21551;&#21160;&#65292;&#35831;&#20462;&#25913; Homestead &#34394;&#25311;&#26426;&#20869;&#30340; <code>/etc/php/7.x/fpm/conf.d/20-xdebug.ini</code> &#25991;&#20214;&#65292;&#24182;&#28155;&#21152;&#20197;&#19979;&#37197;&#32622;&#65306;</p><pre><code class="language-ini">; &#22914;&#26524; Homestead.yaml &#20013;&#30340; IP &#22320;&#22336;&#21253;&#21547;&#19981;&#21516;&#30340;&#23376;&#32593;&#65292;&#27492;&#22320;&#22336;&#21487;&#33021;&#20250;&#19981;&#21516;...
+xdebug.client_host = 192.168.10.1
+xdebug.mode = debug
+xdebug.start_with_request = yes</code></pre><h3 id="8da9637b16b699b30b32d39ac28ca32d">&#35843;&#35797; CLI &#24212;&#29992;</h3><p>&#35201;&#35843;&#35797; PHP CLI &#24212;&#29992;&#65292;&#35831;&#20351;&#29992; Homestead &#34394;&#25311;&#26426;&#20869;&#30340; <code>xphp</code> shell &#21035;&#21517;&#65306;</p><pre><code class="language-shell">xphp /path/to/script</code></pre><h3 id="7e2ac9bbc7b44afe1c5910135fd57ac8">&#20351;&#29992; Blackfire &#20998;&#26512;&#24212;&#29992;&#24615;&#33021;</h3><p><a href="https://blackfire.io/docs/introduction" target="_blank" rel="noopener noreferrer">Blackfire</a> &#26159;&#19968;&#39033;&#29992;&#20110;&#20998;&#26512; Web &#35831;&#27714;&#21644; CLI &#24212;&#29992;&#30340;&#26381;&#21153;&#12290;&#23427;&#25552;&#20379;&#20132;&#20114;&#24335;&#29992;&#25143;&#30028;&#38754;&#65292;&#20197;&#35843;&#29992;&#22270;&#21644;&#26102;&#38388;&#32447;&#30340;&#24418;&#24335;&#23637;&#31034;&#20998;&#26512;&#25968;&#25454;&#12290;&#23427;&#19987;&#20026;&#24320;&#21457;&#12289;&#39044;&#21457;&#24067;&#21644;&#29983;&#20135;&#29615;&#22659;&#26500;&#24314;&#65292;&#23545;&#26368;&#32456;&#29992;&#25143;&#27809;&#26377;&#24320;&#38144;&#12290;&#27492;&#22806;&#65292;Blackfire &#36824;&#20250;&#23545;&#20195;&#30721;&#21644; <code>php.ini</code> &#37197;&#32622;&#35774;&#32622;&#25191;&#34892;&#24615;&#33021;&#12289;&#36136;&#37327;&#21644;&#23433;&#20840;&#26816;&#26597;&#12290;</p><p><a href="https://blackfire.io/docs/player/index" target="_blank" rel="noopener noreferrer">Blackfire Player</a> &#26159;&#19968;&#20010;&#24320;&#28304;&#30340; Web &#29228;&#21462;&#12289;Web &#27979;&#35797;&#21644; Web &#25235;&#21462;&#24212;&#29992;&#65292;&#23427;&#21487;&#20197;&#19982; Blackfire &#21327;&#21516;&#24037;&#20316;&#65292;&#20197;&#33050;&#26412;&#21270;&#20998;&#26512;&#22330;&#26223;&#12290;</p><p>&#35201;&#21551;&#29992; Blackfire&#65292;&#35831;&#22312; Homestead &#37197;&#32622;&#25991;&#20214;&#20013;&#20351;&#29992; <code>features</code> &#35774;&#32622;&#65306;</p><pre><code class="language-yaml">features:
+    - blackfire:
+        server_id: "server_id"
+        server_token: "server_value"
+        client_id: "client_id"
+        client_token: "client_value"</code></pre><p>Blackfire &#26381;&#21153;&#22120;&#20973;&#25454;&#21644;&#23458;&#25143;&#31471;&#20973;&#25454;<a href="https://blackfire.io/signup" target="_blank" rel="noopener noreferrer">&#38656;&#35201; Blackfire &#36134;&#25143;</a>&#12290;Blackfire &#25552;&#20379;&#20102;&#22810;&#31181;&#20998;&#26512;&#24212;&#29992;&#30340;&#36873;&#39033;&#65292;&#21253;&#25324; CLI &#24037;&#20855;&#21644;&#27983;&#35272;&#22120;&#25193;&#23637;&#12290;&#35831;<a href="https://blackfire.io/docs/php/integrations/laravel/index" target="_blank" rel="noopener noreferrer">&#26597;&#30475; Blackfire &#25991;&#26723;&#20102;&#35299;&#26356;&#22810;&#35814;&#24773;</a>&#12290;</p><h2 id="84db2fd22b1fb3928ca8f2ed7179c7ff">&#32593;&#32476;&#25509;&#21475;</h2><p><code>Homestead.yaml</code> &#25991;&#20214;&#30340; <code>networks</code> &#23646;&#24615;&#20026; Homestead &#34394;&#25311;&#26426;&#37197;&#32622;&#32593;&#32476;&#25509;&#21475;&#12290;&#20320;&#21487;&#20197;&#25353;&#38656;&#37197;&#32622;&#20219;&#24847;&#25968;&#37327;&#30340;&#25509;&#21475;&#65306;</p><pre><code class="language-yaml">networks:
+    - type: "private_network"
+      ip: "192.168.10.20"</code></pre><p>&#35201;&#21551;&#29992; <a href="https://developer.hashicorp.com/vagrant/docs/networking/public_network" target="_blank" rel="noopener noreferrer">bridged</a> &#25509;&#21475;&#65292;&#35831;&#20026;&#32593;&#32476;&#37197;&#32622; <code>bridge</code> &#35774;&#32622;&#65292;&#24182;&#23558;&#32593;&#32476;&#31867;&#22411;&#25913;&#20026; <code>public_network</code>&#65306;</p><pre><code class="language-yaml">networks:
+    - type: "public_network"
+      ip: "192.168.10.20"
+      bridge: "en1: Wi-Fi (AirPort)"</code></pre><p>&#35201;&#21551;&#29992; <a href="https://developer.hashicorp.com/vagrant/docs/networking/public_network#dhcp" target="_blank" rel="noopener noreferrer">DHCP</a>&#65292;&#21482;&#38656;&#20174;&#37197;&#32622;&#20013;&#31227;&#38500; <code>ip</code> &#36873;&#39033;&#65306;</p><pre><code class="language-yaml">networks:
+    - type: "public_network"
+      bridge: "en1: Wi-Fi (AirPort)"</code></pre><p>&#35201;&#26356;&#26032;&#32593;&#32476;&#20351;&#29992;&#30340;&#35774;&#22791;&#65292;&#21487;&#20197;&#22312;&#32593;&#32476;&#37197;&#32622;&#20013;&#28155;&#21152; <code>dev</code> &#36873;&#39033;&#12290;&#40664;&#35748; <code>dev</code> &#20540;&#20026; <code>eth0</code>&#65306;</p><pre><code class="language-yaml">networks:
+    - type: "public_network"
+      ip: "192.168.10.20"
+      bridge: "en1: Wi-Fi (AirPort)"
+      dev: "enp2s0"</code></pre><h2 id="74bfd85b5313baf40d40d70440ad84cd">&#25193;&#23637; Homestead</h2><p>&#20320;&#21487;&#20197;&#20351;&#29992; Homestead &#30446;&#24405;&#26681;&#30446;&#24405;&#20013;&#30340; <code>after.sh</code> &#33050;&#26412;&#26469;&#25193;&#23637; Homestead&#12290;&#22312;&#35813;&#25991;&#20214;&#20013;&#65292;&#20320;&#21487;&#20197;&#28155;&#21152;&#20219;&#20309;&#24517;&#35201;&#30340; shell &#21629;&#20196;&#65292;&#20197;&#27491;&#30830;&#37197;&#32622;&#21644;&#33258;&#23450;&#20041;&#20320;&#30340;&#34394;&#25311;&#26426;&#12290;</p><p>&#33258;&#23450;&#20041; Homestead &#26102;&#65292;Ubuntu &#21487;&#33021;&#20250;&#35810;&#38382;&#20320;&#26159;&#35201;&#20445;&#30041;&#36719;&#20214;&#21253;&#30340;&#21407;&#22987;&#37197;&#32622;&#65292;&#36824;&#26159;&#29992;&#26032;&#37197;&#32622;&#25991;&#20214;&#35206;&#30422;&#23427;&#12290;&#20026;&#36991;&#20813;&#36825;&#31181;&#24773;&#20917;&#65292;&#23433;&#35013;&#36719;&#20214;&#21253;&#26102;&#24212;&#20351;&#29992;&#20197;&#19979;&#21629;&#20196;&#65292;&#20197;&#20813;&#35206;&#30422; Homestead &#20808;&#21069;&#20889;&#20837;&#30340;&#20219;&#20309;&#37197;&#32622;&#65306;</p><pre><code class="language-shell">sudo apt-get -y \
+    -o Dpkg::Options::="--force-confdef" \
+    -o Dpkg::Options::="--force-confold" \
+    install package-name</code></pre><h3 id="2dbb3e25a90424d991a346b0bca2c26a">&#29992;&#25143;&#33258;&#23450;&#20041;</h3><p>&#24403;&#19982;&#22242;&#38431;&#19968;&#36215;&#20351;&#29992; Homestead &#26102;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#35843;&#25972; Homestead &#20197;&#26356;&#22909;&#22320;&#22865;&#21512;&#20320;&#20010;&#20154;&#30340;&#24320;&#21457;&#39118;&#26684;&#12290;&#20026;&#27492;&#65292;&#20320;&#21487;&#20197;&#22312; Homestead &#30446;&#24405;&#30340;&#26681;&#30446;&#24405;&#65288;&#21253;&#21547; <code>Homestead.yaml</code> &#25991;&#20214;&#30340;&#21516;&#19968;&#30446;&#24405;&#65289;&#20013;&#21019;&#24314;&#19968;&#20010; <code>user-customizations.sh</code> &#25991;&#20214;&#12290;&#22312;&#35813;&#25991;&#20214;&#20013;&#65292;&#20320;&#21487;&#20197;&#36827;&#34892;&#20219;&#20309;&#24819;&#35201;&#30340;&#33258;&#23450;&#20041;&#65307;&#19981;&#36807;&#65292;<code>user-customizations.sh</code> &#19981;&#24212;&#32435;&#20837;&#29256;&#26412;&#25511;&#21046;&#12290;</p><h2 id="1ae40b8b260bb00d9a0c446abd4f1f71">&#26381;&#21153;&#21830;&#19987;&#23646;&#35774;&#32622;</h2><h3 id="e8e4d1f0fe99af04575c1e0815054845">VirtualBox</h3><h4 id="9a57d99dffad9b86229e4339dfc49065"><code>natdnshostresolver</code></h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Homestead &#23558; <code>natdnshostresolver</code> &#35774;&#32622;&#37197;&#32622;&#20026; <code>on</code>&#12290;&#36825;&#35753; Homestead &#21487;&#20197;&#20351;&#29992;&#20320;&#23487;&#20027;&#25805;&#20316;&#31995;&#32479;&#30340; DNS &#35774;&#32622;&#12290;&#22914;&#26524;&#35201;&#35206;&#30422;&#27492;&#34892;&#20026;&#65292;&#35831;&#23558;&#20197;&#19979;&#37197;&#32622;&#36873;&#39033;&#28155;&#21152;&#21040; <code>Homestead.yaml</code> &#25991;&#20214;&#65306;</p><pre><code class="language-yaml">provider: virtualbox
+natdnshostresolver: 'off'</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Laravel Sail: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sail" target="_blank">/docs/Laravel 13.x/sail</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Laravel Homestead: <i><a href="https://github.com/laravel/homestead" target="_blank">https://github.com/laravel/homestead</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Vagrant: <i><a href="https://www.vagrantup.com" target="_blank">https://www.vagrantup.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Vagrant: <i><a href="https://developer.hashicorp.com/vagrant/downloads" target="_blank">https://developer.hashicorp.com/vagrant/downloads</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> VirtualBox 6.1.x: <i><a href="https://www.virtualbox.org/wiki/Download_Old_Builds_6_1" target="_blank">https://www.virtualbox.org/wiki/Download_Old_Builds_6_1</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Parallels: <i><a href="https://www.parallels.com/products/desktop/" target="_blank">https://www.parallels.com/products/desktop/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> Parallels Vagrant 插件: <i><a href="https://github.com/Parallels/vagrant-parallels" target="_blank">https://github.com/Parallels/vagrant-parallels</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> NFS: <i><a href="https://developer.hashicorp.com/vagrant/docs/synced-folders/nfs" target="_blank">https://developer.hashicorp.com/vagrant/docs/synced-folders/nfs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> vagrant-winnfsd: <i><a href="https://github.com/winnfsd/vagrant-winnfsd" target="_blank">https://github.com/winnfsd/vagrant-winnfsd</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> Synced Folders: <i><a href="https://developer.hashicorp.com/vagrant/docs/synced-folders/basic_usage" target="_blank">https://developer.hashicorp.com/vagrant/docs/synced-folders/basic_usage</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> Bonjour Print Services for Windows: <i><a href="https://support.apple.com/kb/DL999?viewlocale=en_US&locale=en_US" target="_blank">https://support.apple.com/kb/DL999?viewlocale=en_US&locale=en_US</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> 按项目安装: <i><a href="dgy7x25vw2.html#per-project-installation" target="_blank">#per-project-installation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> 主机名解析: <i><a href="dgy7x25vw2.html#hostname-resolution" target="_blank">#hostname-resolution</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> Elasticsearch 文档: <i><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current" target="_blank">https://www.elastic.co/guide/en/elasticsearch/reference/current</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> GitHub releases 页面: <i><a href="https://github.com/laravel/homestead/releases" target="_blank">https://github.com/laravel/homestead/releases</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> 文件夹映射: <i><a href="dgy7x25vw2.html#configuring-shared-folders" target="_blank">#configuring-shared-folders</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> 在你的 Homestead 虚拟机内: <i><a href="dgy7x25vw2.html#connecting-via-ssh" target="_blank">#connecting-via-ssh</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> 按项目安装: <i><a href="dgy7x25vw2.html#per-project-installation" target="_blank">#per-project-installation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> 调度 cron 任务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/scheduling" target="_blank">/docs/Laravel 13.x/scheduling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> Mailpit: <i><a href="https://github.com/axllent/mailpit" target="_blank">https://github.com/axllent/mailpit</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> Minio: <i><a href="https://github.com/minio/minio" target="_blank">https://github.com/minio/minio</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> features: <i><a href="dgy7x25vw2.html#installing-optional-features" target="_blank">#installing-optional-features</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> Laravel Dusk: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/dusk" target="_blank">/docs/Laravel 13.x/dusk</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> webdriver 功能: <i><a href="dgy7x25vw2.html#installing-optional-features" target="_blank">#installing-optional-features</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> SSH 进入你的 Homestead 虚拟机: <i><a href="dgy7x25vw2.html#connecting-via-ssh" target="_blank">#connecting-via-ssh</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> Xdebug: <i><a href="https://xdebug.org" target="_blank">https://xdebug.org</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> bookmarklet: <i><a href="https://www.jetbrains.com/phpstorm/marklets/" target="_blank">https://www.jetbrains.com/phpstorm/marklets/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> Blackfire: <i><a href="https://blackfire.io/docs/introduction" target="_blank">https://blackfire.io/docs/introduction</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> Blackfire Player: <i><a href="https://blackfire.io/docs/player/index" target="_blank">https://blackfire.io/docs/player/index</a></i><br><code style="font-size: 90%; opacity: 0.6;">[30]</code> 需要 Blackfire 账户: <i><a href="https://blackfire.io/signup" target="_blank">https://blackfire.io/signup</a></i><br><code style="font-size: 90%; opacity: 0.6;">[31]</code> 查看 Blackfire 文档了解更多详情: <i><a href="https://blackfire.io/docs/php/integrations/laravel/index" target="_blank">https://blackfire.io/docs/php/integrations/laravel/index</a></i><br><code style="font-size: 90%; opacity: 0.6;">[32]</code> bridged: <i><a href="https://developer.hashicorp.com/vagrant/docs/networking/public_network" target="_blank">https://developer.hashicorp.com/vagrant/docs/networking/public_network</a></i><br><code style="font-size: 90%; opacity: 0.6;">[33]</code> DHCP: <i><a href="https://developer.hashicorp.com/vagrant/docs/networking/public_network#dhcp" target="_blank">https://developer.hashicorp.com/vagrant/docs/networking/public_network#dhcp</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="569x568yep.html#blog1084" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Laravel Head</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="rwyl28xvz8.html#blog1086" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">Laravel Horizon</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,1458 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Laravel Head | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/569x568yep.html', function (data, status) {
+            addView('569x568yep.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Laravel Head</h1><ul>
+<li><a href="569x568yep.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="569x568yep.html#e655a410ff21cd07e7a0150491e04371">安装</a></li>
+<li><a href="569x568yep.html#c1b18ad6ef67d4c3ddff0f1bf856e807">快速上手</a></li>
+<li><a href="569x568yep.html#ee8ecb9ee03a10a2e6cb9a7471b964b4">优先级</a></li>
+<li><a href="569x568yep.html#8f39b0d17cfb1dc782fbf00589aa169f">定义元数据</a>
+<ul>
+<li><a href="569x568yep.html#225f3ed00750ae78ad1e6ea42c8f5087">默认值</a></li>
+<li><a href="569x568yep.html#699743526f48d3574006c73f649d6e6c">路由元数据</a>
+<ul>
+<li><a href="569x568yep.html#09d2bb3e6a5165500ee14fbf0635b67d">路由与路由组</a></li>
+<li><a href="569x568yep.html#17970b95e61a7c802a8b5ea413cac7cf">支持的属性</a></li>
+</ul></li>
+<li><a href="569x568yep.html#c6d46971f5ede5121ea49df4c234b116">运行时元数据</a></li>
+<li><a href="569x568yep.html#ef3aa1e0eac147ea473ef7bc035382aa">错误页</a></li>
+</ul></li>
+<li><a href="569x568yep.html#9d003c21ab5fb8409c51e901aed5576d">Open Graph</a>
+<ul>
+<li><a href="569x568yep.html#3ad04134665b4037f1b7b04d825337ff">X / Twitter Cards</a></li>
+</ul></li>
+<li><a href="569x568yep.html#a1c76c6e1bd796959e536718e04d10ca">主题颜色</a></li>
+<li><a href="569x568yep.html#e19ee17a7598e677257a503771fa1a7a">应用元数据与图标</a></li>
+<li><a href="569x568yep.html#096550d21e4a740591429d479b4ac5a0">渐进式 Web 应用（PWA）</a></li>
+<li><a href="569x568yep.html#427022cf91e12e600014d1310ed1383a">性能与发现</a></li>
+<li><a href="569x568yep.html#695ef488157108cebfa8c662d0774201">自定义标签</a></li>
+<li><a href="569x568yep.html#7146a60667b422e69fd050fe1df6859a">Schema</a>
+<ul>
+<li><a href="569x568yep.html#bd583a6e4543b796b2ac49e44ff5ba44">面包屑（Breadcrumbs）</a></li>
+<li><a href="569x568yep.html#1fe917b01f9a3f87fa2d7d3b7643fac1">FAQ</a></li>
+<li><a href="569x568yep.html#d029c49a3caa6221f07afbeb92b8673d">自定义 Schemas</a></li>
+</ul></li>
+<li><a href="569x568yep.html#e8308900fbf635700e990b67f10f7d46">渲染</a>
+<ul>
+<li><a href="569x568yep.html#1ea52f26e7e0ce08e462f87f5e35096c">Blade</a></li>
+<li><a href="569x568yep.html#17b339ccb60b8ee0f47dc6d247174b5e">Livewire</a></li>
+<li><a href="569x568yep.html#b19a24ee5c287f42ee1d465dab77ab37">Inertia</a>
+<ul>
+<li><a href="569x568yep.html#e44500c71fe9faaee73effdc1f091b02">静态 Inertia 标签</a></li>
+</ul></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p><a href="https://github.com/laravel/head" target="_blank" rel="noopener noreferrer">Laravel Head</a> &#25552;&#20379;&#20102;&#19968;&#22871;&#27969;&#30021;&#30340; API&#65292;&#29992;&#26469;&#31649;&#29702;&#24212;&#29992;&#25991;&#26723;&#30340; <code>&lt;head&gt;</code> &#20803;&#32032;&mdash;&mdash;&#21253;&#25324;&#26631;&#39064;&#19982; meta &#26631;&#31614;&#12289;Open Graph &#20803;&#25968;&#25454;&#12289;canonical URL&#12289;robots &#25351;&#20196;&#12289;&#24615;&#33021;&#25552;&#31034;&#19982;&#32467;&#26500;&#21270;&#25968;&#25454;&#12290;&#23427;&#19982; Blade&#12289;Livewire &#21644; Inertia &#37117;&#33021;&#33391;&#22909;&#21327;&#20316;&#12290;</p><h2 id="e655a410ff21cd07e7a0150491e04371">&#23433;&#35013;</h2><p>&#21487;&#20197;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23433;&#35013; Laravel Head&#65306;</p><pre><code class="language-shell">composer require laravel/head</code></pre><h2 id="c1b18ad6ef67d4c3ddff0f1bf856e807">&#24555;&#36895;&#19978;&#25163;</h2><p>&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#20013;&#27880;&#20876;&#20840;&#31449;&#40664;&#35748;&#20540;&#65306;</p><pre><code class="language-php">use Laravel\Head\Facades\Head;
+use Laravel\Head\HeadBuilder;
+
+Head::defaults(fn (HeadBuilder $head) =&gt; $head
+    -&gt;title('Laravel', suffix: ' - Laravel')
+    -&gt;description('Build something great.'));</code></pre><p>&#22312;&#36816;&#34892;&#26102;&#35774;&#32622;&#39029;&#38754;&#32423;&#20803;&#25968;&#25454;&#65306;</p><pre><code class="language-php">Head::title($post-&gt;title)
+    -&gt;description($post-&gt;description);</code></pre><p>&#22312;&#24067;&#23616;&#37324;&#28210;&#26579;&#35299;&#26512;&#22909;&#30340;&#26631;&#31614;&#65306;</p><pre><code class="language-blade">&lt;head&gt;
+    @head
+&lt;/head&gt;</code></pre><h2 id="ee8ecb9ee03a10a2e6cb9a7471b964b4">&#20248;&#20808;&#32423;</h2><p>&#39029;&#38754;&#20803;&#25968;&#25454;&#25353;&#20174;&#20302;&#21040;&#39640;&#30340;&#20116;&#20010;&#23618;&#32423;&#36827;&#34892;&#35299;&#26512;&#65306;</p><ol style="padding-left: 1.5em;">
+<li style="list-style-type: decimal;">&#39029;&#38754;&#40664;&#35748;&#20540;&#65288;Page defaults&#65289;</li>
+<li style="list-style-type: decimal;">&#36335;&#30001;&#32452;&#20803;&#25968;&#25454;&#65288;Route group metadata&#65289;</li>
+<li style="list-style-type: decimal;">&#36335;&#30001;&#20803;&#25968;&#25454;&#65288;Route metadata&#65289;</li>
+<li style="list-style-type: decimal;">&#36816;&#34892;&#26102;&#20803;&#25968;&#25454;&#65288;Runtime metadata&#65289;</li>
+<li style="list-style-type: decimal;">&#38169;&#35823;&#20803;&#25968;&#25454;&#65288;Error metadata&#65289;</li>
+</ol><p>&#26356;&#39640;&#23618;&#32423;&#20250;&#25353;&#23383;&#27573;&#36880;&#39033;&#35206;&#30422;&#26356;&#20302;&#23618;&#32423;&#12290;&#20363;&#22914;&#65292;&#36816;&#34892;&#26102;&#26631;&#39064;&#20250;&#26367;&#25442;&#36335;&#30001;&#26631;&#39064;&#65292;&#20294;&#19981;&#20250;&#26367;&#25442;&#36335;&#30001;&#25551;&#36848;&#12290;&#19979;&#38754;&#23558;&#20998;&#21035;&#20171;&#32461;&#22914;&#20309;&#22312;&#27599;&#19968;&#23618;&#35774;&#32622;&#20803;&#25968;&#25454;&#12290;&#20851;&#20110;&#22312; Blade&#12289;Livewire &#21644; Inertia &#20013;&#22914;&#20309;&#28210;&#26579;&#35299;&#26512;&#21518;&#30340;&#20803;&#25968;&#25454;&#65292;&#35831;&#21442;&#38405;<a href="569x568yep.html#rendering" target="_blank">&#28210;&#26579;</a>&#12290;</p><h2 id="8f39b0d17cfb1dc782fbf00589aa169f">&#23450;&#20041;&#20803;&#25968;&#25454;</h2><p>Laravel Head &#20801;&#35768;&#20320;&#36890;&#36807;&#20840;&#31449;&#40664;&#35748;&#20540;&#12289;&#36335;&#30001;&#20803;&#25968;&#25454;&#12289;&#36816;&#34892;&#26102;&#35843;&#29992;&#21644;&#38169;&#35823;&#39029;&#23450;&#20041;&#31561;&#26041;&#24335;&#26469;&#23450;&#20041;&#20803;&#25968;&#25454;&#12290;</p><h3 id="225f3ed00750ae78ad1e6ea42c8f5087">&#40664;&#35748;&#20540;</h3><p>&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#20013;&#27880;&#20876;&#39029;&#38754;&#40664;&#35748;&#20540;&#65306;</p><pre><code class="language-php">use Laravel\Head\Enums\OgType;
+use Laravel\Head\Facades\Head;
+use Laravel\Head\HeadBuilder;
+
+Head::defaults(function (HeadBuilder $head) {
+    $head
+        -&gt;title('Laravel', suffix: ' - Laravel')
+        -&gt;description('Build something great.')
+        -&gt;canonical()
+        -&gt;og(siteName: 'Laravel', type: OgType::Website)
+        -&gt;searchableByRobots()
+        -&gt;preconnect('https://fonts.example.com');
+});</code></pre><p>&#40664;&#35748;&#20540;&#26159;&#20248;&#20808;&#32423;&#26368;&#20302;&#30340;&#39029;&#38754;&#20803;&#25968;&#25454;&#23618;&#12290;&#33509;&#27809;&#26377;&#36335;&#30001;&#12289;&#36816;&#34892;&#26102;&#25110;&#38169;&#35823;&#20803;&#25968;&#25454;&#26174;&#24335;&#35774;&#32622;&#26631;&#39064;&#65292;&#21017;&#20250;&#21407;&#26679;&#28210;&#26579; <code>Laravel</code>&#12290;&#24403;&#26356;&#39640;&#23618;&#32423;&#35774;&#32622;&#20102;&#39029;&#38754;&#26631;&#39064;&#26102;&#65292;&#20250;&#24212;&#29992;&#32487;&#25215;&#30340;&#21518;&#32512;&#65292;&#22240;&#27492; <code>Head::title('About')</code> &#20250;&#28210;&#26579;&#20026; <code>About - Laravel</code>&#12290;&#33509;&#24076;&#26395;&#26631;&#39064;&#24573;&#30053;&#32487;&#25215;&#30340;&#21069;&#32512;&#25110;&#21518;&#32512;&#65292;&#21487;&#20256;&#20837; <code>exact: true</code>&#12290;</p><p>&#35843;&#29992; <code>Head::canonical()</code> &#20250;&#20351;&#29992;&#24403;&#21069;&#35831;&#27714; URL &#28210;&#26579;&#19968;&#20010; canonical &#38142;&#25509;&#12290;&#33509;&#35201;&#26174;&#24335;&#25351;&#23450; URL&#65292;&#21487;&#20256;&#20837;&#23383;&#31526;&#20018;&#65292;&#20363;&#22914; <code>Head::canonical('/about')</code>&#12290;Canonical URL &#40664;&#35748;&#20250;&#34987;&#35268;&#33539;&#21270;&#20026; <code>https</code>&#65292;&#33509;&#24819;&#20445;&#30041;&#35831;&#27714;&#21407;&#21327;&#35758;&#65292;&#21487;&#20256;&#20837; <code>forceHttps: false</code>&#12290;</p><p>Robots &#25351;&#20196;&#21487;&#20256;&#20837;&#21407;&#22987;&#23383;&#31526;&#20018;&#12289;<code>RobotsRule</code> &#26522;&#20030;&#20540;&#65292;&#25110;&#28151;&#21512;&#20004;&#32773;&#30340;&#21015;&#34920;&#12290;&#21015;&#34920;&#20250;&#28210;&#26579;&#20026;&#36887;&#21495;&#20998;&#38548;&#30340;&#25351;&#20196;&#65292;&#22240;&#27492; <code>Head::robots([RobotsRule::NoIndex, RobotsRule::NoFollow])</code> &#20250;&#28210;&#26579;&#20026; <code>noindex, nofollow</code>&#12290;</p><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;<code>searchableByRobots</code> &#26041;&#27861;&#28210;&#26579; <code>all</code>&#65292;<code>hiddenFromRobots</code> &#26041;&#27861;&#28210;&#26579; <code>none</code>&#12290;</p><h3 id="699743526f48d3574006c73f649d6e6c">&#36335;&#30001;&#20803;&#25968;&#25454;</h3><p>&#20320;&#21487;&#20197;&#30452;&#25509;&#22312;&#36335;&#30001;&#19978;&#23450;&#20041;&#20803;&#25968;&#25454;&#65292;&#23545;&#20110;&#37027;&#20123;&#20803;&#25968;&#25454;&#21487;&#25552;&#21069;&#39044;&#30693;&#30340;&#21322;&#38745;&#24577;&#39029;&#38754;&#23588;&#20854;&#26377;&#29992;&#12290;</p><h4 id="09d2bb3e6a5165500ee14fbf0635b67d">&#36335;&#30001;&#19982;&#36335;&#30001;&#32452;</h4><pre><code class="language-php">Route::view('/contact', 'contact')
+    -&gt;name('contact')
+    -&gt;withHead(
+        title: 'Contact Us',
+        description: 'Get in touch.',
+    );</code></pre><p>&#20849;&#20139;&#30340;&#36335;&#30001;&#20803;&#25968;&#25454;&#21487;&#20197;&#22312;&#36335;&#30001;&#38142;&#30340;&#20219;&#24847;&#20301;&#32622;&#24212;&#29992;&#21040;&#36335;&#30001;&#32452;&#65306;</p><pre><code class="language-php">Route::withHead(robots: 'noindex, nofollow')
+    -&gt;prefix('admin')
+    -&gt;name('admin.')
+    -&gt;group(function () {
+        Route::get('/dashboard', DashboardController::class)
+            -&gt;name('dashboard')
+            -&gt;withHead(title: 'Dashboard');
+    });</code></pre><p>&#20063;&#21487;&#20197;&#20026;&#36164;&#28304;&#36335;&#30001;&#21644;&#21333;&#20363;&#36335;&#30001;&#23450;&#20041;&#20803;&#25968;&#25454;&#65306;</p><pre><code class="language-php">Route::resource('posts', PostController::class)-&gt;withHead(
+    robots: 'index, follow',
+);
+
+Route::singleton('profile', ProfileController::class)-&gt;withHead(
+    title: 'Your Profile',
+);</code></pre><p><code>withHead</code> &#26041;&#27861;&#36890;&#36807; Laravel &#21407;&#29983;&#30340;&#36335;&#30001;&#20803;&#25968;&#25454; API &#23384;&#20648;&#32431;&#25968;&#32452;&#12290;&#23427;&#31561;&#25928;&#20110;&#20197; <code>head</code> &#20026; key &#25226;&#23646;&#24615;&#23884;&#22871;&#20256;&#20837; <code>metadata</code> &#26041;&#27861;&#65292;&#22240;&#27492;&#20803;&#25968;&#25454;&#21487;&#20197;&#19982;&#32531;&#23384;&#36335;&#30001;&#20860;&#23481;&#12290;</p><p><code>withHead</code> &#30340;&#20855;&#21517;&#21442;&#25968;&#26377;&#24847;&#20165;&#20801;&#35768; Laravel Head &#20869;&#32622;&#30340;&#36335;&#30001;&#23646;&#24615;&#65292;&#20197;&#20415;&#32534;&#36753;&#22120;&#19982;&#38745;&#24577;&#20998;&#26512;&#21487;&#20197;&#21457;&#29616;&#25340;&#20889;&#38169;&#35823;&#12290; &#30001;&#33258;&#23450;&#20041;&#26631;&#31614;&#26500;&#36896;&#22120;&#27880;&#20876;&#30340;&#36335;&#30001;&#23646;&#24615;&#21487;&#20197;&#36890;&#36807; <code>extensions</code> &#36879;&#20256;&#65306;</p><pre><code class="language-php">Route::get('/article', ArticleController::class)-&gt;withHead(
+    title: 'Article',
+    extensions: ['readingTime' =&gt; 4],
+);</code></pre><h4 id="17970b95e61a7c802a8b5ea413cac7cf">&#25903;&#25345;&#30340;&#23646;&#24615;</h4><p>&#25903;&#25345;&#30340;&#36335;&#30001;&#23646;&#24615;&#19982;&#23545;&#24212;&#30340;&#27969;&#24335;&#26500;&#36896;&#22120;&#26041;&#27861;&#21516;&#21517;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#20998;&#31867;</th>
+<th>&#23646;&#24615;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Document</td>
+<td><code>title</code>, <code>description</code>, <code>canonical</code>, <code>robots</code></td>
+</tr>
+<tr>
+<td>Application metadata</td>
+<td><code>themeColor</code>, <code>applicationName</code>, <code>colorScheme</code>, <code>referrer</code>, <code>viewport</code>, <code>appleWebAppTitle</code>, <code>webAppCapable</code>, <code>appleWebAppStatusBarStyle</code></td>
+</tr>
+<tr>
+<td>Social</td>
+<td><code>og</code>, <code>ogImage</code>, <code>ogVideo</code>, <code>ogAudio</code>, <code>twitter</code>, <code>twitterImage</code></td>
+</tr>
+<tr>
+<td>Performance</td>
+<td><code>preload</code>, <code>prefetch</code>, <code>preconnect</code>, <code>dnsPrefetch</code></td>
+</tr>
+<tr>
+<td>Discovery</td>
+<td><code>alternates</code>, <code>feed</code>, <code>icon</code>, <code>favicon</code>, <code>appleTouchIcon</code>, <code>appleTouchStartupImage</code>, <code>maskIcon</code>, <code>manifest</code></td>
+</tr>
+<tr>
+<td>Structured data</td>
+<td><code>schema</code></td>
+</tr>
+<tr>
+<td>Custom tags</td>
+<td><code>meta</code>, <code>link</code></td>
+</tr>
+</tbody>
+</table><p>&#23884;&#22871;&#36873;&#39033;&#21517;&#27839;&#29992; <code>camelCase</code> &#21629;&#21517;&#65292;&#19982;&#27969;&#24335; API &#19968;&#33268;&mdash;&mdash;&#20363;&#22914; <code>forceHttps</code>&#12289;<code>siteName</code>&#12289;<code>secureUrl</code>&#12290;</p><p>&#21487;&#37325;&#22797;&#23646;&#24615;&#65288;&#22914; <code>ogImage</code>&#12289;<code>preload</code>&#12289;<code>feed</code>&#12289;<code>schema</code>&#12289;<code>icon</code>&#12289;<code>appleTouchStartupImage</code>&#65289;&#25509;&#21463;&#21333;&#20010;&#20540;&#25110;&#21015;&#34920;&#12290;</p><h3 id="c6d46971f5ede5121ea49df4c234b116">&#36816;&#34892;&#26102;&#20803;&#25968;&#25454;</h3><p>&#24403;&#26576;&#20010;&#20540;&#24517;&#39035;&#31561;&#21040;&#35831;&#27714;&#21040;&#36798;&#25165;&#33021;&#30830;&#23450;&#65288;&#20363;&#22914;&#27491;&#22312;&#26597;&#30475;&#30340;&#25991;&#31456;&#30340;&#26631;&#39064;&#65289;&#65292;&#21487;&#20197;&#22312;&#36816;&#34892;&#26102;&#35774;&#32622;&#65306;</p><pre><code class="language-php">use Laravel\Head\Facades\Head;
+
+public function __invoke(Post $post): Response
+{
+    Head::title($post-&gt;title);
+
+    // ...
+}</code></pre><p>&#36890;&#36807; <code>Head</code> &#38376;&#38754;&#36827;&#34892;&#30340;&#36816;&#34892;&#26102;&#35843;&#29992;&#20250;&#35206;&#30422;&#36335;&#30001;&#20803;&#25968;&#25454;&#65292;&#29992;&#20110;&#20381;&#36182;&#20110;&#35831;&#27714;&#30340;&#25968;&#25454;&#12290;&#25511;&#21046;&#22120;&#21644; action &#26159;&#36827;&#34892;&#36825;&#31181;&#35843;&#29992;&#26368;&#24120;&#35265;&#30340;&#20301;&#32622;&#65306;</p><pre><code class="language-php">use App\Models\Post;
+use Laravel\Head\Facades\Head;
+
+public function show(Post $post)
+{
+    Head::title($post-&gt;title)
+        -&gt;description($post-&gt;description);
+
+    return view('posts.show', ['post' =&gt; $post]);
+}</code></pre><p>&#22810;&#27425;&#36816;&#34892;&#26102;&#35843;&#29992;&#20250;&#25353;&#25191;&#34892;&#39034;&#24207;&#21512;&#24182;&#12290;&#23545;&#20110; title&#12289;description&#12289;canonical URL&#12289;robots &#25351;&#20196;&#36825;&#31867;&#21333;&#20540;&#23383;&#27573;&#65292;&#21518;&#38754;&#30340;&#35843;&#29992;&#20248;&#20808;&#12290;&#21487;&#37325;&#22797;&#23383;&#27573;&#20250;&#20445;&#30041;&#22810;&#26465;&#35760;&#24405;&#65292;&#20294;&#33509;&#20877;&#27425;&#20256;&#20837;&#30456;&#21516;&#30340; key&#65292;&#21017;&#20250;&#26356;&#26032;&#21407;&#26465;&#30446;&#12290;&#23545;&#20110; <code>ogImage</code> &#26041;&#27861;&#65292;URL &#29992;&#20316; key&#65306;</p><pre><code class="language-php">Head::ogImage('/images/cover.jpg', alt: 'Draft cover')
+    -&gt;ogImage('/images/gallery.jpg', alt: 'Gallery image')
+    -&gt;ogImage('/images/cover.jpg', alt: 'Final cover', width: 1200, height: 630);</code></pre><pre><code class="language-html">&lt;meta property="og:image" content="/images/cover.jpg"&gt;
+&lt;meta property="og:image:width" content="1200"&gt;
+&lt;meta property="og:image:height" content="630"&gt;
+&lt;meta property="og:image:alt" content="Final cover"&gt;
+&lt;meta property="og:image" content="/images/gallery.jpg"&gt;
+&lt;meta property="og:image:alt" content="Gallery image"&gt;</code></pre><p>Open Graph &#23186;&#20307;&#33509;&#32487;&#25215;&#33258;&#40664;&#35748;&#20540;&#65292;&#20250;&#20316;&#20026;&#22238;&#36864;&#12290;&#24403;&#36335;&#30001;&#12289;&#36816;&#34892;&#26102;&#25110;&#38169;&#35823;&#20803;&#25968;&#25454;&#23450;&#20041;&#20102;&#21516;&#31867;&#22411;&#30340;&#23186;&#20307;&#26102;&#65292;&#20250;&#26367;&#25442;&#40664;&#35748;&#20540;&#32780;&#38750;&#21512;&#24182;&mdash;&mdash;&#22240;&#27492;&#39029;&#38754;&#30340; <code>og:image</code> &#20248;&#20808;&#20110;&#20840;&#31449;&#40664;&#35748;&#22270;&#29255;&#12290;</p><p>&#21487;&#20197;&#20351;&#29992; <code>when</code> &#19982; <code>unless</code> &#26041;&#27861;&#20197;&#27969;&#24335;&#26041;&#24335;&#23450;&#20041;&#26465;&#20214;&#24615;&#20803;&#25968;&#25454;&#65306;</p><pre><code class="language-php">Head::title($post-&gt;title)
+    -&gt;when($post-&gt;isDraft(), fn ($head) =&gt; $head-&gt;hiddenFromRobots());</code></pre><h3 id="ef3aa1e0eac147ea473ef7bc035382aa">&#38169;&#35823;&#39029;</h3><p>&#36890;&#24120;&#65292;&#24212;&#24403;&#22312;&#24212;&#29992; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#27880;&#20876;&#38169;&#35823;&#20803;&#25968;&#25454;&#65306;</p><pre><code class="language-php">use Laravel\Head\ErrorPages;
+use Laravel\Head\Facades\Head;
+
+/**
+ * &#24341;&#23548;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Head::errors(function (ErrorPages $errors) {
+        $errors-&gt;defaults(robots: 'noindex, follow');
+
+        $errors-&gt;status(
+            404,
+            title: 'Page Not Found',
+            description: 'The page you are looking for could not be found.',
+        );
+    });
+}</code></pre><p><code>defaults</code> &#19982; <code>status</code> &#26041;&#27861;&#20063;&#25509;&#25910;&#19982; <code>Head::defaults()</code> &#30456;&#21516;&#30340;&#27969;&#24335;&#26500;&#36896;&#22120;&#22238;&#35843;&#65306;</p><pre><code class="language-php">use Laravel\Head\ErrorPages;
+use Laravel\Head\Facades\Head;
+use Laravel\Head\HeadBuilder;
+
+Head::errors(function (ErrorPages $errors) {
+    $errors-&gt;status(404, fn (HeadBuilder $head) =&gt; $head
+        -&gt;title('Page Not Found')
+        -&gt;description('The page you are looking for could not be found.'));
+});</code></pre><p>&#24403;&#20026;&#26576;&#20010;&#24050;&#27880;&#20876;&#30340;&#38169;&#35823;&#29366;&#24577;&#30721;&#28210;&#26579;&#21709;&#24212;&#26102;&#65292;&#36825;&#20123;&#20803;&#25968;&#25454;&#20250;&#20940;&#39550;&#20110;&#25152;&#26377;&#20854;&#20182;&#23618;&#32423;&#12290;</p><p>Laravel &#22312;&#28210;&#26579;&#38169;&#35823;&#35270;&#22270;&#25110;&#25191;&#34892;&#21709;&#24212;&#38454;&#27573;&#30340;&#38057;&#23376;&#65288;&#20363;&#22914; Inertia &#30340; <code>handleExceptionsUsing()</code> &#26041;&#27861;&#65289;&#26102;&#65292;&#20250;&#33258;&#21160;&#26816;&#27979;&#21709;&#24212;&#29366;&#24577;&#12290;&#22914;&#26524;&#20320;&#22312; <code>$exceptions-&gt;render()</code> &#22238;&#35843;&#20013;&#28210;&#26579;&#38169;&#35823;&#21709;&#24212;&#65292;&#35831;&#22312;&#28210;&#26579;&#21069;&#35843;&#29992; <code>Head::status(404)</code>&#65292;&#35753;&#38169;&#35823;&#20803;&#25968;&#25454;&#29983;&#25928;&#12290;</p><h2 id="9d003c21ab5fb8409c51e901aed5576d">Open Graph</h2><p>&#21487;&#20197;&#20351;&#29992; <code>og</code> &#26041;&#27861;&#35774;&#32622; Open Graph &#23646;&#24615;&#12290;&#37325;&#22797;&#30340;&#23186;&#20307;&#21487;&#20197;&#36890;&#36807;&#39030;&#23618;&#26041;&#27861;&#28155;&#21152;&#65292;&#36825;&#20123;&#26041;&#27861;&#25509;&#25910;&#20855;&#21517;&#21442;&#25968;&#65306;</p><pre><code class="language-php">use Laravel\Head\Enums\ImageType;
+use Laravel\Head\Enums\OgType;
+
+Head::og(type: OgType::Article, title: $post-&gt;title)
+    -&gt;ogImage($post-&gt;hero_image_url)
+    -&gt;ogImage(
+        $post-&gt;gallery_image_url,
+        alt: $post-&gt;gallery_image_alt,
+        width: 1200,
+        height: 630,
+        type: ImageType::Jpeg,
+    );</code></pre><p><code>ogImage</code>&#12289;<code>ogVideo</code>&#12289;<code>ogAudio</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159; URL&#65292;&#20063;&#21487;&#20197;&#20256;&#20837;&#21487;&#36873;&#30340;&#20855;&#21517;&#21442;&#25968;&#65292;&#20363;&#22914; <code>alt</code>&#12289;<code>width</code>&#12289;<code>height</code>&#12289;<code>type</code>&#12289;<code>secureUrl</code>&#65288;Open Graph &#35268;&#33539;&#25903;&#25345;&#26102;&#65289;&#12290;</p><p>&#22312; API &#25509;&#21463; <code>type</code> &#30340;&#22320;&#26041;&#65292;&#21487;&#20197;&#20256;&#20837; <code>ImageType</code> &#26522;&#20030;&#20540;&mdash;&mdash;&#20363;&#22914; <code>ImageType::Svg</code>&#12289;<code>ImageType::Png</code>&#12289;<code>ImageType::Jpeg</code>&#12289;<code>ImageType::Webp</code>&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+Document &#30340; <code>title</code> &#21644; <code>description</code> &#20250;&#33258;&#21160;&#34917;&#40784;&#32570;&#22833;&#30340; <code>og:title</code> &#21644; <code>og:description</code>&#12290;</p>
+</blockquote><p>&#22914;&#26524;&#21482;&#38656;&#35201;&#19968;&#24352; Open Graph &#22270;&#29255;&#65292;&#19988;&#27809;&#26377;&#20854;&#20182;&#23646;&#24615;&#65292;&#21487;&#20197;&#25226; <code>image</code> &#20855;&#21517;&#21442;&#25968;&#20256;&#32473; <code>og</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Head::og(
+    type: OgType::Website,
+    title: $page-&gt;title,
+    description: $page-&gt;description,
+    image: $page-&gt;og_image_url,
+);</code></pre><p><code>og(image: ...)</code> &#21644; <code>ogImage(...)</code> &#20250;&#20889;&#20837;&#21516;&#19968;&#20221;&#24213;&#23618;&#22270;&#29255;&#21015;&#34920;&#65292;&#20320;&#21487;&#20197;&#22312;&#35843;&#29992;&#22788;&#36873;&#29992;&#26356;&#39034;&#25163;&#30340;&#24418;&#24335;&#12290;&#21487;&#20197;&#20351;&#29992; <a href="569x568yep.html#custom-tags" target="_blank"><code>meta</code></a> &#26041;&#27861;&#26469;&#25193;&#23637;&#33258;&#23450;&#20041;&#30340; Open Graph &#23383;&#27573;&#65288;&#20363;&#22914; product&#12289;article &#23646;&#24615;&#65289;&#12290;</p><h3 id="3ad04134665b4037f1b7b04d825337ff">X / Twitter Cards</h3><p>&#33509;&#24076;&#26395;&#20174;&#19982; Open Graph &#20849;&#20139;&#30340; title&#12289;description&#12289;image &#20013;&#28210;&#26579; X / Twitter cards&#65292;&#21487;&#20197;&#22312;&#40664;&#35748;&#20540;&#37324;&#27880;&#20876; <code>twitter()</code>&#65306;</p><pre><code class="language-php">use Laravel\Head\Enums\TwitterCard;
+use Laravel\Head\Facades\Head;
+use Laravel\Head\HeadBuilder;
+
+Head::defaults(fn (HeadBuilder $head) =&gt; $head-&gt;twitter(
+    card: TwitterCard::SummaryWithLargeImage,
+));</code></pre><p>&#28982;&#21518;&#35774;&#32622;&#39029;&#38754;&#32423;&#20803;&#25968;&#25454;&#65306;</p><pre><code class="language-php">Head::title('Introducing Laravel Head')
+    -&gt;description('A fluent API for Laravel document head metadata.')
+    -&gt;ogImage('https://example.com/social.jpg', alt: 'Introducing Laravel Head');</code></pre><p>&#36825;&#20250;&#28210;&#26579;&#20986;&#19982;&#20043;&#23545;&#24212;&#30340; Twitter &#26631;&#31614;&#65306;</p><pre><code class="language-html">&lt;meta name="twitter:card" content="summary_large_image"&gt;
+&lt;meta name="twitter:title" content="Introducing Laravel Head"&gt;
+&lt;meta name="twitter:description" content="A fluent API for Laravel document head metadata."&gt;
+&lt;meta name="twitter:image" content="https://example.com/social.jpg"&gt;
+&lt;meta name="twitter:image:alt" content="Introducing Laravel Head"&gt;</code></pre><p>&#21487;&#20197;&#22312;&#21333;&#20010;&#39029;&#38754;&#36890;&#36807;&#26174;&#24335;&#30340; Twitter &#20540;&#36827;&#34892;&#33258;&#23450;&#20041;&#65306;</p><pre><code class="language-php">Head::twitter(title: $post-&gt;social_title)
+    -&gt;twitterImage($post-&gt;social_image_url, alt: $post-&gt;title);</code></pre><p>&#36335;&#30001;&#20803;&#25968;&#25454;&#25903;&#25345; <code>twitter</code> &#21644; <code>twitterImage</code>&#12290;</p><h2 id="a1c76c6e1bd796959e536718e04d10ca">&#20027;&#39064;&#39068;&#33394;</h2><p>&#21487;&#20197;&#22312;&#20840;&#23616;&#12289;&#25353;&#36335;&#30001;&#25110;&#22312;&#36816;&#34892;&#26102;&#35774;&#32622;&#20027;&#39064;&#39068;&#33394;&#65306;</p><pre><code class="language-php">Head::themeColor('#0f172a');</code></pre><p>&#36825;&#20250;&#28210;&#26579;&#19968;&#20010; <code>&lt;meta name="theme-color"&gt;</code> &#26631;&#31614;&#12290;&#23545;&#20110;&#25351;&#23450;&#23186;&#20307;&#31867;&#22411;&#30340;&#20027;&#39064;&#39068;&#33394;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Media</code> &#26522;&#20030;&#65306;</p><pre><code class="language-php">use Laravel\Head\Enums\Media;
+
+Head::themeColor('#ffffff', media: Media::Light)
+    -&gt;themeColor('#111827', media: Media::Dark);</code></pre><p><code>Media</code> &#26522;&#20030;&#36824;&#21253;&#21547; <code>Portrait</code> &#21644; <code>Landscape</code>&#12290;<code>media</code> &#21442;&#25968;&#20063;&#25903;&#25345;&#33258;&#23450;&#20041;&#30340;&#23186;&#20307;&#26597;&#35810;&#23383;&#31526;&#20018;&#12290;</p><p>&#36335;&#30001;&#20803;&#25968;&#25454;&#36890;&#36807;&#30456;&#21516;&#30340; <code>camelCase</code> &#38190;&#25903;&#25345;&#21333;&#20010;&#20027;&#39064;&#39068;&#33394;&#65306;</p><pre><code class="language-php">Route::view('/dashboard', 'dashboard')-&gt;withHead(
+    themeColor: '#0f172a',
+);</code></pre><h2 id="e19ee17a7598e677257a503771fa1a7a">&#24212;&#29992;&#20803;&#25968;&#25454;&#19982;&#22270;&#26631;</h2><p>Laravel Head &#25552;&#20379;&#20102;&#29992;&#20110;&#24120;&#35265;&#27983;&#35272;&#22120;&#19982;&#24212;&#29992;&#20803;&#25968;&#25454;&#30340;&#26041;&#27861;&#65306;</p><pre><code class="language-php">use Laravel\Head\Enums\ImageType;
+use Laravel\Head\Enums\Media;
+
+Head::applicationName('Laravel')
+    -&gt;colorScheme('light dark')
+    -&gt;referrer('strict-origin-when-cross-origin')
+    -&gt;viewport('width=device-width, initial-scale=1')
+    -&gt;appleWebAppTitle('Laravel')
+    -&gt;webAppCapable()
+    -&gt;appleWebAppStatusBarStyle('black')
+    -&gt;favicon('/favicon.svg', type: ImageType::Svg)
+    -&gt;icon('/favicon-32x32.png', type: ImageType::Png, sizes: '32x32')
+    -&gt;appleTouchIcon('/apple-touch-icon.png', sizes: '180x180')
+    -&gt;appleTouchStartupImage('/launch.png', media: Media::Portrait)
+    -&gt;maskIcon('/safari-pinned-tab.svg', color: '#111827')
+    -&gt;manifest('/site.webmanifest');</code></pre><p><code>favicon</code> &#26041;&#27861;&#26159; <code>icon</code> &#26041;&#27861;&#30340;&#21035;&#21517;&#65292;&#25903;&#25345;&#30456;&#21516;&#30340; <code>type</code>&#12289;<code>sizes</code>&#12289;<code>media</code> &#21442;&#25968;&#12290;</p><p>&#36335;&#30001;&#20803;&#25968;&#25454;&#20351;&#29992;&#30456;&#21516;&#30340;&#21629;&#21517;&#65306;</p><pre><code class="language-php">use Laravel\Head\Enums\ImageType;
+use Laravel\Head\Enums\Media;
+
+Route::view('/dashboard', 'dashboard')-&gt;withHead(
+    applicationName: 'Laravel',
+    colorScheme: 'light dark',
+    appleWebAppTitle: 'Laravel',
+    webAppCapable: true,
+    appleWebAppStatusBarStyle: 'black',
+    favicon: [
+        ['href' =&gt; '/favicon.svg', 'type' =&gt; ImageType::Svg],
+        ['href' =&gt; '/favicon-32x32.png', 'type' =&gt; ImageType::Png, 'sizes' =&gt; '32x32'],
+    ],
+    appleTouchIcon: ['href' =&gt; '/apple-touch-icon.png', 'sizes' =&gt; '180x180'],
+    appleTouchStartupImage: ['href' =&gt; '/launch.png', 'media' =&gt; Media::Portrait],
+    manifest: '/site.webmanifest',
+);</code></pre><h2 id="096550d21e4a740591429d479b4ac5a0">&#28176;&#36827;&#24335; Web &#24212;&#29992;&#65288;PWA&#65289;</h2><p><code>pwa</code> &#26041;&#27861;&#29992;&#20110;&#37197;&#32622;&#19968;&#20010;&#21487;&#23433;&#35013; Web &#24212;&#29992;&#25152;&#24120;&#29992;&#30340; <code>&lt;head&gt;</code> &#26631;&#31614;&#65306;</p><pre><code class="language-php">Head::pwa(
+    name: 'Laravel',
+    manifest: '/site.webmanifest',
+    themeColor: '#0f172a',
+    appleTouchIcon: '/apple-touch-icon.png',
+    appleWebAppStatusBarStyle: 'black',
+);</code></pre><p>&#23427;&#20250;&#28210;&#26579;&#24212;&#29992;&#21517;&#31216;&#12289;Web &#24212;&#29992;&#28165;&#21333;&#38142;&#25509;&#20197;&#21450; iOS standalone &#20803;&#25968;&#25454;&#12290;&#22914;&#26524;&#25552;&#20379;&#20102;&#20027;&#39064;&#39068;&#33394;&#12289;Apple &#29366;&#24577;&#26639;&#26679;&#24335;&#19982; Apple touch &#22270;&#26631;&#65292;&#20063;&#20250;&#19968;&#24182;&#28210;&#26579;&#12290;&#21019;&#24314; Web &#24212;&#29992;&#28165;&#21333;&#19982;&#27880;&#20876; service worker &#20173;&#30001;&#24212;&#29992;&#33258;&#34892;&#36127;&#36131;&#12290;</p><p>&#21487;&#20197;&#22312;&#40664;&#35748;&#20540;&#25110;&#36816;&#34892;&#26102;&#20803;&#25968;&#25454;&#20013;&#20351;&#29992; <code>pwa</code> &#26041;&#27861;&#12290;&#36335;&#30001;&#20803;&#25968;&#25454;&#25903;&#25345;&#19978;&#25991;&#25552;&#21040;&#30340;&#37027;&#20123;&#29420;&#31435;&#23646;&#24615;&#12290;</p><h2 id="427022cf91e12e600014d1310ed1383a">&#24615;&#33021;&#19982;&#21457;&#29616;</h2><p>Laravel Head &#21487;&#28210;&#26579;&#24615;&#33021;&#25552;&#31034;&#12289;&#20998;&#39029;&#38142;&#25509;&#12289;locale &#20505;&#36873;&#39033;&#19982; feed &#21457;&#29616;&#65306;</p><pre><code class="language-php">Head::preload(asset('fonts/inter.woff2'), as: 'font', crossorigin: true)
+    -&gt;prefetch(asset('images/next.webp'))
+    -&gt;preconnect('https://cdn.example.com')
+    -&gt;dnsPrefetch('https://analytics.example.com')
+    -&gt;paginate($posts)
+    -&gt;alternates([
+        'en' =&gt; 'https://example.com/en/about',
+        'fr' =&gt; 'https://example.com/fr/about',
+        'x-default' =&gt; 'https://example.com/about',
+    ])
+    -&gt;feed('/feed', title: 'Laravel RSS')
+    -&gt;feed('/feed.atom', type: 'atom', title: 'Laravel Atom');</code></pre><p>&#23545;&#20110;&#26412;&#22320;&#36164;&#28304;&#65292;<code>preloadAsset()</code> &#19982; <code>prefetchAsset()</code> &#20250;&#36890;&#36807; <code>asset()</code> &#36741;&#21161;&#20989;&#25968;&#35299;&#26512; URL&#65292;&#24182;&#26681;&#25454;&#25991;&#20214;&#25193;&#23637;&#21517;&#33258;&#21160;&#35782;&#21035; <code>as</code> &#23646;&#24615;&#12290;&#23383;&#20307; preload &#20250;&#33258;&#21160;&#24102;&#19978; <code>crossorigin</code>&mdash;&mdash;&#23613;&#31649;&#26159;&#21516;&#28304;&#23383;&#20307;&#65292;preload &#35268;&#33539;&#20063;&#35201;&#27714;&#36825;&#26679;&#20570;&#65306;</p><pre><code class="language-php">Head::preloadAsset('fonts/inter.woff2')
+    -&gt;prefetchAsset('images/next.webp');</code></pre><pre><code class="language-html">&lt;link rel="preload" href="https://example.com/fonts/inter.woff2" as="font" crossorigin&gt;
+&lt;link rel="prefetch" href="https://example.com/images/next.webp" as="image"&gt;</code></pre><p>&#21487;&#20197;&#26174;&#24335;&#20256;&#20837; <code>as</code> &#35206;&#30422;&#33258;&#21160;&#26816;&#27979;&#12290;&#24403; <code>as</code> &#23646;&#24615;&#26080;&#27861;&#20174;&#25193;&#23637;&#21517;&#25512;&#26029;&#26102;&#65292;<code>preloadAsset</code> &#26041;&#27861;&#20250;&#25243;&#20986;&#24322;&#24120;&mdash;&mdash;&#22240;&#20026;&#27983;&#35272;&#22120;&#22312;&#27809;&#26377;&#35813;&#23646;&#24615;&#30340;&#24773;&#20917;&#19979;&#20250;&#24573;&#30053; preload&#65307;<code>prefetchAsset</code> &#26041;&#27861;&#21017;&#20250;&#30452;&#25509;&#30465;&#30053;&#23427;&#12290;</p><h2 id="695ef488157108cebfa8c662d0774201">&#33258;&#23450;&#20041;&#26631;&#31614;</h2><p>&#23545;&#20110;&#27809;&#26377;&#19987;&#23646;&#26041;&#27861;&#30340;&#26631;&#31614;&#65292;&#21487;&#20197;&#20351;&#29992; <code>meta()</code> &#19982; <code>link()</code>&#65306;</p><pre><code class="language-php">Head::meta('format-detection', 'telephone=no')
+    -&gt;meta('article:author', $post-&gt;author-&gt;name)
+    -&gt;link('search', '/opensearch.xml', [
+        'type' =&gt; 'application/opensearchdescription+xml',
+        'title' =&gt; 'Laravel Search',
+    ])
+    -&gt;link('me', 'https://social.example.com/@laravel');</code></pre><p>&#22914;&#26524;&#24076;&#26395;&#26576; meta &#26631;&#31614;&#20165;&#22312;&#28385;&#36275;&#21305;&#37197;&#26465;&#20214;&#26102;&#34987;&#27983;&#35272;&#22120;&#24212;&#29992;&#65292;&#21487;&#20197;&#20256;&#20837;&#23186;&#20307;&#26597;&#35810;&#65306;</p><pre><code class="language-php">use Laravel\Head\Enums\Media;
+
+Head::meta('theme-color', '#ffffff', media: Media::Light)
+    -&gt;meta('theme-color', '#111827', media: Media::Dark);</code></pre><p><code>meta</code> &#26041;&#27861;&#23545;&#24120;&#35268; meta &#26631;&#31614;&#20351;&#29992; <code>name</code> &#23646;&#24615;&#12290;&#23545;&#20110;&#36890;&#24120;&#20351;&#29992; <code>property</code> &#23646;&#24615;&#30340; key&#65288;&#22914; Open Graph&#65288;<code>og:</code>&#65289;&#25110; article &#20803;&#25968;&#25454;&#65288;<code>article:</code>&#65289;&#65289;&#65292;&#26041;&#27861;&#20250;&#33258;&#21160;&#20999;&#25442;&#65306;</p><pre><code class="language-php">Head::meta('description', 'About Laravel')
+    -&gt;meta('og:title', 'About Laravel');</code></pre><pre><code class="language-html">&lt;meta name="description" content="About Laravel"&gt;
+&lt;meta property="og:title" content="About Laravel"&gt;</code></pre><p>&#21487;&#20197;&#26174;&#24335;&#20256;&#20837; <code>property: true</code> &#25110; <code>property: false</code> &#26469;&#36873;&#25321;&#23646;&#24615;&#31867;&#22411;&#12290;</p><h2 id="7146a60667b422e69fd050fe1df6859a">Schema</h2><p>&#20869;&#32622;&#30340; schema &#26500;&#36896;&#22120;&#35206;&#30422;&#20102;&#24120;&#35265;&#30340; JSON-LD &#31867;&#22411;&#65306;</p><pre><code class="language-php">use Laravel\Head\Enums\OfferAvailability;
+use Laravel\Head\Facades\Schema;
+
+Head::schema(
+    Schema::product()
+        -&gt;name($product-&gt;name)
+        -&gt;offers(
+            Schema::offer()
+                -&gt;price($product-&gt;price)
+                -&gt;currency('USD')
+                -&gt;availability(OfferAvailability::InStock)
+        )
+);</code></pre><p>&#20869;&#32622;&#30340;&#24037;&#21378;&#26041;&#27861;&#21253;&#25324;&#65306;<code>article</code>&#12289;<code>blogPosting</code>&#12289;<code>product</code>&#12289;<code>offer</code>&#12289;<code>brand</code>&#12289;<code>breadcrumbs</code>&#12289;<code>faq</code>&#12289;<code>organization</code>&#12289;<code>person</code>&#12289;<code>webPage</code> &#21644; <code>webSite</code>&#12290;&#26410;&#30693;&#30340;&#24037;&#21378;&#26041;&#27861;&#20250;&#21019;&#24314;&#19968;&#20010;&#36890;&#29992; schema &#23545;&#35937;&#65292;&#22240;&#27492;&#20173;&#28982;&#21487;&#20197;&#34920;&#36798;&#33258;&#23450;&#20041;&#30340; schema.org &#31867;&#22411;&#12290;</p><p>&#24403; JSON-LD schema &#25968;&#25454;&#19981;&#21512;&#27861;&#26102;&#65292;Laravel Head &#22312;&#38750;&#29983;&#20135;&#29615;&#22659;&#20250;&#25243;&#20986;&#24322;&#24120;&#65292;&#22312;&#29983;&#20135;&#29615;&#22659;&#20165;&#35760;&#24405;&#35686;&#21578;&#12290;</p><h3 id="bd583a6e4543b796b2ac49e44ff5ba44">&#38754;&#21253;&#23633;&#65288;Breadcrumbs&#65289;</h3><p>&#21487;&#20197;&#36880;&#39033;&#25110;&#25209;&#37327;&#28155;&#21152;&#38754;&#21253;&#23633;&#39033;&#65292;&#20301;&#32622;&#65288;position&#65289;&#20250;&#25353;&#28155;&#21152;&#39034;&#24207;&#33258;&#21160;&#20998;&#37197;&#65306;</p><pre><code class="language-php">Head::schema(
+    Schema::breadcrumbs()-&gt;items([
+        'Home' =&gt; route('home'),
+        'Shop' =&gt; route('shop.index'),
+        'Shoes' =&gt; route('shop.category', 'shoes'),
+    ])
+);</code></pre><p>&#20063;&#21487;&#20197;&#29992; <code>item</code> &#26041;&#27861;&#36880;&#39033;&#28155;&#21152;&#65306;</p><pre><code class="language-php">Schema::breadcrumbs()
+    -&gt;item('Home', route('home'))
+    -&gt;item('Shop', route('shop.index'));</code></pre><h3 id="1fe917b01f9a3f87fa2d7d3b7643fac1">FAQ</h3><p>FAQ &#26465;&#30446;&#36981;&#24490;&#30456;&#21516;&#30340;&#27169;&#24335;&#12290;&#21487;&#20197;&#20351;&#29992; <code>question</code> &#26041;&#27861;&#36880;&#26465;&#28155;&#21152;&#65292;&#25110;&#20351;&#29992; <code>questions</code> &#26041;&#27861;&#25209;&#37327;&#28155;&#21152;&#65306;</p><pre><code class="language-php">Head::schema(
+    Schema::faq()-&gt;questions([
+        'What is Laravel Head?' =&gt; 'A fluent API for managing the document head.',
+        'Is it free?' =&gt; 'Yes, it is open source.',
+    ])
+);</code></pre><h3 id="d029c49a3caa6221f07afbeb92b8673d">&#33258;&#23450;&#20041; Schemas</h3><p>&#21487;&#20197;&#26174;&#24335;&#27880;&#20876;&#33258;&#23450;&#20041; schema &#31867;&#22411;&#65306;</p><pre><code class="language-php">use DateTimeInterface;
+use Laravel\Head\Facades\Schema;
+use Laravel\Head\Schema\SchemaObject;
+use Laravel\Head\SchemaType;
+
+#[SchemaType('JobPosting')]
+class JobPosting extends SchemaObject
+{
+    public function title(string $title): static
+    {
+        return $this-&gt;set('title', $title);
+    }
+
+    public function datePosted(DateTimeInterface|string $date): static
+    {
+        return $this-&gt;date('datePosted', $date);
+    }
+}
+
+Schema::register(JobPosting::class);
+
+Head::schema(
+    Schema::jobPosting()
+        -&gt;title('Senior Laravel Developer')
+        -&gt;datePosted(now())
+);</code></pre><h2 id="e8308900fbf635700e990b67f10f7d46">&#28210;&#26579;</h2><p>Laravel Head &#20250;&#20026;&#24403;&#21069;&#21709;&#24212;&#35299;&#26512;&#20986;&#39029;&#38754;&#20803;&#25968;&#25454;&#26631;&#31614;&#12290;&#20855;&#20307;&#22914;&#20309;&#28210;&#26579;&#21462;&#20915;&#20110;&#20320;&#30340;&#24212;&#29992;&#26632;&#12290;</p><p>HTML &#28210;&#26579;&#22120;&#20026; <code>@head</code> &#25351;&#20196;&#25552;&#20379;&#25903;&#25345;&#65292;&#24182;&#20026; Laravel Head &#19982; Inertia &#36890;&#36807; <code>head</code> prop &#20849;&#20139;&#30340;&#20803;&#32032;&#25552;&#20379;&#28210;&#26579;&#33021;&#21147;&#12290;&#25968;&#32452;&#28210;&#26579;&#22120;&#20026; <code>Head::toArray()</code> &#25552;&#20379;&#25903;&#25345;&#65292;&#20379;&#37027;&#20123;&#38656;&#35201;&#25226;&#35299;&#26512;&#21518;&#30340;&#20803;&#25968;&#25454;&#20316;&#20026;&#32467;&#26500;&#21270;&#25968;&#25454;&#30340;&#24212;&#29992;&#20351;&#29992;&#12290;</p><h3 id="1ea52f26e7e0ce08e462f87f5e35096c">Blade</h3><p>&#22312;&#24067;&#23616;&#30340; <code>&lt;head&gt;</code> &#20013;&#29992; <code>@head</code> &#25351;&#20196;&#28210;&#26579;&#32047;&#31215;&#30340;&#26631;&#31614;&#65306;</p><pre><code class="language-blade">&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    @head
+&lt;/head&gt;</code></pre><p><code>@head</code> &#25351;&#20196;&#26159;&#21516;&#27493;&#28210;&#26579;&#30340;&#65292;&#22240;&#27492;&#39029;&#38754;&#20803;&#25968;&#25454;&#38656;&#35201;&#22312;&#24067;&#23616;&#28210;&#26579;&#21069;&#23450;&#20041;&#12290;</p><h3 id="17b339ccb60b8ee0f47dc6d247174b5e">Livewire</h3><p>Livewire &#24212;&#29992;&#22312;&#25991;&#26723;&#24067;&#23616;&#20013;&#20351;&#29992;&#30456;&#21516;&#30340; <code>@head</code> &#25351;&#20196;&#65306;</p><pre><code class="language-blade">&lt;head&gt;
+    @head
+&lt;/head&gt;
+
+&lt;body&gt;
+    {{ $slot }}
+
+    @livewireScripts
+&lt;/body&gt;</code></pre><p>&#26080;&#38656;&#20219;&#20309; Livewire &#19987;&#23646;&#37197;&#32622;&#12290;Laravel Head &#30340;&#20803;&#25968;&#25454;&#25353;&#35831;&#27714;&#35299;&#26512;&#65292;&#35299;&#26512;&#22120;&#20063;&#26159;&#35831;&#27714;&#20316;&#29992;&#22495;&#30340;&#12290;&#22240;&#27492;&#27599;&#27425; <code>wire:navigate</code> &#35775;&#38382;&#37117;&#20250;&#25289;&#21462;&#19968;&#20010;&#20840;&#26032;&#30340;&#25991;&#26723;&#65292;<code>@head</code> &#36755;&#20986;&#20250;&#21453;&#26144;&#30446;&#26631;&#36335;&#30001;&#30340;&#20803;&#25968;&#25454;&#12290;&#36890;&#36807; <code>wire:navigate</code> &#35775;&#38382;&#30340;&#39029;&#38754;&#20250;&#25910;&#21040;&#27491;&#30830;&#30340;&#36335;&#30001;&#12289;&#36816;&#34892;&#26102;&#21644;&#38169;&#35823;&#20803;&#25968;&#25454;&#65292;&#26080;&#38656;&#22312;&#32452;&#20214;&#20869;&#20889; head &#30456;&#20851;&#20195;&#30721;&#12290;</p><h3 id="b19a24ee5c287f42ee1d465dab77ab37">Inertia</h3><p>&#22312; Inertia &#30340;&#26681;&#27169;&#26495;&#20013;&#20351;&#29992;&#30456;&#21516;&#30340; <code>@head</code> &#25351;&#20196;&#65292;&#24182;&#37197;&#21512; Inertia &#33258;&#36523;&#30340;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    @head
+
+    @viteReactRefresh
+    @vite(['resources/css/app.css', 'resources/js/app.tsx'])
+    &lt;x-inertia::head /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;x-inertia::app /&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p>&#24403;&#23433;&#35013;&#20102; Inertia&#65292;Laravel Head &#20250;&#33258;&#21160;&#25226;&#39029;&#38754;&#31649;&#29702;&#30340; head &#20316;&#20026;&#24050;&#28210;&#26579;&#20803;&#32032;&#23383;&#31526;&#20018;&#25968;&#32452;&#65292;&#36890;&#36807;&#27599;&#20010;&#39029;&#38754;&#23545;&#35937;&#19978;&#30340; <code>head</code> prop &#36827;&#34892;&#20849;&#20139;&#65306;</p><pre><code class="language-json">{
+    "props": {
+        "head": [
+            "&lt;title data-inertia=\"title\"&gt;Dashboard - Laravel&lt;/title&gt;",
+            "&lt;meta data-inertia=\"description\" name=\"description\" content=\"Your application overview.\"&gt;"
+        ]
+    }
+}</code></pre><p>&#22312;&#35843;&#29992; <code>createInertiaApp()</code> &#30340;&#22320;&#26041;&#21551;&#29992; Inertia &#30340; <code>serverHead</code> &#36873;&#39033;&#12290;&#35813;&#36873;&#39033;&#22312; Inertia 3.5 &#21450;&#20197;&#19978;&#29256;&#26412;&#21487;&#29992;&#65306;</p><pre><code class="language-js">createInertiaApp({
+    // ...
+    serverHead: true,
+});</code></pre><p>&#27599;&#20010;&#30001;&#39029;&#38754;&#31649;&#29702;&#30340;&#20803;&#32032;&#37117;&#24102;&#26377;&#31283;&#23450;&#30340; <code>data-inertia</code> key&#12290;<code>@head</code> &#25351;&#20196;&#20250;&#20808;&#28210;&#26579;&#21021;&#22987;&#25991;&#26723;&#65292;&#20043;&#21518; Inertia &#20250;&#25509;&#31649;&#36825;&#20123;&#20803;&#32032;&#65292;&#24182;&#22312;&#24120;&#35268;&#35775;&#38382;&#12289;<a href="https://inertiajs.com/docs/v3/the-basics/instant-visits" target="_blank" rel="noopener noreferrer">&#21363;&#26102;&#35775;&#38382;</a> &#21644;&#21069;&#36827;/&#21518;&#36864;&#23548;&#33322;&#26399;&#38388;&#20445;&#25345;&#21516;&#27493;&#12290;&#36825;&#20123;&#20803;&#32032;&#23384;&#22312;&#20110;&#21021;&#22987; HTML &#21709;&#24212;&#20013;&#65292;&#22240;&#27492;&#29228;&#34411;&#21644;&#38142;&#25509;&#39044;&#35272; bot &#21363;&#20351;&#19981;&#25191;&#34892; JavaScript &#20063;&#33021;&#35835;&#21462;&#12290;&#26080;&#38656;&#22312;&#23458;&#25143;&#31471;&#20351;&#29992; <code>&lt;Head&gt;</code> &#32452;&#20214;&#12290;</p><p>&#26080;&#35770;&#26159;&#21542;&#20351;&#29992; <a href="https://inertiajs.com/docs/v3/advanced/server-side-rendering" target="_blank" rel="noopener noreferrer">&#26381;&#21153;&#31471;&#28210;&#26579;&#65288;SSR&#65289;</a> &#37117;&#21487;&#20197;&#24037;&#20316;&#12290;&#22914;&#26524;&#24212;&#29992;&#26377;&#29420;&#31435;&#30340; SSR &#20837;&#21475;&#65292;&#35831;&#22312;&#37027;&#37324;&#20063;&#21551;&#29992; <code>serverHead</code>&#12290;Laravel Head &#20250;&#22312; <code>@head</code> &#19982; <code>&lt;x-inertia::head /&gt;</code> &#20043;&#38388;&#33258;&#21160;&#21435;&#37325;&#39029;&#38754;&#31649;&#29702;&#30340;&#20803;&#32032;&mdash;&mdash;&#26080;&#35770;&#20004;&#32773;&#20986;&#29616;&#39034;&#24207;&#22914;&#20309;&#65292;&#21516;&#26102;&#20445;&#30041;&#30001; JavaScript SSR &#20135;&#29983;&#30340;&#20854;&#20182; head &#20803;&#32032;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#23558; Laravel Head &#24341;&#20837;&#29616;&#26377; Inertia &#24212;&#29992;&#26102;&#65292;&#35831;&#20174; <code>resources/js/app.tsx</code> &#19982; <code>resources/js/ssr.tsx</code> &#20013;&#21024;&#38500; title &#22238;&#35843;&#65292;&#35753; Laravel Head &#31649;&#29702;&#26368;&#32456;&#30340;&#25991;&#26723; title&#65307;&#24182;&#25226;&#30001; Inertia <a href="https://inertiajs.com/docs/v3/the-basics/title-and-meta" target="_blank" rel="noopener noreferrer"><code>&lt;Head&gt;</code> &#32452;&#20214;</a> &#31649;&#29702;&#30340;&#26631;&#31614;&#36801;&#31227;&#21040; Laravel Head&#65292;&#36991;&#20813;&#37325;&#22797;&#23450;&#20041;&#21516;&#19968;&#20803;&#32032;&#12290;</p>
+</blockquote><p><code>head</code> prop &#19981;&#20250;&#20986;&#29616;&#22312;&#23616;&#37096;&#21047;&#26032;&#21709;&#24212;&#20013;&#65292;&#22240;&#27492; Inertia &#20250;&#27839;&#29992;&#19978;&#19968;&#27425;&#23436;&#25972;&#39029;&#38754;&#30340; head&#12290;&#21363;&#26102;&#35775;&#38382;&#21516;&#26679;&#20250;&#20445;&#30041;&#24403;&#21069; head&#65292;&#30452;&#21040;&#21518;&#21488;&#21709;&#24212;&#21040;&#36798;&#12290;&#22914;&#26524;&#24212;&#29992;&#24050;&#32463;&#22312;&#20351;&#29992; <code>head</code> prop&#65292;&#21487;&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#20013;&#20462;&#25913;&#20854;&#21517;&#31216;&#65306;</p><pre><code class="language-php">use Laravel\Head\Facades\Head;
+
+public function boot(): void
+{
+    Head::inertia(prop: '_head');
+}</code></pre><p>&#28982;&#21518;&#36890;&#36807; <code>serverHead: '_head'</code> &#35753; Inertia &#25351;&#21521;&#21516;&#19968;&#20010; prop&#12290;</p><h4 id="e44500c71fe9faaee73effdc1f091b02">&#38745;&#24577; Inertia &#26631;&#31614;</h4><p>&#22823;&#22810;&#25968;&#26631;&#31614;&#37117;&#24212;&#35813;&#25918;&#22312;&#40664;&#35748;&#20540;&#12289;&#36335;&#30001;&#20803;&#25968;&#25454;&#25110;&#36816;&#34892;&#26102;&#20803;&#25968;&#25454;&#37324;&#65292;&#20197;&#20415; Laravel Head &#33021;&#20026;&#27599;&#20010;&#39029;&#38754;&#35299;&#26512;&#20986;&#27491;&#30830;&#30340;&#20540;&#12290;&#21482;&#26377;&#39318;&#27425; HTML &#21709;&#24212;&#37324;&#20986;&#29616;&#12289;&#19988;&#20043;&#21518;&#19981;&#20877;&#30001; Inertia &#26356;&#26032;&#30340;&#37027;&#20123;&#25991;&#26723;&#26631;&#31614;&#65292;&#25165;&#36866;&#21512;&#25918;&#22312; Inertia globals &#20013;&#12290;</p><p>&#21487;&#20197;&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#20013;&#36890;&#36807; <code>Head::inertiaGlobals()</code> &#27880;&#20876;&#23427;&#20204;&#65306;</p><pre><code class="language-php">use Laravel\Head\Facades\Head;
+use Laravel\Head\HeadBuilder;
+
+Head::inertiaGlobals(function (HeadBuilder $head) {
+    $head
+        -&gt;viewport('width=device-width, initial-scale=1')
+        -&gt;colorScheme('light dark')
+        -&gt;icon('/favicon.svg', type: 'image/svg+xml')
+        -&gt;appleTouchIcon('/apple-touch-icon.png', sizes: '180x180')
+        -&gt;manifest('/site.webmanifest');
+});</code></pre><p>Inertia globals &#19981;&#20250;&#20986;&#29616;&#22312; <code>head</code> prop &#20013;&#12289;&#28210;&#26579;&#26102;&#19981;&#24102; <code>data-inertia</code> &#24402;&#23646;&#23646;&#24615;&#65292;&#24182;&#19988;&#22312;&#31532;&#19968;&#27425;&#21709;&#24212;&#21518;&#19981;&#20877;&#26356;&#26032;&#12290;&#36825;&#31867;&#20840;&#23616;&#26631;&#31614;&#36866;&#21512; viewport&#12289;color-scheme&#12289;favicon&#12289;touch icon&#12289;manifest &#31561;&#30456;&#23545;&#31283;&#23450;&#12289;&#19968;&#27425;&#30830;&#23450;&#21363;&#21487;&#30340;&#27983;&#35272;&#22120;&#25552;&#31034;&#12290;&#22914;&#26524;&#26576;&#20010;&#26631;&#31614;&#19982;&#20855;&#20307;&#39029;&#38754;&#30456;&#20851;&#12289;&#20250;&#24433;&#21709; SEO&#12289;&#25110;&#32773;&#20197;&#21518;&#21487;&#33021;&#35843;&#25972;&#65292;&#24314;&#35758;&#25913;&#25918;&#22312; <code>defaults</code>&#12289;&#36335;&#30001;&#20803;&#25968;&#25454;&#25110;&#36816;&#34892;&#26102;&#20803;&#25968;&#25454;&#20013;&#12290;</p><p>&#22914;&#26524;&#24212;&#29992;&#38656;&#35201;&#25226;&#35299;&#26512;&#21518;&#30340;&#20803;&#25968;&#25454;&#20316;&#20026;&#32467;&#26500;&#21270;&#25968;&#25454;&#20351;&#29992;&#65292;&#32780;&#19981;&#26159;&#28210;&#26579;&#25104;&#26631;&#31614;&#65292;&#21487;&#20197;&#35843;&#29992; <code>Head::toArray()</code>&#12290;&#36820;&#22238;&#30340;&#25968;&#25454;&#21253;&#25324; titles&#12289;Open Graph &#20540;&#12289;JSON-LD schemas &#21450;&#20854;&#20182;&#24050;&#35299;&#26512;&#20803;&#25968;&#25454;&#12290;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Laravel Head: <i><a href="https://github.com/laravel/head" target="_blank">https://github.com/laravel/head</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 渲染: <i><a href="569x568yep.html#rendering" target="_blank">#rendering</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> `meta`: <i><a href="569x568yep.html#custom-tags" target="_blank">#custom-tags</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> 即时访问: <i><a href="https://inertiajs.com/docs/v3/the-basics/instant-visits" target="_blank">https://inertiajs.com/docs/v3/the-basics/instant-visits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> 服务端渲染（SSR）: <i><a href="https://inertiajs.com/docs/v3/advanced/server-side-rendering" target="_blank">https://inertiajs.com/docs/v3/advanced/server-side-rendering</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> `<Head>` 组件: <i><a href="https://inertiajs.com/docs/v3/the-basics/title-and-meta" target="_blank">https://inertiajs.com/docs/v3/the-basics/title-and-meta</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="qk942rovw1.html#blog1083" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Laravel Folio</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="dgy7x25vw2.html#blog1085" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">Laravel Homestead</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

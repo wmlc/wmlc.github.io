@@ -70,7 +70,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
 
     
 </head>
@@ -325,6 +325,10 @@
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
+                                   href="../Laravel&#32;13.x/overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
                                    href="../Linux/overview.html">Linux</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
@@ -565,6 +569,93 @@
     })();
 </script>
 
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -581,7 +672,7 @@ var _hmt = _hmt || [];
 		<h1>Filebeat 配置详解</h1><ul>
 <li><a href="xkdvp38ezo.html#5e184361f5f00afb86011510a0b7b091">一、配置详解</a></li>
 <li><a href="xkdvp38ezo.html#05bba993e4adff5cf3dc58d22370e82b">二、模块配置</a></li>
-</ul><?xml encoding="UTF-8"><h3 id="5e184361f5f00afb86011510a0b7b091">&#19968;&#12289;&#37197;&#32622;&#35814;&#35299;</h3><p><strong class="mk-b">1.1 input&#37197;&#32622;&#27573;</strong></p><pre><code class="language-yaml">#&#27599;&#19968;&#20010;prospectors&#65292;&#36215;&#22987;&#20110;&#19968;&#20010;&#30772;&#25240;&#21495;&rdquo;-&ldquo;
+</ul><?xml encoding="UTF-8"><h3 id="5e184361f5f00afb86011510a0b7b091">&#19968;&#12289;&#37197;&#32622;&#35814;&#35299;</h3><p><strong class="mk-y">1.1 input&#37197;&#32622;&#27573;</strong></p><pre><code class="language-yaml">#&#27599;&#19968;&#20010;prospectors&#65292;&#36215;&#22987;&#20110;&#19968;&#20010;&#30772;&#25240;&#21495;&rdquo;-&ldquo;
 filebeat.prospectors:
 
 #&#40664;&#35748;log&#65292;&#20174;&#26085;&#24535;&#25991;&#20214;&#35835;&#21462;&#27599;&#19968;&#34892;&#12290;stdin&#65292;&#20174;&#26631;&#20934;&#36755;&#20837;&#35835;&#21462;
@@ -649,7 +740,7 @@ filebeat.idle_timeout: 5s
 filebeat.registry_file: ${path.data}/registry
 
 #&#23450;&#20041;filebeat&#37197;&#32622;&#25991;&#20214;&#30446;&#24405;&#65292;&#24517;&#39035;&#25351;&#23450;&#19968;&#20010;&#19981;&#21516;&#20110;filebeat&#20027;&#37197;&#32622;&#25991;&#20214;&#25152;&#22312;&#30340;&#30446;&#24405;&#65292;&#30446;&#24405;&#20013;&#25152;&#26377;&#37197;&#32622;&#25991;&#20214;&#20013;&#30340;&#20840;&#23616;&#37197;&#32622;&#20250;&#34987;&#24573;&#30053;
-filebeat.config_dir</code></pre><p><strong class="mk-b">1.2 &#36890;&#29992;&#37197;&#32622;&#27573;</strong></p><pre><code class="language-yaml">#&#37197;&#32622;&#21457;&#36865;&#32773;&#21517;&#31216;&#65292;&#22914;&#26524;&#19981;&#37197;&#32622;&#21017;&#20351;&#29992;hostname
+filebeat.config_dir</code></pre><p><strong class="mk-p">1.2 &#36890;&#29992;&#37197;&#32622;&#27573;</strong></p><pre><code class="language-yaml">#&#37197;&#32622;&#21457;&#36865;&#32773;&#21517;&#31216;&#65292;&#22914;&#26524;&#19981;&#37197;&#32622;&#21017;&#20351;&#29992;hostname
 name:
 
 #&#26631;&#35760;tag&#65292;&#21487;&#29992;&#20110;&#20998;&#32452;
@@ -662,7 +753,7 @@ fields:
 queue_size: 1000
 
 #&#35774;&#32622;&#26368;&#22823;CPU&#25968;&#65292;&#40664;&#35748;&#20026;CPU&#26680;&#25968;
-max_procs:</code></pre><p><strong class="mk-p">1.3 Path&#37197;&#32622;&#27573;</strong></p><pre><code class="language-yaml">#filebeat&#23433;&#35013;&#30446;&#24405;&#65292;&#20026;&#20854;&#20182;&#25152;&#26377;path&#37197;&#32622;&#30340;&#40664;&#35748;&#22522;&#26412;&#36335;&#24452;&#65292;&#40664;&#35748;&#20026;filebeat&#20108;&#36827;&#21046;&#25991;&#20214;&#30340;&#26412;&#22320;&#30446;&#24405;
+max_procs:</code></pre><p><strong class="mk-g">1.3 Path&#37197;&#32622;&#27573;</strong></p><pre><code class="language-yaml">#filebeat&#23433;&#35013;&#30446;&#24405;&#65292;&#20026;&#20854;&#20182;&#25152;&#26377;path&#37197;&#32622;&#30340;&#40664;&#35748;&#22522;&#26412;&#36335;&#24452;&#65292;&#40664;&#35748;&#20026;filebeat&#20108;&#36827;&#21046;&#25991;&#20214;&#30340;&#26412;&#22320;&#30446;&#24405;
 path.home:
 
 #filebeat&#37197;&#32622;&#36335;&#24452;&#65292;&#20027;&#37197;&#32622;&#25991;&#20214;&#21644;es&#27169;&#26495;&#30340;&#40664;&#35748;&#22522;&#26412;&#36335;&#24452;&#65292;&#40664;&#35748;&#20026;filebeat&#23478;&#30446;&#24405;
@@ -706,7 +797,7 @@ name:
 rotateeverybytes: 10485760
 
 #&#26085;&#24535;&#36718;&#24490;&#25991;&#20214;&#20445;&#23384;&#25968;&#37327;&#65292;&#40664;&#35748;7
-keepfiles: 7</code></pre><h3 id="05bba993e4adff5cf3dc58d22370e82b">&#20108;&#12289;&#27169;&#22359;&#37197;&#32622;</h3><p><strong class="mk-y">2.1 &#36755;&#20986;&#21040;Kafka&#38598;&#32676;&#20013;</strong></p><pre><code class="language-yaml">filebeat.inputs:
+keepfiles: 7</code></pre><h3 id="05bba993e4adff5cf3dc58d22370e82b">&#20108;&#12289;&#27169;&#22359;&#37197;&#32622;</h3><p><strong class="mk-p">2.1 &#36755;&#20986;&#21040;Kafka&#38598;&#32676;&#20013;</strong></p><pre><code class="language-yaml">filebeat.inputs:
 - type: log
   enabled: true
   paths:
@@ -729,7 +820,7 @@ setup.template.settings:
 output.kafka:
   enabled: true
   hosts: ["1.1.1.1:9092","1.1.1.2:9092","1.1.1.3:9092"] #kafka&#38598;&#32676;&#22320;&#22336;
-  topic: 'tomcat-server-log' #topic&#21517;</code></pre><p><strong class="mk-b">2.2 &#36755;&#20986;&#21040;elasticsearch</strong></p><pre><code class="language-yaml">#&#21551;&#29992;&#27169;&#22359;
+  topic: 'tomcat-server-log' #topic&#21517;</code></pre><p><strong class="mk-p">2.2 &#36755;&#20986;&#21040;elasticsearch</strong></p><pre><code class="language-yaml">#&#21551;&#29992;&#27169;&#22359;
 enabled: true
 
 #ES&#22320;&#22336;
@@ -760,7 +851,7 @@ max_retries: 3
 bulk_max_size: 50
 
 #&#21040;ES&#30340;http&#35831;&#27714;&#36229;&#26102;&#26102;&#38388;,&#40664;&#35748;90&#31186;
-timeout: 90</code></pre><p><strong class="mk-b">2.3 &#36755;&#20986;&#21040;logstash</strong></p><pre><code class="language-yaml">#&#21551;&#29992;&#27169;&#22359;
+timeout: 90</code></pre><p><strong class="mk-g">2.3 &#36755;&#20986;&#21040;logstash</strong></p><pre><code class="language-yaml">#&#21551;&#29992;&#27169;&#22359;
 enabled: true
 
 #logstash&#22320;&#22336;
@@ -785,7 +876,7 @@ index: &lsquo;filebeat&rsquo;
 proxy_url: socks5://user:password@socks5-server:2233
 
 #&#20351;&#29992;&#20195;&#29702;&#26102;&#26159;&#21542;&#20351;&#29992;&#26412;&#22320;&#35299;&#26512;&#65292;&#40664;&#35748;false
-proxy_use_local_resolver: false</code></pre><p><strong class="mk-b">2.4 &#36755;&#20986;&#21040;Redis</strong></p><pre><code class="language-yaml">#&#21551;&#29992;&#27169;&#22359;
+proxy_use_local_resolver: false</code></pre><p><strong class="mk-g">2.4 &#36755;&#20986;&#21040;Redis</strong></p><pre><code class="language-yaml">#&#21551;&#29992;&#27169;&#22359;
 enabled: true
 
 #logstash&#22320;&#22336;
@@ -828,7 +919,7 @@ bulk_max_size: 2048
 proxy_url:
 
 #&#20351;&#29992;&#20195;&#29702;&#26102;&#26159;&#21542;&#20351;&#29992;&#26412;&#22320;&#35299;&#26512;&#65292;&#40664;&#35748;false
-proxy_use_local_resolver: fals</code></pre><p><strong class="mk-y">2.5 &#35835;&#21462;Nginx&#26085;&#24535;&#36755;&#20986;&#21040;ES</strong></p><pre><code class="language-yaml">filebeat.inputs:
+proxy_use_local_resolver: fals</code></pre><p><strong class="mk-p">2.5 &#35835;&#21462;Nginx&#26085;&#24535;&#36755;&#20986;&#21040;ES</strong></p><pre><code class="language-yaml">filebeat.inputs:
 - type: log
   enabled: true
   paths:

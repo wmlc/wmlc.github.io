@@ -1,0 +1,1459 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>缓存 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/5dve2w3v4x.html', function (data, status) {
+            addView('5dve2w3v4x.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>缓存</h1><ul>
+<li><a href="5dve2w3v4x.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="5dve2w3v4x.html#224e2ccda861c2514faa683b3683c361">配置</a>
+<ul>
+<li><a href="5dve2w3v4x.html#934c47f8569f6de4389638e42069a4e1">驱动前置条件</a>
+<ul>
+<li><a href="5dve2w3v4x.html#68051bf4aa2743b030984b694628ee9c">数据库</a></li>
+<li><a href="5dve2w3v4x.html#05894ba2c918dd33592bf1bd21c347f6">Memcached</a></li>
+<li><a href="5dve2w3v4x.html#e111446745a1825b862f8727ae63bce4">Redis</a></li>
+<li><a href="5dve2w3v4x.html#a39cf1ca12a97140547dc54624e4bd6f">存储</a></li>
+<li><a href="5dve2w3v4x.html#6ebb7423072c5943f52c11274fd71b0b">DynamoDB</a></li>
+<li><a href="5dve2w3v4x.html#206e3718af092fd1d12f80cae771ccac">MongoDB</a></li>
+</ul></li>
+</ul></li>
+<li><a href="5dve2w3v4x.html#f2874988bd06c60f915262ff5d8c9669">缓存的使用</a>
+<ul>
+<li><a href="5dve2w3v4x.html#e85f81c90c393bb34da6cb49ce9b4e6f">获取缓存实例</a>
+<ul>
+<li><a href="5dve2w3v4x.html#25a6fad9b53cd95db1c6fe8048737e94">访问多个缓存存储</a></li>
+</ul></li>
+<li><a href="5dve2w3v4x.html#b7b4f3ebaabd04b6487ba48e5bf06cfe">从缓存中检索条目</a>
+<ul>
+<li><a href="5dve2w3v4x.html#fa71a3e16aaecd5bea8e573037300468">判断条目是否存在</a></li>
+<li><a href="5dve2w3v4x.html#ace89b5b48bdbcbf1d38d33b500b1d7a">递增 / 递减数值</a></li>
+<li><a href="5dve2w3v4x.html#02ecd83f24f2fad6ae79ed118a7ec7d6">检索并存储</a></li>
+<li><a href="5dve2w3v4x.html#18a61085313ff2c38c8b0694a633c43d">过期期间返回旧数据</a></li>
+<li><a href="5dve2w3v4x.html#72593c574223d99f1421b368d268bd2e">检索并删除</a></li>
+</ul></li>
+<li><a href="5dve2w3v4x.html#7b49e49e31408128e3462530a7ee81af">在缓存中存储条目</a>
+<ul>
+<li><a href="5dve2w3v4x.html#44a55d66f62eac2428885e70e50b05c8">不存在时才存储</a></li>
+</ul></li>
+<li><a href="5dve2w3v4x.html#0b4ae5af1ddf4a31e0a761b444eecca8">延长条目生命周期</a>
+<ul>
+<li><a href="5dve2w3v4x.html#46f3916cc1ac94313f205a6930091c63">永久存储条目</a></li>
+</ul></li>
+<li><a href="5dve2w3v4x.html#8e2a32f095d198efda604177ddc01213">从缓存中移除条目</a></li>
+<li><a href="5dve2w3v4x.html#9038e2257ee6da73f58491769a7ee99d">缓存记忆化</a></li>
+<li><a href="5dve2w3v4x.html#3178c9ab009a10f07cf2de9481f93cfc">缓存辅助函数</a></li>
+</ul></li>
+<li><a href="5dve2w3v4x.html#fdbfd8449c5359ff7e764944a122b179">缓存标签</a>
+<ul>
+<li><a href="5dve2w3v4x.html#21e279d57ac2733db6b6f6f38a3c7cc1">存储带标签的缓存条目</a></li>
+<li><a href="5dve2w3v4x.html#85610b8b64f0d86403a47dd3134ff7c2">访问带标签的缓存条目</a></li>
+<li><a href="5dve2w3v4x.html#638293ee6eb89f06ac4d87b7e2111589">移除带标签的缓存条目</a></li>
+</ul></li>
+<li><a href="5dve2w3v4x.html#8a1c7cfbce26ccf37acfdcb9d2b0e926">原子锁</a>
+<ul>
+<li><a href="5dve2w3v4x.html#f01d1b85bc8c8281e7b8acef0e103645">管理锁</a></li>
+<li><a href="5dve2w3v4x.html#9e3d4f1c30de7432f7495dc64cc92b4d">跨进程管理锁</a></li>
+<li><a href="5dve2w3v4x.html#5138af80277be6096348456092a0687d">刷新锁</a></li>
+<li><a href="5dve2w3v4x.html#47fedf10ff02e466e28c2528305930ba">并发限制</a></li>
+</ul></li>
+<li><a href="5dve2w3v4x.html#eb926b4fdf626abcc8855923a3e22436">缓存故障转移</a></li>
+<li><a href="5dve2w3v4x.html#d6a367191a63038e417737fa159897e4">添加自定义缓存驱动</a>
+<ul>
+<li><a href="5dve2w3v4x.html#8ff2a9b9af3b7d7631328503396d25be">编写驱动</a></li>
+<li><a href="5dve2w3v4x.html#853d254f08da1ccad10ace69b3ae9d28">注册驱动</a></li>
+</ul></li>
+<li><a href="5dve2w3v4x.html#10b2761db5a8e089049df39675abc550">事件</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>&#20320;&#30340;&#24212;&#29992;&#31243;&#24207;&#25191;&#34892;&#30340;&#37096;&#20998;&#25968;&#25454;&#26816;&#32034;&#25110;&#22788;&#29702;&#20219;&#21153;&#21487;&#33021;&#38750;&#24120;&#28040;&#32791; CPU&#65292;&#25110;&#32773;&#38656;&#35201;&#25968;&#31186;&#25165;&#33021;&#23436;&#25104;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#36890;&#24120;&#20250;&#23558;&#25968;&#25454;&#32531;&#23384;&#19968;&#27573;&#26102;&#38388;&#65292;&#20197;&#20415;&#22312;&#21518;&#32493;&#35831;&#27714;&#30456;&#21516;&#25968;&#25454;&#26102;&#33021;&#22815;&#24555;&#36895;&#26816;&#32034;&#12290;&#32531;&#23384;&#25968;&#25454;&#36890;&#24120;&#23384;&#20648;&#22312;&#19968;&#20010;&#38750;&#24120;&#24555;&#36895;&#30340;&#25968;&#25454;&#23384;&#20648;&#20013;&#65292;&#20363;&#22914; <a href="https://memcached.org" target="_blank" rel="noopener noreferrer">Memcached</a> &#25110; <a href="https://redis.io" target="_blank" rel="noopener noreferrer">Redis</a>&#12290;</p><p>&#20540;&#24471;&#24198;&#24184;&#30340;&#26159;&#65292;Laravel &#20026;&#21508;&#31181;&#32531;&#23384;&#21518;&#31471;&#25552;&#20379;&#20102;&#23500;&#26377;&#34920;&#29616;&#21147;&#19988;&#32479;&#19968;&#30340; API&#65292;&#35753;&#20320;&#33021;&#22815;&#21033;&#29992;&#20854;&#26497;&#24555;&#30340;&#25968;&#25454;&#26816;&#32034;&#33021;&#21147;&#65292;&#20174;&#32780;&#21152;&#36895; Web &#24212;&#29992;&#31243;&#24207;&#12290;</p><h2 id="224e2ccda861c2514faa683b3683c361">&#37197;&#32622;</h2><p>&#20320;&#30340;&#24212;&#29992;&#31243;&#24207;&#30340;&#32531;&#23384;&#37197;&#32622;&#25991;&#20214;&#20301;&#20110; <code>config/cache.php</code>&#12290;&#22312;&#35813;&#25991;&#20214;&#20013;&#65292;&#20320;&#21487;&#20197;&#25351;&#23450;&#40664;&#35748;&#24773;&#20917;&#19979;&#25972;&#20010;&#24212;&#29992;&#31243;&#24207;&#35201;&#20351;&#29992;&#21738;&#20010;&#32531;&#23384;&#23384;&#20648;&#12290;Laravel &#24320;&#31665;&#21363;&#29992;&#22320;&#25903;&#25345;&#27969;&#34892;&#30340;&#32531;&#23384;&#21518;&#31471;&#65292;&#20363;&#22914; <a href="https://memcached.org" target="_blank" rel="noopener noreferrer">Memcached</a>&#12289;<a href="https://redis.io" target="_blank" rel="noopener noreferrer">Redis</a>&#12289;<a href="https://aws.amazon.com/dynamodb" target="_blank" rel="noopener noreferrer">DynamoDB</a>&#12289;&#20851;&#31995;&#22411;&#25968;&#25454;&#24211;&#20197;&#21450;&#25991;&#20214;&#31995;&#32479;&#30913;&#30424;&#12290;&#27492;&#22806;&#65292;&#36824;&#25552;&#20379;&#20102;&#22522;&#20110;&#25991;&#20214;&#30340;&#32531;&#23384;&#39537;&#21160;&#65292;&#32780; <code>array</code> &#21644; <code>null</code> &#32531;&#23384;&#39537;&#21160;&#21017;&#20026;&#33258;&#21160;&#21270;&#27979;&#35797;&#25552;&#20379;&#20102;&#20415;&#25463;&#30340;&#32531;&#23384;&#21518;&#31471;&#12290;</p><p>&#32531;&#23384;&#37197;&#32622;&#25991;&#20214;&#36824;&#21253;&#21547;&#21508;&#31181;&#20854;&#20182;&#36873;&#39033;&#65292;&#20320;&#21487;&#20197;&#33258;&#34892;&#26597;&#30475;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Laravel &#37197;&#32622;&#20026;&#20351;&#29992; <code>database</code> &#32531;&#23384;&#39537;&#21160;&#65292;&#35813;&#39537;&#21160;&#23558;&#24207;&#21015;&#21270;&#21518;&#30340;&#32531;&#23384;&#23545;&#35937;&#23384;&#20648;&#22312;&#24212;&#29992;&#31243;&#24207;&#30340;&#25968;&#25454;&#24211;&#20013;&#12290;</p><h3 id="934c47f8569f6de4389638e42069a4e1">&#39537;&#21160;&#21069;&#32622;&#26465;&#20214;</h3><h4 id="68051bf4aa2743b030984b694628ee9c">&#25968;&#25454;&#24211;</h4><p>&#20351;&#29992; <code>database</code> &#32531;&#23384;&#39537;&#21160;&#26102;&#65292;&#20320;&#38656;&#35201;&#19968;&#24352;&#25968;&#25454;&#24211;&#34920;&#26469;&#23384;&#25918;&#32531;&#23384;&#25968;&#25454;&#12290;&#36890;&#24120;&#65292;Laravel &#40664;&#35748;&#30340; <code>0001_01_01_000001_create_cache_table.php</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/migrations" target="_blank">&#25968;&#25454;&#24211;&#36801;&#31227;</a> &#24050;&#21253;&#21547;&#35813;&#34920;&#65307;&#20294;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#31243;&#24207;&#19981;&#21253;&#21547;&#27492;&#36801;&#31227;&#65292;&#21487;&#20197;&#20351;&#29992; <code>make:cache-table</code> Artisan &#21629;&#20196;&#26469;&#21019;&#24314;&#23427;&#65306;</p><pre><code class="language-shell">php artisan make:cache-table
+
+php artisan migrate</code></pre><h4 id="05894ba2c918dd33592bf1bd21c347f6">Memcached</h4><p>&#20351;&#29992; Memcached &#39537;&#21160;&#38656;&#35201;&#23433;&#35013; <a href="https://pecl.php.net/package/memcached" target="_blank" rel="noopener noreferrer">Memcached PECL &#21253;</a>&#12290;&#20320;&#21487;&#20197;&#22312; <code>config/cache.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#21015;&#20986;&#25152;&#26377; Memcached &#26381;&#21153;&#22120;&#12290;&#35813;&#25991;&#20214;&#24050;&#21253;&#21547;&#19968;&#20010; <code>memcached.servers</code> &#26465;&#30446;&#20379;&#20320;&#24320;&#22987;&#20351;&#29992;&#65306;</p><pre><code class="language-php">'memcached' =&gt; [
+    // ...
+
+    'servers' =&gt; [
+        [
+            'host' =&gt; env('MEMCACHED_HOST', '127.0.0.1'),
+            'port' =&gt; env('MEMCACHED_PORT', 11211),
+            'weight' =&gt; 100,
+        ],
+    ],
+],</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#20320;&#21487;&#20197;&#23558; <code>host</code> &#36873;&#39033;&#35774;&#32622;&#20026; UNIX socket &#36335;&#24452;&#12290;&#22914;&#26524;&#36825;&#26679;&#20570;&#65292;&#21017;&#24212;&#23558; <code>port</code> &#36873;&#39033;&#35774;&#32622;&#20026; <code>0</code>&#65306;</p><pre><code class="language-php">'memcached' =&gt; [
+    // ...
+
+    'servers' =&gt; [
+        [
+            'host' =&gt; '/var/run/memcached/memcached.sock',
+            'port' =&gt; 0,
+            'weight' =&gt; 100
+        ],
+    ],
+],</code></pre><h4 id="e111446745a1825b862f8727ae63bce4">Redis</h4><p>&#22312; Laravel &#20013;&#20351;&#29992; Redis &#32531;&#23384;&#20043;&#21069;&#65292;&#20320;&#38656;&#35201;&#36890;&#36807; PECL &#23433;&#35013; PhpRedis PHP &#25193;&#23637;&#65292;&#25110;&#36890;&#36807; Composer &#23433;&#35013; <code>predis/predis</code> &#21253;&#12290;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sail" target="_blank">Laravel Sail</a> &#24050;&#21253;&#21547;&#35813;&#25193;&#23637;&#12290;&#27492;&#22806;&#65292;&#23448;&#26041;&#30340; Laravel &#24212;&#29992;&#24179;&#21488;&#65288;&#22914; <a href="https://cloud.laravel.com" target="_blank" rel="noopener noreferrer">Laravel Cloud</a> &#21644; <a href="https://forge.laravel.com" target="_blank" rel="noopener noreferrer">Laravel Forge</a>&#65289;&#40664;&#35748;&#24050;&#23433;&#35013; PhpRedis &#25193;&#23637;&#12290;</p><p>&#26377;&#20851;&#37197;&#32622; Redis &#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405;&#20854; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/redis#configuration" target="_blank">Laravel &#25991;&#26723;&#39029;&#38754;</a>&#12290;</p><h4 id="a39cf1ca12a97140547dc54624e4bd6f">&#23384;&#20648;</h4><p><code>storage</code> &#32531;&#23384;&#39537;&#21160;&#20801;&#35768;&#20320;&#23558;&#32531;&#23384;&#20540;&#23384;&#20648;&#21040;&#24212;&#29992;&#31243;&#24207;&#24050;&#37197;&#32622;&#30340;&#20219;&#20309; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/filesystem" target="_blank">&#25991;&#20214;&#31995;&#32479;&#30913;&#30424;</a> &#19978;&#12290;&#24403;&#20320;&#24819;&#20351;&#29992;&#29616;&#26377;&#30913;&#30424;&#65288;&#20363;&#22914; S3 &#30913;&#30424;&#65289;&#20316;&#20026;&#38190;&#20540;&#32531;&#23384;&#23384;&#20648;&#26102;&#65292;&#36825;&#20250;&#24456;&#26377;&#29992;&#65306;</p><pre><code class="language-php">'storage' =&gt; [
+    'driver' =&gt; 'storage',
+    'disk' =&gt; env('CACHE_STORAGE_DISK'),
+    'path' =&gt; env('CACHE_STORAGE_PATH', 'framework/cache/data'),
+],</code></pre><h4 id="6ebb7423072c5943f52c11274fd71b0b">DynamoDB</h4><p>&#22312;&#20351;&#29992; <a href="https://aws.amazon.com/dynamodb" target="_blank" rel="noopener noreferrer">DynamoDB</a> &#32531;&#23384;&#39537;&#21160;&#20043;&#21069;&#65292;&#20320;&#24517;&#39035;&#21019;&#24314;&#19968;&#24352; DynamoDB &#34920;&#26469;&#23384;&#20648;&#25152;&#26377;&#32531;&#23384;&#25968;&#25454;&#12290;&#36890;&#24120;&#65292;&#35813;&#34920;&#24212;&#21629;&#21517;&#20026; <code>cache</code>&#12290;&#19981;&#36807;&#65292;&#20320;&#24212;&#35813;&#26681;&#25454; <code>cache</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>stores.dynamodb.table</code> &#37197;&#32622;&#39033;&#30340;&#20540;&#26469;&#21629;&#21517;&#35813;&#34920;&#12290;&#34920;&#21517;&#20063;&#21487;&#20197;&#36890;&#36807; <code>DYNAMODB_CACHE_TABLE</code> &#29615;&#22659;&#21464;&#37327;&#35774;&#32622;&#12290;</p><p>&#35813;&#34920;&#36824;&#24212;&#20855;&#26377;&#19968;&#20010;&#23383;&#31526;&#20018;&#20998;&#21306;&#38190;&#65292;&#20854;&#21517;&#31216;&#23545;&#24212;&#24212;&#29992;&#31243;&#24207; <code>cache</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>stores.dynamodb.attributes.key</code> &#37197;&#32622;&#39033;&#30340;&#20540;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#20998;&#21306;&#38190;&#24212;&#21629;&#21517;&#20026; <code>key</code>&#12290;</p><p>&#36890;&#24120;&#65292;DynamoDB &#19981;&#20250;&#20027;&#21160;&#31227;&#38500;&#34920;&#20013;&#30340;&#36807;&#26399;&#26465;&#30446;&#12290;&#22240;&#27492;&#65292;&#20320;&#24212;&#35813;&#22312;&#34920;&#19978; <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html" target="_blank" rel="noopener noreferrer">&#21551;&#29992;&#29983;&#23384;&#26102;&#38388;&#65288;TTL&#65289;</a>&#12290;&#37197;&#32622;&#34920;&#30340; TTL &#35774;&#32622;&#26102;&#65292;&#24212;&#23558; TTL &#23646;&#24615;&#21517;&#31216;&#35774;&#32622;&#20026; <code>expires_at</code>&#12290;</p><p>&#25509;&#19979;&#26469;&#65292;&#23433;&#35013; AWS SDK&#65292;&#20197;&#20415;&#20320;&#30340; Laravel &#24212;&#29992;&#31243;&#24207;&#33021;&#22815;&#19982; DynamoDB &#36890;&#20449;&#65306;</p><pre><code class="language-shell">composer require aws/aws-sdk-php</code></pre><p>&#27492;&#22806;&#65292;&#20320;&#24212;&#30830;&#20445;&#20026; DynamoDB &#32531;&#23384;&#23384;&#20648;&#37197;&#32622;&#36873;&#39033;&#25552;&#20379;&#20102;&#30456;&#24212;&#30340;&#20540;&#12290;&#36890;&#24120;&#65292;&#36825;&#20123;&#36873;&#39033;&#65288;&#20363;&#22914; <code>AWS_ACCESS_KEY_ID</code> &#21644; <code>AWS_SECRET_ACCESS_KEY</code>&#65289;&#24212;&#22312;&#24212;&#29992;&#31243;&#24207;&#30340; <code>.env</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#65306;</p><pre><code class="language-php">'dynamodb' =&gt; [
+    'driver' =&gt; 'dynamodb',
+    'key' =&gt; env('AWS_ACCESS_KEY_ID'),
+    'secret' =&gt; env('AWS_SECRET_ACCESS_KEY'),
+    'region' =&gt; env('AWS_DEFAULT_REGION', 'us-east-1'),
+    'table' =&gt; env('DYNAMODB_CACHE_TABLE', 'cache'),
+    'endpoint' =&gt; env('DYNAMODB_ENDPOINT'),
+],</code></pre><h4 id="206e3718af092fd1d12f80cae771ccac">MongoDB</h4><p>&#22914;&#26524;&#20320;&#20351;&#29992; MongoDB&#65292;&#23448;&#26041;&#30340; <code>mongodb/laravel-mongodb</code> &#21253;&#25552;&#20379;&#20102; <code>mongodb</code> &#32531;&#23384;&#39537;&#21160;&#65292;&#24182;&#21487;&#20351;&#29992; <code>mongodb</code> &#25968;&#25454;&#24211;&#36830;&#25509;&#36827;&#34892;&#37197;&#32622;&#12290;MongoDB &#25903;&#25345; TTL &#32034;&#24341;&#65292;&#21487;&#29992;&#20110;&#33258;&#21160;&#28165;&#29702;&#36807;&#26399;&#30340;&#32531;&#23384;&#26465;&#30446;&#12290;</p><p>&#26377;&#20851;&#37197;&#32622; MongoDB &#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405; MongoDB &#30340; <a href="https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/cache/" target="_blank" rel="noopener noreferrer">&#32531;&#23384;&#19982;&#38145;&#25991;&#26723;</a>&#12290;</p><h2 id="f2874988bd06c60f915262ff5d8c9669">&#32531;&#23384;&#30340;&#20351;&#29992;</h2><h3 id="e85f81c90c393bb34da6cb49ce9b4e6f">&#33719;&#21462;&#32531;&#23384;&#23454;&#20363;</h3><p>&#35201;&#33719;&#21462;&#32531;&#23384;&#23384;&#20648;&#23454;&#20363;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Cache</code> facade&#65292;&#26412;&#31687;&#25991;&#26723;&#36890;&#31687;&#37117;&#20250;&#20351;&#29992;&#23427;&#12290;<code>Cache</code> facade &#25552;&#20379;&#20102;&#20415;&#25463;&#12289;&#31616;&#27905;&#30340;&#26041;&#24335;&#26469;&#35775;&#38382; Laravel &#32531;&#23384;&#22865;&#32422;&#30340;&#24213;&#23618;&#23454;&#29616;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\Cache;
+
+class UserController extends Controller
+{
+    /**
+     * &#26174;&#31034;&#24212;&#29992;&#31243;&#24207;&#20013;&#25152;&#26377;&#29992;&#25143;&#30340;&#21015;&#34920;&#12290;
+     */
+    public function index(): array
+    {
+        $value = Cache::get('key');
+
+        return [
+            // ...
+        ];
+    }
+}</code></pre><h4 id="25a6fad9b53cd95db1c6fe8048737e94">&#35775;&#38382;&#22810;&#20010;&#32531;&#23384;&#23384;&#20648;</h4><p>&#20351;&#29992; <code>Cache</code> facade&#65292;&#21487;&#20197;&#36890;&#36807; <code>store</code> &#26041;&#27861;&#35775;&#38382;&#21508;&#31181;&#32531;&#23384;&#23384;&#20648;&#12290;&#20256;&#32473; <code>store</code> &#26041;&#27861;&#30340;&#38190;&#24212;&#19982; <code>cache</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>stores</code> &#37197;&#32622;&#25968;&#32452;&#37324;&#21015;&#20986;&#30340;&#26576;&#20010;&#23384;&#20648;&#30456;&#23545;&#24212;&#65306;</p><pre><code class="language-php">$value = Cache::store('file')-&gt;get('foo');
+
+Cache::store('redis')-&gt;put('bar', 'baz', 600); // 10 &#20998;&#38047;</code></pre><h3 id="b7b4f3ebaabd04b6487ba48e5bf06cfe">&#20174;&#32531;&#23384;&#20013;&#26816;&#32034;&#26465;&#30446;</h3><p><code>Cache</code> facade &#30340; <code>get</code> &#26041;&#27861;&#29992;&#20110;&#20174;&#32531;&#23384;&#20013;&#26816;&#32034;&#26465;&#30446;&#12290;&#22914;&#26524;&#26465;&#30446;&#19981;&#23384;&#22312;&#20110;&#32531;&#23384;&#20013;&#65292;&#23558;&#36820;&#22238; <code>null</code>&#12290;&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#21521; <code>get</code> &#26041;&#27861;&#20256;&#20837;&#31532;&#20108;&#20010;&#21442;&#25968;&#65292;&#25351;&#23450;&#26465;&#30446;&#19981;&#23384;&#22312;&#26102;&#35201;&#36820;&#22238;&#30340;&#40664;&#35748;&#20540;&#65306;</p><pre><code class="language-php">$value = Cache::get('key');
+
+$value = Cache::get('key', 'default');</code></pre><p>&#20320;&#29978;&#33267;&#21487;&#20197;&#20256;&#20837;&#19968;&#20010;&#38381;&#21253;&#20316;&#20026;&#40664;&#35748;&#20540;&#12290;&#22914;&#26524;&#25351;&#23450;&#30340;&#26465;&#30446;&#19981;&#23384;&#22312;&#20110;&#32531;&#23384;&#20013;&#65292;&#23558;&#36820;&#22238;&#35813;&#38381;&#21253;&#30340;&#25191;&#34892;&#32467;&#26524;&#12290;&#20256;&#20837;&#38381;&#21253;&#21487;&#20197;&#35753;&#20320;&#24310;&#36831;&#20174;&#25968;&#25454;&#24211;&#25110;&#20854;&#20182;&#22806;&#37096;&#26381;&#21153;&#26816;&#32034;&#40664;&#35748;&#20540;&#65306;</p><pre><code class="language-php">$value = Cache::get('key', function () {
+    return DB::table(/* ... */)-&gt;get();
+});</code></pre><h4 id="fa71a3e16aaecd5bea8e573037300468">&#21028;&#26029;&#26465;&#30446;&#26159;&#21542;&#23384;&#22312;</h4><p>&#21487;&#20197;&#20351;&#29992; <code>has</code> &#26041;&#27861;&#26469;&#21028;&#26029;&#26465;&#30446;&#26159;&#21542;&#23384;&#22312;&#20110;&#32531;&#23384;&#20013;&#12290;&#22914;&#26524;&#26465;&#30446;&#23384;&#22312;&#20294;&#20854;&#20540;&#20026; <code>null</code>&#65292;&#35813;&#26041;&#27861;&#20063;&#20250;&#36820;&#22238; <code>false</code>&#65306;</p><pre><code class="language-php">if (Cache::has('key')) {
+    // ...
+}</code></pre><h4 id="ace89b5b48bdbcbf1d38d33b500b1d7a">&#36882;&#22686; / &#36882;&#20943;&#25968;&#20540;</h4><p><code>increment</code> &#21644; <code>decrement</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#35843;&#25972;&#32531;&#23384;&#20013;&#25972;&#25968;&#26465;&#30446;&#30340;&#20540;&#12290;&#36825;&#20004;&#20010;&#26041;&#27861;&#37117;&#25509;&#21463;&#21487;&#36873;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#65292;&#34920;&#31034;&#36882;&#22686;&#25110;&#36882;&#20943;&#26465;&#30446;&#30340;&#24133;&#24230;&#65306;</p><pre><code class="language-php">// &#22914;&#26524;&#19981;&#23384;&#22312;&#21017;&#21021;&#22987;&#21270;&#35813;&#20540;...
+Cache::add('key', 0, now()-&gt;plus(hours: 4));
+
+// &#36882;&#22686;&#25110;&#36882;&#20943;&#20540;...
+Cache::increment('key');
+Cache::increment('key', $amount);
+Cache::decrement('key');
+Cache::decrement('key', $amount);</code></pre><h4 id="02ecd83f24f2fad6ae79ed118a7ec7d6">&#26816;&#32034;&#24182;&#23384;&#20648;</h4><p>&#26377;&#26102;&#20320;&#24076;&#26395;&#20174;&#32531;&#23384;&#20013;&#26816;&#32034;&#26465;&#30446;&#65292;&#20294;&#22914;&#26524;&#25152;&#35831;&#27714;&#30340;&#26465;&#30446;&#19981;&#23384;&#22312;&#65292;&#36824;&#35201;&#23384;&#20648;&#19968;&#20010;&#40664;&#35748;&#20540;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20174;&#32531;&#23384;&#20013;&#26816;&#32034;&#25152;&#26377;&#29992;&#25143;&#65292;&#22914;&#26524;&#19981;&#23384;&#22312;&#65292;&#21017;&#20174;&#25968;&#25454;&#24211;&#20013;&#26816;&#32034;&#24182;&#23558;&#20854;&#21152;&#20837;&#32531;&#23384;&#12290;&#21487;&#20197;&#20351;&#29992; <code>Cache::remember</code> &#26041;&#27861;&#26469;&#23454;&#29616;&#65306;</p><pre><code class="language-php">$value = Cache::remember('users', $seconds, function () {
+    return DB::table('users')-&gt;get();
+});</code></pre><p>&#22914;&#26524;&#26465;&#30446;&#19981;&#23384;&#22312;&#20110;&#32531;&#23384;&#20013;&#65292;&#21017;&#20256;&#32473; <code>remember</code> &#26041;&#27861;&#30340;&#38381;&#21253;&#20250;&#34987;&#25191;&#34892;&#65292;&#20854;&#32467;&#26524;&#20250;&#34987;&#25918;&#20837;&#32531;&#23384;&#12290;</p><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#30693;&#36947;&#26465;&#30446;&#26159;&#20174;&#32531;&#23384;&#20013;&#26816;&#32034;&#21040;&#30340;&#65292;&#36824;&#26159;&#36890;&#36807;&#25191;&#34892;&#32473;&#23450;&#38381;&#21253;&#24471;&#21040;&#30340;&#65292;&#21487;&#20197;&#20351;&#29992; <code>rememberWithWarmth</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#36820;&#22238;&#19968;&#20010;&#25968;&#32452;&#65292;&#21253;&#21547;&#32531;&#23384;&#20540;&#20197;&#21450;&#19968;&#20010;&#24067;&#23572;&#20540;&#65292;&#34920;&#31034;&#26465;&#30446;&#26159;&#21542;&#20026;"&#28909;&#30340;"&#65288;warm&#65289;&#65292;&#21363;&#23427;&#26159;&#20174;&#32531;&#23384;&#20013;&#26816;&#32034;&#21040;&#30340;&#65292;&#32780;&#38750;&#30001;&#38381;&#21253;&#35299;&#26512;&#24471;&#21040;&#30340;&#65306;</p><pre><code class="language-php">[$value, $warm] = Cache::rememberWithWarmth('users', $seconds, function () {
+    return DB::table('users')-&gt;get();
+});</code></pre><p>&#22914;&#26524;&#26465;&#30446;&#19981;&#23384;&#22312;&#20110;&#32531;&#23384;&#20013;&#65292;&#21487;&#20197;&#20351;&#29992; <code>rememberForever</code> &#26041;&#27861;&#20174;&#32531;&#23384;&#20013;&#26816;&#32034;&#26465;&#30446;&#25110;&#23558;&#20854;&#27704;&#20037;&#23384;&#20648;&#65306;</p><pre><code class="language-php">$value = Cache::rememberForever('users', function () {
+    return DB::table('users')-&gt;get();
+});</code></pre><h4 id="18a61085313ff2c38c8b0694a633c43d">&#36807;&#26399;&#26399;&#38388;&#36820;&#22238;&#26087;&#25968;&#25454;</h4><p>&#20351;&#29992; <code>Cache::remember</code> &#26041;&#27861;&#26102;&#65292;&#22914;&#26524;&#32531;&#23384;&#20540;&#24050;&#36807;&#26399;&#65292;&#37096;&#20998;&#29992;&#25143;&#21487;&#33021;&#20250;&#36935;&#21040;&#21709;&#24212;&#32531;&#24930;&#30340;&#24773;&#20917;&#12290;&#23545;&#20110;&#26576;&#20123;&#31867;&#22411;&#30340;&#25968;&#25454;&#65292;&#20801;&#35768;&#22312;&#21518;&#21488;&#37325;&#26032;&#35745;&#31639;&#32531;&#23384;&#20540;&#30340;&#21516;&#26102;&#36820;&#22238;&#37096;&#20998;&#36807;&#26399;&#30340;&#26087;&#25968;&#25454;&#20250;&#24456;&#26377;&#29992;&#65292;&#36825;&#26679;&#21487;&#20197;&#36991;&#20813;&#37096;&#20998;&#29992;&#25143;&#22312;&#32531;&#23384;&#20540;&#35745;&#31639;&#26399;&#38388;&#36935;&#21040;&#21709;&#24212;&#32531;&#24930;&#30340;&#38382;&#39064;&#12290;&#36825;&#36890;&#24120;&#34987;&#31216;&#20026;"stale-while-revalidate"&#27169;&#24335;&#65292;<code>Cache::flexible</code> &#26041;&#27861;&#25552;&#20379;&#20102;&#35813;&#27169;&#24335;&#30340;&#23454;&#29616;&#12290;</p><p><code>flexible</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#25968;&#32452;&#65292;&#29992;&#20110;&#25351;&#23450;&#32531;&#23384;&#20540;&#34987;&#35270;&#20026;"&#26032;&#40092;&#30340;"&#65288;fresh&#65289;&#30340;&#26102;&#38271;&#65292;&#20197;&#21450;&#23427;&#20309;&#26102;&#21464;&#20026;"&#36807;&#26399;&#30340;"&#65288;stale&#65289;&#12290;&#25968;&#32452;&#20013;&#30340;&#31532;&#19968;&#20010;&#20540;&#34920;&#31034;&#32531;&#23384;&#34987;&#35270;&#20026;&#26032;&#40092;&#29366;&#24577;&#30340;&#31186;&#25968;&#65292;&#31532;&#20108;&#20010;&#20540;&#23450;&#20041;&#20102;&#22312;&#24517;&#39035;&#37325;&#26032;&#35745;&#31639;&#20043;&#21069;&#65292;&#23427;&#21487;&#20197;&#20316;&#20026;&#26087;&#25968;&#25454;&#36820;&#22238;&#30340;&#26102;&#38271;&#12290;</p><p>&#22914;&#26524;&#22312;&#26032;&#40092;&#26399;&#20869;&#65288;&#31532;&#19968;&#20010;&#20540;&#20043;&#21069;&#65289;&#21457;&#36215;&#35831;&#27714;&#65292;&#23558;&#31435;&#21363;&#36820;&#22238;&#32531;&#23384;&#65292;&#26080;&#38656;&#37325;&#26032;&#35745;&#31639;&#12290;&#22914;&#26524;&#22312;&#36807;&#26399;&#26399;&#20869;&#65288;&#20004;&#20010;&#20540;&#20043;&#38388;&#65289;&#21457;&#36215;&#35831;&#27714;&#65292;&#21017;&#21521;&#29992;&#25143;&#36820;&#22238;&#26087;&#20540;&#65292;&#24182;&#27880;&#20876;&#19968;&#20010; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/helpers#deferred-functions" target="_blank">&#24310;&#36831;&#20989;&#25968;</a>&#65292;&#20197;&#20415;&#22312;&#21709;&#24212;&#21457;&#36865;&#32473;&#29992;&#25143;&#20043;&#21518;&#21047;&#26032;&#32531;&#23384;&#20540;&#12290;&#22914;&#26524;&#22312;&#31532;&#20108;&#20010;&#20540;&#20043;&#21518;&#21457;&#36215;&#35831;&#27714;&#65292;&#21017;&#32531;&#23384;&#34987;&#35270;&#20026;&#24050;&#36807;&#26399;&#65292;&#24182;&#31435;&#21363;&#37325;&#26032;&#35745;&#31639;&#35813;&#20540;&#65292;&#36825;&#21487;&#33021;&#20250;&#23548;&#33268;&#29992;&#25143;&#30340;&#21709;&#24212;&#21464;&#24930;&#65306;</p><pre><code class="language-php">$value = Cache::flexible('users', [5, 10], function () {
+    return DB::table('users')-&gt;get();
+});</code></pre><h4 id="72593c574223d99f1421b368d268bd2e">&#26816;&#32034;&#24182;&#21024;&#38500;</h4><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#20174;&#32531;&#23384;&#20013;&#26816;&#32034;&#26465;&#30446;&#65292;&#28982;&#21518;&#21024;&#38500;&#35813;&#26465;&#30446;&#65292;&#21487;&#20197;&#20351;&#29992; <code>pull</code> &#26041;&#27861;&#12290;&#19982; <code>get</code> &#26041;&#27861;&#31867;&#20284;&#65292;&#22914;&#26524;&#26465;&#30446;&#19981;&#23384;&#22312;&#20110;&#32531;&#23384;&#20013;&#65292;&#23558;&#36820;&#22238; <code>null</code>&#65306;</p><pre><code class="language-php">$value = Cache::pull('key');
+
+$value = Cache::pull('key', 'default');</code></pre><h3 id="7b49e49e31408128e3462530a7ee81af">&#22312;&#32531;&#23384;&#20013;&#23384;&#20648;&#26465;&#30446;</h3><p>&#21487;&#20197;&#20351;&#29992; <code>Cache</code> facade &#19978;&#30340; <code>put</code> &#26041;&#27861;&#23558;&#26465;&#30446;&#23384;&#20648;&#21040;&#32531;&#23384;&#20013;&#65306;</p><pre><code class="language-php">Cache::put('key', 'value', $seconds = 10);</code></pre><p>&#22914;&#26524;&#27809;&#26377;&#21521; <code>put</code> &#26041;&#27861;&#20256;&#20837;&#23384;&#20648;&#26102;&#38388;&#65292;&#35813;&#26465;&#30446;&#23558;&#34987;&#26080;&#38480;&#26399;&#23384;&#20648;&#65306;</p><pre><code class="language-php">Cache::put('key', 'value');</code></pre><p>&#38500;&#20102;&#20256;&#20837;&#25972;&#25968;&#24418;&#24335;&#30340;&#31186;&#25968;&#65292;&#20320;&#20063;&#21487;&#20197;&#20256;&#20837;&#19968;&#20010; <code>DateTime</code> &#23454;&#20363;&#26469;&#34920;&#31034;&#32531;&#23384;&#26465;&#30446;&#30340;&#26399;&#26395;&#36807;&#26399;&#26102;&#38388;&#65306;</p><pre><code class="language-php">Cache::put('key', 'value', now()-&gt;plus(minutes: 10));</code></pre><h4 id="44a55d66f62eac2428885e70e50b05c8">&#19981;&#23384;&#22312;&#26102;&#25165;&#23384;&#20648;</h4><p><code>add</code> &#26041;&#27861;&#20165;&#24403;&#26465;&#30446;&#23578;&#26410;&#23384;&#22312;&#20110;&#32531;&#23384;&#23384;&#20648;&#20013;&#26102;&#65292;&#25165;&#20250;&#23558;&#20854;&#21152;&#20837;&#32531;&#23384;&#12290;&#22914;&#26524;&#26465;&#30446;&#30830;&#23454;&#34987;&#21152;&#20837;&#32531;&#23384;&#65292;&#35813;&#26041;&#27861;&#23558;&#36820;&#22238; <code>true</code>&#65307;&#21542;&#21017;&#65292;&#36820;&#22238; <code>false</code>&#12290;<code>add</code> &#26041;&#27861;&#26159;&#21407;&#23376;&#25805;&#20316;&#65306;</p><pre><code class="language-php">Cache::add('key', 'value', $seconds);</code></pre><h3 id="0b4ae5af1ddf4a31e0a761b444eecca8">&#24310;&#38271;&#26465;&#30446;&#29983;&#21629;&#21608;&#26399;</h3><p><code>touch</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#24310;&#38271;&#29616;&#26377;&#32531;&#23384;&#26465;&#30446;&#30340;&#29983;&#21629;&#21608;&#26399;&#65288;TTL&#65289;&#12290;&#22914;&#26524;&#32531;&#23384;&#26465;&#30446;&#23384;&#22312;&#19988;&#25104;&#21151;&#24310;&#38271;&#20102;&#20854;&#36807;&#26399;&#26102;&#38388;&#65292;<code>touch</code> &#26041;&#27861;&#23558;&#36820;&#22238; <code>true</code>&#65307;&#22914;&#26524;&#26465;&#30446;&#19981;&#23384;&#22312;&#20110;&#32531;&#23384;&#20013;&#65292;&#35813;&#26041;&#27861;&#23558;&#36820;&#22238; <code>false</code>&#65306;</p><pre><code class="language-php">Cache::touch('key', 3600);</code></pre><p>&#20320;&#21487;&#20197;&#25552;&#20379;&#19968;&#20010; <code>DateTimeInterface</code>&#12289;<code>DateInterval</code> &#25110; <code>Carbon</code> &#23454;&#20363;&#26469;&#25351;&#23450;&#30830;&#20999;&#30340;&#36807;&#26399;&#26102;&#38388;&#65306;</p><pre><code class="language-php">Cache::touch('key', now()-&gt;addHours(2));</code></pre><h4 id="46f3916cc1ac94313f205a6930091c63">&#27704;&#20037;&#23384;&#20648;&#26465;&#30446;</h4><p><code>forever</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#26465;&#30446;&#27704;&#20037;&#23384;&#20648;&#22312;&#32531;&#23384;&#20013;&#12290;&#30001;&#20110;&#36825;&#20123;&#26465;&#30446;&#19981;&#20250;&#36807;&#26399;&#65292;&#22240;&#27492;&#24517;&#39035;&#20351;&#29992; <code>forget</code> &#26041;&#27861;&#25163;&#21160;&#23558;&#20854;&#20174;&#32531;&#23384;&#20013;&#31227;&#38500;&#65306;</p><pre><code class="language-php">Cache::forever('key', 'value');</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159; Memcached &#39537;&#21160;&#65292;&#24403;&#32531;&#23384;&#36798;&#21040;&#20854;&#22823;&#23567;&#38480;&#21046;&#26102;&#65292;&#34987;&#23384;&#20648;&#20026;"&#27704;&#20037;"&#30340;&#26465;&#30446;&#21487;&#33021;&#20250;&#34987;&#31227;&#38500;&#12290;</p>
+</blockquote><h3 id="8e2a32f095d198efda604177ddc01213">&#20174;&#32531;&#23384;&#20013;&#31227;&#38500;&#26465;&#30446;</h3><p>&#21487;&#20197;&#20351;&#29992; <code>forget</code> &#26041;&#27861;&#20174;&#32531;&#23384;&#20013;&#31227;&#38500;&#26465;&#30446;&#65306;</p><pre><code class="language-php">Cache::forget('key');</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#36890;&#36807;&#25552;&#20379;&#38646;&#25110;&#36127;&#25968;&#30340;&#36807;&#26399;&#31186;&#25968;&#26469;&#31227;&#38500;&#26465;&#30446;&#65306;</p><pre><code class="language-php">Cache::put('key', 'value', 0);
+
+Cache::put('key', 'value', -5);</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>flush</code> &#26041;&#27861;&#28165;&#38500;&#25972;&#20010;&#32531;&#23384;&#65306;</p><pre><code class="language-php">Cache::flush();</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>flushLocks</code> &#26041;&#27861;&#28165;&#38500;&#32531;&#23384;&#20013;&#30340;&#25152;&#26377;&#21407;&#23376;&#38145;&#65306;</p><pre><code class="language-php">Cache::flushLocks();</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#28165;&#38500;&#32531;&#23384;&#19981;&#20250;&#36981;&#24490;&#20320;&#37197;&#32622;&#30340;&#32531;&#23384;"&#21069;&#32512;"&#65292;&#24182;&#20250;&#31227;&#38500;&#32531;&#23384;&#20013;&#30340;&#25152;&#26377;&#26465;&#30446;&#12290;&#22312;&#28165;&#38500;&#30001;&#20854;&#20182;&#24212;&#29992;&#31243;&#24207;&#20849;&#20139;&#30340;&#32531;&#23384;&#26102;&#65292;&#35831;&#21153;&#24517;&#35880;&#24910;&#32771;&#34385;&#12290;</p>
+</blockquote><h3 id="9038e2257ee6da73f58491769a7ee99d">&#32531;&#23384;&#35760;&#24518;&#21270;</h3><p>Laravel &#30340; <code>memo</code> &#32531;&#23384;&#39537;&#21160;&#20801;&#35768;&#20320;&#22312;&#21333;&#27425;&#35831;&#27714;&#25110;&#20219;&#21153;&#25191;&#34892;&#26399;&#38388;&#23558;&#24050;&#35299;&#26512;&#30340;&#32531;&#23384;&#20540;&#20020;&#26102;&#23384;&#20648;&#21040;&#20869;&#23384;&#20013;&#12290;&#36825;&#21487;&#20197;&#36991;&#20813;&#22312;&#21516;&#19968;&#25191;&#34892;&#36807;&#31243;&#20013;&#37325;&#22797;&#35775;&#38382;&#32531;&#23384;&#65292;&#20174;&#32780;&#26174;&#33879;&#25552;&#21319;&#24615;&#33021;&#12290;</p><p>&#35201;&#20351;&#29992;&#35760;&#24518;&#21270;&#30340;&#32531;&#23384;&#65292;&#35843;&#29992; <code>memo</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Cache;
+
+$value = Cache::memo()-&gt;get('key');</code></pre><p><code>memo</code> &#26041;&#27861;&#21487;&#36873;&#22320;&#25509;&#21463;&#32531;&#23384;&#23384;&#20648;&#30340;&#21517;&#31216;&#65292;&#29992;&#20110;&#25351;&#23450;&#35760;&#24518;&#21270;&#39537;&#21160;&#23558;&#35013;&#39280;&#30340;&#24213;&#23618;&#32531;&#23384;&#23384;&#20648;&#65306;</p><pre><code class="language-php">// &#20351;&#29992;&#40664;&#35748;&#32531;&#23384;&#23384;&#20648;...
+$value = Cache::memo()-&gt;get('key');
+
+// &#20351;&#29992; Redis &#32531;&#23384;&#23384;&#20648;...
+$value = Cache::memo('redis')-&gt;get('key');</code></pre><p>&#23545;&#20110;&#32473;&#23450;&#30340;&#38190;&#65292;&#31532;&#19968;&#27425; <code>get</code> &#35843;&#29992;&#20250;&#20174;&#20320;&#30340;&#32531;&#23384;&#23384;&#20648;&#20013;&#26816;&#32034;&#20540;&#65292;&#20294;&#22312;&#21516;&#19968;&#35831;&#27714;&#25110;&#20219;&#21153;&#20869;&#30340;&#21518;&#32493;&#35843;&#29992;&#23558;&#20174;&#20869;&#23384;&#20013;&#26816;&#32034;&#20540;&#65306;</p><pre><code class="language-php">// &#35775;&#38382;&#32531;&#23384;...
+$value = Cache::memo()-&gt;get('key');
+
+// &#19981;&#35775;&#38382;&#32531;&#23384;&#65292;&#36820;&#22238;&#35760;&#24518;&#21270;&#30340;&#20540;...
+$value = Cache::memo()-&gt;get('key');</code></pre><p>&#35843;&#29992;&#20462;&#25913;&#32531;&#23384;&#20540;&#30340;&#26041;&#27861;&#65288;&#20363;&#22914; <code>put</code>&#12289;<code>increment</code>&#12289;<code>remember</code> &#31561;&#65289;&#26102;&#65292;&#35760;&#24518;&#21270;&#30340;&#32531;&#23384;&#20250;&#33258;&#21160;&#36951;&#24536;&#35760;&#24518;&#21270;&#30340;&#20540;&#65292;&#24182;&#23558;&#35813;&#20462;&#25913;&#26041;&#27861;&#35843;&#29992;&#22996;&#25176;&#32473;&#24213;&#23618;&#32531;&#23384;&#23384;&#20648;&#65306;</p><pre><code class="language-php">Cache::memo()-&gt;put('name', 'Taylor'); // &#20889;&#20837;&#24213;&#23618;&#32531;&#23384;...
+Cache::memo()-&gt;get('name');           // &#35775;&#38382;&#24213;&#23618;&#32531;&#23384;...
+Cache::memo()-&gt;get('name');           // &#24050;&#35760;&#24518;&#21270;&#65292;&#19981;&#35775;&#38382;&#32531;&#23384;...
+
+Cache::memo()-&gt;put('name', 'Tim');    // &#36951;&#24536;&#35760;&#24518;&#21270;&#30340;&#20540;&#65292;&#20889;&#20837;&#26032;&#20540;...
+Cache::memo()-&gt;get('name');           // &#20877;&#27425;&#35775;&#38382;&#24213;&#23618;&#32531;&#23384;...</code></pre><h3 id="3178c9ab009a10f07cf2de9481f93cfc">&#32531;&#23384;&#36741;&#21161;&#20989;&#25968;</h3><p>&#38500;&#20102;&#20351;&#29992; <code>Cache</code> facade &#20043;&#22806;&#65292;&#36824;&#21487;&#20197;&#20351;&#29992;&#20840;&#23616; <code>cache</code> &#20989;&#25968;&#26469;&#36890;&#36807;&#32531;&#23384;&#26816;&#32034;&#21644;&#23384;&#20648;&#25968;&#25454;&#12290;&#24403; <code>cache</code> &#20989;&#25968;&#20197;&#21333;&#20010;&#23383;&#31526;&#20018;&#21442;&#25968;&#35843;&#29992;&#26102;&#65292;&#23427;&#23558;&#36820;&#22238;&#32473;&#23450;&#38190;&#30340;&#20540;&#65306;</p><pre><code class="language-php">$value = cache('key');</code></pre><p>&#22914;&#26524;&#20320;&#21521;&#35813;&#20989;&#25968;&#25552;&#20379;&#38190;&#20540;&#23545;&#25968;&#32452;&#20197;&#21450;&#36807;&#26399;&#26102;&#38388;&#65292;&#23427;&#20250;&#23558;&#20540;&#23384;&#20648;&#21040;&#32531;&#23384;&#20013;&#25351;&#23450;&#30340;&#26102;&#38271;&#65306;</p><pre><code class="language-php">cache(['key' =&gt; 'value'], $seconds);
+
+cache(['key' =&gt; 'value'], now()-&gt;plus(minutes: 10));</code></pre><p>&#24403; <code>cache</code> &#20989;&#25968;&#19981;&#24102;&#20219;&#20309;&#21442;&#25968;&#35843;&#29992;&#26102;&#65292;&#23427;&#20250;&#36820;&#22238; <code>Illuminate\Contracts\Cache\Factory</code> &#23454;&#29616;&#30340;&#23454;&#20363;&#65292;&#35753;&#20320;&#21487;&#20197;&#35843;&#29992;&#20854;&#20182;&#32531;&#23384;&#26041;&#27861;&#65306;</p><pre><code class="language-php">cache()-&gt;remember('users', $seconds, function () {
+    return DB::table('users')-&gt;get();
+});</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22312;&#27979;&#35797;&#23545;&#20840;&#23616; <code>cache</code> &#20989;&#25968;&#30340;&#35843;&#29992;&#26102;&#65292;&#21487;&#20197;&#20687; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/mocking#mocking-facades" target="_blank">&#27979;&#35797; facade</a> &#37027;&#26679;&#20351;&#29992; <code>Cache::shouldReceive</code> &#26041;&#27861;&#12290;</p>
+</blockquote><h2 id="fdbfd8449c5359ff7e764944a122b179">&#32531;&#23384;&#26631;&#31614;</h2><blockquote>
+<p>[!WARNING]<br>
+&#20351;&#29992; <code>file</code>&#12289;<code>dynamodb</code>&#12289;<code>database</code> &#25110; <code>storage</code> &#32531;&#23384;&#39537;&#21160;&#26102;&#65292;&#19981;&#25903;&#25345;&#32531;&#23384;&#26631;&#31614;&#12290;</p>
+</blockquote><h3 id="21e279d57ac2733db6b6f6f38a3c7cc1">&#23384;&#20648;&#24102;&#26631;&#31614;&#30340;&#32531;&#23384;&#26465;&#30446;</h3><p>&#32531;&#23384;&#26631;&#31614;&#20801;&#35768;&#20320;&#22312;&#32531;&#23384;&#20013;&#20026;&#30456;&#20851;&#26465;&#30446;&#25171;&#19978;&#26631;&#31614;&#65292;&#28982;&#21518;&#21047;&#26032;&#25152;&#26377;&#34987;&#36171;&#20104;&#25351;&#23450;&#26631;&#31614;&#30340;&#32531;&#23384;&#20540;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#20256;&#20837;&#19968;&#20010;&#26377;&#24207;&#30340;&#26631;&#31614;&#21517;&#31216;&#25968;&#32452;&#26469;&#35775;&#38382;&#24102;&#26631;&#31614;&#30340;&#32531;&#23384;&#12290;&#20363;&#22914;&#65292;&#25105;&#20204;&#26469;&#35775;&#38382;&#19968;&#20010;&#24102;&#26631;&#31614;&#30340;&#32531;&#23384;&#65292;&#24182;&#21521;&#20854;&#20013; <code>put</code> &#19968;&#20010;&#20540;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Cache;
+
+Cache::tags(['people', 'artists'])-&gt;put('John', $john, $seconds);
+Cache::tags(['people', 'authors'])-&gt;put('Anne', $anne, $seconds);</code></pre><h3 id="85610b8b64f0d86403a47dd3134ff7c2">&#35775;&#38382;&#24102;&#26631;&#31614;&#30340;&#32531;&#23384;&#26465;&#30446;</h3><p>&#36890;&#36807;&#26631;&#31614;&#23384;&#20648;&#30340;&#26465;&#30446;&#65292;&#22914;&#26524;&#19981;&#21516;&#26102;&#25552;&#20379;&#23384;&#20648;&#35813;&#20540;&#25152;&#29992;&#30340;&#26631;&#31614;&#65292;&#23558;&#26080;&#27861;&#35775;&#38382;&#12290;&#35201;&#26816;&#32034;&#24102;&#26631;&#31614;&#30340;&#32531;&#23384;&#26465;&#30446;&#65292;&#35831;&#23558;&#30456;&#21516;&#30340;&#26377;&#24207;&#26631;&#31614;&#21015;&#34920;&#20256;&#32473; <code>tags</code> &#26041;&#27861;&#65292;&#28982;&#21518;&#20197;&#20320;&#24819;&#35201;&#26816;&#32034;&#30340;&#38190;&#35843;&#29992; <code>get</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$john = Cache::tags(['people', 'artists'])-&gt;get('John');
+
+$anne = Cache::tags(['people', 'authors'])-&gt;get('Anne');</code></pre><h3 id="638293ee6eb89f06ac4d87b7e2111589">&#31227;&#38500;&#24102;&#26631;&#31614;&#30340;&#32531;&#23384;&#26465;&#30446;</h3><p>&#20320;&#21487;&#20197;&#21047;&#26032;&#25152;&#26377;&#34987;&#36171;&#20104;&#26576;&#20010;&#26631;&#31614;&#25110;&#26631;&#31614;&#21015;&#34920;&#30340;&#26465;&#30446;&#12290;&#20363;&#22914;&#65292;&#19979;&#38754;&#30340;&#20195;&#30721;&#20250;&#31227;&#38500;&#25152;&#26377;&#24102;&#26377; <code>people</code>&#12289;<code>authors</code> &#25110;&#20004;&#32773;&#26631;&#31614;&#30340;&#32531;&#23384;&#12290;&#22240;&#27492;&#65292;<code>Anne</code> &#21644; <code>John</code> &#37117;&#20250;&#34987;&#20174;&#32531;&#23384;&#20013;&#31227;&#38500;&#65306;</p><pre><code class="language-php">Cache::tags(['people', 'authors'])-&gt;flush();</code></pre><p>&#30456;&#27604;&#20043;&#19979;&#65292;&#19979;&#38754;&#30340;&#20195;&#30721;&#21482;&#20250;&#31227;&#38500;&#24102;&#26377; <code>authors</code> &#26631;&#31614;&#30340;&#32531;&#23384;&#20540;&#65292;&#22240;&#27492; <code>Anne</code> &#20250;&#34987;&#31227;&#38500;&#65292;&#32780; <code>John</code> &#19981;&#20250;&#65306;</p><pre><code class="language-php">Cache::tags('authors')-&gt;flush();</code></pre><h2 id="8a1c7cfbce26ccf37acfdcb9d2b0e926">&#21407;&#23376;&#38145;</h2><blockquote>
+<p>[!WARNING]<br>
+&#35201;&#20351;&#29992;&#27492;&#21151;&#33021;&#65292;&#20320;&#30340;&#24212;&#29992;&#31243;&#24207;&#24517;&#39035;&#23558; <code>memcached</code>&#12289;<code>redis</code>&#12289;<code>dynamodb</code>&#12289;<code>database</code>&#12289;<code>file</code> &#25110; <code>array</code> &#32531;&#23384;&#39537;&#21160;&#29992;&#20316;&#24212;&#29992;&#31243;&#24207;&#30340;&#40664;&#35748;&#32531;&#23384;&#39537;&#21160;&#12290;&#27492;&#22806;&#65292;&#25152;&#26377;&#26381;&#21153;&#22120;&#24517;&#39035;&#19982;&#35813;&#20013;&#22830;&#32531;&#23384;&#26381;&#21153;&#22120;&#36890;&#20449;&#12290;</p>
+</blockquote><h3 id="f01d1b85bc8c8281e7b8acef0e103645">&#31649;&#29702;&#38145;</h3><p>&#21407;&#23376;&#38145;&#20801;&#35768;&#25805;&#20316;&#20998;&#24067;&#24335;&#38145;&#65292;&#32780;&#26080;&#38656;&#25285;&#24515;&#31454;&#24577;&#26465;&#20214;&#12290;&#20363;&#22914;&#65292;<a href="https://cloud.laravel.com" target="_blank" rel="noopener noreferrer">Laravel Cloud</a> &#20351;&#29992;&#21407;&#23376;&#38145;&#26469;&#30830;&#20445;&#26381;&#21153;&#22120;&#19978;&#19968;&#27425;&#21482;&#25191;&#34892;&#19968;&#20010;&#36828;&#31243;&#20219;&#21153;&#12290;&#21487;&#20197;&#20351;&#29992; <code>Cache::lock</code> &#26041;&#27861;&#21019;&#24314;&#21644;&#31649;&#29702;&#38145;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Cache;
+
+$lock = Cache::lock('foo', 10);
+
+if ($lock-&gt;get()) {
+    // &#38145;&#24050;&#33719;&#21462;&#65292;&#25345;&#32493; 10 &#31186;...
+
+    $lock-&gt;release();
+}</code></pre><p><code>get</code> &#26041;&#27861;&#20063;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#12290;&#38381;&#21253;&#25191;&#34892;&#23436;&#27605;&#21518;&#65292;Laravel &#20250;&#33258;&#21160;&#37322;&#25918;&#38145;&#65306;</p><pre><code class="language-php">Cache::lock('foo', 10)-&gt;get(function () {
+    // &#38145;&#24050;&#33719;&#21462;&#65292;&#25345;&#32493; 10 &#31186;&#65292;&#24182;&#33258;&#21160;&#37322;&#25918;...
+});</code></pre><p>&#22914;&#26524;&#22312;&#20320;&#35831;&#27714;&#26102;&#38145;&#26242;&#19981;&#21487;&#29992;&#65292;&#21487;&#20197;&#35753; Laravel &#31561;&#24453;&#25351;&#23450;&#30340;&#31186;&#25968;&#12290;&#22914;&#26524;&#22312;&#25351;&#23450;&#30340;&#26102;&#38388;&#38480;&#21046;&#20869;&#26080;&#27861;&#33719;&#21462;&#38145;&#65292;&#23558;&#25243;&#20986; <code>Illuminate\Contracts\Cache\LockTimeoutException</code>&#65306;</p><pre><code class="language-php">use Illuminate\Contracts\Cache\LockTimeoutException;
+
+$lock = Cache::lock('foo', 10);
+
+try {
+    $lock-&gt;block(5);
+
+    // &#26368;&#22810;&#31561;&#24453; 5 &#31186;&#21518;&#33719;&#21462;&#21040;&#38145;...
+} catch (LockTimeoutException $e) {
+    // &#26080;&#27861;&#33719;&#21462;&#38145;...
+} finally {
+    $lock-&gt;release();
+}</code></pre><p>&#19978;&#38754;&#30340;&#31034;&#20363;&#21487;&#20197;&#36890;&#36807;&#21521; <code>block</code> &#26041;&#27861;&#20256;&#20837;&#38381;&#21253;&#26469;&#31616;&#21270;&#12290;&#24403;&#21521;&#35813;&#26041;&#27861;&#20256;&#20837;&#38381;&#21253;&#26102;&#65292;Laravel &#20250;&#23581;&#35797;&#22312;&#25351;&#23450;&#30340;&#31186;&#25968;&#20869;&#33719;&#21462;&#38145;&#65292;&#24182;&#22312;&#38381;&#21253;&#25191;&#34892;&#23436;&#27605;&#21518;&#33258;&#21160;&#37322;&#25918;&#38145;&#65306;</p><pre><code class="language-php">Cache::lock('foo', 10)-&gt;block(5, function () {
+    // &#26368;&#22810;&#31561;&#24453; 5 &#31186;&#21518;&#33719;&#21462;&#21040;&#38145;&#65292;&#25345;&#32493; 10 &#31186;...
+});</code></pre><h3 id="9e3d4f1c30de7432f7495dc64cc92b4d">&#36328;&#36827;&#31243;&#31649;&#29702;&#38145;</h3><p>&#26377;&#26102;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#22312;&#19968;&#20010;&#36827;&#31243;&#20013;&#33719;&#21462;&#38145;&#65292;&#24182;&#22312;&#21478;&#19968;&#20010;&#36827;&#31243;&#20013;&#37322;&#25918;&#23427;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#22312; Web &#35831;&#27714;&#26399;&#38388;&#33719;&#21462;&#38145;&#65292;&#24182;&#24076;&#26395;&#22312;&#35813;&#35831;&#27714;&#35302;&#21457;&#30340;&#38431;&#21015;&#20219;&#21153;&#30340;&#26411;&#23614;&#37322;&#25918;&#38145;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#24212;&#35813;&#23558;&#38145;&#30340;&#20316;&#29992;&#22495;"&#25152;&#26377;&#32773;&#20196;&#29260;"&#65288;owner token&#65289;&#20256;&#36882;&#32473;&#38431;&#21015;&#20219;&#21153;&#65292;&#20197;&#20415;&#35813;&#20219;&#21153;&#21487;&#20197;&#20351;&#29992;&#32473;&#23450;&#20196;&#29260;&#37325;&#26032;&#23454;&#20363;&#21270;&#38145;&#12290;</p><p>&#22312;&#19979;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#22914;&#26524;&#25104;&#21151;&#33719;&#21462;&#21040;&#38145;&#65292;&#25105;&#20204;&#23558;&#27966;&#21457;&#19968;&#20010;&#38431;&#21015;&#20219;&#21153;&#12290;&#27492;&#22806;&#65292;&#25105;&#20204;&#20250;&#36890;&#36807;&#38145;&#30340; <code>owner</code> &#26041;&#27861;&#23558;&#38145;&#30340;&#25152;&#26377;&#32773;&#20196;&#29260;&#20256;&#36882;&#32473;&#38431;&#21015;&#20219;&#21153;&#65306;</p><pre><code class="language-php">$podcast = Podcast::find($id);
+
+$lock = Cache::lock('processing', 120);
+
+if ($lock-&gt;get()) {
+    ProcessPodcast::dispatch($podcast, $lock-&gt;owner());
+}</code></pre><p>&#22312;&#24212;&#29992;&#31243;&#24207;&#30340; <code>ProcessPodcast</code> &#20219;&#21153;&#20013;&#65292;&#25105;&#20204;&#21487;&#20197;&#20351;&#29992;&#25152;&#26377;&#32773;&#20196;&#29260;&#24674;&#22797;&#24182;&#37322;&#25918;&#38145;&#65306;</p><pre><code class="language-php">Cache::restoreLock('processing', $this-&gt;owner)-&gt;release();</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#37322;&#25918;&#38145;&#32780;&#19981;&#32771;&#34385;&#20854;&#24403;&#21069;&#25152;&#26377;&#32773;&#65292;&#21487;&#20197;&#20351;&#29992; <code>forceRelease</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Cache::lock('processing')-&gt;forceRelease();</code></pre><h3 id="5138af80277be6096348456092a0687d">&#21047;&#26032;&#38145;</h3><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#24310;&#38271;&#24403;&#21069;&#25317;&#26377;&#30340;&#38145;&#30340;&#36807;&#26399;&#26102;&#38388;&#65292;&#21487;&#20197;&#20351;&#29992; <code>refresh</code> &#26041;&#27861;&#12290;&#22914;&#26524;&#26410;&#25552;&#20379;&#31186;&#25968;&#65292;&#23558;&#20351;&#29992;&#38145;&#30340;&#21407;&#22987;&#25345;&#32493;&#26102;&#38388;&#12290;&#36825;&#23545;&#20110;&#38271;&#26102;&#38388;&#36816;&#34892;&#30340;&#25805;&#20316;&#24456;&#26377;&#29992;&#65292;&#22312;&#36825;&#31867;&#25805;&#20316;&#20013;&#65292;&#20320;&#20542;&#21521;&#20110;&#33719;&#21462;&#19968;&#20010;&#30701;&#26399;&#38145;&#24182;&#23450;&#26399;&#24310;&#38271;&#23427;&#65292;&#32780;&#19981;&#26159;&#33719;&#21462;&#19968;&#20010;&#36807;&#26399;&#26102;&#38388;&#24456;&#38271;&#30340;&#38145;&#65306;</p><pre><code class="language-php">$lock = Cache::lock('generate-reports', 60);
+
+if ($lock-&gt;get()) {
+    foreach ($reports as $report) {
+        $report-&gt;generate();
+
+        // &#23558;&#38145;&#20877;&#24310;&#38271; 60 &#31186;...
+        $lock-&gt;refresh();
+    }
+
+    $lock-&gt;release();
+}</code></pre><h3 id="47fedf10ff02e466e28c2528305930ba">&#24182;&#21457;&#38480;&#21046;</h3><p>Laravel &#30340;&#21407;&#23376;&#38145;&#21151;&#33021;&#36824;&#25552;&#20379;&#20102;&#20960;&#31181;&#38480;&#21046;&#38381;&#21253;&#24182;&#21457;&#25191;&#34892;&#30340;&#26041;&#24335;&#12290;&#24403;&#20320;&#24076;&#26395;&#25972;&#20010;&#22522;&#30784;&#35774;&#26045;&#20013;&#21482;&#20801;&#35768;&#19968;&#20010;&#36816;&#34892;&#23454;&#20363;&#26102;&#65292;&#20351;&#29992; <code>withoutOverlapping</code>&#65306;</p><pre><code class="language-php">Cache::withoutOverlapping('foo', function () {
+    // &#26368;&#22810;&#31561;&#24453; 10 &#31186;&#21518;&#33719;&#21462;&#21040;&#38145;...
+});</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#38145;&#20250;&#19968;&#30452;&#25345;&#26377;&#30452;&#21040;&#38381;&#21253;&#25191;&#34892;&#23436;&#27605;&#65292;&#24182;&#19988;&#35813;&#26041;&#27861;&#26368;&#22810;&#31561;&#24453; 10 &#31186;&#26469;&#33719;&#21462;&#38145;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992;&#39069;&#22806;&#30340;&#21442;&#25968;&#33258;&#23450;&#20041;&#36825;&#20123;&#20540;&#65306;</p><pre><code class="language-php">Cache::withoutOverlapping('foo', function () {
+    // &#26368;&#22810;&#31561;&#24453; 5 &#31186;&#21518;&#33719;&#21462;&#21040;&#38145;&#65292;&#25345;&#32493; 120 &#31186;...
+}, lockFor: 120, waitFor: 5);</code></pre><p>&#22914;&#26524;&#22312;&#25351;&#23450;&#30340;&#31561;&#24453;&#26102;&#38388;&#20869;&#26080;&#27861;&#33719;&#21462;&#38145;&#65292;&#23558;&#25243;&#20986; <code>Illuminate\Contracts\Cache\LockTimeoutException</code>&#12290;</p><p>&#22914;&#26524;&#20320;&#24819;&#35201;&#21463;&#25511;&#30340;&#24182;&#34892;&#24230;&#65292;&#20351;&#29992; <code>funnel</code> &#26041;&#27861;&#26469;&#35774;&#32622;&#26368;&#22823;&#24182;&#21457;&#25191;&#34892;&#25968;&#12290;<code>funnel</code> &#26041;&#27861;&#36866;&#29992;&#20110;&#20219;&#20309;&#25903;&#25345;&#38145;&#30340;&#32531;&#23384;&#39537;&#21160;&#65306;</p><pre><code class="language-php">Cache::funnel('foo')
+    -&gt;limit(3)
+    -&gt;releaseAfter(60)
+    -&gt;block(10)
+    -&gt;then(function () {
+        // &#24050;&#33719;&#21462;&#24182;&#21457;&#38145;...
+    }, function () {
+        // &#26080;&#27861;&#33719;&#21462;&#24182;&#21457;&#38145;...
+    });</code></pre><p><code>funnel</code> &#38190;&#26631;&#35782;&#34987;&#38480;&#21046;&#30340;&#36164;&#28304;&#12290;<code>limit</code> &#26041;&#27861;&#23450;&#20041;&#26368;&#22823;&#24182;&#21457;&#25191;&#34892;&#25968;&#12290;<code>releaseAfter</code> &#26041;&#27861;&#35774;&#32622;&#22312;&#33258;&#21160;&#37322;&#25918;&#24050;&#33719;&#21462;&#30340;&#27133;&#20301;&#20043;&#21069;&#30340;&#31186;&#25968;&#23433;&#20840;&#36229;&#26102;&#12290;<code>block</code> &#26041;&#27861;&#35774;&#32622;&#31561;&#24453;&#21487;&#29992;&#27133;&#20301;&#30340;&#31186;&#25968;&#12290;</p><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#36890;&#36807;&#24322;&#24120;&#32780;&#38750;&#25552;&#20379;&#22833;&#36133;&#38381;&#21253;&#26469;&#22788;&#29702;&#36229;&#26102;&#65292;&#21487;&#20197;&#30465;&#30053;&#31532;&#20108;&#20010;&#38381;&#21253;&#12290;&#22914;&#26524;&#22312;&#25351;&#23450;&#30340;&#31561;&#24453;&#26102;&#38388;&#20869;&#26080;&#27861;&#33719;&#21462;&#38145;&#65292;&#23558;&#25243;&#20986; <code>Illuminate\Cache\Limiters\LimiterTimeoutException</code>&#65306;</p><pre><code class="language-php">use Illuminate\Cache\Limiters\LimiterTimeoutException;
+
+try {
+    Cache::funnel('foo')
+        -&gt;limit(3)
+        -&gt;releaseAfter(60)
+        -&gt;block(10)
+        -&gt;then(function () {
+            // &#24050;&#33719;&#21462;&#24182;&#21457;&#38145;...
+        });
+} catch (LimiterTimeoutException $e) {
+    // &#26080;&#27861;&#33719;&#21462;&#24182;&#21457;&#38145;...
+}</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#20026;&#24182;&#21457;&#38480;&#21046;&#22120;&#20351;&#29992;&#29305;&#23450;&#30340;&#32531;&#23384;&#23384;&#20648;&#65292;&#21487;&#20197;&#22312;&#25152;&#38656;&#30340;&#23384;&#20648;&#19978;&#35843;&#29992; <code>funnel</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Cache::store('redis')-&gt;funnel('foo')
+    -&gt;limit(3)
+    -&gt;block(10)
+    -&gt;then(function () {
+        // &#24050;&#20351;&#29992; "redis" &#23384;&#20648;&#33719;&#21462;&#24182;&#21457;&#38145;...
+    });</code></pre><blockquote>
+<p>[!NOTE]<br>
+<code>funnel</code> &#26041;&#27861;&#35201;&#27714;&#32531;&#23384;&#23384;&#20648;&#23454;&#29616; <code>Illuminate\Contracts\Cache\LockProvider</code> &#25509;&#21475;&#12290;&#22914;&#26524;&#20320;&#23581;&#35797;&#23545;&#19981;&#25903;&#25345;&#38145;&#30340;&#32531;&#23384;&#23384;&#20648;&#20351;&#29992; <code>funnel</code>&#65292;&#23558;&#25243;&#20986; <code>BadMethodCallException</code>&#12290;</p>
+</blockquote><h2 id="eb926b4fdf626abcc8855923a3e22436">&#32531;&#23384;&#25925;&#38556;&#36716;&#31227;</h2><p><code>failover</code> &#32531;&#23384;&#39537;&#21160;&#22312;&#19982;&#32531;&#23384;&#20132;&#20114;&#26102;&#25552;&#20379;&#33258;&#21160;&#25925;&#38556;&#36716;&#31227;&#21151;&#33021;&#12290;&#22914;&#26524; <code>failover</code> &#23384;&#20648;&#30340;&#20027;&#32531;&#23384;&#23384;&#20648;&#22240;&#20219;&#20309;&#21407;&#22240;&#22833;&#36133;&#65292;Laravel &#20250;&#33258;&#21160;&#23581;&#35797;&#20351;&#29992;&#21015;&#34920;&#20013;&#19979;&#19968;&#20010;&#24050;&#37197;&#32622;&#30340;&#23384;&#20648;&#12290;&#36825;&#22312;&#32531;&#23384;&#21487;&#38752;&#24615;&#33267;&#20851;&#37325;&#35201;&#30340;&#29983;&#20135;&#29615;&#22659;&#20013;&#65292;&#23545;&#20110;&#30830;&#20445;&#39640;&#21487;&#29992;&#24615;&#29305;&#21035;&#26377;&#29992;&#12290;</p><p>&#35201;&#37197;&#32622;&#25925;&#38556;&#36716;&#31227;&#32531;&#23384;&#23384;&#20648;&#65292;&#35831;&#25351;&#23450; <code>failover</code> &#39537;&#21160;&#65292;&#24182;&#25552;&#20379;&#19968;&#32452;&#25353;&#39034;&#24207;&#23581;&#35797;&#30340;&#23384;&#20648;&#21517;&#31216;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Laravel &#22312;&#24212;&#29992;&#31243;&#24207;&#30340; <code>config/cache.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#21253;&#21547;&#19968;&#20010;&#31034;&#20363;&#25925;&#38556;&#36716;&#31227;&#37197;&#32622;&#65306;</p><pre><code class="language-php">'failover' =&gt; [
+    'driver' =&gt; 'failover',
+    'stores' =&gt; [
+        'database',
+        'array',
+    ],
+],</code></pre><p>&#37197;&#32622;&#22909;&#20351;&#29992; <code>failover</code> &#39537;&#21160;&#30340;&#23384;&#20648;&#21518;&#65292;&#20320;&#38656;&#35201;&#22312;&#24212;&#29992;&#31243;&#24207;&#30340; <code>.env</code> &#25991;&#20214;&#20013;&#23558;&#35813;&#25925;&#38556;&#36716;&#31227;&#23384;&#20648;&#35774;&#32622;&#20026;&#40664;&#35748;&#32531;&#23384;&#23384;&#20648;&#65292;&#25165;&#33021;&#20351;&#29992;&#25925;&#38556;&#36716;&#31227;&#21151;&#33021;&#65306;</p><pre><code class="language-ini">CACHE_STORE=failover</code></pre><p>&#24403;&#32531;&#23384;&#23384;&#20648;&#25805;&#20316;&#22833;&#36133;&#24182;&#28608;&#27963;&#25925;&#38556;&#36716;&#31227;&#26102;&#65292;Laravel &#20250;&#27966;&#21457; <code>Illuminate\Cache\Events\CacheFailedOver</code> &#20107;&#20214;&#65292;&#35753;&#20320;&#33021;&#22815;&#25253;&#21578;&#25110;&#35760;&#24405;&#26576;&#20010;&#32531;&#23384;&#23384;&#20648;&#24050;&#22833;&#36133;&#12290;</p><h2 id="d6a367191a63038e417737fa159897e4">&#28155;&#21152;&#33258;&#23450;&#20041;&#32531;&#23384;&#39537;&#21160;</h2><h3 id="8ff2a9b9af3b7d7631328503396d25be">&#32534;&#20889;&#39537;&#21160;</h3><p>&#35201;&#21019;&#24314;&#33258;&#23450;&#20041;&#32531;&#23384;&#39537;&#21160;&#65292;&#39318;&#20808;&#38656;&#35201;&#23454;&#29616; <code>Illuminate\Contracts\Cache\Store</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/contracts" target="_blank">&#22865;&#32422;</a>&#12290;&#22240;&#27492;&#65292;&#19968;&#20010; MongoDB &#32531;&#23384;&#23454;&#29616;&#21487;&#33021;&#22914;&#19979;&#25152;&#31034;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Extensions;
+
+use Illuminate\Contracts\Cache\Store;
+
+class MongoStore implements Store
+{
+    public function get($key) {}
+    public function many(array $keys) {}
+    public function put($key, $value, $seconds) {}
+    public function putMany(array $values, $seconds) {}
+    public function increment($key, $value = 1) {}
+    public function decrement($key, $value = 1) {}
+    public function forever($key, $value) {}
+    public function forget($key) {}
+    public function flush() {}
+    public function getPrefix() {}
+}</code></pre><p>&#25105;&#20204;&#21482;&#38656;&#20351;&#29992; MongoDB &#36830;&#25509;&#26469;&#23454;&#29616;&#36825;&#20123;&#26041;&#27861;&#12290;&#26377;&#20851;&#22914;&#20309;&#23454;&#29616;&#27599;&#20010;&#26041;&#27861;&#30340;&#31034;&#20363;&#65292;&#35831;&#26597;&#30475; <a href="https://github.com/laravel/framework" target="_blank" rel="noopener noreferrer">Laravel &#26694;&#26550;&#28304;&#30721;</a> &#20013;&#30340; <code>Illuminate\Cache\MemcachedStore</code>&#12290;&#23454;&#29616;&#23436;&#25104;&#21518;&#65292;&#21487;&#20197;&#36890;&#36807;&#35843;&#29992; <code>Cache</code> facade &#30340; <code>extend</code> &#26041;&#27861;&#26469;&#23436;&#25104;&#33258;&#23450;&#20041;&#39537;&#21160;&#30340;&#27880;&#20876;&#65306;</p><pre><code class="language-php">Cache::extend('mongo', function (Application $app) {
+    return Cache::repository(new MongoStore);
+});</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#24819;&#30693;&#36947;&#33258;&#23450;&#20041;&#32531;&#23384;&#39537;&#21160;&#20195;&#30721;&#24212;&#25918;&#22312;&#21738;&#37324;&#65292;&#21487;&#20197;&#22312; <code>app</code> &#30446;&#24405;&#19979;&#21019;&#24314;&#19968;&#20010; <code>Extensions</code> &#21629;&#21517;&#31354;&#38388;&#12290;&#19981;&#36807;&#35831;&#27880;&#24847;&#65292;Laravel &#24182;&#27809;&#26377;&#20005;&#26684;&#30340;&#24212;&#29992;&#32467;&#26500;&#65292;&#20320;&#21487;&#20197;&#25353;&#29031;&#33258;&#24049;&#30340;&#20559;&#22909;&#26469;&#32452;&#32455;&#24212;&#29992;&#31243;&#24207;&#12290;</p>
+</blockquote><h3 id="853d254f08da1ccad10ace69b3ae9d28">&#27880;&#20876;&#39537;&#21160;</h3><p>&#35201;&#21521; Laravel &#27880;&#20876;&#33258;&#23450;&#20041;&#32531;&#23384;&#39537;&#21160;&#65292;&#25105;&#20204;&#23558;&#20351;&#29992; <code>Cache</code> facade &#19978;&#30340; <code>extend</code> &#26041;&#27861;&#12290;&#30001;&#20110;&#20854;&#20182;&#26381;&#21153;&#25552;&#20379;&#32773;&#21487;&#33021;&#20250;&#22312;&#20854; <code>boot</code> &#26041;&#27861;&#20013;&#23581;&#35797;&#35835;&#21462;&#32531;&#23384;&#20540;&#65292;&#25105;&#20204;&#20250;&#22312; <code>booting</code> &#22238;&#35843;&#20013;&#27880;&#20876;&#33258;&#23450;&#20041;&#39537;&#21160;&#12290;&#36890;&#36807;&#20351;&#29992; <code>booting</code> &#22238;&#35843;&#65292;&#25105;&#20204;&#21487;&#20197;&#30830;&#20445;&#33258;&#23450;&#20041;&#39537;&#21160;&#24688;&#22909;&#22312;&#24212;&#29992;&#31243;&#24207;&#30340;&#26381;&#21153;&#25552;&#20379;&#32773;&#30340; <code>boot</code> &#26041;&#27861;&#34987;&#35843;&#29992;&#20043;&#21069;&#12289;&#20294;&#22312;&#25152;&#26377;&#26381;&#21153;&#25552;&#20379;&#32773;&#30340; <code>register</code> &#26041;&#27861;&#34987;&#35843;&#29992;&#20043;&#21518;&#27880;&#20876;&#12290;&#25105;&#20204;&#23558;&#22312;&#24212;&#29992;&#31243;&#24207;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>register</code> &#26041;&#27861;&#20013;&#27880;&#20876; <code>booting</code> &#22238;&#35843;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use App\Extensions\MongoStore;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * &#27880;&#20876;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function register(): void
+    {
+        $this-&gt;app-&gt;booting(function () {
+             Cache::extend('mongo', function (Application $app) {
+                 return Cache::repository(new MongoStore);
+             });
+         });
+    }
+
+    /**
+     * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function boot(): void
+    {
+        // ...
+    }
+}</code></pre><p>&#20256;&#32473; <code>extend</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#39537;&#21160;&#30340;&#21517;&#31216;&#12290;&#23427;&#19982; <code>config/cache.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; <code>driver</code> &#36873;&#39033;&#30456;&#23545;&#24212;&#12290;&#31532;&#20108;&#20010;&#21442;&#25968;&#26159;&#19968;&#20010;&#38381;&#21253;&#65292;&#24212;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Cache\Repository</code> &#23454;&#20363;&#12290;&#35813;&#38381;&#21253;&#20250;&#25509;&#25910;&#21040;&#19968;&#20010; <code>$app</code> &#23454;&#20363;&#65292;&#23427;&#26159; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/container" target="_blank">&#26381;&#21153;&#23481;&#22120;</a> &#30340;&#19968;&#20010;&#23454;&#20363;&#12290;</p><p>&#25193;&#23637;&#27880;&#20876;&#23436;&#25104;&#21518;&#65292;&#23558;&#24212;&#29992;&#31243;&#24207; <code>config/cache.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; <code>CACHE_STORE</code> &#29615;&#22659;&#21464;&#37327;&#25110; <code>default</code> &#36873;&#39033;&#26356;&#26032;&#20026;&#20320;&#25193;&#23637;&#30340;&#21517;&#31216;&#12290;</p><h2 id="10b2761db5a8e089049df39675abc550">&#20107;&#20214;</h2><p>&#35201;&#22312;&#27599;&#27425;&#32531;&#23384;&#25805;&#20316;&#26102;&#25191;&#34892;&#20195;&#30721;&#65292;&#21487;&#20197;&#30417;&#21548;&#32531;&#23384;&#27966;&#21457;&#30340;&#21508;&#31181; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#20107;&#20214;</a>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#20107;&#20214;&#21517;&#31216;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Illuminate\Cache\Events\CacheFlushed</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\CacheFlushing</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\CacheFlushFailed</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\CacheLocksFlushed</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\CacheLocksFlushing</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\CacheLocksFlushFailed</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\CacheHit</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\CacheMissed</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\ForgettingKey</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\KeyForgetFailed</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\KeyForgotten</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\KeyWriteFailed</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\KeyWritten</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\RetrievingKey</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\RetrievingManyKeys</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\WritingKey</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Cache\Events\WritingManyKeys</code></td>
+</tr>
+</tbody>
+</table><p>&#20026;&#20102;&#25552;&#21319;&#24615;&#33021;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#24212;&#29992;&#31243;&#24207;&#30340; <code>config/cache.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#65292;&#23558;&#32473;&#23450;&#32531;&#23384;&#23384;&#20648;&#30340; <code>events</code> &#37197;&#32622;&#36873;&#39033;&#35774;&#32622;&#20026; <code>false</code> &#26469;&#31105;&#29992;&#32531;&#23384;&#20107;&#20214;&#65306;</p><pre><code class="language-php">'database' =&gt; [
+    'driver' =&gt; 'database',
+    // ...
+    'events' =&gt; false,
+],</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Memcached: <i><a href="https://memcached.org" target="_blank">https://memcached.org</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Redis: <i><a href="https://redis.io" target="_blank">https://redis.io</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Memcached: <i><a href="https://memcached.org" target="_blank">https://memcached.org</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Redis: <i><a href="https://redis.io" target="_blank">https://redis.io</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> DynamoDB: <i><a href="https://aws.amazon.com/dynamodb" target="_blank">https://aws.amazon.com/dynamodb</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 数据库迁移: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/migrations" target="_blank">/docs/Laravel 13.x/migrations</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> Memcached PECL 包: <i><a href="https://pecl.php.net/package/memcached" target="_blank">https://pecl.php.net/package/memcached</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> Laravel Sail: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sail" target="_blank">/docs/Laravel 13.x/sail</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> Laravel Cloud: <i><a href="https://cloud.laravel.com" target="_blank">https://cloud.laravel.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> Laravel Forge: <i><a href="https://forge.laravel.com" target="_blank">https://forge.laravel.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> Laravel 文档页面: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/redis#configuration" target="_blank">/docs/Laravel 13.x/redis#configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> 文件系统磁盘: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/filesystem" target="_blank">/docs/Laravel 13.x/filesystem</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> DynamoDB: <i><a href="https://aws.amazon.com/dynamodb" target="_blank">https://aws.amazon.com/dynamodb</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> 启用生存时间（TTL）: <i><a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html" target="_blank">https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 缓存与锁文档: <i><a href="https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/cache/" target="_blank">https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/cache/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> 延迟函数: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/helpers#deferred-functions" target="_blank">/docs/Laravel 13.x/helpers#deferred-functions</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> 测试 facade: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/mocking#mocking-facades" target="_blank">/docs/Laravel 13.x/mocking#mocking-facades</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> Laravel Cloud: <i><a href="https://cloud.laravel.com" target="_blank">https://cloud.laravel.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> 契约: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/contracts" target="_blank">/docs/Laravel 13.x/contracts</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> Laravel 框架源码: <i><a href="https://github.com/laravel/framework" target="_blank">https://github.com/laravel/framework</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> 服务容器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/container" target="_blank">/docs/Laravel 13.x/container</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> 事件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="enyd5w197d.html#blog1028" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">广播</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="4rvgn63ydj.html#blog1030" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">集合</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

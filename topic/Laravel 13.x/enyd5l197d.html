@@ -1,0 +1,1121 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>AI 辅助开发 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/enyd5l197d.html', function (data, status) {
+            addView('enyd5l197d.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>AI 辅助开发</h1><ul>
+<li><a href="enyd5l197d.html#e05dce83e5129785b9f316978a14b896">简介</a>
+<ul>
+<li><a href="enyd5l197d.html#f36b770ee96754bbbe61bf8d4b275354">为什么选择 Laravel 进行 AI 开发？</a></li>
+</ul></li>
+<li><a href="enyd5l197d.html#d01bf50efe6efd4a926d63fe1273510e">Laravel Boost</a>
+<ul>
+<li><a href="enyd5l197d.html#e655a410ff21cd07e7a0150491e04371">安装</a></li>
+<li><a href="enyd5l197d.html#99e7e0a620a5b2cb8435eeae6180c059">可用工具</a></li>
+<li><a href="enyd5l197d.html#ccf138878c7fd40ab2c5f809b4868f34">AI 指南</a></li>
+<li><a href="enyd5l197d.html#a177c064b2085802b3ee9df5132b896e">代理技能</a></li>
+<li><a href="enyd5l197d.html#c68b63bec957ccf7fcedb701d471ee9f">文档搜索</a></li>
+<li><a href="enyd5l197d.html#f0f519f1d09fd60426699e3c258c2172">代理集成</a></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>Laravel &#22312;&#23450;&#20301;&#19978;&#29420;&#20855;&#20248;&#21183;&#65292;&#26159; AI &#36741;&#21161;&#19982;&#26234;&#33021;&#20307;&#65288;agentic&#65289;&#24320;&#21457;&#30340;&#26368;&#20339;&#26694;&#26550;&#12290;Claude Code&#12289;OpenCode&#12289;Cursor&#12289;GitHub Copilot &#31561; AI &#32534;&#30721;&#26234;&#33021;&#20307;&#65288;coding agent&#65289;&#30340;&#20852;&#36215;&#65292;&#25913;&#21464;&#20102;&#24320;&#21457;&#32773;&#32534;&#20889;&#20195;&#30721;&#30340;&#26041;&#24335;&#12290;&#36825;&#20123;&#24037;&#20855;&#33021;&#20197;&#31354;&#21069;&#30340;&#36895;&#24230;&#29983;&#25104;&#23436;&#25972;&#21151;&#33021;&#12289;&#35843;&#35797;&#22797;&#26434;&#38382;&#39064;&#12289;&#37325;&#26500;&#20195;&#30721;&mdash;&mdash;&#20294;&#23427;&#20204;&#30340;&#26377;&#25928;&#24615;&#22312;&#24456;&#22823;&#31243;&#24230;&#19978;&#21462;&#20915;&#20110;&#23545;&#20195;&#30721;&#24211;&#30340;&#29702;&#35299;&#31243;&#24230;&#12290;</p><h3 id="f36b770ee96754bbbe61bf8d4b275354">&#20026;&#20160;&#20040;&#36873;&#25321; Laravel &#36827;&#34892; AI &#24320;&#21457;&#65311;</h3><p>Laravel &#32422;&#23450;&#26126;&#30830;&#12289;&#32467;&#26500;&#28165;&#26224;&#65292;&#26159; AI &#36741;&#21161;&#24320;&#21457;&#30340;&#29702;&#24819;&#26694;&#26550;&#12290;&#24403;&#20320;&#35753; AI &#26234;&#33021;&#20307;&#26032;&#22686;&#19968;&#20010;&#25511;&#21046;&#22120;&#26102;&#65292;&#23427;&#28165;&#26970;&#35813;&#25226;&#25511;&#21046;&#22120;&#25918;&#22312;&#20309;&#22788;&#12290;&#24403;&#20320;&#38656;&#35201;&#26032;&#24314; Migration &#26102;&#65292;&#21629;&#21517;&#32422;&#23450;&#19982;&#25991;&#20214;&#20301;&#32622;&#37117;&#21487;&#39044;&#26399;&#12290;&#36825;&#31181;&#19968;&#33268;&#24615;&#28040;&#38500;&#20102;&#28789;&#27963;&#24230;&#26356;&#39640;&#30340;&#26694;&#26550;&#20013;&#24120;&#20196; AI &#24037;&#20855;&#29359;&#38169;&#30340;&#29468;&#27979;&#12290;</p><p>&#38500;&#20102;&#25991;&#20214;&#32452;&#32455;&#65292;Laravel &#34920;&#36798;&#21147;&#24378;&#30340;&#35821;&#27861;&#19982;&#35814;&#23613;&#30340;&#25991;&#26723;&#65292;&#20026; AI &#26234;&#33021;&#20307;&#25552;&#20379;&#20102;&#29983;&#25104;&#20934;&#30830;&#12289;&#22320;&#36947;&#20195;&#30721;&#25152;&#38656;&#30340;&#19978;&#19979;&#25991;&#12290;Eloquent &#20851;&#32852;&#65288;Relationship&#65289;&#12289;&#34920;&#21333;&#35831;&#27714;&#65288;form request&#65289;&#12289;&#20013;&#38388;&#20214;&#65288;Middleware&#65289;&#31561;&#29305;&#24615;&#37117;&#36981;&#24490;&#26234;&#33021;&#20307;&#33021;&#22815;&#21487;&#38752;&#29702;&#35299;&#19982;&#22797;&#29992;&#30340;&#27169;&#24335;&#12290;&#26368;&#32456;&#29983;&#25104;&#30340; AI &#20195;&#30721;&#22914;&#21516;&#36164;&#28145; Laravel &#24320;&#21457;&#32773;&#25152;&#20889;&#65292;&#32780;&#38750;&#25340;&#20945;&#33258;&#36890;&#29992; PHP &#29255;&#27573;&#12290;</p><h2 id="d01bf50efe6efd4a926d63fe1273510e">Laravel Boost</h2><p><a href="https://github.com/laravel/boost" target="_blank" rel="noopener noreferrer">Laravel Boost</a> &#24357;&#21512;&#20102; AI &#32534;&#30721;&#26234;&#33021;&#20307;&#19982;&#20320;&#30340; Laravel &#24212;&#29992;&#20043;&#38388;&#30340;&#40511;&#27807;&#12290;Boost &#26159;&#19968;&#20010; MCP&#65288;Model Context Protocol&#65292;&#27169;&#22411;&#19978;&#19979;&#25991;&#21327;&#35758;&#65289;&#26381;&#21153;&#22120;&#65292;&#37197;&#22791; 15 &#20010;&#20197;&#19978;&#30340;&#19987;&#29992;&#24037;&#20855;&#65292;&#35753; AI &#26234;&#33021;&#20307;&#28145;&#20837;&#27934;&#23519;&#24212;&#29992;&#30340;&#32467;&#26500;&#12289;&#25968;&#25454;&#24211;&#12289;&#36335;&#30001;&#31561;&#12290;&#23433;&#35013; Boost &#21518;&#65292;&#20320;&#30340; AI &#26234;&#33021;&#20307;&#20174;&#36890;&#29992;&#20195;&#30721;&#21161;&#25163;&#34581;&#21464;&#20026;&#29702;&#35299;&#20320;&#20855;&#20307;&#24212;&#29992;&#30340; Laravel &#19987;&#23478;&#12290;</p><p>Boost &#25552;&#20379;&#19977;&#22823;&#33021;&#21147;&#65306;&#19968;&#22871;&#29992;&#20110;&#26816;&#26597;&#19982;&#20132;&#20114;&#24212;&#29992;&#30340; MCP &#24037;&#20855;&#12289;&#19987;&#20026; Laravel &#29983;&#24577;&#31934;&#24515;&#25171;&#30952;&#30340;&#21487;&#32452;&#21512; AI &#25351;&#21335;&#65292;&#20197;&#21450;&#19968;&#20010;&#21253;&#21547; 17,000 &#22810;&#26465; Laravel &#19987;&#23646;&#30693;&#35782;&#30340;&#24378;&#22823;&#25991;&#26723; API&#12290;</p><h3 id="e655a410ff21cd07e7a0150491e04371">&#23433;&#35013;</h3><p>Boost &#21487;&#23433;&#35013;&#20110;&#36816;&#34892; PHP 8.1 &#21450;&#20197;&#19978;&#29256;&#26412;&#30340; Laravel 10&#12289;11&#12289;12&#12289;13 &#24212;&#29992;&#12290;&#24320;&#22987;&#20043;&#21069;&#65292;&#20197;&#24320;&#21457;&#20381;&#36182;&#26041;&#24335;&#23433;&#35013; Boost&#65306;</p><pre><code class="language-shell">composer require laravel/boost --dev</code></pre><p>&#23433;&#35013;&#23436;&#25104;&#21518;&#65292;&#36816;&#34892;&#20132;&#20114;&#24335;&#23433;&#35013;&#31243;&#24207;&#65306;</p><pre><code class="language-shell">php artisan boost:install</code></pre><p>&#23433;&#35013;&#31243;&#24207;&#20250;&#33258;&#21160;&#26816;&#27979;&#20320;&#30340; IDE &#19982; AI &#26234;&#33021;&#20307;&#65292;&#35753;&#20320;&#36873;&#25321;&#36866;&#21512;&#39033;&#30446;&#30340;&#38598;&#25104;&#26041;&#24335;&#12290;Boost &#20250;&#29983;&#25104;&#24517;&#35201;&#30340;&#37197;&#32622;&#25991;&#20214;&#65292;&#20363;&#22914;&#38754;&#21521; MCP &#20860;&#23481;&#32534;&#36753;&#22120;&#30340; <code>.mcp.json</code> &#19982;&#29992;&#20110; AI &#19978;&#19979;&#25991;&#30340;&#25351;&#21335;&#25991;&#20214;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#24076;&#26395;&#27599;&#20301;&#24320;&#21457;&#32773;&#33258;&#34892;&#37197;&#32622;&#29615;&#22659;&#65292;&#21487;&#20197;&#25226; <code>.mcp.json</code>&#12289;<code>CLAUDE.md</code>&#12289;<code>boost.json</code> &#31561;&#29983;&#25104;&#30340;&#37197;&#32622;&#25991;&#20214;&#23433;&#20840;&#22320;&#21152;&#20837; <code>.gitignore</code>&#12290;</p>
+</blockquote><h3 id="99e7e0a620a5b2cb8435eeae6180c059">&#21487;&#29992;&#24037;&#20855;</h3><p>Boost &#36890;&#36807;&#27169;&#22411;&#19978;&#19979;&#25991;&#21327;&#35758;&#65288;Model Context Protocol&#65289;&#21521; AI &#26234;&#33021;&#20307;&#26292;&#38706;&#19968;&#25972;&#22871;&#24037;&#20855;&#12290;&#36825;&#20123;&#24037;&#20855;&#35753;&#26234;&#33021;&#20307;&#28145;&#20837;&#29702;&#35299;&#24182;&#19982;&#20320;&#30340; Laravel &#24212;&#29992;&#20132;&#20114;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;"><strong class="mk-b">&#24212;&#29992;&#33258;&#26816;&#65288;Application Introspection&#65289;</strong> - &#26597;&#35810; PHP &#19982; Laravel &#29256;&#26412;&#12289;&#21015;&#20986;&#24050;&#23433;&#35013;&#21253;&#12289;&#26816;&#26597;&#24212;&#29992;&#37197;&#32622;&#19982;&#29615;&#22659;&#21464;&#37327;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-y">&#25968;&#25454;&#24211;&#24037;&#20855;&#65288;Database Tools&#65289;</strong> - &#26816;&#26597;&#25968;&#25454;&#24211;&#32467;&#26500;&#12289;&#25191;&#34892;&#21482;&#35835;&#26597;&#35810;&#65292;&#26080;&#38656;&#31163;&#24320;&#23545;&#35805;&#21363;&#21487;&#29702;&#35299;&#25968;&#25454;&#32467;&#26500;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-p">&#36335;&#30001;&#26816;&#26597;&#65288;Route Inspection&#65289;</strong> - &#21015;&#20986;&#25152;&#26377;&#24050;&#27880;&#20876;&#36335;&#30001;&#21450;&#20854;&#20013;&#38388;&#20214;&#12289;&#25511;&#21046;&#22120;&#19982;&#21442;&#25968;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-g">Artisan &#21629;&#20196;&#65288;Artisan Commands&#65289;</strong> - &#21457;&#29616;&#21487;&#29992;&#30340; Artisan &#21629;&#20196;&#21450;&#20854;&#21442;&#25968;&#65292;&#35753;&#26234;&#33021;&#20307;&#33021;&#20026;&#20320;&#30340;&#20219;&#21153;&#24314;&#35758;&#24182;&#25191;&#34892;&#27491;&#30830;&#21629;&#20196;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-b">&#26085;&#24535;&#20998;&#26512;&#65288;Log Analysis&#65289;</strong> - &#35835;&#21462;&#24182;&#20998;&#26512;&#24212;&#29992;&#26085;&#24535;&#25991;&#20214;&#20197;&#21327;&#21161;&#35843;&#35797;&#38382;&#39064;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-y">&#27983;&#35272;&#22120;&#26085;&#24535;&#65288;Browser Logs&#65289;</strong> - &#20351;&#29992; Laravel &#21069;&#31471;&#24037;&#20855;&#24320;&#21457;&#26102;&#65292;&#35775;&#38382;&#27983;&#35272;&#22120;&#25511;&#21046;&#21488;&#26085;&#24535;&#19982;&#38169;&#35823;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-p">Tinker &#38598;&#25104;&#65288;Tinker Integration&#65289;</strong> - &#36890;&#36807; Laravel Tinker &#22312;&#24212;&#29992;&#19978;&#19979;&#25991;&#20013;&#25191;&#34892; PHP &#20195;&#30721;&#65292;&#35753;&#26234;&#33021;&#20307;&#39564;&#35777;&#20551;&#35774;&#19982;&#34892;&#20026;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-b">&#25991;&#26723;&#25628;&#32034;&#65288;Documentation Search&#65289;</strong> - &#25628;&#32034; Laravel &#29983;&#24577;&#25991;&#26723;&#65292;&#32467;&#26524;&#25353;&#20320;&#23433;&#35013;&#30340;&#21253;&#29256;&#26412;&#23450;&#21046;&#12290;</li>
+</ul><h3 id="ccf138878c7fd40ab2c5f809b4868f34">AI &#25351;&#21335;</h3><p>Boost &#20869;&#32622;&#19968;&#22871;&#19987;&#20026; Laravel &#29983;&#24577;&#31934;&#24515;&#25171;&#30952;&#30340; AI &#25351;&#21335;&#12290;&#36825;&#20123;&#25351;&#21335;&#25945;&#23548; AI &#26234;&#33021;&#20307;&#22914;&#20309;&#32534;&#20889;&#22320;&#36947; Laravel &#20195;&#30721;&#12289;&#36981;&#24490;&#26694;&#26550;&#32422;&#23450;&#12289;&#36991;&#20813;&#24120;&#35265;&#38519;&#38449;&#12290;&#25351;&#21335;&#21487;&#32452;&#21512;&#19988;&#24863;&#30693;&#29256;&#26412;&#65292;&#24847;&#21619;&#30528;&#26234;&#33021;&#20307;&#20250;&#25910;&#21040;&#36866;&#37197;&#20320;&#30830;&#20999;&#21253;&#29256;&#26412;&#30340;&#25351;&#20196;&#12290;</p><p>Laravel &#33258;&#36523;&#21450; Laravel &#29983;&#24577;&#20013; 16 &#20010;&#20197;&#19978;&#30340;&#21253;&#37117;&#25552;&#20379;&#25351;&#21335;&#65292;&#21253;&#25324;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">Livewire&#65288;2.x&#12289;3.x&#12289;4.x&#65289;</li>
+<li style="list-style-type: disc;">Inertia.js&#65288;React&#12289;Svelte&#12289;Vue &#21464;&#20307;&#65289;</li>
+<li style="list-style-type: disc;">Tailwind CSS&#65288;3.x&#12289;4.x&#65289;</li>
+<li style="list-style-type: disc;">Filament&#65288;3.x&#12289;4.x&#65289;</li>
+<li style="list-style-type: disc;">PHPUnit</li>
+<li style="list-style-type: disc;">Pest PHP</li>
+<li style="list-style-type: disc;">Laravel Pint</li>
+<li style="list-style-type: disc;">&#20197;&#21450;&#26356;&#22810;</li>
+</ul><p>&#24403;&#20320;&#36816;&#34892; <code>boost:install</code> &#26102;&#65292;Boost &#20250;&#33258;&#21160;&#26816;&#27979;&#24212;&#29992;&#25152;&#20351;&#29992;&#30340;&#21253;&#65292;&#24182;&#23558;&#30456;&#20851;&#25351;&#21335;&#32452;&#35013;&#36827;&#39033;&#30446;&#30340; AI &#19978;&#19979;&#25991;&#25991;&#20214;&#12290;</p><h3 id="a177c064b2085802b3ee9df5132b896e">&#20195;&#29702;&#25216;&#33021;</h3><p><a href="https://agentskills.io/home" target="_blank" rel="noopener noreferrer">Agent Skills</a> &#26159;&#36731;&#37327;&#12289;&#23450;&#21521;&#30340;&#30693;&#35782;&#27169;&#22359;&#65292;&#26234;&#33021;&#20307;&#22312;&#22788;&#29702;&#29305;&#23450;&#39046;&#22495;&#26102;&#21487;&#25353;&#38656;&#28608;&#27963;&#12290;&#19982;&#21069;&#32622;&#21152;&#36733;&#30340;&#25351;&#21335;&#19981;&#21516;&#65292;&#25216;&#33021;&#20165;&#22312;&#30456;&#20851;&#26102;&#21152;&#36733;&#35814;&#32454;&#27169;&#24335;&#19982;&#26368;&#20339;&#23454;&#36341;&#65292;&#20174;&#32780;&#20943;&#23569;&#19978;&#19979;&#25991;&#33192;&#32960;&#12289;&#25552;&#21319; AI &#29983;&#25104;&#20195;&#30721;&#30340;&#30456;&#20851;&#24615;&#12290;</p><p>Livewire&#12289;Inertia&#12289;Tailwind CSS&#12289;Pest &#31561;&#28909;&#38376; Laravel &#21253;&#37117;&#25552;&#20379;&#25216;&#33021;&#12290;&#24403;&#20320;&#36816;&#34892; <code>boost:install</code> &#24182;&#36873;&#25321;&#25216;&#33021;&#20316;&#20026;&#29305;&#24615;&#26102;&#65292;&#31995;&#32479;&#20250;&#20381;&#25454; <code>composer.json</code> &#20013;&#26816;&#27979;&#21040;&#30340;&#21253;&#33258;&#21160;&#23433;&#35013;&#25216;&#33021;&#12290;</p><h3 id="c68b63bec957ccf7fcedb701d471ee9f">&#25991;&#26723;&#25628;&#32034;</h3><p>Boost &#20869;&#32622;&#24378;&#22823;&#30340;&#25991;&#26723; API&#65292;&#35753; AI &#26234;&#33021;&#20307;&#35775;&#38382; Laravel &#29983;&#24577;&#20013; 17,000 &#22810;&#26465;&#25991;&#26723;&#12290;&#19982;&#36890;&#29992;&#32593;&#32476;&#25628;&#32034;&#19981;&#21516;&#65292;&#36825;&#20123;&#25991;&#26723;&#32463;&#36807;&#32034;&#24341;&#12289;&#21521;&#37327;&#21270;&#24182;&#25353;&#20320;&#30340;&#30830;&#20999;&#21253;&#29256;&#26412;&#36807;&#28388;&#12290;</p><p>&#24403;&#26234;&#33021;&#20307;&#38656;&#35201;&#29702;&#35299;&#26576;&#39033;&#29305;&#24615;&#30340;&#24037;&#20316;&#21407;&#29702;&#26102;&#65292;&#21487;&#25628;&#32034; Boost &#30340;&#25991;&#26723; API &#24182;&#33719;&#21462;&#20934;&#30830;&#30340;&#12289;&#29256;&#26412;&#19987;&#23646;&#20449;&#24687;&#12290;&#36825;&#28040;&#38500;&#20102; AI &#26234;&#33021;&#20307;&#24314;&#35758;&#20351;&#29992;&#26087;&#26694;&#26550;&#29256;&#26412;&#30340;&#24223;&#24323;&#26041;&#27861;&#25110;&#35821;&#27861;&#30340;&#24120;&#35265;&#38382;&#39064;&#12290;</p><h3 id="f0f519f1d09fd60426699e3c258c2172">&#20195;&#29702;&#38598;&#25104;</h3><p>Boost &#19982;&#25903;&#25345;&#27169;&#22411;&#19978;&#19979;&#25991;&#21327;&#35758;&#65288;Model Context Protocol&#65289;&#30340;&#27969;&#34892; IDE &#21450; AI &#24037;&#20855;&#38598;&#25104;&#12290;&#20851;&#20110; Cursor&#12289;Claude Code&#12289;Codex&#12289;Gemini CLI&#12289;GitHub Copilot&#12289;Junie &#30340;&#35814;&#32454;&#37197;&#32622;&#35828;&#26126;&#65292;&#35831;&#21442;&#38405; Boost &#25991;&#26723;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/boost#set-up-your-agents" target="_blank">&#37197;&#32622;&#20320;&#30340;&#26234;&#33021;&#20307;</a> &#31456;&#33410;&#12290;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Laravel Boost: <i><a href="https://github.com/laravel/boost" target="_blank">https://github.com/laravel/boost</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Agent Skills: <i><a href="https://agentskills.io/home" target="_blank">https://agentskills.io/home</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 配置你的智能体: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/boost#set-up-your-agents" target="_blank">/docs/Laravel 13.x/boost#set-up-your-agents</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="3dykqpoyl0.html#blog1003" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">配置</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="5dve213v4x.html#blog1005" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">目录结构</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

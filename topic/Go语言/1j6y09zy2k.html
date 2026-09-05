@@ -70,7 +70,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
 
     
 </head>
@@ -325,6 +325,10 @@
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
+                                   href="../Laravel&#32;13.x/overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
                                    href="../Linux/overview.html">Linux</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
@@ -576,6 +580,93 @@
     })();
 </script>
 
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -620,7 +711,7 @@ func main() {
 
    time.Sleep(time.Second)
 }</code></pre><p>&#22312;&#27492;&#31034;&#20363;&#20013;&#65292;&#25105;&#20204;&#23450;&#20041;&#20102;&#20004;&#20010; goroutine&#65292;&#23427;&#20204;&#23558;&#28040;&#24687;&#25171;&#21360;&#21040;&#25511;&#21046;&#21488;&#65288;&#32456;&#31471;&#65289;&#12290;&#28155;&#21152; <code>time.Sleep(time.Second)</code> &#35821;&#21477;&#26159;&#20026;&#20102;&#35753;&#20027;&#32447;&#31243;&#20445;&#25345;&#27963;&#21160;&#29366;&#24577;&#65292;&#30452;&#21040;&#20004;&#20010; goroutine &#37117;&#23436;&#25104;&#25191;&#34892;&#12290;&#24403;&#25105;&#20204;&#36816;&#34892;&#36825;&#20010;&#31243;&#24207;&#26102;&#65292;&#25105;&#20204;&#20250;&#30475;&#21040;&#20004;&#26465;&#28040;&#24687;&#37117;&#25171;&#21360;&#21040;&#25511;&#21046;&#21488;&#19978;&#12290;  </p><pre><code class="language-shell">Goroutine 2
-Goroutine 1</code></pre><p><strong class="mk-y">&#20195;&#30721;&#30340;&#36755;&#20986;&#39034;&#24207;&#19981;&#26159;&#22266;&#23450;&#30340;&#65292;&#22240;&#20026;&#23427;&#26159;&#24182;&#21457;&#34892;&#20026;&#12290;</strong></p><p>&#36825;&#21482;&#26159;&#19968;&#20010;&#31616;&#21333;&#30340;&#31034;&#20363;&#65292;&#20294;&#23427;&#23637;&#31034;&#20102; goroutine &#30340;&#24378;&#22823;&#21151;&#33021;&#12290; Goroutine &#26159;&#36731;&#37327;&#32423;&#30340;&#65292;&#22240;&#27492;&#25105;&#20204;&#21487;&#20197;&#21019;&#24314;&#25968;&#21315;&#20010; Goroutines &#32780;&#19981;&#20250;&#26174;&#30528;&#24433;&#21709;&#24615;&#33021;&#12290;&#36825;&#20351;&#24471; Go &#25104;&#20026;&#26500;&#24314;&#24182;&#21457;&#24212;&#29992;&#31243;&#24207;&#30340;&#32477;&#20339;&#36873;&#25321;&#12290;</p><h3 id="511e2f52cf5d9e0557daa9acf708d0bf">Go &#30340;&#21487;&#25193;&#23637;&#24615;</h3><p>Go &#30340;&#24182;&#21457;&#26041;&#27861;&#20351;&#20854;&#25104;&#20026;&#26500;&#24314;&#21487;&#25193;&#23637;&#21518;&#31471;&#31995;&#32479;&#30340;&#32477;&#20339;&#36873;&#25321;&#12290;&#22312; Go &#20013;&#65292;&#25105;&#20204;&#21487;&#20197;&#20351;&#29992;&#19982; goroutines &#30456;&#21516;&#30340;&#26041;&#27861;&#26469;&#26500;&#24314;&#21487;&#25193;&#23637;&#30340;&#21518;&#31471;&#31995;&#32479;&#12290;&#25105;&#20204;&#21487;&#20197;&#21019;&#24314;&#22810;&#20010; goroutines &#26469;&#22788;&#29702;&#35831;&#27714;&#65292;&#20445;&#35777;&#21518;&#31471;&#21487;&#20197;&#22788;&#29702;&#22823;&#37327;&#30340;&#35831;&#27714;&#32780;&#19981;&#24433;&#21709;&#24615;&#33021;&#12290;</p><p>&#36825;&#26159;&#25105;&#20204;&#22914;&#20309;&#22312; Go &#20013;&#26500;&#24314;&#21487;&#25193;&#23637;&#21518;&#31471;&#30340;&#31034;&#20363;&#65306;  </p><pre><code class="language-go">package main
+Goroutine 1</code></pre><p><strong class="mk-b">&#20195;&#30721;&#30340;&#36755;&#20986;&#39034;&#24207;&#19981;&#26159;&#22266;&#23450;&#30340;&#65292;&#22240;&#20026;&#23427;&#26159;&#24182;&#21457;&#34892;&#20026;&#12290;</strong></p><p>&#36825;&#21482;&#26159;&#19968;&#20010;&#31616;&#21333;&#30340;&#31034;&#20363;&#65292;&#20294;&#23427;&#23637;&#31034;&#20102; goroutine &#30340;&#24378;&#22823;&#21151;&#33021;&#12290; Goroutine &#26159;&#36731;&#37327;&#32423;&#30340;&#65292;&#22240;&#27492;&#25105;&#20204;&#21487;&#20197;&#21019;&#24314;&#25968;&#21315;&#20010; Goroutines &#32780;&#19981;&#20250;&#26174;&#30528;&#24433;&#21709;&#24615;&#33021;&#12290;&#36825;&#20351;&#24471; Go &#25104;&#20026;&#26500;&#24314;&#24182;&#21457;&#24212;&#29992;&#31243;&#24207;&#30340;&#32477;&#20339;&#36873;&#25321;&#12290;</p><h3 id="511e2f52cf5d9e0557daa9acf708d0bf">Go &#30340;&#21487;&#25193;&#23637;&#24615;</h3><p>Go &#30340;&#24182;&#21457;&#26041;&#27861;&#20351;&#20854;&#25104;&#20026;&#26500;&#24314;&#21487;&#25193;&#23637;&#21518;&#31471;&#31995;&#32479;&#30340;&#32477;&#20339;&#36873;&#25321;&#12290;&#22312; Go &#20013;&#65292;&#25105;&#20204;&#21487;&#20197;&#20351;&#29992;&#19982; goroutines &#30456;&#21516;&#30340;&#26041;&#27861;&#26469;&#26500;&#24314;&#21487;&#25193;&#23637;&#30340;&#21518;&#31471;&#31995;&#32479;&#12290;&#25105;&#20204;&#21487;&#20197;&#21019;&#24314;&#22810;&#20010; goroutines &#26469;&#22788;&#29702;&#35831;&#27714;&#65292;&#20445;&#35777;&#21518;&#31471;&#21487;&#20197;&#22788;&#29702;&#22823;&#37327;&#30340;&#35831;&#27714;&#32780;&#19981;&#24433;&#21709;&#24615;&#33021;&#12290;</p><p>&#36825;&#26159;&#25105;&#20204;&#22914;&#20309;&#22312; Go &#20013;&#26500;&#24314;&#21487;&#25193;&#23637;&#21518;&#31471;&#30340;&#31034;&#20363;&#65306;  </p><pre><code class="language-go">package main
 
 import "net/http"
 

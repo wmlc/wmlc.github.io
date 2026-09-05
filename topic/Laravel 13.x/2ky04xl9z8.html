@@ -1,0 +1,1880 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Laravel Passport | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/2ky04xl9z8.html', function (data, status) {
+            addView('2ky04xl9z8.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Laravel Passport</h1><ul>
+<li><a href="2ky04xl9z8.html#e05dce83e5129785b9f316978a14b896">简介</a>
+<ul>
+<li><a href="2ky04xl9z8.html#8d87a2250ff623d0f9844116e99855f2">Passport 还是 Sanctum？</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#e655a410ff21cd07e7a0150491e04371">安装</a>
+<ul>
+<li><a href="2ky04xl9z8.html#a636affa04233e7f293c380ed6ac5679">部署 Passport</a>
+<ul>
+<li><a href="2ky04xl9z8.html#8fb219b974732fce7ad3ef6c63dd3900">从环境变量加载密钥</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#7a7b122a3e8280da860b8a83732531dd">升级 Passport</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#224e2ccda861c2514faa683b3683c361">配置</a>
+<ul>
+<li><a href="2ky04xl9z8.html#62adfe333650102ddf0365dfe9afe779">令牌生命周期</a></li>
+<li><a href="2ky04xl9z8.html#08e7667f82759e100cd648b7fdabca08">覆盖默认模型</a></li>
+<li><a href="2ky04xl9z8.html#91725713f34f79574d587d6807ba23b5">覆盖路由</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#eb0729e350fc9a27af55bddbc03b9096">授权码模式</a>
+<ul>
+<li><a href="2ky04xl9z8.html#d0de9bd899b5b844c26ce94b8554ea26">管理客户端</a>
+<ul>
+<li><a href="2ky04xl9z8.html#86be3e6b385c2731f0d2723c22ea4e51">第一方客户端</a></li>
+<li><a href="2ky04xl9z8.html#f080b6e07566467dd80503eb646f78b6">第三方客户端</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#975c61163d288e8a67b35e0dc6d49e77">请求令牌</a>
+<ul>
+<li><a href="2ky04xl9z8.html#4b51e228f80e60169b85489fbd9044c6">重定向以进行授权</a></li>
+<li><a href="2ky04xl9z8.html#f9c3dde89ac0d351396bfa3936a1293a">批准请求</a></li>
+<li><a href="2ky04xl9z8.html#554d3edbf88981e21b0e828248eb6e22">将授权码转换为访问令牌</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#745a63ce4eb6c1668235e35c878b1027">管理令牌</a></li>
+<li><a href="2ky04xl9z8.html#da78df0a7449605116312c89d513b1e4">刷新令牌</a></li>
+<li><a href="2ky04xl9z8.html#57f7928e375c166c21eae655050b7883">撤销令牌</a></li>
+<li><a href="2ky04xl9z8.html#d253c9494da89fcb96b3eb866c38cd4c">清理令牌</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#97e008b2241272eaf55c3436afe32fe0">带 PKCE 的授权码模式</a>
+<ul>
+<li><a href="2ky04xl9z8.html#09585d309f90637ccaa1a5e18063e9e3">创建客户端</a></li>
+<li><a href="2ky04xl9z8.html#975c61163d288e8a67b35e0dc6d49e77">请求令牌</a>
+<ul>
+<li><a href="2ky04xl9z8.html#f815efb1788c56e4c3a616c5f8ada7fd">Code Verifier 和 Code Challenge</a></li>
+<li><a href="2ky04xl9z8.html#4b51e228f80e60169b85489fbd9044c6">重定向以进行授权</a></li>
+<li><a href="2ky04xl9z8.html#554d3edbf88981e21b0e828248eb6e22">将授权码转换为访问令牌</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#3581d5e723415d176c5f0da55662d9e7">设备授权模式</a>
+<ul>
+<li><a href="2ky04xl9z8.html#1d33c71d8fc0ecc5e2037fceafa1c2c6">创建设备授权模式客户端</a></li>
+<li><a href="2ky04xl9z8.html#975c61163d288e8a67b35e0dc6d49e77">请求令牌</a>
+<ul>
+<li><a href="2ky04xl9z8.html#4dcd598be6f2a2da1e7da36588ce0878">请求 Device Code</a></li>
+<li><a href="2ky04xl9z8.html#f87779de264f7dfae97aa062425e316f">显示验证 URI 和 User Code</a></li>
+<li><a href="2ky04xl9z8.html#24a985a3a83cfe1c599c258cd342c963">轮询令牌请求</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#b2c40fadd7a01dd036ff114ca2bcae18">密码模式</a>
+<ul>
+<li><a href="2ky04xl9z8.html#ad939ee58d7057517f038b1ca33a2c30">创建密码模式客户端</a></li>
+<li><a href="2ky04xl9z8.html#975c61163d288e8a67b35e0dc6d49e77">请求令牌</a></li>
+<li><a href="2ky04xl9z8.html#e4578cd8e5ea6070999d505105403436">请求所有作用域</a></li>
+<li><a href="2ky04xl9z8.html#438884bc9d9d101ba4647c4bd2f0e1be">自定义用户提供者</a></li>
+<li><a href="2ky04xl9z8.html#e6c1d04b2025c4faa96516ec67a49b6a">自定义用户名字段</a></li>
+<li><a href="2ky04xl9z8.html#a57cc67409f28083a065d2baecedcb0c">自定义密码验证</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#771a5ec30bb47959db9d0caf1754db64">隐式模式</a></li>
+<li><a href="2ky04xl9z8.html#7a0b3aedbf68414519514df15750839c">客户端凭据模式</a>
+<ul>
+<li><a href="2ky04xl9z8.html#8deb56b078032f442937fd5f4e9904e7">检索令牌</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#fd0b1eff7eb1e26aefd8393fa2bc5bd8">个人访问令牌</a>
+<ul>
+<li><a href="2ky04xl9z8.html#ef99c8aa42b1893bdc5fd9ae1e96e8b0">创建个人访问客户端</a></li>
+<li><a href="2ky04xl9z8.html#438884bc9d9d101ba4647c4bd2f0e1be">自定义用户提供者</a></li>
+<li><a href="2ky04xl9z8.html#112cd128ebe75703e8b7eeb8e429c654">管理个人访问令牌</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#801705ac2343e82fa596c98e745035e8">保护路由</a>
+<ul>
+<li><a href="2ky04xl9z8.html#a374a6f761e8c386e8f2418c4b0958e9">通过中间件</a>
+<ul>
+<li><a href="2ky04xl9z8.html#7d77a30ea5b81d63a847d73b03be08bc">多个身份认证 Guard</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#ce0e69177616df7ded7d9ab825e3208e">传递访问令牌</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#93b22c815809e5e2c968964153289dd7">令牌作用域</a>
+<ul>
+<li><a href="2ky04xl9z8.html#9c06f4d2a4579a8e0ff61d13c32bd27e">定义作用域</a></li>
+<li><a href="2ky04xl9z8.html#30cd2dcfa46500257c7f89d7079b5c30">默认作用域</a></li>
+<li><a href="2ky04xl9z8.html#d069ca417b495ca71931661ff39393ac">为令牌分配作用域</a>
+<ul>
+<li><a href="2ky04xl9z8.html#e7833d371ec1ee4d84d8c9bf0193204e">请求授权码时</a></li>
+<li><a href="2ky04xl9z8.html#104be5ceb4455b5dcc7be02710f173cb">签发个人访问令牌时</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#f9a6cac5097e8fce8a48b28937cfe457">检查作用域</a>
+<ul>
+<li><a href="2ky04xl9z8.html#27c8de6eb90fa64bb3ac563464ab47a9">检查所有作用域</a></li>
+<li><a href="2ky04xl9z8.html#cc4c71e2c78331b1d364ef753a532ca2">检查任意作用域</a></li>
+<li><a href="2ky04xl9z8.html#b39e4231700a8818af4f8c6fb2b2c8a0">作用域属性</a></li>
+<li><a href="2ky04xl9z8.html#b3fb7c46f649b688f4ba0c4c525093c3">在令牌实例上检查作用域</a></li>
+<li><a href="2ky04xl9z8.html#bee14bdbaf4c2f098eeac39ae6738d71">其他作用域方法</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#bb71ff0d30cc4337f8c3d4bb5cacc43b">SPA 身份认证</a>
+<ul>
+<li><a href="2ky04xl9z8.html#5ca91402e8b86bcdd8d07cbead81ecf5">自定义 Cookie 名称</a></li>
+<li><a href="2ky04xl9z8.html#71aa682d3e6eac3048c40e97045b7f02">CSRF 保护</a></li>
+</ul></li>
+<li><a href="2ky04xl9z8.html#10b2761db5a8e089049df39675abc550">事件</a></li>
+<li><a href="2ky04xl9z8.html#db06c78d1e24cf708a14ce81c9b617ec">测试</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p><a href="https://github.com/laravel/passport" target="_blank" rel="noopener noreferrer">Laravel Passport</a> &#21487;&#20197;&#22312;&#20960;&#20998;&#38047;&#20869;&#20026;&#20320;&#30340; Laravel &#24212;&#29992;&#25552;&#20379;&#19968;&#20010;&#23436;&#25972;&#30340; OAuth2 &#26381;&#21153;&#31471;&#23454;&#29616;&#12290;Passport &#26500;&#24314;&#22312; <a href="https://github.com/thephpleague/oauth2-server" target="_blank" rel="noopener noreferrer">League OAuth2 server</a> &#20043;&#19978;&#65292;&#21518;&#32773;&#30001; Andy Millington &#21644; Simon Hamp &#32500;&#25252;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#26412;&#25991;&#26723;&#40664;&#35748;&#20320;&#24050;&#32463;&#29087;&#24713; OAuth2&#12290;&#22914;&#26524;&#20320;&#23545; OAuth2 &#19968;&#26080;&#25152;&#30693;&#65292;&#24314;&#35758;&#20808;&#20102;&#35299; OAuth2 &#30340;&#19968;&#33324;<a href="https://oauth2.thephpleague.com/terminology/" target="_blank" rel="noopener noreferrer">&#26415;&#35821;</a>&#21644;&#29305;&#24615;&#65292;&#20877;&#32487;&#32493;&#38405;&#35835;&#12290;</p>
+</blockquote><h3 id="8d87a2250ff623d0f9844116e99855f2">Passport &#36824;&#26159; Sanctum&#65311;</h3><p>&#22312;&#24320;&#22987;&#20043;&#21069;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20808;&#21028;&#26029;&#24212;&#29992;&#26356;&#36866;&#21512;&#20351;&#29992; Laravel Passport &#36824;&#26159; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Laravel Sanctum</a>&#12290;&#22914;&#26524;&#24212;&#29992;&#30830;&#23454;&#38656;&#35201;&#25903;&#25345; OAuth2&#65292;&#37027;&#20040;&#24212;&#35813;&#20351;&#29992; Laravel Passport&#12290;</p><p>&#19981;&#36807;&#65292;&#22914;&#26524;&#20320;&#35201;&#23545;&#21333;&#39029;&#24212;&#29992;&#12289;&#31227;&#21160;&#24212;&#29992;&#36827;&#34892;&#36523;&#20221;&#39564;&#35777;&#65292;&#25110;&#32773;&#31614;&#21457; API &#20196;&#29260;&#65292;&#37027;&#20040;&#24212;&#35813;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Laravel Sanctum</a>&#12290;Laravel Sanctum &#19981;&#25903;&#25345; OAuth2&#65292;&#20294;&#23427;&#25552;&#20379;&#20102;&#19968;&#31181;&#26356;&#31616;&#21333;&#30340; API &#36523;&#20221;&#39564;&#35777;&#24320;&#21457;&#20307;&#39564;&#12290;</p><h2 id="e655a410ff21cd07e7a0150491e04371">&#23433;&#35013;</h2><p>&#20320;&#21487;&#20197;&#36890;&#36807; <code>install:api</code> Artisan &#21629;&#20196;&#23433;&#35013; Laravel Passport&#65306;</p><pre><code class="language-shell">php artisan install:api --passport</code></pre><p>&#35813;&#21629;&#20196;&#20250;&#21457;&#24067;&#24182;&#36816;&#34892;&#25152;&#38656;&#30340;&#25968;&#25454;&#24211;&#36801;&#31227;&#65292;&#20197;&#21019;&#24314;&#24212;&#29992;&#23384;&#20648; OAuth2 &#23458;&#25143;&#31471;&#21644;&#35775;&#38382;&#20196;&#29260;&#25152;&#38656;&#30340;&#34920;&#12290;&#35813;&#21629;&#20196;&#36824;&#20250;&#21019;&#24314;&#29983;&#25104;&#23433;&#20840;&#35775;&#38382;&#20196;&#29260;&#25152;&#38656;&#30340;&#21152;&#23494;&#23494;&#38053;&#12290;</p><p>&#36816;&#34892; <code>install:api</code> &#21629;&#20196;&#21518;&#65292;&#23558; <code>Laravel\Passport\HasApiTokens</code> Trait &#21644; <code>Laravel\Passport\Contracts\OAuthenticatable</code> &#25509;&#21475;&#28155;&#21152;&#21040; <code>App\Models\User</code> &#27169;&#22411;&#20013;&#12290;&#36825;&#20010; Trait &#20250;&#20026;&#27169;&#22411;&#25552;&#20379;&#19968;&#20123;&#36741;&#21161;&#26041;&#27861;&#65292;&#29992;&#20110;&#26816;&#26597;&#24050;&#35748;&#35777;&#29992;&#25143;&#30340;&#20196;&#29260;&#21644;&#20316;&#29992;&#22495;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\Contracts\OAuthenticatable;
+use Laravel\Passport\HasApiTokens;
+
+class User extends Authenticatable implements OAuthenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+}</code></pre><p>&#26368;&#21518;&#65292;&#22312;&#24212;&#29992;&#30340; <code>config/auth.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#65292;&#23450;&#20041;&#19968;&#20010; <code>api</code> &#36523;&#20221;&#35748;&#35777; guard&#65292;&#24182;&#23558; <code>driver</code> &#36873;&#39033;&#35774;&#32622;&#20026; <code>passport</code>&#12290;&#36825;&#20250;&#25351;&#31034;&#24212;&#29992;&#22312;&#35748;&#35777;&#20256;&#20837;&#30340; API &#35831;&#27714;&#26102;&#20351;&#29992; Passport &#30340; <code>TokenGuard</code>&#65306;</p><pre><code class="language-php">'guards' =&gt; [
+    'web' =&gt; [
+        'driver' =&gt; 'session',
+        'provider' =&gt; 'users',
+    ],
+
+    'api' =&gt; [
+        'driver' =&gt; 'passport',
+        'provider' =&gt; 'users',
+    ],
+],</code></pre><h3 id="a636affa04233e7f293c380ed6ac5679">&#37096;&#32626; Passport</h3><p>&#31532;&#19968;&#27425;&#23558; Passport &#37096;&#32626;&#21040;&#24212;&#29992;&#26381;&#21153;&#22120;&#26102;&#65292;&#24456;&#21487;&#33021;&#38656;&#35201;&#36816;&#34892; <code>passport:keys</code> &#21629;&#20196;&#12290;&#35813;&#21629;&#20196;&#20250;&#29983;&#25104; Passport &#29983;&#25104;&#35775;&#38382;&#20196;&#29260;&#25152;&#38656;&#30340;&#21152;&#23494;&#23494;&#38053;&#12290;&#29983;&#25104;&#30340;&#23494;&#38053;&#36890;&#24120;&#19981;&#32435;&#20837;&#29256;&#26412;&#25511;&#21046;&#65306;</p><pre><code class="language-shell">php artisan passport:keys</code></pre><p>&#22914;&#26377;&#24517;&#35201;&#65292;&#20320;&#21487;&#20197;&#23450;&#20041; Passport &#23494;&#38053;&#30340;&#21152;&#36733;&#36335;&#24452;&#12290;&#21487;&#20197;&#20351;&#29992; <code>Passport::loadKeysFrom</code> &#26041;&#27861;&#26469;&#23454;&#29616;&#12290;&#36890;&#24120;&#65292;&#24212;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#27492;&#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
+}</code></pre><h4 id="8fb219b974732fce7ad3ef6c63dd3900">&#20174;&#29615;&#22659;&#21464;&#37327;&#21152;&#36733;&#23494;&#38053;</h4><p>&#25110;&#32773;&#65292;&#20320;&#20063;&#21487;&#20197;&#20351;&#29992; <code>vendor:publish</code> Artisan &#21629;&#20196;&#21457;&#24067; Passport &#30340;&#37197;&#32622;&#25991;&#20214;&#65306;</p><pre><code class="language-shell">php artisan vendor:publish --tag=passport-config</code></pre><p>&#21457;&#24067;&#37197;&#32622;&#25991;&#20214;&#21518;&#65292;&#21487;&#20197;&#36890;&#36807;&#23558;&#24212;&#29992;&#30340;&#21152;&#23494;&#23494;&#38053;&#23450;&#20041;&#20026;&#29615;&#22659;&#21464;&#37327;&#26469;&#21152;&#36733;&#23427;&#20204;&#65306;</p><pre><code class="language-ini">PASSPORT_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----
+&lt;private key here&gt;
+-----END RSA PRIVATE KEY-----"
+
+PASSPORT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
+&lt;public key here&gt;
+-----END PUBLIC KEY-----"</code></pre><h3 id="7a7b122a3e8280da860b8a83732531dd">&#21319;&#32423; Passport</h3><p>&#21319;&#32423;&#21040; Passport &#30340;&#26032;&#20027;&#29256;&#26412;&#26102;&#65292;&#35831;&#21153;&#24517;&#20180;&#32454;&#38405;&#35835;<a href="https://github.com/laravel/passport/blob/master/UPGRADE.md" target="_blank" rel="noopener noreferrer">&#21319;&#32423;&#25351;&#21335;</a>&#12290;</p><h2 id="224e2ccda861c2514faa683b3683c361">&#37197;&#32622;</h2><h3 id="62adfe333650102ddf0365dfe9afe779">&#20196;&#29260;&#29983;&#21629;&#21608;&#26399;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Passport &#31614;&#21457;&#30340;&#26159;&#38271;&#26399;&#26377;&#25928;&#30340;&#35775;&#38382;&#20196;&#29260;&#65292;&#19968;&#24180;&#21518;&#36807;&#26399;&#12290;&#22914;&#26524;&#38656;&#35201;&#37197;&#32622;&#26356;&#38271;&#25110;&#26356;&#30701;&#30340;&#20196;&#29260;&#29983;&#21629;&#21608;&#26399;&#65292;&#21487;&#20197;&#20351;&#29992; <code>tokensExpireIn</code>&#12289;<code>refreshTokensExpireIn</code> &#21644; <code>personalAccessTokensExpireIn</code> &#26041;&#27861;&#12290;&#36825;&#20123;&#26041;&#27861;&#24212;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#65306;</p><pre><code class="language-php">use Carbon\CarbonInterval;
+
+/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Passport::tokensExpireIn(CarbonInterval::days(15));
+    Passport::refreshTokensExpireIn(CarbonInterval::days(30));
+    Passport::personalAccessTokensExpireIn(CarbonInterval::months(6));
+}</code></pre><blockquote>
+<p>[!WARNING]<br>
+Passport &#25968;&#25454;&#24211;&#34920;&#20013;&#30340; <code>expires_at</code> &#21015;&#26159;&#21482;&#35835;&#30340;&#65292;&#20165;&#29992;&#20110;&#26174;&#31034;&#12290;&#31614;&#21457;&#20196;&#29260;&#26102;&#65292;Passport &#23558;&#36807;&#26399;&#20449;&#24687;&#23384;&#20648;&#22312;&#24050;&#31614;&#21517;&#21644;&#21152;&#23494;&#30340;&#20196;&#29260;&#20869;&#12290;&#22914;&#26524;&#38656;&#35201;&#20351;&#20196;&#29260;&#22833;&#25928;&#65292;&#24212;<a href="2ky04xl9z8.html#revoking-tokens" target="_blank">&#25764;&#38144;&#23427;</a>&#12290;</p>
+</blockquote><h3 id="08e7667f82759e100cd648b7fdabca08">&#35206;&#30422;&#40664;&#35748;&#27169;&#22411;</h3><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#23450;&#20041;&#33258;&#24049;&#30340;&#27169;&#22411;&#24182;&#32487;&#25215;&#30456;&#24212;&#30340; Passport &#27169;&#22411;&#65292;&#33258;&#30001;&#25193;&#23637; Passport &#20869;&#37096;&#20351;&#29992;&#30340;&#27169;&#22411;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Client as PassportClient;
+
+class Client extends PassportClient
+{
+    // ...
+}</code></pre><p>&#23450;&#20041;&#22909;&#27169;&#22411;&#21518;&#65292;&#21487;&#20197;&#36890;&#36807; <code>Laravel\Passport\Passport</code> &#31867;&#25351;&#31034; Passport &#20351;&#29992;&#33258;&#23450;&#20041;&#27169;&#22411;&#12290;&#36890;&#24120;&#65292;&#24212;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#21578;&#30693; Passport &#33258;&#23450;&#20041;&#27169;&#22411;&#65306;</p><pre><code class="language-php">use App\Models\Passport\AuthCode;
+use App\Models\Passport\Client;
+use App\Models\Passport\DeviceCode;
+use App\Models\Passport\RefreshToken;
+use App\Models\Passport\Token;
+use Laravel\Passport\Passport;
+
+/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Passport::useTokenModel(Token::class);
+    Passport::useRefreshTokenModel(RefreshToken::class);
+    Passport::useAuthCodeModel(AuthCode::class);
+    Passport::useClientModel(Client::class);
+    Passport::useDeviceCodeModel(DeviceCode::class);
+}</code></pre><h3 id="91725713f34f79574d587d6807ba23b5">&#35206;&#30422;&#36335;&#30001;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#33258;&#23450;&#20041; Passport &#23450;&#20041;&#30340;&#36335;&#30001;&#12290;&#20026;&#27492;&#65292;&#39318;&#20808;&#38656;&#35201;&#36890;&#36807;&#22312;&#24212;&#29992;&#30340; <code>AppServiceProvider</code> &#30340; <code>register</code> &#26041;&#27861;&#20013;&#28155;&#21152; <code>Passport::ignoreRoutes</code> &#26469;&#24573;&#30053; Passport &#27880;&#20876;&#30340;&#36335;&#30001;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Passport;
+
+/**
+ * Register any application services.
+ */
+public function register(): void
+{
+    Passport::ignoreRoutes();
+}</code></pre><p>&#28982;&#21518;&#65292;&#20320;&#21487;&#20197;&#23558; Passport &#22312;<a href="https://github.com/laravel/passport/blob/master/routes/web.php" target="_blank" rel="noopener noreferrer">&#20854;&#36335;&#30001;&#25991;&#20214;</a>&#20013;&#23450;&#20041;&#30340;&#36335;&#30001;&#22797;&#21046;&#21040;&#24212;&#29992;&#30340; <code>routes/web.php</code> &#25991;&#20214;&#20013;&#65292;&#24182;&#25353;&#38656;&#20462;&#25913;&#65306;</p><pre><code class="language-php">Route::group([
+    'as' =&gt; 'passport.',
+    'prefix' =&gt; config('passport.path', 'oauth'),
+    'namespace' =&gt; '\Laravel\Passport\Http\Controllers',
+], function () {
+    // Passport routes...
+});</code></pre><h2 id="eb0729e350fc9a27af55bddbc03b9096">&#25480;&#26435;&#30721;&#27169;&#24335;</h2><p>&#36890;&#36807;&#25480;&#26435;&#30721;&#20351;&#29992; OAuth2 &#26159;&#22823;&#22810;&#25968;&#24320;&#21457;&#32773;&#29087;&#24713; OAuth2 &#30340;&#26041;&#24335;&#12290;&#20351;&#29992;&#25480;&#26435;&#30721;&#26102;&#65292;&#23458;&#25143;&#31471;&#24212;&#29992;&#20250;&#23558;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#20320;&#30340;&#26381;&#21153;&#22120;&#65292;&#29992;&#25143;&#23558;&#22312;&#37027;&#37324;&#25209;&#20934;&#25110;&#25298;&#32477;&#21521;&#23458;&#25143;&#31471;&#31614;&#21457;&#35775;&#38382;&#20196;&#29260;&#30340;&#35831;&#27714;&#12290;</p><p>&#39318;&#20808;&#65292;&#25105;&#20204;&#38656;&#35201;&#25351;&#31034; Passport &#22914;&#20309;&#36820;&#22238;&#25105;&#20204;&#30340;&#12300;&#25480;&#26435;&#12301;&#35270;&#22270;&#12290;</p><p>&#21487;&#20197;&#20351;&#29992; <code>Laravel\Passport\Passport</code> &#31867;&#25552;&#20379;&#30340;&#30456;&#24212;&#26041;&#27861;&#33258;&#23450;&#20041;&#25152;&#26377;&#25480;&#26435;&#35270;&#22270;&#30340;&#28210;&#26579;&#36923;&#36753;&#12290;&#36890;&#24120;&#65292;&#24212;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#27492;&#26041;&#27861;&#65306;</p><pre><code class="language-php">use Inertia\Inertia;
+use Laravel\Passport\Passport;
+
+/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    // &#36890;&#36807;&#25552;&#20379;&#35270;&#22270;&#21517;&#31216;...
+    Passport::authorizationView('auth.oauth.authorize');
+
+    // &#36890;&#36807;&#25552;&#20379;&#38381;&#21253;...
+    Passport::authorizationView(
+        fn ($parameters) =&gt; Inertia::render('Auth/OAuth/Authorize', [
+            'request' =&gt; $parameters['request'],
+            'authToken' =&gt; $parameters['authToken'],
+            'client' =&gt; $parameters['client'],
+            'user' =&gt; $parameters['user'],
+            'scopes' =&gt; $parameters['scopes'],
+        ])
+    );
+}</code></pre><p>Passport &#20250;&#33258;&#21160;&#23450;&#20041;&#36820;&#22238;&#35813;&#35270;&#22270;&#30340; <code>/oauth/authorize</code> &#36335;&#30001;&#12290;<code>auth.oauth.authorize</code> &#27169;&#26495;&#24212;&#21253;&#21547;&#19968;&#20010;&#34920;&#21333;&#65292;&#35813;&#34920;&#21333;&#21521; <code>passport.authorizations.approve</code> &#36335;&#30001;&#21457;&#36215; POST &#35831;&#27714;&#20197;&#25209;&#20934;&#25480;&#26435;&#65292;&#20197;&#21450;&#19968;&#20010;&#21521; <code>passport.authorizations.deny</code> &#36335;&#30001;&#21457;&#36215; DELETE &#35831;&#27714;&#20197;&#25298;&#32477;&#25480;&#26435;&#12290;<code>passport.authorizations.approve</code> &#21644; <code>passport.authorizations.deny</code> &#36335;&#30001;&#38656;&#35201; <code>state</code>&#12289;<code>client_id</code> &#21644; <code>auth_token</code> &#23383;&#27573;&#12290;</p><h3 id="d0de9bd899b5b844c26ce94b8554ea26">&#31649;&#29702;&#23458;&#25143;&#31471;</h3><p>&#38656;&#35201;&#19982;&#24212;&#29992; API &#20132;&#20114;&#30340;&#24320;&#21457;&#32773;&#38656;&#35201;&#36890;&#36807;&#21019;&#24314;&#19968;&#20010;&#12300;&#23458;&#25143;&#31471;&#12301;&#26469;&#21521;&#20320;&#30340;&#24212;&#29992;&#27880;&#20876;&#20182;&#20204;&#30340;&#24212;&#29992;&#12290;&#36890;&#24120;&#65292;&#36825;&#21253;&#25324;&#25552;&#20379;&#20854;&#24212;&#29992;&#21517;&#31216;&#20197;&#21450;&#19968;&#20010; URI&mdash;&mdash;&#22312;&#29992;&#25143;&#25209;&#20934;&#25480;&#26435;&#35831;&#27714;&#21518;&#65292;&#20320;&#30340;&#24212;&#29992;&#21487;&#20197;&#36890;&#36807;&#35813; URI &#36827;&#34892;&#37325;&#23450;&#21521;&#12290;</p><h4 id="86be3e6b385c2731f0d2723c22ea4e51">&#31532;&#19968;&#26041;&#23458;&#25143;&#31471;</h4><p>&#21019;&#24314;&#23458;&#25143;&#31471;&#26368;&#31616;&#21333;&#30340;&#26041;&#24335;&#26159;&#20351;&#29992; <code>passport:client</code> Artisan &#21629;&#20196;&#12290;&#35813;&#21629;&#20196;&#21487;&#29992;&#20110;&#21019;&#24314;&#31532;&#19968;&#26041;&#23458;&#25143;&#31471;&#25110;&#27979;&#35797;&#20320;&#30340; OAuth2 &#21151;&#33021;&#12290;&#36816;&#34892; <code>passport:client</code> &#21629;&#20196;&#26102;&#65292;Passport &#20250;&#25552;&#31034;&#20320;&#36755;&#20837;&#26377;&#20851;&#23458;&#25143;&#31471;&#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#24182;&#21521;&#25552;&#20379;&#23458;&#25143;&#31471; ID &#21644;&#23494;&#38053;&#65306;</p><pre><code class="language-shell">php artisan passport:client</code></pre><p>&#22914;&#26524;&#35201;&#20026;&#23458;&#25143;&#31471;&#20801;&#35768;&#22810;&#20010;&#37325;&#23450;&#21521; URI&#65292;&#21487;&#20197;&#22312; <code>passport:client</code> &#21629;&#20196;&#25552;&#31034;&#36755;&#20837; URI &#26102;&#20351;&#29992;&#36887;&#21495;&#20998;&#38548;&#30340;&#21015;&#34920;&#26469;&#25351;&#23450;&#12290;&#21253;&#21547;&#36887;&#21495;&#30340;&#20219;&#20309; URI &#37117;&#24212;&#36827;&#34892; URI &#32534;&#30721;&#65306;</p><pre><code class="language-shell">https://third-party-app.com/callback,https://example.com/oauth/redirect</code></pre><h4 id="f080b6e07566467dd80503eb646f78b6">&#31532;&#19977;&#26041;&#23458;&#25143;&#31471;</h4><p>&#30001;&#20110;&#24212;&#29992;&#30340;&#29992;&#25143;&#26080;&#27861;&#20351;&#29992; <code>passport:client</code> &#21629;&#20196;&#65292;&#22240;&#27492;&#21487;&#20197;&#20351;&#29992; <code>Laravel\Passport\ClientRepository</code> &#31867;&#30340; <code>createAuthorizationCodeGrantClient</code> &#26041;&#27861;&#20026;&#25351;&#23450;&#29992;&#25143;&#27880;&#20876;&#19968;&#20010;&#23458;&#25143;&#31471;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Laravel\Passport\ClientRepository;
+
+$user = User::find($userId);
+
+// &#21019;&#24314;&#19968;&#20010;&#23646;&#20110;&#25351;&#23450;&#29992;&#25143;&#30340; OAuth &#24212;&#29992;&#23458;&#25143;&#31471;...
+$client = app(ClientRepository::class)-&gt;createAuthorizationCodeGrantClient(
+    user: $user,
+    name: 'Example App',
+    redirectUris: ['https://third-party-app.com/callback'],
+    confidential: false,
+    enableDeviceFlow: true
+);
+
+// &#26816;&#32034;&#23646;&#20110;&#35813;&#29992;&#25143;&#30340;&#25152;&#26377; OAuth &#24212;&#29992;&#23458;&#25143;&#31471;...
+$clients = $user-&gt;oauthApps()-&gt;get();</code></pre><p><code>createAuthorizationCodeGrantClient</code> &#26041;&#27861;&#36820;&#22238; <code>Laravel\Passport\Client</code> &#30340;&#23454;&#20363;&#12290;&#21487;&#20197;&#23558; <code>$client-&gt;id</code> &#26174;&#31034;&#20026;&#23458;&#25143;&#31471; ID&#65292;&#23558; <code>$client-&gt;plainSecret</code> &#26174;&#31034;&#20026;&#23458;&#25143;&#31471;&#23494;&#38053;&#32473;&#29992;&#25143;&#12290;</p><h3 id="975c61163d288e8a67b35e0dc6d49e77">&#35831;&#27714;&#20196;&#29260;</h3><h4 id="4b51e228f80e60169b85489fbd9044c6">&#37325;&#23450;&#21521;&#20197;&#36827;&#34892;&#25480;&#26435;</h4><p>&#21019;&#24314;&#23458;&#25143;&#31471;&#21518;&#65292;&#24320;&#21457;&#32773;&#21487;&#20197;&#20351;&#29992;&#20854;&#23458;&#25143;&#31471; ID &#21644;&#23494;&#38053;&#20174;&#20320;&#30340;&#24212;&#29992;&#35831;&#27714;&#25480;&#26435;&#30721;&#21644;&#35775;&#38382;&#20196;&#29260;&#12290;&#39318;&#20808;&#65292;&#35843;&#29992;&#26041;&#24212;&#29992;&#24212;&#21521;&#20320;&#30340;&#24212;&#29992;&#30340; <code>/oauth/authorize</code> &#36335;&#30001;&#21457;&#36215;&#37325;&#23450;&#21521;&#35831;&#27714;&#65292;&#22914;&#19979;&#25152;&#31034;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+Route::get('/redirect', function (Request $request) {
+    $request-&gt;session()-&gt;put('state', $state = Str::random(40));
+
+    $query = http_build_query([
+        'client_id' =&gt; 'your-client-id',
+        'redirect_uri' =&gt; 'https://third-party-app.com/callback',
+        'response_type' =&gt; 'code',
+        'scope' =&gt; 'user:read orders:create',
+        'state' =&gt; $state,
+        // 'prompt' =&gt; '', // "none"&#12289;"consent" &#25110; "login"
+    ]);
+
+    return redirect('https://passport-app.test/oauth/authorize?'.$query);
+});</code></pre><p><code>prompt</code> &#21442;&#25968;&#21487;&#29992;&#20110;&#25351;&#23450; Passport &#24212;&#29992;&#30340;&#36523;&#20221;&#35748;&#35777;&#34892;&#20026;&#12290;</p><p>&#22914;&#26524; <code>prompt</code> &#20540;&#20026; <code>none</code>&#65292;&#24403;&#29992;&#25143;&#23578;&#26410;&#36890;&#36807; Passport &#24212;&#29992;&#36827;&#34892;&#36523;&#20221;&#35748;&#35777;&#26102;&#65292;Passport &#23558;&#22987;&#32456;&#25243;&#20986;&#36523;&#20221;&#35748;&#35777;&#38169;&#35823;&#12290;&#22914;&#26524;&#20540;&#20026; <code>consent</code>&#65292;Passport &#23558;&#22987;&#32456;&#26174;&#31034;&#25480;&#26435;&#25209;&#20934;&#30028;&#38754;&#65292;&#21363;&#20351;&#25152;&#26377;&#20316;&#29992;&#22495;&#20043;&#21069;&#24050;&#25480;&#20104;&#35843;&#29992;&#26041;&#24212;&#29992;&#12290;&#24403;&#20540;&#20026; <code>login</code> &#26102;&#65292;Passport &#24212;&#29992;&#23558;&#22987;&#32456;&#25552;&#31034;&#29992;&#25143;&#37325;&#26032;&#30331;&#24405;&#24212;&#29992;&#65292;&#21363;&#20351;&#20182;&#20204;&#24050;&#32463;&#25317;&#26377;&#29616;&#26377;&#20250;&#35805;&#12290;</p><p>&#22914;&#26524;&#26410;&#25552;&#20379; <code>prompt</code> &#20540;&#65292;&#21017;&#21482;&#26377;&#22312;&#29992;&#25143;&#20043;&#21069;&#26410;&#25480;&#26435;&#35843;&#29992;&#26041;&#24212;&#29992;&#35775;&#38382;&#25152;&#35831;&#27714;&#20316;&#29992;&#22495;&#26102;&#65292;&#31995;&#32479;&#25165;&#20250;&#25552;&#31034;&#29992;&#25143;&#36827;&#34892;&#25480;&#26435;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#35831;&#35760;&#20303;&#65292;<code>/oauth/authorize</code> &#36335;&#30001;&#24050;&#30001; Passport &#23450;&#20041;&#65292;&#26080;&#38656;&#25163;&#21160;&#23450;&#20041;&#27492;&#36335;&#30001;&#12290;</p>
+</blockquote><h4 id="f9c3dde89ac0d351396bfa3936a1293a">&#25209;&#20934;&#35831;&#27714;</h4><p>&#25910;&#21040;&#25480;&#26435;&#35831;&#27714;&#26102;&#65292;Passport &#23558;&#26681;&#25454; <code>prompt</code> &#21442;&#25968;&#30340;&#20540;&#65288;&#22914;&#26524;&#23384;&#22312;&#65289;&#33258;&#21160;&#21709;&#24212;&#65292;&#24182;&#21487;&#33021;&#21521;&#29992;&#25143;&#26174;&#31034;&#19968;&#20010;&#27169;&#26495;&#65292;&#20801;&#35768;&#20182;&#20204;&#25209;&#20934;&#25110;&#25298;&#32477;&#25480;&#26435;&#35831;&#27714;&#12290;&#22914;&#26524;&#29992;&#25143;&#25209;&#20934;&#35813;&#35831;&#27714;&#65292;&#20182;&#20204;&#23558;&#34987;&#37325;&#23450;&#21521;&#22238;&#21040;&#35843;&#29992;&#26041;&#24212;&#29992;&#25351;&#23450;&#30340; <code>redirect_uri</code>&#12290;<code>redirect_uri</code> &#24517;&#39035;&#19982;&#21019;&#24314;&#23458;&#25143;&#31471;&#26102;&#25351;&#23450;&#30340; <code>redirect</code> URL &#30456;&#21305;&#37197;&#12290;</p><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#24076;&#26395;&#36339;&#36807;&#25480;&#26435;&#25552;&#31034;&#65292;&#20363;&#22914;&#22312;&#25480;&#26435;&#31532;&#19968;&#26041;&#23458;&#25143;&#31471;&#26102;&#12290;&#21487;&#20197;&#36890;&#36807;<a href="2ky04xl9z8.html#overriding-default-models" target="_blank">&#25193;&#23637; <code>Client</code> &#27169;&#22411;</a>&#24182;&#23450;&#20041;&#19968;&#20010; <code>skipsAuthorization</code> &#26041;&#27861;&#26469;&#23454;&#29616;&#12290;&#22914;&#26524; <code>skipsAuthorization</code> &#36820;&#22238; <code>true</code>&#65292;&#21017;&#23458;&#25143;&#31471;&#23558;&#34987;&#25209;&#20934;&#65292;&#24182;&#19988;&#29992;&#25143;&#23558;&#31435;&#21363;&#34987;&#37325;&#23450;&#21521;&#22238;&#21040; <code>redirect_uri</code>&#65292;&#38500;&#38750;&#35843;&#29992;&#26041;&#24212;&#29992;&#22312;&#37325;&#23450;&#21521;&#20197;&#36827;&#34892;&#25480;&#26435;&#26102;&#26126;&#30830;&#35774;&#32622;&#20102; <code>prompt</code> &#21442;&#25968;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models\Passport;
+
+use Illuminate\Contracts\Auth\Authenticatable;
+use Laravel\Passport\Client as BaseClient;
+
+class Client extends BaseClient
+{
+    /**
+     * Determine if the client should skip the authorization prompt.
+     *
+     * @param  \Laravel\Passport\Scope[]  $scopes
+     */
+    public function skipsAuthorization(Authenticatable $user, array $scopes): bool
+    {
+        return $this-&gt;firstParty();
+    }
+}</code></pre><h4 id="554d3edbf88981e21b0e828248eb6e22">&#23558;&#25480;&#26435;&#30721;&#36716;&#25442;&#20026;&#35775;&#38382;&#20196;&#29260;</h4><p>&#22914;&#26524;&#29992;&#25143;&#25209;&#20934;&#25480;&#26435;&#35831;&#27714;&#65292;&#20182;&#20204;&#23558;&#34987;&#37325;&#23450;&#21521;&#22238;&#21040;&#35843;&#29992;&#26041;&#24212;&#29992;&#12290;&#35843;&#29992;&#26041;&#24212;&#39318;&#20808;&#26681;&#25454;&#37325;&#23450;&#21521;&#21069;&#23384;&#20648;&#30340;&#20540;&#39564;&#35777; <code>state</code> &#21442;&#25968;&#12290;&#22914;&#26524; state &#21442;&#25968;&#21305;&#37197;&#65292;&#21017;&#35843;&#29992;&#26041;&#24212;&#21521;&#20320;&#30340;&#24212;&#29992;&#21457;&#36215; <code>POST</code> &#35831;&#27714;&#20197;&#35831;&#27714;&#35775;&#38382;&#20196;&#29260;&#12290;&#35813;&#35831;&#27714;&#24212;&#21253;&#25324;&#20320;&#30340;&#24212;&#29992;&#22312;&#29992;&#25143;&#25209;&#20934;&#25480;&#26435;&#35831;&#27714;&#26102;&#31614;&#21457;&#30340;&#25480;&#26435;&#30721;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+
+Route::get('/callback', function (Request $request) {
+    $state = $request-&gt;session()-&gt;pull('state');
+
+    throw_unless(
+        strlen($state) &gt; 0 &amp;&amp; $state === $request-&gt;state,
+        InvalidArgumentException::class,
+        'Invalid state value.'
+    );
+
+    $response = Http::asForm()-&gt;post('https://passport-app.test/oauth/token', [
+        'grant_type' =&gt; 'authorization_code',
+        'client_id' =&gt; 'your-client-id',
+        'client_secret' =&gt; 'your-client-secret',
+        'redirect_uri' =&gt; 'https://third-party-app.com/callback',
+        'code' =&gt; $request-&gt;code,
+    ]);
+
+    return $response-&gt;json();
+});</code></pre><p>&#35813; <code>/oauth/token</code> &#36335;&#30001;&#23558;&#36820;&#22238;&#19968;&#20010; JSON &#21709;&#24212;&#65292;&#21253;&#21547; <code>access_token</code>&#12289;<code>refresh_token</code> &#21644; <code>expires_in</code> &#23646;&#24615;&#12290;<code>expires_in</code> &#23646;&#24615;&#21253;&#21547;&#35775;&#38382;&#20196;&#29260;&#36807;&#26399;&#21069;&#30340;&#31186;&#25968;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#19982; <code>/oauth/authorize</code> &#36335;&#30001;&#19968;&#26679;&#65292;<code>/oauth/token</code> &#36335;&#30001;&#30001; Passport &#20026;&#20320;&#23450;&#20041;&#65292;&#26080;&#38656;&#25163;&#21160;&#23450;&#20041;&#27492;&#36335;&#30001;&#12290;</p>
+</blockquote><h3 id="745a63ce4eb6c1668235e35c878b1027">&#31649;&#29702;&#20196;&#29260;</h3><p>&#21487;&#20197;&#20351;&#29992; <code>Laravel\Passport\HasApiTokens</code> Trait &#30340; <code>tokens</code> &#26041;&#27861;&#26816;&#32034;&#29992;&#25143;&#25480;&#26435;&#30340;&#20196;&#29260;&#12290;&#20363;&#22914;&#65292;&#36825;&#21487;&#20197;&#29992;&#20110;&#21521;&#29992;&#25143;&#25552;&#20379;&#19968;&#20010;&#20202;&#34920;&#26495;&#65292;&#20197;&#36319;&#36394;&#20182;&#20204;&#19982;&#31532;&#19977;&#26041;&#24212;&#29992;&#30340;&#36830;&#25509;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Date;
+use Laravel\Passport\Token;
+
+$user = User::find($userId);
+
+// &#26816;&#32034;&#35813;&#29992;&#25143;&#30340;&#25152;&#26377;&#26377;&#25928;&#20196;&#29260;...
+$tokens = $user-&gt;tokens()
+    -&gt;where('revoked', false)
+    -&gt;where('expires_at', '&gt;', Date::now())
+    -&gt;get();
+
+// &#26816;&#32034;&#29992;&#25143;&#19982;&#31532;&#19977;&#26041; OAuth &#24212;&#29992;&#23458;&#25143;&#31471;&#30340;&#25152;&#26377;&#36830;&#25509;...
+$connections = $tokens-&gt;load('client')
+    -&gt;reject(fn (Token $token) =&gt; $token-&gt;client-&gt;firstParty())
+    -&gt;groupBy('client_id')
+    -&gt;map(fn (Collection $tokens) =&gt; [
+        'client' =&gt; $tokens-&gt;first()-&gt;client,
+        'scopes' =&gt; $tokens-&gt;pluck('scopes')-&gt;flatten()-&gt;unique()-&gt;values()-&gt;all(),
+        'tokens_count' =&gt; $tokens-&gt;count(),
+    ])
+    -&gt;values();</code></pre><h3 id="da78df0a7449605116312c89d513b1e4">&#21047;&#26032;&#20196;&#29260;</h3><p>&#22914;&#26524;&#24212;&#29992;&#31614;&#21457;&#30340;&#26159;&#30701;&#26399;&#35775;&#38382;&#20196;&#29260;&#65292;&#21017;&#29992;&#25143;&#38656;&#35201;&#36890;&#36807;&#31614;&#21457;&#35775;&#38382;&#20196;&#29260;&#26102;&#25552;&#20379;&#30340;&#21047;&#26032;&#20196;&#29260;&#26469;&#21047;&#26032;&#20182;&#20204;&#30340;&#35775;&#38382;&#20196;&#29260;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+$response = Http::asForm()-&gt;post('https://passport-app.test/oauth/token', [
+    'grant_type' =&gt; 'refresh_token',
+    'refresh_token' =&gt; 'the-refresh-token',
+    'client_id' =&gt; 'your-client-id',
+    'client_secret' =&gt; 'your-client-secret', // &#20165;&#26426;&#23494;&#23458;&#25143;&#31471;&#38656;&#35201;...
+    'scope' =&gt; 'user:read orders:create',
+]);
+
+return $response-&gt;json();</code></pre><p>&#35813; <code>/oauth/token</code> &#36335;&#30001;&#23558;&#36820;&#22238;&#19968;&#20010; JSON &#21709;&#24212;&#65292;&#21253;&#21547; <code>access_token</code>&#12289;<code>refresh_token</code> &#21644; <code>expires_in</code> &#23646;&#24615;&#12290;<code>expires_in</code> &#23646;&#24615;&#21253;&#21547;&#35775;&#38382;&#20196;&#29260;&#36807;&#26399;&#21069;&#30340;&#31186;&#25968;&#12290;</p><h3 id="57f7928e375c166c21eae655050b7883">&#25764;&#38144;&#20196;&#29260;</h3><p>&#21487;&#20197;&#20351;&#29992; <code>Laravel\Passport\Token</code> &#27169;&#22411;&#19978;&#30340; <code>revoke</code> &#26041;&#27861;&#25764;&#38144;&#20196;&#29260;&#12290;&#21487;&#20197;&#20351;&#29992; <code>Laravel\Passport\RefreshToken</code> &#27169;&#22411;&#19978;&#30340; <code>revoke</code> &#26041;&#27861;&#25764;&#38144;&#20196;&#29260;&#30340;&#21047;&#26032;&#20196;&#29260;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Passport;
+use Laravel\Passport\Token;
+
+$token = Passport::token()-&gt;find($tokenId);
+
+// &#25764;&#38144;&#35775;&#38382;&#20196;&#29260;...
+$token-&gt;revoke();
+
+// &#25764;&#38144;&#20196;&#29260;&#30340;&#21047;&#26032;&#20196;&#29260;...
+$token-&gt;refreshToken?-&gt;revoke();
+
+// &#25764;&#38144;&#35813;&#29992;&#25143;&#30340;&#25152;&#26377;&#20196;&#29260;...
+User::find($userId)-&gt;tokens()-&gt;each(function (Token $token) {
+    $token-&gt;revoke();
+    $token-&gt;refreshToken?-&gt;revoke();
+});</code></pre><h3 id="d253c9494da89fcb96b3eb866c38cd4c">&#28165;&#29702;&#20196;&#29260;</h3><p>&#24403;&#20196;&#29260;&#34987;&#25764;&#38144;&#25110;&#36807;&#26399;&#26102;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#23558;&#20854;&#20174;&#25968;&#25454;&#24211;&#20013;&#28165;&#38500;&#12290;Passport &#33258;&#24102;&#30340; <code>passport:purge</code> Artisan &#21629;&#20196;&#21487;&#20197;&#20026;&#20320;&#23436;&#25104;&#27492;&#25805;&#20316;&#65306;</p><pre><code class="language-shell"># &#28165;&#29702;&#24050;&#25764;&#38144;&#21644;&#36807;&#26399;&#30340;&#20196;&#29260;&#12289;&#25480;&#26435;&#30721;&#21644;&#35774;&#22791;&#30721;...
+php artisan passport:purge
+
+# &#20165;&#28165;&#29702;&#36807;&#26399;&#36229;&#36807; 6 &#23567;&#26102;&#30340;&#20196;&#29260;...
+php artisan passport:purge --hours=6
+
+# &#20165;&#28165;&#29702;&#24050;&#25764;&#38144;&#30340;&#20196;&#29260;&#12289;&#25480;&#26435;&#30721;&#21644;&#35774;&#22791;&#30721;...
+php artisan passport:purge --revoked
+
+# &#20165;&#28165;&#29702;&#36807;&#26399;&#30340;&#20196;&#29260;&#12289;&#25480;&#26435;&#30721;&#21644;&#35774;&#22791;&#30721;...
+php artisan passport:purge --expired</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>routes/console.php</code> &#25991;&#20214;&#20013;&#37197;&#32622;&#19968;&#20010;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/scheduling" target="_blank">&#23450;&#26102;&#20219;&#21153;</a>&#65292;&#25353;&#35745;&#21010;&#33258;&#21160;&#28165;&#29702;&#20196;&#29260;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Schedule;
+
+Schedule::command('passport:purge')-&gt;hourly();</code></pre><h2 id="97e008b2241272eaf55c3436afe32fe0">&#24102; PKCE &#30340;&#25480;&#26435;&#30721;&#27169;&#24335;</h2><p>&#24102;&#12300;Proof Key for Code Exchange&#12301;&#65288;PKCE&#65289;&#30340;&#25480;&#26435;&#30721;&#27169;&#24335;&#26159;&#19968;&#31181;&#23433;&#20840;&#22320;&#23545;&#21333;&#39029;&#24212;&#29992;&#25110;&#31227;&#21160;&#24212;&#29992;&#36827;&#34892;&#36523;&#20221;&#35748;&#35777;&#20197;&#35775;&#38382;&#20320;&#30340; API &#30340;&#26041;&#24335;&#12290;&#24403;&#26080;&#27861;&#20445;&#35777;&#23458;&#25143;&#31471;&#23494;&#38053;&#34987;&#23433;&#20840;&#23384;&#20648;&#26102;&#65292;&#25110;&#32773;&#20026;&#20102;&#20943;&#36731;&#25480;&#26435;&#30721;&#34987;&#25915;&#20987;&#32773;&#25130;&#33719;&#30340;&#23041;&#32961;&#26102;&#65292;&#24212;&#20351;&#29992;&#27492;&#27169;&#24335;&#12290;&#12300;code verifier&#12301;&#21644;&#12300;code challenge&#12301;&#30340;&#32452;&#21512;&#22312;&#23558;&#25480;&#26435;&#30721;&#20132;&#25442;&#20026;&#35775;&#38382;&#20196;&#29260;&#26102;&#21462;&#20195;&#20102;&#23458;&#25143;&#31471;&#23494;&#38053;&#12290;</p><h3 id="09585d309f90637ccaa1a5e18063e9e3">&#21019;&#24314;&#23458;&#25143;&#31471;</h3><p>&#22312;&#24212;&#29992;&#33021;&#22815;&#36890;&#36807;&#24102; PKCE &#30340;&#25480;&#26435;&#30721;&#27169;&#24335;&#31614;&#21457;&#20196;&#29260;&#20043;&#21069;&#65292;&#38656;&#35201;&#21019;&#24314;&#19968;&#20010;&#21551;&#29992;&#20102; PKCE &#30340;&#23458;&#25143;&#31471;&#12290;&#21487;&#20197;&#20351;&#29992;&#24102;&#26377; <code>--public</code> &#36873;&#39033;&#30340; <code>passport:client</code> Artisan &#21629;&#20196;&#26469;&#23436;&#25104;&#27492;&#25805;&#20316;&#65306;</p><pre><code class="language-shell">php artisan passport:client --public</code></pre><h3 id="975c61163d288e8a67b35e0dc6d49e77">&#35831;&#27714;&#20196;&#29260;</h3><h4 id="f815efb1788c56e4c3a616c5f8ada7fd">Code Verifier &#21644; Code Challenge</h4><p>&#30001;&#20110;&#27492;&#25480;&#26435;&#27169;&#24335;&#19981;&#25552;&#20379;&#23458;&#25143;&#31471;&#23494;&#38053;&#65292;&#24320;&#21457;&#32773;&#38656;&#35201;&#29983;&#25104; code verifier &#21644; code challenge &#30340;&#32452;&#21512;&#20197;&#35831;&#27714;&#20196;&#29260;&#12290;</p><p>code verifier &#24212;&#20026; 43 &#21040; 128 &#20010;&#23383;&#31526;&#20043;&#38388;&#30340;&#38543;&#26426;&#23383;&#31526;&#20018;&#65292;&#21253;&#21547;&#23383;&#27597;&#12289;&#25968;&#23383;&#20197;&#21450; <code>"-"</code>&#12289;<code>"."</code>&#12289;<code>"_"</code>&#12289;<code>"~"</code> &#23383;&#31526;&#65292;&#22914; <a href="https://tools.ietf.org/html/rfc7636" target="_blank" rel="noopener noreferrer">RFC 7636 &#35268;&#33539;</a>&#20013;&#25152;&#23450;&#20041;&#12290;</p><p>code challenge &#24212;&#20026; URL &#19982;&#25991;&#20214;&#21517;&#23433;&#20840;&#23383;&#31526;&#30340; Base64 &#32534;&#30721;&#23383;&#31526;&#20018;&#12290;&#32467;&#23614;&#30340; <code>'='</code> &#23383;&#31526;&#24212;&#34987;&#31227;&#38500;&#65292;&#19988;&#19981;&#24212;&#21253;&#21547;&#25442;&#34892;&#31526;&#12289;&#31354;&#26684;&#25110;&#20854;&#20182;&#39069;&#22806;&#23383;&#31526;&#12290;</p><pre><code class="language-php">$encoded = base64_encode(hash('sha256', $codeVerifier, true));
+
+$codeChallenge = strtr(rtrim($encoded, '='), '+/', '-_');</code></pre><h4 id="4b51e228f80e60169b85489fbd9044c6">&#37325;&#23450;&#21521;&#20197;&#36827;&#34892;&#25480;&#26435;</h4><p>&#21019;&#24314;&#23458;&#25143;&#31471;&#21518;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#23458;&#25143;&#31471; ID &#20197;&#21450;&#29983;&#25104;&#30340; code verifier &#21644; code challenge &#20174;&#24212;&#29992;&#35831;&#27714;&#25480;&#26435;&#30721;&#21644;&#35775;&#38382;&#20196;&#29260;&#12290;&#39318;&#20808;&#65292;&#35843;&#29992;&#26041;&#24212;&#29992;&#24212;&#21521;&#24212;&#29992;&#30340; <code>/oauth/authorize</code> &#36335;&#30001;&#21457;&#36215;&#37325;&#23450;&#21521;&#35831;&#27714;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+Route::get('/redirect', function (Request $request) {
+    $request-&gt;session()-&gt;put('state', $state = Str::random(40));
+
+    $request-&gt;session()-&gt;put(
+        'code_verifier', $codeVerifier = Str::random(128)
+    );
+
+    $codeChallenge = strtr(rtrim(
+        base64_encode(hash('sha256', $codeVerifier, true))
+    , '='), '+/', '-_');
+
+    $query = http_build_query([
+        'client_id' =&gt; 'your-client-id',
+        'redirect_uri' =&gt; 'https://third-party-app.com/callback',
+        'response_type' =&gt; 'code',
+        'scope' =&gt; 'user:read orders:create',
+        'state' =&gt; $state,
+        'code_challenge' =&gt; $codeChallenge,
+        'code_challenge_method' =&gt; 'S256',
+        // 'prompt' =&gt; '', // "none"&#12289;"consent" &#25110; "login"
+    ]);
+
+    return redirect('https://passport-app.test/oauth/authorize?'.$query);
+});</code></pre><h4 id="554d3edbf88981e21b0e828248eb6e22">&#23558;&#25480;&#26435;&#30721;&#36716;&#25442;&#20026;&#35775;&#38382;&#20196;&#29260;</h4><p>&#22914;&#26524;&#29992;&#25143;&#25209;&#20934;&#25480;&#26435;&#35831;&#27714;&#65292;&#20182;&#20204;&#23558;&#34987;&#37325;&#23450;&#21521;&#22238;&#21040;&#35843;&#29992;&#26041;&#24212;&#29992;&#12290;&#35843;&#29992;&#26041;&#24212;&#26681;&#25454;&#37325;&#23450;&#21521;&#21069;&#23384;&#20648;&#30340;&#20540;&#39564;&#35777; <code>state</code> &#21442;&#25968;&#65292;&#19982;&#26631;&#20934;&#25480;&#26435;&#30721;&#27169;&#24335;&#30456;&#21516;&#12290;</p><p>&#22914;&#26524; state &#21442;&#25968;&#21305;&#37197;&#65292;&#35843;&#29992;&#26041;&#24212;&#21521;&#20320;&#30340;&#24212;&#29992;&#21457;&#36215; <code>POST</code> &#35831;&#27714;&#20197;&#35831;&#27714;&#35775;&#38382;&#20196;&#29260;&#12290;&#35813;&#35831;&#27714;&#24212;&#21253;&#25324;&#29992;&#25143;&#25209;&#20934;&#25480;&#26435;&#35831;&#27714;&#26102;&#20320;&#30340;&#24212;&#29992;&#31614;&#21457;&#30340;&#25480;&#26435;&#30721;&#20197;&#21450;&#26368;&#21021;&#29983;&#25104;&#30340; code verifier&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+
+Route::get('/callback', function (Request $request) {
+    $state = $request-&gt;session()-&gt;pull('state');
+
+    $codeVerifier = $request-&gt;session()-&gt;pull('code_verifier');
+
+    throw_unless(
+        strlen($state) &gt; 0 &amp;&amp; $state === $request-&gt;state,
+        InvalidArgumentException::class
+    );
+
+    $response = Http::asForm()-&gt;post('https://passport-app.test/oauth/token', [
+        'grant_type' =&gt; 'authorization_code',
+        'client_id' =&gt; 'your-client-id',
+        'redirect_uri' =&gt; 'https://third-party-app.com/callback',
+        'code_verifier' =&gt; $codeVerifier,
+        'code' =&gt; $request-&gt;code,
+    ]);
+
+    return $response-&gt;json();
+});</code></pre><h2 id="3581d5e723415d176c5f0da55662d9e7">&#35774;&#22791;&#25480;&#26435;&#27169;&#24335;</h2><p>OAuth2 &#35774;&#22791;&#25480;&#26435;&#27169;&#24335;&#20801;&#35768;&#26080;&#27983;&#35272;&#22120;&#25110;&#36755;&#20837;&#21463;&#38480;&#30340;&#35774;&#22791;&#65288;&#22914;&#30005;&#35270;&#21644;&#28216;&#25103;&#26426;&#65289;&#36890;&#36807;&#20132;&#25442;&#12300;device code&#12301;&#26469;&#33719;&#24471;&#35775;&#38382;&#20196;&#29260;&#12290;&#20351;&#29992;&#35774;&#22791;&#27969;&#26102;&#65292;&#35774;&#22791;&#23458;&#25143;&#31471;&#20250;&#25351;&#31034;&#29992;&#25143;&#20351;&#29992;&#36741;&#21161;&#35774;&#22791;&#65288;&#22914;&#35745;&#31639;&#26426;&#25110;&#26234;&#33021;&#25163;&#26426;&#65289;&#36830;&#25509;&#21040;&#26381;&#21153;&#22120;&#65292;&#22312;&#37027;&#37324;&#36755;&#20837;&#25552;&#20379;&#30340;&#12300;user code&#12301;&#65292;&#24182;&#25209;&#20934;&#25110;&#25298;&#32477;&#35775;&#38382;&#35831;&#27714;&#12290;</p><p>&#39318;&#20808;&#65292;&#25105;&#20204;&#38656;&#35201;&#25351;&#31034; Passport &#22914;&#20309;&#36820;&#22238;&#25105;&#20204;&#30340;&#12300;user code&#12301;&#21644;&#12300;authorization&#12301;&#35270;&#22270;&#12290;</p><p>&#21487;&#20197;&#20351;&#29992; <code>Laravel\Passport\Passport</code> &#31867;&#25552;&#20379;&#30340;&#30456;&#24212;&#26041;&#27861;&#33258;&#23450;&#20041;&#25152;&#26377;&#25480;&#26435;&#35270;&#22270;&#30340;&#28210;&#26579;&#36923;&#36753;&#12290;&#36890;&#24120;&#65292;&#24212;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#27492;&#26041;&#27861;&#12290;</p><pre><code class="language-php">use Inertia\Inertia;
+use Laravel\Passport\Passport;
+
+/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    // &#36890;&#36807;&#25552;&#20379;&#35270;&#22270;&#21517;&#31216;...
+    Passport::deviceUserCodeView('auth.oauth.device.user-code');
+    Passport::deviceAuthorizationView('auth.oauth.device.authorize');
+
+    // &#36890;&#36807;&#25552;&#20379;&#38381;&#21253;...
+    Passport::deviceUserCodeView(
+        fn ($parameters) =&gt; Inertia::render('Auth/OAuth/Device/UserCode')
+    );
+
+    Passport::deviceAuthorizationView(
+        fn ($parameters) =&gt; Inertia::render('Auth/OAuth/Device/Authorize', [
+            'request' =&gt; $parameters['request'],
+            'authToken' =&gt; $parameters['authToken'],
+            'client' =&gt; $parameters['client'],
+            'user' =&gt; $parameters['user'],
+            'scopes' =&gt; $parameters['scopes'],
+        ])
+    );
+
+    // ...
+}</code></pre><p>Passport &#20250;&#33258;&#21160;&#23450;&#20041;&#36820;&#22238;&#36825;&#20123;&#35270;&#22270;&#30340;&#36335;&#30001;&#12290;<code>auth.oauth.device.user-code</code> &#27169;&#26495;&#24212;&#21253;&#21547;&#19968;&#20010;&#34920;&#21333;&#65292;&#35813;&#34920;&#21333;&#21521; <code>passport.device.authorizations.authorize</code> &#36335;&#30001;&#21457;&#36215; GET &#35831;&#27714;&#12290;<code>passport.device.authorizations.authorize</code> &#36335;&#30001;&#38656;&#35201; <code>user_code</code> &#26597;&#35810;&#21442;&#25968;&#12290;</p><p><code>auth.oauth.device.authorize</code> &#27169;&#26495;&#24212;&#21253;&#21547;&#19968;&#20010;&#34920;&#21333;&#65292;&#35813;&#34920;&#21333;&#21521; <code>passport.device.authorizations.approve</code> &#36335;&#30001;&#21457;&#36215; POST &#35831;&#27714;&#20197;&#25209;&#20934;&#25480;&#26435;&#65292;&#20197;&#21450;&#19968;&#20010;&#21521; <code>passport.device.authorizations.deny</code> &#36335;&#30001;&#21457;&#36215; DELETE &#35831;&#27714;&#20197;&#25298;&#32477;&#25480;&#26435;&#12290;<code>passport.device.authorizations.approve</code> &#21644; <code>passport.device.authorizations.deny</code> &#36335;&#30001;&#38656;&#35201; <code>state</code>&#12289;<code>client_id</code> &#21644; <code>auth_token</code> &#23383;&#27573;&#12290;</p><h3 id="1d33c71d8fc0ecc5e2037fceafa1c2c6">&#21019;&#24314;&#35774;&#22791;&#25480;&#26435;&#27169;&#24335;&#23458;&#25143;&#31471;</h3><p>&#22312;&#24212;&#29992;&#33021;&#22815;&#36890;&#36807;&#35774;&#22791;&#25480;&#26435;&#27169;&#24335;&#31614;&#21457;&#20196;&#29260;&#20043;&#21069;&#65292;&#38656;&#35201;&#21019;&#24314;&#19968;&#20010;&#21551;&#29992;&#20102;&#35774;&#22791;&#27969;&#30340;&#23458;&#25143;&#31471;&#12290;&#21487;&#20197;&#20351;&#29992;&#24102;&#26377; <code>--device</code> &#36873;&#39033;&#30340; <code>passport:client</code> Artisan &#21629;&#20196;&#26469;&#23436;&#25104;&#27492;&#25805;&#20316;&#12290;&#35813;&#21629;&#20196;&#23558;&#21019;&#24314;&#19968;&#20010;&#21551;&#29992;&#20102;&#31532;&#19968;&#26041;&#35774;&#22791;&#27969;&#30340;&#23458;&#25143;&#31471;&#65292;&#24182;&#21521;&#25552;&#20379;&#23458;&#25143;&#31471; ID &#21644;&#23494;&#38053;&#65306;</p><pre><code class="language-shell">php artisan passport:client --device</code></pre><p>&#27492;&#22806;&#65292;&#36824;&#21487;&#20197;&#20351;&#29992; <code>ClientRepository</code> &#31867;&#19978;&#30340; <code>createDeviceAuthorizationGrantClient</code> &#26041;&#27861;&#20026;&#23646;&#20110;&#25351;&#23450;&#29992;&#25143;&#30340;&#31532;&#19977;&#26041;&#23458;&#25143;&#31471;&#36827;&#34892;&#27880;&#20876;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Laravel\Passport\ClientRepository;
+
+$user = User::find($userId);
+
+$client = app(ClientRepository::class)-&gt;createDeviceAuthorizationGrantClient(
+    user: $user,
+    name: 'Example Device',
+    confidential: false,
+);</code></pre><h3 id="975c61163d288e8a67b35e0dc6d49e77">&#35831;&#27714;&#20196;&#29260;</h3><h4 id="4dcd598be6f2a2da1e7da36588ce0878">&#35831;&#27714; Device Code</h4><p>&#21019;&#24314;&#23458;&#25143;&#31471;&#21518;&#65292;&#24320;&#21457;&#32773;&#21487;&#20197;&#20351;&#29992;&#20854;&#23458;&#25143;&#31471; ID &#20174;&#20320;&#30340;&#24212;&#29992;&#35831;&#27714; device code&#12290;&#39318;&#20808;&#65292;&#35843;&#29992;&#26041;&#35774;&#22791;&#24212;&#21521;&#20320;&#30340;&#24212;&#29992;&#30340; <code>/oauth/device/code</code> &#36335;&#30001;&#21457;&#36215; <code>POST</code> &#35831;&#27714;&#20197;&#35831;&#27714; device code&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+$response = Http::asForm()-&gt;post('https://passport-app.test/oauth/device/code', [
+    'client_id' =&gt; 'your-client-id',
+    'scope' =&gt; 'user:read orders:create',
+]);
+
+return $response-&gt;json();</code></pre><p>&#36825;&#23558;&#36820;&#22238;&#19968;&#20010; JSON &#21709;&#24212;&#65292;&#21253;&#21547; <code>device_code</code>&#12289;<code>user_code</code>&#12289;<code>verification_uri</code>&#12289;<code>interval</code> &#21644; <code>expires_in</code> &#23646;&#24615;&#12290;<code>expires_in</code> &#23646;&#24615;&#21253;&#21547; device code &#36807;&#26399;&#21069;&#30340;&#31186;&#25968;&#12290;<code>interval</code> &#23646;&#24615;&#21253;&#21547;&#35843;&#29992;&#26041;&#35774;&#22791;&#22312;&#36718;&#35810; <code>/oauth/token</code> &#36335;&#30001;&#20197;&#36991;&#20813;&#39057;&#29575;&#38480;&#21046;&#38169;&#35823;&#26102;&#65292;&#27599;&#27425;&#35831;&#27714;&#20043;&#38388;&#24212;&#31561;&#24453;&#30340;&#31186;&#25968;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#35831;&#35760;&#20303;&#65292;<code>/oauth/device/code</code> &#36335;&#30001;&#24050;&#30001; Passport &#23450;&#20041;&#65292;&#26080;&#38656;&#25163;&#21160;&#23450;&#20041;&#27492;&#36335;&#30001;&#12290;</p>
+</blockquote><h4 id="f87779de264f7dfae97aa062425e316f">&#26174;&#31034;&#39564;&#35777; URI &#21644; User Code</h4><p>&#33719;&#24471; device code &#35831;&#27714;&#21518;&#65292;&#35843;&#29992;&#26041;&#35774;&#22791;&#24212;&#25351;&#31034;&#29992;&#25143;&#20351;&#29992;&#21478;&#19968;&#21488;&#35774;&#22791;&#35775;&#38382;&#25152;&#25552;&#20379;&#30340; <code>verification_uri</code>&#65292;&#24182;&#36755;&#20837; <code>user_code</code> &#20197;&#25209;&#20934;&#25480;&#26435;&#35831;&#27714;&#12290;</p><h4 id="24a985a3a83cfe1c599c258cd342c963">&#36718;&#35810;&#20196;&#29260;&#35831;&#27714;</h4><p>&#30001;&#20110;&#29992;&#25143;&#23558;&#20351;&#29992;&#21333;&#29420;&#30340;&#35774;&#22791;&#25480;&#20104;&#65288;&#25110;&#25298;&#32477;&#65289;&#35775;&#38382;&#65292;&#35843;&#29992;&#26041;&#35774;&#22791;&#24212;&#36718;&#35810;&#20320;&#30340;&#24212;&#29992;&#30340; <code>/oauth/token</code> &#36335;&#30001;&#65292;&#20197;&#30830;&#23450;&#29992;&#25143;&#20309;&#26102;&#21709;&#24212;&#35813;&#35831;&#27714;&#12290;&#35843;&#29992;&#26041;&#35774;&#22791;&#24212;&#20351;&#29992;&#35831;&#27714; device code &#26102; JSON &#21709;&#24212;&#20013;&#25552;&#20379;&#30340;&#26368;&#23567;&#36718;&#35810; <code>interval</code>&#65292;&#20197;&#36991;&#20813;&#39057;&#29575;&#38480;&#21046;&#38169;&#35823;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Sleep;
+
+$interval = 5;
+
+do {
+    Sleep::for($interval)-&gt;seconds();
+
+    $response = Http::asForm()-&gt;post('https://passport-app.test/oauth/token', [
+        'grant_type' =&gt; 'urn:ietf:params:oauth:grant-type:device_code',
+        'client_id' =&gt; 'your-client-id',
+        'client_secret' =&gt; 'your-client-secret', // &#20165;&#26426;&#23494;&#23458;&#25143;&#31471;&#38656;&#35201;...
+        'device_code' =&gt; 'the-device-code',
+    ]);
+
+    if ($response-&gt;json('error') === 'slow_down') {
+        $interval += 5;
+    }
+} while (in_array($response-&gt;json('error'), ['authorization_pending', 'slow_down']));
+
+return $response-&gt;json();</code></pre><p>&#22914;&#26524;&#29992;&#25143;&#25209;&#20934;&#25480;&#26435;&#35831;&#27714;&#65292;&#36825;&#23558;&#36820;&#22238;&#19968;&#20010; JSON &#21709;&#24212;&#65292;&#21253;&#21547; <code>access_token</code>&#12289;<code>refresh_token</code> &#21644; <code>expires_in</code> &#23646;&#24615;&#12290;<code>expires_in</code> &#23646;&#24615;&#21253;&#21547;&#35775;&#38382;&#20196;&#29260;&#36807;&#26399;&#21069;&#30340;&#31186;&#25968;&#12290;</p><h2 id="b2c40fadd7a01dd036ff114ca2bcae18">&#23494;&#30721;&#27169;&#24335;</h2><blockquote>
+<p>[!WARNING]<br>
+&#25105;&#20204;&#19981;&#20877;&#25512;&#33616;&#20351;&#29992;&#23494;&#30721;&#27169;&#24335;&#20196;&#29260;&#12290;&#30456;&#21453;&#65292;&#24212;&#36873;&#25321; <a href="https://oauth2.thephpleague.com/authorization-server/which-grant/" target="_blank" rel="noopener noreferrer">OAuth2 Server &#24403;&#21069;&#25512;&#33616;&#30340;&#19968;&#31181;&#27169;&#24335;</a>&#12290;</p>
+</blockquote><p>OAuth2 &#23494;&#30721;&#27169;&#24335;&#20801;&#35768;&#20854;&#20182;&#31532;&#19968;&#26041;&#23458;&#25143;&#31471;&#65288;&#22914;&#31227;&#21160;&#24212;&#29992;&#65289;&#20351;&#29992;&#30005;&#23376;&#37038;&#31665;&#22320;&#22336;/&#29992;&#25143;&#21517;&#21644;&#23494;&#30721;&#33719;&#24471;&#35775;&#38382;&#20196;&#29260;&#12290;&#36825;&#20351;&#20320;&#33021;&#22815;&#23433;&#20840;&#22320;&#21521;&#31532;&#19968;&#26041;&#23458;&#25143;&#31471;&#31614;&#21457;&#35775;&#38382;&#20196;&#29260;&#65292;&#32780;&#26080;&#38656;&#29992;&#25143;&#32463;&#21382;&#25972;&#20010; OAuth2 &#25480;&#26435;&#30721;&#37325;&#23450;&#21521;&#27969;&#31243;&#12290;</p><p>&#35201;&#21551;&#29992;&#23494;&#30721;&#27169;&#24335;&#65292;&#35831;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992; <code>enablePasswordGrant</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Passport::enablePasswordGrant();
+}</code></pre><h3 id="ad939ee58d7057517f038b1ca33a2c30">&#21019;&#24314;&#23494;&#30721;&#27169;&#24335;&#23458;&#25143;&#31471;</h3><p>&#22312;&#24212;&#29992;&#33021;&#22815;&#36890;&#36807;&#23494;&#30721;&#27169;&#24335;&#31614;&#21457;&#20196;&#29260;&#20043;&#21069;&#65292;&#38656;&#35201;&#21019;&#24314;&#19968;&#20010;&#23494;&#30721;&#27169;&#24335;&#23458;&#25143;&#31471;&#12290;&#21487;&#20197;&#20351;&#29992;&#24102;&#26377; <code>--password</code> &#36873;&#39033;&#30340; <code>passport:client</code> Artisan &#21629;&#20196;&#26469;&#23436;&#25104;&#27492;&#25805;&#20316;&#12290;</p><pre><code class="language-shell">php artisan passport:client --password</code></pre><h3 id="975c61163d288e8a67b35e0dc6d49e77">&#35831;&#27714;&#20196;&#29260;</h3><p>&#21551;&#29992;&#35813;&#27169;&#24335;&#24182;&#21019;&#24314;&#23494;&#30721;&#27169;&#24335;&#23458;&#25143;&#31471;&#21518;&#65292;&#21487;&#20197;&#36890;&#36807;&#21521; <code>/oauth/token</code> &#36335;&#30001;&#21457;&#36215; <code>POST</code> &#35831;&#27714;&#65292;&#24182;&#38468;&#24102;&#29992;&#25143;&#30340;&#30005;&#23376;&#37038;&#31665;&#22320;&#22336;&#21644;&#23494;&#30721;&#26469;&#35831;&#27714;&#35775;&#38382;&#20196;&#29260;&#12290;&#35831;&#35760;&#20303;&#65292;&#27492;&#36335;&#30001;&#24050;&#30001; Passport &#27880;&#20876;&#65292;&#26080;&#38656;&#25163;&#21160;&#23450;&#20041;&#12290;&#22914;&#26524;&#35831;&#27714;&#25104;&#21151;&#65292;&#20320;&#23558;&#22312;&#26381;&#21153;&#22120;&#36820;&#22238;&#30340; JSON &#21709;&#24212;&#20013;&#25910;&#21040; <code>access_token</code> &#21644; <code>refresh_token</code>&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+$response = Http::asForm()-&gt;post('https://passport-app.test/oauth/token', [
+    'grant_type' =&gt; 'password',
+    'client_id' =&gt; 'your-client-id',
+    'client_secret' =&gt; 'your-client-secret', // &#20165;&#26426;&#23494;&#23458;&#25143;&#31471;&#38656;&#35201;...
+    'username' =&gt; 'taylor@laravel.com',
+    'password' =&gt; 'my-password',
+    'scope' =&gt; 'user:read orders:create',
+]);
+
+return $response-&gt;json();</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#35831;&#35760;&#20303;&#65292;&#40664;&#35748;&#24773;&#20917;&#19979;&#35775;&#38382;&#20196;&#29260;&#26159;&#38271;&#26399;&#26377;&#25928;&#30340;&#12290;&#19981;&#36807;&#65292;&#20320;&#21487;&#20197;&#26681;&#25454;&#38656;&#35201;<a href="2ky04xl9z8.html#configuration" target="_blank">&#37197;&#32622;&#26368;&#38271;&#35775;&#38382;&#20196;&#29260;&#29983;&#21629;&#21608;&#26399;</a>&#12290;</p>
+</blockquote><h3 id="e4578cd8e5ea6070999d505105403436">&#35831;&#27714;&#25152;&#26377;&#20316;&#29992;&#22495;</h3><p>&#20351;&#29992;&#23494;&#30721;&#27169;&#24335;&#25110;&#23458;&#25143;&#31471;&#20973;&#25454;&#27169;&#24335;&#26102;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20026;&#20196;&#29260;&#25480;&#26435;&#24212;&#29992;&#25903;&#25345;&#30340;&#25152;&#26377;&#20316;&#29992;&#22495;&#12290;&#21487;&#20197;&#36890;&#36807;&#35831;&#27714; <code>*</code> &#20316;&#29992;&#22495;&#26469;&#23454;&#29616;&#12290;&#22914;&#26524;&#35831;&#27714; <code>*</code> &#20316;&#29992;&#22495;&#65292;&#20196;&#29260;&#23454;&#20363;&#19978;&#30340; <code>can</code> &#26041;&#27861;&#23558;&#22987;&#32456;&#36820;&#22238; <code>true</code>&#12290;&#27492;&#20316;&#29992;&#22495;&#21482;&#33021;&#20998;&#37197;&#32473;&#20351;&#29992; <code>password</code> &#25110; <code>client_credentials</code> &#27169;&#24335;&#31614;&#21457;&#30340;&#20196;&#29260;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+$response = Http::asForm()-&gt;post('https://passport-app.test/oauth/token', [
+    'grant_type' =&gt; 'password',
+    'client_id' =&gt; 'your-client-id',
+    'client_secret' =&gt; 'your-client-secret', // &#20165;&#26426;&#23494;&#23458;&#25143;&#31471;&#38656;&#35201;...
+    'username' =&gt; 'taylor@laravel.com',
+    'password' =&gt; 'my-password',
+    'scope' =&gt; '*',
+]);</code></pre><h3 id="438884bc9d9d101ba4647c4bd2f0e1be">&#33258;&#23450;&#20041;&#29992;&#25143;&#25552;&#20379;&#32773;</h3><p>&#22914;&#26524;&#24212;&#29992;&#20351;&#29992;&#20102;&#22810;&#20010;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication#introduction" target="_blank">&#36523;&#20221;&#35748;&#35777;&#29992;&#25143;&#25552;&#20379;&#32773;</a>&#65292;&#21017;&#21487;&#20197;&#36890;&#36807;&#22312;&#36890;&#36807; <code>artisan passport:client --password</code> &#21629;&#20196;&#21019;&#24314;&#23458;&#25143;&#31471;&#26102;&#25552;&#20379; <code>--provider</code> &#36873;&#39033;&#65292;&#26469;&#25351;&#23450;&#23494;&#30721;&#27169;&#24335;&#23458;&#25143;&#31471;&#25152;&#20351;&#29992;&#30340;&#29992;&#25143;&#25552;&#20379;&#32773;&#12290;&#32473;&#23450;&#30340;&#25552;&#20379;&#32773;&#21517;&#31216;&#24212;&#19982;&#24212;&#29992; <code>config/auth.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#30340;&#26377;&#25928;&#25552;&#20379;&#32773;&#21305;&#37197;&#12290;&#28982;&#21518;&#21487;&#20197;<a href="2ky04xl9z8.html#multiple-authentication-guards" target="_blank">&#20351;&#29992;&#20013;&#38388;&#20214;&#20445;&#25252;&#36335;&#30001;</a>&#65292;&#20197;&#30830;&#20445;&#21482;&#26377; guard &#25351;&#23450;&#25552;&#20379;&#32773;&#30340;&#29992;&#25143;&#34987;&#25480;&#26435;&#12290;</p><h3 id="e6c1d04b2025c4faa96516ec67a49b6a">&#33258;&#23450;&#20041;&#29992;&#25143;&#21517;&#23383;&#27573;</h3><p>&#20351;&#29992;&#23494;&#30721;&#27169;&#24335;&#36827;&#34892;&#36523;&#20221;&#35748;&#35777;&#26102;&#65292;Passport &#23558;&#20351;&#29992;&#21487;&#35748;&#35777;&#27169;&#22411;&#30340; <code>email</code> &#23646;&#24615;&#20316;&#20026;&#12300;&#29992;&#25143;&#21517;&#12301;&#12290;&#20294;&#26159;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#27169;&#22411;&#19978;&#23450;&#20041; <code>findForPassport</code> &#26041;&#27861;&#26469;&#33258;&#23450;&#20041;&#27492;&#34892;&#20026;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\Bridge\Client;
+use Laravel\Passport\Contracts\OAuthenticatable;
+use Laravel\Passport\HasApiTokens;
+
+class User extends Authenticatable implements OAuthenticatable
+{
+    use HasApiTokens, Notifiable;
+
+    /**
+     * Find the user instance for the given username.
+     */
+    public function findForPassport(string $username, Client $client): User
+    {
+        return $this-&gt;where('username', $username)-&gt;first();
+    }
+}</code></pre><h3 id="a57cc67409f28083a065d2baecedcb0c">&#33258;&#23450;&#20041;&#23494;&#30721;&#39564;&#35777;</h3><p>&#20351;&#29992;&#23494;&#30721;&#27169;&#24335;&#36827;&#34892;&#36523;&#20221;&#35748;&#35777;&#26102;&#65292;Passport &#23558;&#20351;&#29992;&#27169;&#22411;&#30340; <code>password</code> &#23646;&#24615;&#39564;&#35777;&#32473;&#23450;&#23494;&#30721;&#12290;&#22914;&#26524;&#27169;&#22411;&#27809;&#26377; <code>password</code> &#23646;&#24615;&#65292;&#25110;&#32773;&#20320;&#24076;&#26395;&#33258;&#23450;&#20041;&#23494;&#30721;&#39564;&#35777;&#36923;&#36753;&#65292;&#21487;&#20197;&#22312;&#27169;&#22411;&#19978;&#23450;&#20041; <code>validateForPassportPasswordGrant</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\Contracts\OAuthenticatable;
+use Laravel\Passport\HasApiTokens;
+
+class User extends Authenticatable implements OAuthenticatable
+{
+    use HasApiTokens, Notifiable;
+
+    /**
+     * Validate the password of the user for the Passport password grant.
+     */
+    public function validateForPassportPasswordGrant(string $password): bool
+    {
+        return Hash::check($password, $this-&gt;password);
+    }
+}</code></pre><h2 id="771a5ec30bb47959db9d0caf1754db64">&#38544;&#24335;&#27169;&#24335;</h2><blockquote>
+<p>[!WARNING]<br>
+&#25105;&#20204;&#19981;&#20877;&#25512;&#33616;&#20351;&#29992;&#38544;&#24335;&#27169;&#24335;&#20196;&#29260;&#12290;&#30456;&#21453;&#65292;&#24212;&#36873;&#25321; <a href="https://oauth2.thephpleague.com/authorization-server/which-grant/" target="_blank" rel="noopener noreferrer">OAuth2 Server &#24403;&#21069;&#25512;&#33616;&#30340;&#19968;&#31181;&#27169;&#24335;</a>&#12290;</p>
+</blockquote><p>&#38544;&#24335;&#27169;&#24335;&#19982;&#25480;&#26435;&#30721;&#27169;&#24335;&#31867;&#20284;&#65307;&#20294;&#26159;&#65292;&#26080;&#38656;&#20132;&#25442;&#25480;&#26435;&#30721;&#21363;&#21487;&#23558;&#20196;&#29260;&#36820;&#22238;&#32473;&#23458;&#25143;&#31471;&#12290;&#27492;&#27169;&#24335;&#26368;&#24120;&#29992;&#20110;&#26080;&#27861;&#23433;&#20840;&#23384;&#20648;&#23458;&#25143;&#31471;&#20973;&#25454;&#30340; JavaScript &#25110;&#31227;&#21160;&#24212;&#29992;&#12290;&#35201;&#21551;&#29992;&#27492;&#27169;&#24335;&#65292;&#35831;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992; <code>enableImplicitGrant</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Passport::enableImplicitGrant();
+}</code></pre><p>&#22312;&#24212;&#29992;&#33021;&#22815;&#36890;&#36807;&#38544;&#24335;&#27169;&#24335;&#31614;&#21457;&#20196;&#29260;&#20043;&#21069;&#65292;&#38656;&#35201;&#21019;&#24314;&#19968;&#20010;&#38544;&#24335;&#27169;&#24335;&#23458;&#25143;&#31471;&#12290;&#21487;&#20197;&#20351;&#29992;&#24102;&#26377; <code>--implicit</code> &#36873;&#39033;&#30340; <code>passport:client</code> Artisan &#21629;&#20196;&#26469;&#23436;&#25104;&#27492;&#25805;&#20316;&#12290;</p><pre><code class="language-shell">php artisan passport:client --implicit</code></pre><p>&#21551;&#29992;&#35813;&#27169;&#24335;&#24182;&#21019;&#24314;&#38544;&#24335;&#23458;&#25143;&#31471;&#21518;&#65292;&#24320;&#21457;&#32773;&#21487;&#20197;&#20351;&#29992;&#20854;&#23458;&#25143;&#31471; ID &#20174;&#20320;&#30340;&#24212;&#29992;&#35831;&#27714;&#35775;&#38382;&#20196;&#29260;&#12290;&#35843;&#29992;&#26041;&#24212;&#29992;&#24212;&#21521;&#20320;&#30340;&#24212;&#29992;&#30340; <code>/oauth/authorize</code> &#36335;&#30001;&#21457;&#36215;&#37325;&#23450;&#21521;&#35831;&#27714;&#65292;&#22914;&#19979;&#25152;&#31034;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+
+Route::get('/redirect', function (Request $request) {
+    $request-&gt;session()-&gt;put('state', $state = Str::random(40));
+
+    $query = http_build_query([
+        'client_id' =&gt; 'your-client-id',
+        'redirect_uri' =&gt; 'https://third-party-app.com/callback',
+        'response_type' =&gt; 'token',
+        'scope' =&gt; 'user:read orders:create',
+        'state' =&gt; $state,
+        // 'prompt' =&gt; '', // "none"&#12289;"consent" &#25110; "login"
+    ]);
+
+    return redirect('https://passport-app.test/oauth/authorize?'.$query);
+});</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#35831;&#35760;&#20303;&#65292;<code>/oauth/authorize</code> &#36335;&#30001;&#24050;&#30001; Passport &#23450;&#20041;&#65292;&#26080;&#38656;&#25163;&#21160;&#23450;&#20041;&#27492;&#36335;&#30001;&#12290;</p>
+</blockquote><h2 id="7a0b3aedbf68414519514df15750839c">&#23458;&#25143;&#31471;&#20973;&#25454;&#27169;&#24335;</h2><p>&#23458;&#25143;&#31471;&#20973;&#25454;&#27169;&#24335;&#36866;&#29992;&#20110;&#26426;&#22120;&#23545;&#26426;&#22120;&#30340;&#36523;&#20221;&#35748;&#35777;&#12290;&#20363;&#22914;&#65292;&#21487;&#20197;&#22312;&#23450;&#26102;&#20219;&#21153;&#20013;&#20351;&#29992;&#27492;&#27169;&#24335;&#26469;&#25191;&#34892;&#36890;&#36807; API &#30340;&#32500;&#25252;&#20219;&#21153;&#12290;</p><p>&#22312;&#24212;&#29992;&#33021;&#22815;&#36890;&#36807;&#23458;&#25143;&#31471;&#20973;&#25454;&#27169;&#24335;&#31614;&#21457;&#20196;&#29260;&#20043;&#21069;&#65292;&#38656;&#35201;&#21019;&#24314;&#19968;&#20010;&#23458;&#25143;&#31471;&#20973;&#25454;&#27169;&#24335;&#23458;&#25143;&#31471;&#12290;&#21487;&#20197;&#20351;&#29992; <code>passport:client</code> Artisan &#21629;&#20196;&#30340; <code>--client</code> &#36873;&#39033;&#26469;&#23436;&#25104;&#27492;&#25805;&#20316;&#65306;</p><pre><code class="language-shell">php artisan passport:client --client</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#23558; <code>Laravel\Passport\Http\Middleware\EnsureClientIsResourceOwner</code> &#20013;&#38388;&#20214;&#20998;&#37197;&#32473;&#19968;&#20010;&#36335;&#30001;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Http\Middleware\EnsureClientIsResourceOwner;
+
+Route::get('/orders', function (Request $request) {
+    // &#35775;&#38382;&#20196;&#29260;&#26377;&#25928;&#19988;&#23458;&#25143;&#31471;&#26159;&#36164;&#28304;&#25152;&#26377;&#32773;...
+})-&gt;middleware(EnsureClientIsResourceOwner::class);</code></pre><p>&#33509;&#35201;&#23558;&#36335;&#30001;&#30340;&#35775;&#38382;&#38480;&#21046;&#20026;&#29305;&#23450;&#20316;&#29992;&#22495;&#65292;&#21487;&#20197;&#23558;&#25152;&#38656;&#20316;&#29992;&#22495;&#21015;&#34920;&#25552;&#20379;&#32473; <code>using</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Route::get('/orders', function (Request $request) {
+    // &#35775;&#38382;&#20196;&#29260;&#26377;&#25928;&#65292;&#23458;&#25143;&#31471;&#26159;&#36164;&#28304;&#25152;&#26377;&#32773;&#65292;&#24182;&#20855;&#26377; "servers:read" &#21644; "servers:create" &#20316;&#29992;&#22495;...
+})-&gt;middleware(EnsureClientIsResourceOwner::using('servers:read', 'servers:create'));</code></pre><blockquote>
+<p>[!WARNING]<br>
+<a href="https://oauth2.thephpleague.com/database-setup/#:~:text=Please%20note%20that,the%20bearer%20token." target="_blank" rel="noopener noreferrer">&#24213;&#23618;&#30340; OAuth2 server</a> &#23558;&#23458;&#25143;&#31471;&#20973;&#25454;&#20196;&#29260;&#30340; <code>sub</code> &#22768;&#26126;&#35774;&#32622;&#20026;&#23458;&#25143;&#31471;&#30340;&#26631;&#35782;&#31526;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Passport &#23545;&#23458;&#25143;&#31471;&#20351;&#29992; UUID&#65292;&#22240;&#27492;&#36825;&#19981;&#20250;&#19982;&#29992;&#25143;&#30340;&#25972;&#25968;&#20027;&#38190;&#20914;&#31361;&#12290;&#20294;&#26159;&#65292;&#22914;&#26524;&#23558; <code>Passport::$clientUuids</code> &#35774;&#32622;&#20026; <code>false</code>&#65292;&#23458;&#25143;&#31471;&#20973;&#25454;&#20196;&#29260;&#21487;&#33021;&#38169;&#35823;&#22320;&#35299;&#26512; ID &#19982;&#23458;&#25143;&#31471; ID &#21305;&#37197;&#30340;&#29992;&#25143;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20351;&#29992;&#27492;&#20013;&#38388;&#20214;&#26080;&#27861;&#20445;&#35777;&#20256;&#20837;&#20196;&#29260;&#26159;&#23458;&#25143;&#31471;&#20973;&#25454;&#20196;&#29260;&#12290;</p>
+</blockquote><h3 id="8deb56b078032f442937fd5f4e9904e7">&#26816;&#32034;&#20196;&#29260;</h3><p>&#35201;&#20351;&#29992;&#27492;&#27169;&#24335;&#31867;&#22411;&#26816;&#32034;&#20196;&#29260;&#65292;&#35831;&#21521; <code>oauth/token</code> &#31471;&#28857;&#21457;&#36215;&#35831;&#27714;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+$response = Http::asForm()-&gt;post('https://passport-app.test/oauth/token', [
+    'grant_type' =&gt; 'client_credentials',
+    'client_id' =&gt; 'your-client-id',
+    'client_secret' =&gt; 'your-client-secret',
+    'scope' =&gt; 'servers:read servers:create',
+]);
+
+return $response-&gt;json()['access_token'];</code></pre><h2 id="fd0b1eff7eb1e26aefd8393fa2bc5bd8">&#20010;&#20154;&#35775;&#38382;&#20196;&#29260;</h2><p>&#26377;&#26102;&#65292;&#20320;&#30340;&#29992;&#25143;&#21487;&#33021;&#24076;&#26395;&#33258;&#34892;&#31614;&#21457;&#35775;&#38382;&#20196;&#29260;&#65292;&#32780;&#19981;&#32463;&#36807;&#20856;&#22411;&#30340;&#25480;&#26435;&#30721;&#37325;&#23450;&#21521;&#27969;&#31243;&#12290;&#36890;&#36807;&#24212;&#29992; UI &#20801;&#35768;&#29992;&#25143;&#33258;&#34892;&#31614;&#21457;&#20196;&#29260;&#23545;&#20110;&#35753;&#29992;&#25143;&#35797;&#39564;&#20320;&#30340; API &#38750;&#24120;&#26377;&#29992;&#65292;&#25110;&#32773;&#21487;&#20197;&#20316;&#20026;&#31614;&#21457;&#35775;&#38382;&#20196;&#29260;&#30340;&#19968;&#31181;&#26356;&#31616;&#21333;&#30340;&#26041;&#24335;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#24212;&#29992;&#20027;&#35201;&#20351;&#29992; Passport &#31614;&#21457;&#20010;&#20154;&#35775;&#38382;&#20196;&#29260;&#65292;&#35831;&#32771;&#34385;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Laravel Sanctum</a>&#65292;&#23427;&#26159; Laravel &#29992;&#20110;&#31614;&#21457; API &#35775;&#38382;&#20196;&#29260;&#30340;&#36731;&#37327;&#32423;&#31532;&#19968;&#26041;&#24211;&#12290;</p>
+</blockquote><h3 id="ef99c8aa42b1893bdc5fd9ae1e96e8b0">&#21019;&#24314;&#20010;&#20154;&#35775;&#38382;&#23458;&#25143;&#31471;</h3><p>&#22312;&#24212;&#29992;&#33021;&#22815;&#31614;&#21457;&#20010;&#20154;&#35775;&#38382;&#20196;&#29260;&#20043;&#21069;&#65292;&#38656;&#35201;&#21019;&#24314;&#19968;&#20010;&#20010;&#20154;&#35775;&#38382;&#23458;&#25143;&#31471;&#12290;&#21487;&#20197;&#36890;&#36807;&#25191;&#34892;&#24102;&#26377; <code>--personal</code> &#36873;&#39033;&#30340; <code>passport:client</code> Artisan &#21629;&#20196;&#26469;&#23436;&#25104;&#27492;&#25805;&#20316;&#12290;&#22914;&#26524;&#24050;&#32463;&#36816;&#34892;&#20102; <code>passport:install</code> &#21629;&#20196;&#65292;&#21017;&#26080;&#38656;&#36816;&#34892;&#27492;&#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan passport:client --personal</code></pre><h3 id="438884bc9d9d101ba4647c4bd2f0e1be">&#33258;&#23450;&#20041;&#29992;&#25143;&#25552;&#20379;&#32773;</h3><p>&#22914;&#26524;&#24212;&#29992;&#20351;&#29992;&#20102;&#22810;&#20010;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication#introduction" target="_blank">&#36523;&#20221;&#35748;&#35777;&#29992;&#25143;&#25552;&#20379;&#32773;</a>&#65292;&#21017;&#21487;&#20197;&#36890;&#36807;&#22312;&#36890;&#36807; <code>artisan passport:client --personal</code> &#21629;&#20196;&#21019;&#24314;&#23458;&#25143;&#31471;&#26102;&#25552;&#20379; <code>--provider</code> &#36873;&#39033;&#65292;&#26469;&#25351;&#23450;&#20010;&#20154;&#35775;&#38382;&#27169;&#24335;&#23458;&#25143;&#31471;&#25152;&#20351;&#29992;&#30340;&#29992;&#25143;&#25552;&#20379;&#32773;&#12290;&#32473;&#23450;&#30340;&#25552;&#20379;&#32773;&#21517;&#31216;&#24212;&#19982;&#24212;&#29992; <code>config/auth.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#30340;&#26377;&#25928;&#25552;&#20379;&#32773;&#21305;&#37197;&#12290;&#28982;&#21518;&#21487;&#20197;<a href="2ky04xl9z8.html#multiple-authentication-guards" target="_blank">&#20351;&#29992;&#20013;&#38388;&#20214;&#20445;&#25252;&#36335;&#30001;</a>&#65292;&#20197;&#30830;&#20445;&#21482;&#26377; guard &#25351;&#23450;&#25552;&#20379;&#32773;&#30340;&#29992;&#25143;&#34987;&#25480;&#26435;&#12290;</p><h3 id="112cd128ebe75703e8b7eeb8e429c654">&#31649;&#29702;&#20010;&#20154;&#35775;&#38382;&#20196;&#29260;</h3><p>&#21019;&#24314;&#20010;&#20154;&#35775;&#38382;&#23458;&#25143;&#31471;&#21518;&#65292;&#21487;&#20197;&#20351;&#29992; <code>App\Models\User</code> &#27169;&#22411;&#23454;&#20363;&#19978;&#30340; <code>createToken</code> &#26041;&#27861;&#20026;&#25351;&#23450;&#29992;&#25143;&#31614;&#21457;&#20196;&#29260;&#12290;<code>createToken</code> &#26041;&#27861;&#25509;&#21463;&#20196;&#29260;&#21517;&#31216;&#20316;&#20026;&#31532;&#19968;&#20010;&#21442;&#25968;&#65292;&#21487;&#36873;&#30340;<a href="2ky04xl9z8.html#token-scopes" target="_blank">&#20316;&#29992;&#22495;</a>&#25968;&#32452;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Illuminate\Support\Facades\Date;
+use Laravel\Passport\Token;
+
+$user = User::find($userId);
+
+// &#21019;&#24314;&#19981;&#24102;&#20316;&#29992;&#22495;&#30340;&#20196;&#29260;...
+$token = $user-&gt;createToken('My Token')-&gt;accessToken;
+
+// &#21019;&#24314;&#24102;&#20316;&#29992;&#22495;&#30340;&#20196;&#29260;...
+$token = $user-&gt;createToken('My Token', ['user:read', 'orders:create'])-&gt;accessToken;
+
+// &#21019;&#24314;&#24102;&#25152;&#26377;&#20316;&#29992;&#22495;&#30340;&#20196;&#29260;...
+$token = $user-&gt;createToken('My Token', ['*'])-&gt;accessToken;
+
+// &#26816;&#32034;&#23646;&#20110;&#35813;&#29992;&#25143;&#30340;&#25152;&#26377;&#26377;&#25928;&#20010;&#20154;&#35775;&#38382;&#20196;&#29260;...
+$tokens = $user-&gt;tokens()
+    -&gt;with('client')
+    -&gt;where('revoked', false)
+    -&gt;where('expires_at', '&gt;', Date::now())
+    -&gt;get()
+    -&gt;filter(fn (Token $token) =&gt; $token-&gt;client-&gt;hasGrantType('personal_access'));</code></pre><h2 id="801705ac2343e82fa596c98e745035e8">&#20445;&#25252;&#36335;&#30001;</h2><h3 id="a374a6f761e8c386e8f2418c4b0958e9">&#36890;&#36807;&#20013;&#38388;&#20214;</h3><p>Passport &#21253;&#21547;&#19968;&#20010;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication#adding-custom-guards" target="_blank">&#36523;&#20221;&#35748;&#35777; guard</a>&#65292;&#23427;&#20250;&#39564;&#35777;&#20256;&#20837;&#35831;&#27714;&#19978;&#30340;&#35775;&#38382;&#20196;&#29260;&#12290;&#23558; <code>api</code> guard &#37197;&#32622;&#20026;&#20351;&#29992; <code>passport</code> driver &#21518;&#65292;&#21482;&#38656;&#22312;&#38656;&#35201;&#26377;&#25928;&#35775;&#38382;&#20196;&#29260;&#30340;&#36335;&#30001;&#19978;&#25351;&#23450; <code>auth:api</code> &#20013;&#38388;&#20214;&#65306;</p><pre><code class="language-php">Route::get('/user', function () {
+    // &#21482;&#26377;&#36890;&#36807; API &#35748;&#35777;&#30340;&#29992;&#25143;&#25165;&#33021;&#35775;&#38382;&#27492;&#36335;&#30001;...
+})-&gt;middleware('auth:api');</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#26159;<a href="2ky04xl9z8.html#client-credentials-grant" target="_blank">&#23458;&#25143;&#31471;&#20973;&#25454;&#27169;&#24335;</a>&#65292;&#21017;&#24212;&#20351;&#29992; <a href="2ky04xl9z8.html#client-credentials-grant" target="_blank"><code>Laravel\Passport\Http\Middleware\EnsureClientIsResourceOwner</code> &#20013;&#38388;&#20214;</a>&#26469;&#20445;&#25252;&#36335;&#30001;&#65292;&#32780;&#19981;&#26159; <code>auth:api</code> &#20013;&#38388;&#20214;&#12290;</p>
+</blockquote><h4 id="7d77a30ea5b81d63a847d73b03be08bc">&#22810;&#20010;&#36523;&#20221;&#35748;&#35777; Guard</h4><p>&#22914;&#26524;&#24212;&#29992;&#23545;&#19981;&#21516;&#31867;&#22411;&#30340;&#29992;&#25143;&#36827;&#34892;&#36523;&#20221;&#35748;&#35777;&#65288;&#36825;&#20123;&#29992;&#25143;&#21487;&#33021;&#20351;&#29992;&#23436;&#20840;&#19981;&#21516;&#30340; Eloquent &#27169;&#22411;&#65289;&#65292;&#37027;&#20040;&#21487;&#33021;&#38656;&#35201;&#20026;&#24212;&#29992;&#20013;&#30340;&#27599;&#20010;&#29992;&#25143;&#25552;&#20379;&#32773;&#31867;&#22411;&#23450;&#20041; guard &#37197;&#32622;&#12290;&#36825;&#20801;&#35768;&#20320;&#20445;&#25252;&#38754;&#21521;&#29305;&#23450;&#29992;&#25143;&#25552;&#20379;&#32773;&#30340;&#35831;&#27714;&#12290;&#20363;&#22914;&#65292;&#32473;&#23450;&#20197;&#19979; guard &#37197;&#32622; <code>config/auth.php</code> &#37197;&#32622;&#25991;&#20214;&#65306;</p><pre><code class="language-php">'guards' =&gt; [
+    'api' =&gt; [
+        'driver' =&gt; 'passport',
+        'provider' =&gt; 'users',
+    ],
+
+    'api-customers' =&gt; [
+        'driver' =&gt; 'passport',
+        'provider' =&gt; 'customers',
+    ],
+],</code></pre><p>&#19979;&#38754;&#30340;&#36335;&#30001;&#23558;&#20351;&#29992; <code>api-customers</code> guard&#65288;&#35813; guard &#20351;&#29992; <code>customers</code> &#29992;&#25143;&#25552;&#20379;&#32773;&#65289;&#26469;&#39564;&#35777;&#20256;&#20837;&#35831;&#27714;&#65306;</p><pre><code class="language-php">Route::get('/customer', function () {
+    // ...
+})-&gt;middleware('auth:api-customers');</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#26377;&#20851;&#22312; Passport &#20013;&#20351;&#29992;&#22810;&#20010;&#29992;&#25143;&#25552;&#20379;&#32773;&#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405;<a href="2ky04xl9z8.html#customizing-the-user-provider-for-pat" target="_blank">&#20010;&#20154;&#35775;&#38382;&#20196;&#29260;&#25991;&#26723;</a>&#21644;<a href="2ky04xl9z8.html#customizing-the-user-provider" target="_blank">&#23494;&#30721;&#27169;&#24335;&#25991;&#26723;</a>&#12290;</p>
+</blockquote><h3 id="ce0e69177616df7ded7d9ab825e3208e">&#20256;&#36882;&#35775;&#38382;&#20196;&#29260;</h3><p>&#35843;&#29992;&#21463; Passport &#20445;&#25252;&#30340;&#36335;&#30001;&#26102;&#65292;&#24212;&#29992;&#30340; API &#28040;&#36153;&#32773;&#24212;&#22312;&#20854;&#35831;&#27714;&#30340; <code>Authorization</code> &#22836;&#37096;&#20013;&#23558;&#35775;&#38382;&#20196;&#29260;&#25351;&#23450;&#20026; <code>Bearer</code> &#20196;&#29260;&#12290;&#20363;&#22914;&#65292;&#20351;&#29992; <code>Http</code> Facade &#26102;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+$response = Http::withHeaders([
+    'Accept' =&gt; 'application/json',
+    'Authorization' =&gt; "Bearer $accessToken",
+])-&gt;get('https://passport-app.test/api/user');
+
+return $response-&gt;json();</code></pre><h2 id="93b22c815809e5e2c968964153289dd7">&#20196;&#29260;&#20316;&#29992;&#22495;</h2><p>&#20316;&#29992;&#22495;&#20801;&#35768; API &#23458;&#25143;&#31471;&#22312;&#35831;&#27714;&#35775;&#38382;&#36134;&#25143;&#30340;&#25480;&#26435;&#26102;&#65292;&#35831;&#27714;&#19968;&#32452;&#29305;&#23450;&#30340;&#26435;&#38480;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#20320;&#27491;&#22312;&#26500;&#24314;&#19968;&#20010;&#30005;&#23376;&#21830;&#21153;&#24212;&#29992;&#65292;&#24182;&#38750;&#25152;&#26377; API &#28040;&#36153;&#32773;&#37117;&#38656;&#35201;&#19979;&#21333;&#30340;&#33021;&#21147;&#12290;&#30456;&#21453;&#65292;&#20320;&#21487;&#20197;&#20165;&#20801;&#35768;&#28040;&#36153;&#32773;&#35831;&#27714;&#35775;&#38382;&#35746;&#21333;&#21457;&#36135;&#29366;&#24577;&#30340;&#25480;&#26435;&#12290;&#25442;&#21477;&#35805;&#35828;&#65292;&#20316;&#29992;&#22495;&#20801;&#35768;&#24212;&#29992;&#30340;&#29992;&#25143;&#38480;&#21046;&#31532;&#19977;&#26041;&#24212;&#29992;&#21487;&#20195;&#34920;&#20182;&#20204;&#25191;&#34892;&#30340;&#25805;&#20316;&#12290;</p><h3 id="9c06f4d2a4579a8e0ff61d13c32bd27e">&#23450;&#20041;&#20316;&#29992;&#22495;</h3><p>&#21487;&#20197;&#20351;&#29992;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#30340; <code>Passport::tokensCan</code> &#26041;&#27861;&#26469;&#23450;&#20041; API &#30340;&#20316;&#29992;&#22495;&#12290;<code>tokensCan</code> &#26041;&#27861;&#25509;&#21463;&#20316;&#29992;&#22495;&#21517;&#31216;&#21644;&#20316;&#29992;&#22495;&#25551;&#36848;&#25968;&#32452;&#12290;&#20316;&#29992;&#22495;&#25551;&#36848;&#21487;&#20197;&#26159;&#20219;&#20309;&#20320;&#24076;&#26395;&#30340;&#20869;&#23481;&#65292;&#24182;&#23558;&#26174;&#31034;&#32473;&#25480;&#26435;&#25209;&#20934;&#30028;&#38754;&#19978;&#30340;&#29992;&#25143;&#65306;</p><pre><code class="language-php">/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Passport::tokensCan([
+        'user:read' =&gt; 'Retrieve the user info',
+        'orders:create' =&gt; 'Place orders',
+        'orders:read:status' =&gt; 'Check order status',
+    ]);
+}</code></pre><h3 id="30cd2dcfa46500257c7f89d7079b5c30">&#40664;&#35748;&#20316;&#29992;&#22495;</h3><p>&#22914;&#26524;&#23458;&#25143;&#31471;&#26410;&#35831;&#27714;&#20219;&#20309;&#29305;&#23450;&#20316;&#29992;&#22495;&#65292;&#21487;&#20197;&#20351;&#29992; <code>defaultScopes</code> &#26041;&#27861;&#37197;&#32622; Passport &#26381;&#21153;&#22120;&#65292;&#23558;&#40664;&#35748;&#20316;&#29992;&#22495;&#38468;&#21152;&#21040;&#20196;&#29260;&#12290;&#36890;&#24120;&#65292;&#24212;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#27492;&#26041;&#27861;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Passport;
+
+Passport::tokensCan([
+    'user:read' =&gt; 'Retrieve the user info',
+    'orders:create' =&gt; 'Place orders',
+    'orders:read:status' =&gt; 'Check order status',
+]);
+
+Passport::defaultScopes([
+    'user:read',
+    'orders:create',
+]);</code></pre><h3 id="d069ca417b495ca71931661ff39393ac">&#20026;&#20196;&#29260;&#20998;&#37197;&#20316;&#29992;&#22495;</h3><h4 id="e7833d371ec1ee4d84d8c9bf0193204e">&#35831;&#27714;&#25480;&#26435;&#30721;&#26102;</h4><p>&#20351;&#29992;&#25480;&#26435;&#30721;&#27169;&#24335;&#35831;&#27714;&#35775;&#38382;&#20196;&#29260;&#26102;&#65292;&#28040;&#36153;&#32773;&#24212;&#23558;&#20854;&#25152;&#38656;&#30340;&#20316;&#29992;&#22495;&#25351;&#23450;&#20026; <code>scope</code> &#26597;&#35810;&#23383;&#31526;&#20018;&#21442;&#25968;&#12290;<code>scope</code> &#21442;&#25968;&#24212;&#26159;&#31354;&#26684;&#20998;&#38548;&#30340;&#20316;&#29992;&#22495;&#21015;&#34920;&#65306;</p><pre><code class="language-php">Route::get('/redirect', function () {
+    $query = http_build_query([
+        'client_id' =&gt; 'your-client-id',
+        'redirect_uri' =&gt; 'https://third-party-app.com/callback',
+        'response_type' =&gt; 'code',
+        'scope' =&gt; 'user:read orders:create',
+    ]);
+
+    return redirect('https://passport-app.test/oauth/authorize?'.$query);
+});</code></pre><h4 id="104be5ceb4455b5dcc7be02710f173cb">&#31614;&#21457;&#20010;&#20154;&#35775;&#38382;&#20196;&#29260;&#26102;</h4><p>&#22914;&#26524;&#20351;&#29992; <code>App\Models\User</code> &#27169;&#22411;&#30340; <code>createToken</code> &#26041;&#27861;&#31614;&#21457;&#20010;&#20154;&#35775;&#38382;&#20196;&#29260;&#65292;&#21017;&#21487;&#20197;&#23558;&#25152;&#38656;&#20316;&#29992;&#22495;&#30340;&#25968;&#32452;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473;&#35813;&#26041;&#27861;&#65306;</p><pre><code class="language-php">$token = $user-&gt;createToken('My Token', ['orders:create'])-&gt;accessToken;</code></pre><h3 id="f9a6cac5097e8fce8a48b28937cfe457">&#26816;&#26597;&#20316;&#29992;&#22495;</h3><p>Passport &#21253;&#21547;&#20004;&#20010;&#20013;&#38388;&#20214;&#65292;&#21487;&#29992;&#20110;&#39564;&#35777;&#20256;&#20837;&#35831;&#27714;&#26159;&#21542;&#24050;&#20351;&#29992;&#25480;&#20104;&#20102;&#32473;&#23450;&#20316;&#29992;&#22495;&#30340;&#20196;&#29260;&#36827;&#34892;&#36523;&#20221;&#35748;&#35777;&#12290;</p><h4 id="27c8de6eb90fa64bb3ac563464ab47a9">&#26816;&#26597;&#25152;&#26377;&#20316;&#29992;&#22495;</h4><p>&#21487;&#20197;&#23558; <code>Laravel\Passport\Http\Middleware\CheckToken</code> &#20013;&#38388;&#20214;&#20998;&#37197;&#32473;&#36335;&#30001;&#65292;&#20197;&#39564;&#35777;&#20256;&#20837;&#35831;&#27714;&#30340;&#35775;&#38382;&#20196;&#29260;&#26159;&#21542;&#20855;&#26377;&#25152;&#26377;&#21015;&#20986;&#30340;&#20316;&#29992;&#22495;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Http\Middleware\CheckToken;
+
+Route::get('/orders', function () {
+    // &#35775;&#38382;&#20196;&#29260;&#21516;&#26102;&#20855;&#26377; "orders:read" &#21644; "orders:create" &#20316;&#29992;&#22495;...
+})-&gt;middleware(['auth:api', CheckToken::using('orders:read', 'orders:create')]);</code></pre><h4 id="cc4c71e2c78331b1d364ef753a532ca2">&#26816;&#26597;&#20219;&#24847;&#20316;&#29992;&#22495;</h4><p>&#21487;&#20197;&#23558; <code>Laravel\Passport\Http\Middleware\CheckTokenForAnyScope</code> &#20013;&#38388;&#20214;&#20998;&#37197;&#32473;&#36335;&#30001;&#65292;&#20197;&#39564;&#35777;&#20256;&#20837;&#35831;&#27714;&#30340;&#35775;&#38382;&#20196;&#29260;&#26159;&#21542;&#33267;&#23569;&#20855;&#26377;&#25152;&#21015;&#20986;&#30340;&#20316;&#29992;&#22495;&#20043;&#19968;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Http\Middleware\CheckTokenForAnyScope;
+
+Route::get('/orders', function () {
+    // &#35775;&#38382;&#20196;&#29260;&#20855;&#26377; "orders:read" &#25110; "orders:create" &#20316;&#29992;&#22495;...
+})-&gt;middleware(['auth:api', CheckTokenForAnyScope::using('orders:read', 'orders:create')]);</code></pre><h4 id="b39e4231700a8818af4f8c6fb2b2c8a0">&#20316;&#29992;&#22495;&#23646;&#24615;</h4><p>&#22914;&#26524;&#24212;&#29992;&#20351;&#29992;&#20102;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/controllers#middleware-attributes" target="_blank">&#25511;&#21046;&#22120;&#20013;&#38388;&#20214;&#23646;&#24615;</a>&#65292;&#21017;&#21487;&#20197;&#20351;&#29992; <code>Laravel\Passport\Attributes\AuthorizeToken</code> &#23646;&#24615;&#20316;&#20026; Passport &#20316;&#29992;&#22495;&#20013;&#38388;&#20214;&#30340;&#20415;&#25463;&#31616;&#20889;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Laravel\Passport\Attributes\AuthorizeToken;
+
+#[AuthorizeToken('orders:read')]
+#[AuthorizeToken('orders:create', only: ['store'])]
+class OrderController
+{
+    #[AuthorizeToken(['orders:read', 'orders:create'], anyScope: true)]
+    public function index()
+    {
+        // &#35775;&#38382;&#20196;&#29260;&#20855;&#26377; "orders:read" &#25110; "orders:create" &#20316;&#29992;&#22495;...
+    }
+
+    public function store()
+    {
+        // &#35775;&#38382;&#20196;&#29260;&#21516;&#26102;&#20855;&#26377; "orders:read" &#21644; "orders:create" &#20316;&#29992;&#22495;...
+    }
+}</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>AuthorizeToken</code> &#23646;&#24615;&#35201;&#27714;&#20855;&#22791;&#25152;&#26377;&#32473;&#23450;&#30340;&#20316;&#29992;&#22495;&#12290;&#22914;&#26524;&#20256;&#20837; <code>anyScope: true</code>&#65292;&#21017;&#24403;&#20196;&#29260;&#33267;&#23569;&#20855;&#26377;&#32473;&#23450;&#20316;&#29992;&#22495;&#20043;&#19968;&#26102;&#65292;&#35831;&#27714;&#21363;&#34987;&#25480;&#26435;&#12290;</p><h4 id="b3fb7c46f649b688f4ba0c4c525093c3">&#22312;&#20196;&#29260;&#23454;&#20363;&#19978;&#26816;&#26597;&#20316;&#29992;&#22495;</h4><p>&#19968;&#26086;&#35775;&#38382;&#20196;&#29260;&#35748;&#35777;&#30340;&#35831;&#27714;&#36827;&#20837;&#24212;&#29992;&#65292;&#20320;&#20173;&#28982;&#21487;&#20197;&#20351;&#29992;&#24050;&#35748;&#35777;&#30340; <code>App\Models\User</code> &#23454;&#20363;&#19978;&#30340; <code>tokenCan</code> &#26041;&#27861;&#26469;&#26816;&#26597;&#20196;&#29260;&#26159;&#21542;&#20855;&#26377;&#32473;&#23450;&#20316;&#29992;&#22495;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+
+Route::get('/orders', function (Request $request) {
+    if ($request-&gt;user()-&gt;tokenCan('orders:create')) {
+        // ...
+    }
+});</code></pre><h4 id="bee14bdbaf4c2f098eeac39ae6738d71">&#20854;&#20182;&#20316;&#29992;&#22495;&#26041;&#27861;</h4><p><code>scopeIds</code> &#26041;&#27861;&#23558;&#36820;&#22238;&#25152;&#26377;&#24050;&#23450;&#20041; ID/&#21517;&#31216;&#30340;&#25968;&#32452;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Passport;
+
+Passport::scopeIds();</code></pre><p><code>scopes</code> &#26041;&#27861;&#23558;&#36820;&#22238;&#25152;&#26377;&#24050;&#23450;&#20041;&#20316;&#29992;&#22495;&#30340;&#25968;&#32452;&#65288;&#20316;&#20026; <code>Laravel\Passport\Scope</code> &#30340;&#23454;&#20363;&#65289;&#65306;</p><pre><code class="language-php">Passport::scopes();</code></pre><p><code>scopesFor</code> &#26041;&#27861;&#23558;&#36820;&#22238;&#19982;&#32473;&#23450; ID/&#21517;&#31216;&#21305;&#37197;&#30340; <code>Laravel\Passport\Scope</code> &#23454;&#20363;&#25968;&#32452;&#65306;</p><pre><code class="language-php">Passport::scopesFor(['user:read', 'orders:create']);</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>hasScope</code> &#26041;&#27861;&#21028;&#26029;&#32473;&#23450;&#20316;&#29992;&#22495;&#26159;&#21542;&#24050;&#23450;&#20041;&#65306;</p><pre><code class="language-php">Passport::hasScope('orders:create');</code></pre><h2 id="bb71ff0d30cc4337f8c3d4bb5cacc43b">SPA &#36523;&#20221;&#35748;&#35777;</h2><p>&#26500;&#24314; API &#26102;&#65292;&#33021;&#22815;&#20174; JavaScript &#24212;&#29992;&#20013;&#28040;&#36153;&#33258;&#24049;&#30340; API &#26159;&#38750;&#24120;&#26377;&#29992;&#30340;&#12290;&#36825;&#31181; API &#24320;&#21457;&#26041;&#24335;&#20801;&#35768;&#20320;&#33258;&#24049;&#30340;&#24212;&#29992;&#28040;&#36153;&#19982;&#20320;&#19982;&#19990;&#30028;&#20849;&#20139;&#30340;&#21516;&#19968;&#20010; API&#12290;&#21516;&#19968; API &#21487;&#34987;&#20320;&#30340; Web &#24212;&#29992;&#12289;&#31227;&#21160;&#24212;&#29992;&#12289;&#31532;&#19977;&#26041;&#24212;&#29992;&#20197;&#21450;&#20320;&#21487;&#33021;&#22312;&#21508;&#31181;&#21253;&#31649;&#29702;&#22120;&#19978;&#21457;&#24067;&#30340;&#20219;&#20309; SDK &#25152;&#28040;&#36153;&#12290;</p><p>&#36890;&#24120;&#65292;&#22914;&#26524;&#24819;&#20174; JavaScript &#24212;&#29992;&#28040;&#36153; API&#65292;&#38656;&#35201;&#25163;&#21160;&#23558;&#35775;&#38382;&#20196;&#29260;&#21457;&#36865;&#32473;&#24212;&#29992;&#65292;&#24182;&#22312;&#27599;&#27425;&#35831;&#27714;&#26102;&#23558;&#20854;&#19968;&#36215;&#20256;&#36882;&#32473;&#20320;&#30340;&#24212;&#29992;&#12290;&#19981;&#36807;&#65292;Passport &#21253;&#21547;&#19968;&#20010;&#21487;&#20197;&#20026;&#20320;&#22788;&#29702;&#27492;&#38382;&#39064;&#30340;&#20013;&#38388;&#20214;&#12290;&#21482;&#38656;&#23558; <code>CreateFreshApiToken</code> &#20013;&#38388;&#20214;&#38468;&#21152;&#21040;&#24212;&#29992;&#30340; <code>bootstrap/app.php</code> &#25991;&#20214;&#20013;&#30340; <code>web</code> &#20013;&#38388;&#20214;&#32452;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
+
+-&gt;withMiddleware(function (Middleware $middleware): void {
+    $middleware-&gt;web(append: [
+        CreateFreshApiToken::class,
+    ]);
+})</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#24212;&#30830;&#20445; <code>CreateFreshApiToken</code> &#20013;&#38388;&#20214;&#26159;&#20013;&#38388;&#20214;&#26632;&#20013;&#21015;&#20986;&#30340;&#26368;&#21518;&#19968;&#20010;&#20013;&#38388;&#20214;&#12290;</p>
+</blockquote><p>&#35813;&#20013;&#38388;&#20214;&#20250;&#23558; <code>laravel_token</code> cookie &#38468;&#21152;&#21040;&#20256;&#20986;&#30340;&#21709;&#24212;&#19978;&#12290;&#35813; cookie &#21253;&#21547;&#19968;&#20010;&#21152;&#23494;&#30340; JWT&#65292;Passport &#23558;&#20351;&#29992;&#23427;&#26469;&#23545;&#26469;&#33258; JavaScript &#24212;&#29992;&#30340; API &#35831;&#27714;&#36827;&#34892;&#36523;&#20221;&#35748;&#35777;&#12290;JWT &#30340;&#29983;&#21629;&#21608;&#26399;&#31561;&#20110; <code>session.lifetime</code> &#37197;&#32622;&#20540;&#12290;&#29616;&#22312;&#65292;&#30001;&#20110;&#27983;&#35272;&#22120;&#23558;&#22312;&#25152;&#26377;&#21518;&#32493;&#35831;&#27714;&#20013;&#33258;&#21160;&#21457;&#36865; cookie&#65292;&#22240;&#27492;&#20320;&#21487;&#20197;&#21521;&#24212;&#29992;&#30340; API &#21457;&#36215;&#35831;&#27714;&#65292;&#32780;&#26080;&#38656;&#26174;&#24335;&#20256;&#36882;&#35775;&#38382;&#20196;&#29260;&#65306;</p><pre><code class="language-js">axios.get('/api/user')
+    .then(response =&gt; {
+        console.log(response.data);
+    });</code></pre><h4 id="5ca91402e8b86bcdd8d07cbead81ecf5">&#33258;&#23450;&#20041; Cookie &#21517;&#31216;</h4><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Passport::cookie</code> &#26041;&#27861;&#33258;&#23450;&#20041; <code>laravel_token</code> cookie &#30340;&#21517;&#31216;&#12290;&#36890;&#24120;&#65292;&#24212;&#22312;&#24212;&#29992;&#30340; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#27492;&#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Passport::cookie('custom_name');
+}</code></pre><h4 id="71aa682d3e6eac3048c40e97045b7f02">CSRF &#20445;&#25252;</h4><p>&#20351;&#29992;&#27492;&#36523;&#20221;&#35748;&#35777;&#26041;&#27861;&#26102;&#65292;&#38656;&#35201;&#30830;&#20445;&#35831;&#27714;&#20013;&#21253;&#21547;&#26377;&#25928;&#30340; CSRF &#20196;&#29260;&#22836;&#37096;&#12290;&#38543;&#39592;&#26550;&#24212;&#29992;&#21644;&#25152;&#26377; starter kit &#19968;&#36215;&#25552;&#20379;&#30340;&#40664;&#35748; Laravel JavaScript &#33050;&#25163;&#26550;&#21253;&#21547;&#19968;&#20010; <a href="https://github.com/axios/axios" target="_blank" rel="noopener noreferrer">Axios</a> &#23454;&#20363;&#65292;&#35813;&#23454;&#20363;&#23558;&#33258;&#21160;&#20351;&#29992;&#21152;&#23494;&#30340; <code>XSRF-TOKEN</code> cookie &#20540;&#22312;&#21516;&#28304;&#35831;&#27714;&#19978;&#21457;&#36865; <code>X-XSRF-TOKEN</code> &#22836;&#37096;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#36873;&#25321;&#21457;&#36865; <code>X-CSRF-TOKEN</code> &#22836;&#37096;&#32780;&#19981;&#26159; <code>X-XSRF-TOKEN</code>&#65292;&#21017;&#38656;&#35201;&#20351;&#29992; <code>csrf_token()</code> &#25552;&#20379;&#30340;&#26410;&#21152;&#23494;&#20196;&#29260;&#12290;</p>
+</blockquote><h2 id="10b2761db5a8e089049df39675abc550">&#20107;&#20214;</h2><p>Passport &#22312;&#31614;&#21457;&#35775;&#38382;&#20196;&#29260;&#21644;&#21047;&#26032;&#20196;&#29260;&#26102;&#20250;&#35302;&#21457;&#20107;&#20214;&#12290;&#20320;&#21487;&#20197;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#30417;&#21548;&#36825;&#20123;&#20107;&#20214;</a>&#20197;&#28165;&#29702;&#25110;&#25764;&#38144;&#25968;&#25454;&#24211;&#20013;&#30340;&#20854;&#20182;&#35775;&#38382;&#20196;&#29260;&#65306;</p><table>
+<thead>
+<tr>
+<th>Event Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Laravel\Passport\Events\AccessTokenCreated</code></td>
+</tr>
+<tr>
+<td><code>Laravel\Passport\Events\AccessTokenRevoked</code></td>
+</tr>
+<tr>
+<td><code>Laravel\Passport\Events\RefreshTokenCreated</code></td>
+</tr>
+</tbody>
+</table><h2 id="db06c78d1e24cf708a14ce81c9b617ec">&#27979;&#35797;</h2><p>Passport &#30340; <code>actingAs</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#25351;&#23450;&#24403;&#21069;&#24050;&#35748;&#35777;&#30340;&#29992;&#25143;&#21450;&#20854;&#20316;&#29992;&#22495;&#12290;&#20256;&#36882;&#32473; <code>actingAs</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#29992;&#25143;&#23454;&#20363;&#65292;&#31532;&#20108;&#20010;&#21442;&#25968;&#26159;&#24212;&#25480;&#20104;&#29992;&#25143;&#20196;&#29260;&#30340;&#20316;&#29992;&#22495;&#25968;&#32452;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Laravel\Passport\Passport;
+
+test('orders can be created', function () {
+    Passport::actingAs(
+        User::factory()-&gt;create(),
+        ['orders:create']
+    );
+
+    $response = $this-&gt;post('/api/orders');
+
+    $response-&gt;assertStatus(201);
+});</code></pre><pre><code class="language-php">use App\Models\User;
+use Laravel\Passport\Passport;
+
+public function test_orders_can_be_created(): void
+{
+    Passport::actingAs(
+        User::factory()-&gt;create(),
+        ['orders:create']
+    );
+
+    $response = $this-&gt;post('/api/orders');
+
+    $response-&gt;assertStatus(201);
+}</code></pre><p>Passport &#30340; <code>actingAsClient</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#25351;&#23450;&#24403;&#21069;&#24050;&#35748;&#35777;&#30340;&#23458;&#25143;&#31471;&#21450;&#20854;&#20316;&#29992;&#22495;&#12290;&#20256;&#36882;&#32473; <code>actingAsClient</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#23458;&#25143;&#31471;&#23454;&#20363;&#65292;&#31532;&#20108;&#20010;&#21442;&#25968;&#26159;&#24212;&#25480;&#20104;&#23458;&#25143;&#31471;&#20196;&#29260;&#30340;&#20316;&#29992;&#22495;&#25968;&#32452;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Client;
+use Laravel\Passport\Passport;
+
+test('servers can be retrieved', function () {
+    Passport::actingAsClient(
+        Client::factory()-&gt;create(),
+        ['servers:read']
+    );
+
+    $response = $this-&gt;get('/api/servers');
+
+    $response-&gt;assertStatus(200);
+});</code></pre><pre><code class="language-php">use Laravel\Passport\Client;
+use Laravel\Passport\Passport;
+
+public function test_servers_can_be_retrieved(): void
+{
+    Passport::actingAsClient(
+        Client::factory()-&gt;create(),
+        ['servers:read']
+    );
+
+    $response = $this-&gt;get('/api/servers');
+
+    $response-&gt;assertStatus(200);
+}</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Laravel Passport: <i><a href="https://github.com/laravel/passport" target="_blank">https://github.com/laravel/passport</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> League OAuth2 server: <i><a href="https://github.com/thephpleague/oauth2-server" target="_blank">https://github.com/thephpleague/oauth2-server</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 术语: <i><a href="https://oauth2.thephpleague.com/terminology/" target="_blank">https://oauth2.thephpleague.com/terminology/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Laravel Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> Laravel Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 升级指南: <i><a href="https://github.com/laravel/passport/blob/master/UPGRADE.md" target="_blank">https://github.com/laravel/passport/blob/master/UPGRADE.md</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 撤销它: <i><a href="2ky04xl9z8.html#revoking-tokens" target="_blank">#revoking-tokens</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 其路由文件: <i><a href="https://github.com/laravel/passport/blob/master/routes/web.php" target="_blank">https://github.com/laravel/passport/blob/master/routes/web.php</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> 扩展 `Client` 模型: <i><a href="2ky04xl9z8.html#overriding-default-models" target="_blank">#overriding-default-models</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> 定时任务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/scheduling" target="_blank">/docs/Laravel 13.x/scheduling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> RFC 7636 规范: <i><a href="https://tools.ietf.org/html/rfc7636" target="_blank">https://tools.ietf.org/html/rfc7636</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> OAuth2 Server 当前推荐的一种模式: <i><a href="https://oauth2.thephpleague.com/authorization-server/which-grant/" target="_blank">https://oauth2.thephpleague.com/authorization-server/which-grant/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> 配置最长访问令牌生命周期: <i><a href="2ky04xl9z8.html#configuration" target="_blank">#configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> 身份认证用户提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication#introduction" target="_blank">/docs/Laravel 13.x/authentication#introduction</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 使用中间件保护路由: <i><a href="2ky04xl9z8.html#multiple-authentication-guards" target="_blank">#multiple-authentication-guards</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> OAuth2 Server 当前推荐的一种模式: <i><a href="https://oauth2.thephpleague.com/authorization-server/which-grant/" target="_blank">https://oauth2.thephpleague.com/authorization-server/which-grant/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> 底层的 OAuth2 server: <i><a href="https://oauth2.thephpleague.com/database-setup/#:~:text=Please%20note%20that,the%20bearer%20token." target="_blank">https://oauth2.thephpleague.com/database-setup/#:~:text=Please%20note%20that,the%20bearer%20token.</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> Laravel Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> 身份认证用户提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication#introduction" target="_blank">/docs/Laravel 13.x/authentication#introduction</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> 使用中间件保护路由: <i><a href="2ky04xl9z8.html#multiple-authentication-guards" target="_blank">#multiple-authentication-guards</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> 作用域: <i><a href="2ky04xl9z8.html#token-scopes" target="_blank">#token-scopes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> 身份认证 guard: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication#adding-custom-guards" target="_blank">/docs/Laravel 13.x/authentication#adding-custom-guards</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> 客户端凭据模式: <i><a href="2ky04xl9z8.html#client-credentials-grant" target="_blank">#client-credentials-grant</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> `Laravel\Passport\Http\Middleware\EnsureClientIsResourceOwner` 中间件: <i><a href="2ky04xl9z8.html#client-credentials-grant" target="_blank">#client-credentials-grant</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> 个人访问令牌文档: <i><a href="2ky04xl9z8.html#customizing-the-user-provider-for-pat" target="_blank">#customizing-the-user-provider-for-pat</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> 密码模式文档: <i><a href="2ky04xl9z8.html#customizing-the-user-provider" target="_blank">#customizing-the-user-provider</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> 控制器中间件属性: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/controllers#middleware-attributes" target="_blank">/docs/Laravel 13.x/controllers#middleware-attributes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> Axios: <i><a href="https://github.com/axios/axios" target="_blank">https://github.com/axios/axios</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> 监听这些事件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="d6vro1rv3g.html#blog1088" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Laravel Octane</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="2qvpx7z93m.html#blog1090" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">Laravel Pennant</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

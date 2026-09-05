@@ -1,0 +1,1670 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>资源打包（Vite） | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/ndvm3gj93j.html', function (data, status) {
+            addView('ndvm3gj93j.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>资源打包（Vite）</h1><ul>
+<li><a href="ndvm3gj93j.html#58f11359121aea84fe8cf51c08c5b931">安装与配置</a>
+<ul>
+<li><a href="ndvm3gj93j.html#81bdb71653e01f870654763efaa66811">安装 Node</a></li>
+<li><a href="ndvm3gj93j.html#6fd101c80d2ef22feb5c7c18eadd6e9f">安装 Vite 与 Laravel 插件</a></li>
+<li><a href="ndvm3gj93j.html#dd126bd07bc2ea4e18f3ba7866835325">配置 Vite</a>
+<ul>
+<li><a href="ndvm3gj93j.html#d5f44213b5a9fe37c5637f7dec2e9c74">使用安全的开发服务器</a></li>
+<li><a href="ndvm3gj93j.html#43be85338520cc3b4416579ab23fc0ef">在 Sail 与 WSL2 中运行开发服务器</a></li>
+</ul></li>
+<li><a href="ndvm3gj93j.html#6ed8f690861c0a49387ba56f60ca2abb">加载脚本与样式</a>
+<ul>
+<li><a href="ndvm3gj93j.html#3e712c041e63af73d746d6b8bfcbb824">内联资源</a></li>
+</ul></li>
+</ul></li>
+<li><a href="ndvm3gj93j.html#94a1ce258a9dda0a7a972f5cb8cebc45">运行 Vite</a></li>
+<li><a href="ndvm3gj93j.html#72b60fb429c7e8a0bf5dbf308b089d6a">使用 JavaScript</a>
+<ul>
+<li><a href="ndvm3gj93j.html#6dc7a717efc15adf80699301b55eb635">别名</a></li>
+<li><a href="ndvm3gj93j.html#2d8ec58babcec05d3fe8f712968de749">Vue</a></li>
+<li><a href="ndvm3gj93j.html#50ce2da63bea6a618e7578fa50690040">React</a></li>
+<li><a href="ndvm3gj93j.html#3f37ceb3e7787681158e016284b19a78">Svelte</a></li>
+<li><a href="ndvm3gj93j.html#b19a24ee5c287f42ee1d465dab77ab37">Inertia</a></li>
+<li><a href="ndvm3gj93j.html#1a173838d0a6e16a08dbcf6212be0618">URL 处理</a></li>
+</ul></li>
+<li><a href="ndvm3gj93j.html#1e5309e33ac9e6e1d3c83b7d273bc3c6">使用样式表</a></li>
+<li><a href="ndvm3gj93j.html#ebbebcb0ba0b583950991a3e7b6d73f2">使用字体</a>
+<ul>
+<li><a href="ndvm3gj93j.html#73ae72cc498c3bb3b39f1b75c81f3e12">字体 Provider</a></li>
+<li><a href="ndvm3gj93j.html#e42119f4ddcd369ed0374e26d41abdc3">本地字体</a></li>
+<li><a href="ndvm3gj93j.html#57c1e3a0cd95f7d401a6c5be4c891528">字体选项</a></li>
+</ul></li>
+<li><a href="ndvm3gj93j.html#2369e62c45daa91ce69ab6f1570b76bd">使用 Blade 与路由</a>
+<ul>
+<li><a href="ndvm3gj93j.html#47d9e8772ecc9d0309fc0ba61770c47a">通过 Vite 处理静态资源</a></li>
+<li><a href="ndvm3gj93j.html#57b203c4215189cabc225b40d5a4e474">保存时刷新</a></li>
+<li><a href="ndvm3gj93j.html#6dc7a717efc15adf80699301b55eb635">别名</a></li>
+</ul></li>
+<li><a href="ndvm3gj93j.html#9029431fc4d36794719b5dadb37fb899">资源预取</a></li>
+<li><a href="ndvm3gj93j.html#e70e9322b99db15ffb2fa4b8b8b1bda6">自定义基础 URL</a></li>
+<li><a href="ndvm3gj93j.html#3867e350ebb33a487c4ac5f7787e1c29">环境变量</a></li>
+<li><a href="ndvm3gj93j.html#c096818f8b63108a72328f361cc28afb">在测试中禁用 Vite</a></li>
+<li><a href="ndvm3gj93j.html#a9600e5bd2572996d2fbfc27e1a57ef3">服务端渲染（SSR）</a></li>
+<li><a href="ndvm3gj93j.html#72d157b6cb37851341967d844f1c1402">脚本与样式标签属性</a>
+<ul>
+<li><a href="ndvm3gj93j.html#e4e773c939f90372b40f6f759bd8d20c">内容安全策略（CSP）Nonce</a></li>
+<li><a href="ndvm3gj93j.html#48f1a0a8cc828760a00015085a081a11">子资源完整性（SRI）</a></li>
+<li><a href="ndvm3gj93j.html#cd16a4a3eb51061dd24978109211ead8">任意属性</a></li>
+</ul></li>
+<li><a href="ndvm3gj93j.html#dc157373a8b5e249dd9fefe172c12a43">高级自定义</a>
+<ul>
+<li><a href="ndvm3gj93j.html#641afb63e4e1ff34866e15b9d4c2c854">开发服务器跨源资源共享（CORS）</a></li>
+<li><a href="ndvm3gj93j.html#57dfe73c0ed25a6aea1d792d62c6c4fb">修正开发服务器 URL</a></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><p><a href="https://vitejs.dev" target="_blank" rel="noopener noreferrer">Vite</a> &#26159;&#19968;&#20010;&#29616;&#20195;&#21270;&#30340;&#21069;&#31471;&#26500;&#24314;&#24037;&#20855;&#65292;&#25552;&#20379;&#26497;&#24555;&#30340;&#24320;&#21457;&#29615;&#22659;&#65292;&#24182;&#20026;&#29983;&#20135;&#29615;&#22659;&#25171;&#21253;&#20320;&#30340;&#20195;&#30721;&#12290;&#22312;&#20351;&#29992; Laravel &#26500;&#24314;&#24212;&#29992;&#26102;&#65292;&#20320;&#36890;&#24120;&#20250;&#20351;&#29992; Vite &#23558;&#24212;&#29992;&#30340; CSS &#21644; JavaScript &#25991;&#20214;&#25171;&#21253;&#20026;&#21487;&#29992;&#20110;&#29983;&#20135;&#30340;&#36164;&#28304;&#12290;</p><p>Laravel &#36890;&#36807;&#25552;&#20379;&#23448;&#26041;&#30340;&#25554;&#20214;&#21644; Blade &#25351;&#20196;&#65292;&#19982; Vite &#26080;&#32541;&#38598;&#25104;&#65292;&#29992;&#20110;&#22312;&#24320;&#21457;&#21644;&#29983;&#20135;&#29615;&#22659;&#20013;&#21152;&#36733;&#20320;&#30340;&#36164;&#28304;&#12290;</p><h2 id="58f11359121aea84fe8cf51c08c5b931">&#23433;&#35013;&#19982;&#37197;&#32622;</h2><blockquote>
+<p>[!NOTE]<br>
+&#20197;&#19979;&#25991;&#26723;&#20171;&#32461;&#20102;&#22914;&#20309;&#25163;&#21160;&#23433;&#35013;&#21644;&#37197;&#32622; Laravel Vite &#25554;&#20214;&#12290;&#19981;&#36807;&#65292;Laravel &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#20837;&#38376;&#22871;&#20214;</a> &#24050;&#32463;&#21253;&#21547;&#20102;&#25152;&#26377;&#36825;&#20123;&#33050;&#25163;&#26550;&#65292;&#26159;&#19978;&#25163; Laravel &#19982; Vite &#26368;&#24555;&#30340;&#26041;&#24335;&#12290;</p>
+</blockquote><h3 id="81bdb71653e01f870654763efaa66811">&#23433;&#35013; Node</h3><p>&#22312;&#36816;&#34892; Vite &#21644; Laravel &#25554;&#20214;&#20043;&#21069;&#65292;&#20320;&#24517;&#39035;&#30830;&#20445;&#24050;&#23433;&#35013; Node.js&#65288;16+&#65289;&#21644; NPM&#65306;</p><pre><code class="language-shell">node -v
+npm -v</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <a href="https://nodejs.org/en/download/" target="_blank" rel="noopener noreferrer">Node &#23448;&#32593;</a> &#25552;&#20379;&#30340;&#31616;&#26131;&#22270;&#24418;&#21270;&#23433;&#35013;&#31243;&#24207;&#26469;&#23433;&#35013;&#26368;&#26032;&#29256;&#26412;&#30340; Node &#21644; NPM&#12290;&#25110;&#32773;&#65292;&#22914;&#26524;&#20320;&#22312;&#20351;&#29992; <a href="https://laravel.com/docs/%7B%7Bversion%7D%7D/sail" target="_blank" rel="noopener noreferrer">Laravel Sail</a>&#65292;&#21487;&#20197;&#36890;&#36807; Sail &#35843;&#29992; Node &#21644; NPM&#65306;</p><pre><code class="language-shell">./vendor/bin/sail node -v
+./vendor/bin/sail npm -v</code></pre><h3 id="6fd101c80d2ef22feb5c7c18eadd6e9f">&#23433;&#35013; Vite &#19982; Laravel &#25554;&#20214;</h3><p>&#22312;&#19968;&#20010;&#20840;&#26032;&#30340; Laravel &#23433;&#35013;&#20013;&#65292;&#20320;&#20250;&#22312;&#24212;&#29992;&#30446;&#24405;&#32467;&#26500;&#30340;&#26681;&#30446;&#24405;&#25214;&#21040;&#19968;&#20010; <code>package.json</code> &#25991;&#20214;&#12290;&#40664;&#35748;&#30340; <code>package.json</code> &#25991;&#20214;&#24050;&#32463;&#21253;&#21547;&#20102;&#24320;&#22987;&#20351;&#29992; Vite &#21644; Laravel &#25554;&#20214;&#25152;&#38656;&#30340;&#19968;&#20999;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807; NPM &#23433;&#35013;&#24212;&#29992;&#30340;&#21069;&#31471;&#20381;&#36182;&#65306;</p><pre><code class="language-shell">npm install</code></pre><h3 id="dd126bd07bc2ea4e18f3ba7866835325">&#37197;&#32622; Vite</h3><p>Vite &#36890;&#36807;&#19968;&#20010;&#20301;&#20110;&#39033;&#30446;&#26681;&#30446;&#24405;&#30340; <code>vite.config.js</code> &#25991;&#20214;&#36827;&#34892;&#37197;&#32622;&#12290;&#20320;&#21487;&#20197;&#26681;&#25454;&#38656;&#35201;&#36827;&#34892;&#33258;&#23450;&#20041;&#65292;&#20063;&#21487;&#20197;&#23433;&#35013;&#24212;&#29992;&#25152;&#38656;&#30340;&#20854;&#20182;&#25554;&#20214;&#65292;&#20363;&#22914; <code>@vitejs/plugin-react</code>&#12289;<code>@sveltejs/vite-plugin-svelte</code> &#25110; <code>@vitejs/plugin-vue</code>&#12290;</p><p>Laravel Vite &#25554;&#20214;&#35201;&#27714;&#20320;&#25351;&#23450;&#24212;&#29992;&#30340;&#20837;&#21475;&#28857;&#12290;&#36825;&#20123;&#20837;&#21475;&#28857;&#21487;&#20197;&#26159; JavaScript &#25110; CSS &#25991;&#20214;&#65292;&#20063;&#21253;&#25324; TypeScript&#12289;JSX&#12289;TSX &#21644; Sass &#31561;&#39044;&#22788;&#29702;&#35821;&#35328;&#12290;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel([
+            'resources/css/app.css',
+            'resources/js/app.js',
+        ]),
+    ],
+});</code></pre><p>&#22914;&#26524;&#20320;&#27491;&#22312;&#26500;&#24314;&#19968;&#20010; SPA&#65288;&#21253;&#25324;&#20351;&#29992; Inertia &#26500;&#24314;&#30340;&#24212;&#29992;&#65289;&#65292;Vite &#22312;&#26080; CSS &#20837;&#21475;&#28857;&#26102;&#25928;&#26524;&#26368;&#20339;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel([
+            'resources/css/app.css', // [tl! remove]
+            'resources/js/app.js',
+        ]),
+    ],
+});</code></pre><p>&#30456;&#21453;&#65292;&#20320;&#24212;&#35813;&#36890;&#36807; JavaScript &#24341;&#20837; CSS&#12290;&#36890;&#24120;&#65292;&#36825;&#20250;&#22312;&#24212;&#29992;&#30340; <code>resources/js/app.js</code> &#25991;&#20214;&#20013;&#23436;&#25104;&#65306;</p><pre><code class="language-js">import './bootstrap';
+import '../css/app.css'; // [tl! add]</code></pre><p>Laravel &#25554;&#20214;&#36824;&#25903;&#25345;&#22810;&#20837;&#21475;&#28857;&#20197;&#21450;&#39640;&#32423;&#37197;&#32622;&#36873;&#39033;&#65292;&#20363;&#22914; <a href="ndvm3gj93j.html#ssr" target="_blank">SSR &#20837;&#21475;&#28857;</a>&#12290;</p><h4 id="d5f44213b5a9fe37c5637f7dec2e9c74">&#20351;&#29992;&#23433;&#20840;&#30340;&#24320;&#21457;&#26381;&#21153;&#22120;</h4><p>&#22914;&#26524;&#20320;&#30340;&#26412;&#22320;&#24320;&#21457; Web &#26381;&#21153;&#22120;&#36890;&#36807; HTTPS &#20026;&#24212;&#29992;&#25552;&#20379;&#26381;&#21153;&#65292;&#22312;&#36830;&#25509; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#26102;&#21487;&#33021;&#20250;&#36935;&#21040;&#38382;&#39064;&#12290;</p><p>&#22914;&#26524;&#20320;&#22312;&#20351;&#29992; <a href="https://herd.laravel.com" target="_blank" rel="noopener noreferrer">Laravel Herd</a> &#24182;&#24050;&#20026;&#31449;&#28857;&#21551;&#29992;&#23433;&#20840;&#35775;&#38382;&#65292;&#25110;&#32773;&#20320;&#22312;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/valet" target="_blank">Laravel Valet</a> &#24182;&#24050;&#23545;&#24212;&#29992;&#25191;&#34892;&#36807; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/valet#securing-sites" target="_blank">secure &#21629;&#20196;</a>&#65292;Laravel Vite &#25554;&#20214;&#20250;&#33258;&#21160;&#26816;&#27979;&#24182;&#20351;&#29992;&#29983;&#25104;&#30340; TLS &#35777;&#20070;&#12290;</p><p>&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#20027;&#26426;&#21517;&#19982;&#24212;&#29992;&#30446;&#24405;&#21517;&#19981;&#21305;&#37197;&#65292;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>vite.config.js</code> &#25991;&#20214;&#20013;&#25163;&#21160;&#25351;&#23450;&#20027;&#26426;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            // ...
+            detectTls: 'my-app.test', // [tl! add]
+        }),
+    ],
+});</code></pre><p>&#22914;&#26524;&#20351;&#29992;&#20854;&#20182; Web &#26381;&#21153;&#22120;&#65292;&#20320;&#24212;&#24403;&#29983;&#25104;&#19968;&#20010;&#21463;&#20449;&#20219;&#30340;&#35777;&#20070;&#65292;&#24182;&#25163;&#21160;&#37197;&#32622; Vite &#20351;&#29992;&#29983;&#25104;&#30340;&#35777;&#20070;&#65306;</p><pre><code class="language-js">// ...
+import fs from 'fs'; // [tl! add]
+
+const host = 'my-app.test'; // [tl! add]
+
+export default defineConfig({
+    // ...
+    server: { // [tl! add]
+        host, // [tl! add]
+        hmr: { host }, // [tl! add]
+        https: { // [tl! add]
+            key: fs.readFileSync(`/path/to/${host}.key`), // [tl! add]
+            cert: fs.readFileSync(`/path/to/${host}.crt`), // [tl! add]
+        }, // [tl! add]
+    }, // [tl! add]
+});</code></pre><p>&#22914;&#26524;&#20320;&#26080;&#27861;&#20026;&#31995;&#32479;&#29983;&#25104;&#21463;&#20449;&#20219;&#30340;&#35777;&#20070;&#65292;&#21487;&#20197;&#23433;&#35013;&#24182;&#37197;&#32622; <a href="https://github.com/vitejs/vite-plugin-basic-ssl" target="_blank" rel="noopener noreferrer">@vitejs/plugin-basic-ssl &#25554;&#20214;</a>&#12290;&#20351;&#29992;&#19981;&#21463;&#20449;&#20219;&#30340;&#35777;&#20070;&#26102;&#65292;&#20320;&#38656;&#35201;&#22312;&#27983;&#35272;&#22120;&#20013;&#25509;&#21463; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#30340;&#35777;&#20070;&#35686;&#21578;&#65292;&#26041;&#27861;&#26159;&#36816;&#34892; <code>npm run dev</code> &#21629;&#20196;&#26102;&#65292;&#22312;&#25511;&#21046;&#21488;&#28857;&#20987; "Local" &#38142;&#25509;&#12290;</p><h4 id="43be85338520cc3b4416579ab23fc0ef">&#22312; Sail &#19982; WSL2 &#20013;&#36816;&#34892;&#24320;&#21457;&#26381;&#21153;&#22120;</h4><p>&#22312; Windows &#23376;&#31995;&#32479; Linux 2&#65288;WSL2&#65289;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sail" target="_blank">Laravel Sail</a> &#20013;&#36816;&#34892; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#26102;&#65292;&#20320;&#24212;&#24403;&#21521;&#19979;&#24212;&#29992;&#30340; <code>vite.config.js</code> &#25991;&#20214;&#20013;&#28155;&#21152;&#20197;&#19979;&#37197;&#32622;&#65292;&#20197;&#30830;&#20445;&#27983;&#35272;&#22120;&#33021;&#22815;&#19982;&#24320;&#21457;&#26381;&#21153;&#22120;&#36890;&#20449;&#65306;</p><pre><code class="language-js">// ...
+
+export default defineConfig({
+    // ...
+    server: { // [tl! add:start]
+        hmr: {
+            host: 'localhost',
+        },
+    }, // [tl! add:end]
+});</code></pre><p>&#22914;&#26524;&#22312;&#24320;&#21457;&#26381;&#21153;&#22120;&#36816;&#34892;&#26399;&#38388;&#65292;&#25991;&#20214;&#21464;&#26356;&#27809;&#26377;&#21453;&#26144;&#22312;&#27983;&#35272;&#22120;&#20013;&#65292;&#20320;&#21487;&#33021;&#36824;&#38656;&#35201;&#37197;&#32622; Vite &#30340; <a href="https://vitejs.dev/config/server-options.html#server-watch" target="_blank" rel="noopener noreferrer">server.watch.usePolling &#36873;&#39033;</a>&#12290;</p><h3 id="6ed8f690861c0a49387ba56f60ca2abb">&#21152;&#36733;&#33050;&#26412;&#19982;&#26679;&#24335;</h3><p>&#37197;&#32622;&#22909; Vite &#20837;&#21475;&#28857;&#21518;&#65292;&#20320;&#29616;&#22312;&#21487;&#20197;&#22312;&#24212;&#29992;&#26681;&#27169;&#26495;&#30340; <code>&lt;head&gt;</code> &#20013;&#65292;&#20351;&#29992;&#19968;&#20010; <code>@vite()</code> Blade &#25351;&#20196;&#24341;&#29992;&#23427;&#20204;&#65306;</p><pre><code class="language-blade">&lt;!DOCTYPE html&gt;
+&lt;head&gt;
+    {{-- ... --}}
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+&lt;/head&gt;</code></pre><p>&#22914;&#26524;&#20320;&#36890;&#36807; JavaScript &#24341;&#20837; CSS&#65292;&#21017;&#21482;&#38656;&#35201;&#24341;&#20837; JavaScript &#20837;&#21475;&#28857;&#65306;</p><pre><code class="language-blade">&lt;!DOCTYPE html&gt;
+&lt;head&gt;
+    {{-- ... --}}
+
+    @vite('resources/js/app.js')
+&lt;/head&gt;</code></pre><p><code>@vite</code> &#25351;&#20196;&#20250;&#33258;&#21160;&#26816;&#27979; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#65292;&#24182;&#27880;&#20837; Vite &#23458;&#25143;&#31471;&#20197;&#21551;&#29992;&#28909;&#27169;&#22359;&#26367;&#25442;&#65288;Hot Module Replacement&#65289;&#12290;&#22312;&#26500;&#24314;&#27169;&#24335;&#19979;&#65292;&#35813;&#25351;&#20196;&#20250;&#21152;&#36733;&#32534;&#35793;&#21518;&#19988;&#24102;&#29256;&#26412;&#21495;&#30340;&#36164;&#28304;&#65292;&#21253;&#25324;&#20219;&#20309;&#34987;&#24341;&#20837;&#30340; CSS&#12290;</p><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#20320;&#36824;&#21487;&#20197;&#22312;&#35843;&#29992; <code>@vite</code> &#25351;&#20196;&#26102;&#25351;&#23450;&#32534;&#35793;&#36164;&#28304;&#30340;&#26500;&#24314;&#36335;&#24452;&#65306;</p><pre><code class="language-blade">&lt;!doctype html&gt;
+&lt;head&gt;
+    {{-- &#32473;&#23450;&#30340;&#26500;&#24314;&#36335;&#24452;&#30456;&#23545;&#20110; public &#36335;&#24452;&#12290; --}}
+
+    @vite('resources/js/app.js', 'vendor/courier/build')
+&lt;/head&gt;</code></pre><h4 id="3e712c041e63af73d746d6b8bfcbb824">&#20869;&#32852;&#36164;&#28304;</h4><p>&#26377;&#26102;&#65292;&#21487;&#33021;&#38656;&#35201;&#21253;&#21547;&#36164;&#28304;&#30340;&#21407;&#22987;&#20869;&#23481;&#65292;&#32780;&#19981;&#26159;&#38142;&#25509;&#21040;&#35813;&#36164;&#28304;&#30340;&#29256;&#26412;&#21270; URL&#12290;&#20363;&#22914;&#65292;&#22312;&#21521; PDF &#29983;&#25104;&#22120;&#20256;&#36882; HTML &#20869;&#23481;&#26102;&#65292;&#21487;&#33021;&#38656;&#35201;&#30452;&#25509;&#23558;&#36164;&#28304;&#20869;&#23481;&#23884;&#20837;&#21040;&#39029;&#38754;&#20013;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Vite</code> Facade &#25552;&#20379;&#30340; <code>content</code> &#26041;&#27861;&#36755;&#20986; Vite &#36164;&#28304;&#30340;&#20869;&#23481;&#65306;</p><pre><code class="language-blade">@use('Illuminate\Support\Facades\Vite')
+
+&lt;!doctype html&gt;
+&lt;head&gt;
+    {{-- ... --}}
+
+    &lt;style&gt;
+        {!! Vite::content('resources/css/app.css') !!}
+    &lt;/style&gt;
+    &lt;script&gt;
+        {!! Vite::content('resources/js/app.js') !!}
+    &lt;/script&gt;
+&lt;/head&gt;</code></pre><h2 id="94a1ce258a9dda0a7a972f5cb8cebc45">&#36816;&#34892; Vite</h2><p>&#26377;&#20004;&#31181;&#26041;&#24335;&#21487;&#20197;&#36816;&#34892; Vite&#12290;&#20320;&#21487;&#20197;&#36890;&#36807; <code>dev</code> &#21629;&#20196;&#36816;&#34892;&#24320;&#21457;&#26381;&#21153;&#22120;&#65292;&#36825;&#22312;&#26412;&#22320;&#24320;&#21457;&#26102;&#24456;&#26377;&#29992;&#12290;&#24320;&#21457;&#26381;&#21153;&#22120;&#20250;&#33258;&#21160;&#26816;&#27979;&#25991;&#20214;&#21464;&#26356;&#65292;&#24182;&#31435;&#21363;&#21453;&#26144;&#22312;&#20219;&#20309;&#24050;&#25171;&#24320;&#30340;&#27983;&#35272;&#22120;&#31383;&#21475;&#20013;&#12290;</p><p>&#25110;&#32773;&#65292;&#36816;&#34892; <code>build</code> &#21629;&#20196;&#20250;&#23545;&#24212;&#29992;&#30340;&#36164;&#28304;&#36827;&#34892;&#29256;&#26412;&#21270;&#21644;&#25171;&#21253;&#65292;&#20351;&#20854;&#20934;&#22791;&#22909;&#37096;&#32626;&#21040;&#29983;&#20135;&#29615;&#22659;&#65306;</p><pre><code class="language-shell"># &#36816;&#34892; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&hellip;&hellip;
+npm run dev
+
+# &#20026;&#29983;&#20135;&#29615;&#22659;&#26500;&#24314;&#24182;&#29256;&#26412;&#21270;&#36164;&#28304;&hellip;&hellip;
+npm run build</code></pre><p>&#22914;&#26524;&#20320;&#22312; WSL2 &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sail" target="_blank">Sail</a> &#20013;&#36816;&#34892;&#24320;&#21457;&#26381;&#21153;&#22120;&#65292;&#21487;&#33021;&#38656;&#35201;&#19968;&#20123; <a href="ndvm3gj93j.html#configuring-hmr-in-sail-on-wsl2" target="_blank">&#39069;&#22806;&#30340;&#37197;&#32622;</a> &#36873;&#39033;&#12290;</p><h2 id="72b60fb429c7e8a0bf5dbf308b089d6a">&#20351;&#29992; JavaScript</h2><h3 id="6dc7a717efc15adf80699301b55eb635">&#21035;&#21517;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Laravel &#25554;&#20214;&#25552;&#20379;&#20102;&#19968;&#20010;&#24120;&#29992;&#21035;&#21517;&#65292;&#24110;&#21161;&#20320;&#24555;&#36895;&#19978;&#25163;&#24182;&#20415;&#25463;&#22320;&#24341;&#20837;&#24212;&#29992;&#30340;&#36164;&#28304;&#65306;</p><pre><code class="language-js">{
+    '@' =&gt; '/resources/js'
+}</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312; <code>vite.config.js</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#28155;&#21152;&#33258;&#24049;&#30340;&#21035;&#21517;&#26469;&#35206;&#30422; <code>'@'</code> &#21035;&#21517;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel(['resources/ts/app.tsx']),
+    ],
+    resolve: {
+        alias: {
+            '@': '/resources/ts',
+        },
+    },
+});</code></pre><h3 id="2d8ec58babcec05d3fe8f712968de749">Vue</h3><p>&#22914;&#26524;&#20320;&#24819;&#20351;&#29992; <a href="https://vuejs.org/" target="_blank" rel="noopener noreferrer">Vue</a> &#26694;&#26550;&#26500;&#24314;&#21069;&#31471;&#65292;&#36824;&#38656;&#35201;&#23433;&#35013; <code>@vitejs/plugin-vue</code> &#25554;&#20214;&#65306;</p><pre><code class="language-shell">npm install --save-dev @vitejs/plugin-vue</code></pre><p>&#28982;&#21518;&#65292;&#20320;&#21487;&#20197;&#23558;&#23427;&#21253;&#21547;&#22312; <code>vite.config.js</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#12290;&#22312;&#20351;&#29992; Vue &#25554;&#20214;&#19982; Laravel &#37197;&#21512;&#26102;&#65292;&#36824;&#38656;&#35201;&#20960;&#20010;&#39069;&#22806;&#30340;&#36873;&#39033;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue';
+
+export default defineConfig({
+    plugins: [
+        laravel(['resources/js/app.js']),
+        vue({
+            template: {
+                transformAssetUrls: {
+                    // &#24403;&#22312;&#21333;&#25991;&#20214;&#32452;&#20214;&#20013;&#24341;&#29992;&#26102;&#65292;Vue &#25554;&#20214;&#20250;&#37325;&#20889;&#36164;&#28304; URL&#65292;
+                    // &#20351;&#20854;&#25351;&#21521; Laravel Web &#26381;&#21153;&#22120;&#12290;&#23558;&#20854;&#35774;&#20026; `null` &#21487;&#35753;
+                    // Laravel &#25554;&#20214;&#25913;&#20026;&#23558;&#36164;&#28304; URL &#37325;&#20889;&#21040; Vite &#26381;&#21153;&#22120;&#12290;
+                    base: null,
+
+                    // Vue &#25554;&#20214;&#20250;&#35299;&#26512;&#32477;&#23545; URL &#24182;&#23558;&#20854;&#35270;&#20026;&#30913;&#30424;&#19978;&#30340;&#25991;&#20214;&#36335;&#24452;&#12290;
+                    // &#23558;&#20854;&#35774;&#20026; `false` &#20250;&#20445;&#30041;&#32477;&#23545; URL &#19981;&#21464;&#65292;&#20197;&#20415;&#23427;&#20204;&#33021;&#22815;
+                    // &#25353;&#39044;&#26399;&#24341;&#29992; public &#30446;&#24405;&#20013;&#30340;&#36164;&#28304;&#12290;
+                    includeAbsolute: false,
+                },
+            },
+        }),
+    ],
+});</code></pre><blockquote>
+<p>[!NOTE]<br>
+Laravel &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#20837;&#38376;&#22871;&#20214;</a> &#24050;&#32463;&#21253;&#21547;&#20102;&#27491;&#30830;&#30340; Laravel&#12289;Vue &#21644; Vite &#37197;&#32622;&#12290;&#36825;&#20123;&#22871;&#20214;&#26159;&#19978;&#25163; Laravel&#12289;Vue &#21644; Vite &#26368;&#24555;&#30340;&#26041;&#24335;&#12290;</p>
+</blockquote><h3 id="50ce2da63bea6a618e7578fa50690040">React</h3><p>&#22914;&#26524;&#20320;&#24819;&#20351;&#29992; <a href="https://reactjs.org/" target="_blank" rel="noopener noreferrer">React</a> &#26694;&#26550;&#26500;&#24314;&#21069;&#31471;&#65292;&#36824;&#38656;&#35201;&#23433;&#35013; <code>@vitejs/plugin-react</code> &#25554;&#20214;&#65306;</p><pre><code class="language-shell">npm install --save-dev @vitejs/plugin-react</code></pre><p>&#28982;&#21518;&#65292;&#20320;&#21487;&#20197;&#23558;&#23427;&#21253;&#21547;&#22312; <code>vite.config.js</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+    plugins: [
+        laravel(['resources/js/app.jsx']),
+        react(),
+    ],
+});</code></pre><p>&#20320;&#38656;&#35201;&#30830;&#20445;&#25152;&#26377;&#21253;&#21547; JSX &#30340;&#25991;&#20214;&#37117;&#24102;&#26377; <code>.jsx</code> &#25110; <code>.tsx</code> &#25193;&#23637;&#21517;&#65292;&#24182;&#22312;&#38656;&#35201;&#26102;&#65288;&#22914; <a href="ndvm3gj93j.html#configuring-vite" target="_blank">&#19978;&#25991;&#25152;&#31034;</a>&#65289;&#26356;&#26032;&#20320;&#30340;&#20837;&#21475;&#28857;&#12290;</p><p>&#20320;&#36824;&#38656;&#35201;&#22312;&#29616;&#26377;&#30340; <code>@vite</code> &#25351;&#20196;&#26049;&#21253;&#21547;&#39069;&#22806;&#30340; <code>@viteReactRefresh</code> Blade &#25351;&#20196;&#12290;</p><pre><code class="language-blade">@viteReactRefresh
+@vite('resources/js/app.jsx')</code></pre><p><code>@viteReactRefresh</code> &#25351;&#20196;&#24517;&#39035;&#22312; <code>@vite</code> &#25351;&#20196;&#20043;&#21069;&#35843;&#29992;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+Laravel &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#20837;&#38376;&#22871;&#20214;</a> &#24050;&#32463;&#21253;&#21547;&#20102;&#27491;&#30830;&#30340; Laravel&#12289;React &#21644; Vite &#37197;&#32622;&#12290;&#36825;&#20123;&#22871;&#20214;&#26159;&#19978;&#25163; Laravel&#12289;React &#21644; Vite &#26368;&#24555;&#30340;&#26041;&#24335;&#12290;</p>
+</blockquote><h3 id="3f37ceb3e7787681158e016284b19a78">Svelte</h3><p>&#22914;&#26524;&#20320;&#24819;&#20351;&#29992; <a href="https://svelte.dev/" target="_blank" rel="noopener noreferrer">Svelte</a> &#26694;&#26550;&#26500;&#24314;&#21069;&#31471;&#65292;&#36824;&#38656;&#35201;&#23433;&#35013; <code>@sveltejs/vite-plugin-svelte</code> &#25554;&#20214;&#65306;</p><pre><code class="language-shell">npm install --save-dev @sveltejs/vite-plugin-svelte</code></pre><p>&#28982;&#21518;&#65292;&#20320;&#21487;&#20197;&#23558;&#23427;&#21253;&#21547;&#22312; <code>vite.config.js</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#12290;</p><pre><code class="language-js">import { svelte } from '@sveltejs/vite-plugin-svelte';
+import laravel from 'laravel-vite-plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [
+    laravel({
+      input: ['resources/js/app.ts'],
+      ssr: 'resources/js/ssr.ts',
+      refresh: true,
+    }),
+    svelte(),
+  ],
+});</code></pre><blockquote>
+<p>[!NOTE]<br>
+Laravel &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#20837;&#38376;&#22871;&#20214;</a> &#24050;&#32463;&#21253;&#21547;&#20102;&#27491;&#30830;&#30340; Laravel&#12289;Svelte &#21644; Vite &#37197;&#32622;&#12290;&#36825;&#20123;&#22871;&#20214;&#26159;&#19978;&#25163; Laravel&#12289;Svelte &#21644; Vite &#26368;&#24555;&#30340;&#26041;&#24335;&#12290;</p>
+</blockquote><h3 id="b19a24ee5c287f42ee1d465dab77ab37">Inertia</h3><p>Laravel Vite &#25554;&#20214;&#25552;&#20379;&#20102;&#19968;&#20010;&#20415;&#25463;&#30340; <code>resolvePageComponent</code> &#20989;&#25968;&#65292;&#24110;&#21161;&#20320;&#35299;&#26512; Inertia &#39029;&#38754;&#32452;&#20214;&#12290;&#19979;&#38754;&#26159;&#19968;&#20010;&#22312; Vue 3 &#20013;&#20351;&#29992;&#35813;&#36741;&#21161;&#20989;&#25968;&#30340;&#31034;&#20363;&#65307;&#19981;&#36807;&#65292;&#20320;&#20063;&#21487;&#20197;&#22312;&#20854;&#20182;&#26694;&#26550;&#65288;&#22914; React &#25110; Svelte&#65289;&#20013;&#20351;&#29992;&#35813;&#20989;&#25968;&#65306;</p><pre><code class="language-js">import { createApp, h } from 'vue';
+import { createInertiaApp } from '@inertiajs/vue3';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+
+createInertiaApp({
+  resolve: (name) =&gt; resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+  setup({ el, App, props, plugin }) {
+    createApp({ render: () =&gt; h(App, props) })
+      .use(plugin)
+      .mount(el)
+  },
+});</code></pre><p>&#22914;&#26524;&#20320;&#22312; Inertia &#20013;&#20351;&#29992; Vite &#30340;&#20195;&#30721;&#20998;&#21106;&#21151;&#33021;&#65292;&#25105;&#20204;&#24314;&#35758;&#37197;&#32622; <a href="ndvm3gj93j.html#asset-prefetching" target="_blank">&#36164;&#28304;&#39044;&#21462;</a>&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+Laravel &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#20837;&#38376;&#22871;&#20214;</a> &#24050;&#32463;&#21253;&#21547;&#20102;&#27491;&#30830;&#30340; Laravel&#12289;Inertia &#21644; Vite &#37197;&#32622;&#12290;&#36825;&#20123;&#22871;&#20214;&#26159;&#19978;&#25163; Laravel&#12289;Inertia &#21644; Vite &#26368;&#24555;&#30340;&#26041;&#24335;&#12290;</p>
+</blockquote><h3 id="1a173838d0a6e16a08dbcf6212be0618">URL &#22788;&#29702;</h3><p>&#22312;&#20351;&#29992; Vite &#24182;&#24341;&#29992;&#24212;&#29992; HTML&#12289;CSS &#25110; JS &#20013;&#30340;&#36164;&#28304;&#26102;&#65292;&#26377;&#20960;&#20010;&#27880;&#24847;&#20107;&#39033;&#12290;&#39318;&#20808;&#65292;&#22914;&#26524;&#20320;&#20351;&#29992;&#32477;&#23545;&#36335;&#24452;&#24341;&#29992;&#36164;&#28304;&#65292;Vite &#19981;&#20250;&#23558;&#35813;&#36164;&#28304;&#32435;&#20837;&#26500;&#24314;&#65307;&#22240;&#27492;&#65292;&#20320;&#24212;&#24403;&#30830;&#20445;&#35813;&#36164;&#28304;&#22312; public &#30446;&#24405;&#20013;&#21487;&#29992;&#12290;&#22312;&#20351;&#29992; <a href="ndvm3gj93j.html#configuring-vite" target="_blank">&#19987;&#29992; CSS &#20837;&#21475;&#28857;</a> &#26102;&#65292;&#24212;&#36991;&#20813;&#20351;&#29992;&#32477;&#23545;&#36335;&#24452;&#65292;&#22240;&#20026;&#22312;&#24320;&#21457;&#26399;&#38388;&#65292;&#27983;&#35272;&#22120;&#20250;&#23581;&#35797;&#20174;&#25176;&#31649; CSS &#30340; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#65288;&#32780;&#38750; public &#30446;&#24405;&#65289;&#21152;&#36733;&#36825;&#20123;&#36335;&#24452;&#12290;</p><p>&#24341;&#29992;&#30456;&#23545;&#36164;&#28304;&#36335;&#24452;&#26102;&#65292;&#20320;&#24212;&#24403;&#35760;&#20303;&#65292;&#36335;&#24452;&#26159;&#30456;&#23545;&#20110;&#24341;&#29992;&#23427;&#20204;&#30340;&#25991;&#20214;&#32780;&#35328;&#30340;&#12290;&#20219;&#20309;&#36890;&#36807;&#30456;&#23545;&#36335;&#24452;&#24341;&#29992;&#30340;&#36164;&#28304;&#37117;&#20250;&#34987; Vite &#37325;&#20889;&#12289;&#29256;&#26412;&#21270;&#24182;&#25171;&#21253;&#12290;</p><p>&#32771;&#34385;&#20197;&#19979;&#39033;&#30446;&#32467;&#26500;&#65306;</p><pre><code class="language-text">public/
+  taylor.png
+resources/
+  js/
+    Pages/
+      Welcome.vue
+  images/
+    abigail.png</code></pre><p>&#20197;&#19979;&#31034;&#20363;&#23637;&#31034;&#20102; Vite &#22914;&#20309;&#22788;&#29702;&#30456;&#23545;&#21644;&#32477;&#23545; URL&#65306;</p><pre><code class="language-html">&lt;!-- &#35813;&#36164;&#28304;&#19981;&#30001; Vite &#22788;&#29702;&#65292;&#20063;&#19981;&#20250;&#34987;&#32435;&#20837;&#26500;&#24314; --&gt;
+&lt;img src="/taylor.png"&gt;
+
+&lt;!-- &#35813;&#36164;&#28304;&#20250;&#34987; Vite &#37325;&#20889;&#12289;&#29256;&#26412;&#21270;&#24182;&#25171;&#21253; --&gt;
+&lt;img src="../../images/abigail.png"&gt;</code></pre><h2 id="1e5309e33ac9e6e1d3c83b7d273bc3c6">&#20351;&#29992;&#26679;&#24335;&#34920;</h2><blockquote>
+<p>[!NOTE]<br>
+Laravel &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#20837;&#38376;&#22871;&#20214;</a> &#24050;&#32463;&#21253;&#21547;&#20102;&#27491;&#30830;&#30340; Tailwind &#21644; Vite &#37197;&#32622;&#12290;&#25110;&#32773;&#65292;&#22914;&#26524;&#20320;&#24819;&#22312;&#19981;&#20351;&#29992;&#20837;&#38376;&#22871;&#20214;&#30340;&#24773;&#20917;&#19979;&#23558; Tailwind &#19982; Laravel &#37197;&#21512;&#20351;&#29992;&#65292;&#35831;&#26597;&#30475; <a href="https://tailwindcss.com/docs/guides/laravel" target="_blank" rel="noopener noreferrer">Tailwind &#38024;&#23545; Laravel &#30340;&#23433;&#35013;&#25351;&#21335;</a>&#12290;</p>
+</blockquote><p>&#25152;&#26377; Laravel &#24212;&#29992;&#37117;&#24050;&#32463;&#21253;&#21547;&#20102; Tailwind &#20197;&#21450;&#19968;&#20010;&#37197;&#32622;&#27491;&#30830;&#30340; <code>vite.config.js</code> &#25991;&#20214;&#12290;&#22240;&#27492;&#65292;&#20320;&#21482;&#38656;&#21551;&#21160; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#65292;&#25110;&#36816;&#34892; <code>dev</code> Composer &#21629;&#20196;&#65292;&#23427;&#20250;&#21516;&#26102;&#21551;&#21160; Laravel &#21644; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#65306;</p><pre><code class="language-shell">composer run dev</code></pre><p>&#24212;&#29992;&#30340; CSS &#21487;&#20197;&#25918;&#32622;&#22312; <code>resources/css/app.css</code> &#25991;&#20214;&#20013;&#12290;</p><h2 id="ebbebcb0ba0b583950991a3e7b6d73f2">&#20351;&#29992;&#23383;&#20307;</h2><p>Laravel Vite &#25554;&#20214;&#21487;&#20197;&#20026;&#20320;&#30340;&#24212;&#29992;&#25552;&#20379;&#32463;&#36807;&#20248;&#21270;&#30340;&#33258;&#25176;&#31649;&#23383;&#20307;&#12290;&#37197;&#32622;&#23383;&#20307;&#21518;&#65292;&#25554;&#20214;&#20250;&#35299;&#26512;&#25152;&#35831;&#27714;&#30340;&#23383;&#20307;&#25991;&#20214;&#65292;&#23558;&#23427;&#20204;&#20316;&#20026; Vite &#36164;&#28304;&#36755;&#20986;&#65292;&#29983;&#25104;&#23383;&#20307; CSS&#65292;&#24182;&#20889;&#20837;&#19968;&#20010;&#21487;&#30001; Blade &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/blade#fonts" target="_blank"><code>@fonts</code> &#25351;&#20196;</a> &#28040;&#36153;&#30340;&#23383;&#20307;&#28165;&#21333;&#12290;</p><p>&#35201;&#37197;&#32622;&#23383;&#20307;&#65292;&#20174; <code>laravel-vite-plugin/fonts</code> &#20013;&#23548;&#20837;&#19968;&#20010;&#25110;&#22810;&#20010; provider &#36741;&#21161;&#20989;&#25968;&#65292;&#24182;&#23558;&#23427;&#20204;&#28155;&#21152;&#21040; Laravel &#25554;&#20214;&#30340; <code>fonts</code> &#36873;&#39033;&#20013;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import { google } from 'laravel-vite-plugin/fonts';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: 'resources/js/app.js',
+            fonts: [
+                google('Inter', {
+                    alias: 'sans',
+                    weights: [400, 500, 600, 700],
+                    styles: ['normal', 'italic'],
+                    subsets: ['latin'],
+                    display: 'swap',
+                    preload: [
+                        { weight: 400 },
+                        { weight: 700 },
+                    ],
+                    fallbacks: ['system-ui', 'sans-serif'],
+                }),
+            ],
+        }),
+    ],
+});</code></pre><p>&#22312;&#26412;&#20363;&#20013;&#65292;<code>Inter</code> &#23383;&#20307;&#21487;&#36890;&#36807; <code>sans</code> &#21035;&#21517;&#20351;&#29992;&#12290;&#25554;&#20214;&#20250;&#29983;&#25104;&#19968;&#20010; <code>--font-sans</code> CSS &#21464;&#37327;&#65292;&#20197;&#21450;&#19968;&#20010;&#24212;&#29992;&#25152;&#29983;&#25104;&#23383;&#20307;&#26632;&#30340; <code>.font-sans</code> &#24037;&#20855;&#31867;&#12290;</p><h3 id="73ae72cc498c3bb3b39f1b75c81f3e12">&#23383;&#20307; Provider</h3><p>Laravel Vite &#25554;&#20214;&#21253;&#21547;&#20102; Google Fonts&#12289;Bunny Fonts&#12289;Fontsource &#21644;&#26412;&#22320;&#23383;&#20307;&#30340; provider &#36741;&#21161;&#20989;&#25968;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import { bunny, fontsource, google, local } from 'laravel-vite-plugin/fonts';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: 'resources/js/app.js',
+            fonts: [
+                google('Inter', { alias: 'sans' }),
+                bunny('Figtree', { alias: 'body' }),
+                fontsource('JetBrains Mono', { alias: 'mono' }),
+                local('Brand Sans', {
+                    alias: 'brand',
+                    src: 'resources/fonts/brand-sans',
+                }),
+            ],
+        }),
+    ],
+});</code></pre><p><code>fontsource</code> provider &#20250;&#20174;&#24050;&#23433;&#35013;&#30340; Fontsource &#21253;&#20013;&#35835;&#21462;&#23383;&#20307;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#21253;&#21517;&#30001;&#23383;&#20307;&#31995;&#21015;&#25512;&#23548;&#32780;&#26469;&#65292;&#20363;&#22914; <code>@fontsource/jetbrains-mono</code>&#12290;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20351;&#29992;&#20102;&#19981;&#21516;&#30340;&#21253;&#21517;&#65292;&#21487;&#20197;&#36890;&#36807; <code>package</code> &#36873;&#39033;&#25351;&#23450;&#12290;</p><h3 id="e42119f4ddcd369ed0374e26d41abdc3">&#26412;&#22320;&#23383;&#20307;</h3><p>&#20351;&#29992;&#26412;&#22320;&#23383;&#20307;&#26102;&#65292;<code>src</code> &#36873;&#39033;&#21487;&#20197;&#25351;&#21521;&#21333;&#20010;&#23383;&#20307;&#25991;&#20214;&#12289;&#19968;&#20010;&#30446;&#24405;&#25110;&#19968;&#20010; glob &#27169;&#24335;&#12290;&#25554;&#20214;&#20250;&#35782;&#21035;&#21463;&#25903;&#25345;&#30340;&#23383;&#20307;&#25991;&#20214;&#65292;&#24182;&#20174;&#25991;&#20214;&#21517;&#25512;&#26029;&#20854;&#23383;&#37325;&#21644;&#26679;&#24335;&#65306;</p><pre><code class="language-js">local('Brand Sans', {
+    alias: 'brand',
+    src: 'resources/fonts/brand-sans/*.woff2',
+})</code></pre><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#23545;&#21487;&#29992;&#30340;&#21464;&#20307;&#25317;&#26377;&#23436;&#20840;&#25511;&#21046;&#26435;&#65292;&#21487;&#20197;&#20351;&#29992; <code>variants</code> &#36873;&#39033;&#26174;&#24335;&#23450;&#20041;&#65306;</p><pre><code class="language-js">local('Brand Sans', {
+    alias: 'brand',
+    variants: [
+        { src: 'resources/fonts/BrandSans-Regular.woff2', weight: 400 },
+        { src: 'resources/fonts/BrandSans-Italic.woff2', weight: 400, style: 'italic' },
+        { src: ['resources/fonts/BrandSans-Bold.woff2', 'resources/fonts/BrandSans-Bold.ttf'], weight: 700 },
+    ],
+})</code></pre><h3 id="57c1e3a0cd95f7d401a6c5be4c891528">&#23383;&#20307;&#36873;&#39033;</h3><p>&#26681;&#25454; provider &#30340;&#19981;&#21516;&#65292;&#23383;&#20307;&#23450;&#20041;&#21487;&#20197;&#25509;&#21463;&#22810;&#20010;&#36873;&#39033;&#65292;&#29992;&#20110;&#33258;&#23450;&#20041;&#25152;&#29983;&#25104;&#30340;&#23383;&#20307; CSS&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;"><code>alias</code> &#23450;&#20041; Blade &#30340; <code>@fonts</code> &#25351;&#20196;&#20351;&#29992;&#30340;&#21517;&#31216;&#65292;&#40664;&#35748;&#20026;&#23383;&#20307;&#31995;&#21015;&#30340; slug&#12290;</li>
+<li style="list-style-type: disc;"><code>variable</code> &#23450;&#20041;&#29983;&#25104;&#30340; CSS &#21464;&#37327;&#65292;&#40664;&#35748;&#20026; <code>--font-{alias}</code>&#12290;</li>
+<li style="list-style-type: disc;"><code>weights</code> &#23450;&#20041;&#24212;&#24403;&#35299;&#26512;&#30340;&#36828;&#31243;&#25110; Fontsource &#23383;&#37325;&#65292;&#40664;&#35748;&#20026; <code>[400]</code>&#12290;</li>
+<li style="list-style-type: disc;"><code>styles</code> &#23450;&#20041;&#24212;&#24403;&#35299;&#26512;&#30340;&#36828;&#31243;&#25110; Fontsource &#23383;&#20307;&#26679;&#24335;&#65292;&#40664;&#35748;&#20026; <code>['normal']</code>&#12290;</li>
+<li style="list-style-type: disc;"><code>subsets</code> &#23450;&#20041;&#24212;&#24403;&#35299;&#26512;&#30340;&#36828;&#31243;&#25110; Fontsource &#23383;&#20307;&#23376;&#38598;&#65292;&#40664;&#35748;&#20026; <code>['latin']</code>&#12290;</li>
+<li style="list-style-type: disc;"><code>display</code> &#23450;&#20041; <code>font-display</code> &#30340;&#20540;&#65292;&#40664;&#35748;&#20026; <code>swap</code>&#12290;</li>
+<li style="list-style-type: disc;"><code>preload</code> &#25511;&#21046;&#24212;&#24403;&#39044;&#21152;&#36733;&#21738;&#20123; WOFF2 &#23383;&#20307;&#21464;&#20307;&#12290;&#35813;&#36873;&#39033;&#21487;&#20197;&#26159; <code>true</code>&#12289;<code>false</code>&#65292;&#25110;&#19968;&#20010;&#30001; <code>{ weight, style }</code> &#36873;&#25321;&#22120;&#32452;&#25104;&#30340;&#25968;&#32452;&#12290;</li>
+<li style="list-style-type: disc;"><code>fallbacks</code> &#23450;&#20041;&#24212;&#24403;&#36861;&#21152;&#21040;&#25152;&#29983;&#25104;&#23383;&#20307;&#26632;&#20013;&#30340;&#39069;&#22806;&#22238;&#36864;&#23383;&#20307;&#12290;</li>
+<li style="list-style-type: disc;"><code>optimizedFallbacks</code> &#23581;&#35797;&#20351;&#29992;&#21487;&#36873;&#30340; <code>fontaine</code> &#21253;&#29983;&#25104;&#32463;&#36807;&#24230;&#37327;&#35843;&#25972;&#30340;&#22238;&#36864;&#23383;&#20307;&#38754;&#65292;&#40664;&#35748;&#20026; <code>true</code>&#12290;</li>
+</ul><p>&#20248;&#21270;&#30340;&#22238;&#36864;&#23383;&#20307;&#38656;&#35201; <code>fontaine</code> &#21253;&#65292;&#35813;&#21253;&#40664;&#35748;&#26410;&#23433;&#35013;&#12290;&#22914;&#26524;&#20320;&#24819;&#35753; Laravel &#29983;&#25104;&#32463;&#36807;&#24230;&#37327;&#35843;&#25972;&#30340;&#22238;&#36864;&#23383;&#20307;&#38754;&#65292;&#24212;&#23558; <code>fontaine</code> &#20316;&#20026;&#24320;&#21457;&#20381;&#36182;&#23433;&#35013;&#65306;</p><pre><code class="language-shell">npm install --save-dev fontaine</code></pre><p>&#22914;&#26524;&#26410;&#23433;&#35013; <code>fontaine</code> &#25110;&#23427;&#26080;&#27861;&#35835;&#21462;&#26576;&#20010;&#23383;&#20307;&#25991;&#20214;&#65292;Laravel &#20250;&#36339;&#36807;&#35813;&#23383;&#20307;&#30340;&#20248;&#21270;&#22238;&#36864;&#65292;&#24182;&#32487;&#32493;&#20351;&#29992;&#36890;&#36807; <code>fallbacks</code> &#36873;&#39033;&#37197;&#32622;&#30340;&#20219;&#20309;&#23383;&#20307;&#12290;</p><p>&#26412;&#22320;&#23383;&#20307;&#26159;&#20174;&#19978;&#25991;&#25551;&#36848;&#30340; <code>src</code> &#25110; <code>variants</code> &#36873;&#39033;&#35299;&#26512;&#30340;&#65292;&#32780;&#19981;&#26159;&#20351;&#29992; <code>weights</code>&#12289;<code>styles</code> &#21644; <code>subsets</code>&#12290;</p><h2 id="2369e62c45daa91ce69ab6f1570b76bd">&#20351;&#29992; Blade &#19982;&#36335;&#30001;</h2><h3 id="47d9e8772ecc9d0309fc0ba61770c47a">&#36890;&#36807; Vite &#22788;&#29702;&#38745;&#24577;&#36164;&#28304;</h3><p>&#22312; JavaScript &#25110; CSS &#20013;&#24341;&#29992;&#36164;&#28304;&#26102;&#65292;Vite &#20250;&#33258;&#21160;&#22788;&#29702;&#24182;&#20026;&#20854;&#28155;&#21152;&#29256;&#26412;&#21495;&#12290;&#27492;&#22806;&#65292;&#22312;&#26500;&#24314;&#22522;&#20110; Blade &#30340;&#24212;&#29992;&#26102;&#65292;Vite &#20063;&#21487;&#20197;&#22788;&#29702;&#24182;&#20026;&#20320;&#20165;&#22312; Blade &#27169;&#26495;&#20013;&#24341;&#29992;&#30340;&#38745;&#24577;&#36164;&#28304;&#28155;&#21152;&#29256;&#26412;&#21495;&#12290;</p><p>&#19981;&#36807;&#65292;&#35201;&#20570;&#21040;&#36825;&#19968;&#28857;&#65292;&#20320;&#38656;&#35201;&#36890;&#36807;&#22312;&#25554;&#20214;&#30340; <code>assets</code> &#36873;&#39033;&#20013;&#25351;&#23450;&#36825;&#20123;&#36164;&#28304;&#65292;&#35753; Vite &#24863;&#30693;&#21040;&#23427;&#20204;&#12290;&#35813;&#36873;&#39033;&#36866;&#29992;&#20110;&#20320;&#24819;&#35201;&#36890;&#36807; <code>Vite::asset</code> &#30452;&#25509;&#24341;&#29992;&#30340;&#38745;&#24577;&#25991;&#20214;&#12290;&#22914;&#26524;&#20320;&#24819;&#35753; Laravel &#29983;&#25104;&#23383;&#20307; CSS &#21644;&#39044;&#21152;&#36733;&#38142;&#25509;&#65292;&#35831;&#25913;&#29992; <a href="ndvm3gj93j.html#working-with-fonts" target="_blank"><code>fonts</code> &#36873;&#39033;</a>&#12290;</p><p>&#20363;&#22914;&#65292;&#22914;&#26524;&#20320;&#24819;&#22788;&#29702;&#24182;&#29256;&#26412;&#21270;&#23384;&#20648;&#22312; <code>resources/images</code> &#20013;&#30340;&#25152;&#26377;&#22270;&#29255;&#20197;&#21450;&#23384;&#20648;&#22312; <code>resources/fonts</code> &#20013;&#30340;&#25152;&#26377;&#23383;&#20307;&#65292;&#24212;&#23558;&#20197;&#19979;&#20869;&#23481;&#28155;&#21152;&#21040;&#20320;&#30340; Vite &#37197;&#32622;&#20013;&#65306;</p><pre><code class="language-js">laravel({
+    input: 'resources/js/app.js',
+    assets: ['resources/images/**', 'resources/fonts/**'],
+})</code></pre><p>&#36825;&#20123;&#36164;&#28304;&#29616;&#22312;&#20250;&#22312;&#36816;&#34892; <code>npm run build</code> &#26102;&#30001; Vite &#22788;&#29702;&#12290;&#28982;&#21518;&#65292;&#20320;&#21487;&#20197;&#22312; Blade &#27169;&#26495;&#20013;&#20351;&#29992; <code>Vite::asset</code> &#26041;&#27861;&#24341;&#29992;&#36825;&#20123;&#36164;&#28304;&#65292;&#35813;&#26041;&#27861;&#20250;&#36820;&#22238;&#32473;&#23450;&#36164;&#28304;&#30340;&#29256;&#26412;&#21270; URL&#65306;</p><pre><code class="language-blade">&lt;img src="{{ Vite::asset('resources/images/logo.png') }}"&gt;</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22312; Laravel Vite &#25554;&#20214;&#31532; 3 &#29256;&#20043;&#21069;&#65292;&#38745;&#24577;&#36164;&#28304;&#24517;&#39035;&#36890;&#36807; <code>import.meta.glob</code> &#22312;&#24212;&#29992;&#30340;&#20837;&#21475;&#28857;&#20013;&#24341;&#20837;&#12290;<code>assets</code> &#36873;&#39033;&#26159;&#30001;&#20110; Vite 8 &#30340;&#21464;&#26356;&#32780;&#24341;&#20837;&#30340;&#12290;</p>
+</blockquote><h3 id="57b203c4215189cabc225b40d5a4e474">&#20445;&#23384;&#26102;&#21047;&#26032;</h3><p>&#24403;&#20320;&#30340;&#24212;&#29992;&#20351;&#29992;&#20256;&#32479;&#30340;&#22522;&#20110; Blade &#30340;&#26381;&#21153;&#31471;&#28210;&#26579;&#26500;&#24314;&#26102;&#65292;Vite &#21487;&#20197;&#22312;&#20320;&#20462;&#25913;&#24212;&#29992;&#20013;&#30340;&#35270;&#22270;&#25991;&#20214;&#26102;&#33258;&#21160;&#21047;&#26032;&#27983;&#35272;&#22120;&#65292;&#20174;&#32780;&#25913;&#36827;&#20320;&#30340;&#24320;&#21457;&#24037;&#20316;&#27969;&#12290;&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#21482;&#38656;&#23558; <code>refresh</code> &#36873;&#39033;&#35774;&#20026; <code>true</code> &#21363;&#21487;&#12290;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            // ...
+            refresh: true,
+        }),
+    ],
+});</code></pre><p>&#24403; <code>refresh</code> &#36873;&#39033;&#20026; <code>true</code> &#26102;&#65292;&#22312;&#36816;&#34892; <code>npm run dev</code> &#26399;&#38388;&#20445;&#23384;&#20197;&#19979;&#30446;&#24405;&#20013;&#30340;&#25991;&#20214;&#20250;&#35302;&#21457;&#27983;&#35272;&#22120;&#25191;&#34892;&#25972;&#39029;&#21047;&#26032;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;"><code>app/Livewire/**</code></li>
+<li style="list-style-type: disc;"><code>app/View/Components/**</code></li>
+<li style="list-style-type: disc;"><code>lang/**</code></li>
+<li style="list-style-type: disc;"><code>resources/lang/**</code></li>
+<li style="list-style-type: disc;"><code>resources/views/**</code></li>
+<li style="list-style-type: disc;"><code>routes/**</code></li>
+</ul><p>&#30417;&#21548; <code>routes/**</code> &#30446;&#24405;&#22312;&#20320;&#20351;&#29992; <a href="https://github.com/tighten/ziggy" target="_blank" rel="noopener noreferrer">Ziggy</a> &#22312;&#21069;&#31471;&#29983;&#25104;&#36335;&#30001;&#38142;&#25509;&#26102;&#24456;&#26377;&#29992;&#12290;</p><p>&#22914;&#26524;&#36825;&#20123;&#40664;&#35748;&#36335;&#24452;&#19981;&#31526;&#21512;&#20320;&#30340;&#38656;&#27714;&#65292;&#20320;&#21487;&#20197;&#25351;&#23450;&#33258;&#24049;&#35201;&#30417;&#21548;&#30340;&#36335;&#24452;&#21015;&#34920;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            // ...
+            refresh: ['resources/views/**'],
+        }),
+    ],
+});</code></pre><p>&#22312;&#24213;&#23618;&#65292;Laravel Vite &#25554;&#20214;&#20351;&#29992;&#20102; <a href="https://github.com/ElMassimo/vite-plugin-full-reload" target="_blank" rel="noopener noreferrer">vite-plugin-full-reload</a> &#21253;&#65292;&#23427;&#25552;&#20379;&#20102;&#19968;&#20123;&#39640;&#32423;&#37197;&#32622;&#36873;&#39033;&#26469;&#24494;&#35843;&#27492;&#21151;&#33021;&#30340;&#34892;&#20026;&#12290;&#22914;&#26524;&#20320;&#38656;&#35201;&#36825;&#31181;&#31243;&#24230;&#30340;&#33258;&#23450;&#20041;&#65292;&#21487;&#20197;&#25552;&#20379;&#19968;&#20010; <code>config</code> &#23450;&#20041;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            // ...
+            refresh: [{
+                paths: ['path/to/watch/**'],
+                config: { delay: 300 }
+            }],
+        }),
+    ],
+});</code></pre><h3 id="6dc7a717efc15adf80699301b55eb635">&#21035;&#21517;</h3><p>&#22312; JavaScript &#24212;&#29992;&#20013;&#65292;<a href="ndvm3gj93j.html#aliases" target="_blank">&#21019;&#24314;&#21035;&#21517;</a> &#26469;&#24341;&#29992;&#24120;&#29992;&#30446;&#24405;&#26159;&#24456;&#24120;&#35265;&#30340;&#20570;&#27861;&#12290;&#19981;&#36807;&#65292;&#20320;&#20063;&#21487;&#20197;&#36890;&#36807; <code>Illuminate\Support\Facades\Vite</code> &#31867;&#19978;&#30340; <code>macro</code> &#26041;&#27861;&#21019;&#24314;&#22312; Blade &#20013;&#20351;&#29992;&#30340;&#21035;&#21517;&#12290;&#36890;&#24120;&#65292;"&#23439;"&#24212;&#24403;&#23450;&#20041;&#22312; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/providers" target="_blank">&#26381;&#21153;&#25552;&#20379;&#32773;</a> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#65306;</p><pre><code class="language-php">/**
+ * &#24341;&#23548;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Vite::macro('image', fn (string $asset) =&gt; $this-&gt;asset("resources/images/{$asset}"));
+}</code></pre><p>&#23450;&#20041;&#22909;&#23439;&#20043;&#21518;&#65292;&#23601;&#21487;&#20197;&#22312;&#27169;&#26495;&#20013;&#35843;&#29992;&#23427;&#12290;&#20363;&#22914;&#65292;&#25105;&#20204;&#21487;&#20197;&#20351;&#29992;&#19978;&#38754;&#23450;&#20041;&#30340; <code>image</code> &#23439;&#26469;&#24341;&#29992;&#20301;&#20110; <code>resources/images/logo.png</code> &#30340;&#36164;&#28304;&#65306;</p><pre><code class="language-blade">&lt;img src="{{ Vite::image('logo.png') }}" alt="Laravel Logo"&gt;</code></pre><h2 id="9029431fc4d36794719b5dadb37fb899">&#36164;&#28304;&#39044;&#21462;</h2><p>&#24403;&#20351;&#29992; Vite &#30340;&#20195;&#30721;&#20998;&#21106;&#21151;&#33021;&#26500;&#24314; SPA &#26102;&#65292;&#25152;&#38656;&#30340;&#36164;&#28304;&#20250;&#22312;&#27599;&#27425;&#39029;&#38754;&#23548;&#33322;&#26102;&#33719;&#21462;&#12290;&#36825;&#31181;&#34892;&#20026;&#21487;&#33021;&#23548;&#33268; UI &#28210;&#26579;&#24310;&#36831;&#12290;&#22914;&#26524;&#20320;&#30340;&#21069;&#31471;&#26694;&#26550;&#23384;&#22312;&#36825;&#20010;&#38382;&#39064;&#65292;Laravel &#25552;&#20379;&#20102;&#22312;&#21021;&#22987;&#39029;&#38754;&#21152;&#36733;&#26102;&#20027;&#21160;&#39044;&#21462;&#24212;&#29992; JavaScript &#21644; CSS &#36164;&#28304;&#30340;&#33021;&#21147;&#12290;</p><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/providers" target="_blank">&#26381;&#21153;&#25552;&#20379;&#32773;</a> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992; <code>Vite::prefetch</code> &#26041;&#27861;&#65292;&#25351;&#31034; Laravel &#20027;&#21160;&#39044;&#21462;&#36164;&#28304;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use Illuminate\Support\Facades\Vite;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * &#27880;&#20876;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function register(): void
+    {
+        // ...
+    }
+
+    /**
+     * &#24341;&#23548;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function boot(): void
+    {
+        Vite::prefetch(concurrency: 3);
+    }
+}</code></pre><p>&#22312;&#19978;&#20363;&#20013;&#65292;&#36164;&#28304;&#20250;&#22312;&#27599;&#27425;&#39029;&#38754;&#21152;&#36733;&#26102;&#20197;&#26368;&#22810; <code>3</code> &#20010;&#24182;&#21457;&#19979;&#36733;&#36827;&#34892;&#39044;&#21462;&#12290;&#20320;&#21487;&#20197;&#20462;&#25913;&#24182;&#21457;&#25968;&#20197;&#36866;&#24212;&#24212;&#29992;&#30340;&#38656;&#27714;&#65292;&#25110;&#32773;&#22312;&#24212;&#29992;&#24212;&#24403;&#19968;&#27425;&#24615;&#19979;&#36733;&#20840;&#37096;&#36164;&#28304;&#26102;&#19981;&#25351;&#23450;&#24182;&#21457;&#38480;&#21046;&#65306;</p><pre><code class="language-php">/**
+ * &#24341;&#23548;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Vite::prefetch();
+}</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#39044;&#21462;&#20250;&#22312; <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event" target="_blank" rel="noopener noreferrer">&#39029;&#38754; <em>load</em> &#20107;&#20214;</a> &#35302;&#21457;&#26102;&#24320;&#22987;&#12290;&#22914;&#26524;&#20320;&#24819;&#33258;&#23450;&#20041;&#39044;&#21462;&#24320;&#22987;&#30340;&#26102;&#38388;&#65292;&#21487;&#20197;&#25351;&#23450;&#19968;&#20010; Vite &#20250;&#30417;&#21548;&#30340;&#20107;&#20214;&#65306;</p><pre><code class="language-php">/**
+ * &#24341;&#23548;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Vite::prefetch(event: 'vite:prefetch');
+}</code></pre><p>&#32473;&#23450;&#19978;&#36848;&#20195;&#30721;&#21518;&#65292;&#39044;&#21462;&#29616;&#22312;&#20250;&#22312;&#20320;&#25163;&#21160;&#22312; <code>window</code> &#23545;&#35937;&#19978;&#27966;&#21457; <code>vite:prefetch</code> &#20107;&#20214;&#26102;&#24320;&#22987;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#35753;&#39044;&#21462;&#22312;&#39029;&#38754;&#21152;&#36733;&#19977;&#31186;&#21518;&#24320;&#22987;&#65306;</p><pre><code class="language-html">&lt;script&gt;
+    addEventListener('load', () =&gt; setTimeout(() =&gt; {
+        dispatchEvent(new Event('vite:prefetch'))
+    }, 3000))
+&lt;/script&gt;</code></pre><h2 id="e70e9322b99db15ffb2fa4b8b8b1bda6">&#33258;&#23450;&#20041;&#22522;&#30784; URL</h2><p>&#22914;&#26524;&#20320;&#30340; Vite &#32534;&#35793;&#36164;&#28304;&#37096;&#32626;&#22312;&#19982;&#24212;&#29992;&#19981;&#21516;&#30340;&#22495;&#21517;&#19979;&#65288;&#20363;&#22914;&#36890;&#36807; CDN&#65289;&#65292;&#24517;&#39035;&#22312;&#24212;&#29992;&#30340; <code>.env</code> &#25991;&#20214;&#20013;&#25351;&#23450; <code>ASSET_URL</code> &#29615;&#22659;&#21464;&#37327;&#65306;</p><pre><code class="language-env">ASSET_URL=https://cdn.example.com</code></pre><p>&#37197;&#32622;&#22909;&#36164;&#28304; URL &#21518;&#65292;&#25152;&#26377;&#34987;&#37325;&#20889;&#30340;&#36164;&#28304; URL &#37117;&#20250;&#21152;&#19978;&#25152;&#37197;&#32622;&#20540;&#20316;&#20026;&#21069;&#32512;&#65306;</p><pre><code class="language-text">https://cdn.example.com/build/assets/app.9dce8d17.js</code></pre><p>&#35831;&#35760;&#20303;&#65292;<a href="ndvm3gj93j.html#url-processing" target="_blank">&#32477;&#23545; URL &#19981;&#20250;&#34987; Vite &#37325;&#20889;</a>&#65292;&#22240;&#27492;&#19981;&#20250;&#21152;&#19978;&#21069;&#32512;&#12290;</p><h2 id="3867e350ebb33a487c4ac5f7787e1c29">&#29615;&#22659;&#21464;&#37327;</h2><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#24212;&#29992;&#30340; <code>.env</code> &#25991;&#20214;&#20013;&#20351;&#29992; <code>VITE_</code> &#21069;&#32512;&#65292;&#23558;&#29615;&#22659;&#21464;&#37327;&#27880;&#20837;&#21040; JavaScript &#20013;&#65306;</p><pre><code class="language-env">VITE_SENTRY_DSN_PUBLIC=http://example.com</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807; <code>import.meta.env</code> &#23545;&#35937;&#35775;&#38382;&#34987;&#27880;&#20837;&#30340;&#29615;&#22659;&#21464;&#37327;&#65306;</p><pre><code class="language-js">import.meta.env.VITE_SENTRY_DSN_PUBLIC</code></pre><h2 id="c096818f8b63108a72328f361cc28afb">&#22312;&#27979;&#35797;&#20013;&#31105;&#29992; Vite</h2><p>Laravel &#30340; Vite &#38598;&#25104;&#20250;&#23581;&#35797;&#22312;&#36816;&#34892;&#27979;&#35797;&#26102;&#35299;&#26512;&#20320;&#30340;&#36164;&#28304;&#65292;&#36825;&#35201;&#27714;&#20320;&#35201;&#20040;&#36816;&#34892; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#65292;&#35201;&#20040;&#26500;&#24314;&#36164;&#28304;&#12290;</p><p>&#22914;&#26524;&#20320;&#24819;&#22312;&#27979;&#35797;&#26399;&#38388;&#27169;&#25311; Vite&#65292;&#21487;&#20197;&#35843;&#29992; <code>withoutVite</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#36866;&#29992;&#20110;&#20219;&#20309;&#32487;&#25215;&#33258; Laravel <code>TestCase</code> &#31867;&#30340;&#27979;&#35797;&#65306;</p><pre><code class="language-php">test('without vite example', function () {
+    $this-&gt;withoutVite();
+
+    // ...
+});</code></pre><pre><code class="language-php">use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    public function test_without_vite_example(): void
+    {
+        $this-&gt;withoutVite();
+
+        // ...
+    }
+}</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#20026;&#25152;&#26377;&#27979;&#35797;&#31105;&#29992; Vite&#65292;&#21487;&#20197;&#22312;&#22522;&#30784; <code>TestCase</code> &#31867;&#30340; <code>setUp</code> &#26041;&#27861;&#20013;&#35843;&#29992; <code>withoutVite</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace Tests;
+
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+
+abstract class TestCase extends BaseTestCase
+{
+    protected function setUp(): void// [tl! add:start]
+    {
+        parent::setUp();
+
+        $this-&gt;withoutVite();
+    }// [tl! add:end]
+}</code></pre><h2 id="a9600e5bd2572996d2fbfc27e1a57ef3">&#26381;&#21153;&#31471;&#28210;&#26579;&#65288;SSR&#65289;</h2><p>Laravel Vite &#25554;&#20214;&#35753;&#20351;&#29992; Vite &#35774;&#32622;&#26381;&#21153;&#31471;&#28210;&#26579;&#21464;&#24471;&#36731;&#32780;&#26131;&#20030;&#12290;&#39318;&#20808;&#65292;&#22312; <code>resources/js/ssr.js</code> &#21019;&#24314;&#19968;&#20010; SSR &#20837;&#21475;&#28857;&#65292;&#24182;&#36890;&#36807;&#21521; Laravel &#25554;&#20214;&#20256;&#20837;&#19968;&#20010;&#37197;&#32622;&#36873;&#39033;&#26469;&#25351;&#23450;&#35813;&#20837;&#21475;&#28857;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: 'resources/js/app.js',
+            ssr: 'resources/js/ssr.js',
+        }),
+    ],
+});</code></pre><p>&#20026;&#20102;&#30830;&#20445;&#20320;&#19981;&#20250;&#24536;&#35760;&#37325;&#26032;&#26500;&#24314; SSR &#20837;&#21475;&#28857;&#65292;&#25105;&#20204;&#24314;&#35758;&#22312;&#24212;&#29992;&#30340; <code>package.json</code> &#20013;&#25193;&#23637; "build" &#33050;&#26412;&#20197;&#21019;&#24314; SSR &#26500;&#24314;&#65306;</p><pre><code class="language-json">"scripts": {
+     "dev": "vite",
+     "build": "vite build" // [tl! remove]
+     "build": "vite build &amp;&amp; vite build --ssr" // [tl! add]
+}</code></pre><p>&#28982;&#21518;&#65292;&#35201;&#26500;&#24314;&#24182;&#21551;&#21160; SSR &#26381;&#21153;&#22120;&#65292;&#21487;&#20197;&#36816;&#34892;&#20197;&#19979;&#21629;&#20196;&#65306;</p><pre><code class="language-shell">npm run build
+node bootstrap/ssr/ssr.js</code></pre><p>&#22914;&#26524;&#20320;&#22312;&#20351;&#29992; <a href="https://inertiajs.com/server-side-rendering" target="_blank" rel="noopener noreferrer">Inertia &#30340; SSR</a>&#65292;&#20063;&#21487;&#20197;&#25913;&#29992; <code>inertia:start-ssr</code> Artisan &#21629;&#20196;&#26469;&#21551;&#21160; SSR &#26381;&#21153;&#22120;&#65306;</p><pre><code class="language-shell">php artisan inertia:start-ssr</code></pre><blockquote>
+<p>[!NOTE]<br>
+Laravel &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#20837;&#38376;&#22871;&#20214;</a> &#24050;&#32463;&#21253;&#21547;&#20102;&#27491;&#30830;&#30340; Laravel&#12289;Inertia SSR &#21644; Vite &#37197;&#32622;&#12290;&#36825;&#20123;&#22871;&#20214;&#26159;&#19978;&#25163; Laravel&#12289;Inertia SSR &#21644; Vite &#26368;&#24555;&#30340;&#26041;&#24335;&#12290;</p>
+</blockquote><h2 id="72d157b6cb37851341967d844f1c1402">&#33050;&#26412;&#19982;&#26679;&#24335;&#26631;&#31614;&#23646;&#24615;</h2><h3 id="e4e773c939f90372b40f6f759bd8d20c">&#20869;&#23481;&#23433;&#20840;&#31574;&#30053;&#65288;CSP&#65289;Nonce</h3><p>&#22914;&#26524;&#20320;&#24819;&#22312;&#33050;&#26412;&#21644;&#26679;&#24335;&#26631;&#31614;&#19978;&#21253;&#21547; <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce" target="_blank" rel="noopener noreferrer">nonce &#23646;&#24615;</a>&#65292;&#20316;&#20026; <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" target="_blank" rel="noopener noreferrer">&#20869;&#23481;&#23433;&#20840;&#31574;&#30053;</a> &#30340;&#19968;&#37096;&#20998;&#65292;&#21487;&#20197;&#22312;&#33258;&#23450;&#20041; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/middleware" target="_blank">&#20013;&#38388;&#20214;</a> &#20013;&#20351;&#29992; <code>useCspNonce</code> &#26041;&#27861;&#29983;&#25104;&#25110;&#25351;&#23450;&#19968;&#20010; nonce&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Vite;
+use Symfony\Component\HttpFoundation\Response;
+
+class AddContentSecurityPolicyHeaders
+{
+    /**
+     * &#22788;&#29702;&#20256;&#20837;&#30340;&#35831;&#27714;&#12290;
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        Vite::useCspNonce();
+
+        return $next($request)-&gt;withHeaders([
+            'Content-Security-Policy' =&gt; "script-src 'nonce-".Vite::cspNonce()."'",
+        ]);
+    }
+}</code></pre><p>&#35843;&#29992; <code>useCspNonce</code> &#26041;&#27861;&#21518;&#65292;Laravel &#20250;&#33258;&#21160;&#22312;&#25152;&#26377;&#29983;&#25104;&#30340;&#33050;&#26412;&#21644;&#26679;&#24335;&#26631;&#31614;&#19978;&#21253;&#21547; <code>nonce</code> &#23646;&#24615;&#12290;</p><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#22312;&#20854;&#20182;&#22320;&#26041;&#25351;&#23450; nonce&#65288;&#21253;&#25324; Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#20837;&#38376;&#22871;&#20214;</a> &#38468;&#24102;&#30340; <a href="https://github.com/tighten/ziggy#using-routes-with-a-content-security-policy" target="_blank" rel="noopener noreferrer">Ziggy <code>@route</code> &#25351;&#20196;</a>&#65289;&#65292;&#21487;&#20197;&#20351;&#29992; <code>cspNonce</code> &#26041;&#27861;&#33719;&#21462;&#23427;&#65306;</p><pre><code class="language-blade">@routes(nonce: Vite::cspNonce())</code></pre><p>&#22914;&#26524;&#20320;&#24050;&#32463;&#26377;&#19968;&#20010;&#24819;&#35753; Laravel &#20351;&#29992;&#30340; nonce&#65292;&#21487;&#20197;&#23558;&#35813; nonce &#20256;&#32473; <code>useCspNonce</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Vite::useCspNonce($nonce);</code></pre><h3 id="48f1a0a8cc828760a00015085a081a11">&#23376;&#36164;&#28304;&#23436;&#25972;&#24615;&#65288;SRI&#65289;</h3><p>&#22914;&#26524;&#20320;&#30340; Vite &#28165;&#21333;&#20013;&#21253;&#21547;&#36164;&#28304;&#30340; <code>integrity</code> &#21704;&#24076;&#65292;Laravel &#20250;&#33258;&#21160;&#22312;&#20026;&#36164;&#28304;&#29983;&#25104;&#30340;&#20219;&#20309;&#33050;&#26412;&#21644;&#26679;&#24335;&#26631;&#31614;&#19978;&#28155;&#21152; <code>integrity</code> &#23646;&#24615;&#65292;&#20197;&#24378;&#21046;&#25191;&#34892; <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity" target="_blank" rel="noopener noreferrer">&#23376;&#36164;&#28304;&#23436;&#25972;&#24615;</a>&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Vite &#19981;&#20250;&#22312;&#20854;&#28165;&#21333;&#20013;&#21253;&#21547; <code>integrity</code> &#21704;&#24076;&#65292;&#20294;&#20320;&#21487;&#20197;&#36890;&#36807;&#23433;&#35013; <a href="https://www.npmjs.com/package/vite-plugin-manifest-sri" target="_blank" rel="noopener noreferrer">vite-plugin-manifest-sri</a> NPM &#25554;&#20214;&#26469;&#21551;&#29992;&#23427;&#65306;</p><pre><code class="language-shell">npm install --save-dev vite-plugin-manifest-sri</code></pre><p>&#28982;&#21518;&#65292;&#20320;&#21487;&#20197;&#22312; <code>vite.config.js</code> &#25991;&#20214;&#20013;&#21551;&#29992;&#35813;&#25554;&#20214;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import manifestSRI from 'vite-plugin-manifest-sri';// [tl! add]
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            // ...
+        }),
+        manifestSRI(),// [tl! add]
+    ],
+});</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#20320;&#36824;&#21487;&#20197;&#33258;&#23450;&#20041;&#21487;&#20197;&#25214;&#21040;&#23436;&#25972;&#24615;&#21704;&#24076;&#30340;&#28165;&#21333;&#38190;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Vite;
+
+Vite::useIntegrityKey('custom-integrity-key');</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#23436;&#20840;&#31105;&#29992;&#36825;&#31181;&#33258;&#21160;&#26816;&#27979;&#65292;&#21487;&#20197;&#21521; <code>useIntegrityKey</code> &#26041;&#27861;&#20256;&#20837; <code>false</code>&#65306;</p><pre><code class="language-php">Vite::useIntegrityKey(false);</code></pre><h3 id="cd16a4a3eb51061dd24978109211ead8">&#20219;&#24847;&#23646;&#24615;</h3><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#22312;&#33050;&#26412;&#21644;&#26679;&#24335;&#26631;&#31614;&#19978;&#21253;&#21547;&#39069;&#22806;&#30340;&#23646;&#24615;&#65288;&#20363;&#22914; <a href="https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change" target="_blank" rel="noopener noreferrer">data-turbo-track</a> &#23646;&#24615;&#65289;&#65292;&#21487;&#20197;&#36890;&#36807; <code>useScriptTagAttributes</code> &#21644; <code>useStyleTagAttributes</code> &#26041;&#27861;&#25351;&#23450;&#23427;&#20204;&#12290;&#36890;&#24120;&#65292;&#36825;&#20123;&#26041;&#27861;&#24212;&#24403;&#20174; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/providers" target="_blank">&#26381;&#21153;&#25552;&#20379;&#32773;</a> &#20013;&#35843;&#29992;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Vite;
+
+Vite::useScriptTagAttributes([
+    'data-turbo-track' =&gt; 'reload', // &#20026;&#23646;&#24615;&#25351;&#23450;&#19968;&#20010;&#20540;&hellip;&hellip;
+    'async' =&gt; true, // &#25351;&#23450;&#19968;&#20010;&#19981;&#24102;&#20540;&#30340;&#23646;&#24615;&hellip;&hellip;
+    'integrity' =&gt; false, // &#25490;&#38500;&#19968;&#20010;&#26412;&#20250;&#34987;&#21253;&#21547;&#30340;&#23646;&#24615;&hellip;&hellip;
+]);
+
+Vite::useStyleTagAttributes([
+    'data-turbo-track' =&gt; 'reload',
+]);</code></pre><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#26377;&#26465;&#20214;&#22320;&#28155;&#21152;&#23646;&#24615;&#65292;&#21487;&#20197;&#20256;&#20837;&#19968;&#20010;&#22238;&#35843;&#65292;&#35813;&#22238;&#35843;&#20250;&#25509;&#25910;&#21040;&#36164;&#28304;&#28304;&#36335;&#24452;&#12289;&#20854; URL&#12289;&#20854;&#28165;&#21333;&#20998;&#22359;&#20197;&#21450;&#25972;&#20010;&#28165;&#21333;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Vite;
+
+Vite::useScriptTagAttributes(fn (string $src, string $url, array|null $chunk, array|null $manifest) =&gt; [
+    'data-turbo-track' =&gt; $src === 'resources/js/app.js' ? 'reload' : false,
+]);
+
+Vite::useStyleTagAttributes(fn (string $src, string $url, array|null $chunk, array|null $manifest) =&gt; [
+    'data-turbo-track' =&gt; $chunk &amp;&amp; $chunk['isEntry'] ? 'reload' : false,
+]);</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22312; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#36816;&#34892;&#26399;&#38388;&#65292;<code>$chunk</code> &#21644; <code>$manifest</code> &#21442;&#25968;&#20250;&#26159; <code>null</code>&#12290;</p>
+</blockquote><h2 id="dc157373a8b5e249dd9fefe172c12a43">&#39640;&#32423;&#33258;&#23450;&#20041;</h2><p>&#24320;&#31665;&#21363;&#29992;&#65292;Laravel &#30340; Vite &#25554;&#20214;&#20351;&#29992;&#20102;&#21512;&#29702;&#30340;&#32422;&#23450;&#65292;&#24212;&#24403;&#36866;&#29992;&#20110;&#22823;&#22810;&#25968;&#24212;&#29992;&#65307;&#19981;&#36807;&#65292;&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#33258;&#23450;&#20041; Vite &#30340;&#34892;&#20026;&#12290;&#20026;&#20102;&#25552;&#20379;&#39069;&#22806;&#30340;&#33258;&#23450;&#20041;&#36873;&#39033;&#65292;&#25105;&#20204;&#25552;&#20379;&#20102;&#20197;&#19979;&#26041;&#27861;&#21644;&#36873;&#39033;&#65292;&#21487;&#29992;&#20110;&#26367;&#20195; <code>@vite</code> Blade &#25351;&#20196;&#65306;</p><pre><code class="language-blade">&lt;!doctype html&gt;
+&lt;head&gt;
+    {{-- ... --}}
+
+    {{
+        Vite::useHotFile(storage_path('vite.hot')) // &#33258;&#23450;&#20041; "hot" &#25991;&#20214;&hellip;&hellip;
+            -&gt;useBuildDirectory('bundle') // &#33258;&#23450;&#20041;&#26500;&#24314;&#30446;&#24405;&hellip;&hellip;
+            -&gt;useManifestFilename('assets.json') // &#33258;&#23450;&#20041;&#28165;&#21333;&#25991;&#20214;&#21517;&hellip;&hellip;
+            -&gt;withEntryPoints(['resources/js/app.js']) // &#25351;&#23450;&#20837;&#21475;&#28857;&hellip;&hellip;
+            -&gt;createAssetPathsUsing(function (string $path, ?bool $secure) { // &#33258;&#23450;&#20041;&#24050;&#26500;&#24314;&#36164;&#28304;&#30340;&#21518;&#31471;&#36335;&#24452;&#29983;&#25104;&hellip;&hellip;
+                return "https://cdn.example.com/{$path}";
+            })
+    }}
+&lt;/head&gt;</code></pre><p>&#22312; <code>vite.config.js</code> &#25991;&#20214;&#20013;&#65292;&#20320;&#24212;&#24403;&#25351;&#23450;&#30456;&#21516;&#30340;&#37197;&#32622;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            hotFile: 'storage/vite.hot', // &#33258;&#23450;&#20041; "hot" &#25991;&#20214;&hellip;&hellip;
+            buildDirectory: 'bundle', // &#33258;&#23450;&#20041;&#26500;&#24314;&#30446;&#24405;&hellip;&hellip;
+            input: ['resources/js/app.js'], // &#25351;&#23450;&#20837;&#21475;&#28857;&hellip;&hellip;
+        }),
+    ],
+    build: {
+      manifest: 'assets.json', // &#33258;&#23450;&#20041;&#28165;&#21333;&#25991;&#20214;&#21517;&hellip;&hellip;
+    },
+});</code></pre><h3 id="641afb63e4e1ff34866e15b9d4c2c854">&#24320;&#21457;&#26381;&#21153;&#22120;&#36328;&#28304;&#36164;&#28304;&#20849;&#20139;&#65288;CORS&#65289;</h3><p>&#22914;&#26524;&#20320;&#22312;&#20174; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#33719;&#21462;&#36164;&#28304;&#26102;&#65292;&#20110;&#27983;&#35272;&#22120;&#20013;&#36935;&#21040;&#36328;&#28304;&#36164;&#28304;&#20849;&#20139;&#65288;CORS&#65289;&#38382;&#39064;&#65292;&#21487;&#33021;&#38656;&#35201;&#20026;&#24320;&#21457;&#26381;&#21153;&#22120;&#25480;&#20104;&#20320;&#30340;&#33258;&#23450;&#20041;&#28304;&#35775;&#38382;&#26435;&#38480;&#12290;Vite &#19982; Laravel &#25554;&#20214;&#32452;&#21512;&#21518;&#65292;&#26080;&#38656;&#20219;&#20309;&#39069;&#22806;&#37197;&#32622;&#21363;&#21487;&#20801;&#35768;&#20197;&#19979;&#28304;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;"><code>::1</code></li>
+<li style="list-style-type: disc;"><code>127.0.0.1</code></li>
+<li style="list-style-type: disc;"><code>localhost</code></li>
+<li style="list-style-type: disc;"><code>*.test</code></li>
+<li style="list-style-type: disc;"><code>*.localhost</code></li>
+<li style="list-style-type: disc;">&#39033;&#30446; <code>.env</code> &#20013;&#30340; <code>APP_URL</code></li>
+</ul><p>&#20026;&#39033;&#30446;&#20801;&#35768;&#33258;&#23450;&#20041;&#28304;&#26368;&#31616;&#21333;&#30340;&#26041;&#24335;&#65292;&#26159;&#30830;&#20445;&#24212;&#29992;&#30340; <code>APP_URL</code> &#29615;&#22659;&#21464;&#37327;&#19982;&#20320;&#27983;&#35272;&#22120;&#20013;&#35775;&#38382;&#30340;&#28304;&#30456;&#21305;&#37197;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#20320;&#35775;&#38382;&#30340;&#26159; <code>https://my-app.laravel</code>&#65292;&#24212;&#24403;&#23558; <code>.env</code> &#26356;&#26032;&#20026;&#30456;&#21305;&#37197;&#65306;</p><pre><code class="language-env">APP_URL=https://my-app.laravel</code></pre><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#23545;&#20801;&#35768;&#30340;&#28304;&#36827;&#34892;&#26356;&#32454;&#31890;&#24230;&#30340;&#25511;&#21046;&#65288;&#20363;&#22914;&#25903;&#25345;&#22810;&#20010;&#28304;&#65289;&#65292;&#24212;&#24403;&#20351;&#29992; <a href="https://vite.dev/config/server-options.html#server-cors" target="_blank" rel="noopener noreferrer">Vite &#20840;&#38754;&#32780;&#28789;&#27963;&#30340;&#20869;&#32622; CORS &#26381;&#21153;&#22120;&#37197;&#32622;</a>&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#22312;&#39033;&#30446;&#30340; <code>vite.config.js</code> &#25991;&#20214;&#20013;&#65292;&#20110; <code>server.cors.origin</code> &#37197;&#32622;&#36873;&#39033;&#20013;&#25351;&#23450;&#22810;&#20010;&#28304;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: 'resources/js/app.js',
+            refresh: true,
+        }),
+    ],
+    server: {  // [tl! add]
+        cors: {  // [tl! add]
+            origin: [  // [tl! add]
+                'https://backend.laravel',  // [tl! add]
+                'http://admin.laravel:8566',  // [tl! add]
+            ],  // [tl! add]
+        },  // [tl! add]
+    },  // [tl! add]
+});</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#21253;&#21547;&#27491;&#21017;&#34920;&#36798;&#24335;&#27169;&#24335;&#65292;&#24403;&#20320;&#24819;&#20801;&#35768;&#26576;&#20010;&#32473;&#23450;&#39030;&#32423;&#22495;&#21517;&#65288;&#20363;&#22914; <code>*.laravel</code>&#65289;&#30340;&#25152;&#26377;&#28304;&#26102;&#65292;&#36825;&#20250;&#24456;&#26377;&#24110;&#21161;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: 'resources/js/app.js',
+            refresh: true,
+        }),
+    ],
+    server: {  // [tl! add]
+        cors: {  // [tl! add]
+            origin: [ // [tl! add]
+                // &#25903;&#25345;&#65306;SCHEME://DOMAIN.laravel[:PORT] [tl! add]
+                /^https?:\/\/.*\.laravel(:\d+)?$/, //[tl! add]
+            ], // [tl! add]
+        }, // [tl! add]
+    }, // [tl! add]
+});</code></pre><h3 id="57dfe73c0ed25a6aea1d792d62c6c4fb">&#20462;&#27491;&#24320;&#21457;&#26381;&#21153;&#22120; URL</h3><p>Vite &#29983;&#24577;&#20013;&#30340;&#26576;&#20123;&#25554;&#20214;&#20551;&#35774;&#20197;&#26012;&#26464;&#24320;&#22836;&#30340; URL &#22987;&#32456;&#25351;&#21521; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#12290;&#28982;&#32780;&#65292;&#30001;&#20110; Laravel &#38598;&#25104;&#30340;&#29305;&#24615;&#65292;&#20107;&#23454;&#24182;&#38750;&#22914;&#27492;&#12290;</p><p>&#20363;&#22914;&#65292;<code>vite-imagetools</code> &#25554;&#20214;&#22312; Vite &#20026;&#20320;&#30340;&#36164;&#28304;&#25552;&#20379;&#26381;&#21153;&#26102;&#65292;&#20250;&#36755;&#20986;&#22914;&#19979; URL&#65306;</p><pre><code class="language-html">&lt;img src="/@imagetools/f0b2f404b13f052c604e632f2fb60381bf61a520"&gt;</code></pre><p><code>vite-imagetools</code> &#25554;&#20214;&#26399;&#26395; Vite &#25318;&#25130;&#35813;&#36755;&#20986; URL&#65292;&#28982;&#21518;&#25554;&#20214;&#23601;&#21487;&#20197;&#22788;&#29702;&#25152;&#26377;&#20197; <code>/@imagetools</code> &#24320;&#22836;&#30340; URL&#12290;&#22914;&#26524;&#20320;&#20351;&#29992;&#30340;&#25554;&#20214;&#26399;&#26395;&#36825;&#31181;&#34892;&#20026;&#65292;&#23601;&#38656;&#35201;&#25163;&#21160;&#20462;&#27491;&#36825;&#20123; URL&#12290;&#20320;&#21487;&#20197;&#22312; <code>vite.config.js</code> &#25991;&#20214;&#20013;&#65292;&#20351;&#29992; <code>transformOnServe</code> &#36873;&#39033;&#26469;&#23436;&#25104;&#12290;</p><p>&#22312;&#36825;&#20010;&#29305;&#23450;&#31034;&#20363;&#20013;&#65292;&#25105;&#20204;&#20250;&#22312;&#29983;&#25104;&#30340;&#20195;&#30721;&#20013;&#65292;&#20026;&#25152;&#26377;&#20986;&#29616;&#30340; <code>/@imagetools</code> &#21152;&#19978;&#24320;&#21457;&#26381;&#21153;&#22120;&#30340; URL &#21069;&#32512;&#65306;</p><pre><code class="language-js">import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import { imagetools } from 'vite-imagetools';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            // ...
+            transformOnServe: (code, devServerUrl) =&gt; code.replaceAll('/@imagetools', devServerUrl+'/@imagetools'),
+        }),
+        imagetools(),
+    ],
+});</code></pre><p>&#29616;&#22312;&#65292;&#24403; Vite &#20026;&#36164;&#28304;&#25552;&#20379;&#26381;&#21153;&#26102;&#65292;&#23427;&#20250;&#36755;&#20986;&#25351;&#21521; Vite &#24320;&#21457;&#26381;&#21153;&#22120;&#30340; URL&#65306;</p><pre><code class="language-html">- &lt;img src="/@imagetools/f0b2f404b13f052c604e632f2fb60381bf61a520"&gt;&lt;!-- [tl! remove] --&gt;
++ &lt;img src="http://[::1]:5173/@imagetools/f0b2f404b13f052c604e632f2fb60381bf61a520"&gt;&lt;!-- [tl! add] --&gt;</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Vite: <i><a href="https://vitejs.dev" target="_blank">https://vitejs.dev</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Node 官网: <i><a href="https://nodejs.org/en/download/" target="_blank">https://nodejs.org/en/download/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Laravel Sail: <i><a href="https://laravel.com/docs/Laravel 13.x/sail" target="_blank">https://laravel.com/docs/Laravel 13.x/sail</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> SSR 入口点: <i><a href="ndvm3gj93j.html#ssr" target="_blank">#ssr</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Laravel Herd: <i><a href="https://herd.laravel.com" target="_blank">https://herd.laravel.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> Laravel Valet: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/valet" target="_blank">/docs/Laravel 13.x/valet</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> secure 命令: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/valet#securing-sites" target="_blank">/docs/Laravel 13.x/valet#securing-sites</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> @vitejs/plugin-basic-ssl 插件: <i><a href="https://github.com/vitejs/vite-plugin-basic-ssl" target="_blank">https://github.com/vitejs/vite-plugin-basic-ssl</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> Laravel Sail: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sail" target="_blank">/docs/Laravel 13.x/sail</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> server.watch.usePolling 选项: <i><a href="https://vitejs.dev/config/server-options.html#server-watch" target="_blank">https://vitejs.dev/config/server-options.html#server-watch</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> Sail: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sail" target="_blank">/docs/Laravel 13.x/sail</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> 额外的配置: <i><a href="ndvm3gj93j.html#configuring-hmr-in-sail-on-wsl2" target="_blank">#configuring-hmr-in-sail-on-wsl2</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> Vue: <i><a href="https://vuejs.org/" target="_blank">https://vuejs.org/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> React: <i><a href="https://reactjs.org/" target="_blank">https://reactjs.org/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> 上文所示: <i><a href="ndvm3gj93j.html#configuring-vite" target="_blank">#configuring-vite</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> 入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> Svelte: <i><a href="https://svelte.dev/" target="_blank">https://svelte.dev/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> 入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> 资源预取: <i><a href="ndvm3gj93j.html#asset-prefetching" target="_blank">#asset-prefetching</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> 入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> 专用 CSS 入口点: <i><a href="ndvm3gj93j.html#configuring-vite" target="_blank">#configuring-vite</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> 入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> Tailwind 针对 Laravel 的安装指南: <i><a href="https://tailwindcss.com/docs/guides/laravel" target="_blank">https://tailwindcss.com/docs/guides/laravel</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> `@fonts` 指令: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/blade#fonts" target="_blank">/docs/Laravel 13.x/blade#fonts</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> `fonts` 选项: <i><a href="ndvm3gj93j.html#working-with-fonts" target="_blank">#working-with-fonts</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> Ziggy: <i><a href="https://github.com/tighten/ziggy" target="_blank">https://github.com/tighten/ziggy</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> vite-plugin-full-reload: <i><a href="https://github.com/ElMassimo/vite-plugin-full-reload" target="_blank">https://github.com/ElMassimo/vite-plugin-full-reload</a></i><br><code style="font-size: 90%; opacity: 0.6;">[30]</code> 创建别名: <i><a href="ndvm3gj93j.html#aliases" target="_blank">#aliases</a></i><br><code style="font-size: 90%; opacity: 0.6;">[31]</code> 服务提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/providers" target="_blank">/docs/Laravel 13.x/providers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[32]</code> 服务提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/providers" target="_blank">/docs/Laravel 13.x/providers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[33]</code> 页面 _load_ 事件: <i><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event" target="_blank">https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event</a></i><br><code style="font-size: 90%; opacity: 0.6;">[34]</code> 绝对 URL 不会被 Vite 重写: <i><a href="ndvm3gj93j.html#url-processing" target="_blank">#url-processing</a></i><br><code style="font-size: 90%; opacity: 0.6;">[35]</code> Inertia 的 SSR: <i><a href="https://inertiajs.com/server-side-rendering" target="_blank">https://inertiajs.com/server-side-rendering</a></i><br><code style="font-size: 90%; opacity: 0.6;">[36]</code> 入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[37]</code> nonce 属性: <i><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce" target="_blank">https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce</a></i><br><code style="font-size: 90%; opacity: 0.6;">[38]</code> 内容安全策略: <i><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" target="_blank">https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP</a></i><br><code style="font-size: 90%; opacity: 0.6;">[39]</code> 中间件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/middleware" target="_blank">/docs/Laravel 13.x/middleware</a></i><br><code style="font-size: 90%; opacity: 0.6;">[40]</code> 入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[41]</code> Ziggy `@route` 指令: <i><a href="https://github.com/tighten/ziggy#using-routes-with-a-content-security-policy" target="_blank">https://github.com/tighten/ziggy#using-routes-with-a-content-security-policy</a></i><br><code style="font-size: 90%; opacity: 0.6;">[42]</code> 子资源完整性: <i><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity" target="_blank">https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity</a></i><br><code style="font-size: 90%; opacity: 0.6;">[43]</code> vite-plugin-manifest-sri: <i><a href="https://www.npmjs.com/package/vite-plugin-manifest-sri" target="_blank">https://www.npmjs.com/package/vite-plugin-manifest-sri</a></i><br><code style="font-size: 90%; opacity: 0.6;">[44]</code> data-turbo-track: <i><a href="https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change" target="_blank">https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change</a></i><br><code style="font-size: 90%; opacity: 0.6;">[45]</code> 服务提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/providers" target="_blank">/docs/Laravel 13.x/providers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[46]</code> Vite 全面而灵活的内置 CORS 服务器配置: <i><a href="https://vite.dev/config/server-options.html#server-cors" target="_blank">https://vite.dev/config/server-options.html#server-cors</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="wevwmrz9l2.html#blog1020" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Blade 模板</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="3oyjdkxyp5.html#blog1022" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">URL 生成</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,2314 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Laravel MCP | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/3oyjdzxyp5.html', function (data, status) {
+            addView('3oyjdzxyp5.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Laravel MCP</h1><ul>
+<li><a href="3oyjdzxyp5.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="3oyjdzxyp5.html#e655a410ff21cd07e7a0150491e04371">安装</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#47b9fd70f67e2386b21d1ef3c411815d">发布路由</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#cd1e2c99d7be8c5c8b66d2ddfbaed649">创建服务器</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#b5c6292447ada6d7cc55ca1c5a276873">服务器注册</a></li>
+<li><a href="3oyjdzxyp5.html#2880f1b45fc7251e9f3faf2c0c4453e4">Web 服务器</a></li>
+<li><a href="3oyjdzxyp5.html#b1444ce8eff5e57988f98c05d6fe17b2">本地服务器</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#20dce2c6fa909a5cd62526615fe2788a">工具</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#5ca5123a7db735cac515a8b7e0eac614">创建工具</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#a64eafd715a87c5fc9cb36316469c861">工具的名称、标题和描述</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#e3a1870b5eb052d3bc2cdde85ee3880e">工具输入 Schema</a></li>
+<li><a href="3oyjdzxyp5.html#fbdfda321404a6fe8fff31983a2339ab">工具输出 Schema</a></li>
+<li><a href="3oyjdzxyp5.html#84def9936d6e2c3cbe34463c296280d9">验证工具参数</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#c3e60e1d604b1ddb032e2d26e2085101">工具依赖注入</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#99c9b1a79a4c0503f20966213e88c0af">工具注解</a></li>
+<li><a href="3oyjdzxyp5.html#77f46901e74ca856ae5c0414ad204273">条件工具注册</a></li>
+<li><a href="3oyjdzxyp5.html#419683651122a382e5be5981ce1c8058">工具响应</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#3c73b0249d2b668ee3ea60653755c414">多内容响应</a></li>
+<li><a href="3oyjdzxyp5.html#b8ac173afc0e0141dd23de30b43b464e">结构化响应</a></li>
+<li><a href="3oyjdzxyp5.html#347ce59e101eb5051db6ef3bad5fb50d">流式响应</a></li>
+</ul></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#c9ffccdbbe4d42f60cc2dda3a80086dd">Prompts</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#5e6220bdcc3794b20aae9bf74a2d8f66">创建 Prompts</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#d8e45164787087964aeaf2534dd71aae">Prompt 的名称、标题和描述</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#f7a97ac3f35356f65c504d72146ec636">Prompt 参数</a></li>
+<li><a href="3oyjdzxyp5.html#8896e842946a7d2e0a80b04f0692c443">验证 Prompt 参数</a></li>
+<li><a href="3oyjdzxyp5.html#e5317ecfb5f2d2db2e9ff17af82e18ba">Prompt 依赖注入</a></li>
+<li><a href="3oyjdzxyp5.html#0980a7c978661b1450d185d3a424b9cd">条件 Prompt 注册</a></li>
+<li><a href="3oyjdzxyp5.html#85f4e11b5055d4109fd2a97eafaeccd7">Prompt 响应</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#ddcf50c29294d4414f3f7c1bbc892cb5">Resources</a></li>
+<li><a href="3oyjdzxyp5.html#71b7e69db9cd6fa0508f75d60b3313e9">创建 Resources</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#fc3b47bfe2a5464e1e5326c1f923d85b">Resource 的名称、标题和描述</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#48b3efcdbaf545c18f66195a11eff1bd">Resource Templates</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#ece013b3cf0d4b7297cd026d00193083">创建 Resource Templates</a></li>
+<li><a href="3oyjdzxyp5.html#db550d96ed8fa6614249beac6292e064">URI 模板语法</a></li>
+<li><a href="3oyjdzxyp5.html#dab7cbf1b00356b429f9763e7253a248">访问模板变量</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#4698b87b2fdfcbe7df9eb0baa00eae7f">Resource URI 与 MIME Type</a></li>
+<li><a href="3oyjdzxyp5.html#a73c9088730b3fb49a23aa6c2739cfd1">Resource Request</a></li>
+<li><a href="3oyjdzxyp5.html#97a04c7577217bd306cebbd741f5c034">Resource 依赖注入</a></li>
+<li><a href="3oyjdzxyp5.html#2b1530aac5f9d2d3e21807fe6e0be6bf">Resource 注解</a></li>
+<li><a href="3oyjdzxyp5.html#c29f9ab663a7cf0920247aa68c3e8fe5">条件 Resource 注册</a></li>
+<li><a href="3oyjdzxyp5.html#97d5768c4641d676e42283b1228d8919">Resource 响应</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#f5adbc53fe5bd26551ea240a65e87dd4">Resource Link 响应</a></li>
+<li><a href="3oyjdzxyp5.html#dd441e659e52ca3e49be665f1da74a13">Blob 响应</a></li>
+<li><a href="3oyjdzxyp5.html#792c3272b4f44a29f78dc0a934f53006">Error 响应</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#a6f00c82b6eb55a13a1f242313aaf9c9">Apps</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#77af91f4449278ff4b14d1753d8572bf">创建 App Resources</a></li>
+<li><a href="3oyjdzxyp5.html#c704cdb9db695aded3122c61fa709150">从 Tools 渲染 Apps</a></li>
+<li><a href="3oyjdzxyp5.html#fe7da457e3364cf15b7adb11fa2a6d2e">App Tool 可见性</a></li>
+<li><a href="3oyjdzxyp5.html#617b830fe18e51472d3ff2ff4460cae1">App 配置</a></li>
+<li><a href="3oyjdzxyp5.html#2e27d9588ebf7bf0a41890836bc24e7e">使用 Boost 构建 Apps</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#34681d7fd511fca9b05c70f3c3d1386a">元数据</a></li>
+<li><a href="3oyjdzxyp5.html#8f67973007158337346584551b093be8">Icons</a></li>
+<li><a href="3oyjdzxyp5.html#c75f7811d70d17dbcd88e9d03752cbed">Authentication</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#66ea2a089dc6885b7e59627915b43a57">OAuth 2.1</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#92183b533eca8b4bf7598287eedbeaab">全新安装 Passport</a></li>
+<li><a href="3oyjdzxyp5.html#74c0cba6a1e2f8c0c94113a25dee2c2d">使用现有的 Passport 安装</a></li>
+<li><a href="3oyjdzxyp5.html#5b4ec7c89ae5c6255eb7a91838bfa022">Passport 与 Sanctum</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#b690b5635a9eb3ab71db966af06f0610">Sanctum</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#c90f54c42e52eedc61ab4b71c09ce384">自定义 MCP 身份验证</a></li>
+</ul></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#9cd8a2455b1839ff98ef70c05b9b5983">Authorization</a></li>
+<li><a href="3oyjdzxyp5.html#7ea8d6c3efd38c74ef8cfbd42576cf90">MCP Client</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#493b26eff6c0aea63f09afeec210a505">连接到服务器</a></li>
+<li><a href="3oyjdzxyp5.html#2278d8879e2c6a81f669d8d58f5220d8">命名客户端</a></li>
+<li><a href="3oyjdzxyp5.html#c3c4621cd2f9090ee7c1feafd565b4f2">客户端身份验证</a></li>
+<li><a href="3oyjdzxyp5.html#8625e1de7be14c39b1d14dc03d822497">Tools</a></li>
+<li><a href="3oyjdzxyp5.html#c9ffccdbbe4d42f60cc2dda3a80086dd">Prompts</a></li>
+<li><a href="3oyjdzxyp5.html#ddcf50c29294d4414f3f7c1bbc892cb5">Resources</a></li>
+</ul></li>
+<li><a href="3oyjdzxyp5.html#ea3cbf02225b85f0c77c2b8fabdac513">Testing Servers</a>
+<ul>
+<li><a href="3oyjdzxyp5.html#d10a751aa63bf2e3c315cac90fad916c">MCP Inspector</a></li>
+<li><a href="3oyjdzxyp5.html#93b824b57d4c22085c1035f7254619db">单元测试</a></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p><a href="https://github.com/laravel/mcp" target="_blank" rel="noopener noreferrer">Laravel MCP</a> &#20026; AI &#23458;&#25143;&#31471;&#25552;&#20379;&#20102;&#19968;&#31181;&#31616;&#27905;&#20248;&#38597;&#30340;&#26041;&#24335;&#26469;&#19982;&#20320;&#30340; Laravel &#24212;&#29992;&#36890;&#36807; <a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noopener noreferrer">Model Context Protocol</a> &#20132;&#20114;&#12290;&#23427;&#25552;&#20379;&#20102;&#19968;&#31181;&#34920;&#36798;&#21147;&#24378;&#12289;&#27969;&#30021;&#30340;&#25509;&#21475;&#65292;&#29992;&#20110;&#23450;&#20041;&#26381;&#21153;&#22120;&#12289;&#24037;&#20855;&#12289;&#36164;&#28304;&#21644;&#25552;&#31034;&#65292;&#20174;&#32780;&#23454;&#29616;&#30001; AI &#39537;&#21160;&#30340;&#24212;&#29992;&#20132;&#20114;&#12290;</p><h2 id="e655a410ff21cd07e7a0150491e04371">&#23433;&#35013;</h2><p>&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#35831;&#36890;&#36807; Composer &#21253;&#31649;&#29702;&#22120;&#23558; Laravel MCP &#23433;&#35013;&#21040;&#20320;&#30340;&#39033;&#30446;&#20013;&#65306;</p><pre><code class="language-shell">composer require laravel/mcp</code></pre><h3 id="47b9fd70f67e2386b21d1ef3c411815d">&#21457;&#24067;&#36335;&#30001;</h3><p>&#23433;&#35013; Laravel MCP &#21518;&#65292;&#25191;&#34892; <code>vendor:publish</code> Artisan &#21629;&#20196;&#26469;&#21457;&#24067; <code>routes/ai.php</code> &#25991;&#20214;&#65292;&#20320;&#23558;&#22312;&#20854;&#20013;&#23450;&#20041; MCP &#26381;&#21153;&#22120;&#65306;</p><pre><code class="language-shell">php artisan vendor:publish --tag=ai-routes</code></pre><p>&#35813;&#21629;&#20196;&#23558;&#22312;&#24212;&#29992;&#30340; <code>routes</code> &#30446;&#24405;&#20013;&#21019;&#24314; <code>routes/ai.php</code> &#25991;&#20214;&#65292;&#20320;&#23558;&#20351;&#29992;&#35813;&#25991;&#20214;&#26469;&#27880;&#20876; MCP &#26381;&#21153;&#22120;&#12290;</p><h2 id="cd1e2c99d7be8c5c8b66d2ddfbaed649">&#21019;&#24314;&#26381;&#21153;&#22120;</h2><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>make:mcp-server</code> Artisan &#21629;&#20196;&#21019;&#24314; MCP &#26381;&#21153;&#22120;&#12290;&#26381;&#21153;&#22120;&#20805;&#24403;&#20013;&#22830;&#36890;&#20449;&#28857;&#65292;&#21521; AI &#23458;&#25143;&#31471;&#20844;&#24320;&#35832;&#22914;&#24037;&#20855;&#12289;&#36164;&#28304;&#21644;&#25552;&#31034;&#20043;&#31867;&#30340; MCP &#33021;&#21147;&#65306;</p><pre><code class="language-shell">php artisan make:mcp-server WeatherServer</code></pre><p>&#35813;&#21629;&#20196;&#23558;&#22312; <code>app/Mcp/Servers</code> &#30446;&#24405;&#20013;&#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#26381;&#21153;&#22120;&#31867;&#12290;&#29983;&#25104;&#30340;&#26381;&#21153;&#22120;&#31867;&#32487;&#25215; Laravel MCP &#30340;&#22522;&#31867; <code>Laravel\Mcp\Server</code>&#65292;&#24182;&#25552;&#20379;&#29992;&#20110;&#37197;&#32622;&#26381;&#21153;&#22120;&#21644;&#27880;&#20876;&#24037;&#20855;&#12289;&#36164;&#28304;&#21450;&#25552;&#31034;&#30340;&#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Servers;
+
+use Laravel\Mcp\Server\Attributes\Instructions;
+use Laravel\Mcp\Server\Attributes\Name;
+use Laravel\Mcp\Server\Attributes\Version;
+use Laravel\Mcp\Server;
+
+#[Name('Weather Server')]
+#[Version('1.0.0')]
+#[Instructions('This server provides weather information and forecasts.')]
+class WeatherServer extends Server
+{
+    /**
+     * The tools registered with this MCP server.
+     *
+     * @var array&lt;int, class-string&lt;\Laravel\Mcp\Server\Tool&gt;&gt;
+     */
+    protected array $tools = [
+        // GetCurrentWeatherTool::class,
+    ];
+
+    /**
+     * The resources registered with this MCP server.
+     *
+     * @var array&lt;int, class-string&lt;\Laravel\Mcp\Server\Resource&gt;&gt;
+     */
+    protected array $resources = [
+        // WeatherGuidelinesResource::class,
+    ];
+
+    /**
+     * The prompts registered with this MCP server.
+     *
+     * @var array&lt;int, class-string&lt;\Laravel\Mcp\Server\Prompt&gt;&gt;
+     */
+    protected array $prompts = [
+        // DescribeWeatherPrompt::class,
+    ];
+}</code></pre><h3 id="b5c6292447ada6d7cc55ca1c5a276873">&#26381;&#21153;&#22120;&#27880;&#20876;</h3><p>&#21019;&#24314;&#26381;&#21153;&#22120;&#21518;&#65292;&#20320;&#24517;&#39035;&#22312; <code>routes/ai.php</code> &#25991;&#20214;&#20013;&#27880;&#20876;&#23427;&#65292;&#20197;&#20351;&#20854;&#21487;&#35775;&#38382;&#12290;Laravel MCP &#25552;&#20379;&#20004;&#31181;&#26381;&#21153;&#22120;&#27880;&#20876;&#26041;&#27861;&#65306;<code>web</code> &#29992;&#20110;&#21487;&#36890;&#36807; HTTP &#35775;&#38382;&#30340;&#26381;&#21153;&#22120;&#65292;<code>local</code> &#29992;&#20110;&#21629;&#20196;&#34892;&#26381;&#21153;&#22120;&#12290;</p><h3 id="2880f1b45fc7251e9f3faf2c0c4453e4">Web &#26381;&#21153;&#22120;</h3><p>Web &#26381;&#21153;&#22120;&#26159;&#26368;&#24120;&#35265;&#30340;&#26381;&#21153;&#22120;&#31867;&#22411;&#65292;&#21487;&#36890;&#36807; HTTP POST &#35831;&#27714;&#35775;&#38382;&#65292;&#38750;&#24120;&#36866;&#21512;&#36828;&#31243; AI &#23458;&#25143;&#31471;&#25110;&#22522;&#20110; Web &#30340;&#38598;&#25104;&#12290;&#20351;&#29992; <code>web</code> &#26041;&#27861;&#27880;&#20876; Web &#26381;&#21153;&#22120;&#65306;</p><pre><code class="language-php">use App\Mcp\Servers\WeatherServer;
+use Laravel\Mcp\Facades\Mcp;
+
+Mcp::web('/mcp/weather', WeatherServer::class);</code></pre><p>&#19982;&#26222;&#36890;&#36335;&#30001;&#19968;&#26679;&#65292;&#20320;&#21487;&#20197;&#24212;&#29992;&#20013;&#38388;&#20214;&#26469;&#20445;&#25252; Web &#26381;&#21153;&#22120;&#65306;</p><pre><code class="language-php">Mcp::web('/mcp/weather', WeatherServer::class)
+    -&gt;middleware(['throttle:mcp']);</code></pre><h3 id="b1444ce8eff5e57988f98c05d6fe17b2">&#26412;&#22320;&#26381;&#21153;&#22120;</h3><p>&#26412;&#22320;&#26381;&#21153;&#22120;&#20316;&#20026; Artisan &#21629;&#20196;&#36816;&#34892;&#65292;&#38750;&#24120;&#36866;&#21512;&#26500;&#24314;&#26412;&#22320; AI &#21161;&#25163;&#38598;&#25104;&#65292;&#20363;&#22914; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/installation#installing-laravel-boost" target="_blank">Laravel Boost</a>&#12290;&#20351;&#29992; <code>local</code> &#26041;&#27861;&#27880;&#20876;&#26412;&#22320;&#26381;&#21153;&#22120;&#65306;</p><pre><code class="language-php">use App\Mcp\Servers\WeatherServer;
+use Laravel\Mcp\Facades\Mcp;
+
+Mcp::local('weather', WeatherServer::class);</code></pre><p>&#27880;&#20876;&#21518;&#65292;&#36890;&#24120;&#26080;&#38656;&#25163;&#21160;&#36816;&#34892; <code>mcp:start</code> Artisan &#21629;&#20196;&#12290;&#35831;&#25913;&#20026;&#37197;&#32622;&#20320;&#30340; MCP &#23458;&#25143;&#31471;&#65288;AI &#20195;&#29702;&#65289;&#20197;&#21551;&#21160;&#26381;&#21153;&#22120;&#65292;&#25110;&#20351;&#29992; <a href="3oyjdzxyp5.html#mcp-inspector" target="_blank">MCP Inspector</a>&#12290;</p><h2 id="20dce2c6fa909a5cd62526615fe2788a">&#24037;&#20855;</h2><p>&#24037;&#20855;&#20351;&#20320;&#30340;&#26381;&#21153;&#22120;&#33021;&#22815;&#20844;&#24320; AI &#23458;&#25143;&#31471;&#21487;&#20197;&#35843;&#29992;&#30340;&#21151;&#33021;&#12290;&#23427;&#20204;&#20801;&#35768;&#35821;&#35328;&#27169;&#22411;&#25191;&#34892;&#25805;&#20316;&#12289;&#36816;&#34892;&#20195;&#30721;&#25110;&#19982;&#22806;&#37096;&#31995;&#32479;&#20132;&#20114;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Tools;
+
+use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Attributes\Description;
+use Laravel\Mcp\Server\Tool;
+
+#[Description('Fetches the current weather forecast for a specified location.')]
+class CurrentWeatherTool extends Tool
+{
+    /**
+     * Handle the tool request.
+     */
+    public function handle(Request $request): Response
+    {
+        $location = $request-&gt;get('location');
+
+        // Get weather...
+
+        return Response::text('The weather is...');
+    }
+
+    /**
+     * Get the tool's input schema.
+     *
+     * @return array&lt;string, \Illuminate\JsonSchema\Types\Type&gt;
+     */
+    public function schema(JsonSchema $schema): array
+    {
+        return [
+            'location' =&gt; $schema-&gt;string()
+                -&gt;description('The location to get the weather for.')
+                -&gt;required(),
+        ];
+    }
+}</code></pre><h3 id="5ca5123a7db735cac515a8b7e0eac614">&#21019;&#24314;&#24037;&#20855;</h3><p>&#35201;&#21019;&#24314;&#24037;&#20855;&#65292;&#35831;&#36816;&#34892; <code>make:mcp-tool</code> Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan make:mcp-tool CurrentWeatherTool</code></pre><p>&#21019;&#24314;&#24037;&#20855;&#21518;&#65292;&#22312;&#26381;&#21153;&#22120;&#30340; <code>$tools</code> &#23646;&#24615;&#20013;&#27880;&#20876;&#23427;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Servers;
+
+use App\Mcp\Tools\CurrentWeatherTool;
+use Laravel\Mcp\Server;
+
+class WeatherServer extends Server
+{
+    /**
+     * The tools registered with this MCP server.
+     *
+     * @var array&lt;int, class-string&lt;\Laravel\Mcp\Server\Tool&gt;&gt;
+     */
+    protected array $tools = [
+        CurrentWeatherTool::class,
+    ];
+}</code></pre><h4 id="a64eafd715a87c5fc9cb36316469c861">&#24037;&#20855;&#30340;&#21517;&#31216;&#12289;&#26631;&#39064;&#21644;&#25551;&#36848;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#24037;&#20855;&#30340;&#21517;&#31216;&#21644;&#26631;&#39064;&#30001;&#31867;&#21517;&#27966;&#29983;&#12290;&#20363;&#22914;&#65292;<code>CurrentWeatherTool</code> &#30340;&#21517;&#31216;&#23558;&#26159; <code>current-weather</code>&#65292;&#26631;&#39064;&#23558;&#26159; <code>Current Weather Tool</code>&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Name</code> &#21644; <code>Title</code> &#23646;&#24615;&#33258;&#23450;&#20041;&#36825;&#20123;&#20540;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Server\Attributes\Name;
+use Laravel\Mcp\Server\Attributes\Title;
+
+#[Name('get-optimistic-weather')]
+#[Title('Get Optimistic Weather Forecast')]
+class CurrentWeatherTool extends Tool
+{
+    // ...
+}</code></pre><p>&#24037;&#20855;&#30340;&#25551;&#36848;&#19981;&#20250;&#33258;&#21160;&#29983;&#25104;&#12290;&#20320;&#24212;&#22987;&#32456;&#20351;&#29992; <code>Description</code> &#23646;&#24615;&#25552;&#20379;&#26377;&#24847;&#20041;&#30340;&#25551;&#36848;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Server\Attributes\Description;
+
+#[Description('Fetches the current weather forecast for a specified location.')]
+class CurrentWeatherTool extends Tool
+{
+    //
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#25551;&#36848;&#26159;&#24037;&#20855;&#20803;&#25968;&#25454;&#30340;&#20851;&#38190;&#37096;&#20998;&#65292;&#22240;&#20026;&#23427;&#26377;&#21161;&#20110; AI &#27169;&#22411;&#29702;&#35299;&#20309;&#26102;&#20197;&#21450;&#22914;&#20309;&#26377;&#25928;&#22320;&#20351;&#29992;&#24037;&#20855;&#12290;</p>
+</blockquote><h3 id="e3a1870b5eb052d3bc2cdde85ee3880e">&#24037;&#20855;&#36755;&#20837; Schema</h3><p>&#24037;&#20855;&#21487;&#20197;&#23450;&#20041;&#36755;&#20837; Schema&#65292;&#20197;&#25351;&#23450;&#23427;&#20204;&#20174; AI &#23458;&#25143;&#31471;&#25509;&#21463;&#30340;&#21442;&#25968;&#12290;&#20351;&#29992; Laravel &#30340; <code>Illuminate\Contracts\JsonSchema\JsonSchema</code> &#26500;&#24314;&#22120;&#26469;&#23450;&#20041;&#24037;&#20855;&#30340;&#36755;&#20837;&#35201;&#27714;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Tools;
+
+use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Laravel\Mcp\Server\Tool;
+
+class CurrentWeatherTool extends Tool
+{
+    /**
+     * Get the tool's input schema.
+     *
+     * @return array&lt;string, \Illuminate\JsonSchema\Types\Type&gt;
+     */
+    public function schema(JsonSchema $schema): array
+    {
+        return [
+            'location' =&gt; $schema-&gt;string()
+                -&gt;description('The location to get the weather for.')
+                -&gt;required(),
+
+            'units' =&gt; $schema-&gt;string()
+                -&gt;enum(['celsius', 'fahrenheit'])
+                -&gt;description('The temperature units to use.')
+                -&gt;default('celsius'),
+        ];
+    }
+}</code></pre><h3 id="fbdfda321404a6fe8fff31983a2339ab">&#24037;&#20855;&#36755;&#20986; Schema</h3><p>&#24037;&#20855;&#21487;&#20197;&#23450;&#20041; <a href="https://modelcontextprotocol.io/specification/2025-06-18/server/tools#output-schema" target="_blank" rel="noopener noreferrer">output schema</a> &#26469;&#25351;&#23450;&#20854;&#21709;&#24212;&#30340;&#32467;&#26500;&#12290;&#36825;&#33021;&#22815;&#26356;&#22909;&#22320;&#19982;&#38656;&#35201;&#21487;&#35299;&#26512;&#24037;&#20855;&#32467;&#26524;&#30340; AI &#23458;&#25143;&#31471;&#38598;&#25104;&#12290;&#20351;&#29992; <code>outputSchema</code> &#26041;&#27861;&#23450;&#20041;&#24037;&#20855;&#30340;&#36755;&#20986;&#32467;&#26500;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Tools;
+
+use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Laravel\Mcp\Server\Tool;
+
+class CurrentWeatherTool extends Tool
+{
+    /**
+     * Get the tool's output schema.
+     *
+     * @return array&lt;string, \Illuminate\JsonSchema\Types\Type&gt;
+     */
+    public function outputSchema(JsonSchema $schema): array
+    {
+        return [
+            'temperature' =&gt; $schema-&gt;number()
+                -&gt;description('Temperature in Celsius')
+                -&gt;required(),
+
+            'conditions' =&gt; $schema-&gt;string()
+                -&gt;description('Weather conditions')
+                -&gt;required(),
+
+            'humidity' =&gt; $schema-&gt;integer()
+                -&gt;description('Humidity percentage')
+                -&gt;required(),
+        ];
+    }
+}</code></pre><h3 id="84def9936d6e2c3cbe34463c296280d9">&#39564;&#35777;&#24037;&#20855;&#21442;&#25968;</h3><p>JSON Schema &#23450;&#20041;&#20026;&#24037;&#20855;&#21442;&#25968;&#25552;&#20379;&#20102;&#22522;&#26412;&#32467;&#26500;&#65292;&#20294;&#20320;&#21487;&#33021;&#36824;&#24076;&#26395;&#24378;&#21046;&#25191;&#34892;&#26356;&#22797;&#26434;&#30340;&#39564;&#35777;&#35268;&#21017;&#12290;</p><p>Laravel MCP &#19982; Laravel &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation" target="_blank">&#39564;&#35777;&#21151;&#33021;</a> &#26080;&#32541;&#38598;&#25104;&#12290;&#20320;&#21487;&#20197;&#22312;&#24037;&#20855;&#30340; <code>handle</code> &#26041;&#27861;&#20013;&#39564;&#35777;&#20256;&#20837;&#30340;&#24037;&#20855;&#21442;&#25968;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Tools;
+
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Tool;
+
+class CurrentWeatherTool extends Tool
+{
+    /**
+     * Handle the tool request.
+     */
+    public function handle(Request $request): Response
+    {
+        $validated = $request-&gt;validate([
+            'location' =&gt; 'required|string|max:100',
+            'units' =&gt; 'in:celsius,fahrenheit',
+        ]);
+
+        // Fetch weather data using the validated arguments...
+    }
+}</code></pre><p>&#39564;&#35777;&#22833;&#36133;&#26102;&#65292;AI &#23458;&#25143;&#31471;&#23558;&#26681;&#25454;&#20320;&#25552;&#20379;&#30340;&#38169;&#35823;&#28040;&#24687;&#37319;&#21462;&#34892;&#21160;&#12290;&#22240;&#27492;&#65292;&#25552;&#20379;&#28165;&#26224;&#12289;&#21487;&#25805;&#20316;&#30340;&#38169;&#35823;&#28040;&#24687;&#33267;&#20851;&#37325;&#35201;&#65306;</p><pre><code class="language-php">$validated = $request-&gt;validate([
+    'location' =&gt; ['required','string','max:100'],
+    'units' =&gt; 'in:celsius,fahrenheit',
+],[
+    'location.required' =&gt; 'You must specify a location to get the weather for. For example, "New York City" or "Tokyo".',
+    'units.in' =&gt; 'You must specify either "celsius" or "fahrenheit" for the units.',
+]);</code></pre><h4 id="c3e60e1d604b1ddb032e2d26e2085101">&#24037;&#20855;&#20381;&#36182;&#27880;&#20837;</h4><p>Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/container" target="_blank">&#26381;&#21153;&#23481;&#22120;</a> &#29992;&#20110;&#35299;&#26512;&#25152;&#26377;&#24037;&#20855;&#12290;&#22240;&#27492;&#65292;&#20320;&#21487;&#20197;&#22312;&#26500;&#36896;&#20989;&#25968;&#20013;&#31867;&#22411;&#25552;&#31034;&#24037;&#20855;&#21487;&#33021;&#38656;&#35201;&#30340;&#20219;&#20309;&#20381;&#36182;&#12290;&#22768;&#26126;&#30340;&#20381;&#36182;&#23558;&#33258;&#21160;&#35299;&#26512;&#24182;&#27880;&#20837;&#21040;&#24037;&#20855;&#23454;&#20363;&#20013;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Tools;
+
+use App\Repositories\WeatherRepository;
+use Laravel\Mcp\Server\Tool;
+
+class CurrentWeatherTool extends Tool
+{
+    /**
+     * Create a new tool instance.
+     */
+    public function __construct(
+        protected WeatherRepository $weather,
+    ) {}
+
+    // ...
+}</code></pre><p>&#38500;&#20102;&#26500;&#36896;&#20989;&#25968;&#27880;&#20837;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#22312;&#24037;&#20855;&#30340; <code>handle()</code> &#26041;&#27861;&#20013;&#31867;&#22411;&#25552;&#31034;&#20381;&#36182;&#12290;&#24403;&#35843;&#29992;&#35813;&#26041;&#27861;&#26102;&#65292;&#26381;&#21153;&#23481;&#22120;&#23558;&#33258;&#21160;&#35299;&#26512;&#24182;&#27880;&#20837;&#20381;&#36182;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Tools;
+
+use App\Repositories\WeatherRepository;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Tool;
+
+class CurrentWeatherTool extends Tool
+{
+    /**
+     * Handle the tool request.
+     */
+    public function handle(Request $request, WeatherRepository $weather): Response
+    {
+        $location = $request-&gt;get('location');
+
+        $forecast = $weather-&gt;getForecastFor($location);
+
+        // ...
+    }
+}</code></pre><h3 id="99c9b1a79a4c0503f20966213e88c0af">&#24037;&#20855;&#27880;&#35299;</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <a href="https://modelcontextprotocol.io/specification/2025-06-18/schema#toolannotations" target="_blank" rel="noopener noreferrer">annotations</a> &#22686;&#24378;&#24037;&#20855;&#65292;&#20197;&#20026; AI &#23458;&#25143;&#31471;&#25552;&#20379;&#39069;&#22806;&#30340;&#20803;&#25968;&#25454;&#12290;&#36825;&#20123;&#27880;&#35299;&#26377;&#21161;&#20110; AI &#27169;&#22411;&#29702;&#35299;&#24037;&#20855;&#30340;&#34892;&#20026;&#21644;&#33021;&#21147;&#12290;&#27880;&#35299;&#36890;&#36807;&#23646;&#24615;&#28155;&#21152;&#21040;&#24037;&#20855;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Tools;
+
+use Laravel\Mcp\Server\Tools\Annotations\IsIdempotent;
+use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
+use Laravel\Mcp\Server\Tool;
+
+#[IsIdempotent]
+#[IsReadOnly]
+class CurrentWeatherTool extends Tool
+{
+    //
+}</code></pre><p>&#21487;&#29992;&#30340;&#27880;&#35299;&#21253;&#25324;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#27880;&#35299;</th>
+<th>&#31867;&#22411;</th>
+<th>&#25551;&#36848;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#[IsReadOnly]</code></td>
+<td>boolean</td>
+<td>&#34920;&#31034;&#35813;&#24037;&#20855;&#19981;&#20250;&#20462;&#25913;&#20854;&#29615;&#22659;&#12290;</td>
+</tr>
+<tr>
+<td><code>#[IsDestructive]</code></td>
+<td>boolean</td>
+<td>&#34920;&#31034;&#35813;&#24037;&#20855;&#21487;&#33021;&#25191;&#34892;&#30772;&#22351;&#24615;&#26356;&#26032;&#65288;&#20165;&#22312;&#38750;&#21482;&#35835;&#26102;&#26377;&#24847;&#20041;&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>#[IsIdempotent]</code></td>
+<td>boolean</td>
+<td>&#34920;&#31034;&#20351;&#29992;&#30456;&#21516;&#21442;&#25968;&#37325;&#22797;&#35843;&#29992;&#19981;&#20250;&#20135;&#29983;&#39069;&#22806;&#25928;&#26524;&#65288;&#38750;&#21482;&#35835;&#26102;&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>#[IsOpenWorld]</code></td>
+<td>boolean</td>
+<td>&#34920;&#31034;&#35813;&#24037;&#20855;&#21487;&#33021;&#19982;&#22806;&#37096;&#23454;&#20307;&#20132;&#20114;&#12290;</td>
+</tr>
+</tbody>
+</table><p>&#21487;&#20197;&#20351;&#29992;&#24067;&#23572;&#21442;&#25968;&#26174;&#24335;&#35774;&#32622;&#27880;&#35299;&#20540;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
+use Laravel\Mcp\Server\Tools\Annotations\IsDestructive;
+use Laravel\Mcp\Server\Tools\Annotations\IsOpenWorld;
+use Laravel\Mcp\Server\Tools\Annotations\IsIdempotent;
+use Laravel\Mcp\Server\Tool;
+
+#[IsReadOnly(true)]
+#[IsDestructive(false)]
+#[IsOpenWorld(false)]
+#[IsIdempotent(true)]
+class CurrentWeatherTool extends Tool
+{
+    //
+}</code></pre><h3 id="77f46901e74ca856ae5c0414ad204273">&#26465;&#20214;&#24037;&#20855;&#27880;&#20876;</h3><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#24037;&#20855;&#31867;&#20013;&#23454;&#29616; <code>shouldRegister</code> &#26041;&#27861;&#22312;&#36816;&#34892;&#26102;&#25353;&#26465;&#20214;&#27880;&#20876;&#24037;&#20855;&#12290;&#27492;&#26041;&#27861;&#20801;&#35768;&#20320;&#26681;&#25454;&#24212;&#29992;&#29366;&#24577;&#12289;&#37197;&#32622;&#25110;&#35831;&#27714;&#21442;&#25968;&#30830;&#23450;&#24037;&#20855;&#26159;&#21542;&#21487;&#29992;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Tools;
+
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Server\Tool;
+
+class CurrentWeatherTool extends Tool
+{
+    /**
+     * Determine if the tool should be registered.
+     */
+    public function shouldRegister(Request $request): bool
+    {
+        return $request?-&gt;user()?-&gt;subscribed() ?? false;
+    }
+}</code></pre><p>&#24403;&#24037;&#20855;&#30340; <code>shouldRegister</code> &#26041;&#27861;&#36820;&#22238; <code>false</code> &#26102;&#65292;&#23427;&#23558;&#19981;&#20250;&#20986;&#29616;&#22312;&#21487;&#29992;&#24037;&#20855;&#21015;&#34920;&#20013;&#65292;&#24182;&#19988;&#19981;&#33021;&#34987; AI &#23458;&#25143;&#31471;&#35843;&#29992;&#12290;</p><h3 id="419683651122a382e5be5981ce1c8058">&#24037;&#20855;&#21709;&#24212;</h3><p>&#24037;&#20855;&#24517;&#39035;&#36820;&#22238; <code>Laravel\Mcp\Response</code> &#30340;&#23454;&#20363;&#12290;Response &#31867;&#25552;&#20379;&#20102;&#20960;&#31181;&#29992;&#20110;&#21019;&#24314;&#19981;&#21516;&#31867;&#22411;&#21709;&#24212;&#30340;&#20415;&#25463;&#26041;&#27861;&#65306;</p><p>&#23545;&#20110;&#31616;&#21333;&#30340;&#25991;&#26412;&#21709;&#24212;&#65292;&#20351;&#29992; <code>text</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+/**
+ * Handle the tool request.
+ */
+public function handle(Request $request): Response
+{
+    // ...
+
+    return Response::text('Weather Summary: Sunny, 72&deg;F');
+}</code></pre><p>&#33509;&#35201;&#25351;&#31034;&#22312;&#24037;&#20855;&#25191;&#34892;&#26399;&#38388;&#21457;&#29983;&#20102;&#38169;&#35823;&#65292;&#35831;&#20351;&#29992; <code>error</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">return Response::error('Unable to fetch weather data. Please try again.');</code></pre><p>&#33509;&#35201;&#36820;&#22238;&#22270;&#20687;&#25110;&#38899;&#39057;&#20869;&#23481;&#65292;&#35831;&#20351;&#29992; <code>image</code> &#21644; <code>audio</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">return Response::image(file_get_contents(storage_path('weather/radar.png')), 'image/png');
+
+return Response::audio(file_get_contents(storage_path('weather/alert.mp3')), 'audio/mp3');</code></pre><p>&#20320;&#20063;&#21487;&#20197;&#20351;&#29992; <code>fromStorage</code> &#26041;&#27861;&#30452;&#25509;&#20174; Laravel &#25991;&#20214;&#31995;&#32479;&#30913;&#30424;&#21152;&#36733;&#22270;&#20687;&#21644;&#38899;&#39057;&#20869;&#23481;&#12290;MIME &#31867;&#22411;&#23558;&#33258;&#21160;&#20174;&#25991;&#20214;&#20013;&#26816;&#27979;&#65306;</p><pre><code class="language-php">return Response::fromStorage('weather/radar.png');</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#25351;&#23450;&#29305;&#23450;&#30340;&#30913;&#30424;&#25110;&#35206;&#30422; MIME &#31867;&#22411;&#65306;</p><pre><code class="language-php">return Response::fromStorage('weather/radar.png', disk: 's3');
+
+return Response::fromStorage('weather/radar.png', mimeType: 'image/webp');</code></pre><h4 id="3c73b0249d2b668ee3ea60653755c414">&#22810;&#20869;&#23481;&#21709;&#24212;</h4><p>&#24037;&#20855;&#21487;&#20197;&#36890;&#36807;&#36820;&#22238; <code>Response</code> &#23454;&#20363;&#25968;&#32452;&#26469;&#36820;&#22238;&#22810;&#20010;&#20869;&#23481;&#29255;&#27573;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+/**
+ * Handle the tool request.
+ *
+ * @return array&lt;int, \Laravel\Mcp\Response&gt;
+ */
+public function handle(Request $request): array
+{
+    // ...
+
+    return [
+        Response::text('Weather Summary: Sunny, 72&deg;F'),
+        Response::text("**Detailed Forecast**\n- Morning: 65&deg;F\n- Afternoon: 78&deg;F\n- Evening: 70&deg;F")
+    ];
+}</code></pre><h4 id="b8ac173afc0e0141dd23de30b43b464e">&#32467;&#26500;&#21270;&#21709;&#24212;</h4><p>&#24037;&#20855;&#21487;&#20197;&#20351;&#29992; <code>structured</code> &#26041;&#27861;&#36820;&#22238;<a href="https://modelcontextprotocol.io/specification/2025-06-18/server/tools#structured-content" target="_blank" rel="noopener noreferrer">&#32467;&#26500;&#21270;&#20869;&#23481;</a>&#12290;&#36825;&#20026; AI &#23458;&#25143;&#31471;&#25552;&#20379;&#21487;&#35299;&#26512;&#30340;&#25968;&#25454;&#65292;&#21516;&#26102;&#20445;&#25345;&#19982; JSON &#32534;&#30721;&#25991;&#26412;&#34920;&#31034;&#30340;&#21521;&#21518;&#20860;&#23481;&#24615;&#65306;</p><pre><code class="language-php">return Response::structured([
+    'temperature' =&gt; 22.5,
+    'conditions' =&gt; 'Partly cloudy',
+    'humidity' =&gt; 65,
+]);</code></pre><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#22312;&#32467;&#26500;&#21270;&#20869;&#23481;&#26049;&#36793;&#25552;&#20379;&#33258;&#23450;&#20041;&#25991;&#26412;&#65292;&#35831;&#23545;&#21709;&#24212;&#24037;&#21378;&#20351;&#29992; <code>withStructuredContent</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">return Response::make(
+    Response::text('Weather is 22.5&deg;C and sunny')
+)-&gt;withStructuredContent([
+    'temperature' =&gt; 22.5,
+    'conditions' =&gt; 'Sunny',
+]);</code></pre><h4 id="347ce59e101eb5051db6ef3bad5fb50d">&#27969;&#24335;&#21709;&#24212;</h4><p>&#23545;&#20110;&#38271;&#26102;&#38388;&#36816;&#34892;&#30340;&#25805;&#20316;&#25110;&#23454;&#26102;&#25968;&#25454;&#27969;&#65292;&#24037;&#20855;&#21487;&#20197;&#20174;&#20854; <code>handle</code> &#26041;&#27861;&#36820;&#22238;&#19968;&#20010; <a href="https://www.php.net/manual/en/language.generators.overview.php" target="_blank" rel="noopener noreferrer">generator</a>&#12290;&#36825;&#20801;&#35768;&#22312;&#26368;&#32456;&#21709;&#24212;&#20043;&#21069;&#21521;&#23458;&#25143;&#31471;&#21457;&#36865;&#20013;&#38388;&#26356;&#26032;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Tools;
+
+use Generator;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Tool;
+
+class CurrentWeatherTool extends Tool
+{
+    /**
+     * Handle the tool request.
+     *
+     * @return \Generator&lt;int, \Laravel\Mcp\Response&gt;
+     */
+    public function handle(Request $request): Generator
+    {
+        $locations = $request-&gt;array('locations');
+
+        foreach ($locations as $index =&gt; $location) {
+            yield Response::notification('processing/progress', [
+                'current' =&gt; $index + 1,
+                'total' =&gt; count($locations),
+                'location' =&gt; $location,
+            ]);
+
+            yield Response::text($this-&gt;forecastFor($location));
+        }
+    }
+}</code></pre><p>&#24403;&#20351;&#29992;&#22522;&#20110; Web &#30340;&#26381;&#21153;&#22120;&#26102;&#65292;&#27969;&#24335;&#21709;&#24212;&#20250;&#33258;&#21160;&#25171;&#24320;&#19968;&#20010; SSE&#65288;Server-Sent Events&#65289;&#27969;&#65292;&#23558;&#27599;&#20010; yield &#30340;&#28040;&#24687;&#20316;&#20026;&#20107;&#20214;&#21457;&#36865;&#32473;&#23458;&#25143;&#31471;&#12290;</p><h2 id="c9ffccdbbe4d42f60cc2dda3a80086dd">Prompts</h2><p><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/prompts" target="_blank" rel="noopener noreferrer">Prompts</a> &#20351;&#20320;&#30340;&#26381;&#21153;&#22120;&#33021;&#22815;&#20849;&#20139;&#21487;&#37325;&#29992;&#30340;&#25552;&#31034;&#27169;&#26495;&#65292;AI &#23458;&#25143;&#31471;&#21487;&#20351;&#29992;&#36825;&#20123;&#27169;&#26495;&#19982;&#35821;&#35328;&#27169;&#22411;&#20132;&#20114;&#12290;&#23427;&#20204;&#25552;&#20379;&#20102;&#19968;&#31181;&#26631;&#20934;&#21270;&#30340;&#26041;&#24335;&#26469;&#26500;&#24314;&#24120;&#35265;&#30340;&#26597;&#35810;&#21644;&#20132;&#20114;&#12290;</p><h3 id="5e6220bdcc3794b20aae9bf74a2d8f66">&#21019;&#24314; Prompts</h3><p>&#35201;&#21019;&#24314; prompt&#65292;&#35831;&#36816;&#34892; <code>make:mcp-prompt</code> Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan make:mcp-prompt DescribeWeatherPrompt</code></pre><p>&#21019;&#24314; prompt &#21518;&#65292;&#22312;&#26381;&#21153;&#22120;&#30340; <code>$prompts</code> &#23646;&#24615;&#20013;&#27880;&#20876;&#23427;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Servers;
+
+use App\Mcp\Prompts\DescribeWeatherPrompt;
+use Laravel\Mcp\Server;
+
+class WeatherServer extends Server
+{
+    /**
+     * The prompts registered with this MCP server.
+     *
+     * @var array&lt;int, class-string&lt;\Laravel\Mcp\Server\Prompt&gt;&gt;
+     */
+    protected array $prompts = [
+        DescribeWeatherPrompt::class,
+    ];
+}</code></pre><h4 id="d8e45164787087964aeaf2534dd71aae">Prompt &#30340;&#21517;&#31216;&#12289;&#26631;&#39064;&#21644;&#25551;&#36848;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;prompt &#30340;&#21517;&#31216;&#21644;&#26631;&#39064;&#30001;&#31867;&#21517;&#27966;&#29983;&#12290;&#20363;&#22914;&#65292;<code>DescribeWeatherPrompt</code> &#30340;&#21517;&#31216;&#23558;&#26159; <code>describe-weather</code>&#65292;&#26631;&#39064;&#23558;&#26159; <code>Describe Weather Prompt</code>&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Name</code> &#21644; <code>Title</code> &#23646;&#24615;&#33258;&#23450;&#20041;&#36825;&#20123;&#20540;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Server\Attributes\Name;
+use Laravel\Mcp\Server\Attributes\Title;
+
+#[Name('weather-assistant')]
+#[Title('Weather Assistant Prompt')]
+class DescribeWeatherPrompt extends Prompt
+{
+    // ...
+}</code></pre><p>Prompt &#25551;&#36848;&#19981;&#20250;&#33258;&#21160;&#29983;&#25104;&#12290;&#20320;&#24212;&#22987;&#32456;&#20351;&#29992; <code>Description</code> &#23646;&#24615;&#25552;&#20379;&#26377;&#24847;&#20041;&#30340;&#25551;&#36848;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Server\Attributes\Description;
+
+#[Description('Generates a natural-language explanation of the weather for a given location.')]
+class DescribeWeatherPrompt extends Prompt
+{
+    //
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#25551;&#36848;&#26159; prompt &#20803;&#25968;&#25454;&#30340;&#20851;&#38190;&#37096;&#20998;&#65292;&#22240;&#20026;&#23427;&#26377;&#21161;&#20110; AI &#27169;&#22411;&#29702;&#35299;&#20309;&#26102;&#20197;&#21450;&#22914;&#20309;&#20805;&#20998;&#21033;&#29992;&#35813; prompt&#12290;</p>
+</blockquote><h3 id="f7a97ac3f35356f65c504d72146ec636">Prompt &#21442;&#25968;</h3><p>Prompt &#21487;&#20197;&#23450;&#20041;&#21442;&#25968;&#65292;&#20801;&#35768; AI &#23458;&#25143;&#31471;&#20351;&#29992;&#29305;&#23450;&#20540;&#33258;&#23450;&#20041; prompt &#27169;&#26495;&#12290;&#20351;&#29992; <code>arguments</code> &#26041;&#27861;&#23450;&#20041; prompt &#25509;&#21463;&#30340;&#21442;&#25968;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Prompts;
+
+use Laravel\Mcp\Server\Prompt;
+use Laravel\Mcp\Server\Prompts\Argument;
+
+class DescribeWeatherPrompt extends Prompt
+{
+    /**
+     * Get the prompt's arguments.
+     *
+     * @return array&lt;int, \Laravel\Mcp\Server\Prompts\Argument&gt;
+     */
+    public function arguments(): array
+    {
+        return [
+            new Argument(
+                name: 'tone',
+                description: 'The tone to use in the weather description (e.g., formal, casual, humorous).',
+                required: true,
+            ),
+        ];
+    }
+}</code></pre><h3 id="8896e842946a7d2e0a80b04f0692c443">&#39564;&#35777; Prompt &#21442;&#25968;</h3><p>Prompt &#21442;&#25968;&#20250;&#26681;&#25454;&#20854;&#23450;&#20041;&#33258;&#21160;&#39564;&#35777;&#65292;&#20294;&#20320;&#21487;&#33021;&#36824;&#24076;&#26395;&#24378;&#21046;&#25191;&#34892;&#26356;&#22797;&#26434;&#30340;&#39564;&#35777;&#35268;&#21017;&#12290;</p><p>Laravel MCP &#19982; Laravel &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation" target="_blank">&#39564;&#35777;&#21151;&#33021;</a> &#26080;&#32541;&#38598;&#25104;&#12290;&#20320;&#21487;&#20197;&#22312; prompt &#30340; <code>handle</code> &#26041;&#27861;&#20013;&#39564;&#35777;&#20256;&#20837;&#30340; prompt &#21442;&#25968;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Prompts;
+
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Prompt;
+
+class DescribeWeatherPrompt extends Prompt
+{
+    /**
+     * Handle the prompt request.
+     */
+    public function handle(Request $request): Response
+    {
+        $validated = $request-&gt;validate([
+            'tone' =&gt; 'required|string|max:50',
+        ]);
+
+        $tone = $validated['tone'];
+
+        // Generate the prompt response using the given tone...
+    }
+}</code></pre><p>&#39564;&#35777;&#22833;&#36133;&#26102;&#65292;AI &#23458;&#25143;&#31471;&#23558;&#26681;&#25454;&#20320;&#25552;&#20379;&#30340;&#38169;&#35823;&#28040;&#24687;&#37319;&#21462;&#34892;&#21160;&#12290;&#22240;&#27492;&#65292;&#25552;&#20379;&#28165;&#26224;&#12289;&#21487;&#25805;&#20316;&#30340;&#38169;&#35823;&#28040;&#24687;&#33267;&#20851;&#37325;&#35201;&#65306;</p><pre><code class="language-php">$validated = $request-&gt;validate([
+    'tone' =&gt; ['required','string','max:50'],
+],[
+    'tone.*' =&gt; 'You must specify a tone for the weather description. Examples include "formal", "casual", or "humorous".',
+]);</code></pre><h3 id="e5317ecfb5f2d2db2e9ff17af82e18ba">Prompt &#20381;&#36182;&#27880;&#20837;</h3><p>Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/container" target="_blank">&#26381;&#21153;&#23481;&#22120;</a> &#29992;&#20110;&#35299;&#26512;&#25152;&#26377; prompts&#12290;&#22240;&#27492;&#65292;&#20320;&#21487;&#20197;&#22312;&#26500;&#36896;&#20989;&#25968;&#20013;&#31867;&#22411;&#25552;&#31034; prompt &#21487;&#33021;&#38656;&#35201;&#30340;&#20219;&#20309;&#20381;&#36182;&#12290;&#22768;&#26126;&#30340;&#20381;&#36182;&#23558;&#33258;&#21160;&#35299;&#26512;&#24182;&#27880;&#20837;&#21040; prompt &#23454;&#20363;&#20013;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Prompts;
+
+use App\Repositories\WeatherRepository;
+use Laravel\Mcp\Server\Prompt;
+
+class DescribeWeatherPrompt extends Prompt
+{
+    /**
+     * Create a new prompt instance.
+     */
+    public function __construct(
+        protected WeatherRepository $weather,
+    ) {}
+
+    //
+}</code></pre><p>&#38500;&#20102;&#26500;&#36896;&#20989;&#25968;&#27880;&#20837;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#22312; prompt &#30340; <code>handle</code> &#26041;&#27861;&#20013;&#31867;&#22411;&#25552;&#31034;&#20381;&#36182;&#12290;&#24403;&#35843;&#29992;&#35813;&#26041;&#27861;&#26102;&#65292;&#26381;&#21153;&#23481;&#22120;&#23558;&#33258;&#21160;&#35299;&#26512;&#24182;&#27880;&#20837;&#20381;&#36182;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Prompts;
+
+use App\Repositories\WeatherRepository;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Prompt;
+
+class DescribeWeatherPrompt extends Prompt
+{
+    /**
+     * Handle the prompt request.
+     */
+    public function handle(Request $request, WeatherRepository $weather): Response
+    {
+        $isAvailable = $weather-&gt;isServiceAvailable();
+
+        // ...
+    }
+}</code></pre><h3 id="0980a7c978661b1450d185d3a424b9cd">&#26465;&#20214; Prompt &#27880;&#20876;</h3><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312; prompt &#31867;&#20013;&#23454;&#29616; <code>shouldRegister</code> &#26041;&#27861;&#22312;&#36816;&#34892;&#26102;&#25353;&#26465;&#20214;&#27880;&#20876; prompts&#12290;&#27492;&#26041;&#27861;&#20801;&#35768;&#20320;&#26681;&#25454;&#24212;&#29992;&#29366;&#24577;&#12289;&#37197;&#32622;&#25110;&#35831;&#27714;&#21442;&#25968;&#30830;&#23450; prompt &#26159;&#21542;&#21487;&#29992;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Prompts;
+
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Server\Prompt;
+
+class CurrentWeatherPrompt extends Prompt
+{
+    /**
+     * Determine if the prompt should be registered.
+     */
+    public function shouldRegister(Request $request): bool
+    {
+        return $request?-&gt;user()?-&gt;subscribed() ?? false;
+    }
+}</code></pre><p>&#24403; prompt &#30340; <code>shouldRegister</code> &#26041;&#27861;&#36820;&#22238; <code>false</code> &#26102;&#65292;&#23427;&#23558;&#19981;&#20250;&#20986;&#29616;&#22312;&#21487;&#29992; prompts &#21015;&#34920;&#20013;&#65292;&#24182;&#19988;&#19981;&#33021;&#34987; AI &#23458;&#25143;&#31471;&#35843;&#29992;&#12290;</p><h3 id="85f4e11b5055d4109fd2a97eafaeccd7">Prompt &#21709;&#24212;</h3><p>Prompts &#21487;&#20197;&#36820;&#22238;&#21333;&#20010; <code>Laravel\Mcp\Response</code> &#25110; <code>Laravel\Mcp\Response</code> &#23454;&#20363;&#30340;&#21487;&#36845;&#20195;&#23545;&#35937;&#12290;&#36825;&#20123;&#21709;&#24212;&#23553;&#35013;&#20102;&#23558;&#21457;&#36865;&#32473; AI &#23458;&#25143;&#31471;&#30340;&#20869;&#23481;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Prompts;
+
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Prompt;
+
+class DescribeWeatherPrompt extends Prompt
+{
+    /**
+     * Handle the prompt request.
+     *
+     * @return array&lt;int, \Laravel\Mcp\Response&gt;
+     */
+    public function handle(Request $request): array
+    {
+        $tone = $request-&gt;string('tone');
+
+        $systemMessage = "You are a helpful weather assistant. Please provide a weather description in a {$tone} tone.";
+
+        $userMessage = "What is the current weather like in New York City?";
+
+        return [
+            Response::text($systemMessage)-&gt;asAssistant(),
+            Response::text($userMessage),
+        ];
+    }
+}</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>asAssistant()</code> &#26041;&#27861;&#25351;&#31034;&#21709;&#24212;&#28040;&#24687;&#24212;&#34987;&#35270;&#20026;&#26469;&#33258; AI &#21161;&#25163;&#65292;&#32780;&#24120;&#35268;&#28040;&#24687;&#34987;&#35270;&#20026;&#29992;&#25143;&#36755;&#20837;&#12290;</p><h2 id="ddcf50c29294d4414f3f7c1bbc892cb5">Resources</h2><p><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/resources" target="_blank" rel="noopener noreferrer">Resources</a> &#20351;&#20320;&#30340;&#26381;&#21153;&#22120;&#33021;&#22815;&#21521; AI &#23458;&#25143;&#31471;&#20844;&#24320;&#25968;&#25454;&#21644;&#20869;&#23481;&#65292;AI &#23458;&#25143;&#31471;&#22312;&#19982;&#35821;&#35328;&#27169;&#22411;&#20132;&#20114;&#26102;&#21487;&#20197;&#35835;&#21462;&#24182;&#29992;&#20316;&#19978;&#19979;&#25991;&#12290;&#23427;&#20204;&#25552;&#20379;&#20102;&#19968;&#31181;&#20849;&#20139;&#38745;&#24577;&#25110;&#21160;&#24577;&#20449;&#24687;&#65288;&#20363;&#22914;&#25991;&#26723;&#12289;&#37197;&#32622;&#25110;&#20219;&#20309;&#26377;&#21161;&#20110;&#21578;&#30693; AI &#21709;&#24212;&#30340;&#25968;&#25454;&#65289;&#30340;&#26041;&#24335;&#12290;</p><h2 id="71b7e69db9cd6fa0508f75d60b3313e9">&#21019;&#24314; Resources</h2><p>&#35201;&#21019;&#24314; resource&#65292;&#35831;&#36816;&#34892; <code>make:mcp-resource</code> Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan make:mcp-resource WeatherGuidelinesResource</code></pre><p>&#21019;&#24314; resource &#21518;&#65292;&#22312;&#26381;&#21153;&#22120;&#30340; <code>$resources</code> &#23646;&#24615;&#20013;&#27880;&#20876;&#23427;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Servers;
+
+use App\Mcp\Resources\WeatherGuidelinesResource;
+use Laravel\Mcp\Server;
+
+class WeatherServer extends Server
+{
+    /**
+     * The resources registered with this MCP server.
+     *
+     * @var array&lt;int, class-string&lt;\Laravel\Mcp\Server\Resource&gt;&gt;
+     */
+    protected array $resources = [
+        WeatherGuidelinesResource::class,
+    ];
+}</code></pre><h4 id="fc3b47bfe2a5464e1e5326c1f923d85b">Resource &#30340;&#21517;&#31216;&#12289;&#26631;&#39064;&#21644;&#25551;&#36848;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;resource &#30340;&#21517;&#31216;&#21644;&#26631;&#39064;&#30001;&#31867;&#21517;&#27966;&#29983;&#12290;&#20363;&#22914;&#65292;<code>WeatherGuidelinesResource</code> &#30340;&#21517;&#31216;&#23558;&#26159; <code>weather-guidelines</code>&#65292;&#26631;&#39064;&#23558;&#26159; <code>Weather Guidelines Resource</code>&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Name</code> &#21644; <code>Title</code> &#23646;&#24615;&#33258;&#23450;&#20041;&#36825;&#20123;&#20540;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Server\Attributes\Name;
+use Laravel\Mcp\Server\Attributes\Title;
+
+#[Name('weather-api-docs')]
+#[Title('Weather API Documentation')]
+class WeatherGuidelinesResource extends Resource
+{
+    // ...
+}</code></pre><p>Resource &#25551;&#36848;&#19981;&#20250;&#33258;&#21160;&#29983;&#25104;&#12290;&#20320;&#24212;&#22987;&#32456;&#20351;&#29992; <code>Description</code> &#23646;&#24615;&#25552;&#20379;&#26377;&#24847;&#20041;&#30340;&#25551;&#36848;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Server\Attributes\Description;
+
+#[Description('Comprehensive guidelines for using the Weather API.')]
+class WeatherGuidelinesResource extends Resource
+{
+    //
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#25551;&#36848;&#26159; resource &#20803;&#25968;&#25454;&#30340;&#20851;&#38190;&#37096;&#20998;&#65292;&#22240;&#20026;&#23427;&#26377;&#21161;&#20110; AI &#27169;&#22411;&#29702;&#35299;&#20309;&#26102;&#20197;&#21450;&#22914;&#20309;&#26377;&#25928;&#22320;&#20351;&#29992;&#35813; resource&#12290;</p>
+</blockquote><h3 id="48b3efcdbaf545c18f66195a11eff1bd">Resource Templates</h3><p><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates" target="_blank" rel="noopener noreferrer">Resource templates</a> &#20351;&#20320;&#30340;&#26381;&#21153;&#22120;&#33021;&#22815;&#20844;&#24320;&#19982; URI &#27169;&#24335;&#21305;&#37197;&#30340;&#21160;&#24577; resources&#65292;&#20854;&#20013;&#21253;&#21547;&#21464;&#37327;&#12290;&#20320;&#19981;&#24517;&#20026;&#27599;&#20010; resource &#23450;&#20041;&#38745;&#24577; URI&#65292;&#32780;&#26159;&#21487;&#20197;&#21019;&#24314;&#19968;&#20010;&#22788;&#29702;&#22522;&#20110;&#27169;&#26495;&#27169;&#24335;&#30340;&#22810;&#20010; URI &#30340; resource&#12290;</p><h4 id="ece013b3cf0d4b7297cd026d00193083">&#21019;&#24314; Resource Templates</h4><p>&#35201;&#21019;&#24314; resource template&#65292;&#35831;&#22312; resource &#31867;&#19978;&#23454;&#29616; <code>HasUriTemplate</code> &#25509;&#21475;&#65292;&#24182;&#23450;&#20041;&#19968;&#20010;&#36820;&#22238; <code>UriTemplate</code> &#23454;&#20363;&#30340; <code>uriTemplate</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Resources;
+
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Attributes\Description;
+use Laravel\Mcp\Server\Attributes\MimeType;
+use Laravel\Mcp\Server\Contracts\HasUriTemplate;
+use Laravel\Mcp\Server\Resource;
+use Laravel\Mcp\Support\UriTemplate;
+
+#[Description('Access user files by ID')]
+#[MimeType('text/plain')]
+class UserFileResource extends Resource implements HasUriTemplate
+{
+    /**
+     * Get the URI template for this resource.
+     */
+    public function uriTemplate(): UriTemplate
+    {
+        return new UriTemplate('file://users/{userId}/files/{fileId}');
+    }
+
+    /**
+     * Handle the resource request.
+     */
+    public function handle(Request $request): Response
+    {
+        $userId = $request-&gt;get('userId');
+        $fileId = $request-&gt;get('fileId');
+
+        // Fetch and return the file content...
+
+        return Response::text($content);
+    }
+}</code></pre><p>&#24403; resource &#23454;&#29616; <code>HasUriTemplate</code> &#25509;&#21475;&#26102;&#65292;&#23427;&#23558;&#27880;&#20876;&#20026; resource template &#32780;&#19981;&#26159;&#38745;&#24577; resource&#12290;&#28982;&#21518; AI &#23458;&#25143;&#31471;&#21487;&#20197;&#20351;&#29992;&#19982;&#27169;&#26495;&#27169;&#24335;&#21305;&#37197;&#30340; URI &#26469;&#35831;&#27714; resources&#65292;URI &#20013;&#30340;&#21464;&#37327;&#23558;&#33258;&#21160;&#25552;&#21462;&#24182;&#22312; resource &#30340; <code>handle</code> &#26041;&#27861;&#20013;&#21487;&#29992;&#12290;</p><h4 id="db550d96ed8fa6614249beac6292e064">URI &#27169;&#26495;&#35821;&#27861;</h4><p>URI &#27169;&#26495;&#20351;&#29992;&#22823;&#25324;&#21495;&#25324;&#36215;&#26469;&#21344;&#20301;&#31526;&#26469;&#23450;&#20041; URI &#20013;&#30340;&#21464;&#37327;&#27573;&#65306;</p><pre><code class="language-php">new UriTemplate('file://users/{userId}');
+new UriTemplate('file://users/{userId}/files/{fileId}');
+new UriTemplate('https://api.example.com/{version}/{resource}/{id}');</code></pre><h4 id="dab7cbf1b00356b429f9763e7253a248">&#35775;&#38382;&#27169;&#26495;&#21464;&#37327;</h4><p>&#24403; URI &#19982;&#20320;&#30340; resource template &#21305;&#37197;&#26102;&#65292;&#25552;&#21462;&#30340;&#21464;&#37327;&#20250;&#33258;&#21160;&#21512;&#24182;&#21040;&#35831;&#27714;&#20013;&#65292;&#24182;&#21487;&#20197;&#20351;&#29992; <code>get</code> &#26041;&#27861;&#35775;&#38382;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Resources;
+
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Contracts\HasUriTemplate;
+use Laravel\Mcp\Server\Resource;
+use Laravel\Mcp\Support\UriTemplate;
+
+class UserProfileResource extends Resource implements HasUriTemplate
+{
+    public function uriTemplate(): UriTemplate
+    {
+        return new UriTemplate('file://users/{userId}/profile');
+    }
+
+    public function handle(Request $request): Response
+    {
+        // Access the extracted variable
+        $userId = $request-&gt;get('userId');
+
+        // Access the full URI if needed
+        $uri = $request-&gt;uri();
+
+        // Fetch user profile...
+
+        return Response::text("Profile for user {$userId}");
+    }
+}</code></pre><p><code>Request</code> &#23545;&#35937;&#26082;&#25552;&#20379;&#25552;&#21462;&#30340;&#21464;&#37327;&#65292;&#20063;&#25552;&#20379;&#25152;&#35831;&#27714;&#30340;&#21407;&#22987; URI&#65292;&#20026;&#22788;&#29702; resource &#35831;&#27714;&#25552;&#20379;&#23436;&#25972;&#30340;&#19978;&#19979;&#25991;&#12290;</p><h3 id="4698b87b2fdfcbe7df9eb0baa00eae7f">Resource URI &#19982; MIME Type</h3><p>&#27599;&#20010; resource &#30001;&#21807;&#19968;&#30340; URI &#26631;&#35782;&#65292;&#24182;&#20855;&#26377;&#20851;&#32852;&#30340; MIME &#31867;&#22411;&#65292;&#20197;&#24110;&#21161; AI &#23458;&#25143;&#31471;&#29702;&#35299; resource &#30340;&#26684;&#24335;&#12290;</p><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;resource &#30340; URI &#26159;&#26681;&#25454; resource &#30340;&#21517;&#31216;&#29983;&#25104;&#30340;&#65292;&#22240;&#27492; <code>WeatherGuidelinesResource</code> &#23558;&#20855;&#26377; <code>weather://resources/weather-guidelines</code> &#30340; URI&#12290;&#40664;&#35748; MIME &#31867;&#22411;&#26159; <code>text/plain</code>&#12290;</p><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>Uri</code> &#21644; <code>MimeType</code> &#23646;&#24615;&#33258;&#23450;&#20041;&#36825;&#20123;&#20540;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Resources;
+
+use Laravel\Mcp\Server\Attributes\MimeType;
+use Laravel\Mcp\Server\Attributes\Uri;
+use Laravel\Mcp\Server\Resource;
+
+#[Uri('weather://resources/guidelines')]
+#[MimeType('application/pdf')]
+class WeatherGuidelinesResource extends Resource
+{
+}</code></pre><p>URI &#21644; MIME &#31867;&#22411;&#26377;&#21161;&#20110; AI &#23458;&#25143;&#31471;&#30830;&#23450;&#22914;&#20309;&#36866;&#24403;&#22320;&#22788;&#29702;&#21644;&#35299;&#37322; resource &#20869;&#23481;&#12290;</p><h3 id="a73c9088730b3fb49a23aa6c2739cfd1">Resource Request</h3><p>&#19982; tools &#21644; prompts &#19981;&#21516;&#65292;resources &#19981;&#33021;&#23450;&#20041;&#36755;&#20837; schema &#25110;&#21442;&#25968;&#12290;&#20294;&#26159;&#65292;&#20320;&#20173;&#28982;&#21487;&#20197;&#22312; resource &#30340; <code>handle</code> &#26041;&#27861;&#20869;&#19982; request &#23545;&#35937;&#20132;&#20114;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Resources;
+
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Resource;
+
+class WeatherGuidelinesResource extends Resource
+{
+    /**
+     * Handle the resource request.
+     */
+    public function handle(Request $request): Response
+    {
+        // ...
+    }
+}</code></pre><h3 id="97a04c7577217bd306cebbd741f5c034">Resource &#20381;&#36182;&#27880;&#20837;</h3><p>Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/container" target="_blank">&#26381;&#21153;&#23481;&#22120;</a> &#29992;&#20110;&#35299;&#26512;&#25152;&#26377; resources&#12290;&#22240;&#27492;&#65292;&#20320;&#21487;&#20197;&#22312;&#26500;&#36896;&#20989;&#25968;&#20013;&#31867;&#22411;&#25552;&#31034; resource &#21487;&#33021;&#38656;&#35201;&#30340;&#20219;&#20309;&#20381;&#36182;&#12290;&#22768;&#26126;&#30340;&#20381;&#36182;&#23558;&#33258;&#21160;&#35299;&#26512;&#24182;&#27880;&#20837;&#21040; resource &#23454;&#20363;&#20013;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Resources;
+
+use App\Repositories\WeatherRepository;
+use Laravel\Mcp\Server\Resource;
+
+class WeatherGuidelinesResource extends Resource
+{
+    /**
+     * Create a new resource instance.
+     */
+    public function __construct(
+        protected WeatherRepository $weather,
+    ) {}
+
+    // ...
+}</code></pre><p>&#38500;&#20102;&#26500;&#36896;&#20989;&#25968;&#27880;&#20837;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#22312; resource &#30340; <code>handle</code> &#26041;&#27861;&#20013;&#31867;&#22411;&#25552;&#31034;&#20381;&#36182;&#12290;&#24403;&#35843;&#29992;&#35813;&#26041;&#27861;&#26102;&#65292;&#26381;&#21153;&#23481;&#22120;&#23558;&#33258;&#21160;&#35299;&#26512;&#24182;&#27880;&#20837;&#20381;&#36182;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Resources;
+
+use App\Repositories\WeatherRepository;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Resource;
+
+class WeatherGuidelinesResource extends Resource
+{
+    /**
+     * Handle the resource request.
+     */
+    public function handle(WeatherRepository $weather): Response
+    {
+        $guidelines = $weather-&gt;guidelines();
+
+        return Response::text($guidelines);
+    }
+}</code></pre><h3 id="2b1530aac5f9d2d3e21807fe6e0be6bf">Resource &#27880;&#35299;</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <a href="https://modelcontextprotocol.io/specification/2025-06-18/schema#resourceannotations" target="_blank" rel="noopener noreferrer">annotations</a> &#22686;&#24378; resources&#65292;&#20197;&#20026; AI &#23458;&#25143;&#31471;&#25552;&#20379;&#39069;&#22806;&#30340;&#20803;&#25968;&#25454;&#12290;&#27880;&#35299;&#36890;&#36807;&#23646;&#24615;&#28155;&#21152;&#21040; resources&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Resources;
+
+use Laravel\Mcp\Enums\Role;
+use Laravel\Mcp\Server\Annotations\Audience;
+use Laravel\Mcp\Server\Annotations\LastModified;
+use Laravel\Mcp\Server\Annotations\Priority;
+use Laravel\Mcp\Server\Resource;
+
+#[Audience(Role::User)]
+#[LastModified('2025-01-12T15:00:58Z')]
+#[Priority(0.9)]
+class UserDashboardResource extends Resource
+{
+    //
+}</code></pre><p>&#21487;&#29992;&#30340;&#27880;&#35299;&#21253;&#25324;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#27880;&#35299;</th>
+<th>&#31867;&#22411;</th>
+<th>&#25551;&#36848;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#[Audience]</code></td>
+<td>Role &#25110;&#25968;&#32452;</td>
+<td>&#25351;&#23450;&#30446;&#26631;&#21463;&#20247;&#65288;<code>Role::User</code>&#12289;<code>Role::Assistant</code> &#25110;&#20004;&#32773;&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>#[Priority]</code></td>
+<td>float</td>
+<td>&#20171;&#20110; 0.0 &#21040; 1.0 &#20043;&#38388;&#30340;&#25968;&#23383;&#20998;&#25968;&#65292;&#34920;&#31034; resource &#37325;&#35201;&#24615;&#12290;</td>
+</tr>
+<tr>
+<td><code>#[LastModified]</code></td>
+<td>string</td>
+<td>&#26174;&#31034; resource &#19978;&#27425;&#26356;&#26032;&#26102;&#38388;&#30340; ISO 8601 &#26102;&#38388;&#25139;&#12290;</td>
+</tr>
+</tbody>
+</table><h3 id="c29f9ab663a7cf0920247aa68c3e8fe5">&#26465;&#20214; Resource &#27880;&#20876;</h3><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312; resource &#31867;&#20013;&#23454;&#29616; <code>shouldRegister</code> &#26041;&#27861;&#22312;&#36816;&#34892;&#26102;&#25353;&#26465;&#20214;&#27880;&#20876; resources&#12290;&#27492;&#26041;&#27861;&#20801;&#35768;&#20320;&#26681;&#25454;&#24212;&#29992;&#29366;&#24577;&#12289;&#37197;&#32622;&#25110;&#35831;&#27714;&#21442;&#25968;&#30830;&#23450; resource &#26159;&#21542;&#21487;&#29992;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Resources;
+
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Server\Resource;
+
+class WeatherGuidelinesResource extends Resource
+{
+    /**
+     * Determine if the resource should be registered.
+     */
+    public function shouldRegister(Request $request): bool
+    {
+        return $request?-&gt;user()?-&gt;subscribed() ?? false;
+    }
+}</code></pre><p>&#24403; resource &#30340; <code>shouldRegister</code> &#26041;&#27861;&#36820;&#22238; <code>false</code> &#26102;&#65292;&#23427;&#23558;&#19981;&#20250;&#20986;&#29616;&#22312;&#21487;&#29992; resources &#21015;&#34920;&#20013;&#65292;&#24182;&#19988;&#19981;&#33021;&#34987; AI &#23458;&#25143;&#31471;&#35775;&#38382;&#12290;</p><h3 id="97d5768c4641d676e42283b1228d8919">Resource &#21709;&#24212;</h3><p>Resources &#24517;&#39035;&#36820;&#22238; <code>Laravel\Mcp\Response</code> &#30340;&#23454;&#20363;&#12290;Response &#31867;&#25552;&#20379;&#20102;&#20960;&#31181;&#29992;&#20110;&#21019;&#24314;&#19981;&#21516;&#31867;&#22411;&#21709;&#24212;&#30340;&#20415;&#25463;&#26041;&#27861;&#65306;</p><p>&#23545;&#20110;&#31616;&#21333;&#30340;&#25991;&#26412;&#20869;&#23481;&#65292;&#20351;&#29992; <code>text</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+/**
+ * Handle the resource request.
+ */
+public function handle(Request $request): Response
+{
+    // ...
+
+    return Response::text($weatherData);
+}</code></pre><h4 id="f5adbc53fe5bd26551ea240a65e87dd4">Resource Link &#21709;&#24212;</h4><p>&#33509;&#35201;&#36820;&#22238; resource link&#65292;&#35831;&#20351;&#29992; <code>resourceLink</code> &#26041;&#27861;&#65292;&#25552;&#20379; URI &#21644;&#21517;&#31216;&#12290;&#19982;&#23884;&#20837;&#30340; resource &#19981;&#21516;&#65292;resource link &#36820;&#22238;&#19968;&#20010; URI &#25351;&#38024;&#65292;&#30001; AI &#23458;&#25143;&#31471;&#29420;&#31435;&#33719;&#21462;&#65306;</p><pre><code class="language-php">return Response::resourceLink(
+    uri: 'file:///data/report.json',
+    name: 'monthly-report',
+    mimeType: 'application/json',
+);</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#20256;&#36882;&#24050;&#27880;&#20876;&#30340; resource &#31867;&#25110;&#23454;&#20363;&#65292;&#23427;&#23558;&#33258;&#21160;&#32487;&#25215;&#35813; resource &#30340; URI&#12289;name&#12289;title&#12289;description &#21644; MIME type&#65306;</p><pre><code class="language-php">return Response::resourceLink(new WeatherForecastResource);</code></pre><h4 id="dd441e659e52ca3e49be665f1da74a13">Blob &#21709;&#24212;</h4><p>&#33509;&#35201;&#36820;&#22238; blob &#20869;&#23481;&#65292;&#35831;&#20351;&#29992; <code>blob</code> &#26041;&#27861;&#65292;&#25552;&#20379; blob &#20869;&#23481;&#65306;</p><pre><code class="language-php">return Response::blob(file_get_contents(storage_path('weather/radar.png')));</code></pre><p>&#36820;&#22238; blob &#20869;&#23481;&#26102;&#65292;MIME &#31867;&#22411;&#23558;&#30001; resource &#37197;&#32622;&#30340; MIME &#31867;&#22411;&#20915;&#23450;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Resources;
+
+use Laravel\Mcp\Server\Attributes\MimeType;
+use Laravel\Mcp\Server\Resource;
+
+#[MimeType('image/png')]
+class WeatherGuidelinesResource extends Resource
+{
+    //
+}</code></pre><h4 id="792c3272b4f44a29f78dc0a934f53006">Error &#21709;&#24212;</h4><p>&#33509;&#35201;&#25351;&#31034;&#22312; resource &#33719;&#21462;&#26399;&#38388;&#21457;&#29983;&#20102;&#38169;&#35823;&#65292;&#35831;&#20351;&#29992; <code>error()</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">return Response::error('Unable to fetch weather data for the specified location.');</code></pre><h2 id="a6f00c82b6eb55a13a1f242313aaf9c9">Apps</h2><p>Laravel MCP &#25903;&#25345; <a href="https://modelcontextprotocol.io/extensions/apps/overview" target="_blank" rel="noopener noreferrer">MCP Apps</a>&#65292;&#23427;&#26159; Model Context Protocol &#30340;&#25193;&#23637;&#65292;&#20801;&#35768;&#24037;&#20855;&#22312;&#21463;&#25903;&#25345;&#30340;&#20027;&#26426;&#20013;&#30340;&#27801;&#31665; iframe &#20869;&#28210;&#26579;&#20132;&#20114;&#24335; HTML &#24212;&#29992;&#12290;&#36825;&#20351;&#20320;&#33021;&#22815;&#26500;&#24314;&#20202;&#34920;&#26495;&#12289;&#34920;&#21333;&#12289;&#21487;&#35270;&#21270;&#20197;&#21450;&#20854;&#20182;&#36229;&#20986;&#32431;&#25991;&#26412;&#21709;&#24212;&#30340;&#20016;&#23500;&#20307;&#39564;&#12290;</p><p>&#19968;&#20010; MCP app &#30001;&#20004;&#20010;&#21327;&#21516;&#24037;&#20316;&#30340;&#37096;&#20998;&#32452;&#25104;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">&#19968;&#20010;&#36820;&#22238;&#24212;&#29992;&#33258;&#21253;&#21547; HTML &#30340; <strong class="mk-p">app resource</strong>&#12290;</li>
+<li style="list-style-type: disc;">&#19968;&#20010;&#36890;&#36807; <code>#[RendersApp]</code> &#23646;&#24615;&#38142;&#25509;&#21040; app resource &#30340; <strong class="mk-p">tool</strong>&#12290;&#24403;&#35813; tool &#34987;&#35843;&#29992;&#26102;&#65292;&#20027;&#26426;&#20250;&#33719;&#21462;&#24182;&#28210;&#26579;&#38142;&#25509;&#30340; resource&#12290;</li>
+</ul><h3 id="77af91f4449278ff4b14d1753d8572bf">&#21019;&#24314; App Resources</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>make:mcp-app-resource</code> Artisan &#21629;&#20196;&#21019;&#24314; app resource&#65306;</p><pre><code class="language-shell">php artisan make:mcp-app-resource WeatherDashboardApp</code></pre><p>&#35813;&#21629;&#20196;&#20250;&#21019;&#24314;&#20004;&#20010;&#25991;&#20214;&#65306;<code>app/Mcp/Resources</code> &#20013;&#30340; PHP &#31867;&#21644; <code>resources/views/mcp</code> &#20013;&#30340; Blade &#35270;&#22270;&#12290;&#35270;&#22270;&#21517;&#31216;&#20250;&#26681;&#25454;&#31867;&#21517;&#33258;&#21160;&#25512;&#26029;&#12290;&#20363;&#22914;&#65292;<code>WeatherDashboardApp</code> &#26144;&#23556;&#21040; <code>mcp.weather-dashboard-app</code>&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Resources;
+
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Attributes\AppMeta;
+use Laravel\Mcp\Server\Attributes\Description;
+use Laravel\Mcp\Server\AppResource;
+
+#[Description('An interactive weather dashboard.')]
+#[AppMeta]
+class WeatherDashboardApp extends AppResource
+{
+    /**
+     * Handle the app resource request.
+     */
+    public function handle(Request $request): Response
+    {
+        return Response::view('mcp.weather-dashboard-app', [
+            'title' =&gt; $this-&gt;title(),
+        ]);
+    }
+}</code></pre><p><code>AppResource</code> &#32487;&#25215;&#33258;&#22522;&#31867; <code>Resource</code>&#65292;&#24182;&#33258;&#21160;&#37197;&#32622; MCP Apps &#35268;&#33539;&#25152;&#38656;&#30340; <code>ui://</code> URI scheme &#21644; <code>text/html;profile=mcp-app</code> MIME type&#12290;&#19982;&#20219;&#20309;&#20854;&#20182; resource &#19968;&#26679;&#65292;&#20320;&#24517;&#39035;&#22312;&#26381;&#21153;&#22120;&#30340; <code>$resources</code> &#25968;&#32452;&#20013;&#27880;&#20876;&#23427;&#12290;</p><p>&#29983;&#25104;&#30340; Blade &#35270;&#22270;&#20351;&#29992; <code>&lt;x-mcp::app&gt;</code> &#32452;&#20214;&#65292;&#35813;&#32452;&#20214;&#28210;&#26579;&#19968;&#20010;&#23436;&#25972;&#30340; HTML &#25991;&#26723;&#65292;&#20854;&#20013;&#25171;&#21253;&#20102;&#23458;&#25143;&#31471; MCP SDK &#24182;&#21487;&#20197;&#20351;&#29992;&#65306;</p><pre><code class="language-blade">&lt;x-mcp::app :title="$title"&gt;
+    &lt;x-slot:head&gt;
+        &lt;script type="module"&gt;
+        createMcpApp(async (app) =&gt; {
+            document.getElementById('run-btn').addEventListener('click', async () =&gt; {
+                const result = await app.callServerTool('get-weather-data', {});
+                document.getElementById('output').textContent = result.content[0]?.text ?? '';
+            });
+        });
+        &lt;/script&gt;
+    &lt;/x-slot:head&gt;
+
+    &lt;div id="app"&gt;
+        &lt;button id="run-btn"&gt;Refresh&lt;/button&gt;
+        &lt;p id="output"&gt;&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/x-mcp::app&gt;</code></pre><p><code>createMcpApp</code> &#20840;&#23616;&#23545;&#35937;&#30001;&#25414;&#32465;&#30340; SDK &#25552;&#20379;&#65292;&#36127;&#36131;&#23558; iframe &#36830;&#25509;&#21040;&#26381;&#21153;&#22120;&#12289;&#24212;&#29992;&#20027;&#26426;&#20027;&#39064;&#65292;&#24182;&#20844;&#24320;&#35832;&#22914; <code>callServerTool</code>&#12289;<code>sendMessage</code>&#12289;<code>openLink</code> &#31561;&#36741;&#21161;&#20989;&#25968;&#20197;&#21450;&#20107;&#20214;&#22238;&#35843;&#12290;&#26377;&#20851;&#23436;&#25972;&#30340;&#23458;&#25143;&#31471; API&#65292;&#35831;&#21442;&#38405; <a href="https://modelcontextprotocol.io/extensions/apps/overview" target="_blank" rel="noopener noreferrer">MCP Apps &#35268;&#33539;</a>&#12290;</p><h3 id="c704cdb9db695aded3122c61fa709150">&#20174; Tools &#28210;&#26579; Apps</h3><p>&#35201;&#26174;&#31034; app resource&#65292;&#35831;&#20351;&#29992; <code>#[RendersApp]</code> &#23646;&#24615;&#23558; tool &#38142;&#25509;&#21040;&#23427;&#12290;&#24403;&#35813; tool &#34987;&#35843;&#29992;&#26102;&#65292;Laravel MCP &#20250;&#23558; resource &#30340; URI &#21253;&#21547;&#22312; tool &#20803;&#25968;&#25454;&#20013;&#65292;&#20197;&#20415;&#20027;&#26426;&#21487;&#20197;&#22312;&#27801;&#31665; iframe &#20013;&#28210;&#26579; app&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Mcp\Tools;
+
+use App\Mcp\Resources\WeatherDashboardApp;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\Server\Attributes\RendersApp;
+use Laravel\Mcp\Server\Tool;
+
+#[RendersApp(resource: WeatherDashboardApp::class)]
+class ShowWeatherDashboard extends Tool
+{
+    /**
+     * Handle the tool request.
+     */
+    public function handle(Request $request): Response
+    {
+        return Response::text('Weather dashboard loaded.');
+    }
+}</code></pre><p>&#21482;&#35201;&#27880;&#20876;&#20102;&#20219;&#20309; <code>AppResource</code>&#65292;Laravel MCP &#23601;&#20250;&#33258;&#21160;&#36890;&#21578; <code>io.modelcontextprotocol/ui</code> &#33021;&#21147;&#65292;&#22240;&#27492;&#26080;&#38656;&#39069;&#22806;&#30340;&#26381;&#21153;&#22120;&#37197;&#32622;&#12290;</p><h3 id="fe7da457e3364cf15b7adb11fa2a6d2e">App Tool &#21487;&#35265;&#24615;</h3><p>&#27599;&#20010; <code>#[RendersApp]</code> tool &#37117;&#21487;&#36890;&#36807; <code>visibility</code> &#21442;&#25968;&#38480;&#21046;&#35841;&#21487;&#20197;&#35843;&#29992;&#23427;&#12290;&#36825;&#23545;&#20110;&#20844;&#24320;&#31169;&#26377;&#30340;&#12289;&#20165;&#38480;&#24212;&#29992;&#30340;&#24037;&#20855;&#65288;UI &#35843;&#29992;&#23427;&#20204;&#26469;&#21152;&#36733;&#25110;&#21047;&#26032;&#25968;&#25454;&#20294;&#19981;&#35753;&#27169;&#22411;&#30475;&#21040;&#36825;&#20123;&#24037;&#20855;&#65289;&#38750;&#24120;&#26377;&#29992;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Server\Attributes\RendersApp;
+use Laravel\Mcp\Server\Ui\Enums\Visibility;
+
+#[RendersApp(resource: WeatherDashboardApp::class, visibility: [Visibility::App])]
+class GetWeatherData extends Tool
+{
+    // ...
+}</code></pre><p><code>Visibility</code> &#26522;&#20030;&#26377;&#20004;&#31181;&#24773;&#20917;&#65292;<code>Model</code> &#21644; <code>App</code>&#65292;&#40664;&#35748;&#20026;&#20004;&#32773;&#37117;&#21253;&#25324;&#12290;&#20351;&#29992; <code>[Visibility::App]</code> &#34920;&#31034; UI &#30452;&#25509;&#35843;&#29992;&#30340;&#21518;&#31471;&#25805;&#20316;&#65292;&#20351;&#29992; <code>[Visibility::Model]</code> &#20351;&#24037;&#20855;&#23545; UI &#19981;&#21487;&#29992;&#12290;</p><h3 id="617b830fe18e51472d3ff2ff4460cae1">App &#37197;&#32622;</h3><p>app resource &#19978;&#30340; <code>#[AppMeta]</code> &#23646;&#24615;&#29992;&#20110;&#37197;&#32622; iframe &#30340;&#20869;&#23481;&#23433;&#20840;&#31574;&#30053;&#12289;&#27983;&#35272;&#22120;&#26435;&#38480;&#20197;&#21450;&#24212;&#21253;&#21547;&#22312;&#35270;&#22270; <code>&lt;head&gt;</code> &#20013;&#30340;&#20219;&#20309;&#24211;&#33050;&#26412;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Server\Attributes\AppMeta;
+use Laravel\Mcp\Server\Ui\Enums\Library;
+use Laravel\Mcp\Server\Ui\Enums\Permission;
+
+#[AppMeta(
+    connectDomains: ['https://api.weather.com'],
+    permissions: [Permission::Geolocation],
+    libraries: [Library::Tailwind, Library::Alpine],
+)]
+class WeatherDashboardApp extends AppResource
+{
+    // ...
+}</code></pre><p><code>Library</code> &#26522;&#20030;&#21253;&#25324;&#24120;&#35265;&#21069;&#31471;&#24211;&#30340;&#39044;&#37197;&#32622; CDN &#33050;&#26412;&#65292;&#20363;&#22914; <code>Library::Tailwind</code> &#21644; <code>Library::Alpine</code>&#65292;&#23427;&#20204;&#30340; CDN &#28304;&#20250;&#33258;&#21160;&#21512;&#24182;&#21040; CSP &#20013;&#12290;<code>Permission</code> &#26522;&#20030;&#28085;&#30422;&#20102;&#27983;&#35272;&#22120;&#26435;&#38480;&#65292;&#20363;&#22914; <code>Camera</code>&#12289;<code>Microphone</code>&#12289;<code>Geolocation</code> &#21644; <code>ClipboardWrite</code>&#12290;</p><p>&#23545;&#20110;&#35745;&#31639;&#25110;&#21160;&#24577;&#37197;&#32622;&#65292;&#20351;&#29992; <code>Laravel\Mcp\Server\Ui</code> &#21629;&#21517;&#31354;&#38388;&#19979;&#30340;&#27969;&#24335; <code>AppMeta</code>&#12289;<code>Csp</code> &#21644; <code>Permissions</code> &#26500;&#24314;&#22120;&#35206;&#30422; resource &#19978;&#30340; <code>appMeta</code> &#26041;&#27861;&#12290;</p><h3 id="2e27d9588ebf7bf0a41890836bc24e7e">&#20351;&#29992; Boost &#26500;&#24314; Apps</h3><p>Laravel MCP &#21253;&#21547;&#19968;&#20010;&#19987;&#29992;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/boost" target="_blank">Boost</a> skill &#21442;&#32771;&#65292;&#29992;&#20110;&#26500;&#24314; MCP Apps&#12290;&#22914;&#26524;&#20320;&#23433;&#35013;&#20102; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/boost" target="_blank">Laravel Boost</a>&#65292;&#20320;&#30340; AI &#32534;&#30721;&#20195;&#29702;&#21487;&#20197;&#35843;&#29992; <code>mcp-development</code> skill&#65292;&#24182;&#35201;&#27714;&#23427;&#20026;&#20320;&#25645;&#24314;&#19968;&#20010; app resource&#12289;Blade &#35270;&#22270;&#20197;&#21450;&#38142;&#25509;&#30340; tool&#12290;</p><p>&#26377;&#20851;&#23436;&#25972;&#30340;&#21327;&#35758;&#21442;&#32771;&#65288;&#21253;&#25324;&#23436;&#25972;&#30340;&#23458;&#25143;&#31471; API &#21644; schema &#35814;&#32454;&#20449;&#24687;&#65289;&#65292;&#35831;&#21442;&#38405;&#23448;&#26041; <a href="https://modelcontextprotocol.io/extensions/apps/overview" target="_blank" rel="noopener noreferrer">MCP Apps &#25991;&#26723;</a>&#12290;</p><h2 id="34681d7fd511fca9b05c70f3c3d1386a">&#20803;&#25968;&#25454;</h2><p>Laravel MCP &#36824;&#25903;&#25345; <a href="https://modelcontextprotocol.io/specification/2025-06-18/basic#meta" target="_blank" rel="noopener noreferrer">MCP &#35268;&#33539;</a>&#20013;&#23450;&#20041;&#30340; <code>_meta</code> &#23383;&#27573;&#65292;&#26576;&#20123; MCP &#23458;&#25143;&#31471;&#25110;&#38598;&#25104;&#38656;&#35201;&#35813;&#23383;&#27573;&#12290;&#20803;&#25968;&#25454;&#21487;&#20197;&#24212;&#29992;&#20110;&#25152;&#26377; MCP &#21407;&#35821;&#65292;&#21253;&#25324; tools&#12289;resources &#21644; prompts&#65292;&#20197;&#21450;&#23427;&#20204;&#30340;&#21709;&#24212;&#12290;</p><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>withMeta</code> &#26041;&#27861;&#23558;&#20803;&#25968;&#25454;&#38468;&#21152;&#21040;&#21508;&#20010;&#21709;&#24212;&#20869;&#23481;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+/**
+ * Handle the tool request.
+ */
+public function handle(Request $request): Response
+{
+    return Response::text('The weather is sunny.')
+        -&gt;withMeta(['source' =&gt; 'weather-api', 'cached' =&gt; true]);
+}</code></pre><p>&#23545;&#20110;&#24212;&#29992;&#20110;&#25972;&#20010;&#21709;&#24212;&#21253;&#32476;&#30340;&#32467;&#26524;&#32423;&#20803;&#25968;&#25454;&#65292;&#35831;&#20351;&#29992; <code>Response::make</code> &#21253;&#35013;&#20320;&#30340;&#21709;&#24212;&#65292;&#24182;&#22312;&#36820;&#22238;&#30340;&#21709;&#24212;&#24037;&#21378;&#23454;&#20363;&#19978;&#35843;&#29992; <code>withMeta</code>&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+use Laravel\Mcp\ResponseFactory;
+
+/**
+ * Handle the tool request.
+ */
+public function handle(Request $request): ResponseFactory
+{
+    return Response::make(
+        Response::text('The weather is sunny.')
+    )-&gt;withMeta(['request_id' =&gt; '12345']);
+}</code></pre><p>&#35201;&#23558;&#20803;&#25968;&#25454;&#38468;&#21152;&#21040; tool&#12289;resource &#25110; prompt &#26412;&#36523;&#65292;&#35831;&#22312;&#31867;&#19978;&#23450;&#20041; <code>$meta</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Server\Attributes\Description;
+use Laravel\Mcp\Server\Tool;
+
+#[Description('Fetches the current weather forecast.')]
+class CurrentWeatherTool extends Tool
+{
+    protected ?array $meta = [
+        'version' =&gt; '2.0',
+        'author' =&gt; 'Weather Team',
+    ];
+
+    // ...
+}</code></pre><h2 id="8f67973007158337346584551b093be8">Icons</h2><p>MCP &#23458;&#25143;&#31471;&#21487;&#20197;&#20026;&#20320;&#30340;&#26381;&#21153;&#22120;&#21450;&#20854;&#21407;&#35821;&#26174;&#31034;&#22270;&#26631;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Icon</code> &#23646;&#24615;&#22312;&#26381;&#21153;&#22120;&#12289;tool&#12289;resource &#25110; prompt &#19978;&#22768;&#26126;&#22270;&#26631;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Enums\IconTheme;
+use Laravel\Mcp\Server\Attributes\Icon;
+
+#[Icon('mcp/server.png', mimeType: 'image/png', sizes: ['48x48'])]
+#[Icon('mcp/server-dark.svg', theme: IconTheme::Dark)]
+class WeatherServer extends Server
+{
+    // ...
+}</code></pre><p><code>Icon</code> &#23646;&#24615;&#26159;&#21487;&#37325;&#22797;&#30340;&#65292;&#22240;&#27492;&#20320;&#21487;&#20197;&#22768;&#26126;&#22810;&#20010;&#22270;&#26631;&#20197;&#25552;&#20379;&#19981;&#21516;&#23610;&#23544;&#25110;&#26126;&#26263;&#20027;&#39064;&#21464;&#20307;&#12290;</p><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#35206;&#30422; <code>icons</code> &#26041;&#27861;&#20197;&#32534;&#31243;&#26041;&#24335;&#23450;&#20041;&#22270;&#26631;&#65292;&#24403;&#22270;&#26631;&#21462;&#20915;&#20110;&#36816;&#34892;&#26102;&#26465;&#20214;&#26102;&#36825;&#38750;&#24120;&#26377;&#29992;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Schema\Icon;
+
+class CurrentWeatherTool extends Tool
+{
+    /**
+     * Get the tool's icons.
+     *
+     * @return array&lt;int, Icon&gt;
+     */
+    public function icons(): array
+    {
+        return [
+            Icon::from('mcp/tool.png', mimeType: 'image/png'),
+        ];
+    }
+}</code></pre><p>&#36890;&#36807;&#23646;&#24615;&#21644; <code>icons</code> &#26041;&#27861;&#23450;&#20041;&#30340;&#22270;&#26631;&#20250;&#33258;&#21160;&#32452;&#21512;&#12290;&#22270;&#26631;&#36335;&#24452;&#35299;&#26512;&#26041;&#24335;&#22914;&#19979;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;">&#20855;&#26377; URI scheme &#30340;&#36335;&#24452;&#65288;&#20363;&#22914; <code>https:</code> &#25110; <code>data:</code>&#65289;&#25353;&#21407;&#26679;&#20351;&#29992;&#12290;</li>
+<li style="list-style-type: disc;">&#30456;&#23545;&#36335;&#24452;&#20351;&#29992; Laravel &#30340; <code>asset</code> &#36741;&#21161;&#20989;&#25968;&#35299;&#26512;&#20026; URL&#12290;</li>
+</ul><h2 id="c75f7811d70d17dbcd88e9d03752cbed">Authentication</h2><p>&#19982;&#36335;&#30001;&#19968;&#26679;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#20013;&#38388;&#20214;&#23545; Web MCP &#26381;&#21153;&#22120;&#36827;&#34892;&#36523;&#20221;&#39564;&#35777;&#12290;&#20026; MCP &#26381;&#21153;&#22120;&#28155;&#21152;&#36523;&#20221;&#39564;&#35777;&#23558;&#35201;&#27714;&#29992;&#25143;&#22312;&#20351;&#29992;&#26381;&#21153;&#22120;&#30340;&#20219;&#20309;&#33021;&#21147;&#20043;&#21069;&#20808;&#36827;&#34892;&#36523;&#20221;&#39564;&#35777;&#12290;</p><p>&#26377;&#20004;&#31181;&#26041;&#27861;&#21487;&#20197;&#23545; MCP &#26381;&#21153;&#22120;&#36827;&#34892;&#36523;&#20221;&#39564;&#35777;&#65306;&#36890;&#36807; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Laravel Sanctum</a> &#36827;&#34892;&#31616;&#21333;&#30340;&#22522;&#20110;&#20196;&#29260;&#30340;&#36523;&#20221;&#39564;&#35777;&#65292;&#25110;&#36890;&#36807; <code>Authorization</code> HTTP &#22836;&#20256;&#36882;&#20219;&#20309;&#20196;&#29260;&#12290;&#25110;&#32773;&#65292;&#20320;&#20063;&#21487;&#20197;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/passport" target="_blank">Laravel Passport</a> &#36890;&#36807; OAuth &#36827;&#34892;&#36523;&#20221;&#39564;&#35777;&#12290;</p><h3 id="66ea2a089dc6885b7e59627915b43a57">OAuth 2.1</h3><p>&#20445;&#25252;&#22522;&#20110; Web &#30340; MCP &#26381;&#21153;&#22120;&#30340;&#26368;&#31283;&#20581;&#26041;&#24335;&#26159;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/passport" target="_blank">Laravel Passport</a> &#30340; OAuth&#12290;</p><p>&#36890;&#36807; OAuth &#23545; MCP &#26381;&#21153;&#22120;&#36827;&#34892;&#36523;&#20221;&#39564;&#35777;&#26102;&#65292;&#35831;&#22312; <code>routes/ai.php</code> &#25991;&#20214;&#20013;&#35843;&#29992; <code>Mcp::oauthRoutes</code> &#26041;&#27861;&#65292;&#20197;&#27880;&#20876;&#25152;&#38656;&#30340; OAuth2 &#21457;&#29616;&#21644;&#23458;&#25143;&#31471;&#27880;&#20876;&#36335;&#30001;&#12290;&#28982;&#21518;&#65292;&#22312; <code>routes/ai.php</code> &#25991;&#20214;&#20013;&#23558; Passport &#30340; <code>auth:api</code> &#20013;&#38388;&#20214;&#24212;&#29992;&#20110; <code>Mcp::web</code> &#36335;&#30001;&#65306;</p><pre><code class="language-php">use App\Mcp\Servers\WeatherExample;
+use Laravel\Mcp\Facades\Mcp;
+
+Mcp::oauthRoutes();
+
+Mcp::web('/mcp/weather', WeatherExample::class)
+    -&gt;middleware('auth:api');</code></pre><h4 id="92183b533eca8b4bf7598287eedbeaab">&#20840;&#26032;&#23433;&#35013; Passport</h4><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#23578;&#26410;&#20351;&#29992; Laravel Passport&#65292;&#35831;&#25353;&#29031; Passport &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/passport#installation" target="_blank">&#23433;&#35013;&#21644;&#37096;&#32626;&#25351;&#21335;</a> &#23558; Passport &#28155;&#21152;&#21040;&#20320;&#30340;&#24212;&#29992;&#12290;&#22312;&#32487;&#32493;&#20043;&#21069;&#65292;&#20320;&#24212;&#35813;&#26377;&#19968;&#20010; <code>OAuthenticatable</code> model&#12289;&#26032;&#30340;&#36523;&#20221;&#39564;&#35777; guard &#21644; passport &#23494;&#38053;&#12290;</p><p>&#25509;&#19979;&#26469;&#65292;&#20320;&#24212;&#35813;&#21457;&#24067; Laravel MCP &#25552;&#20379;&#30340; Passport &#25480;&#26435;&#35270;&#22270;&#65306;</p><pre><code class="language-shell">php artisan vendor:publish --tag=mcp-views</code></pre><p>&#28982;&#21518;&#65292;&#20351;&#29992; <code>Passport::authorizationView</code> &#26041;&#27861;&#25351;&#31034; Passport &#20351;&#29992;&#27492;&#35270;&#22270;&#12290;&#36890;&#24120;&#65292;&#24212;&#22312;&#24212;&#29992;&#30340; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#27492;&#26041;&#27861;&#65306;</p><pre><code class="language-php">use Laravel\Passport\Passport;
+
+/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Passport::authorizationView(function ($parameters) {
+        return view('mcp.authorize', $parameters);
+    });
+}</code></pre><p>&#27492;&#35270;&#22270;&#23558;&#22312;&#36523;&#20221;&#39564;&#35777;&#26399;&#38388;&#26174;&#31034;&#32473;&#26368;&#32456;&#29992;&#25143;&#65292;&#20197;&#20415;&#25298;&#32477;&#25110;&#25209;&#20934; AI &#20195;&#29702;&#30340;&#36523;&#20221;&#39564;&#35777;&#23581;&#35797;&#12290;</p><p>![Authorization screen example](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABOAAAAROCAMAAABKc73cAAAA81BMVEX////7+/v4+PgXFxfl5eUKCgr9/f1zc3P29vby8vLs7Ozj4+Pp6env7++RkZF5eXlRUVF9fX2Li4uEhISOjo4bGxt0dHS0tLTd3d12dnbLy8vW1tapqanFxcVMTEygoKDDw8PIyMgODg7BwcGwsLASEhKbm5uBgYFGRkbh4eHf398gICCXl5fS0tLR0dG6urolJSXPz8+Tk5MVFRVbW1va2tq4uLijo6NnZ2eZmZnNzc02NjZWVlaIiIhAQEClpaUuLi6enp6Hh4e2trZsbGzY2NjU1NStra28vLwyMjJjY2MpKSmVlZVfX187Ozu+vr5OTk7PbglOAABlU0lEQVR42uzBgQAAAACAoP2pF6kCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGB27Ci3QRiIoqiNkGWQvf/tFlNKE5VG+R1yjncwUq5eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwilAKIn325Y8zwv1VO7NuplvEFEqSeNeOeKWgYDKJkncy7zlwwSEkQ8S958zb3Xprc1AIK31peaNb3FXyjCG27LOQEjrMknclZKOvLX9SjW7DwRSct23SdsTp3DPjvlW2zhQTkBAeQyUVhXucr9NfeQtAWGNxPVJ4f7ut2ndLuMmEFrp87wq3IOSfvpmvkF4i8I9OfdbTUB49btwArcrafSt6xvcxFa4rnCP+23x/xRuY/yeFe53wNU29wTcRJ9bFbhzwG3n+PhLwH18sW8HNw4CURQEsYXQgMb5p7uGFQ6iqQrBh9b7jLxNR+pvwL3HdKBCyb7O8Ra4a8CNzzoXIGSuH0eqAQdNJtzpfkL1/1NIef0/pD47cPeFeixAyuFGvRbcexwuVKjZ1+PxN+p2Bm6f/sQANWOdu8C9XsMnOOg5P8KNh3+EuwP35N8AkjaB2+7ALUDMN3APf2XYFoGDKIG73hgEDoq+gXv4M+q2CBxECZwFB1kCZ8FBlsBZcJAlcBYcZAmcBQdZAmfBQZbAWXCQJXAWHGQJnAUHWQJnwUGWwFlwkCVwFhxkCZwFB1kCZ8FBlsBZcJAlcBYcZAmcBQdZAmfBQZbAWXCQJXAWHGQJnAUHWQJnwUGWwFlwkCVwFhxkCZwFB1kCZ8FBlsBZcJAlcBYcZAmcBQdZAmfBQZbAWXCQJXAWHGQJnAUHWQJnwUGWwFlwkCVwFhz8sXcHOWoDURRFLXkDX39e+99mQMhtKRBIRUSCV+eMuxlevbILEUvgLDiIJXAWHMQSOAtuNWP0xiIEzoJby6j9QuIWIXAW3FLGpW4Ktw6Bs+BW0pe2SdxCBM6CW8f1eKpwSxE4C24Z1+Opwq1F4Cy4VVyPpxK3GIGz4NZwPZ4q3HIEzoJbwS1vErccgbPg8t3yJnELEjgLLt1d3uoucRqXSuAsuGgPxltt437F9dgIJHAWXKoxqv50Iu39XolcHoGz4LKMm67aH6lx3Bl5qLp7XGldBoGz4GKM2l/p36/FefuQTeAsuBSvi1Vj7u/3jS8ncBZcitd5m05ibXw3gbPgQvRM3g5twmUTOAsuRM/k7dRP/8+7hi8ncBZciJqs26kFLpbAWXAh5ut2Gl0ewkUSOAsuw3hQp6mru90lcHEEzoLL0GfW6nZd958y2RdV5S1DCIGz4DL0W6/nlodwGQTOgstwJunzPo0JAmfB8SRJ2zsMX9fKIHAWXIZd4BA4Cy7VUaQSOATOgksjcAicBRfrzYFzES6DwFlwGX6K9JEfx98SuM2C48mZUuAQOAsuzLDgEDgLLpaXDAicBRdL4BA4Cy6Wi74InAUXq44kfeBX95khcBYc/ztwvmyfQeAsuA... [truncated]</p><blockquote>
+<p>[!NOTE]<br>
+&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#25105;&#20204;&#21482;&#26159;&#23558; OAuth &#29992;&#20316;&#24213;&#23618;&#21487;&#35748;&#35777; model &#30340;&#36716;&#25442;&#23618;&#12290;&#25105;&#20204;&#24573;&#30053;&#20102; OAuth &#30340;&#35768;&#22810;&#26041;&#38754;&#65292;&#20363;&#22914; scopes&#12290;</p>
+</blockquote><h4 id="74c0cba6a1e2f8c0c94113a25dee2c2d">&#20351;&#29992;&#29616;&#26377;&#30340; Passport &#23433;&#35013;</h4><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#24050;&#32463;&#22312;&#20351;&#29992; Laravel Passport&#65292;&#37027;&#20040; Laravel MCP &#24212;&#35813;&#33021;&#22312;&#20320;&#29616;&#26377;&#30340; Passport &#23433;&#35013;&#20013;&#26080;&#32541;&#24037;&#20316;&#65292;&#20294;&#30446;&#21069;&#19981;&#25903;&#25345;&#33258;&#23450;&#20041; scopes&#65292;&#22240;&#20026; OAuth &#20027;&#35201;&#29992;&#20316;&#24213;&#23618;&#21487;&#35748;&#35777; model &#30340;&#36716;&#25442;&#23618;&#12290;</p><p>Laravel MCP &#36890;&#36807;&#19978;&#38754;&#35752;&#35770;&#30340; <code>Mcp::oauthRoutes</code> &#26041;&#27861;&#28155;&#21152;&#12289;&#36890;&#21578;&#24182;&#20351;&#29992;&#21333;&#20010; <code>mcp:use</code> scope&#12290;</p><h4 id="5b4ec7c89ae5c6255eb7a91838bfa022">Passport &#19982; Sanctum</h4><p>OAuth2.1 &#26159; Model Context Protocol &#35268;&#33539;&#20013;&#35760;&#24405;&#30340;&#36523;&#20221;&#39564;&#35777;&#26426;&#21046;&#65292;&#20063;&#26159; MCP &#23458;&#25143;&#31471;&#20013;&#26368;&#24191;&#27867;&#25903;&#25345;&#30340;&#26041;&#24335;&#12290;&#22240;&#27492;&#65292;&#25105;&#20204;&#24314;&#35758;&#23613;&#21487;&#33021;&#20351;&#29992; Passport&#12290;</p><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#24050;&#32463;&#22312;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Sanctum</a>&#65292;&#37027;&#20040;&#28155;&#21152; Passport &#21487;&#33021;&#20250;&#24456;&#40635;&#28902;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#25105;&#20204;&#24314;&#35758;&#22312;&#26126;&#30830;&#38656;&#35201;&#20351;&#29992;&#20165;&#25903;&#25345; OAuth &#30340; MCP &#23458;&#25143;&#31471;&#20043;&#21069;&#65292;&#20351;&#29992; Sanctum &#32780;&#19981;&#20351;&#29992; Passport&#12290;</p><h3 id="b690b5635a9eb3ab71db966af06f0610">Sanctum</h3><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Sanctum</a> &#20445;&#25252;&#20320;&#30340; MCP &#26381;&#21153;&#22120;&#65292;&#21482;&#38656;&#22312; <code>routes/ai.php</code> &#25991;&#20214;&#20013;&#23558; Sanctum &#30340;&#36523;&#20221;&#39564;&#35777;&#20013;&#38388;&#20214;&#28155;&#21152;&#21040;&#20320;&#30340;&#26381;&#21153;&#22120;&#12290;&#28982;&#21518;&#65292;&#30830;&#20445;&#20320;&#30340; MCP &#23458;&#25143;&#31471;&#25552;&#20379; <code>Authorization: Bearer &lt;token&gt;</code> &#22836;&#20197;&#30830;&#20445;&#25104;&#21151;&#36827;&#34892;&#36523;&#20221;&#39564;&#35777;&#65306;</p><pre><code class="language-php">use App\Mcp\Servers\WeatherExample;
+use Laravel\Mcp\Facades\Mcp;
+
+Mcp::web('/mcp/demo', WeatherExample::class)
+    -&gt;middleware('auth:sanctum');</code></pre><h4 id="c90f54c42e52eedc61ab4b71c09ce384">&#33258;&#23450;&#20041; MCP &#36523;&#20221;&#39564;&#35777;</h4><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#21457;&#24067;&#33258;&#24049;&#30340;&#33258;&#23450;&#20041; API &#20196;&#29260;&#65292;&#21017;&#21487;&#20197;&#36890;&#36807;&#23558;&#20219;&#20309;&#20013;&#38388;&#20214;&#20998;&#37197;&#32473;&#20320;&#30340; <code>Mcp::web</code> &#36335;&#30001;&#26469;&#23545; MCP &#26381;&#21153;&#22120;&#36827;&#34892;&#36523;&#20221;&#39564;&#35777;&#12290;&#20320;&#30340;&#33258;&#23450;&#20041;&#20013;&#38388;&#20214;&#21487;&#20197;&#25163;&#21160;&#26816;&#26597; <code>Authorization</code> &#22836;&#20197;&#23545;&#20256;&#20837;&#30340; MCP &#35831;&#27714;&#36827;&#34892;&#36523;&#20221;&#39564;&#35777;&#12290;</p><h2 id="9cd8a2455b1839ff98ef70c05b9b5983">Authorization</h2><p>&#20320;&#21487;&#20197;&#36890;&#36807; <code>$request-&gt;user()</code> &#26041;&#27861;&#35775;&#38382;&#24403;&#21069;&#24050;&#36890;&#36807;&#36523;&#20221;&#39564;&#35777;&#30340;&#29992;&#25143;&#65292;&#20174;&#32780;&#21487;&#20197;&#22312; MCP tools &#21644; resources &#20013;&#25191;&#34892; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authorization" target="_blank">&#25480;&#26435;&#26816;&#26597;</a>&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+/**
+ * Handle the tool request.
+ */
+public function handle(Request $request): Response
+{
+    if (! $request-&gt;user()-&gt;can('read-weather')) {
+        return Response::error('Permission denied.');
+    }
+
+    // ...
+}</code></pre><h2 id="7ea8d6c3efd38c74ef8cfbd42576cf90">MCP Client</h2><p>&#38500;&#20102;&#26500;&#24314;&#26381;&#21153;&#22120;&#20043;&#22806;&#65292;Laravel MCP &#36824;&#21253;&#25324;&#19968;&#20010;&#29992;&#20110;&#36830;&#25509;&#21040;&#20854;&#20182; MCP &#26381;&#21153;&#22120;&#65288;&#26080;&#35770;&#26159;&#19968;&#26041;&#36824;&#26159;&#31532;&#19977;&#26041;&#65289;&#30340;&#23458;&#25143;&#31471;&#12290;&#35813;&#23458;&#25143;&#31471;&#35753;&#20320;&#30340;&#24212;&#29992;&#33021;&#22815;&#21457;&#29616;&#24182;&#35843;&#29992; MCP &#26381;&#21153;&#22120;&#20844;&#24320;&#30340;&#24037;&#20855;&#65292;&#36825;&#23545;&#20110;&#35753;&#20320;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/ai-sdk#mcp-tools" target="_blank">AI &#20195;&#29702;</a> &#35775;&#38382;&#22806;&#37096; MCP &#26381;&#21153;&#22120;&#25552;&#20379;&#30340;&#33021;&#21147;&#29305;&#21035;&#26377;&#29992;&#12290;</p><h3 id="493b26eff6c0aea63f09afeec210a505">&#36830;&#25509;&#21040;&#26381;&#21153;&#22120;</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>Client::web</code> &#26041;&#27861;&#36830;&#25509;&#21040;&#21487;&#36890;&#36807; HTTP &#35775;&#38382;&#30340; MCP &#26381;&#21153;&#22120;&#65292;&#20256;&#20837;&#26381;&#21153;&#22120;&#30340; URL&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Client;
+
+$client = Client::web('https://mcp.example.com');</code></pre><p>&#35201;&#36830;&#25509;&#21040;&#20316;&#20026;&#21629;&#20196;&#36816;&#34892;&#30340;&#26412;&#22320; MCP &#26381;&#21153;&#22120;&#65292;&#35831;&#20351;&#29992; <code>Client::local</code> &#26041;&#27861;&#65292;&#25552;&#20379;&#21551;&#21160;&#26381;&#21153;&#22120;&#25152;&#38656;&#30340;&#21629;&#20196;&#21644;&#20219;&#20309;&#21442;&#25968;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Client;
+
+$client = Client::local('php', ['artisan', 'mcp:start']);</code></pre><p>&#23458;&#25143;&#31471;&#26159;&#24816;&#24615;&#36830;&#25509;&#30340;&#65292;&#20250;&#22312;&#39318;&#27425;&#21015;&#20986;&#25110;&#35843;&#29992;&#24037;&#20855;&#26102;&#33258;&#21160;&#24314;&#31435;&#36830;&#25509;&#12290;&#22914;&#26524;&#38656;&#35201;&#25163;&#21160;&#31649;&#29702;&#36830;&#25509;&#65292;&#21487;&#20197;&#20351;&#29992; <code>connect</code>&#12289;<code>connected</code>&#12289;<code>ping</code> &#21644; <code>disconnect</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$client-&gt;connect();
+
+$client-&gt;ping();
+
+if ($client-&gt;connected()) {
+    // ...
+}
+
+$client-&gt;disconnect();</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>withTimeout</code> &#26041;&#27861;&#33258;&#23450;&#20041;&#35831;&#27714;&#36229;&#26102;&#65306;</p><pre><code class="language-php">$client = Client::web('https://mcp.example.com')-&gt;withTimeout(30);</code></pre><h3 id="2278d8879e2c6a81f669d8d58f5220d8">&#21629;&#21517;&#23458;&#25143;&#31471;</h3><p>&#20320;&#21487;&#20197;&#27880;&#20876;&#21487;&#37325;&#29992;&#30340;&#21629;&#21517;&#23458;&#25143;&#31471;&#65292;&#32780;&#19981;&#24517;&#22312;&#27599;&#27425;&#38656;&#35201;&#26102;&#26500;&#36896;&#19968;&#20010;&#23458;&#25143;&#31471;&#12290;&#36825;&#36890;&#24120;&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#20351;&#29992; <code>Mcp</code> Facade &#23436;&#25104;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Client;
+use Laravel\Mcp\Facades\Mcp;
+
+Mcp::registerClient('github', fn () =&gt; Client::web('https://mcp.example.com'));</code></pre><p>&#27880;&#20876;&#21518;&#65292;&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340;&#20219;&#20309;&#20301;&#32622;&#25353;&#21517;&#31216;&#35299;&#26512;&#35813;&#23458;&#25143;&#31471;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Facades\Mcp;
+
+$client = Mcp::client('github');</code></pre><p>&#21629;&#21517;&#23458;&#25143;&#31471;&#22312;&#27599;&#20010;&#35831;&#27714;&#20013;&#35299;&#26512;&#19968;&#27425;&#65292;&#24182;&#22312;&#35831;&#27714;&#29983;&#21629;&#21608;&#26399;&#32467;&#26463;&#26102;&#33258;&#21160;&#26029;&#24320;&#36830;&#25509;&#12290;</p><h3 id="c3c4621cd2f9090ee7c1feafd565b4f2">&#23458;&#25143;&#31471;&#36523;&#20221;&#39564;&#35777;</h3><p>&#35201;&#36830;&#25509;&#21040;&#21463; bearer token &#20445;&#25252;&#30340; Web MCP &#26381;&#21153;&#22120;&#65292;&#35831;&#20351;&#29992; <code>withToken</code> &#26041;&#27861;&#12290;&#20320;&#21487;&#20197;&#20256;&#20837;&#20196;&#29260;&#23383;&#31526;&#20018;&#25110;&#24816;&#24615;&#35299;&#26512;&#20196;&#29260;&#30340;&#38381;&#21253;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Auth;
+use Laravel\Mcp\Client;
+
+$client = Client::web('https://mcp.example.com')-&gt;withToken($token);
+
+$client = Client::web('https://mcp.example.com')-&gt;withToken(
+    fn () =&gt; Auth::user()-&gt;mcpToken(),
+);</code></pre><p>&#23545;&#20110;&#21463; <a href="3oyjdzxyp5.html#oauth" target="_blank">OAuth 2.1</a> &#20445;&#25252;&#30340;&#26381;&#21153;&#22120;&#65292;&#35831;&#20351;&#29992; <code>withOAuth</code> &#26041;&#27861;&#37197;&#32622;&#23458;&#25143;&#31471;&#12290;&#36825;&#26159;&#22312;&#20320;&#33258;&#24049;&#30340;&#26381;&#21153;&#22120;&#19978;&#20351;&#29992; OAuth &#36827;&#34892;&#20445;&#25252;&#30340;&#23458;&#25143;&#31471;&#23545;&#24212;&#25805;&#20316;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Client;
+use Laravel\Mcp\Facades\Mcp;
+
+Mcp::registerClient('github', fn () =&gt; Client::web('https://mcp.example.com')-&gt;withOAuth(
+    clientId: config('services.github_mcp.client_id'),
+    clientSecret: config('services.github_mcp.client_secret'),
+));</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#24403; MCP &#26381;&#21153;&#22120;&#25903;&#25345; <a href="https://datatracker.ietf.org/doc/html/rfc7591" target="_blank" rel="noopener noreferrer">&#21160;&#24577;&#23458;&#25143;&#31471;&#27880;&#20876;</a> &#26102;&#65292;&#21487;&#20197;&#30465;&#30053; <code>clientId</code> &#21644; <code>clientSecret</code> &#21442;&#25968;&#65292;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#23458;&#25143;&#31471;&#20250;&#33258;&#21160;&#27880;&#20876;&#33258;&#24049;&#12290;</p>
+</blockquote><p>&#25509;&#19979;&#26469;&#65292;&#20351;&#29992; <code>oAuthRoutesFor</code> &#26041;&#27861;&#22312; <code>routes/ai.php</code> &#25991;&#20214;&#20013;&#20026;&#21629;&#21517;&#23458;&#25143;&#31471;&#27880;&#20876; OAuth &#36335;&#30001;&#12290;&#20320;&#25552;&#20379;&#30340;&#38381;&#21253;&#25509;&#25910;&#23458;&#25143;&#31471;&#21517;&#31216;&#20197;&#21450;&#22312;&#25480;&#26435;&#30721;&#20132;&#25442;&#20026;&#35775;&#38382;&#20196;&#29260;&#21518;&#30340; <code>TokenSet</code>&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Auth;
+use Laravel\Mcp\Client\OAuth\TokenSet;
+use Laravel\Mcp\Facades\Mcp;
+
+Mcp::oAuthRoutesFor('github', function (string $client, TokenSet $token) {
+    Auth::user()-&gt;update([
+        'github_mcp_token' =&gt; $token-&gt;accessToken,
+    ]);
+
+    return redirect('/dashboard');
+});</code></pre><p>&#36825;&#20250;&#27880;&#20876;&#20004;&#20010;&#21629;&#21517;&#36335;&#30001;&#65306;&#19968;&#20010;&#36830;&#25509;&#36335;&#30001;&#65288;<code>mcp.oauth.{client}.connect</code>&#65289;&#65292;&#23558;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#25480;&#26435;&#26381;&#21153;&#22120;&#65307;&#19968;&#20010;&#22238;&#35843;&#36335;&#30001;&#65288;<code>mcp.oauth.{client}.callback</code>&#65289;&#65292;&#29992;&#20110;&#20132;&#25442;&#25480;&#26435;&#30721;&#24182;&#35843;&#29992;&#20320;&#30340;&#22788;&#29702;&#31243;&#24207;&#12290;&#20004;&#26465;&#36335;&#30001;&#40664;&#35748;&#37117;&#20351;&#29992; <code>web</code> &#20013;&#38388;&#20214;&#32452;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>middleware</code> &#21442;&#25968;&#35206;&#30422;&#12290;</p><p>&#35201;&#24320;&#22987;&#25480;&#26435;&#27969;&#31243;&#65292;&#23558;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#36830;&#25509;&#36335;&#30001;&#65306;</p><pre><code class="language-php">return redirect()-&gt;route('mcp.oauth.github.connect');</code></pre><h3 id="8625e1de7be14c39b1d14dc03d822497">Tools</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>tools</code> &#26041;&#27861;&#26816;&#32034; MCP &#26381;&#21153;&#22120;&#20844;&#24320;&#30340;&#24037;&#20855;&#65292;&#35813;&#26041;&#27861;&#36820;&#22238;&#25353;&#21517;&#31216;&#32034;&#24341;&#30340;&#24037;&#20855;&#38598;&#21512;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Facades\Mcp;
+
+$tools = Mcp::client('github')-&gt;tools();
+
+foreach ($tools as $tool) {
+    $tool-&gt;name;
+    $tool-&gt;title;
+    $tool-&gt;description;
+    $tool-&gt;inputSchema;
+}</code></pre><p>&#23458;&#25143;&#31471;&#20250;&#33258;&#21160;&#23545;&#25152;&#26377;&#21487;&#29992;&#24037;&#20855;&#36827;&#34892;&#20998;&#39029;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>limit</code> &#21442;&#25968;&#38480;&#21046;&#36820;&#22238;&#30340;&#24037;&#20855;&#25968;&#37327;&#65306;</p><pre><code class="language-php">$tools = Mcp::client('github')-&gt;tools(limit: 10);</code></pre><p>&#35201;&#35843;&#29992; tool&#65292;&#35831;&#20351;&#29992; <code>callTool</code> &#26041;&#27861;&#65292;&#20256;&#20837; tool &#21517;&#31216;&#21644;&#21442;&#25968;&#25968;&#32452;&#12290;&#36820;&#22238;&#30340; <code>ToolResult</code> &#23454;&#20363;&#20844;&#24320; tool &#21709;&#24212;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Facades\Mcp;
+
+$result = Mcp::client('github')-&gt;callTool('current-weather', [
+    'location' =&gt; 'New York',
+]);
+
+$result-&gt;text(); // The text content of the response...
+(string) $result; // Equivalent to calling text()...
+$result-&gt;isError; // Whether the tool reported an error...
+$result-&gt;structuredContent;  // Structured content, if any...</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#30452;&#25509;&#20174;&#21015;&#20986;&#30340; tool &#23454;&#20363;&#35843;&#29992; tool&#65306;</p><pre><code class="language-php">$tools = Mcp::client('github')-&gt;tools();
+
+$result = $tools['current-weather']-&gt;call([
+    'location' =&gt; 'New York',
+]);</code></pre><p>&#22914;&#26524;&#20320;&#27491;&#22312;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/ai-sdk" target="_blank">Laravel AI SDK</a> &#26500;&#24314;&#20195;&#29702;&#65292;&#20320;&#20063;&#21487;&#20197;&#23558;&#26469;&#33258; MCP &#23458;&#25143;&#31471;&#30340; tools &#30452;&#25509;&#25552;&#20379;&#32473;&#20195;&#29702;&#65292;&#20174;&#32780;&#20801;&#35768;&#27169;&#22411;&#22312;&#21709;&#24212; prompt &#26102;&#35843;&#29992;&#23427;&#20204;&#12290;&#26377;&#20851;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#21442;&#38405; AI SDK &#25991;&#26723;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/ai-sdk#mcp-tools" target="_blank">MCP Tools</a> &#37096;&#20998;&#12290;</p><h3 id="c9ffccdbbe4d42f60cc2dda3a80086dd">Prompts</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>prompts</code> &#26041;&#27861;&#26816;&#32034; MCP &#26381;&#21153;&#22120;&#20844;&#24320;&#30340; prompts&#65292;&#35813;&#26041;&#27861;&#36820;&#22238;&#25353;&#21517;&#31216;&#32034;&#24341;&#30340; prompts &#38598;&#21512;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Facades\Mcp;
+
+$prompts = Mcp::client('github')-&gt;prompts();
+
+foreach ($prompts as $prompt) {
+    $prompt-&gt;name;
+    $prompt-&gt;title;
+    $prompt-&gt;description;
+    $prompt-&gt;arguments;
+}</code></pre><p>&#23458;&#25143;&#31471;&#20250;&#33258;&#21160;&#23545;&#25152;&#26377;&#21487;&#29992; prompts &#36827;&#34892;&#20998;&#39029;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>limit</code> &#21442;&#25968;&#38480;&#21046;&#36820;&#22238;&#30340; prompts &#25968;&#37327;&#65306;</p><pre><code class="language-php">$prompts = Mcp::client('github')-&gt;prompts(limit: 10);</code></pre><p>&#35201;&#26816;&#32034; prompt&#65292;&#35831;&#20351;&#29992; <code>getPrompt</code> &#26041;&#27861;&#65292;&#20256;&#20837; prompt &#21517;&#31216;&#21644;&#21442;&#25968;&#25968;&#32452;&#12290;&#36820;&#22238;&#30340; <code>PromptResult</code> &#23454;&#20363;&#20844;&#24320;&#29983;&#25104;&#30340;&#28040;&#24687;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Facades\Mcp;
+
+$result = Mcp::client('github')-&gt;getPrompt('describe-weather', [
+    'location' =&gt; 'New York',
+]);
+
+$result-&gt;text(); // The text content of the messages...
+(string) $result; // Equivalent to calling text()...
+$result-&gt;messages; // The raw messages returned by the prompt...
+$result-&gt;description; // The prompt description, if any...</code></pre><h3 id="ddcf50c29294d4414f3f7c1bbc892cb5">Resources</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>resources</code> &#26041;&#27861;&#26816;&#32034; MCP &#26381;&#21153;&#22120;&#20844;&#24320;&#30340; resources&#65292;&#35813;&#26041;&#27861;&#36820;&#22238;&#25353; URI &#32034;&#24341;&#30340; resources &#38598;&#21512;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Facades\Mcp;
+
+$resources = Mcp::client('github')-&gt;resources();
+
+foreach ($resources as $resource) {
+    $resource-&gt;uri;
+    $resource-&gt;name;
+    $resource-&gt;title;
+    $resource-&gt;description;
+    $resource-&gt;mimeType;
+    $resource-&gt;size;
+}</code></pre><p>&#23458;&#25143;&#31471;&#20250;&#33258;&#21160;&#23545;&#25152;&#26377;&#21487;&#29992; resources &#36827;&#34892;&#20998;&#39029;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>limit</code> &#21442;&#25968;&#38480;&#21046;&#36820;&#22238;&#30340; resources &#25968;&#37327;&#65306;</p><pre><code class="language-php">$resources = Mcp::client('github')-&gt;resources(limit: 10);</code></pre><p>&#35201;&#35835;&#21462; resource&#65292;&#35831;&#20351;&#29992; <code>readResource</code> &#26041;&#27861;&#65292;&#20256;&#20837; resource URI&#12290;&#36820;&#22238;&#30340; <code>ResourceReadResult</code> &#23454;&#20363;&#20844;&#24320; resource &#20869;&#23481;&#65306;</p><pre><code class="language-php">use Laravel\Mcp\Facades\Mcp;
+
+$result = Mcp::client('github')-&gt;readResource('weather://guidelines');
+
+$result-&gt;content(); // The content of the resource, decoding base64 blobs as needed...
+(string) $result; // Equivalent to calling content()...
+$result-&gt;mimeType(); // The MIME type of the resource, if any...
+$result-&gt;contents; // The raw contents returned by the resource...</code></pre><h2 id="ea3cbf02225b85f0c77c2b8fabdac513">Testing Servers</h2><p>&#20320;&#21487;&#20197;&#20351;&#29992;&#20869;&#32622;&#30340; MCP Inspector &#25110;&#36890;&#36807;&#32534;&#20889;&#21333;&#20803;&#27979;&#35797;&#26469;&#27979;&#35797; MCP &#26381;&#21153;&#22120;&#12290;</p><h3 id="d10a751aa63bf2e3c315cac90fad916c">MCP Inspector</h3><p><a href="https://modelcontextprotocol.io/docs/tools/inspector" target="_blank" rel="noopener noreferrer">MCP Inspector</a> &#26159;&#29992;&#20110;&#27979;&#35797;&#21644;&#35843;&#35797; MCP &#26381;&#21153;&#22120;&#30340;&#20132;&#20114;&#24335;&#24037;&#20855;&#12290;&#20351;&#29992;&#23427;&#36830;&#25509;&#21040;&#20320;&#30340;&#26381;&#21153;&#22120;&#12289;&#39564;&#35777;&#36523;&#20221;&#39564;&#35777;&#20197;&#21450;&#35797;&#29992; tools&#12289;resources &#21644; prompts&#12290;</p><p>&#20320;&#21487;&#20197;&#20026;&#20219;&#20309;&#24050;&#27880;&#20876;&#30340;&#26381;&#21153;&#22120;&#36816;&#34892; inspector&#65306;</p><pre><code class="language-shell"># Web server...
+php artisan mcp:inspector mcp/weather
+
+# Local server named "weather"...
+php artisan mcp:inspector weather</code></pre><p>&#35813;&#21629;&#20196;&#20250;&#21551;&#21160; MCP Inspector&#65292;&#24182;&#25552;&#20379;&#20320;&#21487;&#20197;&#22797;&#21046;&#21040; MCP &#23458;&#25143;&#31471;&#20013;&#30340;&#23458;&#25143;&#31471;&#35774;&#32622;&#65292;&#20197;&#30830;&#20445;&#25152;&#26377;&#20869;&#23481;&#37117;&#24050;&#27491;&#30830;&#37197;&#32622;&#12290;&#22914;&#26524;&#20320;&#30340; Web &#26381;&#21153;&#22120;&#21463;&#36523;&#20221;&#39564;&#35777;&#20013;&#38388;&#20214;&#20445;&#25252;&#65292;&#35831;&#30830;&#20445;&#22312;&#36830;&#25509;&#26102;&#21253;&#21547;&#25152;&#38656;&#30340;&#22836;&#65292;&#20363;&#22914; <code>Authorization</code> bearer token&#12290;</p><h3 id="93b824b57d4c22085c1035f7254619db">&#21333;&#20803;&#27979;&#35797;</h3><p>&#20320;&#21487;&#20197;&#20026; MCP &#26381;&#21153;&#22120;&#12289;tools&#12289;resources &#21644; prompts &#32534;&#20889;&#21333;&#20803;&#27979;&#35797;&#12290;</p><p>&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#35831;&#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#27979;&#35797;&#29992;&#20363;&#65292;&#24182;&#22312;&#27880;&#20876;&#23427;&#30340;&#26381;&#21153;&#22120;&#19978;&#35843;&#29992;&#25152;&#38656;&#21407;&#35821;&#12290;&#20363;&#22914;&#65292;&#35201;&#27979;&#35797; <code>WeatherServer</code> &#19978;&#30340; tool&#65306;</p><pre><code class="language-php">test('tool', function () {
+    $response = WeatherServer::tool(CurrentWeatherTool::class, [
+        'location' =&gt; 'New York City',
+        'units' =&gt; 'fahrenheit',
+    ]);
+
+    $response
+        -&gt;assertOk()
+        -&gt;assertSee('The current weather in New York City is 72&deg;F and sunny.');
+});</code></pre><pre><code class="language-php">/**
+ * Test a tool.
+ */
+public function test_tool(): void
+{
+    $response = WeatherServer::tool(CurrentWeatherTool::class, [
+        'location' =&gt; 'New York City',
+        'units' =&gt; 'fahrenheit',
+    ]);
+
+    $response
+        -&gt;assertOk()
+        -&gt;assertSee('The current weather in New York City is 72&deg;F and sunny.');
+}</code></pre><p>&#31867;&#20284;&#22320;&#65292;&#20320;&#21487;&#20197;&#27979;&#35797; prompts &#21644; resources&#65306;</p><pre><code class="language-php">$response = WeatherServer::prompt(...);
+$response = WeatherServer::resource(...);</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#22312;&#35843;&#29992;&#21407;&#35821;&#20043;&#21069;&#36890;&#36807;&#38142;&#25509; <code>actingAs</code> &#26041;&#27861;&#20197;&#24050;&#35748;&#35777;&#29992;&#25143;&#30340;&#36523;&#20221;&#36827;&#34892;&#25805;&#20316;&#65306;</p><pre><code class="language-php">$response = WeatherServer::actingAs($user)-&gt;tool(...);</code></pre><p>&#25910;&#21040;&#21709;&#24212;&#21518;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#21508;&#31181;&#26029;&#35328;&#26041;&#27861;&#26469;&#39564;&#35777;&#21709;&#24212;&#30340;&#20869;&#23481;&#21644;&#29366;&#24577;&#12290;</p><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>assertOk</code> &#26041;&#27861;&#26029;&#35328;&#21709;&#24212;&#25104;&#21151;&#12290;&#36825;&#20250;&#26816;&#26597;&#21709;&#24212;&#27809;&#26377;&#20219;&#20309;&#38169;&#35823;&#65306;</p><pre><code class="language-php">$response-&gt;assertOk();</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>assertSee</code> &#26041;&#27861;&#26029;&#35328;&#21709;&#24212;&#21253;&#21547;&#29305;&#23450;&#25991;&#26412;&#65306;</p><pre><code class="language-php">$response-&gt;assertSee('The current weather in New York City is 72&deg;F and sunny.');</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>assertHasErrors</code> &#26041;&#27861;&#26029;&#35328;&#21709;&#24212;&#21253;&#21547;&#38169;&#35823;&#65306;</p><pre><code class="language-php">$response-&gt;assertHasErrors();
+
+$response-&gt;assertHasErrors([
+    'Something went wrong.',
+]);</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>assertHasNoErrors</code> &#26041;&#27861;&#26029;&#35328;&#21709;&#24212;&#19981;&#21253;&#21547;&#38169;&#35823;&#65306;</p><pre><code class="language-php">$response-&gt;assertHasNoErrors();</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>assertName()</code>&#12289;<code>assertTitle()</code> &#21644; <code>assertDescription()</code> &#26041;&#27861;&#26029;&#35328;&#21709;&#24212;&#21253;&#21547;&#29305;&#23450;&#20803;&#25968;&#25454;&#65306;</p><pre><code class="language-php">$response-&gt;assertName('current-weather');
+$response-&gt;assertTitle('Current Weather Tool');
+$response-&gt;assertDescription('Fetches the current weather forecast for a specified location.');</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>assertSentNotification</code> &#21644; <code>assertNotificationCount</code> &#26041;&#27861;&#26029;&#35328;&#24050;&#21457;&#36865;&#36890;&#30693;&#65306;</p><pre><code class="language-php">$response-&gt;assertSentNotification('processing/progress', [
+    'step' =&gt; 1,
+    'total' =&gt; 5,
+]);
+
+$response-&gt;assertSentNotification('processing/progress', [
+    'step' =&gt; 2,
+    'total' =&gt; 5,
+]);
+
+$response-&gt;assertNotificationCount(5);</code></pre><p>&#26368;&#21518;&#65292;&#22914;&#26524;&#20320;&#24076;&#26395;&#26816;&#26597;&#21407;&#22987;&#21709;&#24212;&#20869;&#23481;&#65292;&#21487;&#20197;&#20351;&#29992; <code>dd</code> &#25110; <code>dump</code> &#26041;&#27861;&#36755;&#20986;&#21709;&#24212;&#20197;&#36827;&#34892;&#35843;&#35797;&#65306;</p><pre><code class="language-php">$response-&gt;dd();
+$response-&gt;dump();</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Laravel MCP: <i><a href="https://github.com/laravel/mcp" target="_blank">https://github.com/laravel/mcp</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Model Context Protocol: <i><a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank">https://modelcontextprotocol.io/docs/getting-started/intro</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Laravel Boost: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/installation#installing-laravel-boost" target="_blank">/docs/Laravel 13.x/installation#installing-laravel-boost</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> MCP Inspector: <i><a href="3oyjdzxyp5.html#mcp-inspector" target="_blank">#mcp-inspector</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> output schema: <i><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/tools#output-schema" target="_blank">https://modelcontextprotocol.io/specification/2025-06-18/server/tools#output-schema</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 验证功能: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation" target="_blank">/docs/Laravel 13.x/validation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 服务容器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/container" target="_blank">/docs/Laravel 13.x/container</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> annotations: <i><a href="https://modelcontextprotocol.io/specification/2025-06-18/schema#toolannotations" target="_blank">https://modelcontextprotocol.io/specification/2025-06-18/schema#toolannotations</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> 结构化内容: <i><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/tools#structured-content" target="_blank">https://modelcontextprotocol.io/specification/2025-06-18/server/tools#structured-content</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> generator: <i><a href="https://www.php.net/manual/en/language.generators.overview.php" target="_blank">https://www.php.net/manual/en/language.generators.overview.php</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> Prompts: <i><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/prompts" target="_blank">https://modelcontextprotocol.io/specification/2025-06-18/server/prompts</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> 验证功能: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation" target="_blank">/docs/Laravel 13.x/validation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> 服务容器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/container" target="_blank">/docs/Laravel 13.x/container</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> Resources: <i><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/resources" target="_blank">https://modelcontextprotocol.io/specification/2025-06-18/server/resources</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> Resource templates: <i><a href="https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates" target="_blank">https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> 服务容器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/container" target="_blank">/docs/Laravel 13.x/container</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> annotations: <i><a href="https://modelcontextprotocol.io/specification/2025-06-18/schema#resourceannotations" target="_blank">https://modelcontextprotocol.io/specification/2025-06-18/schema#resourceannotations</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> MCP Apps: <i><a href="https://modelcontextprotocol.io/extensions/apps/overview" target="_blank">https://modelcontextprotocol.io/extensions/apps/overview</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> MCP Apps 规范: <i><a href="https://modelcontextprotocol.io/extensions/apps/overview" target="_blank">https://modelcontextprotocol.io/extensions/apps/overview</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> Boost: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/boost" target="_blank">/docs/Laravel 13.x/boost</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> Laravel Boost: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/boost" target="_blank">/docs/Laravel 13.x/boost</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> MCP Apps 文档: <i><a href="https://modelcontextprotocol.io/extensions/apps/overview" target="_blank">https://modelcontextprotocol.io/extensions/apps/overview</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> MCP 规范: <i><a href="https://modelcontextprotocol.io/specification/2025-06-18/basic#meta" target="_blank">https://modelcontextprotocol.io/specification/2025-06-18/basic#meta</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> Laravel Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> Laravel Passport: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/passport" target="_blank">/docs/Laravel 13.x/passport</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> Laravel Passport: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/passport" target="_blank">/docs/Laravel 13.x/passport</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> 安装和部署指南: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/passport#installation" target="_blank">/docs/Laravel 13.x/passport#installation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[30]</code> 授权检查: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authorization" target="_blank">/docs/Laravel 13.x/authorization</a></i><br><code style="font-size: 90%; opacity: 0.6;">[31]</code> AI 代理: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/ai-sdk#mcp-tools" target="_blank">/docs/Laravel 13.x/ai-sdk#mcp-tools</a></i><br><code style="font-size: 90%; opacity: 0.6;">[32]</code> OAuth 2.1: <i><a href="3oyjdzxyp5.html#oauth" target="_blank">#oauth</a></i><br><code style="font-size: 90%; opacity: 0.6;">[33]</code> 动态客户端注册: <i><a href="https://datatracker.ietf.org/doc/html/rfc7591" target="_blank">https://datatracker.ietf.org/doc/html/rfc7591</a></i><br><code style="font-size: 90%; opacity: 0.6;">[34]</code> Laravel AI SDK: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/ai-sdk" target="_blank">/docs/Laravel 13.x/ai-sdk</a></i><br><code style="font-size: 90%; opacity: 0.6;">[35]</code> MCP Tools: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/ai-sdk#mcp-tools" target="_blank">/docs/Laravel 13.x/ai-sdk#mcp-tools</a></i><br><code style="font-size: 90%; opacity: 0.6;">[36]</code> MCP Inspector: <i><a href="https://modelcontextprotocol.io/docs/tools/inspector" target="_blank">https://modelcontextprotocol.io/docs/tools/inspector</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="ndvm3dj93j.html#blog1069" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Laravel AI SDK</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="2ev864oyor.html#blog1071" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">Laravel Boost</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

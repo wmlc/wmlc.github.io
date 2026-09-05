@@ -71,7 +71,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
 
     
 </head>
@@ -323,6 +323,10 @@
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
                                    href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel&#32;13.x/overview.html">Laravel 13.x</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
@@ -699,6 +703,93 @@
     })();
 </script>
 
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -712,7 +803,7 @@ var _hmt = _hmt || [];
      crossorigin="anonymous"></script>
 	
 	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
-		<h1>Linux 使用 strace 命令查看进程正在做什么</h1><?xml encoding="UTF-8"><p>&#25105;&#26377;&#19968;&#20010;&#38271;&#26102;&#38388;&#36816;&#34892;&#30340;&#36827;&#31243;&#65292;&#24819;&#30830;&#35748;&#23427;&#26159;&#21542;&#36824;&#22312;&#24037;&#20316;&#12290;</p><p>&#25105;&#30693;&#36947;&#23427;&#30340;&#36827;&#31243; ID&#65288;&#27604;&#22914;&#36825;&#37324;&#26159; 32425&#65289;&#65292;&#19979;&#38754;&#26159;&#22914;&#20309;&#20351;&#29992; <code>strace</code> &#23454;&#26102;&#26597;&#30475;&#23427;&#24403;&#21069;&#22312;&#20570;&#20160;&#20040;&#12290;&#36825;&#20010;&#21629;&#20196;&#20250;&#38750;&#24120;&#24555;&#36895;&#22320;&#36755;&#20986;&#22823;&#37327;&#20869;&#23481;&mdash;&mdash;&#25353; <strong class="mk-y">Ctrl+C</strong> &#21363;&#21487;&#20572;&#27490;&#65306;</p><pre><code class="language-bash">$ sudo strace -p 32425
+		<h1>Linux 使用 strace 命令查看进程正在做什么</h1><?xml encoding="UTF-8"><p>&#25105;&#26377;&#19968;&#20010;&#38271;&#26102;&#38388;&#36816;&#34892;&#30340;&#36827;&#31243;&#65292;&#24819;&#30830;&#35748;&#23427;&#26159;&#21542;&#36824;&#22312;&#24037;&#20316;&#12290;</p><p>&#25105;&#30693;&#36947;&#23427;&#30340;&#36827;&#31243; ID&#65288;&#27604;&#22914;&#36825;&#37324;&#26159; 32425&#65289;&#65292;&#19979;&#38754;&#26159;&#22914;&#20309;&#20351;&#29992; <code>strace</code> &#23454;&#26102;&#26597;&#30475;&#23427;&#24403;&#21069;&#22312;&#20570;&#20160;&#20040;&#12290;&#36825;&#20010;&#21629;&#20196;&#20250;&#38750;&#24120;&#24555;&#36895;&#22320;&#36755;&#20986;&#22823;&#37327;&#20869;&#23481;&mdash;&mdash;&#25353; <strong class="mk-b">Ctrl+C</strong> &#21363;&#21487;&#20572;&#27490;&#65306;</p><pre><code class="language-bash">$ sudo strace -p 32425
 strace: Process 32425 attached
 lseek(4, 923287936, SEEK_SET)           = 923287936
 write(4, "\r\0\0\0\1\0\"\0\0\"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4096) = 4096
@@ -720,7 +811,7 @@ lseek(3, 919687168, SEEK_SET)           = 919687168
 read(3, "\r\0\0\0\1\0\"\0\0\"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4096) = 4096
 lseek(4, 923292032, SEEK_SET)           = 923292032
 write(4, "\0\3kf\0\0\0\0\265\17I\247\326\307U\263xF\34\305\336\231\352a", 24) = 24
-lseek(4, 923292056, SEEK_SET)           = 923292056</code></pre><p>&#33267;&#23569;&#35828;&#26126;&#36825;&#20010;&#36827;&#31243;&#30830;&#23454;&#22312;&#20570;&#19968;&#20123;&#20107;&#24773;&#65281;</p><hr><p>&#20351;&#29992; <code>strace -c</code> &#21487;&#20197;&#23545;&#31995;&#32479;&#35843;&#29992;&#36827;&#34892;&#35745;&#25968;&#24182;&#29983;&#25104;&#25688;&#35201;&#12290;&#36816;&#34892;&#36825;&#20010;&#21629;&#20196;&#26102;&#30475;&#36215;&#26469;&#22909;&#20687;&#20160;&#20040;&#37117;&#27809;&#21457;&#29983;&#65292;&#20294;&#24403;&#20320;&#20960;&#31186;&#21518;&#25353; <strong class="mk-y">Ctrl+C</strong>&#65292;&#23427;&#20250;&#36755;&#20986;&#25130;&#33267;&#30446;&#21069;&#30340;&#32479;&#35745;&#20449;&#24687;&#65306;</p><pre><code class="language-bash">$ sudo strace -c -p 32425
+lseek(4, 923292056, SEEK_SET)           = 923292056</code></pre><p>&#33267;&#23569;&#35828;&#26126;&#36825;&#20010;&#36827;&#31243;&#30830;&#23454;&#22312;&#20570;&#19968;&#20123;&#20107;&#24773;&#65281;</p><hr><p>&#20351;&#29992; <code>strace -c</code> &#21487;&#20197;&#23545;&#31995;&#32479;&#35843;&#29992;&#36827;&#34892;&#35745;&#25968;&#24182;&#29983;&#25104;&#25688;&#35201;&#12290;&#36816;&#34892;&#36825;&#20010;&#21629;&#20196;&#26102;&#30475;&#36215;&#26469;&#22909;&#20687;&#20160;&#20040;&#37117;&#27809;&#21457;&#29983;&#65292;&#20294;&#24403;&#20320;&#20960;&#31186;&#21518;&#25353; <strong class="mk-b">Ctrl+C</strong>&#65292;&#23427;&#20250;&#36755;&#20986;&#25130;&#33267;&#30446;&#21069;&#30340;&#32479;&#35745;&#20449;&#24687;&#65306;</p><pre><code class="language-bash">$ sudo strace -c -p 32425
 strace: Process 32425 attached
 ^Cstrace: Process 32425 detached
 % time     seconds  usecs/call     calls    errors syscall

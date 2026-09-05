@@ -70,7 +70,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
 
     
 </head>
@@ -322,6 +322,10 @@
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
                                    href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel&#32;13.x/overview.html">Laravel 13.x</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
@@ -650,6 +654,93 @@
     })();
 </script>
 
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -685,7 +776,7 @@ var _hmt = _hmt || [];
             },  
             "plists": {         // &#21512;&#24182;&#21040;&#24037;&#31243;Info.plist&#25991;&#20214;&#30340;&#25968;&#25454;&#65288;json&#26684;&#24335;&#65289;  
             }  
-        },</code></pre><p>&#20854;&#20013;entitlements&#25968;&#25454;&#65288;json&#65289;&#23558;&#36716;&#25442;&#25104;XCode&#24037;&#31243;&#20013;entitlements&#25991;&#20214;&#30340;&#25968;&#25454;&#65288;&#23383;&#20856;&#26684;&#24335;&#65289;  </p><p>plists&#33410;&#28857;&#25968;&#25454;&#23558;&#36716;&#25442;&#25104;XCode&#24037;&#31243;&#20013;Info.plist&#25991;&#20214;&#30340;&#25968;&#25454;&#65288;&#23383;&#20856;&#26684;&#24335;&#65289;</p><h2 id="dc836b934c7361fcea6e235bb69d9735">&#36890;&#29992;&#38142;&#25509;&#65288;Universal Link&#65289;</h2><h3 id="53dc554302a2617dfe9f1322d8e318d1">&#20197;&#19979;&#25991;&#26723;&#24050;&#36807;&#26399;&#65292;&#36866;&#29992;&#20110;&#65306;&#26412;&#22320;&#31163;&#32447;&#25171;&#21253;&#25110;&#32773;&#30001;&#20110;&#26576;&#31181;&#21407;&#22240;&#20320;&#38656;&#35201;&#29992;&#20256;&#32479;&#30340;&#26041;&#24335;&#65306;&#31169;&#26377;&#21270;&#37096;&#32626;&#26381;&#21153;&#22120;&#26469;&#25176;&#31649;apple-app-site-association&#25991;&#20214;&#21019;&#24314;&#36890;&#29992;&#38142;&#25509;&#12290;</h3><h3 id="59de1fe6966f7e179c8ba19d2d4293aa">&#25512;&#33616;&#20351;&#29992;&#65306;<a href="https://uniapp.dcloud.io/api/plugins/universal-links" target="_blank" rel="noopener noreferrer">&#19968;&#38190;&#29983;&#25104;iOS&#36890;&#29992;&#38142;&#25509;</a></h3><p>Universal Link&#26159;&#33529;&#26524;&#22312;WWDC 2015&#19978;&#25552;&#20986;&#30340;iOS 9&#30340;&#26032;&#29305;&#24615;&#20043;&#19968;&#12290;&#27492;&#29305;&#24615;&#31867;&#20284;&#20110;&#28145;&#23618;&#38142;&#25509;&#65292;&#24182;&#33021;&#22815;&#26041;&#20415;&#22320;&#36890;&#36807;&#25171;&#24320;&#19968;&#20010;Https&#38142;&#25509;&#26469;&#30452;&#25509;&#21551;&#21160;&#24744;&#30340;&#23458;&#25143;&#31471;&#24212;&#29992;(&#25163;&#26426;&#26377;&#23433;&#35013;App)&#12290;&#23545;&#27604;&#36215;&#20197;&#24448;&#25152;&#20351;&#29992;&#30340;URL Sheme, &#36825;&#31181;&#26032;&#29305;&#24615;&#22312;&#23454;&#29616;web-app&#30340;&#26080;&#32541;&#38142;&#25509;&#26102;&#33021;&#22815;&#25552;&#20379;&#26497;&#20339;&#30340;&#29992;&#25143;&#20307;&#39564;&#12290;  </p><p>&#20351;&#29992;&#21069;&#35831;&#38405;&#35835;<a href="https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html#//apple_ref/doc/uid/TP40016308-CH12-SW1" target="_blank" rel="noopener noreferrer">&#33529;&#26524;&#23448;&#26041;&#25991;&#26723;</a>  </p><p><strong class="mk-b">&#20351;&#29992;&#36890;&#29992;&#38142;&#25509;&#65288;Universal Link&#65289;&#24517;&#39035;&#35201;&#26377;&#22495;&#21517;&#65292;&#19979;&#30340;&#37197;&#32622;&#20013;&#23558;&#35201;&#29992;&#21040;</strong></p><h3 id="b884183c4cc7b40ec135d5336028238c">&#31532;&#19968;&#27493;&#65306;&#24320;&#21551;Associated Domains&#26381;&#21153;</h3><p>&#30331;&#24405;&#33529;&#26524;&#24320;&#21457;&#32773;&#32593;&#31449;&#65292;&#22312;&ldquo;Certificates, Identifiers &amp; Profiles&rdquo;&#39029;&#38754;&#36873;&#25321;&ldquo;Identifiers&rdquo;&#20013;&#36873;&#25321;&#23545;&#24212;&#30340;App ID&#65292;&#30830;&#20445;&#24320;&#21551;Associated Domains&#26381;&#21153;  </p><p><a href="https://img-cdn-tc.dcloud.net.cn/uploads/article/20190918/aa61368e308ae5e310b02978fd97c5e7.png" target="_blank" rel="noopener noreferrer"><img src="https://img-cdn-tc.dcloud.net.cn/uploads/article/20190918/aa61368e308ae5e310b02978fd97c5e7.png" alt=""></a></p><p><strong class="mk-b">&#24320;&#21551;Associated Domains&#26381;&#21153;&#21518;&#38656;&#35201;&#37325;&#26032;&#29983;&#25104;profile&#25991;&#20214;&#65292;&#25552;&#20132;&#20113;&#31471;&#25171;&#21253;&#26102;&#20351;&#29992;</strong></p><h3 id="3eb217c896002d2c5bc049dbdcf7fbb5">&#31532;&#20108;&#27493;&#65306;&#37197;&#32622;Associated Domains&#65288;&#22495;&#21517;&#65289;</h3><p>&#21407;&#29983;XCode&#29615;&#22659;&#37197;&#32622;&#36890;&#29992;&#38142;&#25509;&#22495;&#21517;&#65288;&#26412;&#22320;&#31163;&#32447;&#25171;&#21253;&#37197;&#32622;&#65292;&#20351;&#29992;HBuilderX&#20113;&#31471;&#25171;&#21253;&#36339;&#36807;&#65289;  </p><p><a href="https://img-cdn-tc.dcloud.net.cn/uploads/article/20191024/2d348820422e3b02d8a65b8f6c6cd830.png" target="_blank" rel="noopener noreferrer"><img src="https://img-cdn-tc.dcloud.net.cn/uploads/article/20191024/2d348820422e3b02d8a65b8f6c6cd830.png" alt=""></a></p><p><a href="https://img-cdn-tc.dcloud.net.cn/uploads/article/20191024/0221225d811e93279784d3235a32d055.png" target="_blank" rel="noopener noreferrer"><img src="https://img-cdn-tc.dcloud.net.cn/uploads/article/20191024/0221225d811e93279784d3235a32d055.png" alt=""></a></p><p><strong class="mk-p">&#20351;&#29992;HBuilderX&#20113;&#31471;&#25171;&#21253;&#26102;&#22312;manifest.json&#20013;&#37197;&#32622;&#22495;&#21517;</strong>  </p><p>&#22312;"plus" -&gt; "distribute" -&gt; "apple" -&gt; "capabilities" -&gt; "entitlements"&#33410;&#28857;&#65288;uni-app&#39033;&#30446;&#22312;"app-plus" -&gt; "distribute" -&gt; "ios" -&gt; "capabilities" -&gt; "entitlements"&#65289;&#19979;&#28155;&#21152;"com.apple.developer.associated-domains"&#23383;&#27573;&#65292;&#23383;&#27573;&#20540;&#20026;&#23383;&#31526;&#20018;&#25968;&#32452;&#65292;&#27599;&#20010;&#23383;&#31526;&#20018;&#20026;&#35201;&#20851;&#32852;&#30340;&#22495;&#21517;</p><pre><code class="language-javascript">    "capabilities": {  
+        },</code></pre><p>&#20854;&#20013;entitlements&#25968;&#25454;&#65288;json&#65289;&#23558;&#36716;&#25442;&#25104;XCode&#24037;&#31243;&#20013;entitlements&#25991;&#20214;&#30340;&#25968;&#25454;&#65288;&#23383;&#20856;&#26684;&#24335;&#65289;  </p><p>plists&#33410;&#28857;&#25968;&#25454;&#23558;&#36716;&#25442;&#25104;XCode&#24037;&#31243;&#20013;Info.plist&#25991;&#20214;&#30340;&#25968;&#25454;&#65288;&#23383;&#20856;&#26684;&#24335;&#65289;</p><h2 id="dc836b934c7361fcea6e235bb69d9735">&#36890;&#29992;&#38142;&#25509;&#65288;Universal Link&#65289;</h2><h3 id="53dc554302a2617dfe9f1322d8e318d1">&#20197;&#19979;&#25991;&#26723;&#24050;&#36807;&#26399;&#65292;&#36866;&#29992;&#20110;&#65306;&#26412;&#22320;&#31163;&#32447;&#25171;&#21253;&#25110;&#32773;&#30001;&#20110;&#26576;&#31181;&#21407;&#22240;&#20320;&#38656;&#35201;&#29992;&#20256;&#32479;&#30340;&#26041;&#24335;&#65306;&#31169;&#26377;&#21270;&#37096;&#32626;&#26381;&#21153;&#22120;&#26469;&#25176;&#31649;apple-app-site-association&#25991;&#20214;&#21019;&#24314;&#36890;&#29992;&#38142;&#25509;&#12290;</h3><h3 id="59de1fe6966f7e179c8ba19d2d4293aa">&#25512;&#33616;&#20351;&#29992;&#65306;<a href="https://uniapp.dcloud.io/api/plugins/universal-links" target="_blank" rel="noopener noreferrer">&#19968;&#38190;&#29983;&#25104;iOS&#36890;&#29992;&#38142;&#25509;</a></h3><p>Universal Link&#26159;&#33529;&#26524;&#22312;WWDC 2015&#19978;&#25552;&#20986;&#30340;iOS 9&#30340;&#26032;&#29305;&#24615;&#20043;&#19968;&#12290;&#27492;&#29305;&#24615;&#31867;&#20284;&#20110;&#28145;&#23618;&#38142;&#25509;&#65292;&#24182;&#33021;&#22815;&#26041;&#20415;&#22320;&#36890;&#36807;&#25171;&#24320;&#19968;&#20010;Https&#38142;&#25509;&#26469;&#30452;&#25509;&#21551;&#21160;&#24744;&#30340;&#23458;&#25143;&#31471;&#24212;&#29992;(&#25163;&#26426;&#26377;&#23433;&#35013;App)&#12290;&#23545;&#27604;&#36215;&#20197;&#24448;&#25152;&#20351;&#29992;&#30340;URL Sheme, &#36825;&#31181;&#26032;&#29305;&#24615;&#22312;&#23454;&#29616;web-app&#30340;&#26080;&#32541;&#38142;&#25509;&#26102;&#33021;&#22815;&#25552;&#20379;&#26497;&#20339;&#30340;&#29992;&#25143;&#20307;&#39564;&#12290;  </p><p>&#20351;&#29992;&#21069;&#35831;&#38405;&#35835;<a href="https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html#//apple_ref/doc/uid/TP40016308-CH12-SW1" target="_blank" rel="noopener noreferrer">&#33529;&#26524;&#23448;&#26041;&#25991;&#26723;</a>  </p><p><strong class="mk-g">&#20351;&#29992;&#36890;&#29992;&#38142;&#25509;&#65288;Universal Link&#65289;&#24517;&#39035;&#35201;&#26377;&#22495;&#21517;&#65292;&#19979;&#30340;&#37197;&#32622;&#20013;&#23558;&#35201;&#29992;&#21040;</strong></p><h3 id="b884183c4cc7b40ec135d5336028238c">&#31532;&#19968;&#27493;&#65306;&#24320;&#21551;Associated Domains&#26381;&#21153;</h3><p>&#30331;&#24405;&#33529;&#26524;&#24320;&#21457;&#32773;&#32593;&#31449;&#65292;&#22312;&ldquo;Certificates, Identifiers &amp; Profiles&rdquo;&#39029;&#38754;&#36873;&#25321;&ldquo;Identifiers&rdquo;&#20013;&#36873;&#25321;&#23545;&#24212;&#30340;App ID&#65292;&#30830;&#20445;&#24320;&#21551;Associated Domains&#26381;&#21153;  </p><p><a href="https://img-cdn-tc.dcloud.net.cn/uploads/article/20190918/aa61368e308ae5e310b02978fd97c5e7.png" target="_blank" rel="noopener noreferrer"><img src="https://img-cdn-tc.dcloud.net.cn/uploads/article/20190918/aa61368e308ae5e310b02978fd97c5e7.png" alt=""></a></p><p><strong class="mk-p">&#24320;&#21551;Associated Domains&#26381;&#21153;&#21518;&#38656;&#35201;&#37325;&#26032;&#29983;&#25104;profile&#25991;&#20214;&#65292;&#25552;&#20132;&#20113;&#31471;&#25171;&#21253;&#26102;&#20351;&#29992;</strong></p><h3 id="3eb217c896002d2c5bc049dbdcf7fbb5">&#31532;&#20108;&#27493;&#65306;&#37197;&#32622;Associated Domains&#65288;&#22495;&#21517;&#65289;</h3><p>&#21407;&#29983;XCode&#29615;&#22659;&#37197;&#32622;&#36890;&#29992;&#38142;&#25509;&#22495;&#21517;&#65288;&#26412;&#22320;&#31163;&#32447;&#25171;&#21253;&#37197;&#32622;&#65292;&#20351;&#29992;HBuilderX&#20113;&#31471;&#25171;&#21253;&#36339;&#36807;&#65289;  </p><p><a href="https://img-cdn-tc.dcloud.net.cn/uploads/article/20191024/2d348820422e3b02d8a65b8f6c6cd830.png" target="_blank" rel="noopener noreferrer"><img src="https://img-cdn-tc.dcloud.net.cn/uploads/article/20191024/2d348820422e3b02d8a65b8f6c6cd830.png" alt=""></a></p><p><a href="https://img-cdn-tc.dcloud.net.cn/uploads/article/20191024/0221225d811e93279784d3235a32d055.png" target="_blank" rel="noopener noreferrer"><img src="https://img-cdn-tc.dcloud.net.cn/uploads/article/20191024/0221225d811e93279784d3235a32d055.png" alt=""></a></p><p><strong class="mk-g">&#20351;&#29992;HBuilderX&#20113;&#31471;&#25171;&#21253;&#26102;&#22312;manifest.json&#20013;&#37197;&#32622;&#22495;&#21517;</strong>  </p><p>&#22312;"plus" -&gt; "distribute" -&gt; "apple" -&gt; "capabilities" -&gt; "entitlements"&#33410;&#28857;&#65288;uni-app&#39033;&#30446;&#22312;"app-plus" -&gt; "distribute" -&gt; "ios" -&gt; "capabilities" -&gt; "entitlements"&#65289;&#19979;&#28155;&#21152;"com.apple.developer.associated-domains"&#23383;&#27573;&#65292;&#23383;&#27573;&#20540;&#20026;&#23383;&#31526;&#20018;&#25968;&#32452;&#65292;&#27599;&#20010;&#23383;&#31526;&#20018;&#20026;&#35201;&#20851;&#32852;&#30340;&#22495;&#21517;</p><pre><code class="language-javascript">    "capabilities": {  
         "entitlements": {  
             "com.apple.developer.associated-domains": [  
                 "applinks:demo.dcloud.net.cn"  
@@ -693,7 +784,7 @@ var _hmt = _hmt || [];
         }  
     }</code></pre><p><strong class="mk-b">&#20854;&#20013;demo.dcloud.net.cn&#26159;&#24212;&#29992;&#36890;&#29992;&#38142;&#25509;&#30340;&#22495;&#21517;&#65288;&#36825;&#37324;&#19981;&#35201;&#21253;&#21547;path&#65289;&#65292;&#35831;&#20462;&#25913;&#20026;&#33258;&#24049;&#24212;&#29992;&#35201;&#20351;&#29992;&#30340;&#22495;&#21517;</strong>  </p><p>&#27809;&#26377;&#22914;&#19978;&#37197;&#32622;ipa&#21253;&#19978;&#20256;&#26102;&#20250;&#25253;&#38169;&#65306; </p><blockquote>
 <p>ERROR ITMS-90046: "Invalid Code Signing Entitlements. Your application bundle's signature contains code signing entitlements that are not supported on iOS. Specifically, value 'applinks:<a href="https://www" target="_blank" rel="noopener noreferrer">https://www</a>.....' for key 'com.apple.developer.associated-domains' in 'Payload/HBuilder.app/HBuilder' is not supported."</p>
-</blockquote><p><strong class="mk-b"> &#23454;&#20363; </strong></p><pre><code class="language-js">"ios" : {
+</blockquote><p><strong class="mk-g"> &#23454;&#20363; </strong></p><pre><code class="language-js">"ios" : {
   "privacyDescription" : {
     "NSCameraUsageDescription" : "&#38656;&#35201;&#24744;&#21516;&#24847;&#25165;&#33021;&#25293;&#25668;&#21830;&#21697;&#29031;&#29255;&#65292;&#36827;&#34892;&#21830;&#21697;&#21457;&#24067;&#30340;&#25805;&#20316;&#12290;",
       "NSPhotoLibraryUsageDescription" : "&#38656;&#35201;&#24744;&#21516;&#24847;&#25165;&#33021;&#33719;&#21462;&#21040;&#30456;&#20876;&#22270;&#29255;&#65292;&#29992;&#20110;&#21830;&#21697;&#30456;&#20876;&#21644;&#29992;&#25143;&#22836;&#20687;&#30340;&#21457;&#24067;&#12290;"
@@ -704,7 +795,7 @@ var _hmt = _hmt || [];
       }
     },
       "idfa": false
-},</code></pre><p>&#20445;&#23384;&#21518;&#25552;&#20132;&#20113;&#31471;&#25171;&#21253;&#29983;&#25928;&#12290;</p><p><strong class="mk-g">HBuilderX&#20013;&#33258;&#24102;&#30340;&#40664;&#35748;&#30495;&#26426;&#36816;&#34892;&#22522;&#24231;HBuilderX&#27880;&#20876;&#30340;&#36890;&#29992;&#38142;&#25509;&#20026;&#65306;<a href="https://demo.dcloud.net.cn/ulink/" target="_blank" rel="noopener noreferrer">https://demo.dcloud.net.cn/ulink/</a></strong></p><h3 id="0341a59d541d32d85b007bba762893e9">&#31532;&#19977;&#27493;&#65306;&#26381;&#21153;&#22120;&#37197;&#32622;apple-app-site-association&#25991;&#20214;</h3><p>&#38656;&#35201;&#22312;&#19978;&#38754;&#22495;&#21517;&#23545;&#24212;&#30340;&#26381;&#21153;&#22120;&#19978;&#25918;apple-app-site-association&#25991;&#20214;&#12290;<br>
+},</code></pre><p>&#20445;&#23384;&#21518;&#25552;&#20132;&#20113;&#31471;&#25171;&#21253;&#29983;&#25928;&#12290;</p><p><strong class="mk-p">HBuilderX&#20013;&#33258;&#24102;&#30340;&#40664;&#35748;&#30495;&#26426;&#36816;&#34892;&#22522;&#24231;HBuilderX&#27880;&#20876;&#30340;&#36890;&#29992;&#38142;&#25509;&#20026;&#65306;<a href="https://demo.dcloud.net.cn/ulink/" target="_blank" rel="noopener noreferrer">https://demo.dcloud.net.cn/ulink/</a></strong></p><h3 id="0341a59d541d32d85b007bba762893e9">&#31532;&#19977;&#27493;&#65306;&#26381;&#21153;&#22120;&#37197;&#32622;apple-app-site-association&#25991;&#20214;</h3><p>&#38656;&#35201;&#22312;&#19978;&#38754;&#22495;&#21517;&#23545;&#24212;&#30340;&#26381;&#21153;&#22120;&#19978;&#25918;apple-app-site-association&#25991;&#20214;&#12290;<br>
 apple-app-site-association&#25991;&#20214;&#37197;&#32622;&#22914;&#19979;&#65306;</p><pre><code class="language-javascript">{  
     "applinks": {  
         "apps": [],  
@@ -722,7 +813,7 @@ apple-app-site-association&#25991;&#20214;&#37197;&#32622;&#22914;&#19979;&#6530
 &#30001;&#21069;&#32512;&#21644;ID&#20004;&#37096;&#20998;&#32452;&#25104;,&#21487;&#20197;&#30331;&#24405;&#33529;&#26524;&#24320;&#21457;&#32773;&#32593;&#31449;&#65292;&#22312;&ldquo;Certificates, Identifiers &amp; Profiles&rdquo;&#39029;&#38754;&#36873;&#25321;&ldquo;Identifiers&rdquo;&#20013;&#36873;&#25321;&#23545;&#24212;&#30340;App ID&#26597;&#30475;</li>
 <li style="list-style-type: disc;">paths<br>
 &#23545;&#24212;&#22495;&#21517;&#20013;&#30340;path&#65292;&#29992;&#20110;&#36807;&#28388;&#21487;&#20197;&#36339;&#36716;&#21040;App&#30340;&#38142;&#25509;&#65292;&#25903;&#25345;&#36890;&#37197;&#31526;*&#65292;?&#20197;&#21450;NOT&#36827;&#34892;&#21305;&#37197;&#65292;&#21305;&#37197;&#30340;&#20248;&#20808;&#32423;&#26159;&#20174;&#24038;&#33267;&#21491;&#20381;&#27425;&#38477;&#20302;</li>
-</ul><p><strong class="mk-b">&#27880;&#24847;&#65306;&#19981;&#35201;&#30452;&#25509;&#25335;&#36125;&#20351;&#29992;&#19978;&#38754;&#30340;&#31034;&#20363;&#65292;&#24517;&#39035;&#26681;&#25454;&#33258;&#24049;&#24212;&#29992;&#30340;&#37197;&#32622;&#20462;&#25913;</strong>  </p><p>&#25226;&#37197;&#32622;&#22909;&#30340;apple-app-site-association&#25991;&#20214;&#19978;&#20256;&#21040;&#20320;&#33258;&#24049;&#30340;&#26381;&#21153;&#22120;&#65292;&#30830;&#20445;&#36890;&#36807;https://demo.dcloud.net.cn/.well-known/apple-app-site-association&#21487;&#35775;&#38382;&#12290;  </p><p><strong class="mk-p">&#20854;&#20013;demo.dcloud.net.cn&#20026;&#19978;&#38754;&#37197;&#32622;&#30340;&#22495;&#21517;</strong>  </p><p>&#24212;&#29992;&#23433;&#35013;&#21518;&#20250;&#36890;&#36807;&#35775;&#38382;&#19978;&#38754;&#30340;url&#21521;&#31995;&#32479;&#27880;&#20876;&#24212;&#29992;&#30340;&#36890;&#29992;&#38142;&#25509;&#12290;</p><h3 id="ec742f596de0938d0f9e835d361103e3">&#25512;&#33616;&#26041;&#26696;&#65306;&#23558;apple-app-site-association&#25991;&#20214;&#37096;&#32626;&#21040;&#65292;&#20813;&#36153;&#30340;&#38463;&#37324;&#20113;&#29256;unicloud&#30340; <a href="https://uniapp.dcloud.io/uniCloud/hosting?id=%e7%ae%80%e4%bb%8b" target="_blank" rel="noopener noreferrer">&#21069;&#31471;&#32593;&#39029;&#25176;&#31649;</a></h3><h3 id="bd6a79dcd3a4f1a6513a082b53b4ae63">&#23458;&#25143;&#31471;&#22788;&#29702;&#36890;&#29992;&#38142;&#25509;</h3><p>&#21487;&#36890;&#36807;5+ API&#30340;<a href="https://www.html5plus.org/doc/zh_cn/runtime.html#plus.runtime.launcher" target="_blank" rel="noopener noreferrer">plus.runtime.launcher</a>&#21028;&#26029;&#24212;&#29992;&#21551;&#21160;&#26469;&#28304;&#65292;&#22914;&#26524;&#20854;&#20540;&#20026;"uniLink"&#21017;&#34920;&#31034;&#36890;&#36807;&#36890;&#29992;&#38142;&#25509;&#21551;&#21160;&#24212;&#12290;<br>
+</ul><p><strong class="mk-y">&#27880;&#24847;&#65306;&#19981;&#35201;&#30452;&#25509;&#25335;&#36125;&#20351;&#29992;&#19978;&#38754;&#30340;&#31034;&#20363;&#65292;&#24517;&#39035;&#26681;&#25454;&#33258;&#24049;&#24212;&#29992;&#30340;&#37197;&#32622;&#20462;&#25913;</strong>  </p><p>&#25226;&#37197;&#32622;&#22909;&#30340;apple-app-site-association&#25991;&#20214;&#19978;&#20256;&#21040;&#20320;&#33258;&#24049;&#30340;&#26381;&#21153;&#22120;&#65292;&#30830;&#20445;&#36890;&#36807;https://demo.dcloud.net.cn/.well-known/apple-app-site-association&#21487;&#35775;&#38382;&#12290;  </p><p><strong class="mk-b">&#20854;&#20013;demo.dcloud.net.cn&#20026;&#19978;&#38754;&#37197;&#32622;&#30340;&#22495;&#21517;</strong>  </p><p>&#24212;&#29992;&#23433;&#35013;&#21518;&#20250;&#36890;&#36807;&#35775;&#38382;&#19978;&#38754;&#30340;url&#21521;&#31995;&#32479;&#27880;&#20876;&#24212;&#29992;&#30340;&#36890;&#29992;&#38142;&#25509;&#12290;</p><h3 id="ec742f596de0938d0f9e835d361103e3">&#25512;&#33616;&#26041;&#26696;&#65306;&#23558;apple-app-site-association&#25991;&#20214;&#37096;&#32626;&#21040;&#65292;&#20813;&#36153;&#30340;&#38463;&#37324;&#20113;&#29256;unicloud&#30340; <a href="https://uniapp.dcloud.io/uniCloud/hosting?id=%e7%ae%80%e4%bb%8b" target="_blank" rel="noopener noreferrer">&#21069;&#31471;&#32593;&#39029;&#25176;&#31649;</a></h3><h3 id="bd6a79dcd3a4f1a6513a082b53b4ae63">&#23458;&#25143;&#31471;&#22788;&#29702;&#36890;&#29992;&#38142;&#25509;</h3><p>&#21487;&#36890;&#36807;5+ API&#30340;<a href="https://www.html5plus.org/doc/zh_cn/runtime.html#plus.runtime.launcher" target="_blank" rel="noopener noreferrer">plus.runtime.launcher</a>&#21028;&#26029;&#24212;&#29992;&#21551;&#21160;&#26469;&#28304;&#65292;&#22914;&#26524;&#20854;&#20540;&#20026;"uniLink"&#21017;&#34920;&#31034;&#36890;&#36807;&#36890;&#29992;&#38142;&#25509;&#21551;&#21160;&#24212;&#12290;<br>
 &#36825;&#26102;&#21487;&#36890;&#36807;5+ API&#30340;<a href="https://www.html5plus.org/doc/zh_cn/runtime.html#plus.runtime.arguments" target="_blank" rel="noopener noreferrer">plus.runtime.arguments</a>&#33719;&#21462;&#21551;&#21160;&#21442;&#25968;&#65292;&#36890;&#29992;&#38142;&#25509;&#21551;&#21160;&#30340;&#24773;&#20917;&#23558;&#36820;&#22238;&#23436;&#25972;&#30340;&#36890;&#29992;&#38142;&#25509;&#22320;&#22336;&#12290;</p><h3 id="1bbbb204023e59eba03319c7c5848fd1">&#27880;&#24847;&#20107;&#39033;</h3><ul style="padding-left: 1.5em;">
 <li style="list-style-type: disc;">apple-app-site-association&#25991;&#20214;&#19981;&#38656;&#35201;.json&#21518;&#32512;</li>
 <li style="list-style-type: disc;">&#23545;apple-app-site-association&#25991;&#20214;&#30340;&#35831;&#27714;&#20165;&#22312;App&#31532;&#19968;&#27425;&#21551;&#21160;&#26102;&#36827;&#34892;&#65292;&#22914;&#26524;&#27492;&#26102;&#32593;&#32476;&#36830;&#25509;&#20986;&#20102;&#38382;&#39064;apple&#20250;&#32531;&#23384;&#35831;&#27714;&#65292;&#31561;&#26377;&#32593;&#30340;&#26102;&#20505;&#20877;&#21435;&#35831;&#27714;&#65292;&#22914;&#26524;&#27809;&#26377;&#35831;&#27714;&#27492;&#25991;&#20214;&#36890;&#29992;&#36830;&#25509;&#20250;&#22833;&#25928;</li>

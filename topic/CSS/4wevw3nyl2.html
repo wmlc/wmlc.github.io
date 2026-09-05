@@ -70,7 +70,7 @@
     }
 </style>
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="21TiS1qTS3jJ30XbFhz67uvSoTu6HMOFBvESyAZp">
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
 
     
 </head>
@@ -325,6 +325,10 @@
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
                                 <a class="px-6 text-grey-darkest"
+                                   href="../Laravel&#32;13.x/overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
                                    href="../Linux/overview.html">Linux</a>
                             </li>
                                                     <li class="py-2 hover:bg-grey-lightest">
@@ -571,6 +575,93 @@
     })();
 </script>
 
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
 <script>
 var _hmt = _hmt || [];
 (function() {
@@ -593,7 +684,7 @@ var _hmt = _hmt || [];
 <li><a href="4wevw3nyl2.html#15959495ddd9ef0a5bca7d20e887f3ef">四.重要性</a></li>
 <li><a href="4wevw3nyl2.html#298c7d7c07423b7764a53ce2e417f272">附：参考资料</a></li>
 </ul></li>
-</ul><?xml encoding="UTF-8"><h1 id="28eaac86b9b4290c7e4c7d00e06e2f79">&#32423;&#32852;</h1><p><em>&#26377;&#26102;&#20505;&#65292;&#26377;&#22810;&#20010;&#30456;&#21516;&#30340;css&#35268;&#21017;&#21487;&#20197;&#34987;&#24212;&#29992;&#20110;&#21516;&#19968;&#20010;&#20803;&#32032;&#12290;&#27492;&#26102;&#27983;&#35272;&#22120;&#38656;&#35201;&#20351;&#29992;&#32423;&#32852;&#31639;&#27861;&#30830;&#23450;&#26368;&#21518;&#20351;&#29992;&#21738;&#19968;&#20010;css&#35268;&#21017;&#36827;&#34892;&#39029;&#38754;&#28210;&#26579;&#12290;</em></p><p>css&#26159;<strong class="mk-p">&#32423;&#32852;&#26679;&#24335;&#34920;&#65288;Cascading Stylesheets&#65289;</strong>&#12290;<em>&#32423;&#32852;</em>&#26159;&#35299;&#20915;&#24403;&#22810;&#20010;css&#35268;&#21017;&#34987;&#21516;&#26102;&#24212;&#29992;&#20110;&#19968;&#20010;html&#20803;&#32032;&#26102;&#20135;&#29983;&#30340;&#20914;&#31361;&#30340;&#19968;&#31181;&#31639;&#27861;&#12290;&#27491;&#22240;&#20026;&#32423;&#32852;&#65292;&#19979;&#38754;&#30340;&#25353;&#38062;&#25165;&#20250;&#34987;&#28210;&#26579;&#25104;&#34013;&#33394;&#65306;</p><pre><code class="language-html">&lt;style&gt;
+</ul><?xml encoding="UTF-8"><h1 id="28eaac86b9b4290c7e4c7d00e06e2f79">&#32423;&#32852;</h1><p><em>&#26377;&#26102;&#20505;&#65292;&#26377;&#22810;&#20010;&#30456;&#21516;&#30340;css&#35268;&#21017;&#21487;&#20197;&#34987;&#24212;&#29992;&#20110;&#21516;&#19968;&#20010;&#20803;&#32032;&#12290;&#27492;&#26102;&#27983;&#35272;&#22120;&#38656;&#35201;&#20351;&#29992;&#32423;&#32852;&#31639;&#27861;&#30830;&#23450;&#26368;&#21518;&#20351;&#29992;&#21738;&#19968;&#20010;css&#35268;&#21017;&#36827;&#34892;&#39029;&#38754;&#28210;&#26579;&#12290;</em></p><p>css&#26159;<strong class="mk-y">&#32423;&#32852;&#26679;&#24335;&#34920;&#65288;Cascading Stylesheets&#65289;</strong>&#12290;<em>&#32423;&#32852;</em>&#26159;&#35299;&#20915;&#24403;&#22810;&#20010;css&#35268;&#21017;&#34987;&#21516;&#26102;&#24212;&#29992;&#20110;&#19968;&#20010;html&#20803;&#32032;&#26102;&#20135;&#29983;&#30340;&#20914;&#31361;&#30340;&#19968;&#31181;&#31639;&#27861;&#12290;&#27491;&#22240;&#20026;&#32423;&#32852;&#65292;&#19979;&#38754;&#30340;&#25353;&#38062;&#25165;&#20250;&#34987;&#28210;&#26579;&#25104;&#34013;&#33394;&#65306;</p><pre><code class="language-html">&lt;style&gt;
     button {
         color: red
     }
@@ -606,9 +697,9 @@ var _hmt = _hmt || [];
 
 &lt;button&gt;This is blue&lt;/button&gt;</code></pre><p>&#29702;&#35299;&#32423;&#32852;&#30340;&#30446;&#30340;&#65292;&#23601;&#26159;&#20026;&#20102;&#29702;&#35299;&#27983;&#35272;&#22120;&#26159;&#22914;&#20309;&#35299;&#20915;&#27492;&#31867;&#20914;&#31361;&#30340;&#12290;&#32423;&#32852;&#31639;&#27861;&#20998;&#20026;&#20197;&#19979;&#22235;&#20010;&#27169;&#22359;&#65306;</p><ul style="padding-left: 1.5em;">
 <li style="list-style-type: disc;"><strong class="mk-g">&#20301;&#32622;&#21644;&#20986;&#29616;&#30340;&#39034;&#24207;</strong>&#65306;css&#35268;&#21017;&#20986;&#29616;&#30340;&#39034;&#24207;&#12290;</li>
-<li style="list-style-type: disc;"><strong class="mk-g">&#29305;&#24322;&#24615;&#65288;&#20855;&#20307;&#24615; Specificity&#65289;</strong>&#65306;&#30830;&#23450;css&#36873;&#25321;&#22120;&#20855;&#26377;&#26368;&#39640;&#21305;&#37197;&#26435;&#30340;&#31639;&#27861;&#12290;</li>
-<li style="list-style-type: disc;"><strong class="mk-y">&#26469;&#28304;</strong>&#65306; css&#22312;&#20309;&#26102;&#20309;&#22788;&#29983;&#25104;&#12290;&#23427;&#26159;&#21542;&#26159;&#19968;&#20010;&#27983;&#35272;&#22120;&#26679;&#24335;&#25110;&#32773;&#26159;&#27983;&#35272;&#22120;&#25554;&#20214;&#28155;&#21152;&#30340;&#26679;&#24335;&#65292;&#21448;&#25110;&#32773;&#26159;&#20320;&#20889;&#30340;css&#20195;&#30721;&#12290;</li>
-<li style="list-style-type: disc;"><strong class="mk-g">&#37325;&#35201;&#24615;</strong>&#65306;&#19968;&#20123;css&#35268;&#21017;&#20855;&#26377;&#26356;&#39640;&#30340;&#37325;&#35201;&#24615;&#65292;&#29305;&#21035;&#26159;&#21253;&#21547;<code>!important</code>&#20540;&#30340;&#35268;&#21017;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-p">&#29305;&#24322;&#24615;&#65288;&#20855;&#20307;&#24615; Specificity&#65289;</strong>&#65306;&#30830;&#23450;css&#36873;&#25321;&#22120;&#20855;&#26377;&#26368;&#39640;&#21305;&#37197;&#26435;&#30340;&#31639;&#27861;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-b">&#26469;&#28304;</strong>&#65306; css&#22312;&#20309;&#26102;&#20309;&#22788;&#29983;&#25104;&#12290;&#23427;&#26159;&#21542;&#26159;&#19968;&#20010;&#27983;&#35272;&#22120;&#26679;&#24335;&#25110;&#32773;&#26159;&#27983;&#35272;&#22120;&#25554;&#20214;&#28155;&#21152;&#30340;&#26679;&#24335;&#65292;&#21448;&#25110;&#32773;&#26159;&#20320;&#20889;&#30340;css&#20195;&#30721;&#12290;</li>
+<li style="list-style-type: disc;"><strong class="mk-b">&#37325;&#35201;&#24615;</strong>&#65306;&#19968;&#20123;css&#35268;&#21017;&#20855;&#26377;&#26356;&#39640;&#30340;&#37325;&#35201;&#24615;&#65292;&#29305;&#21035;&#26159;&#21253;&#21547;<code>!important</code>&#20540;&#30340;&#35268;&#21017;&#12290;</li>
 </ul><h2 id="35029f767874686f29e0fa3b27b5fa17">&#19968;.&#20301;&#32622;&#21644;&#20986;&#29616;&#30340;&#39034;&#24207;</h2><p>&#32423;&#32852;&#35268;&#21017;&#22312;&#35299;&#20915;css&#35268;&#21017;&#20914;&#31361;&#26102;&#65292;&#20250;&#32771;&#34385;css&#35268;&#21017;&#20986;&#29616;&#30340;&#20301;&#32622;&#21644;&#39034;&#24207;&#12290;</p><p>&#19968;&#33324;&#19968;&#20010;&#39029;&#38754;&#21487;&#33021;&#21253;&#21547;&#22810;&#31181;&#26469;&#28304;&#19981;&#21516;&#30340;css&#26679;&#24335;&#12290;&#20363;&#22914;<code>&lt;link&gt;</code>&#26631;&#31614;&#24341;&#20837;&#30340;css&#25991;&#20214;&#12289;<code>&lt;style&gt;</code>&#26631;&#31614;&#20869;&#37096;&#30340;&#26679;&#24335;&#25110;&#32773;&#26159;&#23450;&#20041;&#22312;&#20803;&#32032;<code>style</code>&#23646;&#24615;&#20013;&#12290;</p><p>&#20294;&#26159;&#21482;&#38656;&#35201;&#35760;&#20303;&#19968;&#28857;&#65292;<strong class="mk-b">&#20301;&#32622;&#36234;&#38752;&#21518;&#30340;&#26679;&#24335;&#19968;&#33324;&#20855;&#26377;&#26356;&#39640;&#30340;&#37325;&#35201;&#24615;</strong>&#12290;&#20551;&#35774;&#22312;html&#39030;&#37096;&#26377;&#19968;&#20010;<code>&lt;link&gt;</code>&#26679;&#24335;&#65292;html&#39029;&#38754;&#24213;&#37096;&#20063;&#26377;&#19968;&#20010;<code>&lt;link&gt;</code>&#26679;&#24335;&#65292;&#37027;&#20040;&#24213;&#37096;&#30340;<code>&lt;link&gt;</code>&#26679;&#24335;&#20250;&#22312;css&#35268;&#21017;&#20914;&#31361;&#20013;&#32988;&#20986;&#65292;&#22240;&#20026;&#20301;&#32622;&#27604;&#36739;&#38752;&#21518;&#12290;&#36825;&#19968;&#28857;&#23545;<code>&lt;style&gt;</code>&#26631;&#31614;&#20869;&#30340;&#26679;&#24335;&#20063;&#36866;&#29992;&#65292;&#20294;&#26159;&#19981;&#36866;&#29992;&#20110;&#20803;&#32032;&#30340;<code>style</code>&#23646;&#24615;&#65292;<code>style</code>&#23646;&#24615;&#30340;&#37325;&#35201;&#24615;&#20250;&#27604;<code>&lt;link&gt;</code>&#21644;<code>&lt;style&gt;</code>&#26631;&#31614;&#39640;&#12290;</p><p>&#19979;&#38754;&#30340;demo&#20013;&#65292;&#25353;&#38062;&#26174;&#31034;&#32418;&#33394;&#12290;</p><iframe height="300" style="width: 100%;" scrolling="no" title="003 Box_Model 1" src="https://codepen.io/AhCola/embed/JjNpNJj?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
   See the Pen <a href="https://codepen.io/AhCola/pen/JjNpNJj" target="_blank" rel="noopener noreferrer">
   003 Box_Model 1</a> by Pengfei Wang (<a href="https://codepen.io/AhCola" target="_blank" rel="noopener noreferrer">@AhCola</a>)

@@ -1,0 +1,1307 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Laravel Sanctum | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/xq9zr3jvdo.html', function (data, status) {
+            addView('xq9zr3jvdo.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>Laravel Sanctum</h1><ul>
+<li><a href="xq9zr3jvdo.html#e05dce83e5129785b9f316978a14b896">简介</a>
+<ul>
+<li><a href="xq9zr3jvdo.html#b3fbd195aa167f5eb3f1a8105ccc2799">工作原理</a>
+<ul>
+<li><a href="xq9zr3jvdo.html#8a666f4294c6912f5b6d4a81ce2cc534">API 令牌</a></li>
+<li><a href="xq9zr3jvdo.html#74dc1d3e620f28feddcfbf0d190c5e79">SPA 认证</a></li>
+</ul></li>
+</ul></li>
+<li><a href="xq9zr3jvdo.html#e655a410ff21cd07e7a0150491e04371">安装</a></li>
+<li><a href="xq9zr3jvdo.html#224e2ccda861c2514faa683b3683c361">配置</a>
+<ul>
+<li><a href="xq9zr3jvdo.html#08e7667f82759e100cd648b7fdabca08">覆盖默认模型</a></li>
+</ul></li>
+<li><a href="xq9zr3jvdo.html#66a7683df9f9fef8057572608b58c2f8">API 令牌认证</a>
+<ul>
+<li><a href="xq9zr3jvdo.html#31c94b37bdf50136440e82ef7f2a1977">颁发 API 令牌</a></li>
+<li><a href="xq9zr3jvdo.html#f872f4cc1df8092569f82df57f79b947">令牌权限</a>
+<ul>
+<li><a href="xq9zr3jvdo.html#f9cdc78ee5eab288abbd76ade1bc8fa7">令牌权限中间件</a></li>
+<li><a href="xq9zr3jvdo.html#d7194ca25606ef06656e8de5ce16f21d">第一方 UI 发起的请求</a></li>
+</ul></li>
+<li><a href="xq9zr3jvdo.html#801705ac2343e82fa596c98e745035e8">保护路由</a></li>
+<li><a href="xq9zr3jvdo.html#57f7928e375c166c21eae655050b7883">撤销令牌</a></li>
+<li><a href="xq9zr3jvdo.html#eab7bad604e8d745c9fba0000ee6a480">令牌过期</a></li>
+</ul></li>
+<li><a href="xq9zr3jvdo.html#74dc1d3e620f28feddcfbf0d190c5e79">SPA 认证</a>
+<ul>
+<li><a href="xq9zr3jvdo.html#224e2ccda861c2514faa683b3683c361">配置</a>
+<ul>
+<li><a href="xq9zr3jvdo.html#5967bb13c7e1c7be4062233d9dfc5113">配置你的第一方域名</a></li>
+<li><a href="xq9zr3jvdo.html#6822cfb9c907a376c3c3cbb641af3481">Sanctum 中间件</a></li>
+<li><a href="xq9zr3jvdo.html#cf793922e86385cd1635007c708c06df">CORS 与 Cookie</a></li>
+</ul></li>
+<li><a href="xq9zr3jvdo.html#b7158a42ca1c2845b3c08111982b0494">认证</a>
+<ul>
+<li><a href="xq9zr3jvdo.html#71aa682d3e6eac3048c40e97045b7f02">CSRF 保护</a></li>
+<li><a href="xq9zr3jvdo.html#402d19e50fff44c827a4f3b608bd5812">登录</a></li>
+</ul></li>
+<li><a href="xq9zr3jvdo.html#801705ac2343e82fa596c98e745035e8">保护路由</a></li>
+<li><a href="xq9zr3jvdo.html#8bcd465fcb9d99a20c5817520b0e4eed">授权私有广播频道</a></li>
+</ul></li>
+<li><a href="xq9zr3jvdo.html#74dbcdceb687c6417c4d8bb3ca590abd">移动应用认证</a>
+<ul>
+<li><a href="xq9zr3jvdo.html#31c94b37bdf50136440e82ef7f2a1977">颁发 API 令牌</a></li>
+<li><a href="xq9zr3jvdo.html#801705ac2343e82fa596c98e745035e8">保护路由</a></li>
+<li><a href="xq9zr3jvdo.html#57f7928e375c166c21eae655050b7883">撤销令牌</a></li>
+</ul></li>
+<li><a href="xq9zr3jvdo.html#db06c78d1e24cf708a14ce81c9b617ec">测试</a></li>
+</ul><?xml encoding="UTF-8"><p><a href="https://github.com/laravel/sanctum" target="_blank" rel="noopener noreferrer">Laravel Sanctum</a> &#20026; SPA&#65288;&#21333;&#39029;&#24212;&#29992;&#65289;&#12289;&#31227;&#21160;&#24212;&#29992;&#65292;&#20197;&#21450;&#31616;&#21333;&#12289;&#22522;&#20110;&#20196;&#29260;&#30340; API &#25552;&#20379;&#20102;&#19968;&#22871;&#36731;&#37327;&#32423;&#30340;&#35748;&#35777;&#31995;&#32479;&#12290;Sanctum &#20801;&#35768;&#20320;&#24212;&#29992;&#30340;&#27599;&#20010;&#29992;&#25143;&#20026;&#20854;&#36134;&#25143;&#29983;&#25104;&#22810;&#20010; API &#20196;&#29260;&#12290;&#36825;&#20123;&#20196;&#29260;&#21487;&#20197;&#34987;&#25480;&#20104;"&#33021;&#21147; / &#20316;&#29992;&#22495;&#65288;abilities / scopes&#65289;"&#65292;&#29992;&#20197;&#25351;&#23450;&#20196;&#29260;&#34987;&#20801;&#35768;&#25191;&#34892;&#21738;&#20123;&#25805;&#20316;&#12290;</p><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p><a href="https://github.com/laravel/sanctum" target="_blank" rel="noopener noreferrer">Laravel Sanctum</a> &#20026; SPA&#65288;&#21333;&#39029;&#24212;&#29992;&#65289;&#12289;&#31227;&#21160;&#24212;&#29992;&#65292;&#20197;&#21450;&#31616;&#21333;&#12289;&#22522;&#20110;&#20196;&#29260;&#30340; API &#25552;&#20379;&#20102;&#19968;&#22871;&#36731;&#37327;&#32423;&#30340;&#35748;&#35777;&#31995;&#32479;&#12290;Sanctum &#20801;&#35768;&#20320;&#24212;&#29992;&#30340;&#27599;&#20010;&#29992;&#25143;&#20026;&#20854;&#36134;&#25143;&#29983;&#25104;&#22810;&#20010; API &#20196;&#29260;&#12290;&#36825;&#20123;&#20196;&#29260;&#21487;&#20197;&#34987;&#25480;&#20104;&#33021;&#21147; / &#20316;&#29992;&#22495;&#65288;abilities / scopes&#65289;&#65292;&#29992;&#20197;&#25351;&#23450;&#20196;&#29260;&#34987;&#20801;&#35768;&#25191;&#34892;&#21738;&#20123;&#25805;&#20316;&#12290;</p><h3 id="b3fbd195aa167f5eb3f1a8105ccc2799">&#24037;&#20316;&#21407;&#29702;</h3><p>Laravel Sanctum &#29992;&#20110;&#35299;&#20915;&#20004;&#20010;&#30456;&#20114;&#29420;&#31435;&#30340;&#38382;&#39064;&#12290;&#22312;&#28145;&#20837;&#20102;&#35299;&#36825;&#20010;&#24211;&#20043;&#21069;&#65292;&#25105;&#20204;&#20808;&#20998;&#21035;&#35752;&#35770;&#19968;&#19979;&#12290;</p><h4 id="8a666f4294c6912f5b6d4a81ce2cc534">API &#20196;&#29260;</h4><p>&#39318;&#20808;&#65292;Sanctum &#26159;&#19968;&#20010;&#31616;&#21333;&#30340;&#21253;&#65292;&#20320;&#21487;&#20197;&#29992;&#26469;&#21521;&#29992;&#25143;&#21457;&#25918; API &#20196;&#29260;&#65292;&#32780;&#26080;&#38656; OAuth &#30340;&#22797;&#26434;&#24615;&#12290;&#36825;&#20010;&#21151;&#33021;&#28789;&#24863;&#26469;&#33258; GitHub &#20197;&#21450;&#20854;&#20182;&#21457;&#25918;"&#20010;&#20154;&#35775;&#38382;&#20196;&#29260;&#65288;personal access tokens&#65289;"&#30340;&#24212;&#29992;&#12290;&#20363;&#22914;&#65292;&#35774;&#24819;&#20320;&#24212;&#29992;&#30340;"&#36134;&#25143;&#35774;&#32622;"&#20013;&#26377;&#19968;&#20010;&#39029;&#38754;&#65292;&#29992;&#25143;&#21487;&#20197;&#20026;&#33258;&#24049;&#30340;&#36134;&#25143;&#29983;&#25104;&#19968;&#20010; API &#20196;&#29260;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; Sanctum &#26469;&#29983;&#25104;&#24182;&#31649;&#29702;&#37027;&#20123;&#20196;&#29260;&#12290;&#36825;&#20123;&#20196;&#29260;&#36890;&#24120;&#20855;&#26377;&#24456;&#38271;&#30340;&#36807;&#26399;&#26102;&#38388;&#65288;&#25968;&#24180;&#65289;&#65292;&#20294;&#29992;&#25143;&#21487;&#20197;&#38543;&#26102;&#25163;&#21160;&#25764;&#38144;&#12290;</p><p>Laravel Sanctum &#36890;&#36807;&#23558;&#29992;&#25143; API &#20196;&#29260;&#23384;&#20648;&#22312;&#21333;&#20010;&#25968;&#25454;&#24211;&#34920;&#20013;&#65292;&#24182;&#36890;&#36807; <code>Authorization</code> &#35831;&#27714;&#22836;&#65288;&#20854;&#20013;&#24212;&#21253;&#21547;&#26377;&#25928;&#30340; API &#20196;&#29260;&#65289;&#39564;&#35777;&#20256;&#20837;&#30340; HTTP &#35831;&#27714;&#65292;&#26469;&#23454;&#29616;&#36825;&#19968;&#21151;&#33021;&#12290;</p><h4 id="74dc1d3e620f28feddcfbf0d190c5e79">SPA &#35748;&#35777;</h4><p>&#20854;&#27425;&#65292;Sanctum &#30340;&#23384;&#22312;&#26159;&#20026;&#20102;&#25552;&#20379;&#19968;&#31181;&#31616;&#21333;&#30340;&#26041;&#24335;&#26469;&#35748;&#35777;&#38656;&#35201;&#19982; Laravel &#39537;&#21160;&#30340; API &#36890;&#20449;&#30340;&#21333;&#39029;&#24212;&#29992;&#65288;SPA&#65289;&#12290;&#36825;&#20123; SPA &#21487;&#33021;&#19982;&#20320;&#30340; Laravel &#24212;&#29992;&#20301;&#20110;&#21516;&#19968;&#20010;&#20195;&#30721;&#20179;&#24211;&#20013;&#65292;&#20063;&#21487;&#33021;&#26159;&#19968;&#20010;&#23436;&#20840;&#29420;&#31435;&#30340;&#20195;&#30721;&#20179;&#24211;&#65292;&#20363;&#22914;&#20351;&#29992; Next.js &#25110; Nuxt &#21019;&#24314;&#30340; SPA&#12290;</p><p>&#23545;&#20110;&#36825;&#20010;&#21151;&#33021;&#65292;Sanctum &#19981;&#20351;&#29992;&#20219;&#20309;&#24418;&#24335;&#30340;&#20196;&#29260;&#12290;&#30456;&#21453;&#65292;Sanctum &#20351;&#29992; Laravel &#20869;&#32622;&#30340;&#22522;&#20110; Cookie &#30340;&#20250;&#35805;&#35748;&#35777;&#26381;&#21153;&#12290;&#36890;&#24120;&#65292;Sanctum &#20250;&#21033;&#29992; Laravel &#30340; <code>web</code> &#35748;&#35777;&#23432;&#21355;&#26469;&#23436;&#25104;&#36825;&#19968;&#28857;&#12290;&#36825;&#24102;&#26469;&#20102; CSRF &#38450;&#25252;&#12289;&#20250;&#35805;&#35748;&#35777;&#30340;&#22909;&#22788;&#65292;&#24182;&#33021;&#38450;&#27490;&#35748;&#35777;&#20973;&#25454;&#36890;&#36807; XSS &#27844;&#38706;&#12290;</p><p>&#21482;&#26377;&#24403;&#20256;&#20837;&#35831;&#27714;&#26469;&#33258;&#20320;&#33258;&#24049;&#30340; SPA &#21069;&#31471;&#26102;&#65292;Sanctum &#25165;&#20250;&#23581;&#35797;&#20351;&#29992; Cookie &#36827;&#34892;&#35748;&#35777;&#12290;&#24403; Sanctum &#26816;&#26597;&#19968;&#20010;&#20256;&#20837;&#30340; HTTP &#35831;&#27714;&#26102;&#65292;&#23427;&#20250;&#20808;&#26816;&#26597;&#35748;&#35777; Cookie&#65292;&#22914;&#26524;&#27809;&#26377;&#65292;Sanctum &#20250;&#20877;&#26816;&#26597; <code>Authorization</code> &#35831;&#27714;&#22836;&#20013;&#26159;&#21542;&#26377;&#26377;&#25928;&#30340; API &#20196;&#29260;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#20165;&#23558; Sanctum &#29992;&#20110; API &#20196;&#29260;&#35748;&#35777;&#65292;&#25110;&#20165;&#29992;&#20110; SPA &#35748;&#35777;&#65292;&#37117;&#26159;&#23436;&#20840;&#27809;&#38382;&#39064;&#30340;&#12290;&#20320;&#20351;&#29992; Sanctum &#24182;&#19981;&#24847;&#21619;&#30528;&#24517;&#39035;&#21516;&#26102;&#20351;&#29992;&#23427;&#25552;&#20379;&#30340;&#20004;&#20010;&#21151;&#33021;&#12290;</p>
+</blockquote><h2 id="e655a410ff21cd07e7a0150491e04371">&#23433;&#35013;</h2><p>&#20320;&#21487;&#20197;&#36890;&#36807; <code>install:api</code> Artisan &#21629;&#20196;&#23433;&#35013; Laravel Sanctum&#65306;</p><pre><code class="language-shell">php artisan install:api</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#22914;&#26524;&#20320;&#25171;&#31639;&#20351;&#29992; Sanctum &#26469;&#35748;&#35777;&#19968;&#20010; SPA&#65292;&#35831;&#21442;&#38405;&#26412;&#25991;&#26723;&#30340; <a href="xq9zr3jvdo.html#spa-authentication" target="_blank">SPA Authentication</a> &#37096;&#20998;&#12290;</p><h2 id="224e2ccda861c2514faa683b3683c361">&#37197;&#32622;</h2><h3 id="08e7667f82759e100cd648b7fdabca08">&#35206;&#30422;&#40664;&#35748;&#27169;&#22411;</h3><p>&#23613;&#31649;&#36890;&#24120;&#19981;&#35201;&#27714;&#65292;&#20320;&#21487;&#20197;&#33258;&#30001;&#22320;&#25193;&#23637; Sanctum &#20869;&#37096;&#20351;&#29992;&#30340; <code>PersonalAccessToken</code> &#27169;&#22411;&#65306;</p><pre><code class="language-php">use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
+
+class PersonalAccessToken extends SanctumPersonalAccessToken
+{
+    // ...
+}</code></pre><p>&#28982;&#21518;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; Sanctum &#25552;&#20379;&#30340; <code>usePersonalAccessTokenModel</code> &#26041;&#27861;&#25351;&#31034; Sanctum &#20351;&#29992;&#20320;&#30340;&#33258;&#23450;&#20041;&#27169;&#22411;&#12290;&#36890;&#24120;&#65292;&#20320;&#24212;&#35813;&#22312;&#24212;&#29992; <code>AppServiceProvider</code> &#25991;&#20214;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#35813;&#26041;&#27861;&#65306;</p><pre><code class="language-php">use App\Models\Sanctum\PersonalAccessToken;
+use Laravel\Sanctum\Sanctum;
+
+/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+}</code></pre><h2 id="66a7683df9f9fef8057572608b58c2f8">API &#20196;&#29260;&#35748;&#35777;</h2><blockquote>
+<p>[!NOTE]<br>
+&#20320;&#19981;&#24212;&#35813;&#20351;&#29992; API &#20196;&#29260;&#26469;&#35748;&#35777;&#20320;&#33258;&#24049;&#30340;&#31532;&#19968;&#26041; SPA&#12290;&#30456;&#21453;&#65292;&#35831;&#20351;&#29992; Sanctum &#20869;&#32622;&#30340; <a href="xq9zr3jvdo.html#spa-authentication" target="_blank">SPA &#35748;&#35777;&#21151;&#33021;</a>&#12290;</p>
+</blockquote><h3 id="31c94b37bdf50136440e82ef7f2a1977">&#39041;&#21457; API &#20196;&#29260;</h3><p>Sanctum &#20801;&#35768;&#20320;&#21457;&#25918; API &#20196;&#29260; / &#20010;&#20154;&#35775;&#38382;&#20196;&#29260;&#65292;&#29992;&#20110;&#35748;&#35777;&#21457;&#24448;&#20320;&#24212;&#29992;&#30340; API &#35831;&#27714;&#12290;&#20351;&#29992; API &#20196;&#29260;&#21457;&#36215;&#35831;&#27714;&#26102;&#65292;&#20196;&#29260;&#24212;&#20197; <code>Bearer</code> &#20196;&#29260;&#30340;&#24418;&#24335;&#21253;&#21547;&#22312; <code>Authorization</code> &#35831;&#27714;&#22836;&#20013;&#12290;</p><p>&#35201;&#24320;&#22987;&#20026;&#29992;&#25143;&#21457;&#25918;&#20196;&#29260;&#65292;&#20320;&#30340; User &#27169;&#22411;&#24212;&#20351;&#29992; <code>Laravel\Sanctum\HasApiTokens</code> Trait&#65306;</p><pre><code class="language-php">use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+}</code></pre><p>&#35201;&#21457;&#25918;&#20196;&#29260;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>createToken</code> &#26041;&#27861;&#12290;<code>createToken</code> &#26041;&#27861;&#20250;&#36820;&#22238;&#19968;&#20010; <code>Laravel\Sanctum\NewAccessToken</code> &#23454;&#20363;&#12290;API &#20196;&#29260;&#22312;&#23384;&#20837;&#25968;&#25454;&#24211;&#20043;&#21069;&#20250;&#20351;&#29992; SHA-256 &#21704;&#24076;&#36827;&#34892;&#25955;&#21015;&#65292;&#20294;&#20320;&#21487;&#20197;&#36890;&#36807; <code>NewAccessToken</code> &#23454;&#20363;&#30340; <code>plainTextToken</code> &#23646;&#24615;&#35775;&#38382;&#20196;&#29260;&#30340;&#26126;&#25991;&#20540;&#12290;&#20320;&#24212;&#35813;&#22312;&#20196;&#29260;&#21019;&#24314;&#21518;&#31435;&#21363;&#23558;&#36825;&#20010;&#20540;&#26174;&#31034;&#32473;&#29992;&#25143;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+
+Route::post('/tokens/create', function (Request $request) {
+    $token = $request-&gt;user()-&gt;createToken($request-&gt;token_name);
+
+    return ['token' =&gt; $token-&gt;plainTextToken];
+});</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>HasApiTokens</code> Trait &#25552;&#20379;&#30340; <code>tokens</code> Eloquent &#20851;&#32852;&#26469;&#35775;&#38382;&#29992;&#25143;&#30340;&#25152;&#26377;&#20196;&#29260;&#65306;</p><pre><code class="language-php">foreach ($user-&gt;tokens as $token) {
+    // ...
+}</code></pre><h3 id="f872f4cc1df8092569f82df57f79b947">&#20196;&#29260;&#26435;&#38480;</h3><p>Sanctum &#20801;&#35768;&#20320;&#20026;&#20196;&#29260;&#20998;&#37197;"&#33021;&#21147;&#65288;abilities&#65289;"&#12290;&#33021;&#21147;&#30340;&#20316;&#29992;&#31867;&#20284;&#20110; OAuth &#30340;"&#20316;&#29992;&#22495;&#65288;scopes&#65289;"&#12290;&#20320;&#21487;&#20197;&#23558;&#19968;&#20010;&#23383;&#31526;&#20018;&#33021;&#21147;&#25968;&#32452;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#32473; <code>createToken</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">return $user-&gt;createToken('token-name', ['server:update'])-&gt;plainTextToken;</code></pre><p>&#22312;&#22788;&#29702;&#30001; Sanctum &#35748;&#35777;&#30340;&#20256;&#20837;&#35831;&#27714;&#26102;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>tokenCan</code> &#25110; <code>tokenCant</code> &#26041;&#27861;&#21028;&#26029;&#20196;&#29260;&#26159;&#21542;&#20855;&#26377;&#32473;&#23450;&#30340;&#33021;&#21147;&#65306;</p><pre><code class="language-php">if ($user-&gt;tokenCan('server:update')) {
+    // ...
+}
+
+if ($user-&gt;tokenCant('server:update')) {
+    // ...
+}</code></pre><h4 id="f9cdc78ee5eab288abbd76ade1bc8fa7">&#20196;&#29260;&#26435;&#38480;&#20013;&#38388;&#20214;</h4><p>Sanctum &#36824;&#21253;&#21547;&#20102;&#20004;&#20010;&#20013;&#38388;&#20214;&#65292;&#21487;&#29992;&#20110;&#39564;&#35777;&#20256;&#20837;&#35831;&#27714;&#26159;&#21542;&#20351;&#29992;&#24050;&#34987;&#25480;&#20104;&#32473;&#23450;&#33021;&#21147;&#30340;&#20196;&#29260;&#36827;&#34892;&#20102;&#35748;&#35777;&#12290;&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#35831;&#22312;&#24212;&#29992;&#30340; <code>bootstrap/app.php</code> &#25991;&#20214;&#20013;&#23450;&#20041;&#20197;&#19979;&#20013;&#38388;&#20214;&#21035;&#21517;&#65306;</p><pre><code class="language-php">use Laravel\Sanctum\Http\Middleware\CheckAbilities;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
+
+-&gt;withMiddleware(function (Middleware $middleware): void {
+    $middleware-&gt;alias([
+        'abilities' =&gt; CheckAbilities::class,
+        'ability' =&gt; CheckForAnyAbility::class,
+    ]);
+})</code></pre><p><code>abilities</code> &#20013;&#38388;&#20214;&#21487;&#20197;&#20998;&#37197;&#32473;&#19968;&#20010;&#36335;&#30001;&#65292;&#29992;&#20110;&#39564;&#35777;&#20256;&#20837;&#35831;&#27714;&#30340;&#20196;&#29260;&#26159;&#21542;&#20855;&#26377;&#21015;&#20986;&#30340;&#25152;&#26377;&#33021;&#21147;&#65306;</p><pre><code class="language-php">Route::get('/orders', function () {
+    // &#20196;&#29260;&#21516;&#26102;&#20855;&#22791; "check-status" &#21644; "place-orders" &#33021;&#21147;...
+})-&gt;middleware(['auth:sanctum', 'abilities:check-status,place-orders']);</code></pre><p><code>ability</code> &#20013;&#38388;&#20214;&#21487;&#20197;&#20998;&#37197;&#32473;&#19968;&#20010;&#36335;&#30001;&#65292;&#29992;&#20110;&#39564;&#35777;&#20256;&#20837;&#35831;&#27714;&#30340;&#20196;&#29260;&#26159;&#21542;&#20855;&#26377;&#21015;&#20986;&#30340;&#33021;&#21147;&#20013;&#30340; <em>&#33267;&#23569;&#19968;&#39033;</em>&#65306;</p><pre><code class="language-php">Route::get('/orders', function () {
+    // &#20196;&#29260;&#20855;&#22791; "check-status" &#25110; "place-orders" &#33021;&#21147;...
+})-&gt;middleware(['auth:sanctum', 'ability:check-status,place-orders']);</code></pre><h4 id="d7194ca25606ef06656e8de5ce16f21d">&#31532;&#19968;&#26041; UI &#21457;&#36215;&#30340;&#35831;&#27714;</h4><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#22914;&#26524;&#20256;&#20837;&#30340;&#24050;&#35748;&#35777;&#35831;&#27714;&#26469;&#33258;&#20320;&#30340;&#31532;&#19968;&#26041; SPA&#65292;&#24182;&#19988;&#20320;&#27491;&#22312;&#20351;&#29992; Sanctum &#20869;&#32622;&#30340; <a href="xq9zr3jvdo.html#spa-authentication" target="_blank">SPA &#35748;&#35777;</a>&#65292;&#37027;&#20040; <code>tokenCan</code> &#26041;&#27861;&#23558;&#22987;&#32456;&#36820;&#22238; <code>true</code>&#12290;</p><p>&#19981;&#36807;&#65292;&#36825;&#24182;&#19981;&#19968;&#23450;&#24847;&#21619;&#30528;&#20320;&#30340;&#24212;&#29992;&#24517;&#39035;&#20801;&#35768;&#29992;&#25143;&#25191;&#34892;&#35813;&#25805;&#20316;&#12290;&#36890;&#24120;&#65292;&#20320;&#24212;&#29992;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authorization#creating-policies" target="_blank">&#25480;&#26435;&#31574;&#30053;</a> &#23558;&#20915;&#23450;&#20196;&#29260;&#26159;&#21542;&#24050;&#34987;&#25480;&#20104;&#25191;&#34892;&#36825;&#20123;&#33021;&#21147;&#30340;&#26435;&#38480;&#65292;&#21516;&#26102;&#36824;&#20250;&#26816;&#26597;&#29992;&#25143;&#23454;&#20363;&#26412;&#36523;&#26159;&#21542;&#24212;&#24403;&#34987;&#20801;&#35768;&#25191;&#34892;&#35813;&#25805;&#20316;&#12290;</p><p>&#20363;&#22914;&#65292;&#35774;&#24819;&#19968;&#20010;&#31649;&#29702;&#26381;&#21153;&#22120;&#30340;&#24212;&#29992;&#65292;&#36825;&#21487;&#33021;&#24847;&#21619;&#30528;&#35201;&#26816;&#26597;&#20196;&#29260;&#26159;&#21542;&#34987;&#25480;&#26435;&#26356;&#26032;&#26381;&#21153;&#22120; <strong class="mk-b">&#24182;&#19988;</strong> &#35813;&#26381;&#21153;&#22120;&#23646;&#20110;&#35813;&#29992;&#25143;&#65306;</p><pre><code class="language-php">return $request-&gt;user()-&gt;id === $server-&gt;user_id &amp;&amp;
+       $request-&gt;user()-&gt;tokenCan('server:update')</code></pre><p>&#19968;&#24320;&#22987;&#65292;&#20801;&#35768;&#23545;&#31532;&#19968;&#26041; UI &#21457;&#36215;&#30340;&#35831;&#27714;&#35843;&#29992; <code>tokenCan</code> &#26041;&#27861;&#24182;&#22987;&#32456;&#36820;&#22238; <code>true</code>&#65292;&#21487;&#33021;&#30475;&#36215;&#26469;&#26377;&#20123;&#22855;&#24618;&#65307;&#19981;&#36807;&#65292;&#33021;&#22815;&#22987;&#32456;&#20551;&#35774;&#19968;&#20010; API &#20196;&#29260;&#21487;&#29992;&#12289;&#24182;&#19988;&#21487;&#20197;&#36890;&#36807; <code>tokenCan</code> &#26041;&#27861;&#36827;&#34892;&#26816;&#26597;&#65292;&#26159;&#38750;&#24120;&#26041;&#20415;&#30340;&#12290;&#37319;&#29992;&#36825;&#31181;&#26041;&#24335;&#21518;&#65292;&#20320;&#23601;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340;&#25480;&#26435;&#31574;&#30053;&#20013;&#22987;&#32456;&#35843;&#29992; <code>tokenCan</code> &#26041;&#27861;&#65292;&#32780;&#26080;&#38656;&#25285;&#24515;&#35831;&#27714;&#26159;&#26469;&#33258;&#24212;&#29992;&#30340; UI&#65292;&#36824;&#26159;&#30001; API &#30340;&#26576;&#20010;&#31532;&#19977;&#26041;&#28040;&#36153;&#32773;&#21457;&#36215;&#30340;&#12290;</p><h3 id="801705ac2343e82fa596c98e745035e8">&#20445;&#25252;&#36335;&#30001;</h3><p>&#35201;&#20445;&#25252;&#36335;&#30001;&#65292;&#20351;&#25152;&#26377;&#20256;&#20837;&#35831;&#27714;&#37117;&#24517;&#39035;&#32463;&#36807;&#35748;&#35777;&#65292;&#20320;&#24212;&#35813;&#22312; <code>routes/web.php</code> &#21644; <code>routes/api.php</code> &#36335;&#30001;&#25991;&#20214;&#20013;&#65292;&#23558; <code>sanctum</code> &#35748;&#35777;&#23432;&#21355;&#38468;&#21152;&#21040;&#21463;&#20445;&#25252;&#30340;&#36335;&#30001;&#19978;&#12290;&#35813;&#23432;&#21355;&#20250;&#30830;&#20445;&#20256;&#20837;&#35831;&#27714;&#35201;&#20040;&#20197;&#26377;&#29366;&#24577;&#65288;stateful&#65289;&#12289;&#22522;&#20110; Cookie &#35748;&#35777;&#30340;&#26041;&#24335;&#36890;&#36807;&#35748;&#35777;&#65292;&#35201;&#20040;&#65288;&#22914;&#26524;&#26159;&#26469;&#33258;&#31532;&#19977;&#26041;&#30340;&#35831;&#27714;&#65289;&#21253;&#21547;&#26377;&#25928;&#30340; API &#20196;&#29260;&#35831;&#27714;&#22836;&#12290;</p><p>&#20320;&#21487;&#33021;&#20250;&#30097;&#24785;&#65292;&#20026;&#20160;&#20040;&#25105;&#20204;&#24314;&#35758;&#20320;&#22312;&#24212;&#29992;&#30340; <code>routes/web.php</code> &#25991;&#20214;&#20013;&#20351;&#29992; <code>sanctum</code> &#23432;&#21355;&#26469;&#35748;&#35777;&#36335;&#30001;&#12290;&#35831;&#35760;&#20303;&#65292;Sanctum &#20250;&#39318;&#20808;&#23581;&#35797;&#20351;&#29992; Laravel &#20856;&#22411;&#30340;&#20250;&#35805;&#35748;&#35777; Cookie &#26469;&#35748;&#35777;&#20256;&#20837;&#35831;&#27714;&#12290;&#22914;&#26524;&#35813; Cookie &#19981;&#23384;&#22312;&#65292;Sanctum &#20250;&#23581;&#35797;&#20351;&#29992;&#35831;&#27714; <code>Authorization</code> &#35831;&#27714;&#22836;&#20013;&#30340;&#20196;&#29260;&#36827;&#34892;&#35748;&#35777;&#12290;&#27492;&#22806;&#65292;&#20351;&#29992; Sanctum &#35748;&#35777;&#25152;&#26377;&#35831;&#27714;&#65292;&#33021;&#30830;&#20445;&#25105;&#20204;&#22987;&#32456;&#21487;&#20197;&#22312;&#24403;&#21069;&#24050;&#35748;&#35777;&#30340;&#29992;&#25143;&#23454;&#20363;&#19978;&#35843;&#29992; <code>tokenCan</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+
+Route::get('/user', function (Request $request) {
+    return $request-&gt;user();
+})-&gt;middleware('auth:sanctum');</code></pre><h3 id="57f7928e375c166c21eae655050b7883">&#25764;&#38144;&#20196;&#29260;</h3><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#20351;&#29992; <code>Laravel\Sanctum\HasApiTokens</code> Trait &#25552;&#20379;&#30340; <code>tokens</code> &#20851;&#32852;&#65292;&#20174;&#25968;&#25454;&#24211;&#20013;&#21024;&#38500;&#20196;&#29260;&#26469;"&#25764;&#38144;"&#23427;&#20204;&#65306;</p><pre><code class="language-php">// &#25764;&#38144;&#25152;&#26377;&#20196;&#29260;...
+$user-&gt;tokens()-&gt;delete();
+
+// &#25764;&#38144;&#29992;&#20110;&#35748;&#35777;&#24403;&#21069;&#35831;&#27714;&#30340;&#20196;&#29260;...
+$request-&gt;user()-&gt;currentAccessToken()-&gt;delete();
+
+// &#25764;&#38144;&#29305;&#23450;&#20196;&#29260;...
+$user-&gt;tokens()-&gt;where('id', $tokenId)-&gt;delete();</code></pre><h3 id="eab7bad604e8d745c9fba0000ee6a480">&#20196;&#29260;&#36807;&#26399;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Sanctum &#20196;&#29260;&#27704;&#19981;&#36807;&#26399;&#65292;&#21482;&#33021;&#36890;&#36807;&#22312; <a href="xq9zr3jvdo.html#revoking-tokens" target="_blank">&#25764;&#38144;&#20196;&#29260;</a> &#26102;&#20351;&#20854;&#22833;&#25928;&#12290;&#19981;&#36807;&#65292;&#22914;&#26524;&#20320;&#24819;&#20026;&#24212;&#29992;&#30340; API &#20196;&#29260;&#37197;&#32622;&#36807;&#26399;&#26102;&#38388;&#65292;&#21487;&#20197;&#36890;&#36807;&#24212;&#29992; <code>sanctum</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; <code>expiration</code> &#37197;&#32622;&#36873;&#39033;&#26469;&#23454;&#29616;&#12290;&#35813;&#37197;&#32622;&#36873;&#39033;&#23450;&#20041;&#20102;&#24050;&#21457;&#25918;&#20196;&#29260;&#34987;&#35270;&#20026;&#36807;&#26399;&#21069;&#30340;&#20998;&#38047;&#25968;&#65306;</p><pre><code class="language-php">'expiration' =&gt; 525600,</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#21333;&#29420;&#25351;&#23450;&#27599;&#20010;&#20196;&#29260;&#30340;&#36807;&#26399;&#26102;&#38388;&#65292;&#21487;&#20197;&#23558;&#36807;&#26399;&#26102;&#38388;&#20316;&#20026;&#31532;&#19977;&#20010;&#21442;&#25968;&#20256;&#32473; <code>createToken</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">return $user-&gt;createToken(
+    'token-name', ['*'], now()-&gt;plus(weeks: 1)
+)-&gt;plainTextToken;</code></pre><p>&#22914;&#26524;&#20320;&#20026;&#24212;&#29992;&#37197;&#32622;&#20102;&#20196;&#29260;&#36807;&#26399;&#26102;&#38388;&#65292;&#20320;&#21487;&#33021;&#36824;&#24076;&#26395; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/scheduling" target="_blank">&#23433;&#25490;&#19968;&#20010;&#20219;&#21153;</a> &#26469;&#28165;&#29702;&#24212;&#29992;&#24050;&#36807;&#26399;&#30340;&#20196;&#29260;&#12290;&#20540;&#24471;&#24198;&#24184;&#30340;&#26159;&#65292;Sanctum &#33258;&#24102;&#19968;&#20010; <code>sanctum:prune-expired</code> Artisan &#21629;&#20196;&#65292;&#20320;&#21487;&#20197;&#29992;&#23427;&#26469;&#23436;&#25104;&#36825;&#39033;&#24037;&#20316;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#37197;&#32622;&#19968;&#20010;&#35745;&#21010;&#20219;&#21153;&#65292;&#21024;&#38500;&#25152;&#26377;&#24050;&#36807;&#26399;&#33267;&#23569; 24 &#23567;&#26102;&#30340;&#20196;&#29260;&#25968;&#25454;&#24211;&#35760;&#24405;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Schedule;
+
+Schedule::command('sanctum:prune-expired --hours=24')-&gt;daily();</code></pre><h2 id="74dc1d3e620f28feddcfbf0d190c5e79">SPA &#35748;&#35777;</h2><p>Sanctum &#30340;&#23384;&#22312;&#20063;&#26159;&#20026;&#20102;&#25552;&#20379;&#19968;&#31181;&#31616;&#21333;&#30340;&#26041;&#27861;&#26469;&#35748;&#35777;&#38656;&#35201;&#19982; Laravel &#39537;&#21160;&#30340; API &#36890;&#20449;&#30340;&#21333;&#39029;&#24212;&#29992;&#65288;SPA&#65289;&#12290;&#36825;&#20123; SPA &#21487;&#33021;&#19982;&#20320;&#30340; Laravel &#24212;&#29992;&#20301;&#20110;&#21516;&#19968;&#20010;&#20195;&#30721;&#20179;&#24211;&#20013;&#65292;&#20063;&#21487;&#33021;&#26159;&#19968;&#20010;&#23436;&#20840;&#29420;&#31435;&#30340;&#20195;&#30721;&#20179;&#24211;&#12290;</p><p>&#23545;&#20110;&#36825;&#20010;&#21151;&#33021;&#65292;Sanctum &#19981;&#20351;&#29992;&#20219;&#20309;&#24418;&#24335;&#30340;&#20196;&#29260;&#12290;&#30456;&#21453;&#65292;Sanctum &#20351;&#29992; Laravel &#20869;&#32622;&#30340;&#22522;&#20110; Cookie &#30340;&#20250;&#35805;&#35748;&#35777;&#26381;&#21153;&#12290;&#36825;&#31181;&#35748;&#35777;&#26041;&#24335;&#24102;&#26469;&#20102; CSRF &#38450;&#25252;&#12289;&#20250;&#35805;&#35748;&#35777;&#30340;&#22909;&#22788;&#65292;&#24182;&#33021;&#38450;&#27490;&#35748;&#35777;&#20973;&#25454;&#36890;&#36807; XSS &#27844;&#38706;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#20026;&#20102;&#23436;&#25104;&#35748;&#35777;&#65292;&#20320;&#30340; SPA &#21644; API &#24517;&#39035;&#20849;&#20139;&#30456;&#21516;&#30340;&#39030;&#32423;&#22495;&#21517;&#12290;&#19981;&#36807;&#65292;&#23427;&#20204;&#21487;&#20197;&#25918;&#32622;&#22312;&#19981;&#21516;&#30340;&#23376;&#22495;&#21517;&#19978;&#12290;&#27492;&#22806;&#65292;&#20320;&#24212;&#35813;&#30830;&#20445;&#21457;&#36865; <code>Accept: application/json</code> &#35831;&#27714;&#22836;&#65292;&#20197;&#21450; <code>Referer</code> &#25110; <code>Origin</code> &#35831;&#27714;&#22836;&#12290;</p>
+</blockquote><h3 id="224e2ccda861c2514faa683b3683c361">&#37197;&#32622;</h3><h4 id="5967bb13c7e1c7be4062233d9dfc5113">&#37197;&#32622;&#20320;&#30340;&#31532;&#19968;&#26041;&#22495;&#21517;</h4><p>&#39318;&#20808;&#65292;&#20320;&#24212;&#35813;&#37197;&#32622;&#20320;&#30340; SPA &#23558;&#35201;&#20174;&#21738;&#20123;&#22495;&#21517;&#21457;&#36215;&#35831;&#27714;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>sanctum</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#30340; <code>stateful</code> &#37197;&#32622;&#36873;&#39033;&#26469;&#37197;&#32622;&#36825;&#20123;&#22495;&#21517;&#12290;&#35813;&#37197;&#32622;&#20915;&#23450;&#20102;&#21738;&#20123;&#22495;&#21517;&#22312;&#23545;&#20320;&#30340; API &#21457;&#36215;&#35831;&#27714;&#26102;&#65292;&#20250;&#20351;&#29992; Laravel &#20250;&#35805; Cookie &#20445;&#25345;"&#26377;&#29366;&#24577;&#65288;stateful&#65289;"&#35748;&#35777;&#12290;</p><p>&#20026;&#20102;&#24110;&#21161;&#20320;&#35774;&#32622;&#31532;&#19968;&#26041;&#26377;&#29366;&#24577;&#22495;&#21517;&#65292;Sanctum &#25552;&#20379;&#20102;&#20004;&#20010;&#36741;&#21161;&#20989;&#25968;&#65292;&#20320;&#21487;&#20197;&#23558;&#23427;&#20204;&#21253;&#21547;&#22312;&#37197;&#32622;&#20013;&#12290;&#39318;&#20808;&#65292;<code>Sanctum::currentApplicationUrlWithPort()</code> &#20250;&#20174; <code>APP_URL</code> &#29615;&#22659;&#21464;&#37327;&#36820;&#22238;&#24403;&#21069;&#24212;&#29992; URL&#65292;&#32780; <code>Sanctum::currentRequestHost()</code> &#20250;&#21521;&#26377;&#29366;&#24577;&#22495;&#21517;&#21015;&#34920;&#20013;&#27880;&#20837;&#19968;&#20010;&#21344;&#20301;&#31526;&#65292;&#22312;&#36816;&#34892;&#26102;&#20250;&#30001;&#24403;&#21069;&#35831;&#27714;&#30340;&#20027;&#26426;&#26367;&#25442;&#65292;&#20197;&#20415;&#25152;&#26377;&#20855;&#26377;&#30456;&#21516;&#22495;&#21517;&#30340;&#35831;&#27714;&#37117;&#34987;&#35270;&#20026;&#26377;&#29366;&#24577;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#22914;&#26524;&#20320;&#26159;&#36890;&#36807;&#21253;&#21547;&#31471;&#21475;&#30340; URL&#65288;&#22914; <code>127.0.0.1:8000</code>&#65289;&#35775;&#38382;&#20320;&#30340;&#24212;&#29992;&#65292;&#20320;&#24212;&#35813;&#30830;&#20445;&#22495;&#21517;&#20013;&#21253;&#21547;&#31471;&#21475;&#21495;&#12290;</p>
+</blockquote><h4 id="6822cfb9c907a376c3c3cbb641af3481">Sanctum &#20013;&#38388;&#20214;</h4><p>&#25509;&#19979;&#26469;&#65292;&#20320;&#24212;&#35813;&#25351;&#31034; Laravel&#65292;&#26469;&#33258;&#20320; SPA &#30340;&#20256;&#20837;&#35831;&#27714;&#21487;&#20197;&#20351;&#29992; Laravel &#30340;&#20250;&#35805; Cookie &#36827;&#34892;&#35748;&#35777;&#65292;&#21516;&#26102;&#20173;&#28982;&#20801;&#35768;&#26469;&#33258;&#31532;&#19977;&#26041;&#25110;&#31227;&#21160;&#24212;&#29992;&#30340;&#35831;&#27714;&#20351;&#29992; API &#20196;&#29260;&#36827;&#34892;&#35748;&#35777;&#12290;&#36825;&#21487;&#20197;&#36890;&#36807;&#22312;&#24212;&#29992;&#30340; <code>bootstrap/app.php</code> &#25991;&#20214;&#20013;&#35843;&#29992; <code>statefulApi</code> &#20013;&#38388;&#20214;&#26041;&#27861;&#36731;&#26494;&#23436;&#25104;&#65306;</p><pre><code class="language-php">-&gt;withMiddleware(function (Middleware $middleware): void {
+    $middleware-&gt;statefulApi();
+})</code></pre><h4 id="cf793922e86385cd1635007c708c06df">CORS &#19982; Cookie</h4><p>&#22914;&#26524;&#20320;&#22312;&#20174;&#19968;&#20010;&#29420;&#31435;&#23376;&#22495;&#21517;&#19978;&#25191;&#34892;&#30340; SPA &#35748;&#35777;&#20320;&#30340;&#24212;&#29992;&#26102;&#36935;&#21040;&#20102;&#22256;&#38590;&#65292;&#24456;&#21487;&#33021;&#26159;&#20320;&#30340; CORS&#65288;&#36328;&#22495;&#36164;&#28304;&#20849;&#20139;&#65289;&#25110;&#20250;&#35805; Cookie &#35774;&#32622;&#37197;&#32622;&#26377;&#35823;&#12290;</p><p><code>config/cors.php</code> &#37197;&#32622;&#25991;&#20214;&#40664;&#35748;&#19981;&#20250;&#21457;&#24067;&#12290;&#22914;&#26524;&#20320;&#38656;&#35201;&#33258;&#23450;&#20041; Laravel &#30340; CORS &#36873;&#39033;&#65292;&#24212;&#35813;&#20351;&#29992; <code>config:publish</code> Artisan &#21629;&#20196;&#21457;&#24067;&#23436;&#25972;&#30340; <code>cors</code> &#37197;&#32622;&#25991;&#20214;&#65306;</p><pre><code class="language-shell">php artisan config:publish cors</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#20320;&#24212;&#35813;&#30830;&#20445;&#24212;&#29992;&#30340; CORS &#37197;&#32622;&#36820;&#22238;&#20540;&#20026; <code>True</code> &#30340; <code>Access-Control-Allow-Credentials</code> &#35831;&#27714;&#22836;&#12290;&#36825;&#21487;&#20197;&#36890;&#36807;&#22312;&#24212;&#29992;&#30340; <code>config/cors.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23558; <code>supports_credentials</code> &#36873;&#39033;&#35774;&#32622;&#20026; <code>true</code> &#26469;&#23454;&#29616;&#12290;</p><p>&#27492;&#22806;&#65292;&#20320;&#24212;&#35813;&#21551;&#29992;&#24212;&#29992;&#20840;&#23616; <code>axios</code> &#23454;&#20363;&#19978;&#30340; <code>withCredentials</code> &#21644; <code>withXSRFToken</code> &#36873;&#39033;&#12290;&#36825;&#21487;&#20197;&#22312; <code>resources/js/app.js</code> &#25991;&#20214;&#20013;&#23436;&#25104;&#12290;&#22914;&#26524;&#20320;&#19981;&#26159;&#20351;&#29992; Axios &#20174;&#21069;&#31471;&#21457;&#36215; HTTP &#35831;&#27714;&#65292;&#20320;&#24212;&#35813;&#22312;&#33258;&#24049;&#30340; HTTP &#23458;&#25143;&#31471;&#19978;&#36827;&#34892;&#31561;&#25928;&#30340;&#37197;&#32622;&#65306;</p><pre><code class="language-js">axios.defaults.withCredentials = true;
+axios.defaults.withXSRFToken = true;</code></pre><p>&#26368;&#21518;&#65292;&#20320;&#24212;&#35813;&#30830;&#20445;&#24212;&#29992;&#30340;&#20250;&#35805; Cookie &#22495;&#21517;&#37197;&#32622;&#25903;&#25345;&#26681;&#22495;&#21517;&#30340;&#20219;&#20309;&#23376;&#22495;&#21517;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#24212;&#29992;&#30340; <code>config/session.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#20026;&#22495;&#21517;&#28155;&#21152;&#21069;&#23548; <code>.</code> &#26469;&#23454;&#29616;&#65306;</p><pre><code class="language-php">'domain' =&gt; '.domain.com',</code></pre><h3 id="b7158a42ca1c2845b3c08111982b0494">&#35748;&#35777;</h3><h4 id="71aa682d3e6eac3048c40e97045b7f02">CSRF &#20445;&#25252;</h4><p>&#35201;&#35748;&#35777;&#20320;&#30340; SPA&#65292;&#20320;&#30340; SPA &#30340;"&#30331;&#24405;"&#39029;&#38754;&#24212;&#39318;&#20808;&#21521; <code>/sanctum/csrf-cookie</code> &#31471;&#28857;&#21457;&#36215;&#35831;&#27714;&#65292;&#20197;&#20026;&#24212;&#29992;&#21021;&#22987;&#21270; CSRF &#38450;&#25252;&#65306;</p><pre><code class="language-js">axios.get('/sanctum/csrf-cookie').then(response =&gt; {
+    // &#30331;&#24405;...
+});</code></pre><p>&#22312;&#27492;&#27425;&#35831;&#27714;&#26399;&#38388;&#65292;Laravel &#20250;&#35774;&#32622;&#19968;&#20010;&#21253;&#21547;&#24403;&#21069; CSRF &#20196;&#29260;&#30340; <code>XSRF-TOKEN</code> Cookie&#12290;&#38543;&#21518;&#65292;&#35813;&#20196;&#29260;&#24212;&#34987; URL &#35299;&#30721;&#65292;&#24182;&#22312;&#21518;&#32493;&#35831;&#27714;&#20013;&#36890;&#36807; <code>X-XSRF-TOKEN</code> &#35831;&#27714;&#22836;&#20256;&#36882;&mdash;&mdash;&#19968;&#20123; HTTP &#23458;&#25143;&#31471;&#24211;&#65288;&#22914; Axios &#21644; Angular HttpClient&#65289;&#20250;&#20026;&#20320;&#33258;&#21160;&#23436;&#25104;&#36825;&#19968;&#27493;&#12290;&#22914;&#26524;&#20320;&#30340; JavaScript HTTP &#24211;&#19981;&#20250;&#33258;&#21160;&#20026;&#20320;&#35774;&#32622;&#35813;&#20540;&#65292;&#20320;&#38656;&#35201;&#25163;&#21160;&#23558; <code>X-XSRF-TOKEN</code> &#35831;&#27714;&#22836;&#35774;&#32622;&#20026;&#19982;&#35813;&#36335;&#30001;&#35774;&#32622;&#30340; <code>XSRF-TOKEN</code> Cookie &#30340; URL &#35299;&#30721;&#20540;&#19968;&#33268;&#12290;</p><h4 id="402d19e50fff44c827a4f3b608bd5812">&#30331;&#24405;</h4><p>&#19968;&#26086; CSRF &#38450;&#25252;&#21021;&#22987;&#21270;&#23436;&#25104;&#65292;&#20320;&#24212;&#35813;&#21521;&#20320;&#30340; Laravel &#24212;&#29992;&#30340; <code>/login</code> &#36335;&#30001;&#21457;&#36215;&#19968;&#20010; <code>POST</code> &#35831;&#27714;&#12290;&#36825;&#20010; <code>/login</code> &#36335;&#30001;&#21487;&#20197; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication#authenticating-users" target="_blank">&#25163;&#21160;&#23454;&#29616;</a>&#65292;&#20063;&#21487;&#20197;&#20351;&#29992;&#26080;&#22836;&#35748;&#35777;&#21253;&#65288;&#22914; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/fortify" target="_blank">Laravel Fortify</a>&#65289;&#12290;</p><p>&#22914;&#26524;&#30331;&#24405;&#35831;&#27714;&#25104;&#21151;&#65292;&#20320;&#23601;&#23436;&#25104;&#20102;&#35748;&#35777;&#65292;&#23545;&#20320;&#30340;&#24212;&#29992;&#36335;&#30001;&#30340;&#21518;&#32493;&#35831;&#27714;&#23558;&#36890;&#36807; Laravel &#24212;&#29992;&#21457;&#32473;&#23458;&#25143;&#31471;&#30340;&#20250;&#35805; Cookie &#33258;&#21160;&#23436;&#25104;&#35748;&#35777;&#12290;&#27492;&#22806;&#65292;&#30001;&#20110;&#20320;&#30340;&#24212;&#29992;&#24050;&#32463;&#21521; <code>/sanctum/csrf-cookie</code> &#36335;&#30001;&#21457;&#36215;&#36807;&#35831;&#27714;&#65292;&#21482;&#35201;&#20320;&#30340; JavaScript HTTP &#23458;&#25143;&#31471;&#22312; <code>X-XSRF-TOKEN</code> &#35831;&#27714;&#22836;&#20013;&#21457;&#36865; <code>XSRF-TOKEN</code> Cookie &#30340;&#20540;&#65292;&#21518;&#32493;&#35831;&#27714;&#23601;&#24212;&#35813;&#33258;&#21160;&#33719;&#24471; CSRF &#38450;&#25252;&#12290;</p><p>&#24403;&#28982;&#65292;&#22914;&#26524;&#20320;&#30340;&#29992;&#25143;&#20250;&#35805;&#22240;&#32570;&#20047;&#27963;&#21160;&#32780;&#36807;&#26399;&#65292;&#23545; Laravel &#24212;&#29992;&#30340;&#21518;&#32493;&#35831;&#27714;&#21487;&#33021;&#20250;&#25910;&#21040; 401 &#25110; 419 &#30340; HTTP &#38169;&#35823;&#21709;&#24212;&#12290;&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20320;&#24212;&#35813;&#23558;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040; SPA &#30340;&#30331;&#24405;&#39029;&#38754;&#12290;</p><p>&#30001;&#20110;&#36825;&#31181; SPA &#35748;&#35777;&#26041;&#24335;&#26159;&#22522;&#20110;&#20250;&#35805;&#30340;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; Laravel &#30340;&#26631;&#20934;&#35748;&#35777;&#26381;&#21153;&#65292;&#21253;&#25324; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication#remembering-users" target="_blank">"&#35760;&#20303;&#25105;"</a> &#21151;&#33021;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#20320;&#21487;&#20197;&#33258;&#30001;&#32534;&#20889;&#33258;&#24049;&#30340; <code>/login</code> &#31471;&#28857;&#65307;&#20294;&#26159;&#65292;&#20320;&#24212;&#35813;&#30830;&#20445;&#23427;&#20351;&#29992;&#26631;&#20934;&#30340;&#12289; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication#authenticating-users" target="_blank">Laravel &#25552;&#20379;&#30340;&#22522;&#20110;&#20250;&#35805;&#30340;&#35748;&#35777;&#26381;&#21153;</a> &#26469;&#35748;&#35777;&#29992;&#25143;&#12290;&#36890;&#24120;&#65292;&#36825;&#24847;&#21619;&#30528;&#20351;&#29992; <code>web</code> &#35748;&#35777;&#23432;&#21355;&#12290;</p>
+</blockquote><h3 id="801705ac2343e82fa596c98e745035e8">&#20445;&#25252;&#36335;&#30001;</h3><p>&#35201;&#20445;&#25252;&#36335;&#30001;&#65292;&#20351;&#25152;&#26377;&#20256;&#20837;&#35831;&#27714;&#37117;&#24517;&#39035;&#32463;&#36807;&#35748;&#35777;&#65292;&#20320;&#24212;&#35813;&#22312; <code>routes/api.php</code> &#25991;&#20214;&#20013;&#23558; <code>sanctum</code> &#35748;&#35777;&#23432;&#21355;&#38468;&#21152;&#21040;&#20320;&#30340; API &#36335;&#30001;&#19978;&#12290;&#35813;&#23432;&#21355;&#20250;&#30830;&#20445;&#20256;&#20837;&#35831;&#27714;&#35201;&#20040;&#20197;&#26469;&#33258;&#20320; SPA &#30340;&#26377;&#29366;&#24577;&#35748;&#35777;&#35831;&#27714;&#30340;&#26041;&#24335;&#36890;&#36807;&#35748;&#35777;&#65292;&#35201;&#20040;&#65288;&#22914;&#26524;&#26159;&#26469;&#33258;&#31532;&#19977;&#26041;&#30340;&#35831;&#27714;&#65289;&#21253;&#21547;&#26377;&#25928;&#30340; API &#20196;&#29260;&#35831;&#27714;&#22836;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+
+Route::get('/user', function (Request $request) {
+    return $request-&gt;user();
+})-&gt;middleware('auth:sanctum');</code></pre><h3 id="8bcd465fcb9d99a20c5817520b0e4eed">&#25480;&#26435;&#31169;&#26377;&#24191;&#25773;&#39057;&#36947;</h3><p>&#22914;&#26524;&#20320;&#30340; SPA &#38656;&#35201;&#35748;&#35777; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/broadcasting#authorizing-channels" target="_blank">&#31169;&#26377; / &#23384;&#22312;&#24615;&#24191;&#25773;&#39057;&#36947;</a>&#65292;&#20320;&#24212;&#35813;&#20174;&#24212;&#29992; <code>bootstrap/app.php</code> &#25991;&#20214;&#21253;&#21547;&#30340; <code>withRouting</code> &#26041;&#27861;&#20013;&#31227;&#38500; <code>channels</code> &#26465;&#30446;&#12290;&#30456;&#21453;&#65292;&#20320;&#24212;&#35813;&#35843;&#29992; <code>withBroadcasting</code> &#26041;&#27861;&#65292;&#20197;&#20415;&#20026;&#24212;&#29992;&#30340;&#24191;&#25773;&#36335;&#30001;&#25351;&#23450;&#27491;&#30830;&#30340;&#20013;&#38388;&#20214;&#65306;</p><pre><code class="language-php">return Application::configure(basePath: dirname(__DIR__))
+    -&gt;withRouting(
+        web: __DIR__.'/../routes/web.php',
+        // ...
+    )
+    -&gt;withBroadcasting(
+        __DIR__.'/../routes/channels.php',
+        ['prefix' =&gt; 'api', 'middleware' =&gt; ['api', 'auth:sanctum']],
+    )</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#20026;&#20102;&#35753; Pusher &#30340;&#25480;&#26435;&#35831;&#27714;&#33021;&#22815;&#25104;&#21151;&#65292;&#20320;&#38656;&#35201;&#22312;&#21021;&#22987;&#21270; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/broadcasting#client-side-installation" target="_blank">Laravel Echo</a> &#26102;&#25552;&#20379;&#19968;&#20010;&#33258;&#23450;&#20041;&#30340; Pusher <code>authorizer</code>&#12290;&#36825;&#35753;&#20320;&#30340;&#24212;&#29992;&#21487;&#20197;&#23558; Pusher &#37197;&#32622;&#20026;&#20351;&#29992; <a href="xq9zr3jvdo.html#cors-and-cookies" target="_blank">&#20026;&#36328;&#22495;&#35831;&#27714;&#27491;&#30830;&#37197;&#32622;&#30340;</a> <code>axios</code> &#23454;&#20363;&#65306;</p><pre><code class="language-js">window.Echo = new Echo({
+    broadcaster: "pusher",
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    encrypted: true,
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    authorizer: (channel, options) =&gt; {
+        return {
+            authorize: (socketId, callback) =&gt; {
+                axios.post('/api/broadcasting/auth', {
+                    socket_id: socketId,
+                    channel_name: channel.name
+                })
+                .then(response =&gt; {
+                    callback(false, response.data);
+                })
+                .catch(error =&gt; {
+                    callback(true, error);
+                });
+            }
+        };
+    },
+})</code></pre><h2 id="74dbcdceb687c6417c4d8bb3ca590abd">&#31227;&#21160;&#24212;&#29992;&#35748;&#35777;</h2><p>&#20320;&#20063;&#21487;&#20197;&#20351;&#29992; Sanctum &#20196;&#29260;&#26469;&#35748;&#35777;&#31227;&#21160;&#24212;&#29992;&#21521;&#20320;&#30340; API &#21457;&#36215;&#30340;&#35831;&#27714;&#12290;&#35748;&#35777;&#31227;&#21160;&#24212;&#29992;&#35831;&#27714;&#30340;&#36807;&#31243;&#19982;&#35748;&#35777;&#31532;&#19977;&#26041; API &#35831;&#27714;&#31867;&#20284;&#65307;&#20294;&#26159;&#65292;&#22312;&#22914;&#20309;&#21457;&#25918; API &#20196;&#29260;&#26041;&#38754;&#23384;&#22312;&#19968;&#20123;&#32454;&#24494;&#24046;&#21035;&#12290;</p><h3 id="31c94b37bdf50136440e82ef7f2a1977">&#39041;&#21457; API &#20196;&#29260;</h3><p>&#35201;&#24320;&#22987;&#65292;&#21019;&#24314;&#19968;&#20010;&#25509;&#21463;&#29992;&#25143;&#37038;&#31665; / &#29992;&#25143;&#21517;&#12289;&#23494;&#30721;&#21644;&#35774;&#22791;&#21517;&#31216;&#30340;&#36335;&#30001;&#65292;&#28982;&#21518;&#23558;&#36825;&#20123;&#20973;&#25454;&#20132;&#25442;&#20026;&#19968;&#20010;&#26032;&#30340; Sanctum &#20196;&#29260;&#12290;&#25552;&#20379;&#32473;&#35813;&#31471;&#28857;&#30340;"&#35774;&#22791;&#21517;&#31216;"&#20165;&#29992;&#20110;&#20449;&#24687;&#26631;&#35782;&#65292;&#21487;&#20197;&#26159;&#20320;&#24076;&#26395;&#30340;&#20219;&#20309;&#20540;&#12290;&#36890;&#24120;&#65292;&#35774;&#22791;&#21517;&#31216;&#24212;&#35813;&#26159;&#29992;&#25143;&#33021;&#35782;&#21035;&#30340;&#21517;&#31216;&#65292;&#20363;&#22914; "Nuno's iPhone 17"&#12290;</p><p>&#36890;&#24120;&#65292;&#20320;&#20250;&#20174;&#31227;&#21160;&#24212;&#29992;&#30340;"&#30331;&#24405;"&#30028;&#38754;&#21457;&#36215;&#23545;&#35813;&#20196;&#29260;&#31471;&#28857;&#30340;&#35831;&#27714;&#12290;&#35813;&#31471;&#28857;&#20250;&#36820;&#22238;&#26126;&#25991; API &#20196;&#29260;&#65292;&#23427;&#38543;&#21518;&#21487;&#20197;&#34987;&#23384;&#20648;&#22312;&#31227;&#21160;&#35774;&#22791;&#19978;&#65292;&#24182;&#29992;&#20110;&#21457;&#36215;&#39069;&#22806;&#30340; API &#35831;&#27714;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+
+Route::post('/sanctum/token', function (Request $request) {
+    $request-&gt;validate([
+        'email' =&gt; 'required|email',
+        'password' =&gt; 'required',
+        'device_name' =&gt; 'required',
+    ]);
+
+    $user = User::where('email', $request-&gt;email)-&gt;first();
+
+    if (! $user || ! Hash::check($request-&gt;password, $user-&gt;password)) {
+        throw ValidationException::withMessages([
+            'email' =&gt; ['The provided credentials are incorrect.'],
+        ]);
+    }
+
+    return $user-&gt;createToken($request-&gt;device_name)-&gt;plainTextToken;
+});</code></pre><p>&#24403;&#31227;&#21160;&#24212;&#29992;&#20351;&#29992;&#35813;&#20196;&#29260;&#21521;&#20320;&#30340;&#24212;&#29992;&#21457;&#36215; API &#35831;&#27714;&#26102;&#65292;&#23427;&#24212;&#35813;&#22312; <code>Authorization</code> &#35831;&#27714;&#22836;&#20013;&#20197; <code>Bearer</code> &#20196;&#29260;&#30340;&#24418;&#24335;&#20256;&#36882;&#35813;&#20196;&#29260;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#20026;&#31227;&#21160;&#24212;&#29992;&#21457;&#25918;&#20196;&#29260;&#26102;&#65292;&#20320;&#21516;&#26679;&#21487;&#20197;&#33258;&#30001;&#25351;&#23450; <a href="xq9zr3jvdo.html#token-abilities" target="_blank">&#20196;&#29260;&#33021;&#21147;</a>&#12290;</p>
+</blockquote><h3 id="801705ac2343e82fa596c98e745035e8">&#20445;&#25252;&#36335;&#30001;</h3><p>&#22914;&#19978;&#25991;&#25152;&#36848;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#23558; <code>sanctum</code> &#35748;&#35777;&#23432;&#21355;&#38468;&#21152;&#21040;&#36335;&#30001;&#19978;&#65292;&#26469;&#20445;&#25252;&#36335;&#30001;&#65292;&#20351;&#25152;&#26377;&#20256;&#20837;&#35831;&#27714;&#37117;&#24517;&#39035;&#32463;&#36807;&#35748;&#35777;&#65306;</p><pre><code class="language-php">Route::get('/user', function (Request $request) {
+    return $request-&gt;user();
+})-&gt;middleware('auth:sanctum');</code></pre><h3 id="57f7928e375c166c21eae655050b7883">&#25764;&#38144;&#20196;&#29260;</h3><p>&#20026;&#20102;&#20801;&#35768;&#29992;&#25143;&#25764;&#38144;&#21457;&#25918;&#32473;&#31227;&#21160;&#35774;&#22791;&#30340; API &#20196;&#29260;&#65292;&#20320;&#21487;&#20197;&#22312; Web &#24212;&#29992; UI &#30340;"&#36134;&#25143;&#35774;&#32622;"&#37096;&#20998;&#25353;&#21517;&#31216;&#21015;&#20986;&#23427;&#20204;&#65292;&#24182;&#38468;&#19978;&#19968;&#20010;"&#25764;&#38144;"&#25353;&#38062;&#12290;&#24403;&#29992;&#25143;&#28857;&#20987;"&#25764;&#38144;"&#25353;&#38062;&#26102;&#65292;&#20320;&#21487;&#20197;&#20174;&#25968;&#25454;&#24211;&#20013;&#21024;&#38500;&#35813;&#20196;&#29260;&#12290;&#35831;&#35760;&#20303;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; <code>Laravel\Sanctum\HasApiTokens</code> Trait &#25552;&#20379;&#30340; <code>tokens</code> &#20851;&#32852;&#26469;&#35775;&#38382;&#29992;&#25143;&#30340; API &#20196;&#29260;&#65306;</p><pre><code class="language-php">// &#25764;&#38144;&#25152;&#26377;&#20196;&#29260;...
+$user-&gt;tokens()-&gt;delete();
+
+// &#25764;&#38144;&#29305;&#23450;&#20196;&#29260;...
+$user-&gt;tokens()-&gt;where('id', $tokenId)-&gt;delete();</code></pre><h2 id="db06c78d1e24cf708a14ce81c9b617ec">&#27979;&#35797;</h2><p>&#22312;&#27979;&#35797;&#26102;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Sanctum::actingAs</code> &#26041;&#27861;&#26469;&#35748;&#35777;&#19968;&#20010;&#29992;&#25143;&#65292;&#24182;&#25351;&#23450;&#24212;&#25480;&#20104;&#20854;&#20196;&#29260;&#21738;&#20123;&#33021;&#21147;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Laravel\Sanctum\Sanctum;
+
+test('task list can be retrieved', function () {
+    Sanctum::actingAs(
+        User::factory()-&gt;create(),
+        ['view-tasks']
+    );
+
+    $response = $this-&gt;get('/api/task');
+
+    $response-&gt;assertOk();
+});</code></pre><pre><code class="language-php">use App\Models\User;
+use Laravel\Sanctum\Sanctum;
+
+public function test_task_list_can_be_retrieved(): void
+{
+    Sanctum::actingAs(
+        User::factory()-&gt;create(),
+        ['view-tasks']
+    );
+
+    $response = $this-&gt;get('/api/task');
+
+    $response-&gt;assertOk();
+}</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#25480;&#20104;&#20196;&#29260;&#25152;&#26377;&#33021;&#21147;&#65292;&#24212;&#35813;&#22312;&#20256;&#32473; <code>actingAs</code> &#26041;&#27861;&#30340;&#33021;&#21147;&#21015;&#34920;&#20013;&#21253;&#21547; <code>*</code>&#65306;</p><pre><code class="language-php">Sanctum::actingAs(
+    User::factory()-&gt;create(),
+    ['*']
+);</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Laravel Sanctum: <i><a href="https://github.com/laravel/sanctum" target="_blank">https://github.com/laravel/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Laravel Sanctum: <i><a href="https://github.com/laravel/sanctum" target="_blank">https://github.com/laravel/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> SPA Authentication: <i><a href="xq9zr3jvdo.html#spa-authentication" target="_blank">#spa-authentication</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> SPA 认证功能: <i><a href="xq9zr3jvdo.html#spa-authentication" target="_blank">#spa-authentication</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> SPA 认证: <i><a href="xq9zr3jvdo.html#spa-authentication" target="_blank">#spa-authentication</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 授权策略: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authorization#creating-policies" target="_blank">/docs/Laravel 13.x/authorization#creating-policies</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 撤销令牌: <i><a href="xq9zr3jvdo.html#revoking-tokens" target="_blank">#revoking-tokens</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 安排一个任务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/scheduling" target="_blank">/docs/Laravel 13.x/scheduling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> 手动实现: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication#authenticating-users" target="_blank">/docs/Laravel 13.x/authentication#authenticating-users</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> Laravel Fortify: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/fortify" target="_blank">/docs/Laravel 13.x/fortify</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> "记住我": <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication#remembering-users" target="_blank">/docs/Laravel 13.x/authentication#remembering-users</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> Laravel 提供的基于会话的认证服务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication#authenticating-users" target="_blank">/docs/Laravel 13.x/authentication#authenticating-users</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> 私有 / 存在性广播频道: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/broadcasting#authorizing-channels" target="_blank">/docs/Laravel 13.x/broadcasting#authorizing-channels</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> Laravel Echo: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/broadcasting#client-side-installation" target="_blank">/docs/Laravel 13.x/broadcasting#client-side-installation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 为跨域请求正确配置的: <i><a href="xq9zr3jvdo.html#cors-and-cookies" target="_blank">#cors-and-cookies</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> 令牌能力: <i><a href="xq9zr3jvdo.html#token-abilities" target="_blank">#token-abilities</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="e296opw9q7.html#blog1096" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">Laravel Sail</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="2wy3l13ykm.html#blog1098" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">Laravel Scout</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

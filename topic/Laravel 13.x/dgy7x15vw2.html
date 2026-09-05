@@ -1,0 +1,1575 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>HTTP 客户端 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/dgy7x15vw2.html', function (data, status) {
+            addView('dgy7x15vw2.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>HTTP 客户端</h1><ul>
+<li><a href="dgy7x15vw2.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="dgy7x15vw2.html#ec7abc9ee09a01c61daa3e210d399ec1">发起请求</a>
+<ul>
+<li><a href="dgy7x15vw2.html#f8fbf5526c5fd37ece1584ab1ffbaace">URI 模板</a></li>
+<li><a href="dgy7x15vw2.html#f538b67203cd96ad8b0d6ff28a223329">转储请求</a>
+<ul>
+<li><a href="dgy7x15vw2.html#92b2478db18897c10c4eae3ffe608e8d">请求数据</a></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#d12a4d06a993c061f2215907063b703c">GET 请求查询参数</a></li>
+<li><a href="dgy7x15vw2.html#1acd749ae162fe8a3dbe8a946d4cc875">发送表单 URL 编码请求</a></li>
+<li><a href="dgy7x15vw2.html#36cd124622c1f29427604cd16f05bae3">发送原始请求体</a></li>
+<li><a href="dgy7x15vw2.html#8c2320473511c32cf2b5a58721b95d20">多部分请求</a>
+<ul>
+<li><a href="dgy7x15vw2.html#be47bd270e7756d4233e59bbe4cd5b96">请求头</a></li>
+<li><a href="dgy7x15vw2.html#b7158a42ca1c2845b3c08111982b0494">认证</a></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#b6333babd831326d338dee168c8ffa0e">Bearer 令牌</a>
+<ul>
+<li><a href="dgy7x15vw2.html#e944c7c9017a815650ce6b78f81685e7">超时</a></li>
+<li><a href="dgy7x15vw2.html#132c5cdcceb0f1f17c8c088a42959aa4">重试</a></li>
+<li><a href="dgy7x15vw2.html#6a8bef7b98dfdcf9b7c85814d4382a6c">错误处理</a></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#0ffa1b453ad65b3933eb4587e4bc2245">抛出异常</a>
+<ul>
+<li><a href="dgy7x15vw2.html#5a59464e7ff5da7d13e3abda11259502">Guzzle 中间件</a></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#ec40943bf1a7647888fece2f99c708f7">全局中间件</a>
+<ul>
+<li><a href="dgy7x15vw2.html#0c7f3e7ce1aa5433af194795d2da4c96">Guzzle 选项</a></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#7ce976b5ea383c077b8172346f820824">全局选项</a></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#a27c80896adbd85841d05fbeb01406df">并发请求</a>
+<ul>
+<li><a href="dgy7x15vw2.html#30b344e84a0a8898d2c1d78899dc843b">请求池</a>
+<ul>
+<li><a href="dgy7x15vw2.html#85d776b905ed37e2c457351a9a0c86c2">自定义并发请求</a></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#dd69d800fc36c567ba5cb56588b71134">请求批处理</a>
+<ul>
+<li><a href="dgy7x15vw2.html#015b975a3d315619fea5f569ade86b0d">检查批处理</a></li>
+<li><a href="dgy7x15vw2.html#afb79a757521e65076f09a596f222210">延迟批处理</a></li>
+</ul></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#6d0d5d0a99dedcb4b13a62d47feb6883">宏</a></li>
+<li><a href="dgy7x15vw2.html#db06c78d1e24cf708a14ce81c9b617ec">测试</a>
+<ul>
+<li><a href="dgy7x15vw2.html#e753253da8618e7b67eb5ea42865c942">伪造响应</a>
+<ul>
+<li><a href="dgy7x15vw2.html#fe4212d10587ad397c644c6b5c02b605">伪造特定 URL</a></li>
+<li><a href="dgy7x15vw2.html#1b1a1596ac619ef392f39d255880f5b3">伪造异常</a></li>
+<li><a href="dgy7x15vw2.html#1555aa8afeb04eeb86ca9cbe7f6e7109">伪造响应序列</a></li>
+<li><a href="dgy7x15vw2.html#647cefdd61dfd6d2df3e66d5b8702c98">伪造回调</a></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#5af024d6ea21387c9ea11979e5a7d3e5">检查请求</a>
+<ul>
+<li><a href="dgy7x15vw2.html#896906bbe78203a0abe24b016e024616">记录请求 / 响应</a></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#374e7ea896837ac6807e9667e5a21f53">阻止多余请求</a></li>
+</ul></li>
+<li><a href="dgy7x15vw2.html#10b2761db5a8e089049df39675abc550">事件</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>Laravel &#22312; <a href="http://docs.guzzlephp.org/en/stable/" target="_blank" rel="noopener noreferrer">Guzzle HTTP &#23458;&#25143;&#31471;</a> &#20043;&#19978;&#25552;&#20379;&#20102;&#19968;&#20010;&#23500;&#26377;&#34920;&#29616;&#21147;&#12289;&#26497;&#31616;&#30340; API&#65292;&#35753;&#20320;&#21487;&#20197;&#24555;&#36895;&#21457;&#36215;&#23545;&#22806; HTTP &#35831;&#27714;&#65292;&#19982;&#20854;&#20182; Web &#24212;&#29992;&#36890;&#20449;&#12290;Laravel &#23545; Guzzle &#30340;&#23553;&#35013;&#19987;&#27880;&#20110;&#26368;&#24120;&#35265;&#30340;&#20351;&#29992;&#22330;&#26223;&#21644;&#20986;&#33394;&#30340;&#24320;&#21457;&#32773;&#20307;&#39564;&#12290;</p><h2 id="ec7abc9ee09a01c61daa3e210d399ec1">&#21457;&#36215;&#35831;&#27714;</h2><p>&#35201;&#21457;&#36215;&#35831;&#27714;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Http</code> Facade &#25552;&#20379;&#30340; <code>head</code>&#12289;<code>get</code>&#12289;<code>post</code>&#12289;<code>put</code>&#12289;<code>patch</code> &#21644; <code>delete</code> &#26041;&#27861;&#12290;&#39318;&#20808;&#65292;&#25105;&#20204;&#26469;&#30475;&#30475;&#22914;&#20309;&#21521;&#21478;&#19968;&#20010; URL &#21457;&#36215;&#19968;&#20010;&#22522;&#30784;&#30340; <code>GET</code> &#35831;&#27714;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+$response = Http::get('http://example.com');</code></pre><p><code>get</code> &#26041;&#27861;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Http\Client\Response</code> &#23454;&#20363;&#65292;&#23427;&#25552;&#20379;&#20102;&#22810;&#31181;&#21487;&#29992;&#20110;&#26816;&#26597;&#21709;&#24212;&#30340;&#26041;&#27861;&#65306;</p><pre><code class="language-php">$response-&gt;body() : string;
+$response-&gt;json($key = null, $default = null, $flags = null) : mixed;
+$response-&gt;object() : object;
+$response-&gt;collect($key = null) : Illuminate\Support\Collection;
+$response-&gt;resource() : resource;
+$response-&gt;status() : int;
+$response-&gt;successful() : bool;
+$response-&gt;redirect(): bool;
+$response-&gt;failed() : bool;
+$response-&gt;clientError() : bool;
+$response-&gt;header($header) : string;
+$response-&gt;headers() : array;</code></pre><p><code>Illuminate\Http\Client\Response</code> &#23545;&#35937;&#36824;&#23454;&#29616;&#20102; PHP &#30340; <code>ArrayAccess</code> &#25509;&#21475;&#65292;&#35753;&#20320;&#21487;&#20197;&#30452;&#25509;&#22312;&#21709;&#24212;&#19978;&#35775;&#38382; JSON &#21709;&#24212;&#25968;&#25454;&#65306;</p><pre><code class="language-php">return Http::get('http://example.com/users/1')['name'];</code></pre><p>&#38500;&#20102;&#19978;&#38754;&#21015;&#20986;&#30340;&#21709;&#24212;&#26041;&#27861;&#20043;&#22806;&#65292;&#36824;&#21487;&#20197;&#20351;&#29992;&#20197;&#19979;&#26041;&#27861;&#26469;&#30830;&#23450;&#21709;&#24212;&#26159;&#21542;&#20855;&#26377;&#29305;&#23450;&#30340;&#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;ok() : bool;                  // 200 OK
+$response-&gt;created() : bool;             // 201 Created
+$response-&gt;accepted() : bool;            // 202 Accepted
+$response-&gt;noContent() : bool;           // 204 No Content
+$response-&gt;movedPermanently() : bool;    // 301 Moved Permanently
+$response-&gt;found() : bool;               // 302 Found
+$response-&gt;badRequest() : bool;          // 400 Bad Request
+$response-&gt;unauthorized() : bool;        // 401 Unauthorized
+$response-&gt;paymentRequired() : bool;     // 402 Payment Required
+$response-&gt;forbidden() : bool;           // 403 Forbidden
+$response-&gt;notFound() : bool;            // 404 Not Found
+$response-&gt;requestTimeout() : bool;      // 408 Request Timeout
+$response-&gt;conflict() : bool;            // 409 Conflict
+$response-&gt;unprocessableEntity() : bool; // 422 Unprocessable Entity
+$response-&gt;tooManyRequests() : bool;     // 429 Too Many Requests
+$response-&gt;serverError() : bool;         // 500 Internal Server Error</code></pre><h4 id="f8fbf5526c5fd37ece1584ab1ffbaace">URI &#27169;&#26495;</h4><p>HTTP &#23458;&#25143;&#31471;&#36824;&#20801;&#35768;&#20320;&#20351;&#29992; <a href="https://www.rfc-editor.org/rfc/rfc6570" target="_blank" rel="noopener noreferrer">URI &#27169;&#26495;&#35268;&#33539;</a> &#26469;&#26500;&#36896;&#35831;&#27714; URL&#12290;&#35201;&#23450;&#20041;&#21487;&#20197;&#30001; URI &#27169;&#26495;&#23637;&#24320;&#30340; URL &#21442;&#25968;&#65292;&#21487;&#20197;&#20351;&#29992; <code>withUrlParameters</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Http::withUrlParameters([
+    'endpoint' =&gt; 'https://laravel.com',
+    'page' =&gt; 'docs',
+    'version' =&gt; '13.x',
+    'topic' =&gt; 'validation',
+])-&gt;get('{+endpoint}/{page}/{version}/{topic}');</code></pre><h4 id="f538b67203cd96ad8b0d6ff28a223329">&#36716;&#20648;&#35831;&#27714;</h4><p>&#22914;&#26524;&#20320;&#24819;&#22312;&#21457;&#36865;&#35831;&#27714;&#23454;&#20363;&#20043;&#21069;&#23558;&#20854; dump &#20986;&#26469;&#24182;&#32456;&#27490;&#33050;&#26412;&#25191;&#34892;&#65292;&#21487;&#20197;&#22312;&#35831;&#27714;&#23450;&#20041;&#30340;&#24320;&#22836;&#28155;&#21152; <code>dd</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">return Http::dd()-&gt;get('http://example.com');</code></pre><h3 id="92b2478db18897c10c4eae3ffe608e8d">&#35831;&#27714;&#25968;&#25454;</h3><p>&#24403;&#28982;&#65292;&#22312;&#21457;&#36215; <code>POST</code>&#12289;<code>PUT</code> &#21644; <code>PATCH</code> &#35831;&#27714;&#26102;&#65292;&#25658;&#24102;&#39069;&#22806;&#25968;&#25454;&#26159;&#24456;&#24120;&#35265;&#30340;&#65292;&#22240;&#27492;&#36825;&#20123;&#26041;&#27861;&#25509;&#21463;&#20197;&#25968;&#32452;&#24418;&#24335;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#20837;&#30340;&#25968;&#25454;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#25968;&#25454;&#20250;&#20351;&#29992; <code>application/json</code> &#20869;&#23481;&#31867;&#22411;&#21457;&#36865;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+$response = Http::post('http://example.com/users', [
+    'name' =&gt; 'Steve',
+    'role' =&gt; 'Network Administrator',
+]);</code></pre><h4 id="d12a4d06a993c061f2215907063b703c">GET &#35831;&#27714;&#26597;&#35810;&#21442;&#25968;</h4><p>&#21457;&#36215; <code>GET</code> &#35831;&#27714;&#26102;&#65292;&#20320;&#21487;&#20197;&#30452;&#25509;&#23558;&#26597;&#35810;&#23383;&#31526;&#20018;&#38468;&#21152;&#21040; URL &#19978;&#65292;&#25110;&#32773;&#23558;&#38190;&#20540;&#23545;&#25968;&#32452;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>get</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$response = Http::get('http://example.com/users', [
+    'name' =&gt; 'Taylor',
+    'page' =&gt; 1,
+]);</code></pre><p>&#25110;&#32773;&#65292;&#20063;&#21487;&#20197;&#20351;&#29992; <code>withQueryParameters</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Http::retry(3, 100)-&gt;withQueryParameters([
+    'name' =&gt; 'Taylor',
+    'page' =&gt; 1,
+])-&gt;get('http://example.com/users');</code></pre><h4 id="1acd749ae162fe8a3dbe8a946d4cc875">&#21457;&#36865;&#34920;&#21333; URL &#32534;&#30721;&#35831;&#27714;</h4><p>&#22914;&#26524;&#20320;&#24819;&#20351;&#29992; <code>application/x-www-form-urlencoded</code> &#20869;&#23481;&#31867;&#22411;&#21457;&#36865;&#25968;&#25454;&#65292;&#24212;&#35813;&#22312;&#21457;&#36215;&#35831;&#27714;&#20043;&#21069;&#35843;&#29992; <code>asForm</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$response = Http::asForm()-&gt;post('http://example.com/users', [
+    'name' =&gt; 'Sara',
+    'role' =&gt; 'Privacy Consultant',
+]);</code></pre><h4 id="36cd124622c1f29427604cd16f05bae3">&#21457;&#36865;&#21407;&#22987;&#35831;&#27714;&#20307;</h4><p>&#22914;&#26524;&#20320;&#24819;&#22312;&#21457;&#36215;&#35831;&#27714;&#26102;&#25552;&#20379;&#21407;&#22987;&#35831;&#27714;&#20307;&#65292;&#21487;&#20197;&#20351;&#29992; <code>withBody</code> &#26041;&#27861;&#12290;&#20869;&#23481;&#31867;&#22411;&#21487;&#20197;&#36890;&#36807;&#35813;&#26041;&#27861;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#25552;&#20379;&#65306;</p><pre><code class="language-php">$response = Http::withBody(
+    base64_encode($photo), 'image/jpeg'
+)-&gt;post('http://example.com/photo');</code></pre><h4 id="8c2320473511c32cf2b5a58721b95d20">&#22810;&#37096;&#20998;&#35831;&#27714;</h4><p>&#22914;&#26524;&#20320;&#24819;&#20197;&#22810;&#37096;&#20998;&#65288;multi-part&#65289;&#35831;&#27714;&#30340;&#24418;&#24335;&#21457;&#36865;&#25991;&#20214;&#65292;&#24212;&#35813;&#22312;&#21457;&#36215;&#35831;&#27714;&#20043;&#21069;&#35843;&#29992; <code>attach</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#25509;&#21463;&#25991;&#20214;&#21517;&#21450;&#20854;&#20869;&#23481;&#12290;&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#25552;&#20379;&#31532;&#19977;&#20010;&#21442;&#25968;&#65292;&#20316;&#20026;&#25991;&#20214;&#30340;&#25991;&#20214;&#21517;&#65307;&#31532;&#22235;&#20010;&#21442;&#25968;&#21487;&#29992;&#20110;&#25552;&#20379;&#19982;&#25991;&#20214;&#30456;&#20851;&#30340; Header&#65306;</p><pre><code class="language-php">$response = Http::attach(
+    'attachment', file_get_contents('photo.jpg'), 'photo.jpg', ['Content-Type' =&gt; 'image/jpeg']
+)-&gt;post('http://example.com/attachments');</code></pre><p>&#20320;&#21487;&#20197;&#20256;&#36882;&#19968;&#20010;&#27969;&#36164;&#28304;&#65292;&#32780;&#19981;&#26159;&#20256;&#36882;&#25991;&#20214;&#30340;&#21407;&#22987;&#20869;&#23481;&#65306;</p><pre><code class="language-php">$photo = fopen('photo.jpg', 'r');
+
+$response = Http::attach(
+    'attachment', $photo, 'photo.jpg'
+)-&gt;post('http://example.com/attachments');</code></pre><h3 id="be47bd270e7756d4233e59bbe4cd5b96">&#35831;&#27714;&#22836;</h3><p>&#21487;&#20197;&#20351;&#29992; <code>withHeaders</code> &#26041;&#27861;&#21521;&#35831;&#27714;&#28155;&#21152; Header&#12290;&#35813; <code>withHeaders</code> &#26041;&#27861;&#25509;&#21463;&#38190;&#20540;&#23545;&#25968;&#32452;&#65306;</p><pre><code class="language-php">$response = Http::withHeaders([
+    'X-First' =&gt; 'foo',
+    'X-Second' =&gt; 'bar'
+])-&gt;post('http://example.com/users', [
+    'name' =&gt; 'Taylor',
+]);</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>accept</code> &#26041;&#27861;&#26469;&#25351;&#23450;&#20320;&#30340;&#24212;&#29992;&#26399;&#26395;&#22312;&#21709;&#24212;&#35813;&#35831;&#27714;&#26102;&#36820;&#22238;&#30340;&#20869;&#23481;&#31867;&#22411;&#65306;</p><pre><code class="language-php">$response = Http::accept('application/json')-&gt;get('http://example.com/users');</code></pre><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>acceptJson</code> &#26041;&#27861;&#24555;&#36895;&#25351;&#23450;&#20320;&#30340;&#24212;&#29992;&#26399;&#26395;&#22312;&#21709;&#24212;&#35813;&#35831;&#27714;&#26102;&#36820;&#22238; <code>application/json</code> &#20869;&#23481;&#31867;&#22411;&#65306;</p><pre><code class="language-php">$response = Http::acceptJson()-&gt;get('http://example.com/users');</code></pre><p><code>withHeaders</code> &#26041;&#27861;&#20250;&#23558;&#26032; Header &#21512;&#24182;&#21040;&#35831;&#27714;&#29616;&#26377;&#30340; Header &#20013;&#12290;&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#20351;&#29992; <code>replaceHeaders</code> &#26041;&#27861;&#23436;&#20840;&#26367;&#25442;&#25152;&#26377; Header&#65306;</p><pre><code class="language-php">$response = Http::withHeaders([
+    'X-Original' =&gt; 'foo',
+])-&gt;replaceHeaders([
+    'X-Replacement' =&gt; 'bar',
+])-&gt;post('http://example.com/users', [
+    'name' =&gt; 'Taylor',
+]);</code></pre><h3 id="b7158a42ca1c2845b3c08111982b0494">&#35748;&#35777;</h3><p>&#21487;&#20197;&#20998;&#21035;&#20351;&#29992; <code>withBasicAuth</code> &#21644; <code>withDigestAuth</code> &#26041;&#27861;&#25351;&#23450;&#22522;&#26412;&#35748;&#35777;&#21644;&#25688;&#35201;&#35748;&#35777;&#20973;&#25454;&#65306;</p><pre><code class="language-php">// &#22522;&#26412;&#35748;&#35777;...
+$response = Http::withBasicAuth('taylor@laravel.com', 'secret')-&gt;post(/* ... */);
+
+// &#25688;&#35201;&#35748;&#35777;...
+$response = Http::withDigestAuth('taylor@laravel.com', 'secret')-&gt;post(/* ... */);</code></pre><h4 id="b6333babd831326d338dee168c8ffa0e">Bearer &#20196;&#29260;</h4><p>&#22914;&#26524;&#20320;&#24819;&#24555;&#36895;&#21521;&#35831;&#27714;&#30340; <code>Authorization</code> Header &#28155;&#21152; bearer &#20196;&#29260;&#65292;&#21487;&#20197;&#20351;&#29992; <code>withToken</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$response = Http::withToken('token')-&gt;post(/* ... */);</code></pre><h3 id="e944c7c9017a815650ce6b78f81685e7">&#36229;&#26102;</h3><p><code>timeout</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#25351;&#23450;&#31561;&#24453;&#21709;&#24212;&#30340;&#26368;&#22823;&#31186;&#25968;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;HTTP &#23458;&#25143;&#31471;&#20250;&#22312; 30 &#31186;&#21518;&#36229;&#26102;&#65306;</p><pre><code class="language-php">$response = Http::timeout(3)-&gt;get(/* ... */);</code></pre><p>&#22914;&#26524;&#36229;&#36807;&#20102;&#32473;&#23450;&#30340;&#36229;&#26102;&#26102;&#38388;&#65292;&#20250;&#25243;&#20986; <code>Illuminate\Http\Client\ConnectionException</code> &#23454;&#20363;&#12290;</p><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>connectTimeout</code> &#26041;&#27861;&#25351;&#23450;&#22312;&#23581;&#35797;&#36830;&#25509;&#21040;&#26381;&#21153;&#22120;&#26102;&#31561;&#24453;&#30340;&#26368;&#22823;&#31186;&#25968;&#12290;&#40664;&#35748;&#20540;&#20026; 10 &#31186;&#65306;</p><pre><code class="language-php">$response = Http::connectTimeout(3)-&gt;get(/* ... */);</code></pre><h3 id="132c5cdcceb0f1f17c8c088a42959aa4">&#37325;&#35797;</h3><p>&#22914;&#26524;&#20320;&#24076;&#26395; HTTP &#23458;&#25143;&#31471;&#22312;&#21457;&#29983;&#23458;&#25143;&#31471;&#25110;&#26381;&#21153;&#22120;&#38169;&#35823;&#26102;&#33258;&#21160;&#37325;&#35797;&#35831;&#27714;&#65292;&#21487;&#20197;&#20351;&#29992; <code>retry</code> &#26041;&#27861;&#12290;<code>retry</code> &#26041;&#27861;&#25509;&#21463;&#35831;&#27714;&#24212;&#23581;&#35797;&#30340;&#26368;&#22823;&#27425;&#25968;&#65292;&#20197;&#21450; Laravel &#22312;&#20004;&#27425;&#23581;&#35797;&#20043;&#38388;&#24212;&#31561;&#24453;&#30340;&#27627;&#31186;&#25968;&#65306;</p><pre><code class="language-php">$response = Http::retry(3, 100)-&gt;post(/* ... */);</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#25163;&#21160;&#35745;&#31639;&#20004;&#27425;&#23581;&#35797;&#20043;&#38388;&#24212;&#20241;&#30496;&#30340;&#27627;&#31186;&#25968;&#65292;&#21487;&#20197;&#23558;&#19968;&#20010;&#38381;&#21253;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>retry</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Exception;
+
+$response = Http::retry(3, function (int $attempt, Exception $exception) {
+    return $attempt * 100;
+})-&gt;post(/* ... */);</code></pre><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#20063;&#21487;&#20197;&#23558;&#25968;&#32452;&#20316;&#20026;&#31532;&#19968;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>retry</code> &#26041;&#27861;&#12290;&#35813;&#25968;&#32452;&#23558;&#29992;&#20110;&#30830;&#23450;&#21518;&#32493;&#21508;&#27425;&#23581;&#35797;&#20043;&#38388;&#24212;&#20241;&#30496;&#30340;&#27627;&#31186;&#25968;&#65306;</p><pre><code class="language-php">$response = Http::retry([100, 200])-&gt;post(/* ... */);</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#23558;&#31532;&#19977;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>retry</code> &#26041;&#27861;&#12290;&#31532;&#19977;&#20010;&#21442;&#25968;&#24212;&#35813;&#26159;&#19968;&#20010;&#21487;&#35843;&#29992;&#23545;&#35937;&#65292;&#29992;&#20110;&#20915;&#23450;&#26159;&#21542;&#24212;&#30495;&#27491;&#25191;&#34892;&#37325;&#35797;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20165;&#22312;&#39318;&#27425;&#35831;&#27714;&#36935;&#21040; <code>ConnectionException</code> &#26102;&#25165;&#37325;&#35797;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\PendingRequest;
+use Throwable;
+
+$response = Http::retry(3, 100, function (Throwable $exception, PendingRequest $request) {
+    return $exception instanceof ConnectionException;
+})-&gt;post(/* ... */);</code></pre><p>&#22914;&#26524;&#19968;&#27425;&#35831;&#27714;&#23581;&#35797;&#22833;&#36133;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#22312;&#21457;&#36215;&#26032;&#23581;&#35797;&#20043;&#21069;&#23545;&#35831;&#27714;&#20570;&#19968;&#20123;&#20462;&#25913;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#20462;&#25913;&#20256;&#32473; <code>retry</code> &#26041;&#27861;&#30340;&#21487;&#35843;&#29992;&#23545;&#35937;&#30340; <code>request</code> &#21442;&#25968;&#26469;&#23454;&#29616;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#39318;&#27425;&#23581;&#35797;&#36820;&#22238;&#20102;&#35748;&#35777;&#38169;&#35823;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#20351;&#29992;&#19968;&#20010;&#26032;&#25480;&#26435;&#20196;&#29260;&#37325;&#35797;&#35813;&#35831;&#27714;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\RequestException;
+use Throwable;
+
+$response = Http::withToken($this-&gt;getToken())-&gt;retry(2, 0, function (Throwable $exception, PendingRequest $request) {
+    if (! $exception instanceof RequestException || $exception-&gt;response-&gt;status() !== 401) {
+        return false;
+    }
+
+    $request-&gt;withToken($this-&gt;getNewToken());
+
+    return true;
+})-&gt;post(/* ... */);</code></pre><p>&#22914;&#26524;&#25152;&#26377;&#35831;&#27714;&#37117;&#22833;&#36133;&#20102;&#65292;&#20250;&#25243;&#20986; <code>Illuminate\Http\Client\RequestException</code> &#23454;&#20363;&#12290;&#22914;&#26524;&#20320;&#24819;&#31105;&#29992;&#27492;&#34892;&#20026;&#65292;&#21487;&#20197;&#25552;&#20379;&#19968;&#20010;&#20540;&#20026; <code>false</code> &#30340; <code>throw</code> &#21442;&#25968;&#12290;&#31105;&#29992;&#21518;&#65292;&#22312;&#25152;&#26377;&#37325;&#35797;&#23581;&#35797;&#23436;&#25104;&#21518;&#65292;&#23458;&#25143;&#31471;&#20250;&#36820;&#22238;&#25910;&#21040;&#30340;&#26368;&#21518;&#19968;&#20010;&#21709;&#24212;&#65306;</p><pre><code class="language-php">$response = Http::retry(3, 100, throw: false)-&gt;post(/* ... */);</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22914;&#26524;&#25152;&#26377;&#35831;&#27714;&#37117;&#22240;&#20026;&#36830;&#25509;&#38382;&#39064;&#32780;&#22833;&#36133;&#65292;&#21363;&#20351; <code>throw</code> &#21442;&#25968;&#35774;&#32622;&#20026; <code>false</code>&#65292;&#20173;&#28982;&#20250;&#25243;&#20986; <code>Illuminate\Http\Client\ConnectionException</code>&#12290;</p>
+</blockquote><h3 id="6a8bef7b98dfdcf9b7c85814d4382a6c">&#38169;&#35823;&#22788;&#29702;</h3><p>&#19982; Guzzle &#30340;&#40664;&#35748;&#34892;&#20026;&#19981;&#21516;&#65292;Laravel &#30340; HTTP &#23458;&#25143;&#31471;&#23553;&#35013;&#19981;&#20250;&#22312;&#23458;&#25143;&#31471;&#25110;&#26381;&#21153;&#22120;&#38169;&#35823;&#65288;&#26381;&#21153;&#22120;&#30340; <code>400</code> &#21644; <code>500</code> &#32423;&#21035;&#21709;&#24212;&#65289;&#26102;&#25243;&#20986;&#24322;&#24120;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>successful</code>&#12289;<code>clientError</code> &#25110; <code>serverError</code> &#26041;&#27861;&#21028;&#26029;&#26159;&#21542;&#36820;&#22238;&#20102;&#36825;&#20123;&#38169;&#35823;&#20043;&#19968;&#65306;</p><pre><code class="language-php">// &#21028;&#26029;&#29366;&#24577;&#30721;&#26159;&#21542; &gt;= 200 &#19988; &lt; 300...
+$response-&gt;successful();
+
+// &#21028;&#26029;&#29366;&#24577;&#30721;&#26159;&#21542; &gt;= 400...
+$response-&gt;failed();
+
+// &#21028;&#26029;&#21709;&#24212;&#26159;&#21542;&#20855;&#26377; 400 &#32423;&#21035;&#30340;&#29366;&#24577;&#30721;...
+$response-&gt;clientError();
+
+// &#21028;&#26029;&#21709;&#24212;&#26159;&#21542;&#20855;&#26377; 500 &#32423;&#21035;&#30340;&#29366;&#24577;&#30721;...
+$response-&gt;serverError();
+
+// &#22914;&#26524;&#21457;&#29983;&#23458;&#25143;&#31471;&#25110;&#26381;&#21153;&#22120;&#38169;&#35823;&#65292;&#31435;&#21363;&#25191;&#34892;&#32473;&#23450;&#30340;&#22238;&#35843;...
+$response-&gt;onError(callable $callback);</code></pre><h4 id="0ffa1b453ad65b3933eb4587e4bc2245">&#25243;&#20986;&#24322;&#24120;</h4><p>&#22914;&#26524;&#20320;&#26377;&#19968;&#20010;&#21709;&#24212;&#23454;&#20363;&#65292;&#24182;&#19988;&#24076;&#26395;&#22312;&#21709;&#24212;&#29366;&#24577;&#30721;&#34920;&#31034;&#23458;&#25143;&#31471;&#25110;&#26381;&#21153;&#22120;&#38169;&#35823;&#26102;&#25243;&#20986; <code>Illuminate\Http\Client\RequestException</code> &#23454;&#20363;&#65292;&#21487;&#20197;&#20351;&#29992; <code>throw</code> &#25110; <code>throwIf</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Response;
+
+$response = Http::post(/* ... */);
+
+// &#22914;&#26524;&#21457;&#29983;&#23458;&#25143;&#31471;&#25110;&#26381;&#21153;&#22120;&#38169;&#35823;&#65292;&#25243;&#20986;&#24322;&#24120;...
+$response-&gt;throw();
+
+// &#22914;&#26524;&#21457;&#29983;&#38169;&#35823;&#19988;&#32473;&#23450;&#26465;&#20214;&#20026;&#30495;&#65292;&#25243;&#20986;&#24322;&#24120;...
+$response-&gt;throwIf($condition);
+
+// &#22914;&#26524;&#21457;&#29983;&#38169;&#35823;&#19988;&#32473;&#23450;&#38381;&#21253;&#27714;&#20540;&#20026;&#30495;&#65292;&#25243;&#20986;&#24322;&#24120;...
+$response-&gt;throwIf(fn (Response $response) =&gt; true);
+
+// &#22914;&#26524;&#21457;&#29983;&#38169;&#35823;&#19988;&#32473;&#23450;&#26465;&#20214;&#20026;&#20551;&#65292;&#25243;&#20986;&#24322;&#24120;...
+$response-&gt;throwUnless($condition);
+
+// &#22914;&#26524;&#21457;&#29983;&#38169;&#35823;&#19988;&#32473;&#23450;&#38381;&#21253;&#27714;&#20540;&#20026;&#20551;&#65292;&#25243;&#20986;&#24322;&#24120;...
+$response-&gt;throwUnless(fn (Response $response) =&gt; false);
+
+// &#22914;&#26524;&#21709;&#24212;&#20855;&#26377;&#29305;&#23450;&#29366;&#24577;&#30721;&#65292;&#25243;&#20986;&#24322;&#24120;...
+$response-&gt;throwIfStatus(403);
+
+// &#38500;&#38750;&#21709;&#24212;&#20855;&#26377;&#29305;&#23450;&#29366;&#24577;&#30721;&#65292;&#21542;&#21017;&#25243;&#20986;&#24322;&#24120;...
+$response-&gt;throwUnlessStatus(200);
+
+// &#22914;&#26524;&#21457;&#29983;&#26381;&#21153;&#22120;&#38169;&#35823;&#65288;&#29366;&#24577;&#30721; &gt; 500&#65289;&#65292;&#25243;&#20986;&#24322;&#24120;...
+$response-&gt;throwIfServerError();
+
+// &#22914;&#26524;&#21457;&#29983;&#23458;&#25143;&#31471;&#38169;&#35823;&#65288;&#29366;&#24577;&#30721; &gt; 400 &#19988; &lt; 500&#65289;&#65292;&#25243;&#20986;&#24322;&#24120;...
+$response-&gt;throwIfClientError();
+
+return $response['user']['id'];</code></pre><p><code>Illuminate\Http\Client\RequestException</code> &#23454;&#20363;&#26377;&#19968;&#20010;&#20844;&#24320;&#30340; <code>$response</code> &#23646;&#24615;&#65292;&#35753;&#20320;&#21487;&#20197;&#26816;&#26597;&#36820;&#22238;&#30340;&#21709;&#24212;&#12290;</p><p><code>throw</code> &#26041;&#27861;&#22312;&#27809;&#26377;&#21457;&#29983;&#38169;&#35823;&#26102;&#20250;&#36820;&#22238;&#21709;&#24212;&#23454;&#20363;&#65292;&#35753;&#20320;&#21487;&#20197;&#23558;&#20854;&#20182;&#25805;&#20316;&#38142;&#24335;&#35843;&#29992;&#21040; <code>throw</code> &#26041;&#27861;&#19978;&#65306;</p><pre><code class="language-php">return Http::post(/* ... */)-&gt;throw()-&gt;json();</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#22312;&#25243;&#20986;&#24322;&#24120;&#20043;&#21069;&#25191;&#34892;&#19968;&#20123;&#39069;&#22806;&#36923;&#36753;&#65292;&#21487;&#20197;&#21521; <code>throw</code> &#26041;&#27861;&#20256;&#36882;&#19968;&#20010;&#38381;&#21253;&#12290;&#35813;&#38381;&#21253;&#34987;&#35843;&#29992;&#21518;&#65292;&#24322;&#24120;&#20250;&#33258;&#21160;&#25243;&#20986;&#65292;&#22240;&#27492;&#20320;&#26080;&#38656;&#22312;&#38381;&#21253;&#20869;&#37096;&#37325;&#26032;&#25243;&#20986;&#24322;&#24120;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Response;
+use Illuminate\Http\Client\RequestException;
+
+return Http::post(/* ... */)-&gt;throw(function (Response $response, RequestException $e) {
+    // ...
+})-&gt;json();</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>RequestException</code> &#28040;&#24687;&#22312;&#34987;&#35760;&#24405;&#25110;&#19978;&#25253;&#26102;&#20250;&#25130;&#26029;&#20026; 120 &#20010;&#23383;&#31526;&#12290;&#35201;&#33258;&#23450;&#20041;&#25110;&#31105;&#29992;&#27492;&#34892;&#20026;&#65292;&#21487;&#20197;&#22312; <code>bootstrap/app.php</code> &#25991;&#20214;&#20013;&#37197;&#32622;&#24212;&#29992;&#30340;&#27880;&#20876;&#34892;&#20026;&#26102;&#20351;&#29992; <code>truncateAt</code> &#21644; <code>dontTruncate</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\RequestException;
+
+-&gt;registered(function (): void {
+    // &#23558;&#35831;&#27714;&#24322;&#24120;&#28040;&#24687;&#25130;&#26029;&#20026; 240 &#20010;&#23383;&#31526;...
+    RequestException::truncateAt(240);
+
+    // &#31105;&#29992;&#35831;&#27714;&#24322;&#24120;&#28040;&#24687;&#25130;&#26029;...
+    RequestException::dontTruncate();
+})</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>truncateExceptionsAt</code> &#26041;&#27861;&#20026;&#27599;&#20010;&#35831;&#27714;&#33258;&#23450;&#20041;&#24322;&#24120;&#25130;&#26029;&#34892;&#20026;&#65306;</p><pre><code class="language-php">return Http::truncateExceptionsAt(240)-&gt;post(/* ... */);</code></pre><h3 id="5a59464e7ff5da7d13e3abda11259502">Guzzle &#20013;&#38388;&#20214;</h3><p>&#30001;&#20110; Laravel &#30340; HTTP &#23458;&#25143;&#31471;&#30001; Guzzle &#39537;&#21160;&#65292;&#20320;&#21487;&#20197;&#21033;&#29992; <a href="https://docs.guzzlephp.org/en/stable/handlers-and-middleware.html" target="_blank" rel="noopener noreferrer">Guzzle &#20013;&#38388;&#20214;</a> &#26469;&#25805;&#32437;&#23545;&#22806;&#35831;&#27714;&#25110;&#26816;&#26597;&#20256;&#20837;&#21709;&#24212;&#12290;&#35201;&#25805;&#32437;&#23545;&#22806;&#35831;&#27714;&#65292;&#21487;&#20197;&#36890;&#36807; <code>withRequestMiddleware</code> &#26041;&#27861;&#27880;&#20876;&#19968;&#20010; Guzzle &#20013;&#38388;&#20214;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+use Psr\Http\Message\RequestInterface;
+
+$response = Http::withRequestMiddleware(
+    function (RequestInterface $request) {
+        return $request-&gt;withHeader('X-Example', 'Value');
+    }
+)-&gt;get('http://example.com');</code></pre><p>&#21516;&#26679;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; <code>withResponseMiddleware</code> &#26041;&#27861;&#27880;&#20876;&#19968;&#20010;&#20013;&#38388;&#20214;&#26469;&#26816;&#26597;&#20256;&#20837;&#30340; HTTP &#21709;&#24212;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+use Psr\Http\Message\ResponseInterface;
+
+$response = Http::withResponseMiddleware(
+    function (ResponseInterface $response) {
+        $header = $response-&gt;getHeader('X-Example');
+
+        // ...
+
+        return $response;
+    }
+)-&gt;get('http://example.com');</code></pre><h4 id="ec40943bf1a7647888fece2f99c708f7">&#20840;&#23616;&#20013;&#38388;&#20214;</h4><p>&#26377;&#26102;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#27880;&#20876;&#19968;&#20010;&#36866;&#29992;&#20110;&#27599;&#20010;&#23545;&#22806;&#35831;&#27714;&#21644;&#20256;&#20837;&#21709;&#24212;&#30340;&#20013;&#38388;&#20214;&#12290;&#20026;&#27492;&#65292;&#21487;&#20197;&#20351;&#29992; <code>globalRequestMiddleware</code> &#21644; <code>globalResponseMiddleware</code> &#26041;&#27861;&#12290;&#36890;&#24120;&#65292;&#36825;&#20123;&#26041;&#27861;&#24212;&#35813;&#22312;&#24212;&#29992; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+Http::globalRequestMiddleware(fn ($request) =&gt; $request-&gt;withHeader(
+    'User-Agent', 'Example Application/1.0'
+));
+
+Http::globalResponseMiddleware(fn ($response) =&gt; $response-&gt;withHeader(
+    'X-Finished-At', now()-&gt;toDateTimeString()
+));</code></pre><h3 id="0c7f3e7ce1aa5433af194795d2da4c96">Guzzle &#36873;&#39033;</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>withOptions</code> &#26041;&#27861;&#20026;&#23545;&#22806;&#35831;&#27714;&#25351;&#23450;&#39069;&#22806;&#30340; <a href="http://docs.guzzlephp.org/en/stable/request-options.html" target="_blank" rel="noopener noreferrer">Guzzle &#35831;&#27714;&#36873;&#39033;</a>&#12290;<code>withOptions</code> &#26041;&#27861;&#25509;&#21463;&#38190;&#20540;&#23545;&#25968;&#32452;&#65306;</p><pre><code class="language-php">$response = Http::withOptions([
+    'debug' =&gt; true,
+])-&gt;get('http://example.com/users');</code></pre><h4 id="7ce976b5ea383c077b8172346f820824">&#20840;&#23616;&#36873;&#39033;</h4><p>&#35201;&#20026;&#27599;&#19968;&#20010;&#23545;&#22806;&#35831;&#27714;&#37197;&#32622;&#40664;&#35748;&#36873;&#39033;&#65292;&#21487;&#20197;&#20351;&#29992; <code>globalOptions</code> &#26041;&#27861;&#12290;&#36890;&#24120;&#65292;&#35813;&#26041;&#27861;&#24212;&#35813;&#20174;&#24212;&#29992; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+/**
+ * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Http::globalOptions([
+        'allow_redirects' =&gt; false,
+    ]);
+}</code></pre><h2 id="a27c80896adbd85841d05fbeb01406df">&#24182;&#21457;&#35831;&#27714;</h2><p>&#26377;&#26102;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#24182;&#21457;&#21457;&#36215;&#22810;&#20010; HTTP &#35831;&#27714;&#12290;&#25442;&#21477;&#35805;&#35828;&#65292;&#20320;&#24076;&#26395;&#21516;&#26102;&#20998;&#21457;&#22810;&#20010;&#35831;&#27714;&#65292;&#32780;&#19981;&#26159;&#25353;&#39034;&#24207;&#21457;&#36215;&#35831;&#27714;&#12290;&#22312;&#19982;&#21709;&#24212;&#32531;&#24930;&#30340; HTTP API &#20132;&#20114;&#26102;&#65292;&#36825;&#21487;&#20197;&#24102;&#26469;&#26174;&#33879;&#30340;&#24615;&#33021;&#25552;&#21319;&#12290;</p><h3 id="30b344e84a0a8898d2c1d78899dc843b">&#35831;&#27714;&#27744;</h3><p>&#20540;&#24471;&#24198;&#24184;&#30340;&#26159;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>pool</code> &#26041;&#27861;&#26469;&#23454;&#29616;&#36825;&#19968;&#28857;&#12290;<code>pool</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#65292;&#35813;&#38381;&#21253;&#25509;&#25910;&#19968;&#20010; <code>Illuminate\Http\Client\Pool</code> &#23454;&#20363;&#65292;&#35753;&#20320;&#21487;&#20197;&#36731;&#26494;&#22320;&#23558;&#35831;&#27714;&#28155;&#21152;&#21040;&#35831;&#27714;&#27744;&#20013;&#20197;&#36827;&#34892;&#20998;&#21457;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Pool;
+use Illuminate\Support\Facades\Http;
+
+$responses = Http::pool(fn (Pool $pool) =&gt; [
+    $pool-&gt;get('http://localhost/first'),
+    $pool-&gt;get('http://localhost/second'),
+    $pool-&gt;get('http://localhost/third'),
+]);
+
+return $responses[0]-&gt;ok() &amp;&amp;
+       $responses[1]-&gt;ok() &amp;&amp;
+       $responses[2]-&gt;ok();</code></pre><p>&#22914;&#20320;&#25152;&#35265;&#65292;&#27599;&#20010;&#21709;&#24212;&#23454;&#20363;&#37117;&#21487;&#20197;&#26681;&#25454;&#23427;&#34987;&#28155;&#21152;&#21040;&#27744;&#20013;&#30340;&#39034;&#24207;&#26469;&#35775;&#38382;&#12290;&#22914;&#26524;&#38656;&#35201;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>as</code> &#26041;&#27861;&#20026;&#35831;&#27714;&#21629;&#21517;&#65292;&#20174;&#32780;&#25353;&#21517;&#31216;&#35775;&#38382;&#23545;&#24212;&#30340;&#21709;&#24212;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Pool;
+use Illuminate\Support\Facades\Http;
+
+$responses = Http::pool(fn (Pool $pool) =&gt; [
+    $pool-&gt;as('first')-&gt;get('http://localhost/first'),
+    $pool-&gt;as('second')-&gt;get('http://localhost/second'),
+    $pool-&gt;as('third')-&gt;get('http://localhost/third'),
+]);
+
+return $responses['first']-&gt;ok();</code></pre><p>&#35831;&#27714;&#27744;&#30340;&#26368;&#22823;&#24182;&#21457;&#25968;&#21487;&#20197;&#36890;&#36807;&#21521; <code>pool</code> &#26041;&#27861;&#25552;&#20379; <code>concurrency</code> &#21442;&#25968;&#26469;&#25511;&#21046;&#12290;&#35813;&#20540;&#20915;&#23450;&#20102;&#22312;&#22788;&#29702;&#35831;&#27714;&#27744;&#26102;&#65292;&#26368;&#22823;&#21487;&#20197;&#26377;&#22810;&#23569;&#20010; HTTP &#35831;&#27714;&#21516;&#26102;&#22788;&#20110;&#36827;&#34892;&#20013;&#65288;in-flight&#65289;&#65306;</p><pre><code class="language-php">$responses = Http::pool(fn (Pool $pool) =&gt; [
+    // ...
+], concurrency: 5);</code></pre><p>&#22914;&#26524;&#27744;&#20013;&#30340;&#26576;&#20010;&#35831;&#27714;&#22312;&#36830;&#25509;&#32423;&#21035;&#22833;&#36133;&#65288;&#20363;&#22914;&#36229;&#26102;&#25110; DNS &#22833;&#36133;&#65289;&#65292;<code>$responses</code> &#25968;&#32452;&#20013;&#23545;&#24212;&#30340;&#26465;&#30446;&#23558;&#26159;&#19968;&#20010; <code>Illuminate\Http\Client\ConnectionException</code> &#23454;&#20363;&#65292;&#32780;&#19981;&#26159; <code>Response</code> &#23454;&#20363;&#65306;</p><pre><code class="language-php">foreach ($responses as $response) {
+    if ($response instanceof Throwable) {
+        // &#35831;&#27714;&#36830;&#25509;&#22833;&#36133;...
+    } elseif ($response-&gt;failed()) {
+        // &#35831;&#27714;&#24050;&#36830;&#25509;&#20294;&#25910;&#21040;&#20102;&#38169;&#35823;&#21709;&#24212;...
+    }
+}</code></pre><h4 id="85d776b905ed37e2c457351a9a0c86c2">&#33258;&#23450;&#20041;&#24182;&#21457;&#35831;&#27714;</h4><p><code>pool</code> &#26041;&#27861;&#26080;&#27861;&#19982;&#20854;&#20182; HTTP &#23458;&#25143;&#31471;&#26041;&#27861;&#65288;&#22914; <code>withHeaders</code> &#25110; <code>middleware</code> &#26041;&#27861;&#65289;&#38142;&#24335;&#35843;&#29992;&#12290;&#22914;&#26524;&#20320;&#24819;&#23558;&#33258;&#23450;&#20041; Header &#25110;&#20013;&#38388;&#20214;&#24212;&#29992;&#21040;&#27744;&#20013;&#30340;&#35831;&#27714;&#65292;&#24212;&#35813;&#22312;&#27744;&#20013;&#30340;&#27599;&#20010;&#35831;&#27714;&#19978;&#37197;&#32622;&#36825;&#20123;&#36873;&#39033;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Pool;
+use Illuminate\Support\Facades\Http;
+
+$headers = [
+    'X-Example' =&gt; 'example',
+];
+
+$responses = Http::pool(fn (Pool $pool) =&gt; [
+    $pool-&gt;withHeaders($headers)-&gt;get('http://laravel.test/test'),
+    $pool-&gt;withHeaders($headers)-&gt;get('http://laravel.test/test'),
+    $pool-&gt;withHeaders($headers)-&gt;get('http://laravel.test/test'),
+]);</code></pre><h3 id="dd69d800fc36c567ba5cb56588b71134">&#35831;&#27714;&#25209;&#22788;&#29702;</h3><p>&#22312; Laravel &#20013;&#22788;&#29702;&#24182;&#21457;&#35831;&#27714;&#30340;&#21478;&#19968;&#31181;&#26041;&#24335;&#26159;&#20351;&#29992; <code>batch</code> &#26041;&#27861;&#12290;&#19982; <code>pool</code> &#26041;&#27861;&#31867;&#20284;&#65292;&#23427;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#65292;&#35813;&#38381;&#21253;&#25509;&#25910;&#19968;&#20010; <code>Illuminate\Http\Client\Batch</code> &#23454;&#20363;&#65292;&#35753;&#20320;&#21487;&#20197;&#36731;&#26494;&#22320;&#23558;&#35831;&#27714;&#28155;&#21152;&#21040;&#35831;&#27714;&#27744;&#20013;&#20197;&#36827;&#34892;&#20998;&#21457;&#65292;&#20294;&#23427;&#36824;&#20801;&#35768;&#20320;&#23450;&#20041;&#23436;&#25104;&#22238;&#35843;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Batch;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
+
+$responses = Http::batch(fn (Batch $batch) =&gt; [
+    $batch-&gt;get('http://localhost/first'),
+    $batch-&gt;get('http://localhost/second'),
+    $batch-&gt;get('http://localhost/third'),
+])-&gt;before(function (Batch $batch) {
+    // &#25209;&#27425;&#24050;&#21019;&#24314;&#65292;&#20294;&#23578;&#26410;&#21021;&#22987;&#21270;&#20219;&#20309;&#35831;&#27714;...
+})-&gt;progress(function (Batch $batch, int|string $key, Response $response) {
+    // &#21333;&#20010;&#35831;&#27714;&#24050;&#25104;&#21151;&#23436;&#25104;...
+})-&gt;then(function (Batch $batch, array $results) {
+    // &#25152;&#26377;&#35831;&#27714;&#24050;&#25104;&#21151;&#23436;&#25104;...
+})-&gt;catch(function (Batch $batch, int|string $key, Response|RequestException|ConnectionException $response) {
+    // &#26816;&#27979;&#21040;&#25209;&#27425;&#35831;&#27714;&#22833;&#36133;...
+})-&gt;finally(function (Batch $batch, array $results) {
+    // &#25209;&#27425;&#24050;&#23436;&#25104;&#25191;&#34892;...
+})-&gt;send();</code></pre><p>&#19982; <code>pool</code> &#26041;&#27861;&#31867;&#20284;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>as</code> &#26041;&#27861;&#20026;&#35831;&#27714;&#21629;&#21517;&#65306;</p><pre><code class="language-php">$responses = Http::batch(fn (Batch $batch) =&gt; [
+    $batch-&gt;as('first')-&gt;get('http://localhost/first'),
+    $batch-&gt;as('second')-&gt;get('http://localhost/second'),
+    $batch-&gt;as('third')-&gt;get('http://localhost/third'),
+])-&gt;send();</code></pre><p>&#35843;&#29992; <code>send</code> &#26041;&#27861;&#21551;&#21160; <code>batch</code> &#21518;&#65292;&#19981;&#33021;&#20877;&#21521;&#20854;&#20013;&#28155;&#21152;&#26032;&#35831;&#27714;&#12290;&#23581;&#35797;&#36825;&#26679;&#20570;&#20250;&#23548;&#33268;&#25243;&#20986; <code>Illuminate\Http\Client\BatchInProgressException</code> &#24322;&#24120;&#12290;</p><p>&#35831;&#27714;&#25209;&#27425;&#30340;&#26368;&#22823;&#24182;&#21457;&#25968;&#21487;&#20197;&#36890;&#36807; <code>concurrency</code> &#26041;&#27861;&#25511;&#21046;&#12290;&#35813;&#20540;&#20915;&#23450;&#20102;&#22312;&#22788;&#29702;&#35831;&#27714;&#25209;&#27425;&#26102;&#65292;&#26368;&#22823;&#21487;&#20197;&#26377;&#22810;&#23569;&#20010; HTTP &#35831;&#27714;&#21516;&#26102;&#22788;&#20110;&#36827;&#34892;&#20013;&#65288;in-flight&#65289;&#65306;</p><pre><code class="language-php">$responses = Http::batch(fn (Batch $batch) =&gt; [
+    // ...
+])-&gt;concurrency(5)-&gt;send();</code></pre><h4 id="015b975a3d315619fea5f569ade86b0d">&#26816;&#26597;&#25209;&#22788;&#29702;</h4><p>&#25552;&#20379;&#32473;&#25209;&#27425;&#23436;&#25104;&#22238;&#35843;&#30340; <code>Illuminate\Http\Client\Batch</code> &#23454;&#20363;&#25317;&#26377;&#22810;&#31181;&#23646;&#24615;&#21644;&#26041;&#27861;&#65292;&#24110;&#21161;&#20320;&#19982;&#32473;&#23450;&#30340;&#35831;&#27714;&#25209;&#27425;&#20132;&#20114;&#24182;&#26816;&#26597;&#23427;&#65306;</p><pre><code class="language-php">// &#20998;&#37197;&#32473;&#25209;&#27425;&#30340;&#35831;&#27714;&#25968;&#37327;...
+$batch-&gt;totalRequests;
+
+// &#23578;&#26410;&#22788;&#29702;&#30340;&#35831;&#27714;&#25968;&#37327;...
+$batch-&gt;pendingRequests;
+
+// &#24050;&#22833;&#36133;&#30340;&#35831;&#27714;&#25968;&#37327;...
+$batch-&gt;failedRequests;
+
+// &#36804;&#20170;&#24050;&#22788;&#29702;&#30340;&#35831;&#27714;&#25968;&#37327;...
+$batch-&gt;processedRequests();
+
+// &#25351;&#31034;&#25209;&#27425;&#26159;&#21542;&#24050;&#25191;&#34892;&#23436;&#27605;...
+$batch-&gt;finished();
+
+// &#25351;&#31034;&#25209;&#27425;&#26159;&#21542;&#23384;&#22312;&#35831;&#27714;&#22833;&#36133;...
+$batch-&gt;hasFailures();</code></pre><h4 id="afb79a757521e65076f09a596f222210">&#24310;&#36831;&#25209;&#22788;&#29702;</h4><p>&#24403;&#35843;&#29992; <code>defer</code> &#26041;&#27861;&#26102;&#65292;&#35831;&#27714;&#25209;&#27425;&#19981;&#20250;&#31435;&#21363;&#25191;&#34892;&#12290;&#30456;&#21453;&#65292;Laravel &#20250;&#22312;&#24403;&#21069;&#24212;&#29992;&#35831;&#27714;&#30340; HTTP &#21709;&#24212;&#21457;&#36865;&#32473;&#29992;&#25143;&#20043;&#21518;&#20877;&#25191;&#34892;&#35813;&#25209;&#27425;&#65292;&#35753;&#20320;&#30340;&#24212;&#29992;&#20445;&#25345;&#24555;&#36895;&#21644;&#21709;&#24212;&#28789;&#25935;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Batch;
+use Illuminate\Support\Facades\Http;
+
+$responses = Http::batch(fn (Batch $batch) =&gt; [
+    $batch-&gt;get('http://localhost/first'),
+    $batch-&gt;get('http://localhost/second'),
+    $batch-&gt;get('http://localhost/third'),
+])-&gt;then(function (Batch $batch, array $results) {
+    // &#25152;&#26377;&#35831;&#27714;&#24050;&#25104;&#21151;&#23436;&#25104;...
+})-&gt;defer();</code></pre><h2 id="6d0d5d0a99dedcb4b13a62d47feb6883">&#23439;</h2><p>Laravel HTTP &#23458;&#25143;&#31471;&#20801;&#35768;&#20320;&#23450;&#20041;"macro&#65288;&#23439;&#65289;"&#65292;&#23427;&#21487;&#20197;&#20316;&#20026;&#19968;&#31181;&#27969;&#30021;&#12289;&#23500;&#26377;&#34920;&#29616;&#21147;&#30340;&#26426;&#21046;&#65292;&#29992;&#20110;&#22312;&#19982;&#25972;&#20010;&#24212;&#29992;&#20013;&#30340;&#26381;&#21153;&#20132;&#20114;&#26102;&#37197;&#32622;&#36890;&#29992;&#30340;&#35831;&#27714;&#36335;&#24452;&#21644; Header&#12290;&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#20320;&#21487;&#20197;&#22312;&#24212;&#29992; <code>App\Providers\AppServiceProvider</code> &#31867;&#30340; <code>boot</code> &#26041;&#27861;&#20013;&#23450;&#20041;&#35813;&#23439;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+/**
+ * &#24341;&#23548;&#20219;&#24847;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Http::macro('github', function () {
+        return Http::withHeaders([
+            'X-Example' =&gt; 'example',
+        ])-&gt;baseUrl('https://github.com');
+    });
+}</code></pre><p>&#37197;&#32622;&#22909;&#23439;&#20043;&#21518;&#65292;&#20320;&#21487;&#20197;&#20174;&#24212;&#29992;&#30340;&#20219;&#20309;&#20301;&#32622;&#35843;&#29992;&#23427;&#65292;&#20197;&#20351;&#29992;&#25351;&#23450;&#37197;&#32622;&#21019;&#24314;&#19968;&#20010;&#24453;&#22788;&#29702;&#35831;&#27714;&#65306;</p><pre><code class="language-php">$response = Http::github()-&gt;get('/');</code></pre><h2 id="db06c78d1e24cf708a14ce81c9b617ec">&#27979;&#35797;</h2><p>&#35768;&#22810; Laravel &#26381;&#21153;&#37117;&#25552;&#20379;&#20102;&#24110;&#21161;&#20320;&#36731;&#26494;&#19988;&#23500;&#26377;&#34920;&#29616;&#21147;&#22320;&#32534;&#20889;&#27979;&#35797;&#30340;&#21151;&#33021;&#65292;Laravel &#30340; HTTP &#23458;&#25143;&#31471;&#20063;&#19981;&#20363;&#22806;&#12290;<code>Http</code> Facade &#30340; <code>fake</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#25351;&#31034; HTTP &#23458;&#25143;&#31471;&#22312;&#21457;&#36215;&#35831;&#27714;&#26102;&#36820;&#22238;&#26729;&#65288;stub&#65289;/ &#34394;&#25311;&#21709;&#24212;&#12290;</p><h3 id="e753253da8618e7b67eb5ea42865c942">&#20266;&#36896;&#21709;&#24212;</h3><p>&#20363;&#22914;&#65292;&#35201;&#25351;&#31034; HTTP &#23458;&#25143;&#31471;&#20026;&#27599;&#20010;&#35831;&#27714;&#36820;&#22238;&#31354;&#30340; <code>200</code> &#29366;&#24577;&#30721;&#21709;&#24212;&#65292;&#21487;&#20197;&#19981;&#24102;&#21442;&#25968;&#22320;&#35843;&#29992; <code>fake</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+Http::fake();
+
+$response = Http::post(/* ... */);</code></pre><h4 id="fe4212d10587ad397c644c6b5c02b605">&#20266;&#36896;&#29305;&#23450; URL</h4><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#23558;&#19968;&#20010;&#25968;&#32452;&#20256;&#36882;&#32473; <code>fake</code> &#26041;&#27861;&#12290;&#25968;&#32452;&#30340;&#38190;&#24212;&#35813;&#34920;&#31034;&#20320;&#24076;&#26395;&#20266;&#36896;&#30340; URL &#27169;&#24335;&#21450;&#20854;&#20851;&#32852;&#30340;&#21709;&#24212;&#12290;<code>*</code> &#23383;&#31526;&#21487;&#20197;&#29992;&#20316;&#36890;&#37197;&#31526;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Http</code> Facade &#30340; <code>response</code> &#26041;&#27861;&#20026;&#36825;&#20123;&#31471;&#28857;&#26500;&#36896;&#26729; / &#20266;&#36896;&#21709;&#24212;&#65306;</p><pre><code class="language-php">Http::fake([
+    // &#20026; GitHub &#31471;&#28857;&#26729;&#19968;&#20010; JSON &#21709;&#24212;...
+    'github.com/*' =&gt; Http::response(['foo' =&gt; 'bar'], 200, $headers),
+
+    // &#20026; Google &#31471;&#28857;&#26729;&#19968;&#20010;&#23383;&#31526;&#20018;&#21709;&#24212;...
+    'google.com/*' =&gt; Http::response('Hello World', 200, $headers),
+]);</code></pre><p>&#20219;&#20309;&#21521;&#26410;&#20266;&#36896;&#30340; URL &#21457;&#36215;&#30340;&#35831;&#27714;&#37117;&#23558;&#34987;&#23454;&#38469;&#25191;&#34892;&#12290;&#22914;&#26524;&#20320;&#24819;&#25351;&#23450;&#19968;&#20010;&#22238;&#36864; URL &#27169;&#24335;&#26469;&#26729;&#25152;&#26377;&#26410;&#21305;&#37197;&#30340; URL&#65292;&#21487;&#20197;&#20351;&#29992;&#21333;&#20010; <code>*</code> &#23383;&#31526;&#65306;</p><pre><code class="language-php">Http::fake([
+    // &#20026; GitHub &#31471;&#28857;&#26729;&#19968;&#20010; JSON &#21709;&#24212;...
+    'github.com/*' =&gt; Http::response(['foo' =&gt; 'bar'], 200, ['Headers']),
+
+    // &#20026;&#25152;&#26377;&#20854;&#20182;&#31471;&#28857;&#26729;&#19968;&#20010;&#23383;&#31526;&#20018;&#21709;&#24212;...
+    '*' =&gt; Http::response('Hello World', 200, ['Headers']),
+]);</code></pre><p>&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#31616;&#21333;&#30340;&#23383;&#31526;&#20018;&#12289;JSON &#21644;&#31354;&#21709;&#24212;&#21487;&#20197;&#36890;&#36807;&#25552;&#20379;&#23383;&#31526;&#20018;&#12289;&#25968;&#32452;&#25110;&#25972;&#25968;&#20316;&#20026;&#21709;&#24212;&#26469;&#29983;&#25104;&#65306;</p><pre><code class="language-php">Http::fake([
+    'google.com/*' =&gt; 'Hello World',
+    'github.com/*' =&gt; ['foo' =&gt; 'bar'],
+    'chatgpt.com/*' =&gt; 200,
+]);</code></pre><h4 id="1b1a1596ac619ef392f39d255880f5b3">&#20266;&#36896;&#24322;&#24120;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#27979;&#35797;&#24212;&#29992;&#22312; HTTP &#23458;&#25143;&#31471;&#23581;&#35797;&#21457;&#36215;&#35831;&#27714;&#26102;&#36935;&#21040; <code>Illuminate\Http\Client\ConnectionException</code> &#30340;&#34892;&#20026;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>failedConnection</code> &#26041;&#27861;&#25351;&#31034; HTTP &#23458;&#25143;&#31471;&#25243;&#20986;&#19968;&#20010;&#36830;&#25509;&#24322;&#24120;&#65306;</p><pre><code class="language-php">Http::fake([
+    'github.com/*' =&gt; Http::failedConnection(),
+]);</code></pre><p>&#35201;&#27979;&#35797;&#24212;&#29992;&#22312;&#25243;&#20986; <code>Illuminate\Http\Client\RequestException</code> &#26102;&#30340;&#34892;&#20026;&#65292;&#21487;&#20197;&#20351;&#29992; <code>failedRequest</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$this-&gt;mock(GithubService::class);
+    -&gt;shouldReceive('getUser')
+    -&gt;andThrow(
+        Http::failedRequest(['code' =&gt; 'not_found'], 404)
+    );</code></pre><h4 id="1555aa8afeb04eeb86ca9cbe7f6e7109">&#20266;&#36896;&#21709;&#24212;&#24207;&#21015;</h4><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#25351;&#23450;&#21333;&#20010; URL &#24212;&#25353;&#29305;&#23450;&#39034;&#24207;&#36820;&#22238;&#19968;&#31995;&#21015;&#20266;&#36896;&#21709;&#24212;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>Http::sequence</code> &#26041;&#27861;&#26469;&#26500;&#24314;&#36825;&#20123;&#21709;&#24212;&#65306;</p><pre><code class="language-php">Http::fake([
+    // &#20026; GitHub &#31471;&#28857;&#26729;&#19968;&#31995;&#21015;&#21709;&#24212;...
+    'github.com/*' =&gt; Http::sequence()
+        -&gt;push('Hello World', 200)
+        -&gt;push(['foo' =&gt; 'bar'], 200)
+        -&gt;pushStatus(404),
+]);</code></pre><p>&#24403;&#21709;&#24212;&#24207;&#21015;&#20013;&#30340;&#25152;&#26377;&#21709;&#24212;&#37117;&#34987;&#28040;&#32791;&#23436;&#21518;&#65292;&#20219;&#20309;&#36827;&#19968;&#27493;&#30340;&#35831;&#27714;&#37117;&#20250;&#23548;&#33268;&#21709;&#24212;&#24207;&#21015;&#25243;&#20986;&#24322;&#24120;&#12290;&#22914;&#26524;&#20320;&#24819;&#25351;&#23450;&#22312;&#24207;&#21015;&#20026;&#31354;&#26102;&#24212;&#36820;&#22238;&#30340;&#40664;&#35748;&#21709;&#24212;&#65292;&#21487;&#20197;&#20351;&#29992; <code>whenEmpty</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Http::fake([
+    // &#20026; GitHub &#31471;&#28857;&#26729;&#19968;&#31995;&#21015;&#21709;&#24212;...
+    'github.com/*' =&gt; Http::sequence()
+        -&gt;push('Hello World', 200)
+        -&gt;push(['foo' =&gt; 'bar'], 200)
+        -&gt;whenEmpty(Http::response()),
+]);</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#20266;&#36896;&#19968;&#31995;&#21015;&#21709;&#24212;&#65292;&#20294;&#19981;&#38656;&#35201;&#25351;&#23450;&#24212;&#20266;&#36896;&#30340;&#29305;&#23450; URL &#27169;&#24335;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Http::fakeSequence</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Http::fakeSequence()
+    -&gt;push('Hello World', 200)
+    -&gt;whenEmpty(Http::response());</code></pre><h4 id="647cefdd61dfd6d2df3e66d5b8702c98">&#20266;&#36896;&#22238;&#35843;</h4><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#26356;&#22797;&#26434;&#30340;&#36923;&#36753;&#26469;&#30830;&#23450;&#20026;&#26576;&#20123;&#31471;&#28857;&#36820;&#22238;&#20160;&#20040;&#21709;&#24212;&#65292;&#21487;&#20197;&#21521; <code>fake</code> &#26041;&#27861;&#20256;&#36882;&#19968;&#20010;&#38381;&#21253;&#12290;&#35813;&#38381;&#21253;&#20250;&#25509;&#25910;&#19968;&#20010; <code>Illuminate\Http\Client\Request</code> &#23454;&#20363;&#65292;&#24182;&#24212;&#36820;&#22238;&#19968;&#20010;&#21709;&#24212;&#23454;&#20363;&#12290;&#22312;&#38381;&#21253;&#20869;&#37096;&#65292;&#20320;&#21487;&#20197;&#25191;&#34892;&#20219;&#20309;&#24517;&#35201;&#30340;&#36923;&#36753;&#26469;&#20915;&#23450;&#36820;&#22238;&#20309;&#31181;&#31867;&#22411;&#30340;&#21709;&#24212;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Request;
+
+Http::fake(function (Request $request) {
+    return Http::response('Hello World', 200);
+});</code></pre><h3 id="5af024d6ea21387c9ea11979e5a7d3e5">&#26816;&#26597;&#35831;&#27714;</h3><p>&#20266;&#36896;&#21709;&#24212;&#26102;&#65292;&#20320;&#20598;&#23572;&#21487;&#33021;&#24076;&#26395;&#26816;&#26597;&#23458;&#25143;&#31471;&#25910;&#21040;&#30340;&#35831;&#27714;&#65292;&#20197;&#30830;&#20445;&#20320;&#30340;&#24212;&#29992;&#21457;&#36865;&#20102;&#27491;&#30830;&#30340;&#25968;&#25454;&#25110; Header&#12290;&#20320;&#21487;&#20197;&#22312;&#35843;&#29992; <code>Http::fake</code> &#20043;&#21518;&#35843;&#29992; <code>Http::assertSent</code> &#26041;&#27861;&#26469;&#23454;&#29616;&#12290;</p><p><code>assertSent</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#65292;&#35813;&#38381;&#21253;&#20250;&#25509;&#25910;&#19968;&#20010; <code>Illuminate\Http\Client\Request</code> &#23454;&#20363;&#65292;&#24182;&#24212;&#36820;&#22238;&#19968;&#20010;&#24067;&#23572;&#20540;&#65292;&#25351;&#31034;&#35813;&#35831;&#27714;&#26159;&#21542;&#31526;&#21512;&#20320;&#30340;&#39044;&#26399;&#12290;&#20026;&#20102;&#35753;&#27979;&#35797;&#36890;&#36807;&#65292;&#24517;&#39035;&#33267;&#23569;&#21457;&#20986;&#19968;&#20010;&#31526;&#21512;&#32473;&#23450;&#39044;&#26399;&#30340;&#35831;&#27714;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
+
+Http::fake();
+
+Http::withHeaders([
+    'X-First' =&gt; 'foo',
+])-&gt;post('http://example.com/users', [
+    'name' =&gt; 'Taylor',
+    'role' =&gt; 'Developer',
+]);
+
+Http::assertSent(function (Request $request) {
+    return $request-&gt;hasHeader('X-First', 'foo') &amp;&amp;
+           $request-&gt;url() == 'http://example.com/users' &amp;&amp;
+           $request['name'] == 'Taylor' &amp;&amp;
+           $request['role'] == 'Developer';
+});</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#20351;&#29992; <code>assertNotSent</code> &#26041;&#27861;&#26029;&#35328;&#26576;&#20010;&#29305;&#23450;&#35831;&#27714;&#26410;&#34987;&#21457;&#36865;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
+
+Http::fake();
+
+Http::post('http://example.com/users', [
+    'name' =&gt; 'Taylor',
+    'role' =&gt; 'Developer',
+]);
+
+Http::assertNotSent(function (Request $request) {
+    return $request-&gt;url() === 'http://example.com/posts';
+});</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>assertSentCount</code> &#26041;&#27861;&#26029;&#35328;&#27979;&#35797;&#26399;&#38388;"&#21457;&#36865;"&#20102;&#22810;&#23569;&#20010;&#35831;&#27714;&#65306;</p><pre><code class="language-php">Http::fake();
+
+Http::assertSentCount(5);</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>assertNothingSent</code> &#26041;&#27861;&#26029;&#35328;&#27979;&#35797;&#26399;&#38388;&#27809;&#26377;&#21457;&#36865;&#20219;&#20309;&#35831;&#27714;&#65306;</p><pre><code class="language-php">Http::fake();
+
+Http::assertNothingSent();</code></pre><h4 id="896906bbe78203a0abe24b016e024616">&#35760;&#24405;&#35831;&#27714; / &#21709;&#24212;</h4><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>recorded</code> &#26041;&#27861;&#25910;&#38598;&#25152;&#26377;&#35831;&#27714;&#21450;&#20854;&#23545;&#24212;&#30340;&#21709;&#24212;&#12290;<code>recorded</code> &#26041;&#27861;&#36820;&#22238;&#19968;&#20010;&#25968;&#32452;&#38598;&#21512;&#65292;&#20854;&#20013;&#21253;&#21547; <code>Illuminate\Http\Client\Request</code> &#21644; <code>Illuminate\Http\Client\Response</code> &#30340;&#23454;&#20363;&#65306;</p><pre><code class="language-php">Http::fake([
+    'https://laravel.com' =&gt; Http::response(status: 500),
+    'https://nova.laravel.com/' =&gt; Http::response(),
+]);
+
+Http::get('https://laravel.com');
+Http::get('https://nova.laravel.com/');
+
+$recorded = Http::recorded();
+
+[$request, $response] = $recorded[0];</code></pre><p>&#27492;&#22806;&#65292;<code>recorded</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#65292;&#35813;&#38381;&#21253;&#20250;&#25509;&#25910;&#19968;&#20010; <code>Illuminate\Http\Client\Request</code> &#21644; <code>Illuminate\Http\Client\Response</code> &#23454;&#20363;&#65292;&#24182;&#21487;&#29992;&#20110;&#26681;&#25454;&#20320;&#30340;&#39044;&#26399;&#36807;&#28388;&#35831;&#27714; / &#21709;&#24212;&#23545;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Request;
+use Illuminate\Http\Client\Response;
+
+Http::fake([
+    'https://laravel.com' =&gt; Http::response(status: 500),
+    'https://nova.laravel.com/' =&gt; Http::response(),
+]);
+
+Http::get('https://laravel.com');
+Http::get('https://nova.laravel.com/');
+
+$recorded = Http::recorded(function (Request $request, Response $response) {
+    return $request-&gt;url() !== 'https://laravel.com' &amp;&amp;
+           $response-&gt;successful();
+});</code></pre><h3 id="374e7ea896837ac6807e9667e5a21f53">&#38459;&#27490;&#22810;&#20313;&#35831;&#27714;</h3><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#30830;&#20445;&#36890;&#36807; HTTP &#23458;&#25143;&#31471;&#21457;&#36865;&#30340;&#25152;&#26377;&#35831;&#27714;&#22312;&#20320;&#30340;&#21333;&#20010;&#27979;&#35797;&#25110;&#23436;&#25972;&#27979;&#35797;&#22871;&#20214;&#20013;&#37117;&#24050;&#34987;&#20266;&#36896;&#65292;&#21487;&#20197;&#35843;&#29992; <code>preventStrayRequests</code> &#26041;&#27861;&#12290;&#35843;&#29992;&#27492;&#26041;&#27861;&#21518;&#65292;&#20219;&#20309;&#27809;&#26377;&#23545;&#24212;&#20266;&#36896;&#21709;&#24212;&#30340;&#35831;&#27714;&#37117;&#20250;&#25243;&#20986;&#24322;&#24120;&#65292;&#32780;&#19981;&#26159;&#21457;&#20986;&#23454;&#38469;&#30340; HTTP &#35831;&#27714;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+Http::preventStrayRequests();
+
+Http::fake([
+    'github.com/*' =&gt; Http::response('ok'),
+]);
+
+// &#36820;&#22238; "ok" &#21709;&#24212;...
+Http::get('https://github.com/laravel/framework');
+
+// &#25243;&#20986;&#24322;&#24120;...
+Http::get('https://laravel.com');</code></pre><p>&#26377;&#26102;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#38459;&#27490;&#22823;&#22810;&#25968;&#28216;&#31163;&#35831;&#27714;&#65292;&#21516;&#26102;&#20173;&#20801;&#35768;&#29305;&#23450;&#30340;&#35831;&#27714;&#25191;&#34892;&#12290;&#20026;&#27492;&#65292;&#20320;&#21487;&#20197;&#23558;&#19968;&#20010; URL &#27169;&#24335;&#25968;&#32452;&#20256;&#36882;&#32473; <code>allowStrayRequests</code> &#26041;&#27861;&#12290;&#20219;&#20309;&#21305;&#37197;&#32473;&#23450;&#27169;&#24335;&#30340;&#35831;&#27714;&#37117;&#23558;&#34987;&#20801;&#35768;&#65292;&#32780;&#20854;&#20182;&#25152;&#26377;&#35831;&#27714;&#23558;&#32487;&#32493;&#25243;&#20986;&#24322;&#24120;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Http;
+
+Http::preventStrayRequests();
+
+Http::allowStrayRequests([
+    'http://127.0.0.1:5000/*',
+]);
+
+// &#35813;&#35831;&#27714;&#20250;&#34987;&#25191;&#34892;...
+Http::get('http://127.0.0.1:5000/generate');
+
+// &#25243;&#20986;&#24322;&#24120;...
+Http::get('https://laravel.com');</code></pre><h2 id="10b2761db5a8e089049df39675abc550">&#20107;&#20214;</h2><p>Laravel &#22312;&#21457;&#36865; HTTP &#35831;&#27714;&#30340;&#36807;&#31243;&#20013;&#20250;&#35302;&#21457;&#19977;&#20010;&#20107;&#20214;&#12290;&#22312;&#35831;&#27714;&#34987;&#21457;&#36865;&#20043;&#21069;&#20250;&#35302;&#21457; <code>RequestSending</code> &#20107;&#20214;&#65292;&#32780;&#22312;&#25910;&#21040;&#32473;&#23450;&#35831;&#27714;&#30340;&#21709;&#24212;&#21518;&#20250;&#35302;&#21457; <code>ResponseReceived</code> &#20107;&#20214;&#12290;&#22914;&#26524;&#26410;&#25910;&#21040;&#32473;&#23450;&#35831;&#27714;&#30340;&#21709;&#24212;&#65292;&#21017;&#20250;&#35302;&#21457; <code>ConnectionFailed</code> &#20107;&#20214;&#12290;</p><p><code>RequestSending</code> &#21644; <code>ConnectionFailed</code> &#20107;&#20214;&#37117;&#21253;&#21547;&#19968;&#20010;&#20844;&#24320;&#30340; <code>$request</code> &#23646;&#24615;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#23427;&#26469;&#26816;&#26597; <code>Illuminate\Http\Client\Request</code> &#23454;&#20363;&#12290;&#21516;&#26679;&#65292;<code>ResponseReceived</code> &#20107;&#20214;&#21253;&#21547; <code>$request</code> &#23646;&#24615;&#20197;&#21450; <code>$response</code> &#23646;&#24615;&#65292;&#21487;&#29992;&#20110;&#26816;&#26597; <code>Illuminate\Http\Client\Response</code> &#23454;&#20363;&#12290;&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#20013;&#20026;&#36825;&#20123;&#20107;&#20214;&#21019;&#24314;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#20107;&#20214;&#30417;&#21548;&#22120;</a>&#65306;</p><pre><code class="language-php">use Illuminate\Http\Client\Events\RequestSending;
+
+class LogRequest
+{
+    /**
+     * &#22788;&#29702;&#20107;&#20214;&#12290;
+     */
+    public function handle(RequestSending $event): void
+    {
+        // $event-&gt;request ...
+    }
+}</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Guzzle HTTP 客户端: <i><a href="http://docs.guzzlephp.org/en/stable/" target="_blank">http://docs.guzzlephp.org/en/stable/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> URI 模板规范: <i><a href="https://www.rfc-editor.org/rfc/rfc6570" target="_blank">https://www.rfc-editor.org/rfc/rfc6570</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Guzzle 中间件: <i><a href="https://docs.guzzlephp.org/en/stable/handlers-and-middleware.html" target="_blank">https://docs.guzzlephp.org/en/stable/handlers-and-middleware.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Guzzle 请求选项: <i><a href="http://docs.guzzlephp.org/en/stable/request-options.html" target="_blank">http://docs.guzzlephp.org/en/stable/request-options.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> 事件监听器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="569x5d8yep.html#blog1036" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">辅助函数</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="rwyl24xvz8.html#blog1038" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">图像处理</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

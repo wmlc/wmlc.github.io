@@ -1,0 +1,1988 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>HTTP 测试 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/xq9zr0jvdo.html', function (data, status) {
+            addView('xq9zr0jvdo.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>HTTP 测试</h1><ul>
+<li><a href="xq9zr0jvdo.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="xq9zr0jvdo.html#ec7abc9ee09a01c61daa3e210d399ec1">发起请求</a>
+<ul>
+<li><a href="xq9zr0jvdo.html#553e9949e99d85629141c3faf72964a7">自定义请求头</a></li>
+<li><a href="xq9zr0jvdo.html#706f10887bbeb729378c706eee126fa7">Cookie</a></li>
+<li><a href="xq9zr0jvdo.html#df8e98aa5e63f2031c9e0ea6914b9091">Session / 认证</a></li>
+<li><a href="xq9zr0jvdo.html#13039d784aad276e10d9f7ac59719bbc">调试响应</a></li>
+<li><a href="xq9zr0jvdo.html#e449cf10ae6de811f01f64c323cd596c">异常处理</a></li>
+</ul></li>
+<li><a href="xq9zr0jvdo.html#4b96c8f0ba9d309f104aa25cc0ddddd0">测试 JSON API</a>
+<ul>
+<li><a href="xq9zr0jvdo.html#11e3056f92a0f2d88995f7fc42737137">断言 JSON 精确匹配</a></li>
+<li><a href="xq9zr0jvdo.html#afe5457c9884fced9e1d3c263b03688a">对 JSON 路径断言</a>
+<ul>
+<li><a href="xq9zr0jvdo.html#e22728ac416e3135969b6335e6246dd7">流式 JSON 测试</a></li>
+</ul></li>
+<li><a href="xq9zr0jvdo.html#0e3af82e2bd7d08c5b5d6bc6ba6bb68b">理解 etc 方法</a></li>
+<li><a href="xq9zr0jvdo.html#88b80e02c95e0dc1d81bb665c336b86e">断言属性存在 / 不存在</a></li>
+<li><a href="xq9zr0jvdo.html#57998ad47746acae41c0ea3d50e96884">对 JSON 集合进行断言</a></li>
+<li><a href="xq9zr0jvdo.html#b9e2d676cfb8458b9fb760775d614511">限定 JSON 集合断言范围</a></li>
+<li><a href="xq9zr0jvdo.html#71402a45ff75b2a86034c56b660b14ba">断言 JSON 类型</a></li>
+</ul></li>
+<li><a href="xq9zr0jvdo.html#bb2801837d5113dd9061c6d418a348ab">测试文件上传</a>
+<ul>
+<li><a href="xq9zr0jvdo.html#4d9740b132bd5366ed9a51ffeb7d1c9d">伪造文件自定义</a></li>
+</ul></li>
+<li><a href="xq9zr0jvdo.html#28f6cecf66b53bc985159a4b43fff16e">测试视图</a>
+<ul>
+<li><a href="xq9zr0jvdo.html#9f2649d8352f1f643e3823788b3295a9">共享错误</a>
+<ul>
+<li><a href="xq9zr0jvdo.html#30765cc228a64d58d67b0dcf493ab6a5">渲染 Blade 与组件</a></li>
+</ul></li>
+</ul></li>
+<li><a href="xq9zr0jvdo.html#e1f076cec98ef04be7d2b3e3d9675c40">缓存路由</a></li>
+<li><a href="xq9zr0jvdo.html#b23e2ce8b6b5871a53b0cfc254124999">可用断言</a>
+<ul>
+<li><a href="xq9zr0jvdo.html#5d75bd6d8c9bf8b7da228f93359bedb5">响应断言</a>
+<ul>
+<li><a href="xq9zr0jvdo.html#1f670500f3ac2926ab3b25233f8ab5c4">assertAccepted</a></li>
+<li><a href="xq9zr0jvdo.html#396033245427926f0d8f3840c62a74ba">assertBadRequest</a></li>
+<li><a href="xq9zr0jvdo.html#a83263cbb6c9c55b083567f4fe80228f">assertClientError</a></li>
+<li><a href="xq9zr0jvdo.html#43d21ed0274e743f26c25f0c2ef23b06">assertConflict</a></li>
+<li><a href="xq9zr0jvdo.html#a2c52bc0f7dddb26582bbd625830ac60">assertCookie</a></li>
+<li><a href="xq9zr0jvdo.html#1781f1fd64aa696dd639f33870a4eeed">assertCookieExpired</a></li>
+<li><a href="xq9zr0jvdo.html#ac79402d261fcd038e97a79e0f641aab">assertCookieNotExpired</a></li>
+<li><a href="xq9zr0jvdo.html#d99996a872a4a791a6dc8205a2e62120">assertCookieMissing</a></li>
+<li><a href="xq9zr0jvdo.html#9bbebf05bbbd803751e028dc414c3b23">assertCreated</a></li>
+<li><a href="xq9zr0jvdo.html#1c391478df75c8983233142aa8863e0b">assertDontSee</a></li>
+<li><a href="xq9zr0jvdo.html#a2c1975393d367a87c998e57c721c954">assertDontSeeText</a></li>
+<li><a href="xq9zr0jvdo.html#4e209f36e8bfaf8b853d4b42925e2969">assertDownload</a></li>
+<li><a href="xq9zr0jvdo.html#a7ec3bb327dff2b433a8b47e84172491">assertExactJson</a></li>
+<li><a href="xq9zr0jvdo.html#d2af503be34c86f52538a1d746824737">assertExactJsonStructure</a></li>
+<li><a href="xq9zr0jvdo.html#8880c4f0b3fa8e77bfd7c4e255b04617">assertFailedDependency</a></li>
+<li><a href="xq9zr0jvdo.html#215ebbc6d95b74dc4d1c09865966a826">assertForbidden</a></li>
+<li><a href="xq9zr0jvdo.html#1a767cb28ca3a8f12353d04bae05c32f">assertFound</a></li>
+<li><a href="xq9zr0jvdo.html#49dd1b6b13fe3b7eac51edb2f899fd33">assertGone</a></li>
+<li><a href="xq9zr0jvdo.html#c876227cceccf7b6a0d1ad676e2738b1">assertHeader</a></li>
+<li><a href="xq9zr0jvdo.html#9766f08c524cfd339119f7ec402926eb">assertHeaderContains</a></li>
+<li><a href="xq9zr0jvdo.html#84954f7c206794da3d54b9eac42a3c5c">assertHeaderMissing</a></li>
+<li><a href="xq9zr0jvdo.html#0de6ec47d712af63dedea4ebc29d4048">assertInternalServerError</a></li>
+<li><a href="xq9zr0jvdo.html#d365c84617dca82bf0730ca32d64af14">assertJson</a></li>
+<li><a href="xq9zr0jvdo.html#124abbef01c0ecd7c5dc37b20f288675">assertJsonCount</a></li>
+<li><a href="xq9zr0jvdo.html#ef598fdb49cb41cd5d2ef984f0acff9e">assertJsonFragment</a></li>
+<li><a href="xq9zr0jvdo.html#0f53c69503e1c7e75866d3d78f1a8f16">assertJsonIsArray</a></li>
+<li><a href="xq9zr0jvdo.html#5ede0972877a5c9540cef4146a5b8723">assertJsonIsObject</a></li>
+<li><a href="xq9zr0jvdo.html#3203ef9b492d60d8b3353af5ca9c8dbd">assertJsonMissing</a></li>
+<li><a href="xq9zr0jvdo.html#ebd8825415b9b8230916f4fd18251351">assertJsonMissingExact</a></li>
+<li><a href="xq9zr0jvdo.html#9896b5eefe758d13c7938b2463d938cf">assertJsonMissingValidationErrors</a></li>
+<li><a href="xq9zr0jvdo.html#72ce800f01e5b26a7e59752ddc3c308a">assertJsonPath</a></li>
+<li><a href="xq9zr0jvdo.html#396a2de6790dc5c8afeecc581b89decd">assertJsonPaths</a></li>
+<li><a href="xq9zr0jvdo.html#16cf767b5b2083c27ca8c38d3d9c5b20">assertJsonMissingPath</a></li>
+<li><a href="xq9zr0jvdo.html#a52e1e2a7b2e0b236901a73e68084b48">assertJsonMissingPaths</a></li>
+<li><a href="xq9zr0jvdo.html#bead42183c873e3ae2e7ceab4c0e80d4">assertJsonStructure</a></li>
+<li><a href="xq9zr0jvdo.html#47709f033214aebc28a8cec1b58521d8">assertJsonValidationErrors</a></li>
+<li><a href="xq9zr0jvdo.html#8fd3f690daa8458920fb7bb3281abca7">assertJsonValidationErrorFor</a></li>
+<li><a href="xq9zr0jvdo.html#5910f79bdb4003e1474b9788a2254363">assertMethodNotAllowed</a></li>
+<li><a href="xq9zr0jvdo.html#2b9170383022662ea3bd0c0ab8e50e4c">assertMovedPermanently</a></li>
+<li><a href="xq9zr0jvdo.html#9624ebbf49160c5995236d2f4062c023">assertLocation</a></li>
+<li><a href="xq9zr0jvdo.html#f45a7ff37d307d83c57befee86cde6cc">assertContent</a></li>
+<li><a href="xq9zr0jvdo.html#3ec8c0ed523416258ac25095764063f4">assertNoContent</a></li>
+<li><a href="xq9zr0jvdo.html#7541998b7919ff59b67ed0bfe93421e3">assertStreamed</a></li>
+<li><a href="xq9zr0jvdo.html#86270bdae7ea4a3f49093ee8aa82ca5d">assertStreamedContent</a></li>
+<li><a href="xq9zr0jvdo.html#5f2bdba6c9511e17b272d6f8a3e3a1fa">assertNotFound</a></li>
+<li><a href="xq9zr0jvdo.html#376bce14ff55427c89bbb3b86fe92061">assertOk</a></li>
+<li><a href="xq9zr0jvdo.html#ccaf9cd4899cf6c39bcd4d418453c77d">assertPaymentRequired</a></li>
+<li><a href="xq9zr0jvdo.html#c42748c2c2b6c179270e36a04ca3f708">assertPlainCookie</a></li>
+<li><a href="xq9zr0jvdo.html#54d20cd176350378ded55bb918c37a69">assertRedirect</a></li>
+<li><a href="xq9zr0jvdo.html#ec19919e003a92fc3f213416e4e0285d">assertRedirectBack</a></li>
+<li><a href="xq9zr0jvdo.html#1300b2f0255135140ae6e146b6f8e24c">assertRedirectBackWithErrors</a></li>
+<li><a href="xq9zr0jvdo.html#4dfc193481071c609a7d4aaa42fe4973">assertRedirectBackWithoutErrors</a></li>
+<li><a href="xq9zr0jvdo.html#97e42f4a77b2f81f7435ac9c8eb5694f">assertRedirectContains</a></li>
+<li><a href="xq9zr0jvdo.html#5c82131b00e0b362f3befbac91edc4c2">assertRedirectToRoute</a></li>
+<li><a href="xq9zr0jvdo.html#8e005fa0ddd96e25ea45f6fcbc64ce33">assertRedirectToSignedRoute</a></li>
+<li><a href="xq9zr0jvdo.html#df13699e625344be1e2404f201251901">assertRequestTimeout</a></li>
+<li><a href="xq9zr0jvdo.html#ef770ffccbd0dd5582fe2d685fcb29f3">assertSee</a></li>
+<li><a href="xq9zr0jvdo.html#c001cd58829245d6b39c8f1f8d1966e5">assertSeeInOrder</a></li>
+<li><a href="xq9zr0jvdo.html#35f519ccbe9962cfce9574c3410ad72b">assertSeeText</a></li>
+<li><a href="xq9zr0jvdo.html#22ff8546006e22ce63fc63fd78cd528c">assertSeeTextInOrder</a></li>
+<li><a href="xq9zr0jvdo.html#d9ef1ee91c8713ab56eec5f332802c32">assertServerError</a></li>
+<li><a href="xq9zr0jvdo.html#e4a53b90acc5140ac95bfb4f3d6ad817">assertServiceUnavailable</a></li>
+<li><a href="xq9zr0jvdo.html#53d204c03351c5bfd676fdd2eaf4ed95">assertSessionHas</a></li>
+<li><a href="xq9zr0jvdo.html#fca39f446d244e6f78581ca9a18f8579">assertSessionHasInput</a></li>
+<li><a href="xq9zr0jvdo.html#6f43ce8ec7ef0e3032ed7fc2871d52b8">assertSessionHasAll</a></li>
+<li><a href="xq9zr0jvdo.html#0043e8c011add8688fe4e0bbb97e6622">assertSessionHasErrors</a></li>
+<li><a href="xq9zr0jvdo.html#242ea6f9aef61546bb744e438f0d6258">assertSessionHasErrorsIn</a></li>
+<li><a href="xq9zr0jvdo.html#26587bcd7d208fef846c436a7e2196ce">assertSessionHasNoErrors</a></li>
+<li><a href="xq9zr0jvdo.html#e0567eaf49a033e95a1b8b5e6844536c">assertSessionDoesntHaveErrors</a></li>
+<li><a href="xq9zr0jvdo.html#c36cf130bbc39f80d0f1badeaf4ecd13">assertSessionMissing</a></li>
+<li><a href="xq9zr0jvdo.html#ef9e899b9ee91d89a9666f4a314ca794">assertSessionMissingInput</a></li>
+<li><a href="xq9zr0jvdo.html#4e9a6f3ef3b4c574d75a4bd5352ef25c">assertStatus</a></li>
+<li><a href="xq9zr0jvdo.html#9a984e0320e5e51edbca2fa414c7b476">assertSuccessful</a></li>
+<li><a href="xq9zr0jvdo.html#de35aae674cb25b1e9475a8c209f254e">assertTooManyRequests</a></li>
+<li><a href="xq9zr0jvdo.html#badb57a1a007a4851e45a1c49ab56c9d">assertUnauthorized</a></li>
+<li><a href="xq9zr0jvdo.html#a8db079f1bf9587b65754ab140b675e2">assertUnprocessable</a></li>
+<li><a href="xq9zr0jvdo.html#f59a87c61cadfe3165ce92962f728d5f">assertUnsupportedMediaType</a></li>
+<li><a href="xq9zr0jvdo.html#e321b6c44e837f3ca1d1c329090336c8">assertValid</a></li>
+<li><a href="xq9zr0jvdo.html#c15a6a8d23005070087755ebcbcd8a7d">assertInvalid</a></li>
+<li><a href="xq9zr0jvdo.html#cc3c6e371d611194a689f7dbf391670a">assertViewHas</a></li>
+<li><a href="xq9zr0jvdo.html#a38739cc8bf91e8d40a963f0c33becf1">assertViewHasAll</a></li>
+<li><a href="xq9zr0jvdo.html#39f84a446bdd8fba05fe851ecf7bcbc5">assertViewIs</a></li>
+<li><a href="xq9zr0jvdo.html#d7b1dd20fb7f2ba9fea586fd2d689e55">assertViewMissing</a></li>
+</ul></li>
+<li><a href="xq9zr0jvdo.html#0fd22aea48b53202ca3c1925b658e499">认证断言</a>
+<ul>
+<li><a href="xq9zr0jvdo.html#72acf9da2bfc52a3bd5f833b2b6b555b">assertAuthenticated</a></li>
+<li><a href="xq9zr0jvdo.html#2334f31505bddcc2a2b1b1d946f9a7d3">assertGuest</a></li>
+<li><a href="xq9zr0jvdo.html#168de108757ac7b3167532c88c797d10">assertAuthenticatedAs</a></li>
+</ul></li>
+</ul></li>
+<li><a href="xq9zr0jvdo.html#2bdceefdfd45f8953bb49862144043d3">验证断言</a>
+<ul>
+<li><a href="xq9zr0jvdo.html#e321b6c44e837f3ca1d1c329090336c8">assertValid</a></li>
+<li><a href="xq9zr0jvdo.html#c15a6a8d23005070087755ebcbcd8a7d">assertInvalid</a></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>Laravel &#25552;&#20379;&#20102;&#19968;&#20010;&#38750;&#24120;&#27969;&#30021;&#30340; API&#65292;&#29992;&#20110;&#21521;&#20320;&#30340;&#24212;&#29992;&#21457;&#36215; HTTP &#35831;&#27714;&#24182;&#26816;&#26597;&#21709;&#24212;&#12290;&#20363;&#22914;&#65292;&#35831;&#30475;&#19979;&#38754;&#23450;&#20041;&#30340;&#29305;&#24615;&#27979;&#35797;&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('the application returns a successful response', function () {
+    $response = $this-&gt;get('/');
+
+    $response-&gt;assertStatus(200);
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#19968;&#20010;&#22522;&#30784;&#30340;&#27979;&#35797;&#31034;&#20363;&#12290;
+     */
+    public function test_the_application_returns_a_successful_response(): void
+    {
+        $response = $this-&gt;get('/');
+
+        $response-&gt;assertStatus(200);
+    }
+}</code></pre><p><code>get</code> &#26041;&#27861;&#21521;&#24212;&#29992;&#21457;&#36215;&#19968;&#20010; <code>GET</code> &#35831;&#27714;&#65292;&#32780; <code>assertStatus</code> &#26041;&#27861;&#26029;&#35328;&#36820;&#22238;&#30340;&#21709;&#24212;&#24212;&#35813;&#20855;&#26377;&#32473;&#23450;&#30340; HTTP &#29366;&#24577;&#30721;&#12290;&#38500;&#20102;&#36825;&#20010;&#31616;&#21333;&#30340;&#26029;&#35328;&#20043;&#22806;&#65292;Laravel &#36824;&#21253;&#21547;&#22810;&#31181;&#26029;&#35328;&#65292;&#29992;&#20110;&#26816;&#26597;&#21709;&#24212; Header&#12289;&#20869;&#23481;&#12289;JSON &#32467;&#26500;&#31561;&#12290;</p><h2 id="ec7abc9ee09a01c61daa3e210d399ec1">&#21457;&#36215;&#35831;&#27714;</h2><p>&#35201;&#21521;&#20320;&#30340;&#24212;&#29992;&#21457;&#36215;&#35831;&#27714;&#65292;&#21487;&#20197;&#22312;&#27979;&#35797;&#20013;&#35843;&#29992; <code>get</code>&#12289;<code>post</code>&#12289;<code>put</code>&#12289;<code>patch</code> &#25110; <code>delete</code> &#26041;&#27861;&#12290;&#36825;&#20123;&#26041;&#27861;&#24182;&#19981;&#20250;&#30495;&#27491;&#21521;&#20320;&#30340;&#24212;&#29992;&#21457;&#20986;"&#30495;&#23454;"&#30340; HTTP &#35831;&#27714;&#65292;&#32780;&#26159;&#20250;&#22312;&#20869;&#37096;&#27169;&#25311;&#25972;&#20010;&#32593;&#32476;&#35831;&#27714;&#12290;</p><p>&#27979;&#35797;&#35831;&#27714;&#26041;&#27861;&#36820;&#22238;&#30340;&#24182;&#19981;&#26159; <code>Illuminate\Http\Response</code> &#23454;&#20363;&#65292;&#32780;&#26159; <code>Illuminate\Testing\TestResponse</code> &#23454;&#20363;&#65292;&#23427;&#25552;&#20379;&#20102;<a href="xq9zr0jvdo.html#available-assertions" target="_blank">&#22810;&#31181;&#23454;&#29992;&#30340;&#26029;&#35328;</a>&#65292;&#35753;&#20320;&#21487;&#20197;&#26816;&#26597;&#24212;&#29992;&#30340;&#21709;&#24212;&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('basic request', function () {
+    $response = $this-&gt;get('/');
+
+    $response-&gt;assertStatus(200);
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#19968;&#20010;&#22522;&#30784;&#30340;&#27979;&#35797;&#31034;&#20363;&#12290;
+     */
+    public function test_a_basic_request(): void
+    {
+        $response = $this-&gt;get('/');
+
+        $response-&gt;assertStatus(200);
+    }
+}</code></pre><p>&#19968;&#33324;&#26469;&#35828;&#65292;&#20320;&#30340;&#27599;&#20010;&#27979;&#35797;&#24212;&#35813;&#21482;&#21521;&#24212;&#29992;&#21457;&#36215;&#19968;&#27425;&#35831;&#27714;&#12290;&#22914;&#26524;&#22312;&#21333;&#20010;&#27979;&#35797;&#26041;&#27861;&#20013;&#25191;&#34892;&#22810;&#20010;&#35831;&#27714;&#65292;&#21487;&#33021;&#20250;&#20986;&#29616;&#24847;&#22806;&#34892;&#20026;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#20026;&#26041;&#20415;&#36215;&#35265;&#65292;&#36816;&#34892;&#27979;&#35797;&#26102;&#20250;&#33258;&#21160;&#31105;&#29992; CSRF &#20013;&#38388;&#20214;&#12290;</p>
+</blockquote><h3 id="553e9949e99d85629141c3faf72964a7">&#33258;&#23450;&#20041;&#35831;&#27714;&#22836;</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>withHeaders</code> &#26041;&#27861;&#22312;&#35831;&#27714;&#21457;&#36865;&#21040;&#24212;&#29992;&#20043;&#21069;&#33258;&#23450;&#20041;&#35831;&#27714;&#30340; Header&#12290;&#35813;&#26041;&#27861;&#20801;&#35768;&#20320;&#21521;&#35831;&#27714;&#28155;&#21152;&#20219;&#24847;&#33258;&#23450;&#20041; Header&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('interacting with headers', function () {
+    $response = $this-&gt;withHeaders([
+        'X-Header' =&gt; 'Value',
+    ])-&gt;post('/user', ['name' =&gt; 'Sally']);
+
+    $response-&gt;assertStatus(201);
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#19968;&#20010;&#22522;&#30784;&#30340;&#21151;&#33021;&#27979;&#35797;&#31034;&#20363;&#12290;
+     */
+    public function test_interacting_with_headers(): void
+    {
+        $response = $this-&gt;withHeaders([
+            'X-Header' =&gt; 'Value',
+        ])-&gt;post('/user', ['name' =&gt; 'Sally']);
+
+        $response-&gt;assertStatus(201);
+    }
+}</code></pre><h3 id="706f10887bbeb729378c706eee126fa7">Cookie</h3><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>withCookie</code> &#25110; <code>withCookies</code> &#26041;&#27861;&#22312;&#21457;&#36215;&#35831;&#27714;&#20043;&#21069;&#35774;&#32622; cookie &#20540;&#12290;<code>withCookie</code> &#26041;&#27861;&#25509;&#21463; cookie &#21517;&#31216;&#21644;&#20540;&#20316;&#20026;&#20004;&#20010;&#21442;&#25968;&#65292;&#32780; <code>withCookies</code> &#26041;&#27861;&#25509;&#21463;&#38190;&#20540;&#23545;&#25968;&#32452;&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('interacting with cookies', function () {
+    $response = $this-&gt;withCookie('color', 'blue')-&gt;get('/');
+
+    $response = $this-&gt;withCookies([
+        'color' =&gt; 'blue',
+        'name' =&gt; 'Taylor',
+    ])-&gt;get('/');
+
+    //
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    public function test_interacting_with_cookies(): void
+    {
+        $response = $this-&gt;withCookie('color', 'blue')-&gt;get('/');
+
+        $response = $this-&gt;withCookies([
+            'color' =&gt; 'blue',
+            'name' =&gt; 'Taylor',
+        ])-&gt;get('/');
+
+        //
+    }
+}</code></pre><h3 id="df8e98aa5e63f2031c9e0ea6914b9091">Session / &#35748;&#35777;</h3><p>Laravel &#25552;&#20379;&#20102;&#20960;&#20010;&#36741;&#21161;&#20989;&#25968;&#65292;&#29992;&#20110;&#22312; HTTP &#27979;&#35797;&#26399;&#38388;&#19982; session &#20132;&#20114;&#12290;&#39318;&#20808;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>withSession</code> &#26041;&#27861;&#23558; session &#25968;&#25454;&#35774;&#32622;&#20026;&#32473;&#23450;&#25968;&#32452;&#12290;&#22312;&#21521;&#20320;&#24212;&#29992;&#21457;&#36215;&#35831;&#27714;&#20043;&#21069;&#65292;&#36825;&#21487;&#29992;&#20110;&#20026; session &#21152;&#36733;&#25968;&#25454;&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('interacting with the session', function () {
+    $response = $this-&gt;withSession(['banned' =&gt; false])-&gt;get('/');
+
+    //
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    public function test_interacting_with_the_session(): void
+    {
+        $response = $this-&gt;withSession(['banned' =&gt; false])-&gt;get('/');
+
+        //
+    }
+}</code></pre><p>Laravel &#30340; session &#36890;&#24120;&#29992;&#20110;&#20026;&#24403;&#21069;&#24050;&#35748;&#35777;&#30340;&#29992;&#25143;&#32500;&#25252;&#29366;&#24577;&#12290;&#22240;&#27492;&#65292;<code>actingAs</code> &#36741;&#21161;&#26041;&#27861;&#25552;&#20379;&#20102;&#19968;&#31181;&#31616;&#21333;&#30340;&#26041;&#24335;&#65292;&#23558;&#32473;&#23450;&#30340;&#29992;&#25143;&#35748;&#35777;&#20026;&#24403;&#21069;&#29992;&#25143;&#12290;&#20363;&#22914;&#65292;&#25105;&#20204;&#21487;&#20197;&#20351;&#29992;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent-factories" target="_blank">&#27169;&#22411;&#24037;&#21378;</a> &#26469;&#29983;&#25104;&#24182;&#35748;&#35777;&#19968;&#20010;&#29992;&#25143;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use App\Models\User;
+
+test('an action that requires authentication', function () {
+    $user = User::factory()-&gt;create();
+
+    $response = $this-&gt;actingAs($user)
+        -&gt;withSession(['banned' =&gt; false])
+        -&gt;get('/');
+
+    //
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use App\Models\User;
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    public function test_an_action_that_requires_authentication(): void
+    {
+        $user = User::factory()-&gt;create();
+
+        $response = $this-&gt;actingAs($user)
+            -&gt;withSession(['banned' =&gt; false])
+            -&gt;get('/');
+
+        //
+    }
+}</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#36890;&#36807;&#21521; <code>actingAs</code> &#26041;&#27861;&#20256;&#36882; guard &#21517;&#31216;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#65292;&#26469;&#25351;&#23450;&#24212;&#20351;&#29992;&#21738;&#20010; guard &#26469;&#35748;&#35777;&#32473;&#23450;&#30340;&#29992;&#25143;&#12290;&#25552;&#20379;&#32473; <code>actingAs</code> &#26041;&#27861;&#30340; guard &#22312;&#27979;&#35797;&#26399;&#38388;&#20063;&#20250;&#25104;&#20026;&#40664;&#35748; guard&#65306;</p><pre><code class="language-php">$this-&gt;actingAs($user, 'web');</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#30830;&#20445;&#35831;&#27714;&#26159;&#26410;&#35748;&#35777;&#30340;&#65292;&#21487;&#20197;&#20351;&#29992; <code>actingAsGuest</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$this-&gt;actingAsGuest();</code></pre><h3 id="13039d784aad276e10d9f7ac59719bbc">&#35843;&#35797;&#21709;&#24212;</h3><p>&#21521;&#24212;&#29992;&#21457;&#36215;&#27979;&#35797;&#35831;&#27714;&#21518;&#65292;&#21487;&#20197;&#20351;&#29992; <code>dump</code>&#12289;<code>dumpHeaders</code> &#21644; <code>dumpSession</code> &#26041;&#27861;&#26469;&#26816;&#26597;&#21644;&#35843;&#35797;&#21709;&#24212;&#20869;&#23481;&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('basic test', function () {
+    $response = $this-&gt;get('/');
+
+    $response-&gt;dump();
+    $response-&gt;dumpHeaders();
+    $response-&gt;dumpSession();
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#19968;&#20010;&#22522;&#30784;&#30340;&#27979;&#35797;&#31034;&#20363;&#12290;
+     */
+    public function test_basic_test(): void
+    {
+        $response = $this-&gt;get('/');
+
+        $response-&gt;dump();
+        $response-&gt;dumpHeaders();
+        $response-&gt;dumpSession();
+    }
+}</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>dd</code>&#12289;<code>ddHeaders</code>&#12289;<code>ddBody</code>&#12289;<code>ddJson</code> &#21644; <code>ddSession</code> &#26041;&#27861;&#26469; dump &#26377;&#20851;&#21709;&#24212;&#30340;&#20449;&#24687;&#65292;&#28982;&#21518;&#20572;&#27490;&#25191;&#34892;&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('basic test', function () {
+    $response = $this-&gt;get('/');
+
+    $response-&gt;dd();
+    $response-&gt;ddHeaders();
+    $response-&gt;ddBody();
+    $response-&gt;ddJson();
+    $response-&gt;ddSession();
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#19968;&#20010;&#22522;&#30784;&#30340;&#27979;&#35797;&#31034;&#20363;&#12290;
+     */
+    public function test_basic_test(): void
+    {
+        $response = $this-&gt;get('/');
+
+        $response-&gt;dd();
+        $response-&gt;ddHeaders();
+        $response-&gt;ddBody();
+        $response-&gt;ddJson();
+        $response-&gt;ddSession();
+    }
+}</code></pre><h3 id="e449cf10ae6de811f01f64c323cd596c">&#24322;&#24120;&#22788;&#29702;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#27979;&#35797;&#24212;&#29992;&#26159;&#21542;&#25243;&#20986;&#20102;&#29305;&#23450;&#30340;&#24322;&#24120;&#12290;&#20026;&#27492;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; <code>Exceptions</code> Facade &#26469;"&#20266;&#36896;"&#24322;&#24120;&#22788;&#29702;&#31243;&#24207;&#12290;&#19968;&#26086;&#24322;&#24120;&#22788;&#29702;&#31243;&#24207;&#34987;&#20266;&#36896;&#65292;&#23601;&#21487;&#20197;&#20351;&#29992; <code>assertReported</code> &#21644; <code>assertNotReported</code> &#26041;&#27861;&#23545;&#35831;&#27714;&#26399;&#38388;&#25243;&#20986;&#30340;&#24322;&#24120;&#36827;&#34892;&#26029;&#35328;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use App\Exceptions\InvalidOrderException;
+use Illuminate\Support\Facades\Exceptions;
+
+test('exception is thrown', function () {
+    Exceptions::fake();
+
+    $response = $this-&gt;get('/order/1');
+
+    // &#26029;&#35328;&#24050;&#25243;&#20986;&#24322;&#24120;...
+    Exceptions::assertReported(InvalidOrderException::class);
+
+    // &#23545;&#24322;&#24120;&#36827;&#34892;&#26029;&#35328;...
+    Exceptions::assertReported(function (InvalidOrderException $e) {
+        return $e-&gt;getMessage() === 'The order was invalid.';
+    });
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use App\Exceptions\InvalidOrderException;
+use Illuminate\Support\Facades\Exceptions;
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#19968;&#20010;&#22522;&#30784;&#30340;&#27979;&#35797;&#31034;&#20363;&#12290;
+     */
+    public function test_exception_is_thrown(): void
+    {
+        Exceptions::fake();
+
+        $response = $this-&gt;get('/');
+
+        // &#26029;&#35328;&#24050;&#25243;&#20986;&#24322;&#24120;...
+        Exceptions::assertReported(InvalidOrderException::class);
+
+        // &#23545;&#24322;&#24120;&#36827;&#34892;&#26029;&#35328;...
+        Exceptions::assertReported(function (InvalidOrderException $e) {
+            return $e-&gt;getMessage() === 'The order was invalid.';
+        });
+    }
+}</code></pre><p><code>assertNotReported</code> &#21644; <code>assertNothingReported</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#32473;&#23450;&#30340;&#24322;&#24120;&#22312;&#35831;&#27714;&#26399;&#38388;&#26410;&#34987;&#25243;&#20986;&#65292;&#25110;&#26029;&#35328;&#27809;&#26377;&#25243;&#20986;&#20219;&#20309;&#24322;&#24120;&#65306;</p><pre><code class="language-php">Exceptions::assertNotReported(InvalidOrderException::class);
+
+Exceptions::assertNothingReported();</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#21457;&#36215;&#35831;&#27714;&#20043;&#21069;&#35843;&#29992; <code>withoutExceptionHandling</code> &#26041;&#27861;&#65292;&#20026;&#32473;&#23450;&#35831;&#27714;&#23436;&#20840;&#31105;&#29992;&#24322;&#24120;&#22788;&#29702;&#65306;</p><pre><code class="language-php">$response = $this-&gt;withoutExceptionHandling()-&gt;get('/');</code></pre><p>&#27492;&#22806;&#65292;&#22914;&#26524;&#20320;&#24819;&#30830;&#20445;&#24212;&#29992;&#27809;&#26377;&#20351;&#29992; PHP &#35821;&#35328;&#25110;&#24212;&#29992;&#25152;&#20381;&#36182;&#30340;&#24211;&#24050;&#24323;&#29992;&#30340;&#21151;&#33021;&#65292;&#21487;&#20197;&#22312;&#21457;&#36215;&#35831;&#27714;&#20043;&#21069;&#35843;&#29992; <code>withoutDeprecationHandling</code> &#26041;&#27861;&#12290;&#24403;&#24323;&#29992;&#22788;&#29702;&#34987;&#31105;&#29992;&#26102;&#65292;&#24323;&#29992;&#35686;&#21578;&#20250;&#34987;&#36716;&#25442;&#20026;&#24322;&#24120;&#65292;&#20174;&#32780;&#23548;&#33268;&#20320;&#30340;&#27979;&#35797;&#22833;&#36133;&#65306;</p><pre><code class="language-php">$response = $this-&gt;withoutDeprecationHandling()-&gt;get('/');</code></pre><p><code>assertThrows</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#32473;&#23450;&#38381;&#21253;&#20013;&#30340;&#20195;&#30721;&#25243;&#20986;&#20102;&#25351;&#23450;&#31867;&#22411;&#30340;&#24322;&#24120;&#65306;</p><pre><code class="language-php">$this-&gt;assertThrows(
+    fn () =&gt; (new ProcessOrder)-&gt;execute(),
+    OrderInvalid::class
+);</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#26816;&#26597;&#24182;&#23545;&#25243;&#20986;&#30340;&#24322;&#24120;&#36827;&#34892;&#26029;&#35328;&#65292;&#21487;&#20197;&#21521; <code>assertThrows</code> &#26041;&#27861;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#25552;&#20379;&#19968;&#20010;&#38381;&#21253;&#65306;</p><pre><code class="language-php">$this-&gt;assertThrows(
+    fn () =&gt; (new ProcessOrder)-&gt;execute(),
+    fn (OrderInvalid $e) =&gt; $e-&gt;orderId() === 123;
+);</code></pre><p><code>assertDoesntThrow</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#32473;&#23450;&#38381;&#21253;&#20013;&#30340;&#20195;&#30721;&#27809;&#26377;&#25243;&#20986;&#20219;&#20309;&#24322;&#24120;&#65306;</p><pre><code class="language-php">$this-&gt;assertDoesntThrow(fn () =&gt; (new ProcessOrder)-&gt;execute());</code></pre><h2 id="4b96c8f0ba9d309f104aa25cc0ddddd0">&#27979;&#35797; JSON API</h2><p>Laravel &#36824;&#25552;&#20379;&#20102;&#20960;&#20010;&#29992;&#20110;&#27979;&#35797; JSON API &#21450;&#20854;&#21709;&#24212;&#30340;&#36741;&#21161;&#20989;&#25968;&#12290;&#20363;&#22914;&#65292;<code>json</code>&#12289;<code>getJson</code>&#12289;<code>postJson</code>&#12289;<code>putJson</code>&#12289;<code>patchJson</code>&#12289;<code>deleteJson</code> &#21644; <code>optionsJson</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#20351;&#29992;&#21508;&#31181; HTTP &#21160;&#35789;&#21457;&#36215; JSON &#35831;&#27714;&#12290;&#20320;&#36824;&#21487;&#20197;&#36731;&#26494;&#22320;&#21521;&#36825;&#20123;&#26041;&#27861;&#20256;&#36882;&#25968;&#25454;&#21644; Header&#12290;&#39318;&#20808;&#65292;&#25105;&#20204;&#32534;&#20889;&#19968;&#20010;&#27979;&#35797;&#65292;&#21521; <code>/api/user</code> &#21457;&#36215; <code>POST</code> &#35831;&#27714;&#65292;&#24182;&#26029;&#35328;&#36820;&#22238;&#20102;&#39044;&#26399;&#30340; JSON &#25968;&#25454;&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('making an api request', function () {
+    $response = $this-&gt;postJson('/api/user', ['name' =&gt; 'Sally']);
+
+    $response
+        -&gt;assertStatus(201)
+        -&gt;assertJson([
+            'created' =&gt; true,
+        ]);
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#19968;&#20010;&#22522;&#30784;&#30340;&#21151;&#33021;&#27979;&#35797;&#31034;&#20363;&#12290;
+     */
+    public function test_making_an_api_request(): void
+    {
+        $response = $this-&gt;postJson('/api/user', ['name' =&gt; 'Sally']);
+
+        $response
+            -&gt;assertStatus(201)
+            -&gt;assertJson([
+                'created' =&gt; true,
+            ]);
+    }
+}</code></pre><p>&#27492;&#22806;&#65292;JSON &#21709;&#24212;&#25968;&#25454;&#21487;&#20197;&#20687;&#25968;&#32452;&#21464;&#37327;&#19968;&#26679;&#22312;&#21709;&#24212;&#19978;&#35775;&#38382;&#65292;&#26041;&#20415;&#20320;&#26816;&#26597; JSON &#21709;&#24212;&#20013;&#36820;&#22238;&#30340;&#21508;&#20010;&#20540;&#65306;</p><pre><code class="language-php">expect($response['created'])-&gt;toBeTrue();</code></pre><pre><code class="language-php">$this-&gt;assertTrue($response['created']);</code></pre><blockquote>
+<p>[!NOTE]<br>
+<code>assertJson</code> &#26041;&#27861;&#20250;&#23558;&#21709;&#24212;&#36716;&#25442;&#20026;&#25968;&#32452;&#65292;&#20197;&#39564;&#35777;&#32473;&#23450;&#25968;&#32452;&#23384;&#22312;&#20110;&#24212;&#29992;&#36820;&#22238;&#30340; JSON &#21709;&#24212;&#20013;&#12290;&#22240;&#27492;&#65292;&#22914;&#26524; JSON &#21709;&#24212;&#20013;&#36824;&#26377;&#20854;&#20182;&#23646;&#24615;&#65292;&#21482;&#35201;&#32473;&#23450;&#30340;&#29255;&#27573;&#23384;&#22312;&#65292;&#27979;&#35797;&#20173;&#28982;&#20250;&#36890;&#36807;&#12290;</p>
+</blockquote><h4 id="11e3056f92a0f2d88995f7fc42737137">&#26029;&#35328; JSON &#31934;&#30830;&#21305;&#37197;</h4><p>&#22914;&#21069;&#25152;&#36848;&#65292;<code>assertJson</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328; JSON &#21709;&#24212;&#20013;&#23384;&#22312;&#26576;&#20010; JSON &#29255;&#27573;&#12290;&#22914;&#26524;&#20320;&#24819;&#39564;&#35777;&#32473;&#23450;&#25968;&#32452;&#19982;&#20320;&#30340;&#24212;&#29992;&#36820;&#22238;&#30340; JSON <strong class="mk-b">&#23436;&#20840;&#21305;&#37197;</strong>&#65292;&#24212;&#35813;&#20351;&#29992; <code>assertExactJson</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('asserting an exact json match', function () {
+    $response = $this-&gt;postJson('/user', ['name' =&gt; 'Sally']);
+
+    $response
+        -&gt;assertStatus(201)
+        -&gt;assertExactJson([
+            'created' =&gt; true,
+        ]);
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#19968;&#20010;&#22522;&#30784;&#30340;&#21151;&#33021;&#27979;&#35797;&#31034;&#20363;&#12290;
+     */
+    public function test_asserting_an_exact_json_match(): void
+    {
+        $response = $this-&gt;postJson('/user', ['name' =&gt; 'Sally']);
+
+        $response
+            -&gt;assertStatus(201)
+            -&gt;assertExactJson([
+                'created' =&gt; true,
+            ]);
+    }
+}</code></pre><h4 id="afe5457c9884fced9e1d3c263b03688a">&#23545; JSON &#36335;&#24452;&#26029;&#35328;</h4><p>&#22914;&#26524;&#20320;&#24819;&#39564;&#35777; JSON &#21709;&#24212;&#22312;&#25351;&#23450;&#36335;&#24452;&#21253;&#21547;&#32473;&#23450;&#30340;&#25968;&#25454;&#65292;&#24212;&#35813;&#20351;&#29992; <code>assertJsonPath</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('asserting a json path value', function () {
+    $response = $this-&gt;postJson('/user', ['name' =&gt; 'Sally']);
+
+    $response
+        -&gt;assertStatus(201)
+        -&gt;assertJsonPath('team.owner.name', 'Darian');
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * &#19968;&#20010;&#22522;&#30784;&#30340;&#21151;&#33021;&#27979;&#35797;&#31034;&#20363;&#12290;
+     */
+    public function test_asserting_a_json_paths_value(): void
+    {
+        $response = $this-&gt;postJson('/user', ['name' =&gt; 'Sally']);
+
+        $response
+            -&gt;assertStatus(201)
+            -&gt;assertJsonPath('team.owner.name', 'Darian');
+    }
+}</code></pre><p><code>assertJsonPath</code> &#26041;&#27861;&#36824;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#65292;&#21487;&#29992;&#20110;&#21160;&#24577;&#20915;&#23450;&#26159;&#21542;&#24212;&#35813;&#36890;&#36807;&#26029;&#35328;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonPath('team.owner.name', fn (string $name) =&gt; strlen($name) &gt;= 3);</code></pre><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#19968;&#27425;&#26029;&#35328;&#22810;&#20010; JSON &#36335;&#24452;&#65292;&#21487;&#20197;&#20351;&#29992; <code>assertJsonPaths</code> &#26041;&#27861;&#12290;&#27599;&#20010;&#36335;&#24452;&#30340;&#26399;&#26395;&#20540;&#20063;&#21487;&#20197;&#26159;&#19968;&#20010;&#38381;&#21253;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonPaths([
+    'team.owner.name' =&gt; 'Darian',
+    'team.owner.email' =&gt; fn (string $email) =&gt; str($email)-&gt;is('*@laravel.com'),
+    'team.members.0.name' =&gt; 'Sally',
+]);</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>assertJsonMissingPaths</code> &#26041;&#27861;&#26029;&#35328;&#22810;&#20010; JSON &#36335;&#24452;&#22312;&#21709;&#24212;&#20013;&#32570;&#22833;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonMissingPaths([
+    'team.owner.password',
+    'team.members.0.api_token',
+]);</code></pre><h3 id="e22728ac416e3135969b6335e6246dd7">&#27969;&#24335; JSON &#27979;&#35797;</h3><p>Laravel &#36824;&#25552;&#20379;&#20102;&#19968;&#31181;&#20248;&#32654;&#30340;&#26041;&#24335;&#65292;&#26469;&#27969;&#30021;&#22320;&#27979;&#35797;&#24212;&#29992;&#30340; JSON &#21709;&#24212;&#12290;&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#21487;&#20197;&#21521; <code>assertJson</code> &#26041;&#27861;&#20256;&#36882;&#19968;&#20010;&#38381;&#21253;&#12290;&#35813;&#38381;&#21253;&#20250;&#20351;&#29992; <code>Illuminate\Testing\Fluent\AssertableJson</code> &#23454;&#20363;&#35843;&#29992;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#35813;&#23454;&#20363;&#23545;&#24212;&#29992;&#36820;&#22238;&#30340; JSON &#36827;&#34892;&#26029;&#35328;&#12290;<code>where</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23545; JSON &#30340;&#26576;&#20010;&#29305;&#23450;&#23646;&#24615;&#36827;&#34892;&#26029;&#35328;&#65292;&#32780; <code>missing</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#26576;&#20010;&#29305;&#23450;&#23646;&#24615;&#22312; JSON &#20013;&#32570;&#22833;&#65306;</p><pre><code class="language-php">use Illuminate\Testing\Fluent\AssertableJson;
+
+test('fluent json', function () {
+    $response = $this-&gt;getJson('/users/1');
+
+    $response
+        -&gt;assertJson(fn (AssertableJson $json) =&gt;
+            $json-&gt;where('id', 1)
+                -&gt;where('name', 'Victoria Faith')
+                -&gt;where('email', fn (string $email) =&gt; str($email)-&gt;is('victoria@gmail.com'))
+                -&gt;whereNot('status', 'pending')
+                -&gt;missing('password')
+                -&gt;etc()
+        );
+});</code></pre><pre><code class="language-php">use Illuminate\Testing\Fluent\AssertableJson;
+
+/**
+ * &#19968;&#20010;&#22522;&#30784;&#30340;&#21151;&#33021;&#27979;&#35797;&#31034;&#20363;&#12290;
+ */
+public function test_fluent_json(): void
+{
+    $response = $this-&gt;getJson('/users/1');
+
+    $response
+        -&gt;assertJson(fn (AssertableJson $json) =&gt;
+            $json-&gt;where('id', 1)
+                -&gt;where('name', 'Victoria Faith')
+                -&gt;where('email', fn (string $email) =&gt; str($email)-&gt;is('victoria@gmail.com'))
+                -&gt;whereNot('status', 'pending')
+                -&gt;missing('password')
+                -&gt;etc()
+        );
+}</code></pre><h4 id="0e3af82e2bd7d08c5b5d6bc6ba6bb68b">&#29702;&#35299; <code>etc</code> &#26041;&#27861;</h4><p>&#22312;&#19978;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#20320;&#21487;&#33021;&#27880;&#24847;&#21040;&#25105;&#20204;&#22312;&#26029;&#35328;&#38142;&#30340;&#26411;&#23614;&#35843;&#29992;&#20102; <code>etc</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#21578;&#30693; Laravel&#65292;JSON &#23545;&#35937;&#19978;&#21487;&#33021;&#36824;&#23384;&#22312;&#20854;&#20182;&#23646;&#24615;&#12290;&#22914;&#26524;&#19981;&#20351;&#29992; <code>etc</code> &#26041;&#27861;&#65292;&#24403; JSON &#23545;&#35937;&#19978;&#23384;&#22312;&#20320;&#26410;&#20570;&#26029;&#35328;&#30340;&#20854;&#20182;&#23646;&#24615;&#26102;&#65292;&#27979;&#35797;&#23558;&#20250;&#22833;&#36133;&#12290;</p><p>&#36825;&#31181;&#34892;&#20026;&#32972;&#21518;&#30340;&#24847;&#22270;&#26159;&#20445;&#25252;&#20320;&#65292;&#38450;&#27490;&#22312; JSON &#21709;&#24212;&#20013;&#26080;&#24847;&#26292;&#38706;&#25935;&#24863;&#20449;&#24687;&mdash;&mdash;&#23427;&#24378;&#21046;&#20320;&#35201;&#20040;&#26174;&#24335;&#22320;&#23545;&#23646;&#24615;&#20570;&#20986;&#26029;&#35328;&#65292;&#35201;&#20040;&#36890;&#36807; <code>etc</code> &#26041;&#27861;&#26174;&#24335;&#22320;&#20801;&#35768;&#39069;&#22806;&#30340;&#23646;&#24615;&#12290;</p><p>&#19981;&#36807;&#65292;&#20320;&#24212;&#35813;&#27880;&#24847;&#65292;&#22312;&#26029;&#35328;&#38142;&#20013;&#19981;&#21253;&#21547; <code>etc</code> &#26041;&#27861;&#65292;&#24182;&#19981;&#33021;&#30830;&#20445;&#19981;&#20250;&#21521;&#23884;&#22871;&#22312;&#20320; JSON &#23545;&#35937;&#20869;&#37096;&#30340;&#25968;&#32452;&#28155;&#21152;&#39069;&#22806;&#30340;&#23646;&#24615;&#12290;<code>etc</code> &#26041;&#27861;&#21482;&#30830;&#20445;&#22312;&#35843;&#29992;&#23427;&#30340;&#23884;&#22871;&#23618;&#32423;&#19978;&#19981;&#23384;&#22312;&#39069;&#22806;&#30340;&#23646;&#24615;&#12290;</p><h4 id="88b80e02c95e0dc1d81bb665c336b86e">&#26029;&#35328;&#23646;&#24615;&#23384;&#22312; / &#19981;&#23384;&#22312;</h4><p>&#35201;&#26029;&#35328;&#26576;&#20010;&#23646;&#24615;&#23384;&#22312;&#25110;&#32570;&#22833;&#65292;&#21487;&#20197;&#20351;&#29992; <code>has</code> &#21644; <code>missing</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$response-&gt;assertJson(fn (AssertableJson $json) =&gt;
+    $json-&gt;has('data')
+        -&gt;missing('message')
+);</code></pre><p>&#27492;&#22806;&#65292;<code>hasAll</code> &#21644; <code>missingAll</code> &#26041;&#27861;&#20801;&#35768;&#21516;&#26102;&#26029;&#35328;&#22810;&#20010;&#23646;&#24615;&#30340;&#23384;&#22312;&#25110;&#32570;&#22833;&#65306;</p><pre><code class="language-php">$response-&gt;assertJson(fn (AssertableJson $json) =&gt;
+    $json-&gt;hasAll(['status', 'data'])
+        -&gt;missingAll(['message', 'code'])
+);</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>hasAny</code> &#26041;&#27861;&#26469;&#30830;&#23450;&#32473;&#23450;&#23646;&#24615;&#21015;&#34920;&#20013;&#26159;&#21542;&#33267;&#23569;&#23384;&#22312;&#19968;&#20010;&#23646;&#24615;&#65306;</p><pre><code class="language-php">$response-&gt;assertJson(fn (AssertableJson $json) =&gt;
+    $json-&gt;has('status')
+        -&gt;hasAny('data', 'message', 'code')
+);</code></pre><h4 id="57998ad47746acae41c0ea3d50e96884">&#23545; JSON &#38598;&#21512;&#36827;&#34892;&#26029;&#35328;</h4><p>&#36890;&#24120;&#65292;&#20320;&#30340;&#36335;&#30001;&#20250;&#36820;&#22238;&#19968;&#20010;&#21253;&#21547;&#22810;&#20010;&#26465;&#30446;&#65288;&#20363;&#22914;&#22810;&#20010;&#29992;&#25143;&#65289;&#30340; JSON &#21709;&#24212;&#65306;</p><pre><code class="language-php">Route::get('/users', function () {
+    return User::all();
+});</code></pre><p>&#22312;&#36825;&#20123;&#24773;&#20917;&#19979;&#65292;&#25105;&#20204;&#21487;&#20197;&#20351;&#29992;&#27969;&#30021; JSON &#23545;&#35937;&#30340; <code>has</code> &#26041;&#27861;&#23545;&#21709;&#24212;&#20013;&#21253;&#21547;&#30340;&#29992;&#25143;&#36827;&#34892;&#26029;&#35328;&#12290;&#20363;&#22914;&#65292;&#25105;&#20204;&#26029;&#35328; JSON &#21709;&#24212;&#21253;&#21547;&#19977;&#20010;&#29992;&#25143;&#12290;&#25509;&#19979;&#26469;&#65292;&#25105;&#20204;&#20351;&#29992; <code>first</code> &#26041;&#27861;&#23545;&#38598;&#21512;&#20013;&#30340;&#31532;&#19968;&#20010;&#29992;&#25143;&#20570;&#19968;&#20123;&#26029;&#35328;&#12290;<code>first</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#20010;&#38381;&#21253;&#65292;&#35813;&#38381;&#21253;&#20250;&#25509;&#25910;&#21478;&#19968;&#20010;&#21487;&#26029;&#35328;&#30340; JSON &#23383;&#31526;&#20018;&#65292;&#25105;&#20204;&#21487;&#20197;&#29992;&#23427;&#23545; JSON &#38598;&#21512;&#20013;&#30340;&#31532;&#19968;&#20010;&#23545;&#35937;&#36827;&#34892;&#26029;&#35328;&#65306;</p><pre><code class="language-php">$response
+    -&gt;assertJson(fn (AssertableJson $json) =&gt;
+        $json-&gt;has(3)
+            -&gt;first(fn (AssertableJson $json) =&gt;
+                $json-&gt;where('id', 1)
+                    -&gt;where('name', 'Victoria Faith')
+                    -&gt;where('email', fn (string $email) =&gt; str($email)-&gt;is('victoria@gmail.com'))
+                    -&gt;missing('password')
+                    -&gt;etc()
+            )
+    );</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#23545; JSON &#38598;&#21512;&#20013;&#30340;&#27599;&#20010;&#26465;&#30446;&#20570;&#20986;&#30456;&#21516;&#30340;&#26029;&#35328;&#65292;&#21487;&#20197;&#20351;&#29992; <code>each</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$response
+  -&gt;assertJson(fn (AssertableJson $json) =&gt;
+      $json-&gt;has(3)
+          -&gt;each(fn (AssertableJson $json) =&gt;
+              $json-&gt;whereType('id', 'integer')
+                  -&gt;whereType('name', 'string')
+                  -&gt;whereType('email', 'string')
+                  -&gt;missing('password')
+                  -&gt;etc()
+          )
+  );</code></pre><h4 id="b9e2d676cfb8458b9fb760775d614511">&#38480;&#23450; JSON &#38598;&#21512;&#26029;&#35328;&#33539;&#22260;</h4><p>&#26377;&#26102;&#65292;&#20320;&#24212;&#29992;&#30340;&#36335;&#30001;&#20250;&#36820;&#22238;&#20998;&#37197;&#20102;&#21629;&#21517;&#38190;&#30340; JSON &#38598;&#21512;&#65306;</p><pre><code class="language-php">Route::get('/users', function () {
+    return [
+        'meta' =&gt; [...],
+        'users' =&gt; User::all(),
+    ];
+})</code></pre><p>&#27979;&#35797;&#36825;&#20123;&#36335;&#30001;&#26102;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>has</code> &#26041;&#27861;&#23545;&#38598;&#21512;&#20013;&#30340;&#26465;&#30446;&#25968;&#37327;&#36827;&#34892;&#26029;&#35328;&#12290;&#27492;&#22806;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>has</code> &#26041;&#27861;&#23558;&#19968;&#32452;&#26029;&#35328;&#38480;&#23450;&#22312;&#26576;&#19968;&#33539;&#22260;&#65306;</p><pre><code class="language-php">$response
+    -&gt;assertJson(fn (AssertableJson $json) =&gt;
+        $json-&gt;has('meta')
+            -&gt;has('users', 3)
+            -&gt;has('users.0', fn (AssertableJson $json) =&gt;
+                $json-&gt;where('id', 1)
+                    -&gt;where('name', 'Victoria Faith')
+                    -&gt;where('email', fn (string $email) =&gt; str($email)-&gt;is('victoria@gmail.com'))
+                    -&gt;missing('password')
+                    -&gt;etc()
+            )
+    );</code></pre><p>&#19981;&#36807;&#65292;&#19982;&#20854;&#23545; <code>users</code> &#38598;&#21512;&#35843;&#29992;&#20004;&#27425; <code>has</code> &#26041;&#27861;&#65292;&#20320;&#21487;&#20197;&#36827;&#34892;&#19968;&#27425;&#35843;&#29992;&#65292;&#24182;&#23558;&#19968;&#20010;&#38381;&#21253;&#20316;&#20026;&#31532;&#19977;&#20010;&#21442;&#25968;&#25552;&#20379;&#12290;&#27492;&#26102;&#65292;&#35813;&#38381;&#21253;&#20250;&#33258;&#21160;&#34987;&#35843;&#29992;&#65292;&#24182;&#34987;&#38480;&#23450;&#22312;&#38598;&#21512;&#30340;&#31532;&#19968;&#20010;&#26465;&#30446;&#19978;&#65306;</p><pre><code class="language-php">$response
+    -&gt;assertJson(fn (AssertableJson $json) =&gt;
+        $json-&gt;has('meta')
+            -&gt;has('users', 3, fn (AssertableJson $json) =&gt;
+                $json-&gt;where('id', 1)
+                    -&gt;where('name', 'Victoria Faith')
+                    -&gt;where('email', fn (string $email) =&gt; str($email)-&gt;is('victoria@gmail.com'))
+                    -&gt;missing('password')
+                    -&gt;etc()
+            )
+    );</code></pre><h4 id="71402a45ff75b2a86034c56b660b14ba">&#26029;&#35328; JSON &#31867;&#22411;</h4><p>&#20320;&#21487;&#33021;&#21482;&#24819;&#26029;&#35328; JSON &#21709;&#24212;&#20013;&#30340;&#23646;&#24615;&#23646;&#20110;&#26576;&#31181;&#31867;&#22411;&#12290;<code>Illuminate\Testing\Fluent\AssertableJson</code> &#31867;&#25552;&#20379;&#20102; <code>whereType</code> &#21644; <code>whereAllType</code> &#26041;&#27861;&#26469;&#20570;&#21040;&#36825;&#19968;&#28857;&#65306;</p><pre><code class="language-php">$response-&gt;assertJson(fn (AssertableJson $json) =&gt;
+    $json-&gt;whereType('id', 'integer')
+        -&gt;whereAllType([
+            'users.0.name' =&gt; 'string',
+            'meta' =&gt; 'array'
+        ])
+);</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>|</code> &#23383;&#31526;&#65292;&#25110;&#23558;&#31867;&#22411;&#25968;&#32452;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>whereType</code> &#26041;&#27861;&#65292;&#26469;&#25351;&#23450;&#22810;&#20010;&#31867;&#22411;&#12290;&#22914;&#26524;&#21709;&#24212;&#20540;&#26159;&#25152;&#21015;&#31867;&#22411;&#20013;&#30340;&#20219;&#24847;&#19968;&#31181;&#65292;&#26029;&#35328;&#23601;&#20250;&#25104;&#21151;&#65306;</p><pre><code class="language-php">$response-&gt;assertJson(fn (AssertableJson $json) =&gt;
+    $json-&gt;whereType('name', 'string|null')
+        -&gt;whereType('id', ['string', 'integer'])
+);</code></pre><p><code>whereType</code> &#21644; <code>whereAllType</code> &#26041;&#27861;&#35782;&#21035;&#20197;&#19979;&#31867;&#22411;&#65306;<code>string</code>&#12289;<code>integer</code>&#12289;<code>double</code>&#12289;<code>boolean</code>&#12289;<code>array</code> &#21644; <code>null</code>&#12290;</p><h2 id="bb2801837d5113dd9061c6d418a348ab">&#27979;&#35797;&#25991;&#20214;&#19978;&#20256;</h2><p><code>Illuminate\Http\UploadedFile</code> &#31867;&#25552;&#20379;&#20102;&#19968;&#20010; <code>fake</code> &#26041;&#27861;&#65292;&#21487;&#29992;&#20110;&#29983;&#25104;&#29992;&#20110;&#27979;&#35797;&#30340;&#34394;&#25311;&#25991;&#20214;&#25110;&#22270;&#20687;&#12290;&#32467;&#21512; <code>Storage</code> Facade &#30340; <code>fake</code> &#26041;&#27861;&#65292;&#36825;&#22823;&#22823;&#31616;&#21270;&#20102;&#25991;&#20214;&#19978;&#20256;&#30340;&#27979;&#35797;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#32467;&#21512;&#36825;&#20004;&#20010;&#21151;&#33021;&#36731;&#26494;&#27979;&#35797;&#22836;&#20687;&#19978;&#20256;&#34920;&#21333;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+
+test('avatars can be uploaded', function () {
+    Storage::fake('avatars');
+
+    $file = UploadedFile::fake()-&gt;image('avatar.jpg');
+
+    $response = $this-&gt;post('/avatar', [
+        'avatar' =&gt; $file,
+    ]);
+
+    Storage::disk('avatars')-&gt;assertExists($file-&gt;hashName());
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    public function test_avatars_can_be_uploaded(): void
+    {
+        Storage::fake('avatars');
+
+        $file = UploadedFile::fake()-&gt;image('avatar.jpg');
+
+        $response = $this-&gt;post('/avatar', [
+            'avatar' =&gt; $file,
+        ]);
+
+        Storage::disk('avatars')-&gt;assertExists($file-&gt;hashName());
+    }
+}</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#26029;&#35328;&#26576;&#20010;&#32473;&#23450;&#30340;&#25991;&#20214;&#19981;&#23384;&#22312;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Storage</code> Facade &#25552;&#20379;&#30340; <code>assertMissing</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Storage::fake('avatars');
+
+// ...
+
+Storage::disk('avatars')-&gt;assertMissing('missing.jpg');</code></pre><h4 id="4d9740b132bd5366ed9a51ffeb7d1c9d">&#20266;&#36896;&#25991;&#20214;&#33258;&#23450;&#20041;</h4><p>&#20351;&#29992; <code>UploadedFile</code> &#31867;&#25552;&#20379;&#30340; <code>fake</code> &#26041;&#27861;&#21019;&#24314;&#25991;&#20214;&#26102;&#65292;&#20320;&#21487;&#20197;&#25351;&#23450;&#22270;&#20687;&#30340;&#23485;&#24230;&#12289;&#39640;&#24230;&#21644;&#22823;&#23567;&#65288;&#20197;&#21315;&#23383;&#33410;&#20026;&#21333;&#20301;&#65289;&#65292;&#20197;&#20415;&#26356;&#22909;&#22320;&#27979;&#35797;&#24212;&#29992;&#30340;&#39564;&#35777;&#35268;&#21017;&#65306;</p><pre><code class="language-php">UploadedFile::fake()-&gt;image('avatar.jpg', $width, $height)-&gt;size(100);</code></pre><p>&#38500;&#20102;&#21019;&#24314;&#22270;&#20687;&#20043;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#20351;&#29992; <code>create</code> &#26041;&#27861;&#21019;&#24314;&#20219;&#20309;&#20854;&#20182;&#31867;&#22411;&#30340;&#25991;&#20214;&#65306;</p><pre><code class="language-php">UploadedFile::fake()-&gt;create('document.pdf', $sizeInKilobytes);</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#20320;&#21487;&#20197;&#21521;&#35813;&#26041;&#27861;&#20256;&#36882;&#19968;&#20010; <code>$mimeType</code> &#21442;&#25968;&#65292;&#20197;&#26174;&#24335;&#23450;&#20041;&#25991;&#20214;&#24212;&#36820;&#22238;&#30340; MIME &#31867;&#22411;&#65306;</p><pre><code class="language-php">UploadedFile::fake()-&gt;create(
+    'document.pdf', $sizeInKilobytes, 'application/pdf'
+);</code></pre><h2 id="28f6cecf66b53bc985159a4b43fff16e">&#27979;&#35797;&#35270;&#22270;</h2><p>Laravel &#36824;&#20801;&#35768;&#20320;&#22312;&#26080;&#38656;&#21521;&#24212;&#29992;&#21457;&#36215;&#27169;&#25311; HTTP &#35831;&#27714;&#30340;&#24773;&#20917;&#19979;&#28210;&#26579;&#35270;&#22270;&#12290;&#20026;&#27492;&#65292;&#20320;&#21487;&#20197;&#22312;&#27979;&#35797;&#20013;&#35843;&#29992; <code>view</code> &#26041;&#27861;&#12290;<code>view</code> &#26041;&#27861;&#25509;&#21463;&#35270;&#22270;&#21517;&#31216;&#21644;&#21487;&#36873;&#30340;&#25968;&#25454;&#25968;&#32452;&#12290;&#35813;&#26041;&#27861;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Testing\TestView</code> &#23454;&#20363;&#65292;&#23427;&#25552;&#20379;&#20102;&#20960;&#20010;&#26041;&#27861;&#65292;&#26041;&#20415;&#20320;&#23545;&#35270;&#22270;&#20869;&#23481;&#36827;&#34892;&#26029;&#35328;&#65306;</p><pre><code class="language-php">&lt;?php
+
+test('a welcome view can be rendered', function () {
+    $view = $this-&gt;view('welcome', ['name' =&gt; 'Taylor']);
+
+    $view-&gt;assertSee('Taylor');
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    public function test_a_welcome_view_can_be_rendered(): void
+    {
+        $view = $this-&gt;view('welcome', ['name' =&gt; 'Taylor']);
+
+        $view-&gt;assertSee('Taylor');
+    }
+}</code></pre><p><code>TestView</code> &#31867;&#25552;&#20379;&#20102;&#20197;&#19979;&#26029;&#35328;&#26041;&#27861;&#65306;<code>assertSee</code>&#12289;<code>assertSeeInOrder</code>&#12289;<code>assertSeeText</code>&#12289;<code>assertSeeTextInOrder</code>&#12289;<code>assertDontSee</code> &#21644; <code>assertDontSeeText</code>&#12290;</p><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#23558; <code>TestView</code> &#23454;&#20363;&#36716;&#25442;&#20026;&#23383;&#31526;&#20018;&#26469;&#33719;&#21462;&#21407;&#22987;&#30340;&#12289;&#24050;&#28210;&#26579;&#30340;&#35270;&#22270;&#20869;&#23481;&#65306;</p><pre><code class="language-php">$contents = (string) $this-&gt;view('welcome');</code></pre><h4 id="9f2649d8352f1f643e3823788b3295a9">&#20849;&#20139;&#38169;&#35823;</h4><p>&#26576;&#20123;&#35270;&#22270;&#21487;&#33021;&#20381;&#36182;&#20110; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation#quick-displaying-the-validation-errors" target="_blank">Laravel &#25552;&#20379;&#30340;&#20840;&#23616;&#38169;&#35823;&#21253;</a> &#20013;&#20849;&#20139;&#30340;&#38169;&#35823;&#12290;&#35201;&#20026;&#38169;&#35823;&#21253;&#22635;&#20805;&#38169;&#35823;&#28040;&#24687;&#65292;&#21487;&#20197;&#20351;&#29992; <code>withViewErrors</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$view = $this-&gt;withViewErrors([
+    'name' =&gt; ['Please provide a valid name.']
+])-&gt;view('form');
+
+$view-&gt;assertSee('Please provide a valid name.');</code></pre><h3 id="30765cc228a64d58d67b0dcf493ab6a5">&#28210;&#26579; Blade &#19982;&#32452;&#20214;</h3><p>&#22914;&#26377;&#24517;&#35201;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>blade</code> &#26041;&#27861;&#26469;&#35745;&#31639;&#24182;&#28210;&#26579;&#21407;&#22987;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/blade" target="_blank">Blade</a> &#23383;&#31526;&#20018;&#12290;&#19982; <code>view</code> &#26041;&#27861;&#19968;&#26679;&#65292;<code>blade</code> &#26041;&#27861;&#36820;&#22238; <code>Illuminate\Testing\TestView</code> &#23454;&#20363;&#65306;</p><pre><code class="language-php">$view = $this-&gt;blade(
+    '&lt;x-component :name="$name" /&gt;',
+    ['name' =&gt; 'Taylor']
+);
+
+$view-&gt;assertSee('Taylor');</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>component</code> &#26041;&#27861;&#26469;&#35745;&#31639;&#24182;&#28210;&#26579;&#19968;&#20010; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/blade#components" target="_blank">Blade &#32452;&#20214;</a>&#12290;<code>component</code> &#26041;&#27861;&#36820;&#22238; <code>Illuminate\Testing\TestComponent</code> &#23454;&#20363;&#65306;</p><pre><code class="language-php">$view = $this-&gt;component(Profile::class, ['name' =&gt; 'Taylor']);
+
+$view-&gt;assertSee('Taylor');</code></pre><h2 id="e1f076cec98ef04be7d2b3e3d9675c40">&#32531;&#23384;&#36335;&#30001;</h2><p>&#22312;&#27979;&#35797;&#36816;&#34892;&#20043;&#21069;&#65292;Laravel &#20250;&#24341;&#23548;&#24212;&#29992;&#30340;&#19968;&#20010;&#20840;&#26032;&#23454;&#20363;&#65292;&#21253;&#25324;&#25910;&#38598;&#25152;&#26377;&#24050;&#23450;&#20041;&#30340;&#36335;&#30001;&#12290;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#26377;&#35768;&#22810;&#36335;&#30001;&#25991;&#20214;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#23558; <code>Illuminate\Foundation\Testing\WithCachedRoutes</code> Trait &#28155;&#21152;&#21040;&#20320;&#30340;&#27979;&#35797;&#29992;&#20363;&#20013;&#12290;&#22312;&#20351;&#29992;&#35813; Trait &#30340;&#27979;&#35797;&#19978;&#65292;&#36335;&#30001;&#21482;&#26500;&#24314;&#19968;&#27425;&#24182;&#23384;&#20648;&#22312;&#20869;&#23384;&#20013;&#65292;&#36825;&#24847;&#21619;&#30528;&#36335;&#30001;&#38598;&#21512;&#36807;&#31243;&#21482;&#20250;&#20026;&#27979;&#35797;&#22871;&#20214;&#20013;&#30340;&#25152;&#26377;&#27979;&#35797;&#36816;&#34892;&#19968;&#27425;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use App\Http\Controllers\UserController;
+use Illuminate\Foundation\Testing\WithCachedRoutes;
+
+pest()-&gt;use(WithCachedRoutes::class);
+
+test('basic example', function () {
+    $this-&gt;get(action([UserController::class, 'index']));
+
+    // ...
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use App\Http\Controllers\UserController;
+use Illuminate\Foundation\Testing\WithCachedRoutes;
+use Tests\TestCase;
+
+class BasicTest extends TestCase
+{
+    use WithCachedRoutes;
+
+    /**
+     * &#19968;&#20010;&#22522;&#30784;&#30340;&#21151;&#33021;&#27979;&#35797;&#31034;&#20363;&#12290;
+     */
+    public function test_basic_example(): void
+    {
+        $response = $this-&gt;get(action([UserController::class, 'index']));
+
+        // ...
+    }
+}</code></pre><h2 id="b23e2ce8b6b5871a53b0cfc254124999">&#21487;&#29992;&#26029;&#35328;</h2><h3 id="5d75bd6d8c9bf8b7da228f93359bedb5">&#21709;&#24212;&#26029;&#35328;</h3><p>Laravel &#30340; <code>Illuminate\Testing\TestResponse</code> &#31867;&#25552;&#20379;&#20102;&#22810;&#31181;&#33258;&#23450;&#20041;&#30340;&#26029;&#35328;&#26041;&#27861;&#65292;&#20320;&#21487;&#20197;&#22312;&#27979;&#35797;&#24212;&#29992;&#26102;&#20351;&#29992;&#12290;&#36825;&#20123;&#26029;&#35328;&#21487;&#20197;&#22312; <code>json</code>&#12289;<code>get</code>&#12289;<code>post</code>&#12289;<code>put</code> &#21644; <code>delete</code> &#27979;&#35797;&#26041;&#27861;&#36820;&#22238;&#30340;&#21709;&#24212;&#19978;&#35775;&#38382;&#65306;</p><style>
+    .collection-method-list > p {
+        columns: 14.4em 2; -moz-columns: 14.4em 2; -webkit-columns: 14.4em 2;
+    }
+
+    .collection-method-list a {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style><div class="collection-method-list">
+<p><a href="xq9zr0jvdo.html#assert-accepted" target="_blank">assertAccepted</a><br>
+<a href="xq9zr0jvdo.html#assert-bad-request" target="_blank">assertBadRequest</a><br>
+<a href="xq9zr0jvdo.html#assert-client-error" target="_blank">assertClientError</a><br>
+<a href="xq9zr0jvdo.html#assert-conflict" target="_blank">assertConflict</a><br>
+<a href="xq9zr0jvdo.html#assert-cookie" target="_blank">assertCookie</a><br>
+<a href="xq9zr0jvdo.html#assert-cookie-expired" target="_blank">assertCookieExpired</a><br>
+<a href="xq9zr0jvdo.html#assert-cookie-not-expired" target="_blank">assertCookieNotExpired</a><br>
+<a href="xq9zr0jvdo.html#assert-cookie-missing" target="_blank">assertCookieMissing</a><br>
+<a href="xq9zr0jvdo.html#assert-created" target="_blank">assertCreated</a><br>
+<a href="xq9zr0jvdo.html#assert-dont-see" target="_blank">assertDontSee</a><br>
+<a href="xq9zr0jvdo.html#assert-dont-see-text" target="_blank">assertDontSeeText</a><br>
+<a href="xq9zr0jvdo.html#assert-download" target="_blank">assertDownload</a><br>
+<a href="xq9zr0jvdo.html#assert-exact-json" target="_blank">assertExactJson</a><br>
+<a href="xq9zr0jvdo.html#assert-exact-json-structure" target="_blank">assertExactJsonStructure</a><br>
+<a href="xq9zr0jvdo.html#assert-failed-dependency" target="_blank">assertFailedDependency</a><br>
+<a href="xq9zr0jvdo.html#assert-forbidden" target="_blank">assertForbidden</a><br>
+<a href="xq9zr0jvdo.html#assert-found" target="_blank">assertFound</a><br>
+<a href="xq9zr0jvdo.html#assert-gone" target="_blank">assertGone</a><br>
+<a href="xq9zr0jvdo.html#assert-header" target="_blank">assertHeader</a><br>
+<a href="xq9zr0jvdo.html#assert-header-contains" target="_blank">assertHeaderContains</a><br>
+<a href="xq9zr0jvdo.html#assert-header-missing" target="_blank">assertHeaderMissing</a><br>
+<a href="xq9zr0jvdo.html#assert-internal-server-error" target="_blank">assertInternalServerError</a><br>
+<a href="xq9zr0jvdo.html#assert-json" target="_blank">assertJson</a><br>
+<a href="xq9zr0jvdo.html#assert-json-count" target="_blank">assertJsonCount</a><br>
+<a href="xq9zr0jvdo.html#assert-json-fragment" target="_blank">assertJsonFragment</a><br>
+<a href="xq9zr0jvdo.html#assert-json-is-array" target="_blank">assertJsonIsArray</a><br>
+<a href="xq9zr0jvdo.html#assert-json-is-object" target="_blank">assertJsonIsObject</a><br>
+<a href="xq9zr0jvdo.html#assert-json-missing" target="_blank">assertJsonMissing</a><br>
+<a href="xq9zr0jvdo.html#assert-json-missing-exact" target="_blank">assertJsonMissingExact</a><br>
+<a href="xq9zr0jvdo.html#assert-json-missing-validation-errors" target="_blank">assertJsonMissingValidationErrors</a><br>
+<a href="xq9zr0jvdo.html#assert-json-path" target="_blank">assertJsonPath</a><br>
+<a href="xq9zr0jvdo.html#assert-json-paths" target="_blank">assertJsonPaths</a><br>
+<a href="xq9zr0jvdo.html#assert-json-missing-path" target="_blank">assertJsonMissingPath</a><br>
+<a href="xq9zr0jvdo.html#assert-json-missing-paths" target="_blank">assertJsonMissingPaths</a><br>
+<a href="xq9zr0jvdo.html#assert-json-structure" target="_blank">assertJsonStructure</a><br>
+<a href="xq9zr0jvdo.html#assert-json-validation-errors" target="_blank">assertJsonValidationErrors</a><br>
+<a href="xq9zr0jvdo.html#assert-json-validation-error-for" target="_blank">assertJsonValidationErrorFor</a><br>
+<a href="xq9zr0jvdo.html#assert-location" target="_blank">assertLocation</a><br>
+<a href="xq9zr0jvdo.html#assert-method-not-allowed" target="_blank">assertMethodNotAllowed</a><br>
+<a href="xq9zr0jvdo.html#assert-moved-permanently" target="_blank">assertMovedPermanently</a><br>
+<a href="xq9zr0jvdo.html#assert-content" target="_blank">assertContent</a><br>
+<a href="xq9zr0jvdo.html#assert-no-content" target="_blank">assertNoContent</a><br>
+<a href="xq9zr0jvdo.html#assert-streamed" target="_blank">assertStreamed</a><br>
+<a href="xq9zr0jvdo.html#assert-streamed-content" target="_blank">assertStreamedContent</a><br>
+<a href="xq9zr0jvdo.html#assert-not-found" target="_blank">assertNotFound</a><br>
+<a href="xq9zr0jvdo.html#assert-ok" target="_blank">assertOk</a><br>
+<a href="xq9zr0jvdo.html#assert-payment-required" target="_blank">assertPaymentRequired</a><br>
+<a href="xq9zr0jvdo.html#assert-plain-cookie" target="_blank">assertPlainCookie</a><br>
+<a href="xq9zr0jvdo.html#assert-redirect" target="_blank">assertRedirect</a><br>
+<a href="xq9zr0jvdo.html#assert-redirect-back" target="_blank">assertRedirectBack</a><br>
+<a href="xq9zr0jvdo.html#assert-redirect-back-with-errors" target="_blank">assertRedirectBackWithErrors</a><br>
+<a href="xq9zr0jvdo.html#assert-redirect-back-without-errors" target="_blank">assertRedirectBackWithoutErrors</a><br>
+<a href="xq9zr0jvdo.html#assert-redirect-contains" target="_blank">assertRedirectContains</a><br>
+<a href="xq9zr0jvdo.html#assert-redirect-to-route" target="_blank">assertRedirectToRoute</a><br>
+<a href="xq9zr0jvdo.html#assert-redirect-to-signed-route" target="_blank">assertRedirectToSignedRoute</a><br>
+<a href="xq9zr0jvdo.html#assert-request-timeout" target="_blank">assertRequestTimeout</a><br>
+<a href="xq9zr0jvdo.html#assert-see" target="_blank">assertSee</a><br>
+<a href="xq9zr0jvdo.html#assert-see-in-order" target="_blank">assertSeeInOrder</a><br>
+<a href="xq9zr0jvdo.html#assert-see-text" target="_blank">assertSeeText</a><br>
+<a href="xq9zr0jvdo.html#assert-see-text-in-order" target="_blank">assertSeeTextInOrder</a><br>
+<a href="xq9zr0jvdo.html#assert-server-error" target="_blank">assertServerError</a><br>
+<a href="xq9zr0jvdo.html#assert-service-unavailable" target="_blank">assertServiceUnavailable</a><br>
+<a href="xq9zr0jvdo.html#assert-session-has" target="_blank">assertSessionHas</a><br>
+<a href="xq9zr0jvdo.html#assert-session-has-input" target="_blank">assertSessionHasInput</a><br>
+<a href="xq9zr0jvdo.html#assert-session-has-all" target="_blank">assertSessionHasAll</a><br>
+<a href="xq9zr0jvdo.html#assert-session-has-errors" target="_blank">assertSessionHasErrors</a><br>
+<a href="xq9zr0jvdo.html#assert-session-has-errors-in" target="_blank">assertSessionHasErrorsIn</a><br>
+<a href="xq9zr0jvdo.html#assert-session-has-no-errors" target="_blank">assertSessionHasNoErrors</a><br>
+<a href="xq9zr0jvdo.html#assert-session-doesnt-have-errors" target="_blank">assertSessionDoesntHaveErrors</a><br>
+<a href="xq9zr0jvdo.html#assert-session-missing" target="_blank">assertSessionMissing</a><br>
+<a href="xq9zr0jvdo.html#assert-session-missing-input" target="_blank">assertSessionMissingInput</a><br>
+<a href="xq9zr0jvdo.html#assert-status" target="_blank">assertStatus</a><br>
+<a href="xq9zr0jvdo.html#assert-successful" target="_blank">assertSuccessful</a><br>
+<a href="xq9zr0jvdo.html#assert-too-many-requests" target="_blank">assertTooManyRequests</a><br>
+<a href="xq9zr0jvdo.html#assert-unauthorized" target="_blank">assertUnauthorized</a><br>
+<a href="xq9zr0jvdo.html#assert-unprocessable" target="_blank">assertUnprocessable</a><br>
+<a href="xq9zr0jvdo.html#assert-unsupported-media-type" target="_blank">assertUnsupportedMediaType</a><br>
+<a href="xq9zr0jvdo.html#assert-valid" target="_blank">assertValid</a><br>
+<a href="xq9zr0jvdo.html#assert-invalid" target="_blank">assertInvalid</a><br>
+<a href="xq9zr0jvdo.html#assert-view-has" target="_blank">assertViewHas</a><br>
+<a href="xq9zr0jvdo.html#assert-view-has-all" target="_blank">assertViewHasAll</a><br>
+<a href="xq9zr0jvdo.html#assert-view-is" target="_blank">assertViewIs</a><br>
+<a href="xq9zr0jvdo.html#assert-view-missing" target="_blank">assertViewMissing</a></p>
+</div><h4 id="1f670500f3ac2926ab3b25233f8ab5c4">assertAccepted</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; accepted&#65288;202&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertAccepted();</code></pre><h4 id="396033245427926f0d8f3840c62a74ba">assertBadRequest</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; bad request&#65288;400&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertBadRequest();</code></pre><h4 id="a83263cbb6c9c55b083567f4fe80228f">assertClientError</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; client error&#65288;&gt;= 400&#65292;&lt; 500&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertClientError();</code></pre><h4 id="43d21ed0274e743f26c25f0c2ef23b06">assertConflict</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; conflict&#65288;409&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertConflict();</code></pre><h4 id="a2c52bc0f7dddb26582bbd625830ac60">assertCookie</h4><p>&#26029;&#35328;&#21709;&#24212;&#21253;&#21547;&#32473;&#23450;&#30340; cookie&#65306;</p><pre><code class="language-php">$response-&gt;assertCookie($cookieName, $value = null);</code></pre><h4 id="1781f1fd64aa696dd639f33870a4eeed">assertCookieExpired</h4><p>&#26029;&#35328;&#21709;&#24212;&#21253;&#21547;&#32473;&#23450;&#30340; cookie &#19988;&#23427;&#24050;&#36807;&#26399;&#65306;</p><pre><code class="language-php">$response-&gt;assertCookieExpired($cookieName);</code></pre><h4 id="ac79402d261fcd038e97a79e0f641aab">assertCookieNotExpired</h4><p>&#26029;&#35328;&#21709;&#24212;&#21253;&#21547;&#32473;&#23450;&#30340; cookie &#19988;&#23427;&#23578;&#26410;&#36807;&#26399;&#65306;</p><pre><code class="language-php">$response-&gt;assertCookieNotExpired($cookieName);</code></pre><h4 id="d99996a872a4a791a6dc8205a2e62120">assertCookieMissing</h4><p>&#26029;&#35328;&#21709;&#24212;&#19981;&#21253;&#21547;&#32473;&#23450;&#30340; cookie&#65306;</p><pre><code class="language-php">$response-&gt;assertCookieMissing($cookieName);</code></pre><h4 id="9bbebf05bbbd803751e028dc414c3b23">assertCreated</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; 201 HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertCreated();</code></pre><h4 id="1c391478df75c8983233142aa8863e0b">assertDontSee</h4><p>&#26029;&#35328;&#32473;&#23450;&#23383;&#31526;&#20018;&#19981;&#22312;&#24212;&#29992;&#36820;&#22238;&#30340;&#21709;&#24212;&#20013;&#12290;&#38500;&#38750;&#20320;&#20256;&#20837;&#31532;&#20108;&#20010;&#21442;&#25968; <code>false</code>&#65292;&#21542;&#21017;&#35813;&#26029;&#35328;&#20250;&#33258;&#21160;&#36716;&#20041;&#32473;&#23450;&#23383;&#31526;&#20018;&#65306;</p><pre><code class="language-php">$response-&gt;assertDontSee($value, $escape = true);</code></pre><h4 id="a2c1975393d367a87c998e57c721c954">assertDontSeeText</h4><p>&#26029;&#35328;&#32473;&#23450;&#23383;&#31526;&#20018;&#19981;&#22312;&#21709;&#24212;&#25991;&#26412;&#20013;&#12290;&#38500;&#38750;&#20320;&#20256;&#20837;&#31532;&#20108;&#20010;&#21442;&#25968; <code>false</code>&#65292;&#21542;&#21017;&#35813;&#26029;&#35328;&#20250;&#33258;&#21160;&#36716;&#20041;&#32473;&#23450;&#23383;&#31526;&#20018;&#12290;&#35813;&#26041;&#27861;&#20250;&#22312;&#36827;&#34892;&#26029;&#35328;&#20043;&#21069;&#23558;&#21709;&#24212;&#20869;&#23481;&#20256;&#36882;&#32473; <code>strip_tags</code> PHP &#20989;&#25968;&#65306;</p><pre><code class="language-php">$response-&gt;assertDontSeeText($value, $escape = true);</code></pre><h4 id="4e209f36e8bfaf8b853d4b42925e2969">assertDownload</h4><p>&#26029;&#35328;&#21709;&#24212;&#26159;&#19968;&#20010;"&#19979;&#36733;"&#12290;&#36890;&#24120;&#65292;&#36825;&#24847;&#21619;&#30528;&#36820;&#22238;&#35813;&#21709;&#24212;&#30340;&#34987;&#35843;&#29992;&#36335;&#30001;&#36820;&#22238;&#30340;&#26159; <code>Response::download</code> &#21709;&#24212;&#12289;<code>BinaryFileResponse</code> &#25110; <code>Storage::download</code> &#21709;&#24212;&#65306;</p><pre><code class="language-php">$response-&gt;assertDownload();</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#20320;&#21487;&#20197;&#26029;&#35328;&#21487;&#19979;&#36733;&#25991;&#20214;&#34987;&#36171;&#20104;&#20102;&#32473;&#23450;&#30340;&#25991;&#20214;&#21517;&#65306;</p><pre><code class="language-php">$response-&gt;assertDownload('image.jpg');</code></pre><h4 id="a7ec3bb327dff2b433a8b47e84172491">assertExactJson</h4><p>&#26029;&#35328;&#21709;&#24212;&#21253;&#21547;&#32473;&#23450; JSON &#25968;&#25454;&#30340;&#31934;&#30830;&#21305;&#37197;&#65306;</p><pre><code class="language-php">$response-&gt;assertExactJson(array $data);</code></pre><h4 id="d2af503be34c86f52538a1d746824737">assertExactJsonStructure</h4><p>&#26029;&#35328;&#21709;&#24212;&#21253;&#21547;&#32473;&#23450; JSON &#32467;&#26500;&#30340;&#31934;&#30830;&#21305;&#37197;&#65306;</p><pre><code class="language-php">$response-&gt;assertExactJsonStructure(array $data);</code></pre><p>&#35813;&#26041;&#27861;&#26159; <a href="xq9zr0jvdo.html#assert-json-structure" target="_blank">assertJsonStructure</a> &#30340;&#19968;&#20010;&#26356;&#20005;&#26684;&#30340;&#21464;&#20307;&#12290;&#19982; <code>assertJsonStructure</code> &#30456;&#27604;&#65292;&#22914;&#26524;&#21709;&#24212;&#21253;&#21547;&#20219;&#20309;&#26410;&#22312;&#39044;&#26399; JSON &#32467;&#26500;&#20013;&#26174;&#24335;&#21253;&#21547;&#30340;&#38190;&#65292;&#35813;&#26041;&#27861;&#23558;&#20250;&#22833;&#36133;&#12290;</p><h4 id="8880c4f0b3fa8e77bfd7c4e255b04617">assertFailedDependency</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; failed dependency&#65288;424&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertFailedDependency();</code></pre><h4 id="215ebbc6d95b74dc4d1c09865966a826">assertForbidden</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; forbidden&#65288;403&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertForbidden();</code></pre><h4 id="1a767cb28ca3a8f12353d04bae05c32f">assertFound</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; found&#65288;302&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertFound();</code></pre><h4 id="49dd1b6b13fe3b7eac51edb2f899fd33">assertGone</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; gone&#65288;410&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertGone();</code></pre><h4 id="c876227cceccf7b6a0d1ad676e2738b1">assertHeader</h4><p>&#26029;&#35328;&#21709;&#24212;&#19978;&#23384;&#22312;&#32473;&#23450;&#30340; Header &#21644;&#20540;&#65306;</p><pre><code class="language-php">$response-&gt;assertHeader($headerName, $value = null);</code></pre><h4 id="9766f08c524cfd339119f7ec402926eb">assertHeaderContains</h4><p>&#26029;&#35328;&#32473;&#23450;&#30340; Header &#21253;&#21547;&#32473;&#23450;&#30340;&#23376;&#23383;&#31526;&#20018;&#20540;&#65306;</p><pre><code class="language-php">$response-&gt;assertHeaderContains($headerName, $value);</code></pre><h4 id="84954f7c206794da3d54b9eac42a3c5c">assertHeaderMissing</h4><p>&#26029;&#35328;&#21709;&#24212;&#19978;&#19981;&#23384;&#22312;&#32473;&#23450;&#30340; Header&#65306;</p><pre><code class="language-php">$response-&gt;assertHeaderMissing($headerName);</code></pre><h4 id="0de6ec47d712af63dedea4ebc29d4048">assertInternalServerError</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; "Internal Server Error"&#65288;500&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertInternalServerError();</code></pre><h4 id="d365c84617dca82bf0730ca32d64af14">assertJson</h4><p>&#26029;&#35328;&#21709;&#24212;&#21253;&#21547;&#32473;&#23450;&#30340; JSON &#25968;&#25454;&#65306;</p><pre><code class="language-php">$response-&gt;assertJson(array $data, $strict = false);</code></pre><p><code>assertJson</code> &#26041;&#27861;&#20250;&#23558;&#21709;&#24212;&#36716;&#25442;&#20026;&#25968;&#32452;&#65292;&#20197;&#39564;&#35777;&#32473;&#23450;&#25968;&#32452;&#23384;&#22312;&#20110;&#24212;&#29992;&#36820;&#22238;&#30340; JSON &#21709;&#24212;&#20013;&#12290;&#22240;&#27492;&#65292;&#22914;&#26524; JSON &#21709;&#24212;&#20013;&#36824;&#26377;&#20854;&#20182;&#23646;&#24615;&#65292;&#21482;&#35201;&#32473;&#23450;&#29255;&#27573;&#23384;&#22312;&#65292;&#27979;&#35797;&#20173;&#28982;&#20250;&#36890;&#36807;&#12290;</p><h4 id="124abbef01c0ecd7c5dc37b20f288675">assertJsonCount</h4><p>&#26029;&#35328;&#21709;&#24212; JSON &#22312;&#32473;&#23450;&#38190;&#22788;&#20855;&#26377;&#21253;&#21547;&#39044;&#26399;&#25968;&#37327;&#26465;&#30446;&#30340;&#25968;&#32452;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonCount($count, $key = null);</code></pre><h4 id="ef598fdb49cb41cd5d2ef984f0acff9e">assertJsonFragment</h4><p>&#26029;&#35328;&#21709;&#24212;&#20013;&#20219;&#20309;&#20301;&#32622;&#37117;&#21253;&#21547;&#32473;&#23450;&#30340; JSON &#25968;&#25454;&#65306;</p><pre><code class="language-php">Route::get('/users', function () {
+    return [
+        'users' =&gt; [
+            [
+                'name' =&gt; 'Taylor Otwell',
+            ],
+        ],
+    ];
+});
+
+$response-&gt;assertJsonFragment(['name' =&gt; 'Taylor Otwell']);</code></pre><h4 id="0f53c69503e1c7e75866d3d78f1a8f16">assertJsonIsArray</h4><p>&#26029;&#35328;&#21709;&#24212; JSON &#26159;&#19968;&#20010;&#25968;&#32452;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonIsArray();</code></pre><h4 id="5ede0972877a5c9540cef4146a5b8723">assertJsonIsObject</h4><p>&#26029;&#35328;&#21709;&#24212; JSON &#26159;&#19968;&#20010;&#23545;&#35937;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonIsObject();</code></pre><h4 id="3203ef9b492d60d8b3353af5ca9c8dbd">assertJsonMissing</h4><p>&#26029;&#35328;&#21709;&#24212;&#19981;&#21253;&#21547;&#32473;&#23450;&#30340; JSON &#25968;&#25454;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonMissing(array $data);</code></pre><h4 id="ebd8825415b9b8230916f4fd18251351">assertJsonMissingExact</h4><p>&#26029;&#35328;&#21709;&#24212;&#19981;&#21253;&#21547;&#31934;&#30830;&#30340; JSON &#25968;&#25454;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonMissingExact(array $data);</code></pre><h4 id="9896b5eefe758d13c7938b2463d938cf">assertJsonMissingValidationErrors</h4><p>&#26029;&#35328;&#21709;&#24212;&#23545;&#20110;&#32473;&#23450;&#30340;&#38190;&#27809;&#26377; JSON &#39564;&#35777;&#38169;&#35823;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonMissingValidationErrors($keys);</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#26356;&#36890;&#29992;&#30340; <a href="xq9zr0jvdo.html#assert-valid" target="_blank">assertValid</a> &#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#21709;&#24212;&#27809;&#26377;&#20197; JSON &#24418;&#24335;&#36820;&#22238;&#30340;&#39564;&#35777;&#38169;&#35823;&#65292;<strong class="mk-b">&#24182;&#19988;</strong> &#27809;&#26377;&#38169;&#35823;&#34987;&#38378;&#23384;&#21040; session &#23384;&#20648;&#20013;&#12290;</p>
+</blockquote><h4 id="72ce800f01e5b26a7e59752ddc3c308a">assertJsonPath</h4><p>&#26029;&#35328;&#21709;&#24212;&#22312;&#25351;&#23450;&#36335;&#24452;&#21253;&#21547;&#32473;&#23450;&#30340;&#25968;&#25454;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonPath($path, $expectedValue);</code></pre><p>&#20363;&#22914;&#65292;&#22914;&#26524;&#24212;&#29992;&#36820;&#22238;&#20102;&#20197;&#19979; JSON &#21709;&#24212;&#65306;</p><pre><code class="language-json">{
+    "user": {
+        "name": "Steve Schoger"
+    }
+}</code></pre><p>&#20320;&#21487;&#20197;&#20687;&#36825;&#26679;&#26029;&#35328; <code>user</code> &#23545;&#35937;&#30340; <code>name</code> &#23646;&#24615;&#21305;&#37197;&#32473;&#23450;&#20540;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonPath('user.name', 'Steve Schoger');</code></pre><h4 id="396a2de6790dc5c8afeecc581b89decd">assertJsonPaths</h4><p>&#26029;&#35328;&#21709;&#24212;&#22312;&#25351;&#23450;&#36335;&#24452;&#21253;&#21547;&#32473;&#23450;&#30340;&#25968;&#25454;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonPaths(array $paths);</code></pre><p>&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#19968;&#27425;&#24615;&#26029;&#35328;&#21709;&#24212;&#20013;&#30340;&#22810;&#20010;&#20540;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonPaths([
+    'user.name' =&gt; 'Steve Schoger',
+    'user.email' =&gt; fn (string $email) =&gt; str($email)-&gt;endsWith('@laravel.com'),
+]);</code></pre><h4 id="16cf767b5b2083c27ca8c38d3d9c5b20">assertJsonMissingPath</h4><p>&#26029;&#35328;&#21709;&#24212;&#19981;&#21253;&#21547;&#32473;&#23450;&#30340;&#36335;&#24452;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonMissingPath($path);</code></pre><p>&#20363;&#22914;&#65292;&#22914;&#26524;&#24212;&#29992;&#36820;&#22238;&#20102;&#20197;&#19979; JSON &#21709;&#24212;&#65306;</p><pre><code class="language-json">{
+    "user": {
+        "name": "Steve Schoger"
+    }
+}</code></pre><p>&#20320;&#21487;&#20197;&#26029;&#35328;&#23427;&#19981;&#21253;&#21547; <code>user</code> &#23545;&#35937;&#30340; <code>email</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonMissingPath('user.email');</code></pre><h4 id="a52e1e2a7b2e0b236901a73e68084b48">assertJsonMissingPaths</h4><p>&#26029;&#35328;&#21709;&#24212;&#19981;&#21253;&#21547;&#32473;&#23450;&#30340;&#36335;&#24452;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonMissingPaths($paths);</code></pre><p>&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#26029;&#35328;&#21709;&#24212;&#20013;&#32570;&#22833;&#22810;&#20010;&#36335;&#24452;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonMissingPaths([
+    'user.email',
+    'user.password',
+]);</code></pre><h4 id="bead42183c873e3ae2e7ceab4c0e80d4">assertJsonStructure</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377;&#32473;&#23450;&#30340; JSON &#32467;&#26500;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonStructure(array $structure);</code></pre><p>&#20363;&#22914;&#65292;&#22914;&#26524;&#24212;&#29992;&#36820;&#22238;&#30340; JSON &#21709;&#24212;&#21253;&#21547;&#20197;&#19979;&#25968;&#25454;&#65306;</p><pre><code class="language-json">{
+    "user": {
+        "name": "Steve Schoger"
+    }
+}</code></pre><p>&#20320;&#21487;&#20197;&#20687;&#36825;&#26679;&#26029;&#35328; JSON &#32467;&#26500;&#31526;&#21512;&#20320;&#30340;&#39044;&#26399;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonStructure([
+    'user' =&gt; [
+        'name',
+    ]
+]);</code></pre><p>&#26377;&#26102;&#65292;&#24212;&#29992;&#36820;&#22238;&#30340; JSON &#21709;&#24212;&#21487;&#33021;&#21253;&#21547;&#23545;&#35937;&#25968;&#32452;&#65306;</p><pre><code class="language-json">{
+    "user": [
+        {
+            "name": "Steve Schoger",
+            "age": 55,
+            "location": "Earth"
+        },
+        {
+            "name": "Mary Schoger",
+            "age": 60,
+            "location": "Earth"
+        }
+    ]
+}</code></pre><p>&#22312;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>*</code> &#23383;&#31526;&#23545;&#25968;&#32452;&#20013;&#25152;&#26377;&#23545;&#35937;&#30340;&#32467;&#26500;&#36827;&#34892;&#26029;&#35328;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonStructure([
+    'user' =&gt; [
+        '*' =&gt; [
+             'name',
+             'age',
+             'location'
+        ]
+    ]
+]);</code></pre><h4 id="47709f033214aebc28a8cec1b58521d8">assertJsonValidationErrors</h4><p>&#26029;&#35328;&#21709;&#24212;&#23545;&#20110;&#32473;&#23450;&#30340;&#38190;&#20855;&#26377;&#32473;&#23450;&#30340; JSON &#39564;&#35777;&#38169;&#35823;&#12290;&#24403;&#26029;&#35328;&#30340;&#21709;&#24212;&#26159;&#23558;&#39564;&#35777;&#38169;&#35823;&#20316;&#20026; JSON &#32467;&#26500;&#36820;&#22238;&#12289;&#32780;&#19981;&#26159;&#38378;&#23384;&#21040; session &#26102;&#65292;&#24212;&#20351;&#29992;&#27492;&#26041;&#27861;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonValidationErrors(array $data, $responseKey = 'errors');</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#26356;&#36890;&#29992;&#30340; <a href="xq9zr0jvdo.html#assert-invalid" target="_blank">assertInvalid</a> &#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#21709;&#24212;&#20855;&#26377;&#20197; JSON &#24418;&#24335;&#36820;&#22238;&#30340;&#39564;&#35777;&#38169;&#35823;&#65292;<strong class="mk-b">&#25110;&#32773;</strong> &#38169;&#35823;&#34987;&#38378;&#23384;&#21040;&#20102; session &#23384;&#20648;&#20013;&#12290;</p>
+</blockquote><h4 id="8fd3f690daa8458920fb7bb3281abca7">assertJsonValidationErrorFor</h4><p>&#26029;&#35328;&#21709;&#24212;&#23545;&#20110;&#32473;&#23450;&#30340;&#38190;&#20855;&#26377;&#20219;&#24847; JSON &#39564;&#35777;&#38169;&#35823;&#65306;</p><pre><code class="language-php">$response-&gt;assertJsonValidationErrorFor(string $key, $responseKey = 'errors');</code></pre><h4 id="5910f79bdb4003e1474b9788a2254363">assertMethodNotAllowed</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; method not allowed&#65288;405&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertMethodNotAllowed();</code></pre><h4 id="2b9170383022662ea3bd0c0ab8e50e4c">assertMovedPermanently</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; moved permanently&#65288;301&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertMovedPermanently();</code></pre><h4 id="9624ebbf49160c5995236d2f4062c023">assertLocation</h4><p>&#26029;&#35328;&#21709;&#24212;&#22312; <code>Location</code> Header &#20013;&#20855;&#26377;&#32473;&#23450;&#30340; URI &#20540;&#65306;</p><pre><code class="language-php">$response-&gt;assertLocation($uri);</code></pre><h4 id="f45a7ff37d307d83c57befee86cde6cc">assertContent</h4><p>&#26029;&#35328;&#32473;&#23450;&#23383;&#31526;&#20018;&#19982;&#21709;&#24212;&#20869;&#23481;&#21305;&#37197;&#65306;</p><pre><code class="language-php">$response-&gt;assertContent($value);</code></pre><h4 id="3ec8c0ed523416258ac25095764063f4">assertNoContent</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377;&#32473;&#23450;&#30340; HTTP &#29366;&#24577;&#30721;&#19988;&#27809;&#26377;&#20869;&#23481;&#65306;</p><pre><code class="language-php">$response-&gt;assertNoContent($status = 204);</code></pre><h4 id="7541998b7919ff59b67ed0bfe93421e3">assertStreamed</h4><p>&#26029;&#35328;&#21709;&#24212;&#26159;&#19968;&#20010;&#27969;&#24335;&#21709;&#24212;&#65306;</p><pre><code class="language-php">$response-&gt;assertStreamed();</code></pre><h4 id="86270bdae7ea4a3f49093ee8aa82ca5d">assertStreamedContent</h4><p>&#26029;&#35328;&#32473;&#23450;&#23383;&#31526;&#20018;&#19982;&#27969;&#24335;&#21709;&#24212;&#30340;&#20869;&#23481;&#21305;&#37197;&#65306;</p><pre><code class="language-php">$response-&gt;assertStreamedContent($value);</code></pre><h4 id="5f2bdba6c9511e17b272d6f8a3e3a1fa">assertNotFound</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; not found&#65288;404&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertNotFound();</code></pre><h4 id="376bce14ff55427c89bbb3b86fe92061">assertOk</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; 200 HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertOk();</code></pre><h4 id="ccaf9cd4899cf6c39bcd4d418453c77d">assertPaymentRequired</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; payment required&#65288;402&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertPaymentRequired();</code></pre><h4 id="c42748c2c2b6c179270e36a04ca3f708">assertPlainCookie</h4><p>&#26029;&#35328;&#21709;&#24212;&#21253;&#21547;&#32473;&#23450;&#30340;&#26410;&#21152;&#23494; cookie&#65306;</p><pre><code class="language-php">$response-&gt;assertPlainCookie($cookieName, $value = null);</code></pre><h4 id="54d20cd176350378ded55bb918c37a69">assertRedirect</h4><p>&#26029;&#35328;&#21709;&#24212;&#26159;&#37325;&#23450;&#21521;&#21040;&#32473;&#23450;&#30340; URI&#65306;</p><pre><code class="language-php">$response-&gt;assertRedirect($uri = null);</code></pre><h4 id="ec19919e003a92fc3f213416e4e0285d">assertRedirectBack</h4><p>&#26029;&#35328;&#21709;&#24212;&#26159;&#21542;&#27491;&#22312;&#37325;&#23450;&#21521;&#22238;&#19978;&#19968;&#39029;&#65306;</p><pre><code class="language-php">$response-&gt;assertRedirectBack();</code></pre><h4 id="1300b2f0255135140ae6e146b6f8e24c">assertRedirectBackWithErrors</h4><p>&#26029;&#35328;&#21709;&#24212;&#26159;&#21542;&#27491;&#22312;&#37325;&#23450;&#21521;&#22238;&#19978;&#19968;&#39029;&#65292;&#19988; <a href="xq9zr0jvdo.html#assert-session-has-errors" target="_blank">session &#20855;&#26377;&#32473;&#23450;&#30340;&#38169;&#35823;</a>&#65306;</p><pre><code class="language-php">$response-&gt;assertRedirectBackWithErrors(
+    array $keys = [], $format = null, $errorBag = 'default'
+);</code></pre><h4 id="4dfc193481071c609a7d4aaa42fe4973">assertRedirectBackWithoutErrors</h4><p>&#26029;&#35328;&#21709;&#24212;&#26159;&#21542;&#27491;&#22312;&#37325;&#23450;&#21521;&#22238;&#19978;&#19968;&#39029;&#65292;&#19988; session &#19981;&#21253;&#21547;&#20219;&#20309;&#38169;&#35823;&#28040;&#24687;&#65306;</p><pre><code class="language-php">$response-&gt;assertRedirectBackWithoutErrors();</code></pre><h4 id="97e42f4a77b2f81f7435ac9c8eb5694f">assertRedirectContains</h4><p>&#26029;&#35328;&#21709;&#24212;&#26159;&#21542;&#27491;&#22312;&#37325;&#23450;&#21521;&#21040;&#21253;&#21547;&#32473;&#23450;&#23383;&#31526;&#20018;&#30340; URI&#65306;</p><pre><code class="language-php">$response-&gt;assertRedirectContains($string);</code></pre><h4 id="5c82131b00e0b362f3befbac91edc4c2">assertRedirectToRoute</h4><p>&#26029;&#35328;&#21709;&#24212;&#26159;&#37325;&#23450;&#21521;&#21040;&#32473;&#23450;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/routing#named-routes" target="_blank">&#21629;&#21517;&#36335;&#30001;</a>&#65306;</p><pre><code class="language-php">$response-&gt;assertRedirectToRoute($name, $parameters = []);</code></pre><h4 id="8e005fa0ddd96e25ea45f6fcbc64ce33">assertRedirectToSignedRoute</h4><p>&#26029;&#35328;&#21709;&#24212;&#26159;&#37325;&#23450;&#21521;&#21040;&#32473;&#23450;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/urls#signed-urls" target="_blank">&#31614;&#21517;&#36335;&#30001;</a>&#65306;</p><pre><code class="language-php">$response-&gt;assertRedirectToSignedRoute($name = null, $parameters = []);</code></pre><h4 id="df13699e625344be1e2404f201251901">assertRequestTimeout</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; request timeout&#65288;408&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertRequestTimeout();</code></pre><h4 id="ef770ffccbd0dd5582fe2d685fcb29f3">assertSee</h4><p>&#26029;&#35328;&#32473;&#23450;&#23383;&#31526;&#20018;&#21253;&#21547;&#22312;&#21709;&#24212;&#20013;&#12290;&#38500;&#38750;&#20320;&#20256;&#20837;&#31532;&#20108;&#20010;&#21442;&#25968; <code>false</code>&#65292;&#21542;&#21017;&#35813;&#26029;&#35328;&#20250;&#33258;&#21160;&#36716;&#20041;&#32473;&#23450;&#23383;&#31526;&#20018;&#65306;</p><pre><code class="language-php">$response-&gt;assertSee($value, $escape = true);</code></pre><h4 id="c001cd58829245d6b39c8f1f8d1966e5">assertSeeInOrder</h4><p>&#26029;&#35328;&#32473;&#23450;&#23383;&#31526;&#20018;&#25353;&#39034;&#24207;&#21253;&#21547;&#22312;&#21709;&#24212;&#20013;&#12290;&#38500;&#38750;&#20320;&#20256;&#20837;&#31532;&#20108;&#20010;&#21442;&#25968; <code>false</code>&#65292;&#21542;&#21017;&#35813;&#26029;&#35328;&#20250;&#33258;&#21160;&#36716;&#20041;&#32473;&#23450;&#23383;&#31526;&#20018;&#65306;</p><pre><code class="language-php">$response-&gt;assertSeeInOrder(array $values, $escape = true);</code></pre><h4 id="35f519ccbe9962cfce9574c3410ad72b">assertSeeText</h4><p>&#26029;&#35328;&#32473;&#23450;&#23383;&#31526;&#20018;&#21253;&#21547;&#22312;&#21709;&#24212;&#25991;&#26412;&#20013;&#12290;&#38500;&#38750;&#20320;&#20256;&#20837;&#31532;&#20108;&#20010;&#21442;&#25968; <code>false</code>&#65292;&#21542;&#21017;&#35813;&#26029;&#35328;&#20250;&#33258;&#21160;&#36716;&#20041;&#32473;&#23450;&#23383;&#31526;&#20018;&#12290;&#22312;&#36827;&#34892;&#26029;&#35328;&#20043;&#21069;&#65292;&#21709;&#24212;&#20869;&#23481;&#20250;&#34987;&#20256;&#36882;&#32473; <code>strip_tags</code> PHP &#20989;&#25968;&#65306;</p><pre><code class="language-php">$response-&gt;assertSeeText($value, $escape = true);</code></pre><h4 id="22ff8546006e22ce63fc63fd78cd528c">assertSeeTextInOrder</h4><p>&#26029;&#35328;&#32473;&#23450;&#23383;&#31526;&#20018;&#25353;&#39034;&#24207;&#21253;&#21547;&#22312;&#21709;&#24212;&#25991;&#26412;&#20013;&#12290;&#38500;&#38750;&#20320;&#20256;&#20837;&#31532;&#20108;&#20010;&#21442;&#25968; <code>false</code>&#65292;&#21542;&#21017;&#35813;&#26029;&#35328;&#20250;&#33258;&#21160;&#36716;&#20041;&#32473;&#23450;&#23383;&#31526;&#20018;&#12290;&#22312;&#36827;&#34892;&#26029;&#35328;&#20043;&#21069;&#65292;&#21709;&#24212;&#20869;&#23481;&#20250;&#34987;&#20256;&#36882;&#32473; <code>strip_tags</code> PHP &#20989;&#25968;&#65306;</p><pre><code class="language-php">$response-&gt;assertSeeTextInOrder(array $values, $escape = true);</code></pre><h4 id="d9ef1ee91c8713ab56eec5f332802c32">assertServerError</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; server error&#65288;&gt;= 500&#65292;&lt; 600&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertServerError();</code></pre><h4 id="e4a53b90acc5140ac95bfb4f3d6ad817">assertServiceUnavailable</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; "Service Unavailable"&#65288;503&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertServiceUnavailable();</code></pre><h4 id="53d204c03351c5bfd676fdd2eaf4ed95">assertSessionHas</h4><p>&#26029;&#35328; session &#21253;&#21547;&#32473;&#23450;&#30340;&#25968;&#25454;&#29255;&#27573;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionHas($key, $value = null);</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#23558;&#19968;&#20010;&#38381;&#21253;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#25552;&#20379;&#32473; <code>assertSessionHas</code> &#26041;&#27861;&#12290;&#22914;&#26524;&#38381;&#21253;&#36820;&#22238; <code>true</code>&#65292;&#26029;&#35328;&#23601;&#20250;&#36890;&#36807;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionHas($key, function (User $value) {
+    return $value-&gt;name === 'Taylor Otwell';
+});</code></pre><h4 id="fca39f446d244e6f78581ca9a18f8579">assertSessionHasInput</h4><p>&#26029;&#35328; session &#22312; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/responses#redirecting-with-flashed-session-data" target="_blank">&#38378;&#23384;&#36755;&#20837;&#25968;&#32452;</a> &#20013;&#20855;&#26377;&#32473;&#23450;&#30340;&#20540;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionHasInput($key, $value = null);</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#23558;&#19968;&#20010;&#38381;&#21253;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#25552;&#20379;&#32473; <code>assertSessionHasInput</code> &#26041;&#27861;&#12290;&#22914;&#26524;&#38381;&#21253;&#36820;&#22238; <code>true</code>&#65292;&#26029;&#35328;&#23601;&#20250;&#36890;&#36807;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Crypt;
+
+$response-&gt;assertSessionHasInput($key, function (string $value) {
+    return Crypt::decryptString($value) === 'secret';
+});</code></pre><h4 id="6f43ce8ec7ef0e3032ed7fc2871d52b8">assertSessionHasAll</h4><p>&#26029;&#35328; session &#21253;&#21547;&#32473;&#23450;&#30340;&#38190;&#20540;&#23545;&#25968;&#32452;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionHasAll(array $data);</code></pre><p>&#20363;&#22914;&#65292;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#30340; session &#21253;&#21547; <code>name</code> &#21644; <code>status</code> &#38190;&#65292;&#20320;&#21487;&#20197;&#20687;&#36825;&#26679;&#26029;&#35328;&#20004;&#32773;&#37117;&#23384;&#22312;&#24182;&#20855;&#26377;&#25351;&#23450;&#30340;&#20540;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionHasAll([
+    'name' =&gt; 'Taylor Otwell',
+    'status' =&gt; 'active',
+]);</code></pre><h4 id="0043e8c011add8688fe4e0bbb97e6622">assertSessionHasErrors</h4><p>&#26029;&#35328; session &#21253;&#21547;&#32473;&#23450; <code>$keys</code> &#30340;&#38169;&#35823;&#12290;&#22914;&#26524; <code>$keys</code> &#26159;&#19968;&#20010;&#20851;&#32852;&#25968;&#32452;&#65292;&#21017;&#26029;&#35328; session &#20026;&#27599;&#20010;&#23383;&#27573;&#65288;&#38190;&#65289;&#21253;&#21547;&#29305;&#23450;&#30340;&#38169;&#35823;&#28040;&#24687;&#65288;&#20540;&#65289;&#12290;&#24403;&#27979;&#35797;&#23558;&#39564;&#35777;&#38169;&#35823;&#38378;&#23384;&#21040; session &#32780;&#19981;&#26159;&#20197; JSON &#32467;&#26500;&#36820;&#22238;&#23427;&#20204;&#30340;&#36335;&#30001;&#26102;&#65292;&#24212;&#20351;&#29992;&#27492;&#26041;&#27861;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionHasErrors(
+    array $keys = [], $format = null, $errorBag = 'default'
+);</code></pre><p>&#20363;&#22914;&#65292;&#35201;&#26029;&#35328; <code>name</code> &#21644; <code>email</code> &#23383;&#27573;&#23384;&#22312;&#38378;&#23384;&#21040; session &#30340;&#39564;&#35777;&#38169;&#35823;&#28040;&#24687;&#65292;&#20320;&#21487;&#20197;&#20687;&#36825;&#26679;&#35843;&#29992; <code>assertSessionHasErrors</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionHasErrors(['name', 'email']);</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#26029;&#35328;&#32473;&#23450;&#23383;&#27573;&#20855;&#26377;&#29305;&#23450;&#30340;&#39564;&#35777;&#38169;&#35823;&#28040;&#24687;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionHasErrors([
+    'name' =&gt; 'The given name was invalid.'
+]);</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#26356;&#36890;&#29992;&#30340; <a href="xq9zr0jvdo.html#assert-invalid" target="_blank">assertInvalid</a> &#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#21709;&#24212;&#20855;&#26377;&#20197; JSON &#24418;&#24335;&#36820;&#22238;&#30340;&#39564;&#35777;&#38169;&#35823;&#65292;<strong class="mk-p">&#25110;&#32773;</strong> &#38169;&#35823;&#34987;&#38378;&#23384;&#21040;&#20102; session &#23384;&#20648;&#20013;&#12290;</p>
+</blockquote><h4 id="242ea6f9aef61546bb744e438f0d6258">assertSessionHasErrorsIn</h4><p>&#26029;&#35328;&#22312;&#29305;&#23450;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/validation#named-error-bags" target="_blank">&#38169;&#35823;&#21253;</a> &#20869;&#65292;session &#21253;&#21547;&#32473;&#23450; <code>$keys</code> &#30340;&#38169;&#35823;&#12290;&#22914;&#26524; <code>$keys</code> &#26159;&#19968;&#20010;&#20851;&#32852;&#25968;&#32452;&#65292;&#21017;&#26029;&#35328;&#22312;&#38169;&#35823;&#21253;&#20869;&#20026;&#27599;&#20010;&#23383;&#27573;&#65288;&#38190;&#65289;&#21253;&#21547;&#29305;&#23450;&#30340;&#38169;&#35823;&#28040;&#24687;&#65288;&#20540;&#65289;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionHasErrorsIn($errorBag, $keys = [], $format = null);</code></pre><h4 id="26587bcd7d208fef846c436a7e2196ce">assertSessionHasNoErrors</h4><p>&#26029;&#35328; session &#27809;&#26377;&#39564;&#35777;&#38169;&#35823;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionHasNoErrors();</code></pre><h4 id="e0567eaf49a033e95a1b8b5e6844536c">assertSessionDoesntHaveErrors</h4><p>&#26029;&#35328; session &#23545;&#20110;&#32473;&#23450;&#30340;&#38190;&#27809;&#26377;&#39564;&#35777;&#38169;&#35823;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionDoesntHaveErrors($keys = [], $format = null, $errorBag = 'default');</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#26356;&#36890;&#29992;&#30340; <a href="xq9zr0jvdo.html#assert-valid" target="_blank">assertValid</a> &#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#21709;&#24212;&#27809;&#26377;&#20197; JSON &#24418;&#24335;&#36820;&#22238;&#30340;&#39564;&#35777;&#38169;&#35823;&#65292;<strong class="mk-y">&#24182;&#19988;</strong> &#27809;&#26377;&#38169;&#35823;&#34987;&#38378;&#23384;&#21040; session &#23384;&#20648;&#20013;&#12290;</p>
+</blockquote><h4 id="c36cf130bbc39f80d0f1badeaf4ecd13">assertSessionMissing</h4><p>&#26029;&#35328; session &#19981;&#21253;&#21547;&#32473;&#23450;&#30340;&#38190;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionMissing($key);</code></pre><h4 id="ef9e899b9ee91d89a9666f4a314ca794">assertSessionMissingInput</h4><p>&#26029;&#35328; session &#22312;&#38378;&#23384;&#36755;&#20837;&#25968;&#32452;&#20013;&#32570;&#22833;&#32473;&#23450;&#30340;&#36755;&#20837;&#38190;&#65306;</p><pre><code class="language-php">$response-&gt;assertSessionMissingInput($key);</code></pre><h4 id="4e9a6f3ef3b4c574d75a4bd5352ef25c">assertStatus</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377;&#32473;&#23450;&#30340; HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertStatus($code);</code></pre><h4 id="9a984e0320e5e51edbca2fa414c7b476">assertSuccessful</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; successful&#65288;&gt;= 200 &#19988; &lt; 300&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertSuccessful();</code></pre><h4 id="de35aae674cb25b1e9475a8c209f254e">assertTooManyRequests</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; too many requests&#65288;429&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertTooManyRequests();</code></pre><h4 id="badb57a1a007a4851e45a1c49ab56c9d">assertUnauthorized</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; unauthorized&#65288;401&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertUnauthorized();</code></pre><h4 id="a8db079f1bf9587b65754ab140b675e2">assertUnprocessable</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; unprocessable entity&#65288;422&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertUnprocessable();</code></pre><h4 id="f59a87c61cadfe3165ce92962f728d5f">assertUnsupportedMediaType</h4><p>&#26029;&#35328;&#21709;&#24212;&#20855;&#26377; unsupported media type&#65288;415&#65289;HTTP &#29366;&#24577;&#30721;&#65306;</p><pre><code class="language-php">$response-&gt;assertUnsupportedMediaType();</code></pre><h4 id="e321b6c44e837f3ca1d1c329090336c8">assertValid</h4><p>&#26029;&#35328;&#21709;&#24212;&#23545;&#20110;&#32473;&#23450;&#30340;&#38190;&#27809;&#26377;&#39564;&#35777;&#38169;&#35823;&#12290;&#35813;&#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#20197; JSON &#32467;&#26500;&#36820;&#22238;&#39564;&#35777;&#38169;&#35823;&#12289;&#25110;&#23558;&#39564;&#35777;&#38169;&#35823;&#38378;&#23384;&#21040; session &#30340;&#21709;&#24212;&#65306;</p><pre><code class="language-php">// &#26029;&#35328;&#19981;&#23384;&#22312;&#39564;&#35777;&#38169;&#35823;...
+$response-&gt;assertValid();
+
+// &#26029;&#35328;&#32473;&#23450;&#30340;&#38190;&#19981;&#23384;&#22312;&#39564;&#35777;&#38169;&#35823;...
+$response-&gt;assertValid(['name', 'email']);</code></pre><h4 id="c15a6a8d23005070087755ebcbcd8a7d">assertInvalid</h4><p>&#26029;&#35328;&#21709;&#24212;&#23545;&#20110;&#32473;&#23450;&#30340;&#38190;&#20855;&#26377;&#39564;&#35777;&#38169;&#35823;&#12290;&#35813;&#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#20197; JSON &#32467;&#26500;&#36820;&#22238;&#39564;&#35777;&#38169;&#35823;&#12289;&#25110;&#23558;&#39564;&#35777;&#38169;&#35823;&#38378;&#23384;&#21040; session &#30340;&#21709;&#24212;&#65306;</p><pre><code class="language-php">$response-&gt;assertInvalid(['name', 'email']);</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#26029;&#35328;&#32473;&#23450;&#30340;&#38190;&#20855;&#26377;&#29305;&#23450;&#30340;&#39564;&#35777;&#38169;&#35823;&#28040;&#24687;&#12290;&#27492;&#26102;&#65292;&#20320;&#21487;&#20197;&#25552;&#20379;&#23436;&#25972;&#30340;&#28040;&#24687;&#65292;&#25110;&#20165;&#25552;&#20379;&#28040;&#24687;&#30340;&#19968;&#23567;&#37096;&#20998;&#65306;</p><pre><code class="language-php">$response-&gt;assertInvalid([
+    'name' =&gt; 'The name field is required.',
+    'email' =&gt; 'valid email address',
+]);</code></pre><p>&#22914;&#26524;&#20320;&#24819;&#26029;&#35328;&#32473;&#23450;&#30340;&#23383;&#27573;&#26159;&#21807;&#19968;&#23384;&#22312;&#39564;&#35777;&#38169;&#35823;&#30340;&#23383;&#27573;&#65292;&#21487;&#20197;&#20351;&#29992; <code>assertOnlyInvalid</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$response-&gt;assertOnlyInvalid(['name', 'email']);</code></pre><h4 id="cc3c6e371d611194a689f7dbf391670a">assertViewHas</h4><p>&#26029;&#35328;&#21709;&#24212;&#35270;&#22270;&#21253;&#21547;&#32473;&#23450;&#30340;&#25968;&#25454;&#29255;&#27573;&#65306;</p><pre><code class="language-php">$response-&gt;assertViewHas($key, $value = null);</code></pre><p>&#23558;&#38381;&#21253;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>assertViewHas</code> &#26041;&#27861;&#65292;&#21487;&#20197;&#35753;&#20320;&#26816;&#26597;&#24182;&#23545;&#29305;&#23450;&#30340;&#35270;&#22270;&#25968;&#25454;&#36827;&#34892;&#26029;&#35328;&#65306;</p><pre><code class="language-php">$response-&gt;assertViewHas('user', function (User $user) {
+    return $user-&gt;name === 'Taylor';
+});</code></pre><p>&#27492;&#22806;&#65292;&#35270;&#22270;&#25968;&#25454;&#21487;&#20197;&#20687;&#25968;&#32452;&#21464;&#37327;&#19968;&#26679;&#22312;&#21709;&#24212;&#19978;&#35775;&#38382;&#65292;&#26041;&#20415;&#20320;&#26816;&#26597;&#23427;&#65306;</p><pre><code class="language-php">expect($response['name'])-&gt;toBe('Taylor');</code></pre><pre><code class="language-php">$this-&gt;assertEquals('Taylor', $response['name']);</code></pre><h4 id="a38739cc8bf91e8d40a963f0c33becf1">assertViewHasAll</h4><p>&#26029;&#35328;&#21709;&#24212;&#35270;&#22270;&#20855;&#26377;&#32473;&#23450;&#30340;&#25968;&#25454;&#21015;&#34920;&#65306;</p><pre><code class="language-php">$response-&gt;assertViewHasAll(array $data);</code></pre><p>&#35813;&#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#35270;&#22270;&#20165;&#21253;&#21547;&#21305;&#37197;&#32473;&#23450;&#38190;&#30340;&#25968;&#25454;&#65306;</p><pre><code class="language-php">$response-&gt;assertViewHasAll([
+    'name',
+    'email',
+]);</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#26029;&#35328;&#35270;&#22270;&#25968;&#25454;&#23384;&#22312;&#19988;&#20855;&#26377;&#29305;&#23450;&#30340;&#20540;&#65306;</p><pre><code class="language-php">$response-&gt;assertViewHasAll([
+    'name' =&gt; 'Taylor Otwell',
+    'email' =&gt; 'taylor@example.com,',
+]);</code></pre><h4 id="39f84a446bdd8fba05fe851ecf7bcbc5">assertViewIs</h4><p>&#26029;&#35328;&#32473;&#23450;&#30340;&#35270;&#22270;&#34987;&#36335;&#30001;&#36820;&#22238;&#65306;</p><pre><code class="language-php">$response-&gt;assertViewIs($value);</code></pre><h4 id="d7b1dd20fb7f2ba9fea586fd2d689e55">assertViewMissing</h4><p>&#26029;&#35328;&#32473;&#23450;&#30340;&#25968;&#25454;&#38190;&#27809;&#26377;&#34987;&#25552;&#20379;&#32473;&#24212;&#29992;&#21709;&#24212;&#20013;&#36820;&#22238;&#30340;&#35270;&#22270;&#65306;</p><pre><code class="language-php">$response-&gt;assertViewMissing($key);</code></pre><h3 id="0fd22aea48b53202ca3c1925b658e499">&#35748;&#35777;&#26029;&#35328;</h3><p>Laravel &#36824;&#25552;&#20379;&#20102;&#22810;&#31181;&#19982;&#35748;&#35777;&#30456;&#20851;&#30340;&#26029;&#35328;&#65292;&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340;&#21151;&#33021;&#27979;&#35797;&#20013;&#20351;&#29992;&#12290;&#35831;&#27880;&#24847;&#65292;&#36825;&#20123;&#26041;&#27861;&#26159;&#22312;&#27979;&#35797;&#31867;&#26412;&#36523;&#19978;&#35843;&#29992;&#65292;&#32780;&#19981;&#26159;&#22312; <code>get</code> &#21644; <code>post</code> &#31561;&#26041;&#27861;&#36820;&#22238;&#30340; <code>Illuminate\Testing\TestResponse</code> &#23454;&#20363;&#19978;&#35843;&#29992;&#12290;</p><h4 id="72acf9da2bfc52a3bd5f833b2b6b555b">assertAuthenticated</h4><p>&#26029;&#35328;&#29992;&#25143;&#24050;&#35748;&#35777;&#65306;</p><pre><code class="language-php">$this-&gt;assertAuthenticated($guard = null);</code></pre><h4 id="2334f31505bddcc2a2b1b1d946f9a7d3">assertGuest</h4><p>&#26029;&#35328;&#29992;&#25143;&#26410;&#35748;&#35777;&#65306;</p><pre><code class="language-php">$this-&gt;assertGuest($guard = null);</code></pre><h4 id="168de108757ac7b3167532c88c797d10">assertAuthenticatedAs</h4><p>&#26029;&#35328;&#29305;&#23450;&#30340;&#29992;&#25143;&#24050;&#35748;&#35777;&#65306;</p><pre><code class="language-php">$this-&gt;assertAuthenticatedAs($user, $guard = null);</code></pre><h2 id="2bdceefdfd45f8953bb49862144043d3">&#39564;&#35777;&#26029;&#35328;</h2><p>Laravel &#25552;&#20379;&#20102;&#20004;&#20010;&#20027;&#35201;&#30340;&#19982;&#39564;&#35777;&#30456;&#20851;&#30340;&#26029;&#35328;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#23427;&#20204;&#26469;&#30830;&#20445;&#35831;&#27714;&#20013;&#25552;&#20379;&#30340;&#25968;&#25454;&#26377;&#25928;&#25110;&#26080;&#25928;&#12290;</p><h4 id="e321b6c44e837f3ca1d1c329090336c8">assertValid</h4><p>&#26029;&#35328;&#21709;&#24212;&#23545;&#20110;&#32473;&#23450;&#30340;&#38190;&#27809;&#26377;&#39564;&#35777;&#38169;&#35823;&#12290;&#35813;&#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#20197; JSON &#32467;&#26500;&#36820;&#22238;&#39564;&#35777;&#38169;&#35823;&#12289;&#25110;&#23558;&#39564;&#35777;&#38169;&#35823;&#38378;&#23384;&#21040; session &#30340;&#21709;&#24212;&#65306;</p><pre><code class="language-php">// &#26029;&#35328;&#19981;&#23384;&#22312;&#39564;&#35777;&#38169;&#35823;...
+$response-&gt;assertValid();
+
+// &#26029;&#35328;&#32473;&#23450;&#30340;&#38190;&#19981;&#23384;&#22312;&#39564;&#35777;&#38169;&#35823;...
+$response-&gt;assertValid(['name', 'email']);</code></pre><h4 id="c15a6a8d23005070087755ebcbcd8a7d">assertInvalid</h4><p>&#26029;&#35328;&#21709;&#24212;&#23545;&#20110;&#32473;&#23450;&#30340;&#38190;&#20855;&#26377;&#39564;&#35777;&#38169;&#35823;&#12290;&#35813;&#26041;&#27861;&#21487;&#29992;&#20110;&#26029;&#35328;&#20197; JSON &#32467;&#26500;&#36820;&#22238;&#39564;&#35777;&#38169;&#35823;&#12289;&#25110;&#23558;&#39564;&#35777;&#38169;&#35823;&#38378;&#23384;&#21040; session &#30340;&#21709;&#24212;&#65306;</p><pre><code class="language-php">$response-&gt;assertInvalid(['name', 'email']);</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#26029;&#35328;&#32473;&#23450;&#30340;&#38190;&#20855;&#26377;&#29305;&#23450;&#30340;&#39564;&#35777;&#38169;&#35823;&#28040;&#24687;&#12290;&#27492;&#26102;&#65292;&#20320;&#21487;&#20197;&#25552;&#20379;&#23436;&#25972;&#30340;&#28040;&#24687;&#65292;&#25110;&#20165;&#25552;&#20379;&#28040;&#24687;&#30340;&#19968;&#23567;&#37096;&#20998;&#65306;</p><pre><code class="language-php">$response-&gt;assertInvalid([
+    'name' =&gt; 'The name field is required.',
+    'email' =&gt; 'valid email address',
+]);</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 多种实用的断言: <i><a href="xq9zr0jvdo.html#available-assertions" target="_blank">#available-assertions</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 模型工厂: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent-factories" target="_blank">/docs/Laravel 13.x/eloquent-factories</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Laravel 提供的全局错误包: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation#quick-displaying-the-validation-errors" target="_blank">/docs/Laravel 13.x/validation#quick-displaying-the-validation-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> Blade: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/blade" target="_blank">/docs/Laravel 13.x/blade</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> Blade 组件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/blade#components" target="_blank">/docs/Laravel 13.x/blade#components</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> assertAccepted: <i><a href="xq9zr0jvdo.html#assert-accepted" target="_blank">#assert-accepted</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> assertBadRequest: <i><a href="xq9zr0jvdo.html#assert-bad-request" target="_blank">#assert-bad-request</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> assertClientError: <i><a href="xq9zr0jvdo.html#assert-client-error" target="_blank">#assert-client-error</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> assertConflict: <i><a href="xq9zr0jvdo.html#assert-conflict" target="_blank">#assert-conflict</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> assertCookie: <i><a href="xq9zr0jvdo.html#assert-cookie" target="_blank">#assert-cookie</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> assertCookieExpired: <i><a href="xq9zr0jvdo.html#assert-cookie-expired" target="_blank">#assert-cookie-expired</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> assertCookieNotExpired: <i><a href="xq9zr0jvdo.html#assert-cookie-not-expired" target="_blank">#assert-cookie-not-expired</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> assertCookieMissing: <i><a href="xq9zr0jvdo.html#assert-cookie-missing" target="_blank">#assert-cookie-missing</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> assertCreated: <i><a href="xq9zr0jvdo.html#assert-created" target="_blank">#assert-created</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> assertDontSee: <i><a href="xq9zr0jvdo.html#assert-dont-see" target="_blank">#assert-dont-see</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> assertDontSeeText: <i><a href="xq9zr0jvdo.html#assert-dont-see-text" target="_blank">#assert-dont-see-text</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> assertDownload: <i><a href="xq9zr0jvdo.html#assert-download" target="_blank">#assert-download</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> assertExactJson: <i><a href="xq9zr0jvdo.html#assert-exact-json" target="_blank">#assert-exact-json</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> assertExactJsonStructure: <i><a href="xq9zr0jvdo.html#assert-exact-json-structure" target="_blank">#assert-exact-json-structure</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> assertFailedDependency: <i><a href="xq9zr0jvdo.html#assert-failed-dependency" target="_blank">#assert-failed-dependency</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> assertForbidden: <i><a href="xq9zr0jvdo.html#assert-forbidden" target="_blank">#assert-forbidden</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> assertFound: <i><a href="xq9zr0jvdo.html#assert-found" target="_blank">#assert-found</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> assertGone: <i><a href="xq9zr0jvdo.html#assert-gone" target="_blank">#assert-gone</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> assertHeader: <i><a href="xq9zr0jvdo.html#assert-header" target="_blank">#assert-header</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> assertHeaderContains: <i><a href="xq9zr0jvdo.html#assert-header-contains" target="_blank">#assert-header-contains</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> assertHeaderMissing: <i><a href="xq9zr0jvdo.html#assert-header-missing" target="_blank">#assert-header-missing</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> assertInternalServerError: <i><a href="xq9zr0jvdo.html#assert-internal-server-error" target="_blank">#assert-internal-server-error</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> assertJson: <i><a href="xq9zr0jvdo.html#assert-json" target="_blank">#assert-json</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> assertJsonCount: <i><a href="xq9zr0jvdo.html#assert-json-count" target="_blank">#assert-json-count</a></i><br><code style="font-size: 90%; opacity: 0.6;">[30]</code> assertJsonFragment: <i><a href="xq9zr0jvdo.html#assert-json-fragment" target="_blank">#assert-json-fragment</a></i><br><code style="font-size: 90%; opacity: 0.6;">[31]</code> assertJsonIsArray: <i><a href="xq9zr0jvdo.html#assert-json-is-array" target="_blank">#assert-json-is-array</a></i><br><code style="font-size: 90%; opacity: 0.6;">[32]</code> assertJsonIsObject: <i><a href="xq9zr0jvdo.html#assert-json-is-object" target="_blank">#assert-json-is-object</a></i><br><code style="font-size: 90%; opacity: 0.6;">[33]</code> assertJsonMissing: <i><a href="xq9zr0jvdo.html#assert-json-missing" target="_blank">#assert-json-missing</a></i><br><code style="font-size: 90%; opacity: 0.6;">[34]</code> assertJsonMissingExact: <i><a href="xq9zr0jvdo.html#assert-json-missing-exact" target="_blank">#assert-json-missing-exact</a></i><br><code style="font-size: 90%; opacity: 0.6;">[35]</code> assertJsonMissingValidationErrors: <i><a href="xq9zr0jvdo.html#assert-json-missing-validation-errors" target="_blank">#assert-json-missing-validation-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[36]</code> assertJsonPath: <i><a href="xq9zr0jvdo.html#assert-json-path" target="_blank">#assert-json-path</a></i><br><code style="font-size: 90%; opacity: 0.6;">[37]</code> assertJsonPaths: <i><a href="xq9zr0jvdo.html#assert-json-paths" target="_blank">#assert-json-paths</a></i><br><code style="font-size: 90%; opacity: 0.6;">[38]</code> assertJsonMissingPath: <i><a href="xq9zr0jvdo.html#assert-json-missing-path" target="_blank">#assert-json-missing-path</a></i><br><code style="font-size: 90%; opacity: 0.6;">[39]</code> assertJsonMissingPaths: <i><a href="xq9zr0jvdo.html#assert-json-missing-paths" target="_blank">#assert-json-missing-paths</a></i><br><code style="font-size: 90%; opacity: 0.6;">[40]</code> assertJsonStructure: <i><a href="xq9zr0jvdo.html#assert-json-structure" target="_blank">#assert-json-structure</a></i><br><code style="font-size: 90%; opacity: 0.6;">[41]</code> assertJsonValidationErrors: <i><a href="xq9zr0jvdo.html#assert-json-validation-errors" target="_blank">#assert-json-validation-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[42]</code> assertJsonValidationErrorFor: <i><a href="xq9zr0jvdo.html#assert-json-validation-error-for" target="_blank">#assert-json-validation-error-for</a></i><br><code style="font-size: 90%; opacity: 0.6;">[43]</code> assertLocation: <i><a href="xq9zr0jvdo.html#assert-location" target="_blank">#assert-location</a></i><br><code style="font-size: 90%; opacity: 0.6;">[44]</code> assertMethodNotAllowed: <i><a href="xq9zr0jvdo.html#assert-method-not-allowed" target="_blank">#assert-method-not-allowed</a></i><br><code style="font-size: 90%; opacity: 0.6;">[45]</code> assertMovedPermanently: <i><a href="xq9zr0jvdo.html#assert-moved-permanently" target="_blank">#assert-moved-permanently</a></i><br><code style="font-size: 90%; opacity: 0.6;">[46]</code> assertContent: <i><a href="xq9zr0jvdo.html#assert-content" target="_blank">#assert-content</a></i><br><code style="font-size: 90%; opacity: 0.6;">[47]</code> assertNoContent: <i><a href="xq9zr0jvdo.html#assert-no-content" target="_blank">#assert-no-content</a></i><br><code style="font-size: 90%; opacity: 0.6;">[48]</code> assertStreamed: <i><a href="xq9zr0jvdo.html#assert-streamed" target="_blank">#assert-streamed</a></i><br><code style="font-size: 90%; opacity: 0.6;">[49]</code> assertStreamedContent: <i><a href="xq9zr0jvdo.html#assert-streamed-content" target="_blank">#assert-streamed-content</a></i><br><code style="font-size: 90%; opacity: 0.6;">[50]</code> assertNotFound: <i><a href="xq9zr0jvdo.html#assert-not-found" target="_blank">#assert-not-found</a></i><br><code style="font-size: 90%; opacity: 0.6;">[51]</code> assertOk: <i><a href="xq9zr0jvdo.html#assert-ok" target="_blank">#assert-ok</a></i><br><code style="font-size: 90%; opacity: 0.6;">[52]</code> assertPaymentRequired: <i><a href="xq9zr0jvdo.html#assert-payment-required" target="_blank">#assert-payment-required</a></i><br><code style="font-size: 90%; opacity: 0.6;">[53]</code> assertPlainCookie: <i><a href="xq9zr0jvdo.html#assert-plain-cookie" target="_blank">#assert-plain-cookie</a></i><br><code style="font-size: 90%; opacity: 0.6;">[54]</code> assertRedirect: <i><a href="xq9zr0jvdo.html#assert-redirect" target="_blank">#assert-redirect</a></i><br><code style="font-size: 90%; opacity: 0.6;">[55]</code> assertRedirectBack: <i><a href="xq9zr0jvdo.html#assert-redirect-back" target="_blank">#assert-redirect-back</a></i><br><code style="font-size: 90%; opacity: 0.6;">[56]</code> assertRedirectBackWithErrors: <i><a href="xq9zr0jvdo.html#assert-redirect-back-with-errors" target="_blank">#assert-redirect-back-with-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[57]</code> assertRedirectBackWithoutErrors: <i><a href="xq9zr0jvdo.html#assert-redirect-back-without-errors" target="_blank">#assert-redirect-back-without-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[58]</code> assertRedirectContains: <i><a href="xq9zr0jvdo.html#assert-redirect-contains" target="_blank">#assert-redirect-contains</a></i><br><code style="font-size: 90%; opacity: 0.6;">[59]</code> assertRedirectToRoute: <i><a href="xq9zr0jvdo.html#assert-redirect-to-route" target="_blank">#assert-redirect-to-route</a></i><br><code style="font-size: 90%; opacity: 0.6;">[60]</code> assertRedirectToSignedRoute: <i><a href="xq9zr0jvdo.html#assert-redirect-to-signed-route" target="_blank">#assert-redirect-to-signed-route</a></i><br><code style="font-size: 90%; opacity: 0.6;">[61]</code> assertRequestTimeout: <i><a href="xq9zr0jvdo.html#assert-request-timeout" target="_blank">#assert-request-timeout</a></i><br><code style="font-size: 90%; opacity: 0.6;">[62]</code> assertSee: <i><a href="xq9zr0jvdo.html#assert-see" target="_blank">#assert-see</a></i><br><code style="font-size: 90%; opacity: 0.6;">[63]</code> assertSeeInOrder: <i><a href="xq9zr0jvdo.html#assert-see-in-order" target="_blank">#assert-see-in-order</a></i><br><code style="font-size: 90%; opacity: 0.6;">[64]</code> assertSeeText: <i><a href="xq9zr0jvdo.html#assert-see-text" target="_blank">#assert-see-text</a></i><br><code style="font-size: 90%; opacity: 0.6;">[65]</code> assertSeeTextInOrder: <i><a href="xq9zr0jvdo.html#assert-see-text-in-order" target="_blank">#assert-see-text-in-order</a></i><br><code style="font-size: 90%; opacity: 0.6;">[66]</code> assertServerError: <i><a href="xq9zr0jvdo.html#assert-server-error" target="_blank">#assert-server-error</a></i><br><code style="font-size: 90%; opacity: 0.6;">[67]</code> assertServiceUnavailable: <i><a href="xq9zr0jvdo.html#assert-service-unavailable" target="_blank">#assert-service-unavailable</a></i><br><code style="font-size: 90%; opacity: 0.6;">[68]</code> assertSessionHas: <i><a href="xq9zr0jvdo.html#assert-session-has" target="_blank">#assert-session-has</a></i><br><code style="font-size: 90%; opacity: 0.6;">[69]</code> assertSessionHasInput: <i><a href="xq9zr0jvdo.html#assert-session-has-input" target="_blank">#assert-session-has-input</a></i><br><code style="font-size: 90%; opacity: 0.6;">[70]</code> assertSessionHasAll: <i><a href="xq9zr0jvdo.html#assert-session-has-all" target="_blank">#assert-session-has-all</a></i><br><code style="font-size: 90%; opacity: 0.6;">[71]</code> assertSessionHasErrors: <i><a href="xq9zr0jvdo.html#assert-session-has-errors" target="_blank">#assert-session-has-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[72]</code> assertSessionHasErrorsIn: <i><a href="xq9zr0jvdo.html#assert-session-has-errors-in" target="_blank">#assert-session-has-errors-in</a></i><br><code style="font-size: 90%; opacity: 0.6;">[73]</code> assertSessionHasNoErrors: <i><a href="xq9zr0jvdo.html#assert-session-has-no-errors" target="_blank">#assert-session-has-no-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[74]</code> assertSessionDoesntHaveErrors: <i><a href="xq9zr0jvdo.html#assert-session-doesnt-have-errors" target="_blank">#assert-session-doesnt-have-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[75]</code> assertSessionMissing: <i><a href="xq9zr0jvdo.html#assert-session-missing" target="_blank">#assert-session-missing</a></i><br><code style="font-size: 90%; opacity: 0.6;">[76]</code> assertSessionMissingInput: <i><a href="xq9zr0jvdo.html#assert-session-missing-input" target="_blank">#assert-session-missing-input</a></i><br><code style="font-size: 90%; opacity: 0.6;">[77]</code> assertStatus: <i><a href="xq9zr0jvdo.html#assert-status" target="_blank">#assert-status</a></i><br><code style="font-size: 90%; opacity: 0.6;">[78]</code> assertSuccessful: <i><a href="xq9zr0jvdo.html#assert-successful" target="_blank">#assert-successful</a></i><br><code style="font-size: 90%; opacity: 0.6;">[79]</code> assertTooManyRequests: <i><a href="xq9zr0jvdo.html#assert-too-many-requests" target="_blank">#assert-too-many-requests</a></i><br><code style="font-size: 90%; opacity: 0.6;">[80]</code> assertUnauthorized: <i><a href="xq9zr0jvdo.html#assert-unauthorized" target="_blank">#assert-unauthorized</a></i><br><code style="font-size: 90%; opacity: 0.6;">[81]</code> assertUnprocessable: <i><a href="xq9zr0jvdo.html#assert-unprocessable" target="_blank">#assert-unprocessable</a></i><br><code style="font-size: 90%; opacity: 0.6;">[82]</code> assertUnsupportedMediaType: <i><a href="xq9zr0jvdo.html#assert-unsupported-media-type" target="_blank">#assert-unsupported-media-type</a></i><br><code style="font-size: 90%; opacity: 0.6;">[83]</code> assertValid: <i><a href="xq9zr0jvdo.html#assert-valid" target="_blank">#assert-valid</a></i><br><code style="font-size: 90%; opacity: 0.6;">[84]</code> assertInvalid: <i><a href="xq9zr0jvdo.html#assert-invalid" target="_blank">#assert-invalid</a></i><br><code style="font-size: 90%; opacity: 0.6;">[85]</code> assertViewHas: <i><a href="xq9zr0jvdo.html#assert-view-has" target="_blank">#assert-view-has</a></i><br><code style="font-size: 90%; opacity: 0.6;">[86]</code> assertViewHasAll: <i><a href="xq9zr0jvdo.html#assert-view-has-all" target="_blank">#assert-view-has-all</a></i><br><code style="font-size: 90%; opacity: 0.6;">[87]</code> assertViewIs: <i><a href="xq9zr0jvdo.html#assert-view-is" target="_blank">#assert-view-is</a></i><br><code style="font-size: 90%; opacity: 0.6;">[88]</code> assertViewMissing: <i><a href="xq9zr0jvdo.html#assert-view-missing" target="_blank">#assert-view-missing</a></i><br><code style="font-size: 90%; opacity: 0.6;">[89]</code> assertJsonStructure: <i><a href="xq9zr0jvdo.html#assert-json-structure" target="_blank">#assert-json-structure</a></i><br><code style="font-size: 90%; opacity: 0.6;">[90]</code> assertValid: <i><a href="xq9zr0jvdo.html#assert-valid" target="_blank">#assert-valid</a></i><br><code style="font-size: 90%; opacity: 0.6;">[91]</code> assertInvalid: <i><a href="xq9zr0jvdo.html#assert-invalid" target="_blank">#assert-invalid</a></i><br><code style="font-size: 90%; opacity: 0.6;">[92]</code> session 具有给定的错误: <i><a href="xq9zr0jvdo.html#assert-session-has-errors" target="_blank">#assert-session-has-errors</a></i><br><code style="font-size: 90%; opacity: 0.6;">[93]</code> 命名路由: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/routing#named-routes" target="_blank">/docs/Laravel 13.x/routing#named-routes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[94]</code> 签名路由: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/urls#signed-urls" target="_blank">/docs/Laravel 13.x/urls#signed-urls</a></i><br><code style="font-size: 90%; opacity: 0.6;">[95]</code> 闪存输入数组: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/responses#redirecting-with-flashed-session-data" target="_blank">/docs/Laravel 13.x/responses#redirecting-with-flashed-session-data</a></i><br><code style="font-size: 90%; opacity: 0.6;">[96]</code> assertInvalid: <i><a href="xq9zr0jvdo.html#assert-invalid" target="_blank">#assert-invalid</a></i><br><code style="font-size: 90%; opacity: 0.6;">[97]</code> 错误包: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/validation#named-error-bags" target="_blank">/docs/Laravel 13.x/validation#named-error-bags</a></i><br><code style="font-size: 90%; opacity: 0.6;">[98]</code> assertValid: <i><a href="xq9zr0jvdo.html#assert-valid" target="_blank">#assert-valid</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="e296oqw9q7.html#blog1072" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">测试：入门</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="2wy3lg3ykm.html#blog1074" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">控制台测试</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

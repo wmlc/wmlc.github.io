@@ -1,0 +1,1534 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>服务容器 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/x3vo054vm1.html', function (data, status) {
+            addView('x3vo054vm1.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>服务容器</h1><ul>
+<li><a href="x3vo054vm1.html#61a3ec6656837d917b6f69525a262eec">介绍</a>
+<ul>
+<li><a href="x3vo054vm1.html#54a30731eaaf5a0ed0af06e7e88308f0">零配置解析</a></li>
+<li><a href="x3vo054vm1.html#5abf3356507baf4b7e5e63724b47260e">何时使用容器</a></li>
+</ul></li>
+<li><a href="x3vo054vm1.html#f4f12c7a2c38440ac06aae42cce36673">绑定</a>
+<ul>
+<li><a href="x3vo054vm1.html#4f6d33b2f88a506ad22a7c8bfde28c40">绑定基础</a>
+<ul>
+<li><a href="x3vo054vm1.html#120d424f98aa6bfa87d9a84f1c34cbe5">简单绑定</a></li>
+<li><a href="x3vo054vm1.html#d92d4c044aa68e62e66c4083eab084f9">绑定单例</a></li>
+<li><a href="x3vo054vm1.html#de407d498443265a37f42efd419a6a73">Singleton 属性</a></li>
+<li><a href="x3vo054vm1.html#f3def65f71a9b672af0fac6c39373b48">绑定作用域单例</a></li>
+<li><a href="x3vo054vm1.html#296b8bc1e5dbe196f15c87cb08540af7">Scoped 属性</a></li>
+<li><a href="x3vo054vm1.html#716b6953a2445705634ea7eea2cb2c4c">绑定实例</a></li>
+</ul></li>
+<li><a href="x3vo054vm1.html#73eef38b1a3ce4528a996f8929a83652">将接口绑定到实现</a>
+<ul>
+<li><a href="x3vo054vm1.html#f08464161de93cd86e72c03fdafffe83">Bind 属性</a></li>
+</ul></li>
+<li><a href="x3vo054vm1.html#9bc80206ded105aaafdebd84d07e6371">上下文绑定</a></li>
+<li><a href="x3vo054vm1.html#107cbbf614945bb5cf1d293372b0bdcb">上下文属性</a>
+<ul>
+<li><a href="x3vo054vm1.html#ec47b5a2257ffd5f51ad617891699ea8">自定义属性</a></li>
+</ul></li>
+<li><a href="x3vo054vm1.html#930143d2477efb363ad1b705ceb4d1bf">绑定基本类型</a></li>
+<li><a href="x3vo054vm1.html#b16aea1493da31579dc623cbd27016bb">绑定类型化可变参数</a>
+<ul>
+<li><a href="x3vo054vm1.html#7e3f4a400424ae4a318d92ed2939d29b">可变参数标签依赖</a></li>
+</ul></li>
+<li><a href="x3vo054vm1.html#14d342362f66aa86e2aa1c1e11aa1204">标签</a></li>
+<li><a href="x3vo054vm1.html#6388d1f39a04f97ef80ba6f9fe78fd1b">扩展绑定</a></li>
+</ul></li>
+<li><a href="x3vo054vm1.html#aa357cb96ee813d56ef9d306af50e760">解析</a>
+<ul>
+<li><a href="x3vo054vm1.html#3f6d586ad17031deb61a926a7090b03f">make 方法</a></li>
+<li><a href="x3vo054vm1.html#d2f66d9b4ab16ff9800e25e1932b6218">自动注入</a></li>
+</ul></li>
+<li><a href="x3vo054vm1.html#b9b4fb6745800cbe96a609045d38e6a9">方法调用与注入</a></li>
+<li><a href="x3vo054vm1.html#5f9144c2e23e657ee78b25b462e68dab">容器事件</a>
+<ul>
+<li><a href="x3vo054vm1.html#2eb89a4afccefde70f544d772b470723">重新绑定</a></li>
+</ul></li>
+<li><a href="x3vo054vm1.html#981fe91b1aaff8bfaf54d5c07c15630f">PSR-11</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="61a3ec6656837d917b6f69525a262eec">&#20171;&#32461;</h2><p>Laravel &#26381;&#21153;&#23481;&#22120;&#26159;&#19968;&#20010;&#29992;&#20110;&#31649;&#29702;&#31867;&#20381;&#36182;&#12289;&#25191;&#34892;&#20381;&#36182;&#27880;&#20837;&#30340;&#24378;&#22823;&#24037;&#20855;&#12290;&#25152;&#35859;&#20381;&#36182;&#27880;&#20837;&#65292;&#26412;&#36136;&#19978;&#26159;&#36825;&#26679;&#19968;&#22238;&#20107;&#65306;&#31867;&#30340;&#20381;&#36182;&#36890;&#36807;&#26500;&#36896;&#20989;&#25968;&#65292;&#25110;&#22312;&#26576;&#20123;&#24773;&#20917;&#19979;&#36890;&#36807; "setter" &#26041;&#27861;&#65292;&#34987;"&#27880;&#20837;"&#21040;&#31867;&#20013;&#12290;</p><p>&#25105;&#20204;&#30475;&#19968;&#20010;&#31616;&#21333;&#30340;&#31034;&#20363;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Services\AppleMusic;
+use Illuminate\View\View;
+
+class PodcastController extends Controller
+{
+    /**
+     * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#25511;&#21046;&#22120;&#23454;&#20363;&#12290;
+     */
+    public function __construct(
+        protected AppleMusic $apple,
+    ) {}
+
+    /**
+     * &#26174;&#31034;&#25351;&#23450;&#25773;&#23458;&#30340;&#20449;&#24687;&#12290;
+     */
+    public function show(string $id): View
+    {
+        return view('podcasts.show', [
+            'podcast' =&gt; $this-&gt;apple-&gt;findPodcast($id)
+        ]);
+    }
+}</code></pre><p>&#22312;&#36825;&#20010;&#31034;&#20363;&#20013;&#65292;<code>PodcastController</code> &#38656;&#35201;&#20174;&#26576;&#20010;&#25968;&#25454;&#28304;&#65288;&#20363;&#22914; Apple Music&#65289;&#33719;&#21462;&#25773;&#23458;&#12290;&#22240;&#27492;&#65292;&#25105;&#20204;&#20250;<strong class="mk-p">&#27880;&#20837;</strong>&#19968;&#20010;&#33021;&#22815;&#33719;&#21462;&#25773;&#23458;&#30340;&#26381;&#21153;&#12290;&#30001;&#20110;&#26381;&#21153;&#26159;&#36890;&#36807;&#27880;&#20837;&#26041;&#24335;&#20256;&#20837;&#30340;&#65292;&#25105;&#20204;&#23601;&#33021;&#22312;&#27979;&#35797;&#24212;&#29992;&#26102;&#36731;&#26494;&#22320;"&#27169;&#25311;&#65288;mock&#65289;"&#35813;&#26381;&#21153;&#65292;&#25110;&#32773;&#20026;&#20854;&#21019;&#24314;&#19968;&#20010;&#34394;&#25311;&#23454;&#29616;&#12290;</p><p>&#28145;&#20837;&#29702;&#35299; Laravel &#26381;&#21153;&#23481;&#22120;&#65292;&#23545;&#26500;&#24314;&#19968;&#20010;&#24378;&#22823;&#30340;&#22823;&#22411;&#24212;&#29992;&#65292;&#20035;&#33267;&#20026; Laravel &#26680;&#24515;&#26412;&#36523;&#36129;&#29486;&#20195;&#30721;&#65292;&#37117;&#26159;&#33267;&#20851;&#37325;&#35201;&#30340;&#12290;</p><h3 id="54a30731eaaf5a0ed0af06e7e88308f0">&#38646;&#37197;&#32622;&#35299;&#26512;</h3><p>&#22914;&#26524;&#26576;&#20010;&#31867;&#27809;&#26377;&#20381;&#36182;&#65292;&#25110;&#32773;&#21482;&#20381;&#36182;&#20110;&#20854;&#20182;&#20855;&#20307;&#31867;&#65288;&#32780;&#19981;&#26159;&#25509;&#21475;&#65289;&#65292;&#37027;&#20040;&#23481;&#22120;&#26080;&#38656;&#20219;&#20309;&#39069;&#22806;&#37197;&#32622;&#23601;&#33021;&#35299;&#26512;&#23427;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#22312; <code>routes/web.php</code> &#25991;&#20214;&#20013;&#32534;&#20889;&#22914;&#19979;&#20195;&#30721;&#65306;</p><pre><code class="language-php">&lt;?php
+
+class Service
+{
+    // ...
+}
+
+Route::get('/', function (Service $service) {
+    dd($service::class);
+});</code></pre><p>&#22312;&#36825;&#20010;&#31034;&#20363;&#20013;&#65292;&#35775;&#38382;&#24212;&#29992;&#30340; <code>/</code> &#36335;&#30001;&#20250;&#33258;&#21160;&#35299;&#26512; <code>Service</code> &#31867;&#65292;&#24182;&#23558;&#20854;&#27880;&#20837;&#21040;&#36335;&#30001;&#22788;&#29702;&#22120;&#20013;&#12290;&#36825;&#20855;&#26377;&#21464;&#38761;&#24615;&#30340;&#24847;&#20041;&#65306;&#20320;&#21487;&#20197;&#19968;&#36793;&#24320;&#21457;&#24212;&#29992;&#65292;&#19968;&#36793;&#20139;&#21463;&#20381;&#36182;&#27880;&#20837;&#30340;&#20415;&#21033;&#65292;&#32780;&#26080;&#38656;&#25285;&#24515;&#37197;&#32622;&#25991;&#20214;&#21464;&#24471;&#36234;&#26469;&#36234;&#33219;&#32959;&#12290;</p><p>&#25152;&#24184;&#65292;&#20320;&#22312;&#26500;&#24314; Laravel &#24212;&#29992;&#26102;&#32534;&#20889;&#30340;&#35768;&#22810;&#31867;&#37117;&#20250;&#33258;&#21160;&#32463;&#30001;&#23481;&#22120;&#33719;&#24471;&#23427;&#20204;&#30340;&#20381;&#36182;&#65292;&#21253;&#25324; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/controllers" target="_blank">&#25511;&#21046;&#22120;</a>&#12289;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#20107;&#20214;&#30417;&#21548;&#22120;</a>&#12289;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/middleware" target="_blank">&#20013;&#38388;&#20214;</a> &#31561;&#31561;&#12290;&#27492;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#22312; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues" target="_blank">&#38431;&#21015;&#20219;&#21153;</a> &#30340; <code>handle</code> &#26041;&#27861;&#37324;&#31867;&#22411;&#25552;&#31034;&#20381;&#36182;&#12290;&#19968;&#26086;&#20320;&#20307;&#39564;&#36807;&#36825;&#31181;&#38646;&#37197;&#32622;&#30340;&#33258;&#21160;&#20381;&#36182;&#27880;&#20837;&#65292;&#23601;&#20877;&#20063;&#19981;&#24819;&#22238;&#21040;&#36807;&#21435;&#37027;&#31181;&#20889;&#27861;&#20102;&#12290;</p><h3 id="5abf3356507baf4b7e5e63724b47260e">&#20309;&#26102;&#20351;&#29992;&#23481;&#22120;</h3><p>&#24471;&#30410;&#20110;&#38646;&#37197;&#32622;&#35299;&#26512;&#65292;&#20320;&#32463;&#24120;&#20250;&#30452;&#25509;&#22312;&#36335;&#30001;&#12289;&#25511;&#21046;&#22120;&#12289;&#20107;&#20214;&#30417;&#21548;&#22120;&#31561;&#20301;&#32622;&#31867;&#22411;&#25552;&#31034;&#20381;&#36182;&#65292;&#26681;&#26412;&#19981;&#38656;&#35201;&#25163;&#21160;&#19982;&#23481;&#22120;&#25171;&#20132;&#36947;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#22312;&#36335;&#30001;&#23450;&#20041;&#20013;&#31867;&#22411;&#25552;&#31034; <code>Illuminate\Http\Request</code> &#23545;&#35937;&#65292;&#20174;&#32780;&#20415;&#25463;&#22320;&#35775;&#38382;&#24403;&#21069;&#35831;&#27714;&#12290;&#21363;&#20351;&#25105;&#20204;&#20174;&#26410;&#19982;&#23481;&#22120;&#20132;&#20114;&#23601;&#20889;&#20986;&#20102;&#36825;&#26679;&#30340;&#20195;&#30721;&#65292;&#23427;&#20381;&#28982;&#20250;&#22312;&#24149;&#21518;&#20026;&#25105;&#20204;&#23436;&#25104;&#20381;&#36182;&#30340;&#27880;&#20837;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+
+Route::get('/', function (Request $request) {
+    // ...
+});</code></pre><p>&#22312;&#24456;&#22810;&#24773;&#20917;&#19979;&#65292;&#20381;&#38752;&#33258;&#21160;&#20381;&#36182;&#27880;&#20837;&#19982; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/facades" target="_blank">Facades</a>&#65292;&#21363;&#20415;&#20320;&#23436;&#20840;&#19981;&#38656;&#35201;&#25163;&#21160;&#20174;&#23481;&#22120;&#20013;&#32465;&#23450;&#25110;&#35299;&#26512;&#20219;&#20309;&#19996;&#35199;&#65292;&#20063;&#33021;&#26500;&#24314;&#20986; Laravel &#24212;&#29992;&#12290;<strong class="mk-p">&#37027;&#20040;&#65292;&#20160;&#20040;&#26102;&#20505;&#25165;&#38656;&#35201;&#25163;&#21160;&#19982;&#23481;&#22120;&#20132;&#20114;&#21602;&#65311;</strong> &#26469;&#30475;&#20004;&#31181;&#24773;&#20917;&#12290;</p><p>&#31532;&#19968;&#31181;&#24773;&#20917;&#65306;&#20320;&#20889;&#30340;&#31867;&#23454;&#29616;&#20102;&#26576;&#20010;&#25509;&#21475;&#65292;&#32780;&#20320;&#24076;&#26395;&#22312;&#36335;&#30001;&#25110;&#31867;&#26500;&#36896;&#20989;&#25968;&#20013;&#31867;&#22411;&#25552;&#31034;&#35813;&#25509;&#21475;&#65292;&#27492;&#26102;&#23601;&#24517;&#39035;<a href="x3vo054vm1.html#binding-interfaces-to-implementations" target="_blank">&#21578;&#35785;&#23481;&#22120;&#35813;&#22914;&#20309;&#35299;&#26512;&#36825;&#20010;&#25509;&#21475;</a>&#12290;&#31532;&#20108;&#31181;&#24773;&#20917;&#65306;&#20320;&#27491;&#22312;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/packages" target="_blank">&#32534;&#20889;&#19968;&#20010; Laravel &#21253;</a> &#24182;&#24076;&#26395;&#20998;&#20139;&#32473;&#20854;&#20182; Laravel &#24320;&#21457;&#32773;&#65292;&#36825;&#26102;&#21487;&#33021;&#38656;&#35201;&#25226;&#21253;&#20869;&#30340;&#26381;&#21153;&#32465;&#23450;&#21040;&#23481;&#22120;&#20013;&#12290;</p><h2 id="f4f12c7a2c38440ac06aae42cce36673">&#32465;&#23450;</h2><h3 id="4f6d33b2f88a506ad22a7c8bfde28c40">&#32465;&#23450;&#22522;&#30784;</h3><h4 id="120d424f98aa6bfa87d9a84f1c34cbe5">&#31616;&#21333;&#32465;&#23450;</h4><p>&#20960;&#20046;&#25152;&#26377;&#26381;&#21153;&#23481;&#22120;&#32465;&#23450;&#37117;&#20250;&#27880;&#20876;&#22312; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/providers" target="_blank">&#26381;&#21153;&#25552;&#20379;&#32773;</a> &#20013;&#65292;&#22240;&#27492;&#19979;&#38754;&#30340;&#31034;&#20363;&#37117;&#20250;&#28436;&#31034;&#22312;&#37027;&#31181;&#19978;&#19979;&#25991;&#37324;&#20351;&#29992;&#23481;&#22120;&#30340;&#26041;&#24335;&#12290;</p><p>&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#20013;&#65292;&#21487;&#20197;&#36890;&#36807; <code>$this-&gt;app</code> &#23646;&#24615;&#35775;&#38382;&#23481;&#22120;&#12290;&#25105;&#20204;&#21487;&#20197;&#20351;&#29992; <code>bind</code> &#26041;&#27861;&#26469;&#27880;&#20876;&#19968;&#20010;&#32465;&#23450;&#65292;&#25226;&#24819;&#35201;&#27880;&#20876;&#30340;&#31867;&#25110;&#25509;&#21475;&#21517;&#65292;&#36830;&#21516;&#19968;&#20010;&#36820;&#22238;&#35813;&#31867;&#23454;&#20363;&#30340;&#38381;&#21253;&#19968;&#36215;&#20256;&#20837;&#65306;</p><pre><code class="language-php">use App\Services\Transistor;
+use App\Services\PodcastParser;
+use Illuminate\Contracts\Foundation\Application;
+
+$this-&gt;app-&gt;bind(Transistor::class, function (Application $app) {
+    return new Transistor($app-&gt;make(PodcastParser::class));
+});</code></pre><p>&#35831;&#27880;&#24847;&#65292;&#25105;&#20204;&#25226;&#23481;&#22120;&#26412;&#36523;&#20316;&#20026;&#21442;&#25968;&#25509;&#25910;&#32473;&#20102; resolver&#12290;&#25509;&#19979;&#26469;&#23601;&#21487;&#20197;&#29992;&#23481;&#22120;&#26469;&#35299;&#26512;&#25105;&#20204;&#27491;&#22312;&#26500;&#24314;&#23545;&#35937;&#30340;&#23376;&#20381;&#36182;&#12290;</p><p>&#22914;&#21069;&#25152;&#36848;&#65292;&#20320;&#36890;&#24120;&#20250;&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#37324;&#19982;&#23481;&#22120;&#20132;&#20114;&#65307;&#19981;&#36807;&#65292;&#22914;&#26524;&#20320;&#24819;&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#20043;&#22806;&#25805;&#20316;&#23481;&#22120;&#65292;&#20063;&#21487;&#20197;&#36890;&#36807; <code>App</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/facades" target="_blank">Facade</a> &#26469;&#23436;&#25104;&#65306;</p><pre><code class="language-php">use App\Services\Transistor;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\App;
+
+App::bind(Transistor::class, function (Application $app) {
+    // ...
+});</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>bindIf</code> &#26041;&#27861;&#65292;&#20165;&#22312;&#23578;&#26410;&#20026;&#25351;&#23450;&#31867;&#22411;&#27880;&#20876;&#32465;&#23450;&#26102;&#25165;&#36827;&#34892;&#32465;&#23450;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;bindIf(Transistor::class, function (Application $app) {
+    return new Transistor($app-&gt;make(PodcastParser::class));
+});</code></pre><p>&#20026;&#20102;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#20063;&#21487;&#20197;&#30465;&#30053;&#21333;&#29420;&#20256;&#36882;&#20320;&#24819;&#35201;&#27880;&#20876;&#30340;&#31867;&#25110;&#25509;&#21475;&#21517;&#65292;&#35753; Laravel &#20174;&#20256;&#20837; <code>bind</code> &#26041;&#27861;&#30340;&#38381;&#21253;&#36820;&#22238;&#20540;&#31867;&#22411;&#20013;&#25512;&#26029;&#65306;</p><pre><code class="language-php">App::bind(function (Application $app): Transistor {
+    return new Transistor($app-&gt;make(PodcastParser::class));
+});</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#19968;&#20010;&#31867;&#19981;&#20381;&#36182;&#20219;&#20309;&#25509;&#21475;&#65292;&#37027;&#20040;&#26080;&#38656;&#25226;&#23427;&#32465;&#23450;&#21040;&#23481;&#22120;&#20013;&#12290;&#23481;&#22120;&#19981;&#38656;&#35201;&#34987;&#21578;&#30693;&#35813;&#22914;&#20309;&#26500;&#24314;&#36825;&#20123;&#23545;&#35937;&#65292;&#22240;&#20026;&#23427;&#21487;&#20197;&#36890;&#36807;&#21453;&#23556;&#33258;&#21160;&#35299;&#26512;&#23427;&#20204;&#12290;</p>
+</blockquote><h4 id="d92d4c044aa68e62e66c4083eab084f9">&#32465;&#23450;&#21333;&#20363;</h4><p><code>singleton</code> &#26041;&#27861;&#23558;&#19968;&#20010;&#31867;&#25110;&#25509;&#21475;&#32465;&#23450;&#21040;&#23481;&#22120;&#20013;&#65292;&#20351;&#20854;&#22312;&#25972;&#20010;&#24212;&#29992;&#29983;&#21629;&#21608;&#26399;&#20869;&#21482;&#35299;&#26512;&#19968;&#27425;&#12290;&#19968;&#26086;&#26576;&#20010;&#21333;&#20363;&#32465;&#23450;&#34987;&#35299;&#26512;&#36807;&#65292;&#21518;&#32493;&#23545;&#23481;&#22120;&#30340;&#35843;&#29992;&#37117;&#20250;&#36820;&#22238;&#21516;&#19968;&#20010;&#23545;&#35937;&#23454;&#20363;&#65306;</p><pre><code class="language-php">use App\Services\Transistor;
+use App\Services\PodcastParser;
+use Illuminate\Contracts\Foundation\Application;
+
+$this-&gt;app-&gt;singleton(Transistor::class, function (Application $app) {
+    return new Transistor($app-&gt;make(PodcastParser::class));
+});</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>singletonIf</code> &#26041;&#27861;&#65292;&#20165;&#22312;&#23578;&#26410;&#20026;&#25351;&#23450;&#31867;&#22411;&#27880;&#20876;&#21333;&#20363;&#32465;&#23450;&#26102;&#25165;&#36827;&#34892;&#27880;&#20876;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;singletonIf(Transistor::class, function (Application $app) {
+    return new Transistor($app-&gt;make(PodcastParser::class));
+});</code></pre><h4 id="de407d498443265a37f42efd419a6a73"><code>Singleton</code> &#23646;&#24615;</h4><p>&#21478;&#19968;&#31181;&#26041;&#24335;&#65306;&#20320;&#21487;&#20197;&#20351;&#29992; <code>#[Singleton]</code> &#23646;&#24615;&#26469;&#26631;&#35760;&#26576;&#20010;&#25509;&#21475;&#25110;&#31867;&#65292;&#21521;&#23481;&#22120;&#34920;&#26126;&#21482;&#24212;&#35299;&#26512;&#19968;&#27425;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Services;
+
+use Illuminate\Container\Attributes\Singleton;
+
+#[Singleton]
+class Transistor
+{
+    // ...
+}</code></pre><h4 id="f3def65f71a9b672af0fac6c39373b48">&#32465;&#23450;&#20316;&#29992;&#22495;&#21333;&#20363;</h4><p><code>scoped</code> &#26041;&#27861;&#23558;&#19968;&#20010;&#31867;&#25110;&#25509;&#21475;&#32465;&#23450;&#21040;&#23481;&#22120;&#20013;&#65292;&#20351;&#20854;&#22312;&#19968;&#27425; Laravel &#35831;&#27714; / &#20219;&#21153;&#29983;&#21629;&#21608;&#26399;&#20869;&#21482;&#35299;&#26512;&#19968;&#27425;&#12290;&#34429;&#28982;&#36825;&#20010;&#26041;&#27861;&#19982; <code>singleton</code> &#24456;&#20687;&#65292;&#20294;&#26159; <code>scoped</code> &#26041;&#27861;&#27880;&#20876;&#30340;&#23454;&#20363;&#20250;&#22312; Laravel &#24212;&#29992;&#24320;&#21551;&#26032;"&#29983;&#21629;&#21608;&#26399;"&#26102;&#34987;&#28165;&#31354;&#65292;&#20363;&#22914; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/octane" target="_blank">Laravel Octane</a> worker &#22788;&#29702;&#26032;&#35831;&#27714;&#26102;&#65292;&#25110; Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues" target="_blank">&#38431;&#21015; worker</a> &#22788;&#29702;&#26032;&#20219;&#21153;&#26102;&#65306;</p><pre><code class="language-php">use App\Services\Transistor;
+use App\Services\PodcastParser;
+use Illuminate\Contracts\Foundation\Application;
+
+$this-&gt;app-&gt;scoped(Transistor::class, function (Application $app) {
+    return new Transistor($app-&gt;make(PodcastParser::class));
+});</code></pre><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>scopedIf</code> &#26041;&#27861;&#65292;&#20165;&#22312;&#23578;&#26410;&#20026;&#25351;&#23450;&#31867;&#22411;&#27880;&#20876;&#20316;&#29992;&#22495;&#32465;&#23450;&#26102;&#25165;&#36827;&#34892;&#27880;&#20876;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;scopedIf(Transistor::class, function (Application $app) {
+    return new Transistor($app-&gt;make(PodcastParser::class));
+});</code></pre><h4 id="296b8bc1e5dbe196f15c87cb08540af7"><code>Scoped</code> &#23646;&#24615;</h4><p>&#21478;&#19968;&#31181;&#26041;&#24335;&#65306;&#20320;&#21487;&#20197;&#20351;&#29992; <code>#[Scoped]</code> &#23646;&#24615;&#26469;&#26631;&#35760;&#26576;&#20010;&#25509;&#21475;&#25110;&#31867;&#65292;&#21521;&#23481;&#22120;&#34920;&#26126;&#23427;&#24212;&#22312;&#19968;&#27425; Laravel &#35831;&#27714; / &#20219;&#21153;&#29983;&#21629;&#21608;&#26399;&#20869;&#21482;&#35299;&#26512;&#19968;&#27425;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Services;
+
+use Illuminate\Container\Attributes\Scoped;
+
+#[Scoped]
+class Transistor
+{
+    // ...
+}</code></pre><h4 id="716b6953a2445705634ea7eea2cb2c4c">&#32465;&#23450;&#23454;&#20363;</h4><p>&#20320;&#36824;&#21487;&#20197;&#20351;&#29992; <code>instance</code> &#26041;&#27861;&#25226;&#19968;&#20010;&#24050;&#23384;&#22312;&#30340;&#23545;&#35937;&#23454;&#20363;&#32465;&#23450;&#21040;&#23481;&#22120;&#20013;&#12290;&#35813;&#23454;&#20363;&#20250;&#22312;&#21518;&#32493;&#23545;&#23481;&#22120;&#30340;&#35843;&#29992;&#20013;&#22987;&#32456;&#34987;&#36820;&#22238;&#65306;</p><pre><code class="language-php">use App\Services\Transistor;
+use App\Services\PodcastParser;
+
+$service = new Transistor(new PodcastParser);
+
+$this-&gt;app-&gt;instance(Transistor::class, $service);</code></pre><h3 id="73eef38b1a3ce4528a996f8929a83652">&#23558;&#25509;&#21475;&#32465;&#23450;&#21040;&#23454;&#29616;</h3><p>&#26381;&#21153;&#23481;&#22120;&#30340;&#19968;&#20010;&#38750;&#24120;&#24378;&#22823;&#30340;&#29305;&#24615;&#26159;&#23427;&#33021;&#22815;&#23558;&#25509;&#21475;&#32465;&#23450;&#21040;&#20855;&#20307;&#30340;&#23454;&#29616;&#12290;&#20363;&#22914;&#65292;&#20551;&#35774;&#25105;&#20204;&#26377;&#19968;&#20010; <code>EventPusher</code> &#25509;&#21475;&#21644;&#19968;&#20010; <code>RedisEventPusher</code> &#23454;&#29616;&#12290;&#20889;&#22909; <code>RedisEventPusher</code> &#23454;&#29616;&#31867;&#20043;&#21518;&#65292;&#23601;&#21487;&#20197;&#20687;&#19979;&#38754;&#36825;&#26679;&#25226;&#23427;&#27880;&#20876;&#21040;&#26381;&#21153;&#23481;&#22120;&#37324;&#65306;</p><pre><code class="language-php">use App\Contracts\EventPusher;
+use App\Services\RedisEventPusher;
+
+$this-&gt;app-&gt;bind(EventPusher::class, RedisEventPusher::class);</code></pre><p>&#36825;&#26465;&#35821;&#21477;&#21578;&#35785;&#23481;&#22120;&#65306;&#24403;&#26576;&#20010;&#31867;&#38656;&#35201; <code>EventPusher</code> &#30340;&#23454;&#29616;&#26102;&#65292;&#24212;&#27880;&#20837; <code>RedisEventPusher</code>&#12290;&#20043;&#21518;&#65292;&#25105;&#20204;&#23601;&#21487;&#20197;&#22312;&#30001;&#23481;&#22120;&#35299;&#26512;&#30340;&#31867;&#30340;&#26500;&#36896;&#20989;&#25968;&#20013;&#31867;&#22411;&#25552;&#31034; <code>EventPusher</code> &#25509;&#21475;&#12290;&#35831;&#35760;&#20303;&#65292;Laravel &#24212;&#29992;&#37324;&#30340;&#25511;&#21046;&#22120;&#12289;&#20107;&#20214;&#30417;&#21548;&#22120;&#12289;&#20013;&#38388;&#20214;&#31561;&#21508;&#31181;&#31867;&#37117;&#26159;&#30001;&#23481;&#22120;&#35299;&#26512;&#30340;&#65306;</p><pre><code class="language-php">use App\Contracts\EventPusher;
+
+/**
+ * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#31867;&#23454;&#20363;&#12290;
+ */
+public function __construct(
+    protected EventPusher $pusher,
+) {}</code></pre><h4 id="f08464161de93cd86e72c03fdafffe83"><code>Bind</code> &#23646;&#24615;</h4><p>Laravel &#36824;&#25552;&#20379;&#20102;&#19968;&#20010; <code>Bind</code> &#23646;&#24615;&#20197;&#25552;&#21319;&#20415;&#21033;&#24615;&#12290;&#21487;&#20197;&#25226;&#36825;&#20010;&#23646;&#24615;&#24212;&#29992;&#21040;&#20219;&#20309;&#25509;&#21475;&#19978;&#65292;&#21578;&#35785; Laravel &#27599;&#24403;&#35831;&#27714;&#35813;&#25509;&#21475;&#26102;&#24212;&#33258;&#21160;&#27880;&#20837;&#21738;&#20010;&#23454;&#29616;&#12290;&#20351;&#29992; <code>Bind</code> &#23646;&#24615;&#26102;&#65292;&#26080;&#38656;&#22312;&#24212;&#29992;&#30340;&#26381;&#21153;&#25552;&#20379;&#32773;&#37324;&#20570;&#20219;&#20309;&#39069;&#22806;&#27880;&#20876;&#12290;</p><p>&#27492;&#22806;&#65292;&#21487;&#20197;&#22312;&#21516;&#19968;&#20010;&#25509;&#21475;&#19978;&#25918;&#32622;&#22810;&#20010; <code>Bind</code> &#23646;&#24615;&#65292;&#20197;&#38024;&#23545;&#19981;&#21516;&#30340;&#29615;&#22659;&#37197;&#32622;&#27880;&#20837;&#19981;&#21516;&#30340;&#23454;&#29616;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Contracts;
+
+use App\Services\FakeEventPusher;
+use App\Services\RedisEventPusher;
+use Illuminate\Container\Attributes\Bind;
+
+#[Bind(RedisEventPusher::class)]
+#[Bind(FakeEventPusher::class, environments: ['local', 'testing'])]
+interface EventPusher
+{
+    // ...
+}</code></pre><p>&#27492;&#22806;&#65292;&#36824;&#21487;&#20197;&#24212;&#29992; <a href="x3vo054vm1.html#singleton-attribute" target="_blank">Singleton</a> &#19982; <a href="x3vo054vm1.html#scoped-attribute" target="_blank">Scoped</a> &#23646;&#24615;&#26469;&#25351;&#26126;&#36825;&#20123;&#23481;&#22120;&#32465;&#23450;&#26159;&#21482;&#35299;&#26512;&#19968;&#27425;&#65292;&#36824;&#26159;&#22312;&#27599;&#27425;&#35831;&#27714; / &#20219;&#21153;&#29983;&#21629;&#21608;&#26399;&#20869;&#21482;&#35299;&#26512;&#19968;&#27425;&#65306;</p><pre><code class="language-php">use App\Services\RedisEventPusher;
+use Illuminate\Container\Attributes\Bind;
+use Illuminate\Container\Attributes\Singleton;
+
+#[Bind(RedisEventPusher::class)]
+#[Singleton]
+interface EventPusher
+{
+    // ...
+}</code></pre><p>&#23545;&#20110;&#20381;&#36182;&#20219;&#24847;&#26465;&#20214;&#30340;&#32465;&#23450;&#65292;&#21487;&#20197;&#20351;&#29992; <code>BindWhen</code> &#23646;&#24615;&#12290;&#38381;&#21253;&#21487;&#20197;&#25509;&#25910;&#23481;&#22120;&#24182;&#36820;&#22238; <code>true</code>&#65292;&#29992;&#20110;&#21028;&#26029;&#35813;&#32465;&#23450;&#26159;&#21542;&#29983;&#25928;&#12290;<code>Bind</code> &#19982; <code>BindWhen</code> &#23646;&#24615;&#20250;&#25353;&#29031;&#22768;&#26126;&#39034;&#24207;&#20381;&#27425;&#27714;&#20540;&#65306;</p><pre><code class="language-php">use App\Services\BetaEventPusher;
+use Illuminate\Container\Attributes\BindWhen;
+use Laravel\Pennant\Feature;
+
+#[BindWhen(BetaEventPusher::class, static fn () =&gt; Feature::active('beta-events'))]
+interface EventPusher
+{
+    // ...
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+<code>BindWhen</code> &#23646;&#24615;&#38656;&#35201; PHP 8.5 &#25110;&#26356;&#39640;&#29256;&#26412;&#12290;</p>
+</blockquote><h3 id="9bc80206ded105aaafdebd84d07e6371">&#19978;&#19979;&#25991;&#32465;&#23450;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#20250;&#26377;&#20004;&#20010;&#31867;&#20351;&#29992;&#21516;&#19968;&#20010;&#25509;&#21475;&#65292;&#20294;&#24076;&#26395;&#21521;&#23427;&#20204;&#20998;&#21035;&#27880;&#20837;&#19981;&#21516;&#30340;&#23454;&#29616;&#12290;&#20363;&#22914;&#65292;&#20004;&#20010;&#25511;&#21046;&#22120;&#21487;&#33021;&#20250;&#20381;&#36182; <code>Illuminate\Contracts\Filesystem\Filesystem</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/contracts" target="_blank">&#22865;&#32422;</a> &#30340;&#19981;&#21516;&#23454;&#29616;&#12290;Laravel &#25552;&#20379;&#20102;&#19968;&#22871;&#31616;&#27905;&#27969;&#30021;&#30340;&#25509;&#21475;&#26469;&#23450;&#20041;&#36825;&#31181;&#34892;&#20026;&#65306;</p><pre><code class="language-php">use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\UploadController;
+use App\Http\Controllers\VideoController;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
+
+$this-&gt;app-&gt;when(PhotoController::class)
+    -&gt;needs(Filesystem::class)
+    -&gt;give(function () {
+        return Storage::disk('local');
+    });
+
+$this-&gt;app-&gt;when([VideoController::class, UploadController::class])
+    -&gt;needs(Filesystem::class)
+    -&gt;give(function () {
+        return Storage::disk('s3');
+    });</code></pre><h3 id="107cbbf614945bb5cf1d293372b0bdcb">&#19978;&#19979;&#25991;&#23646;&#24615;</h3><p>&#30001;&#20110;&#19978;&#19979;&#25991;&#32465;&#23450;&#32463;&#24120;&#29992;&#26469;&#27880;&#20837;&#39537;&#21160;&#23454;&#29616;&#25110;&#37197;&#32622;&#20540;&#65292;Laravel &#25552;&#20379;&#20102;&#19968;&#31995;&#21015;&#19978;&#19979;&#25991;&#32465;&#23450;&#23646;&#24615;&#65292;&#35753;&#20320;&#19981;&#24517;&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#37324;&#25163;&#21160;&#23450;&#20041;&#19978;&#19979;&#25991;&#32465;&#23450;&#65292;&#23601;&#33021;&#27880;&#20837;&#36825;&#20123;&#31867;&#22411;&#30340;&#20540;&#12290;</p><p>&#20363;&#22914;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Storage</code> &#23646;&#24615;&#27880;&#20837;&#19968;&#20010;&#25351;&#23450;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/filesystem" target="_blank">&#23384;&#20648;&#30913;&#30424;</a>&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Container\Attributes\Storage;
+use Illuminate\Contracts\Filesystem\Filesystem;
+
+class PhotoController extends Controller
+{
+    public function __construct(
+        #[Storage('local')] protected Filesystem $filesystem
+    ) {
+        // ...
+    }
+}</code></pre><p>&#38500;&#20102; <code>Storage</code> &#23646;&#24615;&#22806;&#65292;Laravel &#36824;&#25552;&#20379;&#20102; <code>Auth</code>&#12289;<code>Cache</code>&#12289;<code>Config</code>&#12289;<code>Context</code>&#12289;<code>DB</code>&#12289;<code>Give</code>&#12289;<code>Log</code>&#12289;<code>RequestAttribute</code>&#12289;<code>RouteParameter</code> &#20197;&#21450; <a href="x3vo054vm1.html#tagging" target="_blank">Tag</a> &#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Contracts\UserRepository;
+use App\Models\Organization;
+use App\Models\Photo;
+use App\Repositories\DatabaseRepository;
+use Illuminate\Container\Attributes\Auth;
+use Illuminate\Container\Attributes\Cache;
+use Illuminate\Container\Attributes\Config;
+use Illuminate\Container\Attributes\Context;
+use Illuminate\Container\Attributes\DB;
+use Illuminate\Container\Attributes\Give;
+use Illuminate\Container\Attributes\Log;
+use Illuminate\Container\Attributes\RequestAttribute;
+use Illuminate\Container\Attributes\RouteParameter;
+use Illuminate\Container\Attributes\Tag;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Database\Connection;
+use Psr\Log\LoggerInterface;
+
+class PhotoController extends Controller
+{
+    public function __construct(
+        #[Auth('web')] protected Guard $auth,
+        #[Cache('redis')] protected Repository $cache,
+        #[Config('app.timezone')] protected string $timezone,
+        #[Context('uuid')] protected string $uuid,
+        #[Context('ulid', hidden: true)] protected string $ulid,
+        #[DB('mysql')] protected Connection $connection,
+        #[Give(DatabaseRepository::class)] protected UserRepository $users,
+        #[Log('daily')] protected LoggerInterface $log,
+        #[RequestAttribute('organization')] protected Organization $organization,
+        #[RouteParameter] protected Photo $photo,
+        #[Tag('reports')] protected iterable $reports,
+    ) {
+        // ...
+    }
+}</code></pre><p><code>RouteParameter</code> &#23646;&#24615;&#20250;&#35299;&#26512;&#19982;&#21464;&#37327;&#21517;&#21305;&#37197;&#30340;&#36335;&#30001;&#21442;&#25968;&#12290;&#22914;&#26377;&#38656;&#35201;&#65292;&#20063;&#21487;&#20197;&#26174;&#24335;&#25351;&#23450;&#35201;&#35299;&#26512;&#30340;&#36335;&#30001;&#21442;&#25968;&#21517;&#65306;<code>#[RouteParameter('photo')]</code>&#12290;</p><p><code>RequestAttribute</code> &#23646;&#24615;&#20250;&#35299;&#26512;&#24403;&#21069;&#35831;&#27714; <a href="https://symfony.com/doc/current/components/http_foundation.html#accessing-request-data" target="_blank" rel="noopener noreferrer">&#23646;&#24615;&#21253;</a> &#20013;&#25351;&#23450;&#38190;&#19979;&#30340;&#20540;&#65306;<code>#[RequestAttribute('organization')]</code>&#12290;</p><p>&#27492;&#22806;&#65292;Laravel &#36824;&#25552;&#20379;&#20102;&#19968;&#20010; <code>CurrentUser</code> &#23646;&#24615;&#65292;&#29992;&#20110;&#22312;&#36335;&#30001;&#25110;&#31867;&#20013;&#27880;&#20837;&#24403;&#21069;&#24050;&#35748;&#35777;&#29992;&#25143;&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
+
+Route::get('/user', function (#[CurrentUser] User $user) {
+    return $user;
+})-&gt;middleware('auth');</code></pre><h4 id="ec47b5a2257ffd5f51ad617891699ea8">&#33258;&#23450;&#20041;&#23646;&#24615;</h4><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#23454;&#29616; <code>Illuminate\Contracts\Container\ContextualAttribute</code> &#22865;&#32422;&#26469;&#21019;&#24314;&#33258;&#23450;&#20041;&#19978;&#19979;&#25991;&#23646;&#24615;&#12290;&#23481;&#22120;&#20250;&#35843;&#29992;&#23646;&#24615;&#30340; <code>resolve</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#24212;&#36820;&#22238;&#35201;&#27880;&#20837;&#21040;&#20351;&#29992;&#35813;&#23646;&#24615;&#30340;&#31867;&#20013;&#30340;&#20540;&#12290;&#19979;&#38754;&#30340;&#31034;&#20363;&#23558;&#37325;&#26032;&#23454;&#29616; Laravel &#20869;&#32622;&#30340; <code>Config</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Attributes;
+
+use Attribute;
+use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Container\ContextualAttribute;
+use ReflectionParameter;
+
+#[Attribute(Attribute::TARGET_PARAMETER)]
+class Config implements ContextualAttribute
+{
+    /**
+     * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#23646;&#24615;&#23454;&#20363;&#12290;
+     */
+    public function __construct(public string $key, public mixed $default = null)
+    {
+    }
+
+    /**
+     * &#35299;&#26512;&#37197;&#32622;&#20540;&#12290;
+     *
+     * @param  self  $attribute
+     * @param  \Illuminate\Contracts\Container\Container  $container
+     * @param  \ReflectionParameter  $parameter
+     * @return mixed
+     */
+    public static function resolve(self $attribute, Container $container, ReflectionParameter $parameter)
+    {
+        return $container-&gt;make('config')-&gt;get($attribute-&gt;key, $attribute-&gt;default);
+    }
+}</code></pre><h3 id="930143d2477efb363ad1b705ceb4d1bf">&#32465;&#23450;&#22522;&#26412;&#31867;&#22411;</h3><p>&#26377;&#26102;&#20320;&#20889;&#30340;&#31867;&#38500;&#20102;&#20250;&#25509;&#25910;&#19968;&#20123;&#27880;&#20837;&#30340;&#31867;&#20043;&#22806;&#65292;&#36824;&#38656;&#35201;&#27880;&#20837;&#20687;&#25972;&#25968;&#36825;&#26679;&#30340;&#21407;&#22987;&#31867;&#22411;&#20540;&#12290;&#36825;&#26102;&#21487;&#20197;&#20351;&#29992;&#19978;&#19979;&#25991;&#32465;&#23450;&#65292;&#36731;&#26494;&#27880;&#20837;&#31867;&#38656;&#35201;&#30340;&#20219;&#20309;&#20540;&#65306;</p><pre><code class="language-php">use App\Http\Controllers\UserController;
+
+$this-&gt;app-&gt;when(UserController::class)
+    -&gt;needs('$variableName')
+    -&gt;give($value);</code></pre><p>&#26377;&#26102;&#19968;&#20010;&#31867;&#20250;&#20381;&#36182;&#19968;&#32452; <a href="x3vo054vm1.html#tagging" target="_blank">&#25171;&#20102;&#26631;&#31614;</a> &#30340;&#23454;&#20363;&#25968;&#32452;&#12290;&#20511;&#21161; <code>giveTagged</code> &#26041;&#27861;&#65292;&#20320;&#21487;&#20197;&#19968;&#27425;&#24615;&#27880;&#20837;&#25152;&#26377;&#24102;&#26377;&#35813;&#26631;&#31614;&#30340;&#23481;&#22120;&#32465;&#23450;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;when(ReportAggregator::class)
+    -&gt;needs('$reports')
+    -&gt;giveTagged('reports');</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#20174;&#24212;&#29992;&#30340;&#26576;&#20010;&#37197;&#32622;&#25991;&#20214;&#20013;&#27880;&#20837;&#20540;&#65292;&#21487;&#20197;&#20351;&#29992; <code>giveConfig</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;when(ReportAggregator::class)
+    -&gt;needs('$timezone')
+    -&gt;giveConfig('app.timezone');</code></pre><h3 id="b16aea1493da31579dc623cbd27016bb">&#32465;&#23450;&#31867;&#22411;&#21270;&#21487;&#21464;&#21442;&#25968;</h3><p>&#26377;&#26102;&#20320;&#30340;&#31867;&#20250;&#36890;&#36807;&#21487;&#21464;&#21442;&#25968;&#25509;&#25910;&#19968;&#32452;&#31867;&#22411;&#21270;&#23545;&#35937;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use App\Services\Logger;
+
+class Firewall
+{
+    /**
+     * &#36807;&#28388;&#22120;&#23454;&#20363;&#12290;
+     *
+     * @var array
+     */
+    protected $filters;
+
+    /**
+     * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#31867;&#23454;&#20363;&#12290;
+     */
+    public function __construct(
+        protected Logger $logger,
+        Filter ...$filters,
+    ) {
+        $this-&gt;filters = $filters;
+    }
+}</code></pre><p>&#36890;&#36807;&#19978;&#19979;&#25991;&#32465;&#23450;&#65292;&#21487;&#20197;&#32473; <code>give</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#36820;&#22238; <code>Filter</code> &#23454;&#20363;&#25968;&#32452;&#30340;&#38381;&#21253;&#65292;&#20174;&#32780;&#35299;&#26512;&#36825;&#20010;&#20381;&#36182;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;when(Firewall::class)
+    -&gt;needs(Filter::class)
+    -&gt;give(function (Application $app) {
+          return [
+              $app-&gt;make(NullFilter::class),
+              $app-&gt;make(ProfanityFilter::class),
+              $app-&gt;make(TooLongFilter::class),
+          ];
+    });</code></pre><p>&#20026;&#20102;&#26041;&#20415;&#36215;&#35265;&#65292;&#20320;&#20063;&#21487;&#20197;&#30452;&#25509;&#20256;&#20837;&#19968;&#20010;&#31867;&#21517;&#25968;&#32452;&#65292;&#27599;&#24403; <code>Firewall</code> &#38656;&#35201; <code>Filter</code> &#23454;&#20363;&#26102;&#23601;&#30001;&#23481;&#22120;&#35299;&#26512;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;when(Firewall::class)
+    -&gt;needs(Filter::class)
+    -&gt;give([
+        NullFilter::class,
+        ProfanityFilter::class,
+        TooLongFilter::class,
+    ]);</code></pre><h4 id="7e3f4a400424ae4a318d92ed2939d29b">&#21487;&#21464;&#21442;&#25968;&#26631;&#31614;&#20381;&#36182;</h4><p>&#26377;&#26102;&#31867;&#30340;&#21487;&#21464;&#21442;&#25968;&#20250;&#20197;&#26576;&#20010;&#20855;&#20307;&#31867;&#20316;&#20026;&#31867;&#22411;&#25552;&#31034;&#65288;&#22914; <code>Report ...$reports</code>&#65289;&#12290;&#20511;&#21161; <code>needs</code> &#19982; <code>giveTagged</code> &#26041;&#27861;&#65292;&#21487;&#20197;&#36731;&#26494;&#20026;&#35813;&#20381;&#36182;&#27880;&#20837;&#25152;&#26377;&#20855;&#26377;&#35813; <a href="x3vo054vm1.html#tagging" target="_blank">&#26631;&#31614;</a> &#30340;&#23481;&#22120;&#32465;&#23450;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;when(ReportAggregator::class)
+    -&gt;needs(Report::class)
+    -&gt;giveTagged('reports');</code></pre><h3 id="14d342362f66aa86e2aa1c1e11aa1204">&#26631;&#31614;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#19968;&#27425;&#24615;&#35299;&#26512;&#26576;&#19968;"&#31867;"&#30340;&#25152;&#26377;&#32465;&#23450;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#27491;&#22312;&#26500;&#24314;&#19968;&#20010;&#25253;&#34920;&#20998;&#26512;&#22120;&#65292;&#38656;&#35201;&#25509;&#25910;&#22810;&#20010;&#19981;&#21516;&#30340; <code>Report</code> &#25509;&#21475;&#23454;&#29616;&#12290;&#27880;&#20876;&#23436; <code>Report</code> &#21508;&#20010;&#23454;&#29616;&#20043;&#21518;&#65292;&#21487;&#20197;&#20351;&#29992; <code>tag</code> &#26041;&#27861;&#32473;&#23427;&#20204;&#20998;&#37197;&#26631;&#31614;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;bind(CpuReport::class, function () {
+    // ...
+});
+
+$this-&gt;app-&gt;bind(MemoryReport::class, function () {
+    // ...
+});
+
+$this-&gt;app-&gt;tag([CpuReport::class, MemoryReport::class], 'reports');</code></pre><p>&#32473;&#26381;&#21153;&#25171;&#22909;&#26631;&#31614;&#20043;&#21518;&#65292;&#23601;&#21487;&#20197;&#36890;&#36807;&#23481;&#22120;&#30340; <code>tagged</code> &#26041;&#27861;&#19968;&#27425;&#24615;&#35299;&#26512;&#23427;&#20204;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;bind(ReportAnalyzer::class, function (Application $app) {
+    return new ReportAnalyzer($app-&gt;tagged('reports'));
+});</code></pre><h3 id="6388d1f39a04f97ef80ba6f9fe78fd1b">&#25193;&#23637;&#32465;&#23450;</h3><p><code>extend</code> &#26041;&#27861;&#20801;&#35768;&#20462;&#25913;&#24050;&#35299;&#26512;&#30340;&#26381;&#21153;&#12290;&#20363;&#22914;&#65292;&#24403;&#26576;&#20010;&#26381;&#21153;&#34987;&#35299;&#26512;&#26102;&#65292;&#21487;&#20197;&#25191;&#34892;&#39069;&#22806;&#30340;&#20195;&#30721;&#26469;&#35013;&#39280;&#25110;&#37197;&#32622;&#23427;&#12290;<code>extend</code> &#26041;&#27861;&#25509;&#25910;&#20004;&#20010;&#21442;&#25968;&#65306;&#20320;&#24819;&#35201;&#25193;&#23637;&#30340;&#26381;&#21153;&#31867;&#65292;&#20197;&#21450;&#19968;&#20010;&#36820;&#22238;&#20462;&#25913;&#21518;&#26381;&#21153;&#30340;&#38381;&#21253;&#12290;&#38381;&#21253;&#25509;&#25910;&#27491;&#22312;&#35299;&#26512;&#30340;&#26381;&#21153;&#23454;&#20363;&#20197;&#21450;&#23481;&#22120;&#23454;&#20363;&#65306;</p><pre><code class="language-php">$this-&gt;app-&gt;extend(Service::class, function (Service $service, Application $app) {
+    return new DecoratedService($service);
+});</code></pre><h2 id="aa357cb96ee813d56ef9d306af50e760">&#35299;&#26512;</h2><h3 id="3f6d586ad17031deb61a926a7090b03f"><code>make</code> &#26041;&#27861;</h3><p>&#21487;&#20197;&#20351;&#29992; <code>make</code> &#26041;&#27861;&#20174;&#23481;&#22120;&#20013;&#35299;&#26512;&#20986;&#31867;&#23454;&#20363;&#12290;<code>make</code> &#26041;&#27861;&#25509;&#25910;&#20320;&#24819;&#35201;&#35299;&#26512;&#30340;&#31867;&#21517;&#25110;&#25509;&#21475;&#21517;&#65306;</p><pre><code class="language-php">use App\Services\Transistor;
+
+$transistor = $this-&gt;app-&gt;make(Transistor::class);</code></pre><p>&#22914;&#26524;&#20320;&#26576;&#20123;&#31867;&#30340;&#20381;&#36182;&#26080;&#27861;&#30001;&#23481;&#22120;&#35299;&#26512;&#65292;&#21487;&#20197;&#36890;&#36807; <code>makeWith</code> &#26041;&#27861;&#25226;&#36825;&#20123;&#20381;&#36182;&#20316;&#20026;&#20851;&#32852;&#25968;&#32452;&#20256;&#20837;&#12290;&#20363;&#22914;&#65292;&#25105;&#20204;&#21487;&#20197;&#25163;&#21160;&#20256;&#20837; <code>Transistor</code> &#26381;&#21153;&#25152;&#38656;&#30340; <code>$id</code> &#26500;&#36896;&#20989;&#25968;&#21442;&#25968;&#65306;</p><pre><code class="language-php">use App\Services\Transistor;
+
+$transistor = $this-&gt;app-&gt;makeWith(Transistor::class, ['id' =&gt; 1]);</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>bound</code> &#26041;&#27861;&#26469;&#21028;&#26029;&#26576;&#20010;&#31867;&#25110;&#25509;&#21475;&#26159;&#21542;&#22312;&#23481;&#22120;&#20013;&#26174;&#24335;&#32465;&#23450;&#36807;&#65306;</p><pre><code class="language-php">if ($this-&gt;app-&gt;bound(Transistor::class)) {
+    // ...
+}</code></pre><p>&#22914;&#26524;&#20320;&#22312;&#26381;&#21153;&#25552;&#20379;&#32773;&#20043;&#22806;&#65292;&#26576;&#20010;&#26080;&#27861;&#35775;&#38382; <code>$app</code> &#21464;&#37327;&#30340;&#20301;&#32622;&#65292;&#20063;&#21487;&#20197;&#20351;&#29992; <code>App</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/facades" target="_blank">Facade</a> &#25110; <code>app</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/helpers#method-app" target="_blank">&#36741;&#21161;&#20989;&#25968;</a> &#20174;&#23481;&#22120;&#20013;&#35299;&#26512;&#31867;&#23454;&#20363;&#65306;</p><pre><code class="language-php">use App\Services\Transistor;
+use Illuminate\Support\Facades\App;
+
+$transistor = App::make(Transistor::class);
+
+$transistor = app(Transistor::class);</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#25226; Laravel &#23481;&#22120;&#23454;&#20363;&#26412;&#36523;&#27880;&#20837;&#21040;&#30001;&#23481;&#22120;&#35299;&#26512;&#30340;&#31867;&#37324;&#65292;&#21487;&#20197;&#22312;&#31867;&#30340;&#26500;&#36896;&#20989;&#25968;&#20013;&#31867;&#22411;&#25552;&#31034; <code>Illuminate\Container\Container</code> &#31867;&#65306;</p><pre><code class="language-php">use Illuminate\Container\Container;
+
+/**
+ * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#31867;&#23454;&#20363;&#12290;
+ */
+public function __construct(
+    protected Container $container,
+) {}</code></pre><h3 id="d2f66d9b4ab16ff9800e25e1932b6218">&#33258;&#21160;&#27880;&#20837;</h3><p>&#21478;&#19968;&#31181;&#26356;&#37325;&#35201;&#30340;&#26041;&#24335;&#26159;&#65306;&#22312;&#30001;&#23481;&#22120;&#35299;&#26512;&#30340;&#31867;&#65288;&#21253;&#25324; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/controllers" target="_blank">&#25511;&#21046;&#22120;</a>&#12289;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#20107;&#20214;&#30417;&#21548;&#22120;</a>&#12289;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/middleware" target="_blank">&#20013;&#38388;&#20214;</a> &#31561;&#65289;&#30340;&#26500;&#36896;&#20989;&#25968;&#37324;&#30452;&#25509;&#31867;&#22411;&#25552;&#31034;&#20381;&#36182;&#65307;&#27492;&#22806;&#65292;&#20320;&#20063;&#21487;&#20197;&#22312; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues" target="_blank">&#38431;&#21015;&#20219;&#21153;</a> &#30340; <code>handle</code> &#26041;&#27861;&#37324;&#31867;&#22411;&#25552;&#31034;&#20381;&#36182;&#12290;&#23454;&#36341;&#20013;&#65292;&#36825;&#27491;&#26159;&#23481;&#22120;&#35299;&#26512;&#32477;&#22823;&#22810;&#25968;&#23545;&#35937;&#30340;&#26041;&#24335;&#12290;</p><p>&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#22312;&#26576;&#20010;&#25511;&#21046;&#22120;&#30340;&#26500;&#36896;&#20989;&#25968;&#37324;&#31867;&#22411;&#25552;&#31034;&#26576;&#20010;&#24212;&#29992;&#33258;&#23450;&#20041;&#26381;&#21153;&#12290;&#35813;&#26381;&#21153;&#20250;&#34987;&#33258;&#21160;&#35299;&#26512;&#24182;&#27880;&#20837;&#21040;&#36825;&#20010;&#31867;&#20013;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Services\AppleMusic;
+
+class PodcastController extends Controller
+{
+    /**
+     * &#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#25511;&#21046;&#22120;&#23454;&#20363;&#12290;
+     */
+    public function __construct(
+        protected AppleMusic $apple,
+    ) {}
+
+    /**
+     * &#26174;&#31034;&#25351;&#23450;&#25773;&#23458;&#30340;&#20449;&#24687;&#12290;
+     */
+    public function show(string $id): Podcast
+    {
+        return $this-&gt;apple-&gt;findPodcast($id);
+    }
+}</code></pre><h2 id="b9b4fb6745800cbe96a609045d38e6a9">&#26041;&#27861;&#35843;&#29992;&#19982;&#27880;&#20837;</h2><p>&#26377;&#26102;&#20320;&#24076;&#26395;&#22312;&#35843;&#29992;&#26576;&#20010;&#23545;&#35937;&#23454;&#20363;&#30340;&#26041;&#27861;&#26102;&#65292;&#35753;&#23481;&#22120;&#33258;&#21160;&#27880;&#20837;&#35813;&#26041;&#27861;&#30340;&#20381;&#36182;&#12290;&#20363;&#22914;&#65292;&#32473;&#23450;&#19979;&#38754;&#36825;&#20010;&#31867;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App;
+
+use App\Services\AppleMusic;
+
+class PodcastStats
+{
+    /**
+     * &#29983;&#25104;&#26032;&#30340;&#25773;&#23458;&#32479;&#35745;&#25253;&#34920;&#12290;
+     */
+    public function generate(AppleMusic $apple): array
+    {
+        return [
+            // ...
+        ];
+    }
+}</code></pre><p>&#21487;&#20197;&#20687;&#19979;&#38754;&#36825;&#26679;&#36890;&#36807;&#23481;&#22120;&#35843;&#29992; <code>generate</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use App\PodcastStats;
+use Illuminate\Support\Facades\App;
+
+$stats = App::call([new PodcastStats, 'generate']);</code></pre><p><code>call</code> &#26041;&#27861;&#25509;&#21463;&#20219;&#24847; PHP callable&#12290;&#23481;&#22120;&#30340; <code>call</code> &#26041;&#27861;&#29978;&#33267;&#21487;&#20197;&#29992;&#26469;&#35843;&#29992;&#38381;&#21253;&#65292;&#24182;&#33258;&#21160;&#27880;&#20837;&#20854;&#20381;&#36182;&#65306;</p><pre><code class="language-php">use App\Services\AppleMusic;
+use Illuminate\Support\Facades\App;
+
+$result = App::call(function (AppleMusic $apple) {
+    // ...
+});</code></pre><h2 id="5f9144c2e23e657ee78b25b462e68dab">&#23481;&#22120;&#20107;&#20214;</h2><p>&#26381;&#21153;&#23481;&#22120;&#27599;&#27425;&#35299;&#26512;&#23545;&#35937;&#26102;&#37117;&#20250;&#35302;&#21457;&#19968;&#20010;&#20107;&#20214;&#65292;&#21487;&#20197;&#20351;&#29992; <code>resolving</code> &#26041;&#27861;&#30417;&#21548;&#36825;&#20010;&#20107;&#20214;&#65306;</p><pre><code class="language-php">use App\Services\Transistor;
+use Illuminate\Contracts\Foundation\Application;
+
+$this-&gt;app-&gt;resolving(Transistor::class, function (Transistor $transistor, Application $app) {
+    // &#24403;&#23481;&#22120;&#35299;&#26512;&#31867;&#22411;&#20026; "Transistor" &#30340;&#23545;&#35937;&#26102;&#35843;&#29992;...
+});
+
+$this-&gt;app-&gt;resolving(function (mixed $object, Application $app) {
+    // &#24403;&#23481;&#22120;&#35299;&#26512;&#20219;&#24847;&#31867;&#22411;&#30340;&#23545;&#35937;&#26102;&#35843;&#29992;...
+});</code></pre><p>&#21487;&#20197;&#30475;&#21040;&#65292;&#27491;&#22312;&#35299;&#26512;&#30340;&#23545;&#35937;&#20250;&#34987;&#20256;&#32473;&#22238;&#35843;&#65292;&#20415;&#20110;&#20320;&#22312;&#23545;&#35937;&#34987;&#20132;&#32473;&#20351;&#29992;&#32773;&#20043;&#21069;&#35774;&#32622;&#20219;&#20309;&#39069;&#22806;&#30340;&#23646;&#24615;&#12290;</p><h3 id="2eb89a4afccefde70f544d772b470723">&#37325;&#26032;&#32465;&#23450;</h3><p><code>rebinding</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#30417;&#21548;&#26576;&#20010;&#26381;&#21153;&#34987;&#37325;&#26032;&#32465;&#23450;&#21040;&#23481;&#22120;&#30340;&#20107;&#20214;&mdash;&mdash;&#20063;&#23601;&#26159;&#35813;&#26381;&#21153;&#22312;&#21021;&#27425;&#32465;&#23450;&#20043;&#21518;&#20877;&#27425;&#27880;&#20876;&#25110;&#34987;&#35206;&#30422;&#26102;&#35302;&#21457;&#12290;&#24403;&#20320;&#38656;&#35201;&#22312;&#27599;&#27425;&#26576;&#20010;&#32465;&#23450;&#26356;&#26032;&#26102;&#21516;&#27493;&#26356;&#26032;&#20381;&#36182;&#25110;&#35843;&#25972;&#34892;&#20026;&#26102;&#65292;&#36825;&#20250;&#24456;&#26377;&#29992;&#65306;</p><pre><code class="language-php">use App\Contracts\PodcastPublisher;
+use App\Services\SpotifyPublisher;
+use App\Services\TransistorPublisher;
+use Illuminate\Contracts\Foundation\Application;
+
+$this-&gt;app-&gt;bind(PodcastPublisher::class, SpotifyPublisher::class);
+
+$this-&gt;app-&gt;rebinding(
+    PodcastPublisher::class,
+    function (Application $app, PodcastPublisher $newInstance) {
+        //
+    },
+);
+
+// &#26032;&#30340;&#32465;&#23450;&#23558;&#35302;&#21457; rebinding &#38381;&#21253;...
+$this-&gt;app-&gt;bind(PodcastPublisher::class, TransistorPublisher::class);</code></pre><h2 id="981fe91b1aaff8bfaf54d5c07c15630f">PSR-11</h2><p>Laravel &#30340;&#26381;&#21153;&#23481;&#22120;&#23454;&#29616;&#20102; <a href="https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-11-container.md" target="_blank" rel="noopener noreferrer">PSR-11</a> &#25509;&#21475;&#12290;&#22240;&#27492;&#65292;&#20320;&#21487;&#20197;&#31867;&#22411;&#25552;&#31034; PSR-11 &#23481;&#22120;&#25509;&#21475;&#26469;&#33719;&#21462; Laravel &#23481;&#22120;&#30340;&#23454;&#20363;&#65306;</p><pre><code class="language-php">use App\Services\Transistor;
+use Psr\Container\ContainerInterface;
+
+Route::get('/', function (ContainerInterface $container) {
+    $service = $container-&gt;get(Transistor::class);
+
+    // ...
+});</code></pre><p>&#22914;&#26524;&#32473;&#23450;&#30340;&#26631;&#35782;&#31526;&#26080;&#27861;&#35299;&#26512;&#65292;&#20250;&#25243;&#20986;&#24322;&#24120;&#12290;&#33509;&#35813;&#26631;&#35782;&#31526;&#20174;&#26410;&#32465;&#23450;&#36807;&#65292;&#21017;&#24322;&#24120;&#31867;&#22411;&#20026; <code>Psr\Container\NotFoundExceptionInterface</code>&#65307;&#33509;&#24050;&#32465;&#23450;&#20294;&#26080;&#27861;&#35299;&#26512;&#65292;&#21017;&#24322;&#24120;&#31867;&#22411;&#20026; <code>Psr\Container\ContainerExceptionInterface</code>&#12290;</p>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 控制器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/controllers" target="_blank">/docs/Laravel 13.x/controllers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 事件监听器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> 中间件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/middleware" target="_blank">/docs/Laravel 13.x/middleware</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> 队列任务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues" target="_blank">/docs/Laravel 13.x/queues</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> Facades: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/facades" target="_blank">/docs/Laravel 13.x/facades</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 告诉容器该如何解析这个接口: <i><a href="x3vo054vm1.html#binding-interfaces-to-implementations" target="_blank">#binding-interfaces-to-implementations</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 编写一个 Laravel 包: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/packages" target="_blank">/docs/Laravel 13.x/packages</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 服务提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/providers" target="_blank">/docs/Laravel 13.x/providers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> Facade: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/facades" target="_blank">/docs/Laravel 13.x/facades</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> Laravel Octane: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/octane" target="_blank">/docs/Laravel 13.x/octane</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> 队列 worker: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues" target="_blank">/docs/Laravel 13.x/queues</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> Singleton: <i><a href="x3vo054vm1.html#singleton-attribute" target="_blank">#singleton-attribute</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> Scoped: <i><a href="x3vo054vm1.html#scoped-attribute" target="_blank">#scoped-attribute</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> 契约: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/contracts" target="_blank">/docs/Laravel 13.x/contracts</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 存储磁盘: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/filesystem" target="_blank">/docs/Laravel 13.x/filesystem</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> Tag: <i><a href="x3vo054vm1.html#tagging" target="_blank">#tagging</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> 属性包: <i><a href="https://symfony.com/doc/current/components/http_foundation.html#accessing-request-data" target="_blank">https://symfony.com/doc/current/components/http_foundation.html#accessing-request-data</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> 打了标签: <i><a href="x3vo054vm1.html#tagging" target="_blank">#tagging</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> 标签: <i><a href="x3vo054vm1.html#tagging" target="_blank">#tagging</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> Facade: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/facades" target="_blank">/docs/Laravel 13.x/facades</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> 辅助函数: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/helpers#method-app" target="_blank">/docs/Laravel 13.x/helpers#method-app</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> 控制器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/controllers" target="_blank">/docs/Laravel 13.x/controllers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> 事件监听器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> 中间件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/middleware" target="_blank">/docs/Laravel 13.x/middleware</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> 队列任务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues" target="_blank">/docs/Laravel 13.x/queues</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> PSR-11: <i><a href="https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-11-container.md" target="_blank">https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-11-container.md</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="3xyq4o4vmq.html#blog1009" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">请求生命周期</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="qk942kovw1.html#blog1011" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">服务提供者</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

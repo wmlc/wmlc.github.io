@@ -1,0 +1,1496 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>用户认证 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/xq9zrgjvdo.html', function (data, status) {
+            addView('xq9zrgjvdo.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>用户认证</h1><ul>
+<li><a href="xq9zrgjvdo.html#785a37313cbc5189279700e6217bb8f5">用户认证</a>
+<ul>
+<li><a href="xq9zrgjvdo.html#61a3ec6656837d917b6f69525a262eec">介绍</a>
+<ul>
+<li><a href="xq9zrgjvdo.html#307027eb33785d9fdeada8a23caa3963">入门套件</a></li>
+<li><a href="xq9zrgjvdo.html#3a7669d29a573a4b71534f32cb62bd53">数据库注意事项</a></li>
+<li><a href="xq9zrgjvdo.html#4fc4c9bf44581cf11ab04660d13045c0">生态总览</a></li>
+<li><a href="xq9zrgjvdo.html#bda177cd1335f9bdc8f3ed231a047f68">Laravel 内置的浏览器认证服务</a></li>
+<li><a href="xq9zrgjvdo.html#92feee600dafb2ec1c68055ef2efd77e">Laravel 的 API 认证服务</a></li>
+<li><a href="xq9zrgjvdo.html#82d1906553ef82b60d59109ee5125800">小结与选型建议</a></li>
+</ul></li>
+<li><a href="xq9zrgjvdo.html#b3d0427738f20b6353daf6d79c47cea0">认证快速入门</a>
+<ul>
+<li><a href="xq9zrgjvdo.html#43e83447385ae2b5373e52050669726e">安装入门套件</a></li>
+<li><a href="xq9zrgjvdo.html#c94f124cf3342206f0ab76f65caf5f95">获取已认证用户</a></li>
+<li><a href="xq9zrgjvdo.html#09d006948f727654e1e9a4b3a9ad0dd2">判断当前用户是否已认证</a></li>
+<li><a href="xq9zrgjvdo.html#801705ac2343e82fa596c98e745035e8">保护路由</a></li>
+<li><a href="xq9zrgjvdo.html#3f14e3e317e6298f5f3dbe2b51f60ad5">重定向未认证用户</a></li>
+<li><a href="xq9zrgjvdo.html#95360fbcfcedf249711ea54346c7d714">重定向已认证用户</a></li>
+<li><a href="xq9zrgjvdo.html#6d36d7647dff306daddc1fcd84911558">指定 Guard</a></li>
+<li><a href="xq9zrgjvdo.html#c1f3b6fc480fa5a9e35171ad77b4ecd5">登录限流</a></li>
+</ul></li>
+<li><a href="xq9zrgjvdo.html#5db639a2e1009066053afb3951042007">手动认证用户</a>
+<ul>
+<li><a href="xq9zrgjvdo.html#55cf67244c3af9fb3c9f1e9daa029b95">指定额外条件</a></li>
+<li><a href="xq9zrgjvdo.html#0288943f6d3497abc59d227473a2ff5f">访问指定的 Guard 实例</a></li>
+<li><a href="xq9zrgjvdo.html#9ecfe7c5c862157bcf70dcfe452489e5">记住用户</a></li>
+<li><a href="xq9zrgjvdo.html#c0dd0ef5de4b9b06399e0046cf21b685">其他认证方式</a></li>
+<li><a href="xq9zrgjvdo.html#0c224a4aa3a12232c75c2ed26a6e15da">通过用户实例进行认证</a></li>
+<li><a href="xq9zrgjvdo.html#e437849e03efed08116cd384500d9336">通过用户 ID 进行认证</a></li>
+<li><a href="xq9zrgjvdo.html#85cba73540860afd4e20b0f97b38f922">临时认证用户</a></li>
+</ul></li>
+<li><a href="xq9zrgjvdo.html#fca02803831c201561ea00a56fee15b5">HTTP Basic 认证</a>
+<ul>
+<li><a href="xq9zrgjvdo.html#101d265b4f54b5a2a3723cc9328c9ca6">关于 FastCGI 的补充说明</a></li>
+<li><a href="xq9zrgjvdo.html#1439ba065b2fbcc515e712e840cac3a7">无状态 HTTP Basic 认证</a></li>
+</ul></li>
+<li><a href="xq9zrgjvdo.html#44efd179aa7e6c204c751cfa6c958dd0">退出登录</a>
+<ul>
+<li><a href="xq9zrgjvdo.html#27e904490e743424c4ed55a497a88021">在其他设备上销毁会话</a></li>
+</ul></li>
+<li><a href="xq9zrgjvdo.html#92fa7ce5c5cfbd7c1aef8ea0018a81c9">密码确认</a>
+<ul>
+<li><a href="xq9zrgjvdo.html#224e2ccda861c2514faa683b3683c361">配置</a></li>
+<li><a href="xq9zrgjvdo.html#75fc7de7375ca7234c0247db7f2776fb">路由</a></li>
+<li><a href="xq9zrgjvdo.html#bbbfa843428d6c8315515f5dc20ca624">密码确认表单</a></li>
+<li><a href="xq9zrgjvdo.html#3fbdde139cb1c9c51e7503d67b0b8bbd">确认密码</a></li>
+<li><a href="xq9zrgjvdo.html#801705ac2343e82fa596c98e745035e8">保护路由</a></li>
+</ul></li>
+<li><a href="xq9zrgjvdo.html#ce6052cca6bc845d75dc42032e48d7ed">添加自定义 Guard</a>
+<ul>
+<li><a href="xq9zrgjvdo.html#00f5cdbd5bebc395b5d221c39226ddc0">闭包请求 Guard</a></li>
+</ul></li>
+<li><a href="xq9zrgjvdo.html#2e850f126f27103f5b3946d6fe1caee1">添加自定义用户提供器</a>
+<ul>
+<li><a href="xq9zrgjvdo.html#7a54b6e72b2780bd7963061ba25a3538">User Provider 契约</a></li>
+<li><a href="xq9zrgjvdo.html#c80e646881d8d36ad93ead2f1a7780f3">Authenticatable 契约</a></li>
+</ul></li>
+<li><a href="xq9zrgjvdo.html#cb5cda6ac83534d52f07664918109cf2">自动重新哈希密码</a></li>
+<li><a href="xq9zrgjvdo.html#10b2761db5a8e089049df39675abc550">事件</a></li>
+</ul></li>
+</ul><?xml encoding="UTF-8"><h1 id="785a37313cbc5189279700e6217bb8f5">&#29992;&#25143;&#35748;&#35777;</h1><h2 id="61a3ec6656837d917b6f69525a262eec">&#20171;&#32461;</h2><p>&#24456;&#22810; Web &#24212;&#29992;&#37117;&#20250;&#20026;&#29992;&#25143;&#25552;&#20379;&#19968;&#31181;"&#30331;&#24405;"&#36523;&#20221;&#35748;&#35777;&#30340;&#26041;&#24335;&#12290;&#22312; Web &#24212;&#29992;&#20013;&#23454;&#29616;&#36825;&#19968;&#29305;&#24615;&#21487;&#33021;&#26082;&#22797;&#26434;&#21448;&#26377;&#39118;&#38505;&#12290;&#27491;&#22240;&#22914;&#27492;&#65292;Laravel &#33268;&#21147;&#20110;&#20026;&#20320;&#25552;&#20379;&#24555;&#36895;&#12289;&#23433;&#20840;&#12289;&#26131;&#29992;&#30340;&#35748;&#35777;&#24037;&#20855;&#12290;</p><p>&#20174;&#26412;&#36136;&#19978;&#35762;&#65292;Laravel &#30340;&#35748;&#35777;&#26426;&#21046;&#30001;"guards"&#21644;"providers"&#20004;&#37096;&#20998;&#32452;&#25104;&#12290;Guards &#23450;&#20041;&#20102;&#22312;&#27599;&#20010;&#35831;&#27714;&#20013;&#22914;&#20309;&#23545;&#29992;&#25143;&#36827;&#34892;&#35748;&#35777;&#12290;&#20363;&#22914;&#65292;Laravel &#33258;&#24102;&#19968;&#20010; <code>session</code> guard&#65292;&#23427;&#20351;&#29992;&#20250;&#35805;&#23384;&#20648;&#21644; Cookie &#26469;&#32500;&#25252;&#29366;&#24577;&#12290;</p><p>Providers &#23450;&#20041;&#20102;&#22914;&#20309;&#20174;&#25345;&#20037;&#23384;&#20648;&#20013;&#26816;&#32034;&#29992;&#25143;&#12290;Laravel &#33258;&#24102;&#25903;&#25345;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent" target="_blank">Eloquent</a> &#21644;&#25968;&#25454;&#24211;&#26597;&#35810;&#26500;&#36896;&#22120;&#26816;&#32034;&#29992;&#25143;&#12290;&#19981;&#36807;&#20320;&#20063;&#21487;&#20197;&#26681;&#25454;&#24212;&#29992;&#38656;&#27714;&#33258;&#30001;&#23450;&#20041;&#20854;&#20182; provider&#12290;</p><p>&#24212;&#29992;&#30340;&#35748;&#35777;&#37197;&#32622;&#25991;&#20214;&#20301;&#20110; <code>config/auth.php</code>&#12290;&#35813;&#25991;&#20214;&#21253;&#21547;&#33509;&#24178;&#25991;&#26723;&#23436;&#22791;&#30340;&#36873;&#39033;&#65292;&#21487;&#29992;&#20110;&#24494;&#35843; Laravel &#35748;&#35777;&#26381;&#21153;&#30340;&#34892;&#20026;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#19981;&#35201;&#25226; guard &#21644; provider &#19982;"&#35282;&#33394;&#65288;roles&#65289;"&#21644;"&#26435;&#38480;&#65288;permissions&#65289;"&#28151;&#28102;&#12290;&#22914;&#38656;&#20102;&#35299;&#22522;&#20110;&#26435;&#38480;&#30340;&#29992;&#25143;&#25805;&#20316;&#25480;&#26435;&#65292;&#35831;&#21442;&#32771; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authorization" target="_blank">&#25480;&#26435;</a> &#25991;&#26723;&#12290;</p>
+</blockquote><h3 id="307027eb33785d9fdeada8a23caa3963">&#20837;&#38376;&#22871;&#20214;</h3><p>&#24819;&#24555;&#36895;&#19978;&#25163;&#65311;&#22312;&#19968;&#20010;&#20840;&#26032;&#30340; Laravel &#24212;&#29992;&#37324;&#23433;&#35013;&#19968;&#20010; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">Laravel &#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#12290;&#36801;&#31227;&#25968;&#25454;&#24211;&#21518;&#65292;&#22312;&#27983;&#35272;&#22120;&#37324;&#35775;&#38382; <code>/register</code> &#25110;&#20998;&#37197;&#32473;&#24212;&#29992;&#30340;&#20854;&#20182; URL&#12290;&#20837;&#38376;&#22871;&#20214;&#20250;&#20026;&#20320;&#25645;&#24314;&#22909;&#23436;&#25972;&#30340;&#35748;&#35777;&#31995;&#32479;&#65281;</p><p><strong class="mk-g">&#21363;&#20351;&#20320;&#26368;&#32456;&#22312; Laravel &#24212;&#29992;&#37324;&#19981;&#25171;&#31639;&#20351;&#29992;&#20837;&#38376;&#22871;&#20214;&#65292;&#23433;&#35013;&#19968;&#20010; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#20837;&#38376;&#22871;&#20214;</a> &#20063;&#26159;&#23398;&#20064;&#22914;&#20309;&#22312;&#30495;&#23454; Laravel &#39033;&#30446;&#20013;&#23454;&#29616; Laravel &#20840;&#37096;&#35748;&#35777;&#21151;&#33021;&#30340;&#22909;&#26426;&#20250;&#12290;</strong> &#30001;&#20110; Laravel &#20837;&#38376;&#22871;&#20214;&#24050;&#32463;&#20026;&#20320;&#20934;&#22791;&#22909;&#20102;&#35748;&#35777;&#30456;&#20851;&#30340;&#25511;&#21046;&#22120;&#12289;&#36335;&#30001;&#21644;&#35270;&#22270;&#65292;&#20320;&#21487;&#20197;&#26597;&#30475;&#36825;&#20123;&#25991;&#20214;&#20013;&#30340;&#20195;&#30721;&#26469;&#23398;&#20064;&#22914;&#20309;&#23454;&#29616; Laravel &#30340;&#35748;&#35777;&#29305;&#24615;&#12290;</p><h3 id="3a7669d29a573a4b71534f32cb62bd53">&#25968;&#25454;&#24211;&#27880;&#24847;&#20107;&#39033;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Laravel &#20250;&#22312; <code>app/Models</code> &#30446;&#24405;&#20013;&#21253;&#21547;&#19968;&#20010; <code>App\Models\User</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent" target="_blank">Eloquent &#27169;&#22411;</a>&#12290;&#35813;&#27169;&#22411;&#21487;&#20197;&#19982;&#40664;&#35748;&#30340; Eloquent &#35748;&#35777;&#39537;&#21160;&#19968;&#36215;&#20351;&#29992;&#12290;</p><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#19981;&#20351;&#29992; Eloquent&#65292;&#21487;&#20197;&#20351;&#29992; <code>database</code> &#35748;&#35777; provider&#65292;&#23427;&#20351;&#29992; Laravel &#26597;&#35810;&#26500;&#36896;&#22120;&#12290;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20351;&#29992; MongoDB&#65292;&#35831;&#26597;&#30475; MongoDB &#23448;&#26041;&#30340; <a href="https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/user-authentication/" target="_blank" rel="noopener noreferrer">Laravel &#29992;&#25143;&#35748;&#35777;&#25991;&#26723;</a>&#12290;</p><p>&#22312;&#20026; <code>App\Models\User</code> &#27169;&#22411;&#35774;&#35745;&#25968;&#25454;&#24211;&#34920;&#32467;&#26500;&#26102;&#65292;&#35831;&#30830;&#20445; <code>password</code> &#21015;&#38271;&#24230;&#33267;&#23569;&#20026; 60 &#20010;&#23383;&#31526;&#12290;&#24403;&#28982;&#65292;&#26032; Laravel &#24212;&#29992;&#33258;&#24102;&#30340; <code>users</code> &#34920;&#36801;&#31227;&#24050;&#32463;&#21019;&#24314;&#20102;&#19968;&#20010;&#22823;&#20110;&#35813;&#38271;&#24230;&#30340;&#21015;&#12290;</p><p>&#27492;&#22806;&#65292;&#36824;&#35201;&#30830;&#20445; <code>users</code>&#65288;&#25110;&#31561;&#20215;&#65289;&#34920;&#20013;&#21253;&#21547;&#19968;&#20010;&#21487;&#31354;&#30340;&#12289;&#38271;&#24230;&#20026; 100 &#20010;&#23383;&#31526;&#20018;&#23383;&#31526;&#30340; <code>remember_token</code> &#21015;&#12290;&#35813;&#21015;&#29992;&#20110;&#23384;&#20648;&#37027;&#20123;&#22312;&#30331;&#24405;&#26102;&#36873;&#25321;"&#35760;&#20303;&#25105;"&#36873;&#39033;&#30340;&#29992;&#25143;&#30340;&#20196;&#29260;&#12290;&#21516;&#26679;&#22320;&#65292;&#26032; Laravel &#24212;&#29992;&#33258;&#24102;&#30340; <code>users</code> &#34920;&#36801;&#31227;&#24050;&#32463;&#21253;&#21547;&#20102;&#35813;&#21015;&#12290;</p><h3 id="4fc4c9bf44581cf11ab04660d13045c0">&#29983;&#24577;&#24635;&#35272;</h3><p>Laravel &#25552;&#20379;&#20102;&#33509;&#24178;&#19982;&#35748;&#35777;&#30456;&#20851;&#30340;&#21253;&#12290;&#22312;&#32487;&#32493;&#20043;&#21069;&#65292;&#25105;&#20204;&#20808;&#26469;&#27010;&#35272;&#19968;&#19979; Laravel &#20013;&#30340;&#35748;&#35777;&#29983;&#24577;&#65292;&#24182;&#35752;&#35770;&#27599;&#20010;&#21253;&#21508;&#33258;&#30340;&#23450;&#20301;&#12290;</p><p>&#39318;&#20808;&#65292;&#24819;&#24819;&#35748;&#35777;&#26159;&#22914;&#20309;&#24037;&#20316;&#30340;&#12290;&#20351;&#29992; Web &#27983;&#35272;&#22120;&#26102;&#65292;&#29992;&#25143;&#20250;&#36890;&#36807;&#30331;&#24405;&#34920;&#21333;&#25552;&#20379;&#29992;&#25143;&#21517;&#21644;&#23494;&#30721;&#12290;&#22914;&#26524;&#20973;&#25454;&#27491;&#30830;&#65292;&#24212;&#29992;&#20250;&#25226;&#24050;&#35748;&#35777;&#29992;&#25143;&#30340;&#20449;&#24687;&#23384;&#21040;&#29992;&#25143;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/session" target="_blank">&#20250;&#35805;</a> &#20013;&#12290;&#39041;&#21457;&#32473;&#27983;&#35272;&#22120;&#30340; Cookie &#20013;&#21253;&#21547;&#20250;&#35805; ID&#65292;&#20197;&#20415;&#21518;&#32493;&#35831;&#27714;&#21487;&#20197;&#25226;&#29992;&#25143;&#19982;&#27491;&#30830;&#30340;&#20250;&#35805;&#20851;&#32852;&#36215;&#26469;&#12290;&#25910;&#21040;&#20250;&#35805; Cookie &#21518;&#65292;&#24212;&#29992;&#20250;&#26681;&#25454;&#20250;&#35805; ID &#21462;&#20986;&#30456;&#24212;&#30340;&#20250;&#35805;&#25968;&#25454;&#65292;&#35782;&#21035;&#20986;&#24050;&#23384;&#25918;&#35748;&#35777;&#20449;&#24687;&#65292;&#24182;&#35748;&#20026;&#35813;&#29992;&#25143;&#22788;&#20110;"&#24050;&#35748;&#35777;"&#29366;&#24577;&#12290;</p><p>&#32780;&#24403;&#26576;&#20010;&#36828;&#31243;&#26381;&#21153;&#38656;&#35201;&#35748;&#35777;&#20197;&#35775;&#38382; API &#26102;&#65292;&#36890;&#24120;&#19981;&#20250;&#20351;&#29992; Cookie&#65292;&#22240;&#20026;&#27492;&#26102;&#27809;&#26377; Web &#27983;&#35272;&#22120;&#12290;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#36828;&#31243;&#26381;&#21153;&#20250;&#22312;&#27599;&#27425;&#35831;&#27714;&#26102;&#25658;&#24102;&#19968;&#20010; API Token &#21457;&#32473; API&#12290;&#24212;&#29992;&#21487;&#20197;&#25343;&#36825;&#20010; Token &#19982;"&#26377;&#25928; API Token &#34920;"&#20013;&#30340;&#35760;&#24405;&#27604;&#23545;&#65292;&#20174;&#32780;&#25226;&#35813;&#35831;&#27714;"&#35748;&#35777;"&#20026;&#23646;&#20110;&#20851;&#32852;&#21040;&#35813; Token &#30340;&#29992;&#25143;&#12290;</p><h4 id="bda177cd1335f9bdc8f3ed231a047f68">Laravel &#20869;&#32622;&#30340;&#27983;&#35272;&#22120;&#35748;&#35777;&#26381;&#21153;</h4><p>Laravel &#33258;&#24102;&#35748;&#35777;&#21644;&#20250;&#35805;&#26381;&#21153;&#65292;&#36890;&#24120;&#36890;&#36807; <code>Auth</code> &#21644; <code>Session</code> &#20004;&#20010; Facade &#26469;&#35775;&#38382;&#12290;&#36825;&#20123;&#29305;&#24615;&#20026;&#26469;&#33258; Web &#27983;&#35272;&#22120;&#30340;&#35831;&#27714;&#25552;&#20379;&#22522;&#20110; Cookie &#30340;&#35748;&#35777;&#65292;&#24182;&#25552;&#20379;&#29992;&#20110;&#26657;&#39564;&#29992;&#25143;&#20973;&#25454;&#12289;&#23545;&#29992;&#25143;&#36827;&#34892;&#35748;&#35777;&#30340;&#26041;&#27861;&#12290;&#27492;&#22806;&#65292;&#36825;&#20123;&#26381;&#21153;&#36824;&#20250;&#33258;&#21160;&#25226;&#30456;&#24212;&#30340;&#35748;&#35777;&#25968;&#25454;&#20889;&#20837;&#29992;&#25143;&#20250;&#35805;&#65292;&#24182;&#21521;&#27983;&#35272;&#22120;&#39041;&#21457;&#20250;&#35805; Cookie&#12290;&#22914;&#20309;&#20351;&#29992;&#36825;&#20123;&#26381;&#21153;&#30340;&#35828;&#26126;&#37117;&#22312;&#26412;&#25991;&#26723;&#20013;&#12290;</p><p><strong class="mk-b">&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</strong></p><p>&#27491;&#22914;&#26412;&#25991;&#25152;&#36848;&#65292;&#20320;&#21487;&#20197;&#25163;&#21160;&#19982;&#36825;&#20123;&#35748;&#35777;&#26381;&#21153;&#20132;&#20114;&#65292;&#20197;&#25645;&#24314;&#24212;&#29992;&#33258;&#24049;&#30340;&#35748;&#35777;&#23618;&#12290;&#19981;&#36807;&#65292;&#20026;&#20102;&#24110;&#21161;&#20320;&#26356;&#24555;&#36215;&#27493;&#65292;&#25105;&#20204;&#21457;&#24067;&#20102; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#20813;&#36153;&#20837;&#38376;&#22871;&#20214;</a>&#65292;&#23427;&#20204;&#33021;&#20026;&#25972;&#20010;&#35748;&#35777;&#23618;&#25552;&#20379;&#31283;&#20581;&#12289;&#29616;&#20195;&#30340;&#33050;&#25163;&#26550;&#12290;</p><h4 id="92feee600dafb2ec1c68055ef2efd77e">Laravel &#30340; API &#35748;&#35777;&#26381;&#21153;</h4><p>Laravel &#25552;&#20379;&#20102;&#20004;&#20010;&#21487;&#36873;&#30340;&#21253;&#65292;&#29992;&#20110;&#24110;&#21161;&#20320;&#31649;&#29702; API Token &#20197;&#21450;&#35748;&#35777;&#20351;&#29992; API Token &#21457;&#36215;&#30340;&#35831;&#27714;&#65306;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/passport" target="_blank">Passport</a> &#21644; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Sanctum</a>&#12290;&#35831;&#27880;&#24847;&#65292;&#36825;&#20123;&#24211;&#19982; Laravel &#20869;&#32622;&#30340;&#22522;&#20110; Cookie &#30340;&#35748;&#35777;&#24211;&#24182;&#19981;&#20114;&#26021;&#12290;&#36825;&#20123;&#24211;&#20027;&#35201;&#20851;&#27880; API Token &#35748;&#35777;&#65292;&#32780;&#20869;&#32622;&#35748;&#35777;&#26381;&#21153;&#20027;&#35201;&#20851;&#27880;&#22522;&#20110; Cookie &#30340;&#27983;&#35272;&#22120;&#35748;&#35777;&#12290;&#35768;&#22810;&#24212;&#29992;&#20250;&#21516;&#26102;&#20351;&#29992; Laravel &#20869;&#32622;&#30340;&#22522;&#20110; Cookie &#30340;&#35748;&#35777;&#26381;&#21153;&#21644;&#20854;&#20013;&#30340;&#26576;&#20010; Laravel API &#35748;&#35777;&#21253;&#12290;</p><p><strong class="mk-p">Passport</strong></p><p>Passport &#26159;&#19968;&#20010; OAuth2 &#35748;&#35777; provider&#65292;&#25552;&#20379;&#22810;&#31181; OAuth2"&#25480;&#26435;&#31867;&#22411;"&#65292;&#20320;&#21487;&#20197;&#20511;&#27492;&#31614;&#21457;&#21508;&#31867; Token&#12290;&#36890;&#24120;&#26469;&#35828;&#65292;&#36825;&#26159;&#20010;&#24378;&#22823;&#32780;&#22797;&#26434;&#30340; API &#35748;&#35777;&#21253;&#12290;&#19981;&#36807;&#65292;&#22823;&#22810;&#25968;&#24212;&#29992;&#24182;&#19981;&#38656;&#35201; OAuth2 &#35268;&#33539;&#37324;&#37027;&#20123;&#22797;&#26434;&#30340;&#29305;&#24615;&mdash;&mdash;&#23427;&#20204;&#20250;&#35753;&#29992;&#25143;&#21644;&#24320;&#21457;&#32773;&#37117;&#24863;&#21040;&#36855;&#24785;&#12290;&#27492;&#22806;&#65292;&#24320;&#21457;&#32773;&#21382;&#26469;&#20063;&#20250;&#23545;&#22914;&#20309;&#29992; Passport &#36825;&#31867; OAuth2 provider &#26469;&#35748;&#35777; SPA &#25110;&#31227;&#21160;&#31471;&#24212;&#29992;&#24863;&#21040;&#22256;&#24785;&#12290;</p><p><strong class="mk-y">Sanctum</strong></p><p>&#38024;&#23545; OAuth2 &#30340;&#22797;&#26434;&#24615;&#21644;&#24320;&#21457;&#32773;&#30340;&#22256;&#24785;&#65292;&#25105;&#20204;&#30528;&#25163;&#25171;&#36896;&#20102;&#19968;&#20010;&#26356;&#31616;&#21333;&#12289;&#26356;&#39034;&#30021;&#30340;&#35748;&#35777;&#21253;&#65292;&#23427;&#21487;&#20197;&#21516;&#26102;&#22788;&#29702;&#26469;&#33258; Web &#27983;&#35272;&#22120;&#30340;&#31532;&#19968;&#26041; Web &#35831;&#27714;&#21644;&#22522;&#20110; Token &#30340; API &#35831;&#27714;&#12290;&#36825;&#19968;&#30446;&#26631;&#22312; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Laravel Sanctum</a> &#21457;&#24067;&#26102;&#24471;&#20197;&#23454;&#29616;&#12290;&#23545;&#20110;&#26082;&#35201;&#25552;&#20379;&#31532;&#19968;&#26041; Web UI &#21448;&#35201;&#25552;&#20379; API &#30340;&#24212;&#29992;&#12289;&#25110;&#32773;&#30001;&#29420;&#31435;&#20110;&#21518;&#31471; Laravel &#24212;&#29992;&#20043;&#22806;&#30340; SPA &#39537;&#21160;&#30340;&#24212;&#29992;&#12289;&#21448;&#25110;&#32773;&#35201;&#25552;&#20379;&#31227;&#21160;&#31471;&#30340;&#24212;&#29992;&#26469;&#35828;&#65292;Sanctum &#24212;&#24403;&#34987;&#35748;&#20026;&#26159;&#39318;&#36873;&#19988;&#25512;&#33616;&#30340;&#35748;&#35777;&#21253;&#12290;</p><p>Laravel Sanctum &#26159;&#19968;&#20010;&#28151;&#21512;&#30340; Web/API &#35748;&#35777;&#21253;&#65292;&#21487;&#20197;&#31649;&#29702;&#24212;&#29992;&#30340;&#25972;&#20010;&#35748;&#35777;&#27969;&#31243;&#12290;&#36825;&#26159;&#21487;&#34892;&#30340;&#65292;&#22240;&#20026;&#24403; Sanctum &#24212;&#29992;&#25910;&#21040;&#19968;&#20010;&#35831;&#27714;&#26102;&#65292;Sanctum &#20250;&#20808;&#21028;&#26029;&#35813;&#35831;&#27714;&#26159;&#21542;&#21253;&#21547;&#24341;&#29992;&#24050;&#35748;&#35777;&#20250;&#35805;&#30340;&#20250;&#35805; Cookie&#12290;Sanctum &#36890;&#36807;&#35843;&#29992;&#25105;&#20204;&#21069;&#38754;&#20171;&#32461;&#30340; Laravel &#20869;&#32622;&#35748;&#35777;&#26381;&#21153;&#26469;&#23454;&#29616;&#36825;&#19968;&#28857;&#12290;&#22914;&#26524;&#35831;&#27714;&#24182;&#38750;&#36890;&#36807;&#20250;&#35805; Cookie &#23436;&#25104;&#35748;&#35777;&#65292;Sanctum &#20250;&#20877;&#21435;&#26816;&#26597;&#35831;&#27714;&#26159;&#21542;&#25658;&#24102; API Token&#12290;&#22914;&#26524;&#23384;&#22312; API Token&#65292;Sanctum &#23558;&#20351;&#29992;&#35813; Token &#23436;&#25104;&#35748;&#35777;&#12290;&#35201;&#20102;&#35299;&#36825;&#19968;&#36807;&#31243;&#30340;&#26356;&#22810;&#32454;&#33410;&#65292;&#35831;&#21442;&#32771; Sanctum &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum#how-it-works" target="_blank">"how it works"</a> &#25991;&#26723;&#12290;</p><h4 id="82d1906553ef82b60d59109ee5125800">&#23567;&#32467;&#19982;&#36873;&#22411;&#24314;&#35758;</h4><p>&#31616;&#32780;&#35328;&#20043;&#65292;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#23558;&#36890;&#36807;&#27983;&#35272;&#22120;&#35775;&#38382;&#24182;&#19988;&#26500;&#24314;&#30340;&#26159;&#21333;&#20307; Laravel &#24212;&#29992;&#65292;&#37027;&#20040;&#23427;&#23558;&#20351;&#29992; Laravel &#20869;&#32622;&#30340;&#35748;&#35777;&#26381;&#21153;&#12290;</p><p>&#25509;&#19979;&#26469;&#65292;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#25552;&#20379;&#38754;&#21521;&#31532;&#19977;&#26041;&#30340; API&#65292;&#37027;&#20040;&#21487;&#20197;&#22312; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/passport" target="_blank">Passport</a> &#21644; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Sanctum</a> &#20043;&#38388;&#20108;&#36873;&#19968;&#26469;&#20026;&#24212;&#29992;&#25552;&#20379; API Token &#35748;&#35777;&#12290;&#19968;&#33324;&#26469;&#35828;&#65292;&#24212;&#20248;&#20808;&#36873;&#25321; Sanctum&#65292;&#22240;&#20026;&#23427;&#26159;&#19968;&#20010;&#23436;&#25972;&#12289;&#31616;&#21333;&#30340; API &#35748;&#35777;&#12289;SPA &#35748;&#35777;&#19982;&#31227;&#21160;&#31471;&#35748;&#35777;&#26041;&#26696;&#65292;&#24182;&#19988;&#25903;&#25345;"&#20316;&#29992;&#22495;&#65288;scope&#65289;"&#25110;"&#33021;&#21147;&#65288;abilities&#65289;"&#12290;</p><p>&#22914;&#26524;&#20320;&#27491;&#22312;&#26500;&#24314;&#20197; Laravel &#21518;&#31471;&#20026;&#25903;&#25745;&#30340;&#21333;&#39029;&#24212;&#29992;&#65288;SPA&#65289;&#65292;&#37027;&#20040;&#24212;&#24403;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/sanctum" target="_blank">Laravel Sanctum</a>&#12290;&#20351;&#29992; Sanctum &#26102;&#65292;&#20320;&#26082;&#38656;&#35201; <a href="xq9zrgjvdo.html#authenticating-users" target="_blank">&#25163;&#21160;&#23454;&#29616;&#33258;&#24049;&#30340;&#21518;&#31471;&#35748;&#35777;&#36335;&#30001;</a>&#65292;&#20063;&#21487;&#20197;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/fortify" target="_blank">Laravel Fortify</a> &#20316;&#20026;&#26080;&#22836;&#35748;&#35777;&#21518;&#31471;&#26381;&#21153;&#65292;&#30001;&#23427;&#26469;&#25552;&#20379;&#27880;&#20876;&#12289;&#23494;&#30721;&#37325;&#32622;&#12289;&#37038;&#31665;&#39564;&#35777;&#31561;&#29305;&#24615;&#30340;&#36335;&#30001;&#21644;&#25511;&#21046;&#22120;&#12290;</p><p>&#21482;&#26377;&#24403;&#24212;&#29992;&#30830;&#23454;&#38656;&#35201; OAuth2 &#35268;&#33539;&#37324;&#25552;&#20379;&#30340;&#20840;&#37096;&#29305;&#24615;&#26102;&#65292;&#25165;&#36873;&#25321; Passport&#12290;&#27492;&#22806;&#65292;&#22914;&#26524;&#20320;&#27491;&#22312;&#26500;&#24314;&#19968;&#20010;&#23558;&#30001; AI &#23458;&#25143;&#31471;&#35775;&#38382;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/mcp" target="_blank">MCP &#26381;&#21153;&#22120;</a>&#65292;&#21017;&#24212;&#24403;&#20351;&#29992; Passport&#65292;&#22240;&#20026; MCP &#23458;&#25143;&#31471;&#36890;&#24120;&#26399;&#26395; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/mcp#oauth" target="_blank">&#36890;&#36807; OAuth &#36827;&#34892;&#35748;&#35777;</a>&#12290;</p><p>&#22914;&#26524;&#20320;&#24819;&#24555;&#36895;&#36215;&#27493;&#65292;&#25105;&#20204;&#38750;&#24120;&#25512;&#33616; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#25105;&#20204;&#30340;&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#65292;&#23427;&#20204;&#20351;&#29992;&#25105;&#20204;&#25512;&#33616;&#30340; Laravel &#20869;&#32622;&#35748;&#35777;&#26381;&#21153;&#26632;&#65292;&#33021;&#35753;&#20320;&#24555;&#36895;&#21551;&#21160;&#19968;&#20010;&#26032;&#30340; Laravel &#24212;&#29992;&#12290;</p><h2 id="b3d0427738f20b6353daf6d79c47cea0">&#35748;&#35777;&#24555;&#36895;&#20837;&#38376;</h2><blockquote>
+<p>[!WARNING]<br>
+&#26412;&#33410;&#25991;&#26723;&#20171;&#32461;&#30340;&#26159;&#36890;&#36807; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">Laravel &#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a> &#36827;&#34892;&#29992;&#25143;&#35748;&#35777;&#30340;&#26041;&#24335;&#65292;&#20854;&#20013;&#21253;&#21547; UI &#33050;&#25163;&#26550;&#20415;&#20110;&#20320;&#24555;&#36895;&#36215;&#27493;&#12290;&#22914;&#26524;&#20320;&#24819;&#30452;&#25509;&#19982; Laravel &#30340;&#35748;&#35777;&#31995;&#32479;&#38598;&#25104;&#65292;&#35831;&#21442;&#38405; <a href="xq9zrgjvdo.html#authenticating-users" target="_blank">&#25163;&#21160;&#35748;&#35777;&#29992;&#25143;</a> &#25991;&#26723;&#12290;</p>
+</blockquote><h3 id="43e83447385ae2b5373e52050669726e">&#23433;&#35013;&#20837;&#38376;&#22871;&#20214;</h3><p>&#39318;&#20808;&#65292;&#20320;&#24212;&#24403; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#23433;&#35013;&#19968;&#20010; Laravel &#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#12290;&#25105;&#20204;&#30340;&#20837;&#38376;&#22871;&#20214;&#25552;&#20379;&#20102;&#31934;&#32654;&#30340;&#35774;&#35745;&#36215;&#28857;&#65292;&#21487;&#20197;&#22312;&#20320;&#20840;&#26032;&#30340; Laravel &#24212;&#29992;&#20013;&#24341;&#20837;&#35748;&#35777;&#21151;&#33021;&#12290;</p><h3 id="c94f124cf3342206f0ab76f65caf5f95">&#33719;&#21462;&#24050;&#35748;&#35777;&#29992;&#25143;</h3><p>&#20351;&#29992;&#20837;&#38376;&#22871;&#20214;&#21019;&#24314;&#24212;&#29992;&#12289;&#20801;&#35768;&#29992;&#25143;&#27880;&#20876;&#24182;&#30331;&#24405;&#20043;&#21518;&#65292;&#20320;&#32463;&#24120;&#38656;&#35201;&#19982;&#24403;&#21069;&#24050;&#35748;&#35777;&#29992;&#25143;&#20132;&#20114;&#12290;&#22312;&#22788;&#29702;&#36827;&#26469;&#30340;&#35831;&#27714;&#26102;&#65292;&#21487;&#20197;&#36890;&#36807; <code>Auth</code> Facade &#30340; <code>user</code> &#26041;&#27861;&#33719;&#21462;&#24403;&#21069;&#24050;&#35748;&#35777;&#29992;&#25143;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Auth;
+
+// &#33719;&#21462;&#24403;&#21069;&#24050;&#35748;&#35777;&#29992;&#25143;...
+$user = Auth::user();
+
+// &#33719;&#21462;&#24403;&#21069;&#24050;&#35748;&#35777;&#29992;&#25143;&#30340; ID...
+$id = Auth::id();</code></pre><p>&#25110;&#32773;&#65292;&#19968;&#26086;&#29992;&#25143;&#34987;&#35748;&#35777;&#65292;&#20320;&#20063;&#21487;&#20197;&#36890;&#36807; <code>Illuminate\Http\Request</code> &#23454;&#20363;&#35775;&#38382;&#24050;&#35748;&#35777;&#29992;&#25143;&#12290;&#35831;&#35760;&#20303;&#65292;&#31867;&#22411;&#25552;&#31034;&#30340;&#31867;&#20250;&#34987;&#33258;&#21160;&#27880;&#20837;&#21040;&#25511;&#21046;&#22120;&#26041;&#27861;&#20013;&#12290;&#31867;&#22411;&#25552;&#31034; <code>Illuminate\Http\Request</code> &#23545;&#35937;&#21518;&#65292;&#22312;&#24212;&#29992;&#20219;&#24847;&#25511;&#21046;&#22120;&#26041;&#27861;&#37324;&#65292;&#37117;&#21487;&#20197;&#36890;&#36807;&#35831;&#27714;&#30340; <code>user</code> &#26041;&#27861;&#20415;&#25463;&#22320;&#35775;&#38382;&#24050;&#35748;&#35777;&#29992;&#25143;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class FlightController extends Controller
+{
+    /**
+     * &#26356;&#26032;&#24050;&#26377;&#33322;&#29677;&#30340;&#33322;&#29677;&#20449;&#24687;&#12290;
+     */
+    public function update(Request $request): RedirectResponse
+    {
+        $user = $request-&gt;user();
+
+        // ...
+
+        return redirect('/flights');
+    }
+}</code></pre><h4 id="09d006948f727654e1e9a4b3a9ad0dd2">&#21028;&#26029;&#24403;&#21069;&#29992;&#25143;&#26159;&#21542;&#24050;&#35748;&#35777;</h4><p>&#35201;&#21028;&#26029;&#21457;&#36215;&#24403;&#21069; HTTP &#35831;&#27714;&#30340;&#29992;&#25143;&#26159;&#21542;&#24050;&#35748;&#35777;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Auth</code> Facade &#19978;&#30340; <code>check</code> &#26041;&#27861;&#12290;&#22914;&#26524;&#29992;&#25143;&#24050;&#35748;&#35777;&#65292;&#35813;&#26041;&#27861;&#20250;&#36820;&#22238; <code>true</code>&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Auth;
+
+if (Auth::check()) {
+    // &#35813;&#29992;&#25143;&#24050;&#30331;&#24405;...
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#21363;&#20415;&#21487;&#20197;&#29992; <code>check</code> &#26041;&#27861;&#21028;&#26029;&#29992;&#25143;&#26159;&#21542;&#24050;&#35748;&#35777;&#65292;&#20320;&#36890;&#24120;&#36824;&#26159;&#20250;&#29992;&#20013;&#38388;&#20214;&#22312;&#20801;&#35768;&#29992;&#25143;&#35775;&#38382;&#26576;&#20123;&#36335;&#30001;/&#25511;&#21046;&#22120;&#21069;&#20808;&#26657;&#39564;&#20854;&#24050;&#35748;&#35777;&#29366;&#24577;&#12290;&#30456;&#20851;&#20869;&#23481;&#35831;&#21442;&#38405; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication#protecting-routes" target="_blank">&#20445;&#25252;&#36335;&#30001;</a> &#25991;&#26723;&#12290;</p>
+</blockquote><h3 id="801705ac2343e82fa596c98e745035e8">&#20445;&#25252;&#36335;&#30001;</h3><p><a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/middleware" target="_blank">&#36335;&#30001;&#20013;&#38388;&#20214;</a> &#21487;&#29992;&#20110;&#20165;&#20801;&#35768;&#24050;&#35748;&#35777;&#29992;&#25143;&#35775;&#38382;&#25351;&#23450;&#36335;&#30001;&#12290;Laravel &#33258;&#24102;&#19968;&#20010; <code>auth</code> &#20013;&#38388;&#20214;&#65292;&#23427;&#26159; <code>Illuminate\Auth\Middleware\Authenticate</code> &#31867;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/middleware#middleware-aliases" target="_blank">&#20013;&#38388;&#20214;&#21035;&#21517;</a>&#12290;&#30001;&#20110;&#35813;&#20013;&#38388;&#20214;&#24050;&#32463;&#22312; Laravel &#20869;&#37096;&#27880;&#20876;&#36807;&#21035;&#21517;&#65292;&#25152;&#20197;&#21482;&#38656;&#25226;&#23427;&#25346;&#36733;&#21040;&#36335;&#30001;&#23450;&#20041;&#19978;&#21363;&#21487;&#65306;</p><pre><code class="language-php">Route::get('/flights', function () {
+    // &#20165;&#20801;&#35768;&#24050;&#35748;&#35777;&#29992;&#25143;&#35775;&#38382;&#35813;&#36335;&#30001;...
+})-&gt;middleware('auth');</code></pre><h4 id="3f14e3e317e6298f5f3dbe2b51f60ad5">&#37325;&#23450;&#21521;&#26410;&#35748;&#35777;&#29992;&#25143;</h4><p>&#24403; <code>auth</code> &#20013;&#38388;&#20214;&#26816;&#27979;&#21040;&#26410;&#35748;&#35777;&#29992;&#25143;&#26102;&#65292;&#20250;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#21517;&#20026; <code>login</code> &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/routing#named-routes" target="_blank">&#21629;&#21517;&#36335;&#30001;</a>&#12290;&#20320;&#21487;&#20197;&#20351;&#29992;&#24212;&#29992; <code>bootstrap/app.php</code> &#25991;&#20214;&#37324;&#30340; <code>redirectGuestsTo</code> &#26041;&#27861;&#20462;&#25913;&#35813;&#34892;&#20026;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+
+-&gt;withMiddleware(function (Middleware $middleware): void {
+    $middleware-&gt;redirectGuestsTo('/login');
+
+    // &#20351;&#29992;&#38381;&#21253;...
+    $middleware-&gt;redirectGuestsTo(fn (Request $request) =&gt; route('login'));
+})</code></pre><h4 id="95360fbcfcedf249711ea54346c7d714">&#37325;&#23450;&#21521;&#24050;&#35748;&#35777;&#29992;&#25143;</h4><p>&#24403; <code>guest</code> &#20013;&#38388;&#20214;&#26816;&#27979;&#21040;&#24050;&#35748;&#35777;&#29992;&#25143;&#26102;&#65292;&#20250;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#21517;&#20026; <code>dashboard</code> &#25110; <code>home</code> &#30340;&#36335;&#30001;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992;&#24212;&#29992; <code>bootstrap/app.php</code> &#25991;&#20214;&#37324;&#30340; <code>redirectUsersTo</code> &#26041;&#27861;&#20462;&#25913;&#35813;&#34892;&#20026;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+
+-&gt;withMiddleware(function (Middleware $middleware): void {
+    $middleware-&gt;redirectUsersTo('/panel');
+
+    // &#20351;&#29992;&#38381;&#21253;...
+    $middleware-&gt;redirectUsersTo(fn (Request $request) =&gt; route('panel'));
+})</code></pre><h4 id="6d36d7647dff306daddc1fcd84911558">&#25351;&#23450; Guard</h4><p>&#22312;&#25226; <code>auth</code> &#20013;&#38388;&#20214;&#25346;&#36733;&#21040;&#36335;&#30001;&#19978;&#26102;&#65292;&#20320;&#20063;&#21487;&#20197;&#25351;&#23450;&#24212;&#35813;&#20351;&#29992;&#21738;&#20010; guard &#26469;&#35748;&#35777;&#29992;&#25143;&#12290;&#25152;&#25351;&#23450;&#30340; guard &#24517;&#39035;&#19982; <code>auth.php</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>guards</code> &#25968;&#32452;&#20013;&#30340;&#26576;&#20010;&#38190;&#23545;&#24212;&#65306;</p><pre><code class="language-php">Route::get('/flights', function () {
+    // &#20165;&#20801;&#35768;&#24050;&#35748;&#35777;&#29992;&#25143;&#35775;&#38382;&#35813;&#36335;&#30001;...
+})-&gt;middleware('auth:admin');</code></pre><h3 id="c1f3b6fc480fa5a9e35171ad77b4ecd5">&#30331;&#24405;&#38480;&#27969;</h3><p>&#22914;&#26524;&#20320;&#27491;&#22312;&#20351;&#29992;&#25105;&#20204;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#65292;&#30331;&#24405;&#23581;&#35797;&#20250;&#33258;&#21160;&#21551;&#29992;&#38480;&#27969;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#29992;&#25143;&#22914;&#26524;&#22810;&#27425;&#36755;&#20837;&#38169;&#35823;&#20973;&#25454;&#65292;&#23558;&#22312;&#19968;&#20998;&#38047;&#20869;&#26080;&#27861;&#20877;&#27425;&#30331;&#24405;&#12290;&#35813;&#38480;&#27969;&#25353;&#29992;&#25143;&#21517;/&#37038;&#31665;&#19982; IP &#22320;&#22336;&#30340;&#32452;&#21512;&#20316;&#20026;&#21807;&#19968;&#32500;&#24230;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#24819;&#23545;&#24212;&#29992;&#20869;&#30340;&#20854;&#20182;&#36335;&#30001;&#36827;&#34892;&#38480;&#27969;&#65292;&#35831;&#21442;&#38405; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/routing#rate-limiting" target="_blank">&#38480;&#27969;&#25991;&#26723;</a>&#12290;</p>
+</blockquote><h2 id="5db639a2e1009066053afb3951042007">&#25163;&#21160;&#35748;&#35777;&#29992;&#25143;</h2><p>&#20320;&#24182;&#38750;&#24517;&#39035;&#20351;&#29992; Laravel <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">&#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a> &#33258;&#24102;&#30340;&#35748;&#35777;&#33050;&#25163;&#26550;&#12290;&#22914;&#26524;&#20320;&#36873;&#25321;&#19981;&#20351;&#29992;&#36825;&#22871;&#33050;&#25163;&#26550;&#65292;&#23601;&#38656;&#35201;&#30452;&#25509;&#20351;&#29992; Laravel &#35748;&#35777;&#31867;&#26469;&#31649;&#29702;&#29992;&#25143;&#35748;&#35777;&#12290;&#25918;&#24515;&#65292;&#38750;&#24120;&#31616;&#21333;&#65281;</p><p>&#25105;&#20204;&#23558;&#36890;&#36807; <code>Auth</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/facades" target="_blank">Facade</a> &#35775;&#38382; Laravel &#30340;&#35748;&#35777;&#26381;&#21153;&#65292;&#25152;&#20197;&#38656;&#35201;&#22312;&#31867;&#30340;&#39030;&#37096;&#23548;&#20837; <code>Auth</code> Facade&#12290;&#25509;&#19979;&#26469;&#65292;&#25105;&#20204;&#26469;&#30475; <code>attempt</code> &#26041;&#27861;&#12290;<code>attempt</code> &#26041;&#27861;&#36890;&#24120;&#29992;&#20110;&#22788;&#29702;&#24212;&#29992;"&#30331;&#24405;"&#34920;&#21333;&#21457;&#36215;&#30340;&#35748;&#35777;&#35831;&#27714;&#12290;&#22914;&#26524;&#35748;&#35777;&#25104;&#21151;&#65292;&#24212;&#24403;&#37325;&#26032;&#29983;&#25104;&#29992;&#25143;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/session" target="_blank">&#20250;&#35805;</a>&#65292;&#20197;&#38450;&#27490; <a href="https://en.wikipedia.org/wiki/Session_fixation" target="_blank" rel="noopener noreferrer">&#20250;&#35805;&#22266;&#23450;&#65288;session fixation&#65289;</a>&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+
+class LoginController extends Controller
+{
+    /**
+     * &#22788;&#29702;&#35748;&#35777;&#23581;&#35797;&#12290;
+     */
+    public function authenticate(Request $request): RedirectResponse
+    {
+        $credentials = $request-&gt;validate([
+            'email' =&gt; ['required', 'email'],
+            'password' =&gt; ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request-&gt;session()-&gt;regenerate();
+
+            return redirect()-&gt;intended('dashboard');
+        }
+
+        return back()-&gt;withErrors([
+            'email' =&gt; 'The provided credentials do not match our records.',
+        ])-&gt;onlyInput('email');
+    }
+}</code></pre><p><code>attempt</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#19968;&#32452;&#38190;/&#20540;&#23545;&#12290;&#25968;&#32452;&#37324;&#30340;&#20540;&#23558;&#29992;&#20110;&#22312;&#25968;&#25454;&#24211;&#34920;&#20013;&#26597;&#25214;&#29992;&#25143;&#12290;&#25152;&#20197;&#65292;&#22312;&#19978;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#20250;&#25353; <code>email</code> &#21015;&#30340;&#20540;&#21435;&#26816;&#32034;&#29992;&#25143;&#12290;&#22914;&#26524;&#25214;&#21040;&#29992;&#25143;&#65292;&#25968;&#25454;&#24211;&#20013;&#20445;&#23384;&#30340;&#21704;&#24076;&#23494;&#30721;&#20250;&#19982;&#26041;&#27861;&#20256;&#20837;&#25968;&#32452;&#20013;&#30340; <code>password</code> &#20540;&#36827;&#34892;&#27604;&#36739;&#12290;&#20320;&#19981;&#24517;&#23545;&#35831;&#27714;&#37324;&#30340; <code>password</code> &#20540;&#20570;&#21704;&#24076;&#65292;&#22240;&#20026;&#26694;&#26550;&#22312;&#19982;&#25968;&#25454;&#24211;&#20013;&#21704;&#24076;&#23494;&#30721;&#27604;&#36739;&#20043;&#21069;&#20250;&#33258;&#21160;&#23545;&#20854;&#36827;&#34892;&#21704;&#24076;&#12290;&#22914;&#26524;&#20004;&#20010;&#21704;&#24076;&#23494;&#30721;&#21305;&#37197;&#65292;&#23601;&#20250;&#20026;&#35813;&#29992;&#25143;&#21551;&#21160;&#19968;&#20010;&#24050;&#35748;&#35777;&#30340;&#20250;&#35805;&#12290;</p><p>&#35831;&#35760;&#20303;&#65292;Laravel &#30340;&#35748;&#35777;&#26381;&#21153;&#20250;&#26681;&#25454;&#20320;&#35748;&#35777; guard &#30340;"provider"&#37197;&#32622;&#20174;&#25968;&#25454;&#24211;&#20013;&#26816;&#32034;&#29992;&#25143;&#12290;&#22312;&#40664;&#35748;&#30340; <code>config/auth.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#65292;&#25351;&#23450;&#20102; Eloquent user provider&#65292;&#24182;&#25351;&#31034;&#23427;&#22312;&#26816;&#32034;&#29992;&#25143;&#26102;&#20351;&#29992; <code>App\Models\User</code> &#27169;&#22411;&#12290;&#20320;&#21487;&#20197;&#26681;&#25454;&#24212;&#29992;&#30340;&#38656;&#35201;&#22312;&#37197;&#32622;&#25991;&#20214;&#20013;&#20462;&#25913;&#36825;&#20123;&#20540;&#12290;</p><p><code>attempt</code> &#26041;&#27861;&#22312;&#35748;&#35777;&#25104;&#21151;&#26102;&#36820;&#22238; <code>true</code>&#65292;&#21542;&#21017;&#36820;&#22238; <code>false</code>&#12290;</p><p>Laravel &#36339;&#36716;&#22120;&#25552;&#20379;&#30340; <code>intended</code> &#26041;&#27861;&#20250;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#35748;&#35777;&#20013;&#38388;&#20214;&#25318;&#25130;&#21069;&#20182;&#20204;&#23581;&#35797;&#35775;&#38382;&#30340; URL&#12290;&#22914;&#26524;&#30446;&#26631; URL &#19981;&#21487;&#29992;&#65292;&#21487;&#20197;&#32473;&#35813;&#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#20828;&#24213; URI&#12290;</p><h4 id="55cf67244c3af9fb3c9f1e9daa029b95">&#25351;&#23450;&#39069;&#22806;&#26465;&#20214;</h4><p>&#20320;&#20063;&#21487;&#20197;&#22312;&#35748;&#35777;&#26597;&#35810;&#20013;&#65292;&#38500;&#20102;&#29992;&#25143;&#30340;&#37038;&#31665;&#21644;&#23494;&#30721;&#20043;&#22806;&#20877;&#21152;&#20837;&#20854;&#23427;&#26597;&#35810;&#26465;&#20214;&#12290;&#20026;&#27492;&#65292;&#21482;&#38656;&#35201;&#25226;&#26465;&#20214;&#21152;&#20837;&#20256;&#32473; <code>attempt</code> &#26041;&#27861;&#30340;&#25968;&#32452;&#20013;&#21363;&#21487;&#12290;&#20363;&#22914;&#65292;&#25105;&#20204;&#21487;&#20197;&#26657;&#39564;&#29992;&#25143;&#26159;&#21542;&#34987;&#26631;&#35760;&#20026;"active"&#65306;</p><pre><code class="language-php">if (Auth::attempt(['email' =&gt; $email, 'password' =&gt; $password, 'active' =&gt; 1])) {
+    // &#35748;&#35777;&#25104;&#21151;...
+}</code></pre><p>&#23545;&#20110;&#26356;&#22797;&#26434;&#30340;&#26597;&#35810;&#26465;&#20214;&#65292;&#20320;&#21487;&#20197;&#22312;&#20973;&#25454;&#25968;&#32452;&#37324;&#25552;&#20379;&#19968;&#20010;&#38381;&#21253;&#12290;&#35813;&#38381;&#21253;&#20250;&#25509;&#25910;&#26597;&#35810;&#23454;&#20363;&#65292;&#35753;&#20320;&#21487;&#20197;&#25353;&#24212;&#29992;&#38656;&#27714;&#33258;&#23450;&#20041;&#26597;&#35810;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Eloquent\Builder;
+
+if (Auth::attempt([
+    'email' =&gt; $email,
+    'password' =&gt; $password,
+    fn (Builder $query) =&gt; $query-&gt;has('activeSubscription'),
+])) {
+    // &#35748;&#35777;&#25104;&#21151;...
+}</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#22312;&#20197;&#19978;&#31034;&#20363;&#20013;&#65292;<code>email</code> &#24182;&#19981;&#26159;&#24517;&#38656;&#30340;&#21015;&#21517;&#65292;&#20165;&#20316;&#20026;&#31034;&#20363;&#20351;&#29992;&#12290;&#20320;&#24212;&#35813;&#20351;&#29992;&#19982;&#25968;&#25454;&#24211;&#34920;&#20013;"username"&#23545;&#24212;&#30340;&#21015;&#21517;&#12290;</p>
+</blockquote><p><code>attemptWhen</code> &#26041;&#27861;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#25509;&#25910;&#19968;&#20010;&#38381;&#21253;&#65292;&#21487;&#20197;&#22312;&#30495;&#27491;&#35748;&#35777;&#29992;&#25143;&#20043;&#21069;&#23545;&#28508;&#22312;&#29992;&#25143;&#20570;&#26356;&#20805;&#20998;&#30340;&#26816;&#26597;&#12290;&#35813;&#38381;&#21253;&#25509;&#25910;&#28508;&#22312;&#29992;&#25143;&#20316;&#20026;&#21442;&#25968;&#65292;&#24182;&#24212;&#36820;&#22238; <code>true</code> &#25110; <code>false</code> &#26469;&#34920;&#31034;&#35813;&#29992;&#25143;&#26159;&#21542;&#21487;&#20197;&#34987;&#35748;&#35777;&#65306;</p><pre><code class="language-php">if (Auth::attemptWhen([
+    'email' =&gt; $email,
+    'password' =&gt; $password,
+], function (User $user) {
+    return $user-&gt;isNotBanned();
+})) {
+    // &#35748;&#35777;&#25104;&#21151;...
+}</code></pre><h4 id="0288943f6d3497abc59d227473a2ff5f">&#35775;&#38382;&#25351;&#23450;&#30340; Guard &#23454;&#20363;</h4><p>&#36890;&#36807; <code>Auth</code> Facade &#30340; <code>guard</code> &#26041;&#27861;&#65292;&#20320;&#21487;&#20197;&#25351;&#23450;&#35748;&#35777;&#29992;&#25143;&#26102;&#24076;&#26395;&#20351;&#29992;&#21738;&#20010; guard &#23454;&#20363;&#12290;&#36825;&#26679;&#19968;&#26469;&#65292;&#20320;&#23601;&#21487;&#20197;&#20351;&#29992;&#23436;&#20840;&#29420;&#31435;&#30340;&#21487;&#35748;&#35777;&#27169;&#22411;&#25110;&#29992;&#25143;&#34920;&#65292;&#20998;&#21035;&#31649;&#29702;&#24212;&#29992;&#19981;&#21516;&#37096;&#20998;&#30340;&#35748;&#35777;&#12290;</p><p>&#20256;&#32473; <code>guard</code> &#26041;&#27861;&#30340; guard &#21517;&#31216;&#24517;&#39035;&#19982; <code>auth.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#37197;&#32622;&#30340;&#26576;&#20010; guard &#19968;&#19968;&#23545;&#24212;&#65306;</p><pre><code class="language-php">if (Auth::guard('admin')-&gt;attempt($credentials)) {
+    // ...
+}</code></pre><h3 id="9ecfe7c5c862157bcf70dcfe452489e5">&#35760;&#20303;&#29992;&#25143;</h3><p>&#24456;&#22810; Web &#24212;&#29992;&#30340;&#30331;&#24405;&#34920;&#21333;&#19978;&#37117;&#25552;&#20379;&#19968;&#20010;"&#35760;&#20303;&#25105;"&#22797;&#36873;&#26694;&#12290;&#22914;&#26524;&#20320;&#24076;&#26395;&#22312;&#24212;&#29992;&#37324;&#25552;&#20379;"&#35760;&#20303;&#25105;"&#21151;&#33021;&#65292;&#21487;&#20197;&#25226;&#19968;&#20010;&#24067;&#23572;&#20540;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#32473; <code>attempt</code> &#26041;&#27861;&#12290;</p><p>&#24403;&#35813;&#20540;&#20026; <code>true</code> &#26102;&#65292;Laravel &#20250;&#35753;&#29992;&#25143;&#26080;&#38480;&#26399;&#20445;&#25345;&#24050;&#35748;&#35777;&#29366;&#24577;&#65292;&#30452;&#21040;&#20182;&#20204;&#25163;&#21160;&#30331;&#20986;&#20026;&#27490;&#12290;&#20320;&#30340; <code>users</code> &#34920;&#24517;&#39035;&#21253;&#21547;&#23383;&#31526;&#20018;&#31867;&#22411;&#30340; <code>remember_token</code> &#21015;&#65292;&#29992;&#26469;&#23384;&#25918;"&#35760;&#20303;&#25105;"&#20196;&#29260;&#12290;&#26032; Laravel &#24212;&#29992;&#33258;&#24102;&#30340; <code>users</code> &#34920;&#36801;&#31227;&#24050;&#32463;&#21253;&#21547;&#27492;&#21015;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Auth;
+
+if (Auth::attempt(['email' =&gt; $email, 'password' =&gt; $password], $remember)) {
+    // &#27491;&#22312;&#35760;&#20303;&#35813;&#29992;&#25143;...
+}</code></pre><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#25552;&#20379;&#20102;"&#35760;&#20303;&#25105;"&#21151;&#33021;&#65292;&#21487;&#20197;&#20351;&#29992; <code>viaRemember</code> &#26041;&#27861;&#21028;&#26029;&#24403;&#21069;&#24050;&#35748;&#35777;&#30340;&#29992;&#25143;&#26159;&#21542;&#26159;&#36890;&#36807;"&#35760;&#20303;&#25105;" Cookie &#23436;&#25104;&#35748;&#35777;&#30340;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Auth;
+
+if (Auth::viaRemember()) {
+    // ...
+}</code></pre><h3 id="c0dd0ef5de4b9b06399e0046cf21b685">&#20854;&#20182;&#35748;&#35777;&#26041;&#24335;</h3><h4 id="0c224a4aa3a12232c75c2ed26a6e15da">&#36890;&#36807;&#29992;&#25143;&#23454;&#20363;&#36827;&#34892;&#35748;&#35777;</h4><p>&#22914;&#26524;&#20320;&#38656;&#35201;&#25226;&#19968;&#20010;&#24050;&#23384;&#22312;&#30340;&#29992;&#25143;&#23454;&#20363;&#35774;&#20026;&#24403;&#21069;&#24050;&#35748;&#35777;&#29992;&#25143;&#65292;&#21487;&#20197;&#25226;&#35813;&#29992;&#25143;&#23454;&#20363;&#20256;&#32473; <code>Auth</code> Facade &#30340; <code>login</code> &#26041;&#27861;&#12290;&#20256;&#20837;&#30340;&#29992;&#25143;&#23454;&#20363;&#24517;&#39035;&#26159; <code>Illuminate\Contracts\Auth\Authenticatable</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/contracts" target="_blank">&#22865;&#32422;</a> &#30340;&#23454;&#29616;&#12290;Laravel &#33258;&#24102;&#30340; <code>App\Models\User</code> &#27169;&#22411;&#24050;&#32463;&#23454;&#29616;&#20102;&#36825;&#20010;&#25509;&#21475;&#12290;&#36825;&#31181;&#35748;&#35777;&#26041;&#24335;&#22312;&#20320;&#24050;&#32463;&#26377;&#19968;&#20010;&#26377;&#25928;&#30340;&#29992;&#25143;&#23454;&#20363;&#26102;&#38750;&#24120;&#26377;&#29992;&#65292;&#20363;&#22914;&#29992;&#25143;&#21018;&#21018;&#22312;&#24212;&#29992;&#37324;&#23436;&#25104;&#27880;&#20876;&#20043;&#21518;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Auth;
+
+Auth::login($user);</code></pre><p>&#20320;&#21487;&#20197;&#25226;&#19968;&#20010;&#24067;&#23572;&#20540;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#32473; <code>login</code> &#26041;&#27861;&#65292;&#35813;&#20540;&#34920;&#31034;&#35748;&#35777;&#20250;&#35805;&#26159;&#21542;&#21551;&#29992;"&#35760;&#20303;&#25105;"&#21151;&#33021;&#12290;&#35831;&#35760;&#20303;&#65292;&#36825;&#24847;&#21619;&#30528;&#35813;&#20250;&#35805;&#20250;&#26080;&#38480;&#26399;&#20445;&#25345;&#24050;&#35748;&#35777;&#29366;&#24577;&#65292;&#30452;&#21040;&#29992;&#25143;&#25163;&#21160;&#30331;&#20986;&#20026;&#27490;&#65306;</p><pre><code class="language-php">Auth::login($user, $remember = true);</code></pre><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#21487;&#20197;&#22312;&#35843;&#29992; <code>login</code> &#26041;&#27861;&#20043;&#21069;&#25351;&#23450;&#19968;&#20010;&#35748;&#35777; guard&#65306;</p><pre><code class="language-php">Auth::guard('admin')-&gt;login($user);</code></pre><h4 id="e437849e03efed08116cd384500d9336">&#36890;&#36807;&#29992;&#25143; ID &#36827;&#34892;&#35748;&#35777;</h4><p>&#35201;&#36890;&#36807;&#29992;&#25143;&#30340;&#25968;&#25454;&#24211;&#35760;&#24405;&#20027;&#38190;&#26469;&#35748;&#35777;&#29992;&#25143;&#65292;&#21487;&#20197;&#20351;&#29992; <code>loginUsingId</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#25509;&#21463;&#20320;&#24076;&#26395;&#35748;&#35777;&#29992;&#25143;&#30340;&#20027;&#38190;&#20316;&#20026;&#21442;&#25968;&#65306;</p><pre><code class="language-php">Auth::loginUsingId(1);</code></pre><p>&#20320;&#21487;&#20197;&#25226;&#19968;&#20010;&#24067;&#23572;&#20540;&#20256;&#32473; <code>loginUsingId</code> &#26041;&#27861;&#30340; <code>remember</code> &#21442;&#25968;&#65292;&#34920;&#31034;&#35748;&#35777;&#20250;&#35805;&#26159;&#21542;&#21551;&#29992;"&#35760;&#20303;&#25105;"&#21151;&#33021;&#12290;&#35831;&#35760;&#20303;&#65292;&#36825;&#24847;&#21619;&#30528;&#35813;&#20250;&#35805;&#20250;&#26080;&#38480;&#26399;&#20445;&#25345;&#24050;&#35748;&#35777;&#29366;&#24577;&#65292;&#30452;&#21040;&#29992;&#25143;&#25163;&#21160;&#30331;&#20986;&#20026;&#27490;&#65306;</p><pre><code class="language-php">Auth::loginUsingId(1, remember: true);</code></pre><h4 id="85cba73540860afd4e20b0f97b38f922">&#20020;&#26102;&#35748;&#35777;&#29992;&#25143;</h4><p>&#21487;&#20197;&#20351;&#29992; <code>once</code> &#26041;&#27861;&#35753;&#26576;&#20010;&#29992;&#25143;&#21482;&#38024;&#23545;&#21333;&#27425;&#35831;&#27714;&#36827;&#34892;&#35748;&#35777;&#12290;&#35843;&#29992;&#35813;&#26041;&#27861;&#26102;&#19981;&#20250;&#29992;&#21040;&#20250;&#35805;&#25110; Cookie&#65292;&#20063;&#19981;&#20250;&#27966;&#21457; <code>Login</code> &#20107;&#20214;&#65306;</p><pre><code class="language-php">if (Auth::once($credentials)) {
+    // ...
+}</code></pre><h2 id="fca02803831c201561ea00a56fee15b5">HTTP Basic &#35748;&#35777;</h2><p><a href="https://en.wikipedia.org/wiki/Basic_access_authentication" target="_blank" rel="noopener noreferrer">HTTP Basic &#35748;&#35777;</a> &#25552;&#20379;&#20102;&#19968;&#31181;&#26080;&#38656;&#35774;&#32622;&#19987;&#38376;"&#30331;&#24405;"&#39029;&#23601;&#33021;&#35753;&#29992;&#25143;&#24555;&#36895;&#23436;&#25104;&#24212;&#29992;&#35748;&#35777;&#30340;&#26041;&#24335;&#12290;&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#21482;&#38656;&#25226; <code>auth.basic</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/middleware" target="_blank">&#20013;&#38388;&#20214;</a> &#25346;&#21040;&#19968;&#26465;&#36335;&#30001;&#19978;&#21363;&#21487;&#12290;<code>auth.basic</code> &#20013;&#38388;&#20214;&#38543; Laravel &#26694;&#26550;&#19968;&#36215;&#25552;&#20379;&#65292;&#26080;&#38656;&#33258;&#34892;&#23450;&#20041;&#65306;</p><pre><code class="language-php">Route::get('/profile', function () {
+    // &#20165;&#20801;&#35768;&#24050;&#35748;&#35777;&#29992;&#25143;&#35775;&#38382;&#35813;&#36335;&#30001;...
+})-&gt;middleware('auth.basic');</code></pre><p>&#20013;&#38388;&#20214;&#25346;&#36733;&#21040;&#36335;&#30001;&#19978;&#21518;&#65292;&#24403;&#20320;&#29992;&#27983;&#35272;&#22120;&#35775;&#38382;&#35813;&#36335;&#30001;&#26102;&#23601;&#20250;&#33258;&#21160;&#24377;&#20986;&#20973;&#25454;&#36755;&#20837;&#26694;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>auth.basic</code> &#20013;&#38388;&#20214;&#20250;&#20551;&#23450; <code>users</code> &#34920;&#20013;&#30340; <code>email</code> &#21015;&#23601;&#26159;&#29992;&#25143;&#30340;"username"&#12290;</p><h4 id="101d265b4f54b5a2a3723cc9328c9ca6">&#20851;&#20110; FastCGI &#30340;&#34917;&#20805;&#35828;&#26126;</h4><p>&#22914;&#26524;&#20320;&#20351;&#29992; <a href="https://www.php.net/manual/en/install.fpm.php" target="_blank" rel="noopener noreferrer">PHP FastCGI</a> &#21644; Apache &#20026; Laravel &#24212;&#29992;&#25552;&#20379;&#26381;&#21153;&#65292;HTTP Basic &#35748;&#35777;&#21487;&#33021;&#26080;&#27861;&#27491;&#24120;&#24037;&#20316;&#12290;&#21487;&#20197;&#22312;&#24212;&#29992;&#30340; <code>.htaccess</code> &#25991;&#20214;&#20013;&#21152;&#20837;&#19979;&#38754;&#36825;&#20960;&#34892;&#26469;&#35299;&#20915;&#65306;</p><pre><code class="language-apache">RewriteCond %{HTTP:Authorization} ^(.+)$
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]</code></pre><h3 id="1439ba065b2fbcc515e712e840cac3a7">&#26080;&#29366;&#24577; HTTP Basic &#35748;&#35777;</h3><p>&#20320;&#20063;&#21487;&#20197;&#20351;&#29992; HTTP Basic &#35748;&#35777;&#32780;&#21448;&#19981;&#22312;&#20250;&#35805;&#20013;&#35774;&#32622;&#29992;&#25143;&#26631;&#35782; Cookie&#12290;&#24403;&#20320;&#36873;&#25321;&#20351;&#29992; HTTP Basic &#35748;&#35777;&#26469;&#35748;&#35777;&#23545;&#24212;&#29992; API &#30340;&#35831;&#27714;&#26102;&#65292;&#36825;&#20250;&#24456;&#26377;&#24110;&#21161;&#12290;&#20026;&#27492;&#65292;&#38656;&#35201; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/middleware" target="_blank">&#23450;&#20041;&#19968;&#20010;&#20013;&#38388;&#20214;</a>&#65292;&#22312;&#37324;&#38754;&#35843;&#29992; <code>onceBasic</code> &#26041;&#27861;&#12290;&#22914;&#26524; <code>onceBasic</code> &#26041;&#27861;&#27809;&#26377;&#36820;&#22238;&#21709;&#24212;&#65292;&#35831;&#27714;&#23601;&#21487;&#20197;&#32487;&#32493;&#21521;&#24212;&#29992;&#20869;&#37096;&#20256;&#36882;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+
+class AuthenticateOnceWithBasicAuth
+{
+    /**
+     * &#22788;&#29702;&#36827;&#26469;&#30340;&#35831;&#27714;&#12290;
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        return Auth::onceBasic() ?: $next($request);
+    }
+
+}</code></pre><p>&#25509;&#19979;&#26469;&#65292;&#25226;&#35813;&#20013;&#38388;&#20214;&#25346;&#21040;&#19968;&#26465;&#36335;&#30001;&#19978;&#65306;</p><pre><code class="language-php">Route::get('/api/user', function () {
+    // &#20165;&#20801;&#35768;&#24050;&#35748;&#35777;&#29992;&#25143;&#35775;&#38382;&#35813;&#36335;&#30001;...
+})-&gt;middleware(AuthenticateOnceWithBasicAuth::class);</code></pre><h2 id="44efd179aa7e6c204c751cfa6c958dd0">&#36864;&#20986;&#30331;&#24405;</h2><p>&#35201;&#25163;&#21160;&#25226;&#29992;&#25143;&#36864;&#20986;&#24212;&#29992;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Auth</code> Facade &#25552;&#20379;&#30340; <code>logout</code> &#26041;&#27861;&#12290;&#23427;&#20250;&#25226;&#35748;&#35777;&#20449;&#24687;&#20174;&#29992;&#25143;&#20250;&#35805;&#20013;&#28165;&#38500;&#65292;&#20351;&#21518;&#32493;&#35831;&#27714;&#19981;&#20877;&#22788;&#20110;&#24050;&#35748;&#35777;&#29366;&#24577;&#12290;</p><p>&#38500;&#20102;&#35843;&#29992; <code>logout</code> &#26041;&#27861;&#20043;&#22806;&#65292;&#24314;&#35758;&#21516;&#26102;&#38144;&#27585;&#29992;&#25143;&#30340;&#20250;&#35805;&#24182;&#37325;&#26032;&#29983;&#25104;&#20854; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/csrf" target="_blank">CSRF Token</a>&#12290;&#30331;&#20986;&#29992;&#25143;&#20043;&#21518;&#65292;&#36890;&#24120;&#20250;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#24212;&#29992;&#30340;&#26681;&#36335;&#24452;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+
+/**
+ * &#25226;&#29992;&#25143;&#30331;&#20986;&#24212;&#29992;&#12290;
+ */
+public function logout(Request $request): RedirectResponse
+{
+    Auth::logout();
+
+    $request-&gt;session()-&gt;invalidate();
+
+    $request-&gt;session()-&gt;regenerateToken();
+
+    return redirect('/');
+}</code></pre><h3 id="27e904490e743424c4ed55a497a88021">&#22312;&#20854;&#20182;&#35774;&#22791;&#19978;&#38144;&#27585;&#20250;&#35805;</h3><p>Laravel &#36824;&#25552;&#20379;&#20102;&#19968;&#31181;&#26426;&#21046;&#65292;&#21487;&#20197;&#22312;&#19981;&#38144;&#27585;&#24403;&#21069;&#35774;&#22791;&#20250;&#35805;&#30340;&#24773;&#20917;&#19979;&#65292;&#25226;&#29992;&#25143;&#22312;&#20854;&#23427;&#35774;&#22791;&#19978;&#20173;&#28982;&#27963;&#36291;&#30340;&#20250;&#35805;&#22833;&#25928;&#65288;"&#36864;&#20986;&#30331;&#24405;"&#65289;&#12290;&#35813;&#29305;&#24615;&#36890;&#24120;&#29992;&#20110;&#29992;&#25143;&#20462;&#25913;&#25110;&#26356;&#26032;&#23494;&#30721;&#30340;&#22330;&#26223;&#65306;&#20320;&#24076;&#26395;&#20854;&#23427;&#35774;&#22791;&#30340;&#20250;&#35805;&#22833;&#25928;&#65292;&#21516;&#26102;&#35753;&#24403;&#21069;&#35774;&#22791;&#20445;&#25345;&#24050;&#35748;&#35777;&#29366;&#24577;&#12290;</p><p>&#24320;&#22987;&#20043;&#21069;&#65292;&#20320;&#24212;&#35813;&#30830;&#20445; <code>Illuminate\Session\Middleware\AuthenticateSession</code> &#20013;&#38388;&#20214;&#34987;&#28155;&#21152;&#21040;&#20102;&#38656;&#35201; Session &#35748;&#35777;&#30340;&#36335;&#30001;&#19978;&#12290;&#36890;&#24120;&#24212;&#24403;&#25226;&#23427;&#25918;&#21040;&#19968;&#20010;&#36335;&#30001;&#20998;&#32452;&#37324;&#65292;&#36825;&#26679;&#23601;&#21487;&#20197;&#35206;&#30422;&#21040;&#24212;&#29992;&#30340;&#22823;&#22810;&#25968;&#36335;&#30001;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#21487;&#20197;&#36890;&#36807; <code>auth.session</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/middleware#middleware-aliases" target="_blank">&#20013;&#38388;&#20214;&#21035;&#21517;</a> &#23558; <code>AuthenticateSession</code> &#20013;&#38388;&#20214;&#25346;&#21040;&#19968;&#26465;&#36335;&#30001;&#19978;&#65306;</p><pre><code class="language-php">Route::middleware(['auth', 'auth.session'])-&gt;group(function () {
+    Route::get('/', function () {
+        // ...
+    });
+});</code></pre><p>&#28982;&#21518;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Auth</code> Facade &#25552;&#20379;&#30340; <code>logoutOtherDevices</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#35201;&#27714;&#29992;&#25143;&#25552;&#20379;&#20182;&#20204;&#30340;&#24403;&#21069;&#23494;&#30721;&#65292;&#24212;&#29992;&#24212;&#24403;&#36890;&#36807;&#26576;&#20010;&#36755;&#20837;&#34920;&#21333;&#25509;&#25910;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Auth;
+
+Auth::logoutOtherDevices($currentPassword);</code></pre><p>&#24403; <code>logoutOtherDevices</code> &#26041;&#27861;&#34987;&#35843;&#29992;&#21518;&#65292;&#29992;&#25143;&#22312;&#20854;&#23427;&#35774;&#22791;&#19978;&#30340;&#20250;&#35805;&#20250;&#34987;&#23436;&#20840;&#38144;&#27585;&#65292;&#20063;&#23601;&#26159;&#35828;&#20182;&#20204;&#20250;&#34987;&#20174;&#25152;&#26377;&#20808;&#21069;&#36890;&#36807;&#20854;&#35748;&#35777;&#30340; guard &#20013;"&#36864;&#20986;"&#12290;</p><h2 id="92fa7ce5c5cfbd7c1aef8ea0018a81c9">&#23494;&#30721;&#30830;&#35748;</h2><p>&#26500;&#24314;&#24212;&#29992;&#26102;&#65292;&#20320;&#20598;&#23572;&#20250;&#36935;&#21040;&#36825;&#26679;&#30340;&#24773;&#24418;&#65306;&#26576;&#20123;&#25805;&#20316;&#22312;&#25191;&#34892;&#21069;&#65292;&#25110;&#22312;&#29992;&#25143;&#34987;&#37325;&#23450;&#21521;&#21040;&#24212;&#29992;&#30340;&#25935;&#24863;&#21306;&#22495;&#21069;&#65292;&#38656;&#35201;&#29992;&#25143;&#20808;&#30830;&#35748;&#33258;&#24049;&#30340;&#23494;&#30721;&#12290;Laravel &#33258;&#24102;&#20102;&#20013;&#38388;&#20214;&#65292;&#35753;&#36825;&#19968;&#27969;&#31243;&#21464;&#24471;&#36731;&#32780;&#26131;&#20030;&#12290;&#23454;&#29616;&#35813;&#29305;&#24615;&#38656;&#35201;&#20320;&#23450;&#20041;&#20004;&#26465;&#36335;&#30001;&#65306;&#19968;&#26465;&#29992;&#20110;&#26174;&#31034;&#19968;&#20010;&#35753;&#29992;&#25143;&#30830;&#35748;&#23494;&#30721;&#30340;&#35270;&#22270;&#65292;&#21478;&#19968;&#26465;&#29992;&#20110;&#30830;&#35748;&#23494;&#30721;&#26377;&#25928;&#24182;&#23558;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#20182;&#20204;&#24819;&#21435;&#30340;&#30446;&#26631;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#19979;&#38754;&#30340;&#25991;&#26723;&#35828;&#26126;&#22914;&#20309;&#30452;&#25509;&#19982; Laravel &#30340;&#23494;&#30721;&#30830;&#35748;&#29305;&#24615;&#38598;&#25104;&#65307;&#19981;&#36807;&#65292;&#22914;&#26524;&#20320;&#24819;&#26356;&#24555;&#36215;&#27493;&#65292;&#21487;&#20197;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/starter-kits" target="_blank">Laravel &#24212;&#29992;&#20837;&#38376;&#22871;&#20214;</a>&#65292;&#23427;&#20204;&#24050;&#32463;&#20869;&#32622;&#20102;&#23545;&#35813;&#29305;&#24615;&#30340;&#25903;&#25345;&#65281;</p>
+</blockquote><h3 id="224e2ccda861c2514faa683b3683c361">&#37197;&#32622;</h3><p>&#29992;&#25143;&#30830;&#35748;&#23494;&#30721;&#21518;&#65292;3 &#23567;&#26102;&#20869;&#19981;&#20250;&#20877;&#34987;&#35201;&#27714;&#20877;&#27425;&#30830;&#35748;&#12290;&#19981;&#36807;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#20462;&#25913;&#24212;&#29992; <code>config/auth.php</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>password_timeout</code> &#37197;&#32622;&#20540;&#26469;&#35843;&#25972;&#20877;&#27425;&#35201;&#27714;&#30830;&#35748;&#23494;&#30721;&#30340;&#38388;&#38548;&#26102;&#38271;&#12290;</p><h3 id="75fc7de7375ca7234c0247db7f2776fb">&#36335;&#30001;</h3><h4 id="bbbfa843428d6c8315515f5dc20ca624">&#23494;&#30721;&#30830;&#35748;&#34920;&#21333;</h4><p>&#39318;&#20808;&#65292;&#25105;&#20204;&#23450;&#20041;&#19968;&#26465;&#36335;&#30001;&#29992;&#20110;&#26174;&#31034;&#19968;&#20010;&#35753;&#29992;&#25143;&#30830;&#35748;&#23494;&#30721;&#30340;&#35270;&#22270;&#65306;</p><pre><code class="language-php">Route::get('/confirm-password', function () {
+    return view('auth.confirm-password');
+})-&gt;middleware('auth')-&gt;name('password.confirm');</code></pre><p>&#27491;&#22914;&#20320;&#25152;&#26399;&#24453;&#30340;&#65292;&#36825;&#20010;&#36335;&#30001;&#36820;&#22238;&#30340;&#35270;&#22270;&#24212;&#35813;&#21253;&#21547;&#19968;&#20010;&#24102;&#26377; <code>password</code> &#23383;&#27573;&#30340;&#34920;&#21333;&#12290;&#21516;&#26102;&#65292;&#20320;&#20063;&#21487;&#20197;&#22312;&#35270;&#22270;&#37324;&#21152;&#19978;&#23545;&#29992;&#25143;&#30340;&#25552;&#31034;&#25991;&#23383;&#65292;&#35828;&#26126;&#20182;&#20204;&#27491;&#22312;&#36827;&#20837;&#24212;&#29992;&#30340;&#21463;&#20445;&#25252;&#21306;&#22495;&#65292;&#24517;&#39035;&#20808;&#30830;&#35748;&#23494;&#30721;&#12290;</p><h4 id="3fbdde139cb1c9c51e7503d67b0b8bbd">&#30830;&#35748;&#23494;&#30721;</h4><p>&#25509;&#19979;&#26469;&#65292;&#25105;&#20204;&#23450;&#20041;&#19968;&#26465;&#29992;&#20110;&#22788;&#29702;&#26469;&#33258;"&#23494;&#30721;&#30830;&#35748;"&#35270;&#22270;&#34920;&#21333;&#35831;&#27714;&#30340;&#36335;&#30001;&#12290;&#35813;&#36335;&#30001;&#36127;&#36131;&#26657;&#39564;&#23494;&#30721;&#24182;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#20182;&#20204;&#24819;&#21435;&#30340;&#30446;&#26631;&#65306;</p><pre><code class="language-php">use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
+Route::post('/confirm-password', function (Request $request) {
+    if (! Hash::check($request-&gt;password, $request-&gt;user()-&gt;password)) {
+        return back()-&gt;withErrors([
+            'password' =&gt; ['The provided password does not match our records.']
+        ]);
+    }
+
+    $request-&gt;session()-&gt;passwordConfirmed();
+
+    return redirect()-&gt;intended();
+})-&gt;middleware(['auth', 'throttle:6,1']);</code></pre><p>&#22312;&#32487;&#32493;&#20043;&#21069;&#65292;&#25105;&#20204;&#26356;&#20180;&#32454;&#22320;&#30475;&#30475;&#36825;&#26465;&#36335;&#30001;&#12290;&#39318;&#20808;&#20250;&#23545;&#35831;&#27714;&#37324;&#30340; <code>password</code> &#23383;&#27573;&#19982;&#24050;&#35748;&#35777;&#29992;&#25143;&#30340;&#23494;&#30721;&#36827;&#34892;&#23454;&#38469;&#27604;&#23545;&#12290;&#22914;&#26524;&#23494;&#30721;&#26377;&#25928;&#65292;&#21017;&#38656;&#35201;&#21578;&#30693; Laravel &#30340;&#20250;&#35805;&#65306;&#29992;&#25143;&#24050;&#30830;&#35748;&#23494;&#30721;&#12290;<code>passwordConfirmed</code> &#26041;&#27861;&#20250;&#22312;&#29992;&#25143;&#30340;&#20250;&#35805;&#37324;&#20889;&#20837;&#19968;&#20010;&#26102;&#38388;&#25139;&#65292;Laravel &#21487;&#20197;&#25454;&#27492;&#21028;&#26029;&#29992;&#25143;&#26368;&#36817;&#19968;&#27425;&#30830;&#35748;&#23494;&#30721;&#30340;&#26102;&#38388;&#12290;&#26368;&#21518;&#65292;&#25105;&#20204;&#23601;&#21487;&#20197;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#20182;&#20204;&#24819;&#21435;&#30340;&#30446;&#26631;&#22320;&#22336;&#12290;</p><h3 id="801705ac2343e82fa596c98e745035e8">&#20445;&#25252;&#36335;&#30001;</h3><p>&#20320;&#24212;&#24403;&#20026;&#20219;&#20309;&#25191;&#34892;"&#38656;&#35201;&#26368;&#36817;&#19968;&#27425;&#23494;&#30721;&#30830;&#35748;"&#25805;&#20316;&#30340;&#36335;&#30001;&#25346;&#19978; <code>password.confirm</code> &#20013;&#38388;&#20214;&#12290;&#35813;&#20013;&#38388;&#20214;&#38543; Laravel &#40664;&#35748;&#23433;&#35013;&#25552;&#20379;&#65292;&#20250;&#33258;&#21160;&#25226;&#29992;&#25143;&#24819;&#35201;&#35775;&#38382;&#30340;&#30446;&#26631; URL &#23384;&#20837;&#20250;&#35805;&#65292;&#20197;&#20415;&#22312;&#29992;&#25143;&#30830;&#35748;&#23494;&#30721;&#21518;&#20877;&#37325;&#23450;&#21521;&#36807;&#21435;&#12290;&#30446;&#26631; URL &#23384;&#20837;&#20250;&#35805;&#20043;&#21518;&#65292;&#20013;&#38388;&#20214;&#20250;&#25226;&#29992;&#25143;&#37325;&#23450;&#21521;&#21040;&#21517;&#20026; <code>password.confirm</code> &#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/routing#named-routes" target="_blank">&#21629;&#21517;&#36335;&#30001;</a>&#65306;</p><pre><code class="language-php">Route::get('/settings', function () {
+    // ...
+})-&gt;middleware(['password.confirm']);
+
+Route::post('/settings', function () {
+    // ...
+})-&gt;middleware(['password.confirm']);</code></pre><h2 id="ce6052cca6bc845d75dc42032e48d7ed">&#28155;&#21152;&#33258;&#23450;&#20041; Guard</h2><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>Auth</code> Facade &#30340; <code>extend</code> &#26041;&#27861;&#26469;&#23450;&#20041;&#33258;&#24049;&#30340;&#35748;&#35777; Guard&#12290;<code>extend</code> &#26041;&#27861;&#30340;&#35843;&#29992;&#24212;&#24403;&#25918;&#22312;&#19968;&#20010; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/providers" target="_blank">&#26381;&#21153;&#25552;&#20379;&#32773;</a> &#20013;&#12290;&#30001;&#20110; Laravel &#24050;&#32463;&#33258;&#24102; <code>AppServiceProvider</code>&#65292;&#25105;&#20204;&#21487;&#20197;&#25226;&#20195;&#30721;&#25918;&#22312;&#37027;&#37324;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use App\Services\Auth\JwtGuard;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    // ...
+
+    /**
+     * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function boot(): void
+    {
+        Auth::extend('jwt', function (Application $app, string $name, array $config) {
+            // &#36820;&#22238;&#19968;&#20010; Illuminate\Contracts\Auth\Guard &#23454;&#20363;...
+
+            return new JwtGuard(Auth::createUserProvider($config['provider']));
+        });
+    }
+}</code></pre><p>&#27491;&#22914;&#19978;&#38754;&#30340;&#31034;&#20363;&#25152;&#31034;&#65292;&#20256;&#20837; <code>extend</code> &#26041;&#27861;&#30340;&#22238;&#35843;&#24212;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Contracts\Auth\Guard</code> &#30340;&#23454;&#29616;&#12290;&#35201;&#23450;&#20041;&#33258;&#23450;&#20041; Guard&#65292;&#20320;&#38656;&#35201;&#23454;&#29616;&#35813;&#25509;&#21475;&#20013;&#30340;&#20960;&#20010;&#26041;&#27861;&#12290;&#19968;&#26086;&#33258;&#23450;&#20041; Guard &#23450;&#20041;&#22909;&#20043;&#21518;&#65292;&#23601;&#21487;&#20197;&#22312; <code>auth.php</code> &#37197;&#32622;&#25991;&#20214;&#30340; <code>guards</code> &#37197;&#32622;&#20013;&#24341;&#29992;&#23427;&#65306;</p><pre><code class="language-php">'guards' =&gt; [
+    'api' =&gt; [
+        'driver' =&gt; 'jwt',
+        'provider' =&gt; 'users',
+    ],
+],</code></pre><h3 id="00f5cdbd5bebc395b5d221c39226ddc0">&#38381;&#21253;&#35831;&#27714; Guard</h3><p>&#23454;&#29616;&#22522;&#20110; HTTP &#35831;&#27714;&#30340;&#33258;&#23450;&#20041;&#35748;&#35777;&#31995;&#32479;&#65292;&#26368;&#31616;&#21333;&#30340;&#26041;&#24335;&#26159;&#20351;&#29992; <code>Auth::viaRequest</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#35753;&#20320;&#36890;&#36807;&#21333;&#20010;&#38381;&#21253;&#24555;&#36895;&#23450;&#20041;&#35748;&#35777;&#27969;&#31243;&#12290;</p><p>&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#35831;&#22312; <code>AppServiceProvider</code> &#30340; <code>boot</code> &#26041;&#27861;&#20013;&#35843;&#29992; <code>Auth::viaRequest</code>&#12290;<code>viaRequest</code> &#26041;&#27861;&#30340;&#31532;&#19968;&#20010;&#21442;&#25968;&#26159;&#35748;&#35777;&#39537;&#21160;&#30340;&#21517;&#23383;&#65292;&#21487;&#20197;&#26159;&#20219;&#20309;&#33021;&#25551;&#36848;&#20320;&#33258;&#23450;&#20041; Guard &#30340;&#23383;&#31526;&#20018;&#12290;&#31532;&#20108;&#20010;&#21442;&#25968;&#24212;&#26159;&#19968;&#20010;&#38381;&#21253;&#65292;&#25509;&#25910;&#36827;&#26469;&#30340; HTTP &#35831;&#27714;&#65292;&#24182;&#36820;&#22238;&#19968;&#20010;&#29992;&#25143;&#23454;&#20363;&#65307;&#22914;&#26524;&#35748;&#35777;&#22833;&#36133;&#65292;&#21017;&#36820;&#22238; <code>null</code>&#65306;</p><pre><code class="language-php">use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+/**
+ * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+ */
+public function boot(): void
+{
+    Auth::viaRequest('custom-token', function (Request $request) {
+        return User::where('token', (string) $request-&gt;token)-&gt;first();
+    });
+}</code></pre><p>&#33258;&#23450;&#20041;&#35748;&#35777;&#39537;&#21160;&#23450;&#20041;&#22909;&#20043;&#21518;&#65292;&#21487;&#20197;&#22312; <code>auth.php</code> &#37197;&#32622;&#25991;&#20214;&#30340; <code>guards</code> &#37197;&#32622;&#20013;&#23558;&#20854;&#27880;&#20876;&#20026;&#39537;&#21160;&#65306;</p><pre><code class="language-php">'guards' =&gt; [
+    'api' =&gt; [
+        'driver' =&gt; 'custom-token',
+    ],
+],</code></pre><p>&#26368;&#21518;&#65292;&#22312;&#25226;&#35748;&#35777;&#20013;&#38388;&#20214;&#25346;&#21040;&#36335;&#30001;&#26102;&#24341;&#29992;&#36825;&#20010; Guard&#65306;</p><pre><code class="language-php">Route::middleware('auth:api')-&gt;group(function () {
+    // ...
+});</code></pre><h2 id="2e850f126f27103f5b3946d6fe1caee1">&#28155;&#21152;&#33258;&#23450;&#20041;&#29992;&#25143;&#25552;&#20379;&#22120;</h2><p>&#22914;&#26524;&#20320;&#27809;&#26377;&#29992;&#20256;&#32479;&#30340;&#20851;&#31995;&#22411;&#25968;&#25454;&#24211;&#26469;&#23384;&#20648;&#29992;&#25143;&#65292;&#23601;&#38656;&#35201;&#20026; Laravel &#25193;&#23637;&#33258;&#24049;&#30340;&#35748;&#35777; user provider&#12290;&#25105;&#20204;&#23558;&#20351;&#29992; <code>Auth</code> Facade &#30340; <code>provider</code> &#26041;&#27861;&#26469;&#23450;&#20041;&#33258;&#23450;&#20041; user provider&#12290;User provider &#35299;&#26512;&#22120;&#24212;&#24403;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Contracts\Auth\UserProvider</code> &#30340;&#23454;&#29616;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Providers;
+
+use App\Extensions\MongoUserProvider;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    // ...
+
+    /**
+     * &#24341;&#23548;&#21551;&#21160;&#20219;&#20309;&#24212;&#29992;&#26381;&#21153;&#12290;
+     */
+    public function boot(): void
+    {
+        Auth::provider('mongo', function (Application $app, array $config) {
+            // &#36820;&#22238;&#19968;&#20010; Illuminate\Contracts\Auth\UserProvider &#23454;&#20363;...
+
+            return new MongoUserProvider($app-&gt;make('mongo.connection'));
+        });
+    }
+}</code></pre><p>&#36890;&#36807; <code>provider</code> &#26041;&#27861;&#27880;&#20876;&#22909; provider &#20043;&#21518;&#65292;&#23601;&#21487;&#20197;&#22312; <code>auth.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#20999;&#25442;&#21040;&#26032;&#30340; user provider &#20102;&#12290;&#39318;&#20808;&#65292;&#23450;&#20041;&#19968;&#20010;&#20351;&#29992;&#26032;&#39537;&#21160;&#30340; provider&#65306;</p><pre><code class="language-php">'providers' =&gt; [
+    'users' =&gt; [
+        'driver' =&gt; 'mongo',
+    ],
+],</code></pre><p>&#26368;&#21518;&#65292;&#21487;&#20197;&#22312; <code>guards</code> &#37197;&#32622;&#20013;&#24341;&#29992;&#36825;&#20010; provider&#65306;</p><pre><code class="language-php">'guards' =&gt; [
+    'web' =&gt; [
+        'driver' =&gt; 'session',
+        'provider' =&gt; 'users',
+    ],
+],</code></pre><h3 id="7a54b6e72b2780bd7963061ba25a3538">User Provider &#22865;&#32422;</h3><p><code>Illuminate\Contracts\Auth\UserProvider</code> &#30340;&#23454;&#29616;&#36127;&#36131;&#20174;&#19968;&#20010;&#25345;&#20037;&#21270;&#23384;&#20648;&#65288;&#22914; MySQL&#12289;MongoDB &#31561;&#65289;&#20013;&#21462;&#20986;&#19968;&#20010; <code>Illuminate\Contracts\Auth\Authenticatable</code> &#23454;&#29616;&#12290;&#36825;&#20004;&#20010;&#25509;&#21475;&#35753; Laravel &#30340;&#35748;&#35777;&#26426;&#21046;&#26080;&#35770;&#29992;&#25143;&#25968;&#25454;&#22914;&#20309;&#23384;&#20648;&#12289;&#26080;&#35770;&#29992;&#21738;&#31181;&#31867;&#26469;&#34920;&#31034;&#24050;&#35748;&#35777;&#29992;&#25143;&#65292;&#37117;&#21487;&#20197;&#32487;&#32493;&#24037;&#20316;&#65306;</p><p>&#25105;&#20204;&#26469;&#30475; <code>Illuminate\Contracts\Auth\UserProvider</code> &#22865;&#32422;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace Illuminate\Contracts\Auth;
+
+interface UserProvider
+{
+    public function retrieveById($identifier);
+    public function retrieveByToken($identifier, $token);
+    public function updateRememberToken(Authenticatable $user, $token);
+    public function retrieveByCredentials(array $credentials);
+    public function validateCredentials(Authenticatable $user, array $credentials);
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false);
+}</code></pre><p><code>retrieveById</code> &#26041;&#27861;&#36890;&#24120;&#25509;&#25910;&#19968;&#20010;&#20195;&#34920;&#29992;&#25143;&#30340;&#38190;&#65292;&#27604;&#22914; MySQL &#25968;&#25454;&#24211;&#30340;&#33258;&#22686; ID&#12290;&#35813;&#26041;&#27861;&#24212;&#24403;&#26816;&#32034;&#20986;&#19982;&#35813; ID &#21305;&#37197;&#30340; <code>Authenticatable</code> &#23454;&#29616;&#24182;&#36820;&#22238;&#12290;</p><p><code>retrieveByToken</code> &#26041;&#27861;&#36890;&#36807;&#21807;&#19968;&#30340; <code>$identifier</code> &#21644;"&#35760;&#20303;&#25105;"<code>$token</code> &#26469;&#26816;&#32034;&#19968;&#20010;&#29992;&#25143;&#65292;token &#36890;&#24120;&#23384;&#20110;&#31867;&#20284; <code>remember_token</code> &#30340;&#25968;&#25454;&#24211;&#21015;&#20013;&#12290;&#21644;&#21069;&#38754;&#19968;&#26679;&#65292;token &#21305;&#37197;&#30340; <code>Authenticatable</code> &#23454;&#29616;&#24212;&#24403;&#34987;&#35813;&#26041;&#27861;&#36820;&#22238;&#12290;</p><p><code>updateRememberToken</code> &#26041;&#27861;&#20250;&#29992;&#26032;&#30340; <code>$token</code> &#26356;&#26032; <code>$user</code> &#23454;&#20363;&#30340; <code>remember_token</code>&#12290;&#22312;"&#35760;&#20303;&#25105;"&#35748;&#35777;&#25104;&#21151;&#25110;&#29992;&#25143;&#30331;&#20986;&#26102;&#65292;&#20250;&#32473;&#29992;&#25143;&#20998;&#37197;&#19968;&#20010;&#26032; token&#12290;</p><p><code>retrieveByCredentials</code> &#26041;&#27861;&#25509;&#25910;&#35843;&#29992; <code>Auth::attempt</code> &#35748;&#35777;&#29992;&#25143;&#26102;&#20256;&#20837;&#30340;&#20973;&#25454;&#25968;&#32452;&#12290;&#28982;&#21518;&#35813;&#26041;&#27861;&#24212;&#24403;&#22522;&#20110;&#24213;&#23618;&#25345;&#20037;&#21270;&#23384;&#20648;"&#26597;&#35810;"&#20986;&#19982;&#36825;&#20123;&#20973;&#25454;&#21305;&#37197;&#30340;&#29992;&#25143;&#12290;&#36890;&#24120;&#65292;&#35813;&#26041;&#27861;&#20250;&#25191;&#34892;&#24102;&#26377;"where"&#26465;&#20214;&#30340;&#26597;&#35810;&#65292;&#25628;&#32034;"username"&#31561;&#20110; <code>$credentials['username']</code> &#20540;&#30340;&#35760;&#24405;&#12290;&#35813;&#26041;&#27861;&#24212;&#36820;&#22238;&#19968;&#20010; <code>Authenticatable</code> &#23454;&#29616;&#12290;<strong class="mk-b">&#27492;&#26041;&#27861;&#19981;&#24212;&#23581;&#35797;&#20570;&#20219;&#20309;&#23494;&#30721;&#26657;&#39564;&#25110;&#35748;&#35777;&#25805;&#20316;&#12290;</strong></p><p><code>validateCredentials</code> &#26041;&#27861;&#24212;&#25226;&#32473;&#23450;&#30340; <code>$user</code> &#19982; <code>$credentials</code> &#36827;&#34892;&#27604;&#23545;&#20197;&#35748;&#35777;&#29992;&#25143;&#12290;&#20363;&#22914;&#65292;&#35813;&#26041;&#27861;&#36890;&#24120;&#20250;&#20351;&#29992; <code>Hash::check</code> &#25226; <code>$user-&gt;getAuthPassword()</code> &#30340;&#20540;&#19982; <code>$credentials['password']</code> &#36827;&#34892;&#27604;&#36739;&#12290;&#35813;&#26041;&#27861;&#24212;&#36820;&#22238; <code>true</code> &#25110; <code>false</code>&#65292;&#34920;&#31034;&#23494;&#30721;&#26159;&#21542;&#26377;&#25928;&#12290;</p><p><code>rehashPasswordIfRequired</code> &#26041;&#27861;&#24212;&#22312;&#38656;&#35201;&#26102;&#23545;&#32473;&#23450; <code>$user</code> &#30340;&#23494;&#30721;&#36827;&#34892;&#37325;&#26032;&#21704;&#24076;&#12290;&#20363;&#22914;&#65292;&#35813;&#26041;&#27861;&#36890;&#24120;&#20351;&#29992; <code>Hash::needsRehash</code> &#21028;&#26029; <code>$credentials['password']</code> &#26159;&#21542;&#38656;&#35201;&#37325;&#26032;&#21704;&#24076;&#12290;&#22914;&#26524;&#38656;&#35201;&#37325;&#26032;&#21704;&#24076;&#65292;&#24212;&#20351;&#29992; <code>Hash::make</code> &#37325;&#26032;&#21704;&#24076;&#23494;&#30721;&#24182;&#26356;&#26032;&#24213;&#23618;&#25345;&#20037;&#21270;&#23384;&#20648;&#20013;&#30340;&#29992;&#25143;&#35760;&#24405;&#12290;</p><h3 id="c80e646881d8d36ad93ead2f1a7780f3">Authenticatable &#22865;&#32422;</h3><p>&#33267;&#27492;&#25105;&#20204;&#24050;&#32463;&#30475;&#36807;&#20102; <code>UserProvider</code> &#30340;&#21508;&#20010;&#26041;&#27861;&#65292;&#19979;&#38754;&#20877;&#26469;&#30475; <code>Authenticatable</code> &#22865;&#32422;&#12290;&#35831;&#35760;&#20303;&#65292;user provider &#30340; <code>retrieveById</code>&#12289;<code>retrieveByToken</code> &#21644; <code>retrieveByCredentials</code> &#26041;&#27861;&#37117;&#24212;&#36820;&#22238;&#36825;&#20010;&#25509;&#21475;&#30340;&#23454;&#29616;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace Illuminate\Contracts\Auth;
+
+interface Authenticatable
+{
+    public function getAuthIdentifierName();
+    public function getAuthIdentifier();
+    public function getAuthPasswordName();
+    public function getAuthPassword();
+    public function getRememberToken();
+    public function setRememberToken($value);
+    public function getRememberTokenName();
+}</code></pre><p>&#36825;&#20010;&#25509;&#21475;&#27604;&#36739;&#31616;&#21333;&#12290;<code>getAuthIdentifierName</code> &#26041;&#27861;&#24212;&#36820;&#22238;&#29992;&#25143;&#30340;"&#20027;&#38190;"&#21015;&#21517;&#65292;<code>getAuthIdentifier</code> &#26041;&#27861;&#24212;&#36820;&#22238;&#29992;&#25143;&#30340;"&#20027;&#38190;"&#20540;&#12290;&#24403;&#20351;&#29992; MySQL &#21518;&#31471;&#26102;&#65292;&#23427;&#36890;&#24120;&#23601;&#26159;&#20998;&#37197;&#32473;&#29992;&#25143;&#35760;&#24405;&#30340;&#33258;&#22686;&#20027;&#38190;&#12290;<code>getAuthPasswordName</code> &#26041;&#27861;&#24212;&#36820;&#22238;&#29992;&#25143;&#23494;&#30721;&#21015;&#30340;&#21015;&#21517;&#12290;<code>getAuthPassword</code> &#26041;&#27861;&#24212;&#36820;&#22238;&#29992;&#25143;&#30340;&#21704;&#24076;&#23494;&#30721;&#12290;</p><p>&#36825;&#20010;&#25509;&#21475;&#35753;&#35748;&#35777;&#31995;&#32479;&#21487;&#20197;&#19982;&#20219;&#20309;"&#29992;&#25143;"&#31867;&#19968;&#36215;&#20351;&#29992;&#65292;&#26080;&#35770;&#20320;&#20351;&#29992;&#30340;&#26159;&#21738;&#31181; ORM &#25110;&#23384;&#20648;&#25277;&#35937;&#23618;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Laravel &#22312; <code>app/Models</code> &#30446;&#24405;&#20013;&#21253;&#21547;&#19968;&#20010;&#23454;&#29616;&#20102;&#35813;&#25509;&#21475;&#30340; <code>App\Models\User</code> &#31867;&#12290;</p><h2 id="cb5cda6ac83534d52f07664918109cf2">&#33258;&#21160;&#37325;&#26032;&#21704;&#24076;&#23494;&#30721;</h2><p>Laravel &#40664;&#35748;&#30340;&#23494;&#30721;&#21704;&#24076;&#31639;&#27861;&#26159; bcrypt&#12290;&#21487;&#20197;&#36890;&#36807;&#24212;&#29992; <code>config/hashing.php</code> &#37197;&#32622;&#25991;&#20214;&#25110; <code>BCRYPT_ROUNDS</code> &#29615;&#22659;&#21464;&#37327;&#26469;&#35843;&#25972; bcrypt &#21704;&#24076;&#30340;"&#24037;&#20316;&#22240;&#23376;"&#12290;</p><p>&#36890;&#24120;&#65292;&#38543;&#30528; CPU/GPU &#31639;&#21147;&#30340;&#25552;&#21319;&#65292;&#24212;&#24403;&#36880;&#27493;&#22686;&#22823; bcrypt &#30340;&#24037;&#20316;&#22240;&#23376;&#12290;&#22914;&#26524;&#20320;&#22686;&#22823;&#20102;&#24212;&#29992;&#30340; bcrypt &#24037;&#20316;&#22240;&#23376;&#65292;Laravel &#20250;&#22312;&#29992;&#25143;&#36890;&#36807;&#20837;&#38376;&#22871;&#20214;&#25110;&#36890;&#36807; <code>attempt</code> &#26041;&#27861; <a href="xq9zrgjvdo.html#authenticating-users" target="_blank">&#25163;&#21160;&#35748;&#35777;</a> &#26102;&#65292;&#20248;&#38597;&#22320;&#12289;&#33258;&#21160;&#22320;&#20026;&#29992;&#25143;&#30340;&#23494;&#30721;&#37325;&#26032;&#21704;&#24076;&#12290;</p><p>&#36890;&#24120;&#65292;&#33258;&#21160;&#37325;&#26032;&#21704;&#24076;&#23494;&#30721;&#19981;&#20250;&#23545;&#20320;&#30340;&#24212;&#29992;&#36896;&#25104;&#24178;&#25200;&#65307;&#20294;&#22914;&#26524;&#20320;&#24819;&#31105;&#29992;&#35813;&#34892;&#20026;&#65292;&#21487;&#20197;&#21457;&#24067; <code>hashing</code> &#37197;&#32622;&#25991;&#20214;&#65306;</p><pre><code class="language-shell">php artisan config:publish hashing</code></pre><p>&#37197;&#32622;&#25991;&#20214;&#21457;&#24067;&#21518;&#65292;&#25226; <code>rehash_on_login</code> &#37197;&#32622;&#39033;&#35774;&#20026; <code>false</code> &#21363;&#21487;&#65306;</p><pre><code class="language-php">'rehash_on_login' =&gt; false,</code></pre><h2 id="10b2761db5a8e089049df39675abc550">&#20107;&#20214;</h2><p>Laravel &#22312;&#35748;&#35777;&#36807;&#31243;&#20013;&#20250;&#27966;&#21457;&#22810;&#31181; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#20107;&#20214;</a>&#12290;&#20320;&#21487;&#20197;&#20026;&#20197;&#19979;&#20219;&#24847;&#20107;&#20214; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#23450;&#20041;&#30417;&#21548;&#22120;</a>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#20107;&#20214;&#21517;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Illuminate\Auth\Events\Registered</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\Attempting</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\Authenticated</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\Login</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\Failed</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\Validated</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\Verified</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\Logout</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\CurrentDeviceLogout</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\OtherDeviceLogout</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\Lockout</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\PasswordReset</code></td>
+</tr>
+<tr>
+<td><code>Illuminate\Auth\Events\PasswordResetLinkSent</code></td>
+</tr>
+</tbody>
+</table>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> Eloquent: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent" target="_blank">/docs/Laravel 13.x/eloquent</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> 授权: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authorization" target="_blank">/docs/Laravel 13.x/authorization</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Laravel 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> 入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> Eloquent 模型: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent" target="_blank">/docs/Laravel 13.x/eloquent</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Laravel 用户认证文档: <i><a href="https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/user-authentication/" target="_blank">https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/user-authentication/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> 会话: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/session" target="_blank">/docs/Laravel 13.x/session</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 免费入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> Passport: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/passport" target="_blank">/docs/Laravel 13.x/passport</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> Laravel Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> "how it works": <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum#how-it-works" target="_blank">/docs/Laravel 13.x/sanctum#how-it-works</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> Passport: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/passport" target="_blank">/docs/Laravel 13.x/passport</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> Laravel Sanctum: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/sanctum" target="_blank">/docs/Laravel 13.x/sanctum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> 手动实现自己的后端认证路由: <i><a href="xq9zrgjvdo.html#authenticating-users" target="_blank">#authenticating-users</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> Laravel Fortify: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/fortify" target="_blank">/docs/Laravel 13.x/fortify</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> MCP 服务器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/mcp" target="_blank">/docs/Laravel 13.x/mcp</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> 通过 OAuth 进行认证: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/mcp#oauth" target="_blank">/docs/Laravel 13.x/mcp#oauth</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> 我们的应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> Laravel 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> 手动认证用户: <i><a href="xq9zrgjvdo.html#authenticating-users" target="_blank">#authenticating-users</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> 安装一个 Laravel 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> 保护路由: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication#protecting-routes" target="_blank">/docs/Laravel 13.x/authentication#protecting-routes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> 路由中间件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/middleware" target="_blank">/docs/Laravel 13.x/middleware</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> 中间件别名: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/middleware#middleware-aliases" target="_blank">/docs/Laravel 13.x/middleware#middleware-aliases</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> 命名路由: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/routing#named-routes" target="_blank">/docs/Laravel 13.x/routing#named-routes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> 限流文档: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/routing#rate-limiting" target="_blank">/docs/Laravel 13.x/routing#rate-limiting</a></i><br><code style="font-size: 90%; opacity: 0.6;">[30]</code> 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[31]</code> Facade: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/facades" target="_blank">/docs/Laravel 13.x/facades</a></i><br><code style="font-size: 90%; opacity: 0.6;">[32]</code> 会话: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/session" target="_blank">/docs/Laravel 13.x/session</a></i><br><code style="font-size: 90%; opacity: 0.6;">[33]</code> 会话固定（session fixation）: <i><a href="https://en.wikipedia.org/wiki/Session_fixation" target="_blank">https://en.wikipedia.org/wiki/Session_fixation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[34]</code> 契约: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/contracts" target="_blank">/docs/Laravel 13.x/contracts</a></i><br><code style="font-size: 90%; opacity: 0.6;">[35]</code> HTTP Basic 认证: <i><a href="https://en.wikipedia.org/wiki/Basic_access_authentication" target="_blank">https://en.wikipedia.org/wiki/Basic_access_authentication</a></i><br><code style="font-size: 90%; opacity: 0.6;">[36]</code> 中间件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/middleware" target="_blank">/docs/Laravel 13.x/middleware</a></i><br><code style="font-size: 90%; opacity: 0.6;">[37]</code> PHP FastCGI: <i><a href="https://www.php.net/manual/en/install.fpm.php" target="_blank">https://www.php.net/manual/en/install.fpm.php</a></i><br><code style="font-size: 90%; opacity: 0.6;">[38]</code> 定义一个中间件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/middleware" target="_blank">/docs/Laravel 13.x/middleware</a></i><br><code style="font-size: 90%; opacity: 0.6;">[39]</code> CSRF Token: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/csrf" target="_blank">/docs/Laravel 13.x/csrf</a></i><br><code style="font-size: 90%; opacity: 0.6;">[40]</code> 中间件别名: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/middleware#middleware-aliases" target="_blank">/docs/Laravel 13.x/middleware#middleware-aliases</a></i><br><code style="font-size: 90%; opacity: 0.6;">[41]</code> Laravel 应用入门套件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/starter-kits" target="_blank">/docs/Laravel 13.x/starter-kits</a></i><br><code style="font-size: 90%; opacity: 0.6;">[42]</code> 命名路由: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/routing#named-routes" target="_blank">/docs/Laravel 13.x/routing#named-routes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[43]</code> 服务提供者: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/providers" target="_blank">/docs/Laravel 13.x/providers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[44]</code> 手动认证: <i><a href="xq9zrgjvdo.html#authenticating-users" target="_blank">#authenticating-users</a></i><br><code style="font-size: 90%; opacity: 0.6;">[45]</code> 事件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br><code style="font-size: 90%; opacity: 0.6;">[46]</code> 定义监听器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="e296olw9q7.html#blog1048" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">任务调度</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="2wy3l43ykm.html#blog1050" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">授权</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

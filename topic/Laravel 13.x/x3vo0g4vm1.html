@@ -1,0 +1,1768 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>数据库：迁移 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/x3vo0g4vm1.html', function (data, status) {
+            addView('x3vo0g4vm1.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>数据库：迁移</h1><ul>
+<li><a href="x3vo0g4vm1.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="x3vo0g4vm1.html#4575770e2d9bc37c10ab3376af219ff7">生成迁移</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#993dd26cb731afbe2784e991a7113fc6">合并迁移</a></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#1bbcf0a3df51e4b85cd39edfb582eace">迁移结构</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#e35459180239feb7e4ba2569945f785a">设置迁移连接</a></li>
+<li><a href="x3vo0g4vm1.html#59370f7d4e545f2d99fafd70b54bb15c">跳过迁移</a></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#a81698d0cedc1ea3b687b130a9716174">运行迁移</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#6a756621775f1e3b0757f97c9cb19d08">隔离迁移执行</a></li>
+<li><a href="x3vo0g4vm1.html#c658e73f8f46c578b2115317f4f782da">强制在生产环境运行迁移</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#61b4f598b620942c289210771fb6dd40">回滚迁移</a></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#14080e0d28db0372c46af18c3eab9964">单命令回滚并迁移</a></li>
+<li><a href="x3vo0g4vm1.html#e3f521c8ba8607bf1a164fc12fea8202">删除所有表并迁移</a></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#43df8b77ae08f65baa8ace315c8b6996">表</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#b9cdb1aea3130189ebbe8478d919a809">创建表</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#d4fd5d2c3c97ba0f966b1eccdc35b580">判断表 / 列是否存在</a></li>
+<li><a href="x3vo0g4vm1.html#8bfe652b0de2e387b197eac3b883f6f8">数据库连接与表选项</a></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#0752e4164ec48ab8c662bf133f066f9b">更新表</a></li>
+<li><a href="x3vo0g4vm1.html#6346be886d75fd84144c117ea6f790f9">重命名 / 删除表</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#2f5ae24e0905fb2af9282df3952e650d">重命名带外键的表</a></li>
+</ul></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#cb2f68c9c24e85d21e6b090b6e5657d8">列</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#ab08ef483e7adb48fcf639ffd6e41f6d">创建列</a></li>
+<li><a href="x3vo0g4vm1.html#0a672490710a08fa66d0d8e97f1fddd4">可用的列类型</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#cd29ffe670eb44bd09af7e6db6f98c29">布尔类型</a></li>
+<li><a href="x3vo0g4vm1.html#b14d91db9ec526a608ce81d0524c7220">字符串与文本类型</a></li>
+<li><a href="x3vo0g4vm1.html#47969bad6e36157fd1d641e009d7578f">数值类型</a></li>
+<li><a href="x3vo0g4vm1.html#49b006cad4738628c206dcde55b110ee">日期与时间类型</a></li>
+<li><a href="x3vo0g4vm1.html#447f76afc4a5d0f2de2c7a5cd111a56d">二进制类型</a></li>
+<li><a href="x3vo0g4vm1.html#6c20c3e985ab99b74f2b2c6c13307733">对象与 JSON 类型</a></li>
+<li><a href="x3vo0g4vm1.html#40d3bd1683ab3aba0f6533d92ef3ac0d">UUID 与 ULID 类型</a></li>
+<li><a href="x3vo0g4vm1.html#453102ccbe6afc01fc0bad84bca48691">空间类型</a></li>
+<li><a href="x3vo0g4vm1.html#0b609e04587599d1746db27c2561b403">关联类型</a></li>
+<li><a href="x3vo0g4vm1.html#bfc492a99ddbfddd11d6b3eb0876f7cf">特殊类型</a></li>
+<li><a href="x3vo0g4vm1.html#ede8a10f8e39746852e298d427436eb5">bigIncrements()</a></li>
+<li><a href="x3vo0g4vm1.html#402644bb4938c1c24335b0cfc8cb5dc7">bigInteger()</a></li>
+<li><a href="x3vo0g4vm1.html#d6f2a262cf0713f238d181585233ed6a">binary()</a></li>
+<li><a href="x3vo0g4vm1.html#d052369cc6704dcaaf14d62b19c02ae3">boolean()</a></li>
+<li><a href="x3vo0g4vm1.html#495d643c6bbc4d22220dedea98ab2989">char()</a></li>
+<li><a href="x3vo0g4vm1.html#2a24324b2a581bf40c24246aa9a9ef58">dateTimeTz()</a></li>
+<li><a href="x3vo0g4vm1.html#83100ed4c5d6f6376c11159954ab513f">dateTime()</a></li>
+<li><a href="x3vo0g4vm1.html#68323bfe2f920d6994da831c8a409195">date()</a></li>
+<li><a href="x3vo0g4vm1.html#40e2c4a357e322e82f50982f509dc48d">decimal()</a></li>
+<li><a href="x3vo0g4vm1.html#e1530923c70100293381e0c70040d776">double()</a></li>
+<li><a href="x3vo0g4vm1.html#e0d16559aabe92bd37728f20e46a92f6">enum()</a></li>
+<li><a href="x3vo0g4vm1.html#4f65c7d8409c2291349de9612dcd401e">float()</a></li>
+<li><a href="x3vo0g4vm1.html#46be1edb5a1953b4a856222402100fe3">foreignId()</a></li>
+<li><a href="x3vo0g4vm1.html#5e64cf0c0d57113ac0cf6383928ddcf6">foreignIdFor()</a></li>
+<li><a href="x3vo0g4vm1.html#c80621ad8d24056c860e533fafa61503">foreignUlid()</a></li>
+<li><a href="x3vo0g4vm1.html#90dd353508fb84b785d6f0ea921e266e">foreignUuid()</a></li>
+<li><a href="x3vo0g4vm1.html#427eca7f3a15ec6b8207a36929d7f232">foreignUuidFor()</a></li>
+<li><a href="x3vo0g4vm1.html#0555b47839f937a71f81fdc347c4f2c9">geography()</a></li>
+<li><a href="x3vo0g4vm1.html#338b12aae1179d9e3406043ee3202980">geometry()</a></li>
+<li><a href="x3vo0g4vm1.html#66d207c9cc617ecffba73056c823b7f5">id()</a></li>
+<li><a href="x3vo0g4vm1.html#61f156a657a5d30ff62d689164645728">increments()</a></li>
+<li><a href="x3vo0g4vm1.html#f49645aec3455703d0c9f38bf39d8305">integer()</a></li>
+<li><a href="x3vo0g4vm1.html#f38b1adfa799d7995cde7cd669d2e5e7">ipAddress()</a></li>
+<li><a href="x3vo0g4vm1.html#6fd3760b68f5da63721c738dde8e8b8b">json()</a></li>
+<li><a href="x3vo0g4vm1.html#c88365f339e7676f925a29eea4a8ba7b">jsonb()</a></li>
+<li><a href="x3vo0g4vm1.html#5f8cce96c1cd0d9b348467545691d057">longText()</a></li>
+<li><a href="x3vo0g4vm1.html#f794e56d67cfc8324aa8d6c07af08876">macAddress()</a></li>
+<li><a href="x3vo0g4vm1.html#eae6f0fd7ee3c9c3b6b2b7ae08ebdf80">mediumIncrements()</a></li>
+<li><a href="x3vo0g4vm1.html#b5cf3b5c7cc2e1b02cfee8367986e404">mediumInteger()</a></li>
+<li><a href="x3vo0g4vm1.html#79ecdb84e8a95062a1aa4c9a9e5f386a">mediumText()</a></li>
+<li><a href="x3vo0g4vm1.html#8b55247348f1bff5b63746234a7d5051">morphs()</a></li>
+<li><a href="x3vo0g4vm1.html#689380ea2a49b4e27f677e5ece9e2e2a">nullableMorphs()</a></li>
+<li><a href="x3vo0g4vm1.html#682cdddcce1a89ae1754ecb90cb131df">nullableUlidMorphs()</a></li>
+<li><a href="x3vo0g4vm1.html#7c33a9eee769d0438b435c8265039ec2">nullableUuidMorphs()</a></li>
+<li><a href="x3vo0g4vm1.html#a5b863785441358e6865cb4943ac6de2">rememberToken()</a></li>
+<li><a href="x3vo0g4vm1.html#bf8ba73c3df10fc6a66b20fab9804fc9">set()</a></li>
+<li><a href="x3vo0g4vm1.html#300b83a4f4a9b6d2f192a59ddcb403d1">smallIncrements()</a></li>
+<li><a href="x3vo0g4vm1.html#584d3bf70d763e5af62f36f625b61a5c">smallInteger()</a></li>
+<li><a href="x3vo0g4vm1.html#9504af58906199eaa932aedf247c7984">softDeletesTz()</a></li>
+<li><a href="x3vo0g4vm1.html#aae049c7fe714541e7fde3e5b6504576">softDeletes()</a></li>
+<li><a href="x3vo0g4vm1.html#77d88c3306c2758481925bc92af2a85e">string()</a></li>
+<li><a href="x3vo0g4vm1.html#2470e62883baee066131bb9c623c1572">text()</a></li>
+<li><a href="x3vo0g4vm1.html#0ce7c591a8469c6ca4515950b790552d">timeTz()</a></li>
+<li><a href="x3vo0g4vm1.html#e123142787daeb46944503552b8e2c40">time()</a></li>
+<li><a href="x3vo0g4vm1.html#02f19051762937a4fc8316dffeb67794">timestampTz()</a></li>
+<li><a href="x3vo0g4vm1.html#b67d6325ac16bf6ed4850e9f6fb06bd8">timestamp()</a></li>
+<li><a href="x3vo0g4vm1.html#2f8bc445e1049972a75641268a07f27f">timestampsTz()</a></li>
+<li><a href="x3vo0g4vm1.html#04478c0868f9617473fc5cf34f3b561c">timestamps()</a></li>
+<li><a href="x3vo0g4vm1.html#47b6dd1bd68cae0042419205ceb71bc1">tinyIncrements()</a></li>
+<li><a href="x3vo0g4vm1.html#f0017ebfe859baf19c548c982d7cd05e">tinyInteger()</a></li>
+<li><a href="x3vo0g4vm1.html#328b647fe68c40eff727846eed2a07d7">tinyText()</a></li>
+<li><a href="x3vo0g4vm1.html#a1c37080390a7975c8cc5fdb4efe3e06">unsignedBigInteger()</a></li>
+<li><a href="x3vo0g4vm1.html#5dffbcec09759ecfe09435ed173dd425">unsignedInteger()</a></li>
+<li><a href="x3vo0g4vm1.html#69a935c87608a82fd9a55027760a1262">unsignedMediumInteger()</a></li>
+<li><a href="x3vo0g4vm1.html#827ec9764257dace0e95339a2b6322ca">unsignedSmallInteger()</a></li>
+<li><a href="x3vo0g4vm1.html#4a4a0a777af0f47274884e800e3067ee">unsignedTinyInteger()</a></li>
+<li><a href="x3vo0g4vm1.html#85ad38dbb16730203e7d0e97bcc5e06e">ulidMorphs()</a></li>
+<li><a href="x3vo0g4vm1.html#2530f76a071b6842352d1e11d8a669db">uuidMorphs()</a></li>
+<li><a href="x3vo0g4vm1.html#6713199581f2bd2682ad6550b750f0a7">ulid()</a></li>
+<li><a href="x3vo0g4vm1.html#1dc2d11af07e15a0bb518c3bfba95111">uuid()</a></li>
+<li><a href="x3vo0g4vm1.html#b53665db8c5a420ab1e8c8a150b0cad5">vector()</a></li>
+<li><a href="x3vo0g4vm1.html#4c336a44aaa42abeafdb92cae6e27ab2">year()</a></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#21e1509d282a5389af24595ac76302a2">列修饰符</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#af128a19d149aaa388f135ab3f929ec1">默认表达式</a></li>
+<li><a href="x3vo0g4vm1.html#8e68a60b6118afa4bd38432b1207073a">列顺序</a></li>
+<li><a href="x3vo0g4vm1.html#62e047fd3a62f44d0f40902cbd6ff870">Instant 列操作</a></li>
+<li><a href="x3vo0g4vm1.html#c37c9e20c1dc4a7d57ff7c93723079a7">DDL 锁</a></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#679988072cca37bb5f00cf157bf0bad4">修改列</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#e60256d3dfe0e55785d75239dfd99efc">PostgreSQL 列修改</a></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#bd7eb2e30858550abab6001309380478">重命名列</a></li>
+<li><a href="x3vo0g4vm1.html#3aac0e33ab967bf61e97fdb0f629d2de">删除列</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#65e35e5e13052e1c143408c054d76f25">可用的命令别名</a></li>
+</ul></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#b271e427962758c71e342a2c06df493a">索引</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#de4e5908cda4e6f60246193ed5de75fc">创建索引</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#1222bc755be6fa32edeec0334cf4c01a">可用的索引类型</a></li>
+<li><a href="x3vo0g4vm1.html#5dc8125e2dc3bcc735fef15c5ac710f5">在线创建索引</a></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#472fba92e37c520356e2f42d7414e11a">重命名索引</a></li>
+<li><a href="x3vo0g4vm1.html#af9dfbc0265c11c731434efa4f659bbc">删除索引</a></li>
+<li><a href="x3vo0g4vm1.html#499c95f9984533889e81c4c221184667">外键约束</a>
+<ul>
+<li><a href="x3vo0g4vm1.html#dbde626650c7927da34e0204f50d69b8">删除外键</a></li>
+<li><a href="x3vo0g4vm1.html#41dc0dc8ef6def6a1923b0c919036981">切换外键约束</a></li>
+</ul></li>
+</ul></li>
+<li><a href="x3vo0g4vm1.html#10b2761db5a8e089049df39675abc550">事件</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>&#36801;&#31227;&#23601;&#20687;&#25968;&#25454;&#24211;&#30340;&#29256;&#26412;&#25511;&#21046;&#65292;&#23427;&#35753;&#22242;&#38431;&#21487;&#20197;&#23450;&#20041;&#24182;&#20849;&#20139;&#24212;&#29992;&#25968;&#25454;&#24211;&#32467;&#26500;&#30340;&#23450;&#20041;&#12290;&#22914;&#26524;&#20320;&#26366;&#19981;&#24471;&#19981;&#21578;&#35785;&#21516;&#20107;&#22312;&#25289;&#21462;&#28304;&#30721;&#21518;&#12300;&#25163;&#21160;&#21521;&#26412;&#22320;&#25968;&#25454;&#24211;&#21152;&#19968;&#21015;&#12301;&#65292;&#37027;&#20040;&#20320;&#24050;&#32463;&#20146;&#36523;&#20307;&#39564;&#36807;&#25968;&#25454;&#24211;&#36801;&#31227;&#35201;&#35299;&#20915;&#30340;&#38382;&#39064;&#12290;</p><p>Laravel &#30340; <code>Schema</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/facades" target="_blank">facade</a> &#20026;&#25152;&#26377; Laravel &#25903;&#25345;&#30340;&#25968;&#25454;&#24211;&#31995;&#32479;&#25552;&#20379;&#19982;&#20855;&#20307;&#25968;&#25454;&#24211;&#26080;&#20851;&#30340;&#24314;&#34920;&#19982;&#34920;&#32467;&#26500;&#21464;&#26356;&#33021;&#21147;&#12290;&#36890;&#24120;&#65292;&#36801;&#31227;&#20250;&#36890;&#36807;&#35813; facade &#26469;&#21019;&#24314;&#21644;&#20462;&#25913;&#25968;&#25454;&#24211;&#34920;&#19982;&#21015;&#12290;</p><h2 id="4575770e2d9bc37c10ab3376af219ff7">&#29983;&#25104;&#36801;&#31227;</h2><p>&#20320;&#21487;&#20197;&#20351;&#29992; <code>make:migration</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/artisan" target="_blank">Artisan &#21629;&#20196;</a> &#29983;&#25104;&#25968;&#25454;&#24211;&#36801;&#31227;&#12290;&#26032;&#29983;&#25104;&#30340;&#36801;&#31227;&#25991;&#20214;&#20250;&#25918;&#21040; <code>database/migrations</code> &#30446;&#24405;&#20013;&#12290;&#27599;&#20010;&#36801;&#31227;&#25991;&#20214;&#21517;&#37117;&#21253;&#21547;&#19968;&#20010;&#26102;&#38388;&#25139;&#65292;&#29992;&#20110;&#35753; Laravel &#30830;&#23450;&#36801;&#31227;&#30340;&#25191;&#34892;&#39034;&#24207;&#65306;</p><pre><code class="language-shell">php artisan make:migration create_flights_table</code></pre><p>Laravel &#20250;&#26681;&#25454;&#36801;&#31227;&#21517;&#31216;&#23581;&#35797;&#29468;&#27979;&#34920;&#21517;&#20197;&#21450;&#35813;&#36801;&#31227;&#26159;&#21542;&#20250;&#21019;&#24314;&#26032;&#34920;&#12290;&#22914;&#26524; Laravel &#33021;&#20174;&#36801;&#31227;&#21517;&#31216;&#20013;&#25512;&#26029;&#20986;&#34920;&#21517;&#65292;&#21017;&#20250;&#22312;&#29983;&#25104;&#30340;&#36801;&#31227;&#25991;&#20214;&#20013;&#39044;&#20808;&#22635;&#20805;&#35813;&#34920;&#21517;&#65307;&#21542;&#21017;&#20320;&#38656;&#35201;&#25163;&#21160;&#22312;&#36801;&#31227;&#25991;&#20214;&#20013;&#25351;&#23450;&#34920;&#21517;&#12290;</p><p>&#22914;&#26524;&#24076;&#26395;&#20026;&#29983;&#25104;&#30340;&#36801;&#31227;&#25991;&#20214;&#25351;&#23450;&#33258;&#23450;&#20041;&#36335;&#24452;&#65292;&#21487;&#20197;&#22312;&#25191;&#34892; <code>make:migration</code> &#21629;&#20196;&#26102;&#20351;&#29992; <code>--path</code> &#36873;&#39033;&#12290;&#35813;&#36335;&#24452;&#24212;&#30456;&#23545;&#20110;&#24212;&#29992;&#26681;&#30446;&#24405;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#21487;&#20197;&#36890;&#36807; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/artisan#stub-customization" target="_blank">stub publishing</a> &#33258;&#23450;&#20041;&#36801;&#31227; stub &#27169;&#26495;&#12290;</p>
+</blockquote><h3 id="993dd26cb731afbe2784e991a7113fc6">&#21512;&#24182;&#36801;&#31227;</h3><p>&#38543;&#30528;&#24212;&#29992;&#19981;&#26029;&#36845;&#20195;&#65292;<code>database/migrations</code> &#30446;&#24405;&#20013;&#21487;&#33021;&#22534;&#31215;&#36234;&#26469;&#36234;&#22810;&#30340;&#36801;&#31227;&#65292;&#26368;&#32456;&#21487;&#33021;&#33192;&#32960;&#21040;&#19978;&#30334;&#20010;&#12290;&#22914;&#26524;&#20320;&#24895;&#24847;&#65292;&#21487;&#20197;&#23558;&#36825;&#20123;&#36801;&#31227;&#12300;&#21512;&#24182;&#12301;&#25104;&#21333;&#20010; SQL &#25991;&#20214;&#12290;&#24320;&#22987;&#20043;&#21069;&#65292;&#35831;&#25191;&#34892; <code>schema:dump</code> &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan schema:dump
+
+# &#36716;&#20648;&#24403;&#21069;&#25968;&#25454;&#24211;&#32467;&#26500;&#24182;&#35009;&#21098;&#25481;&#25152;&#26377;&#24050;&#23384;&#22312;&#30340;&#36801;&#31227;...
+php artisan schema:dump --prune</code></pre><p>&#25191;&#34892;&#35813;&#21629;&#20196;&#21518;&#65292;Laravel &#20250;&#23558;&#19968;&#20010;&#12300;schema&#12301;&#25991;&#20214;&#20889;&#20837;&#24212;&#29992;&#30340; <code>database/schema</code> &#30446;&#24405;&#12290;schema &#25991;&#20214;&#21517;&#20250;&#23545;&#24212;&#30456;&#24212;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#12290;&#21518;&#32493;&#24403; Laravel &#23581;&#35797;&#25191;&#34892;&#36801;&#31227;&#19988;&#25968;&#25454;&#24211;&#20013;&#23578;&#26410;&#25191;&#34892;&#36807;&#20219;&#20309;&#36801;&#31227;&#26102;&#65292;&#20250;&#20808;&#25191;&#34892;&#24403;&#21069;&#25968;&#25454;&#24211;&#36830;&#25509;&#23545;&#24212;&#30340; schema &#25991;&#20214;&#20013;&#30340; SQL &#35821;&#21477;&#65292;&#20877;&#25191;&#34892;&#23578;&#26410;&#21253;&#21547;&#22312;&#35813; schema &#36716;&#20648;&#20013;&#30340;&#21097;&#20313;&#36801;&#31227;&#12290;</p><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#27979;&#35797;&#20351;&#29992;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#19982;&#26412;&#22320;&#24320;&#21457;&#36890;&#24120;&#20351;&#29992;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#19981;&#21516;&#65292;&#35831;&#30830;&#20445;&#20063;&#20351;&#29992;&#35813;&#27979;&#35797;&#36830;&#25509;&#36716;&#20648;&#19968;&#20221; schema &#25991;&#20214;&#65292;&#20197;&#20415;&#27979;&#35797;&#20063;&#33021;&#26500;&#24314;&#25968;&#25454;&#24211;&#12290;&#36890;&#24120;&#30340;&#20570;&#27861;&#26159;&#65306;&#22312;&#23436;&#25104;&#26412;&#22320;&#24320;&#21457;&#36830;&#25509;&#30340;&#36716;&#20648;&#20043;&#21518;&#65292;&#32039;&#25509;&#30528;&#20026;&#27979;&#35797;&#36830;&#25509;&#29983;&#25104;&#36716;&#20648;&#65306;</p><pre><code class="language-shell">php artisan schema:dump
+php artisan schema:dump --database=testing --prune</code></pre><p>&#20320;&#24212;&#35813;&#23558;&#25968;&#25454;&#24211; schema &#25991;&#20214;&#25552;&#20132;&#21040;&#28304;&#30721;&#29256;&#26412;&#25511;&#21046;&#20013;&#65292;&#36825;&#26679;&#22242;&#38431;&#20013;&#30340;&#26032;&#25104;&#21592;&#23601;&#21487;&#20197;&#24555;&#36895;&#26500;&#24314;&#20986;&#24212;&#29992;&#26368;&#21021;&#30340;&#25968;&#25454;&#24211;&#32467;&#26500;&#12290;</p><blockquote>
+<p>[!WARNING]<br>
+&#21512;&#24182;&#36801;&#31227;&#20165;&#36866;&#29992;&#20110; MariaDB&#12289;MySQL&#12289;PostgreSQL &#21644; SQLite &#25968;&#25454;&#24211;&#65292;&#24182;&#19988;&#38656;&#35201;&#20351;&#29992;&#30456;&#24212;&#25968;&#25454;&#24211;&#30340;&#21629;&#20196;&#34892;&#23458;&#25143;&#31471;&#12290;</p>
+</blockquote><h2 id="1bbcf0a3df51e4b85cd39edfb582eace">&#36801;&#31227;&#32467;&#26500;</h2><p>&#19968;&#20010;&#36801;&#31227;&#31867;&#21253;&#21547;&#20004;&#20010;&#26041;&#27861;&#65306;<code>up</code> &#19982; <code>down</code>&#12290;<code>up</code> &#26041;&#27861;&#29992;&#20110;&#21521;&#25968;&#25454;&#24211;&#28155;&#21152;&#26032;&#34920;&#12289;&#21015;&#25110;&#32034;&#24341;&#65292;&#32780; <code>down</code> &#26041;&#27861;&#24212;&#24403;&#25764;&#38144; <code>up</code> &#26041;&#27861;&#25152;&#25191;&#34892;&#30340;&#25805;&#20316;&#12290;</p><p>&#22312;&#36825;&#20004;&#20010;&#26041;&#27861;&#20869;&#37096;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; Laravel schema builder &#20197;&#22768;&#26126;&#24335;&#26041;&#24335;&#21019;&#24314;&#19982;&#20462;&#25913;&#34920;&#12290;&#35201;&#20102;&#35299; <code>Schema</code> builder &#19978;&#21487;&#29992;&#30340;&#20840;&#37096;&#26041;&#27861;&#65292;&#35831; <a href="x3vo0g4vm1.html#creating-tables" target="_blank">&#26597;&#38405;&#20854;&#25991;&#26723;</a>&#12290;&#20363;&#22914;&#65292;&#19979;&#38754;&#30340;&#36801;&#31227;&#20250;&#21019;&#24314;&#19968;&#20010; <code>flights</code> &#34920;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * &#25191;&#34892;&#36801;&#31227;&#12290;
+     */
+    public function up(): void
+    {
+        Schema::create('flights', function (Blueprint $table) {
+            $table-&gt;id();
+            $table-&gt;string('name');
+            $table-&gt;string('airline');
+            $table-&gt;timestamps();
+        });
+    }
+
+    /**
+     * &#22238;&#28378;&#36801;&#31227;&#12290;
+     */
+    public function down(): void
+    {
+        Schema::drop('flights');
+    }
+};</code></pre><h4 id="e35459180239feb7e4ba2569945f785a">&#35774;&#32622;&#36801;&#31227;&#36830;&#25509;</h4><p>&#22914;&#26524;&#20320;&#30340;&#36801;&#31227;&#38656;&#35201;&#19982;&#24212;&#29992;&#40664;&#35748;&#25968;&#25454;&#24211;&#36830;&#25509;&#20043;&#22806;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#20132;&#20114;&#65292;&#24212;&#24403;&#22312;&#36801;&#31227;&#20013;&#35774;&#32622; <code>$connection</code> &#23646;&#24615;&#65306;</p><pre><code class="language-php">/**
+ * &#36801;&#31227;&#24212;&#24403;&#20351;&#29992;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#12290;
+ *
+ * @var string
+ */
+protected $connection = 'pgsql';
+
+/**
+ * &#25191;&#34892;&#36801;&#31227;&#12290;
+ */
+public function up(): void
+{
+    // ...
+}</code></pre><h4 id="59370f7d4e545f2d99fafd70b54bb15c">&#36339;&#36807;&#36801;&#31227;</h4><p>&#26377;&#26102;&#26576;&#20010;&#36801;&#31227;&#26159;&#20026;&#20102;&#25903;&#25345;&#23578;&#26410;&#21551;&#29992;&#30340;&#21151;&#33021;&#65292;&#24182;&#19988;&#20320;&#26242;&#26102;&#19981;&#24076;&#26395;&#23427;&#36816;&#34892;&#12290;&#36825;&#31181;&#24773;&#20917;&#19979;&#65292;&#20320;&#21487;&#20197;&#22312;&#36801;&#31227;&#19978;&#23450;&#20041;&#19968;&#20010; <code>shouldRun</code> &#26041;&#27861;&#12290;&#22914;&#26524; <code>shouldRun</code> &#26041;&#27861;&#36820;&#22238; <code>false</code>&#65292;&#36801;&#31227;&#23558;&#34987;&#36339;&#36807;&#65306;</p><pre><code class="language-php">use App\Models\Flight;
+use Laravel\Pennant\Feature;
+
+/**
+ * &#21028;&#23450;&#26412;&#36801;&#31227;&#26159;&#21542;&#24212;&#24403;&#36816;&#34892;&#12290;
+ */
+public function shouldRun(): bool
+{
+    return Feature::active(Flight::class);
+}</code></pre><h2 id="a81698d0cedc1ea3b687b130a9716174">&#36816;&#34892;&#36801;&#31227;</h2><p>&#35201;&#36816;&#34892;&#25152;&#26377;&#23578;&#26410;&#25191;&#34892;&#30340;&#36801;&#31227;&#65292;&#35831;&#25191;&#34892; <code>migrate</code> Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan migrate</code></pre><p>&#22914;&#26524;&#24819;&#26597;&#30475;&#21738;&#20123;&#36801;&#31227;&#24050;&#32463;&#36816;&#34892;&#12289;&#21738;&#20123;&#36824;&#22312;&#31561;&#24453;&#25191;&#34892;&#65292;&#21487;&#20197;&#20351;&#29992; <code>migrate:status</code> Artisan &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan migrate:status</code></pre><p>&#22914;&#26524;&#21521; <code>migrate</code> &#21629;&#20196;&#20256;&#20837; <code>--step</code> &#36873;&#39033;&#65292;&#37027;&#20040;&#27599;&#26465;&#36801;&#31227;&#20250;&#20316;&#20026;&#29420;&#31435;&#25209;&#27425;&#25191;&#34892;&#65292;&#20415;&#20110;&#31245;&#21518;&#20351;&#29992; <code>migrate:rollback</code> &#21629;&#20196;&#25353;&#25209;&#27425;&#22238;&#28378;&#65306;</p><pre><code class="language-shell">php artisan migrate --step</code></pre><p>&#22914;&#26524;&#24819;&#22312;&#19981;&#30495;&#27491;&#25191;&#34892;&#36801;&#31227;&#30340;&#24773;&#20917;&#19979;&#39044;&#35272;&#23558;&#35201;&#36816;&#34892;&#30340; SQL &#35821;&#21477;&#65292;&#21487;&#20197;&#21521; <code>migrate</code> &#21629;&#20196;&#20256;&#20837; <code>--pretend</code> &#26631;&#24535;&#65306;</p><pre><code class="language-shell">php artisan migrate --pretend</code></pre><h4 id="6a756621775f1e3b0757f97c9cb19d08">&#38548;&#31163;&#36801;&#31227;&#25191;&#34892;</h4><p>&#22914;&#26524;&#20320;&#23558;&#24212;&#29992;&#37096;&#32626;&#22312;&#22810;&#21488;&#26381;&#21153;&#22120;&#19978;&#65292;&#24182;&#22312;&#37096;&#32626;&#36807;&#31243;&#20013;&#36816;&#34892;&#36801;&#31227;&#65292;&#20320;&#22823;&#27010;&#19981;&#24076;&#26395;&#20004;&#21488;&#26381;&#21153;&#22120;&#21516;&#26102;&#23581;&#35797;&#36801;&#31227;&#25968;&#25454;&#24211;&#12290;&#20026;&#36991;&#20813;&#36825;&#31181;&#24773;&#20917;&#65292;&#21487;&#20197;&#22312;&#35843;&#29992; <code>migrate</code> &#21629;&#20196;&#26102;&#20351;&#29992; <code>isolated</code> &#36873;&#39033;&#12290;</p><p>&#24403;&#25552;&#20379; <code>isolated</code> &#36873;&#39033;&#26102;&#65292;Laravel &#20250;&#22312;&#23581;&#35797;&#25191;&#34892;&#36801;&#31227;&#21069;&#65292;&#36890;&#36807;&#24212;&#29992;&#25152;&#20351;&#29992;&#30340;&#32531;&#23384;&#39537;&#21160;&#33719;&#21462;&#19968;&#25226;&#21407;&#23376;&#38145;&#12290;&#20854;&#20182;&#22312;&#35813;&#38145;&#26410;&#37322;&#25918;&#21069;&#23581;&#35797;&#36816;&#34892; <code>migrate</code> &#21629;&#20196;&#30340;&#36827;&#31243;&#23558;&#19981;&#20250;&#25191;&#34892;&#36801;&#31227;&#65292;&#20294;&#21629;&#20196;&#20173;&#20250;&#20197;&#25104;&#21151;&#29366;&#24577;&#36864;&#20986;&#65306;</p><pre><code class="language-shell">php artisan migrate --isolated</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#35201;&#20351;&#29992;&#35813;&#29305;&#24615;&#65292;&#24212;&#29992;&#24517;&#39035;&#23558; <code>memcached</code>&#12289;<code>redis</code>&#12289;<code>dynamodb</code>&#12289;<code>database</code>&#12289;<code>file</code> &#25110; <code>array</code> &#32531;&#23384;&#39537;&#21160;&#20013;&#30340;&#26576;&#19968;&#20010;&#35774;&#32622;&#20026;&#40664;&#35748;&#32531;&#23384;&#39537;&#21160;&#65292;&#24182;&#19988;&#25152;&#26377;&#26381;&#21153;&#22120;&#24517;&#39035;&#36830;&#25509;&#21040;&#21516;&#19968;&#21488;&#20013;&#22830;&#32531;&#23384;&#26381;&#21153;&#22120;&#12290;</p>
+</blockquote><h4 id="c658e73f8f46c578b2115317f4f782da">&#24378;&#21046;&#22312;&#29983;&#20135;&#29615;&#22659;&#36816;&#34892;&#36801;&#31227;</h4><p>&#26377;&#20123;&#36801;&#31227;&#25805;&#20316;&#20855;&#26377;&#30772;&#22351;&#24615;&#65292;&#21487;&#33021;&#20250;&#36896;&#25104;&#25968;&#25454;&#20002;&#22833;&#12290;&#20026;&#38450;&#27490;&#20320;&#35823;&#23545;&#29983;&#20135;&#25968;&#25454;&#24211;&#25191;&#34892;&#36825;&#20123;&#21629;&#20196;&#65292;&#31995;&#32479;&#20250;&#22312;&#25191;&#34892;&#21069;&#25552;&#31034;&#20320;&#30830;&#35748;&#12290;&#22914;&#26524;&#35201;&#36339;&#36807;&#30830;&#35748;&#24378;&#21046;&#25191;&#34892;&#65292;&#21487;&#20197;&#20256;&#20837; <code>--force</code> &#26631;&#24535;&#65306;</p><pre><code class="language-shell">php artisan migrate --force</code></pre><h3 id="61b4f598b620942c289210771fb6dd40">&#22238;&#28378;&#36801;&#31227;</h3><p>&#35201;&#22238;&#28378;&#26368;&#36817;&#19968;&#27425;&#36801;&#31227;&#25805;&#20316;&#65292;&#21487;&#20197;&#20351;&#29992; <code>rollback</code> Artisan &#21629;&#20196;&#12290;&#35813;&#21629;&#20196;&#20250;&#22238;&#28378;&#26368;&#36817;&#19968;&#20010;&#12300;&#25209;&#27425;&#12301;&#30340;&#36801;&#31227;&#65292;&#20854;&#20013;&#21487;&#33021;&#21253;&#21547;&#22810;&#26465;&#36801;&#31227;&#25991;&#20214;&#65306;</p><pre><code class="language-shell">php artisan migrate:rollback</code></pre><p>&#21487;&#20197;&#36890;&#36807; <code>step</code> &#36873;&#39033;&#38480;&#21046;&#22238;&#28378;&#30340;&#36801;&#31227;&#25968;&#37327;&#12290;&#20363;&#22914;&#65292;&#19979;&#38754;&#30340;&#21629;&#20196;&#20250;&#22238;&#28378;&#26368;&#36817; 5 &#26465;&#36801;&#31227;&#65306;</p><pre><code class="language-shell">php artisan migrate:rollback --step=5</code></pre><p>&#21487;&#20197;&#36890;&#36807; <code>batch</code> &#36873;&#39033;&#22238;&#28378;&#25351;&#23450;&#12300;&#25209;&#27425;&#12301;&#30340;&#36801;&#31227;&#65292;&#20854;&#20013; <code>batch</code> &#36873;&#39033;&#23545;&#24212;&#24212;&#29992; <code>migrations</code> &#25968;&#25454;&#24211;&#34920;&#20013;&#20445;&#23384;&#30340;&#25209;&#27425;&#20540;&#12290;&#20363;&#22914;&#65292;&#19979;&#38754;&#30340;&#21629;&#20196;&#20250;&#22238;&#28378;&#25209;&#27425; 3 &#20013;&#30340;&#25152;&#26377;&#36801;&#31227;&#65306;</p><pre><code class="language-shell">php artisan migrate:rollback --batch=3</code></pre><p>&#22914;&#26524;&#24819;&#22312;&#19981;&#30495;&#27491;&#25191;&#34892;&#22238;&#28378;&#30340;&#24773;&#20917;&#19979;&#39044;&#35272;&#23558;&#35201;&#36816;&#34892;&#30340; SQL &#35821;&#21477;&#65292;&#21487;&#20197;&#21521; <code>migrate:rollback</code> &#21629;&#20196;&#20256;&#20837; <code>--pretend</code> &#26631;&#24535;&#65306;</p><pre><code class="language-shell">php artisan migrate:rollback --pretend</code></pre><p><code>migrate:reset</code> &#21629;&#20196;&#20250;&#22238;&#28378;&#24212;&#29992;&#20013;&#30340;&#25152;&#26377;&#36801;&#31227;&#65306;</p><pre><code class="language-shell">php artisan migrate:reset</code></pre><h4 id="14080e0d28db0372c46af18c3eab9964">&#21333;&#21629;&#20196;&#22238;&#28378;&#24182;&#36801;&#31227;</h4><p><code>migrate:refresh</code> &#21629;&#20196;&#20250;&#20808;&#22238;&#28378;&#25152;&#26377;&#36801;&#31227;&#65292;&#28982;&#21518;&#25191;&#34892; <code>migrate</code> &#21629;&#20196;&#12290;&#35813;&#21629;&#20196;&#23454;&#38469;&#19978;&#20250;&#37325;&#24314;&#25972;&#20010;&#25968;&#25454;&#24211;&#65306;</p><pre><code class="language-shell">php artisan migrate:refresh
+
+# &#21047;&#26032;&#25968;&#25454;&#24211;&#24182;&#36816;&#34892;&#25152;&#26377;&#25968;&#25454;&#22635;&#20805;...
+php artisan migrate:refresh --seed</code></pre><p>&#21487;&#20197;&#36890;&#36807; <code>step</code> &#36873;&#39033;&#38480;&#21046;&#22238;&#28378;&#24182;&#37325;&#26032;&#36801;&#31227;&#30340;&#36801;&#31227;&#25968;&#37327;&#12290;&#20363;&#22914;&#65292;&#19979;&#38754;&#30340;&#21629;&#20196;&#20250;&#22238;&#28378;&#24182;&#37325;&#26032;&#36801;&#31227;&#26368;&#36817; 5 &#26465;&#36801;&#31227;&#65306;</p><pre><code class="language-shell">php artisan migrate:refresh --step=5</code></pre><h4 id="e3f521c8ba8607bf1a164fc12fea8202">&#21024;&#38500;&#25152;&#26377;&#34920;&#24182;&#36801;&#31227;</h4><p><code>migrate:fresh</code> &#21629;&#20196;&#20250;&#20808;&#21024;&#38500;&#25968;&#25454;&#24211;&#20013;&#30340;&#25152;&#26377;&#34920;&#65292;&#28982;&#21518;&#25191;&#34892; <code>migrate</code> &#21629;&#20196;&#65306;</p><pre><code class="language-shell">php artisan migrate:fresh
+
+php artisan migrate:fresh --seed</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>migrate:fresh</code> &#21629;&#20196;&#21482;&#20250;&#21024;&#38500;&#40664;&#35748;&#25968;&#25454;&#24211;&#36830;&#25509;&#20013;&#30340;&#34920;&#12290;&#20294;&#21487;&#20197;&#20351;&#29992; <code>--database</code> &#36873;&#39033;&#25351;&#23450;&#35201;&#36801;&#31227;&#30340;&#25968;&#25454;&#24211;&#36830;&#25509;&#12290;&#35813;&#36830;&#25509;&#21517;&#24212;&#19982;&#24212;&#29992; <code>database</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/configuration" target="_blank">&#37197;&#32622;&#25991;&#20214;</a> &#20013;&#23450;&#20041;&#30340;&#26576;&#20010;&#36830;&#25509;&#30456;&#23545;&#24212;&#65306;</p><pre><code class="language-shell">php artisan migrate:fresh --database=admin</code></pre><blockquote>
+<p>[!WARNING]<br>
+<code>migrate:fresh</code> &#21629;&#20196;&#20250;&#26080;&#35270;&#34920;&#21069;&#32512;&#65292;&#21024;&#38500;&#25152;&#26377;&#25968;&#25454;&#24211;&#34920;&#12290;&#24403;&#24320;&#21457;&#22312;&#19982;&#20854;&#23427;&#24212;&#29992;&#20849;&#20139;&#30340;&#25968;&#25454;&#24211;&#19978;&#26102;&#65292;&#35831;&#35880;&#24910;&#20351;&#29992;&#35813;&#21629;&#20196;&#12290;</p>
+</blockquote><h2 id="43df8b77ae08f65baa8ace315c8b6996">&#34920;</h2><h3 id="b9cdb1aea3130189ebbe8478d919a809">&#21019;&#24314;&#34920;</h3><p>&#35201;&#21019;&#24314;&#26032;&#30340;&#25968;&#25454;&#24211;&#34920;&#65292;&#21487;&#20197;&#20351;&#29992; <code>Schema</code> facade &#30340; <code>create</code> &#26041;&#27861;&#12290;<code>create</code> &#26041;&#27861;&#25509;&#25910;&#20004;&#20010;&#21442;&#25968;&#65306;&#31532;&#19968;&#20010;&#26159;&#34920;&#21517;&#65292;&#31532;&#20108;&#20010;&#26159;&#19968;&#20010;&#38381;&#21253;&#65292;&#29992;&#20110;&#25509;&#25910;&#19968;&#20010; <code>Blueprint</code> &#23545;&#35937;&#20197;&#23450;&#20041;&#26032;&#34920;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+Schema::create('users', function (Blueprint $table) {
+    $table-&gt;id();
+    $table-&gt;string('name');
+    $table-&gt;string('email');
+    $table-&gt;timestamps();
+});</code></pre><p>&#21019;&#24314;&#34920;&#26102;&#65292;&#21487;&#20197;&#20351;&#29992; schema builder &#30340;&#20219;&#24847; <a href="x3vo0g4vm1.html#creating-columns" target="_blank">&#21015;&#26041;&#27861;</a> &#26469;&#23450;&#20041;&#34920;&#30340;&#21015;&#12290;</p><h4 id="d4fd5d2c3c97ba0f966b1eccdc35b580">&#21028;&#26029;&#34920; / &#21015;&#26159;&#21542;&#23384;&#22312;</h4><p>&#21487;&#20197;&#20351;&#29992; <code>hasTable</code>&#12289;<code>hasColumn</code> &#21644; <code>hasIndex</code> &#26041;&#27861;&#21028;&#26029;&#34920;&#12289;&#21015;&#25110;&#32034;&#24341;&#26159;&#21542;&#23384;&#22312;&#65306;</p><pre><code class="language-php">if (Schema::hasTable('users')) {
+    // &#34920; "users" &#23384;&#22312;...
+}
+
+if (Schema::hasColumn('users', 'email')) {
+    // &#34920; "users" &#23384;&#22312;&#65292;&#19988;&#21253;&#21547; "email" &#21015;...
+}
+
+if (Schema::hasIndex('users', ['email'], 'unique')) {
+    // &#34920; "users" &#23384;&#22312;&#65292;&#19988; "email" &#21015;&#19978;&#26377;&#21807;&#19968;&#32034;&#24341;...
+}</code></pre><h4 id="8bfe652b0de2e387b197eac3b883f6f8">&#25968;&#25454;&#24211;&#36830;&#25509;&#19982;&#34920;&#36873;&#39033;</h4><p>&#22914;&#26524;&#24076;&#26395;&#23545;&#38750;&#40664;&#35748;&#25968;&#25454;&#24211;&#36830;&#25509;&#25191;&#34892; schema &#25805;&#20316;&#65292;&#35831;&#20351;&#29992; <code>connection</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Schema::connection('sqlite')-&gt;create('users', function (Blueprint $table) {
+    $table-&gt;id();
+});</code></pre><p>&#27492;&#22806;&#65292;&#36824;&#21487;&#20197;&#20351;&#29992;&#19968;&#20123;&#20854;&#23427;&#23646;&#24615;&#19982;&#26041;&#27861;&#26469;&#23450;&#20041;&#21019;&#24314;&#34920;&#26102;&#30340;&#20854;&#23427;&#32454;&#33410;&#12290;<code>engine</code> &#23646;&#24615;&#21487;&#29992;&#20110;&#22312;&#20351;&#29992; MariaDB &#25110; MySQL &#26102;&#25351;&#23450;&#34920;&#30340;&#23384;&#20648;&#24341;&#25806;&#65306;</p><pre><code class="language-php">Schema::create('users', function (Blueprint $table) {
+    $table-&gt;engine('InnoDB');
+
+    // ...
+});</code></pre><p><code>charset</code> &#21644; <code>collation</code> &#23646;&#24615;&#21487;&#29992;&#20110;&#22312;&#20351;&#29992; MariaDB &#25110; MySQL &#26102;&#25351;&#23450;&#34920;&#30340;&#23383;&#31526;&#38598;&#19982;&#25490;&#24207;&#35268;&#21017;&#65306;</p><pre><code class="language-php">Schema::create('users', function (Blueprint $table) {
+    $table-&gt;charset('utf8mb4');
+    $table-&gt;collation('utf8mb4_unicode_ci');
+
+    // ...
+});</code></pre><p><code>temporary</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#23558;&#34920;&#26631;&#35760;&#20026;&#12300;&#20020;&#26102;&#34920;&#12301;&#12290;&#20020;&#26102;&#34920;&#20165;&#23545;&#24403;&#21069;&#36830;&#25509;&#30340;&#25968;&#25454;&#24211;&#20250;&#35805;&#21487;&#35265;&#65292;&#24182;&#22312;&#36830;&#25509;&#20851;&#38381;&#26102;&#33258;&#21160;&#21024;&#38500;&#65306;</p><pre><code class="language-php">Schema::create('calculations', function (Blueprint $table) {
+    $table-&gt;temporary();
+
+    // ...
+});</code></pre><p>&#22914;&#26524;&#24076;&#26395;&#21521;&#25968;&#25454;&#24211;&#34920;&#28155;&#21152;&#12300;&#27880;&#37322;&#12301;&#65292;&#21487;&#20197;&#22312;&#34920;&#23454;&#20363;&#19978;&#35843;&#29992; <code>comment</code> &#26041;&#27861;&#12290;&#34920;&#27880;&#37322;&#30446;&#21069;&#20165; MariaDB&#12289;MySQL &#21644; PostgreSQL &#25903;&#25345;&#65306;</p><pre><code class="language-php">Schema::create('calculations', function (Blueprint $table) {
+    $table-&gt;comment('Business calculations');
+
+    // ...
+});</code></pre><h3 id="0752e4164ec48ab8c662bf133f066f9b">&#26356;&#26032;&#34920;</h3><p><code>Schema</code> facade &#30340; <code>table</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26356;&#26032;&#24050;&#26377;&#34920;&#12290;&#19982; <code>create</code> &#26041;&#27861;&#19968;&#26679;&#65292;<code>table</code> &#26041;&#27861;&#20063;&#25509;&#25910;&#20004;&#20010;&#21442;&#25968;&#65306;&#34920;&#21517;&#19982;&#19968;&#20010;&#25509;&#25910; <code>Blueprint</code> &#23454;&#20363;&#30340;&#38381;&#21253;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#23427;&#21521;&#34920;&#28155;&#21152;&#21015;&#25110;&#32034;&#24341;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+Schema::table('users', function (Blueprint $table) {
+    $table-&gt;integer('votes');
+});</code></pre><h3 id="6346be886d75fd84144c117ea6f790f9">&#37325;&#21629;&#21517; / &#21024;&#38500;&#34920;</h3><p>&#35201;&#37325;&#21629;&#21517;&#24050;&#26377;&#30340;&#25968;&#25454;&#24211;&#34920;&#65292;&#35831;&#20351;&#29992; <code>rename</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Schema;
+
+Schema::rename($from, $to);</code></pre><p>&#35201;&#21024;&#38500;&#24050;&#26377;&#30340;&#34920;&#65292;&#21487;&#20197;&#20351;&#29992; <code>drop</code> &#25110; <code>dropIfExists</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Schema::drop('users');
+
+Schema::dropIfExists('users');</code></pre><h4 id="2f5ae24e0905fb2af9282df3952e650d">&#37325;&#21629;&#21517;&#24102;&#22806;&#38190;&#30340;&#34920;</h4><p>&#22312;&#37325;&#21629;&#21517;&#34920;&#20043;&#21069;&#65292;&#20320;&#24212;&#35813;&#30830;&#35748;&#36801;&#31227;&#25991;&#20214;&#20013;&#22806;&#38190;&#32422;&#26463;&#37117;&#26174;&#24335;&#25351;&#23450;&#20102;&#21517;&#23383;&#65292;&#32780;&#19981;&#26159;&#35753; Laravel &#25353;&#32422;&#23450;&#33258;&#21160;&#29983;&#25104;&#12290;&#21542;&#21017;&#22806;&#38190;&#32422;&#26463;&#30340;&#21517;&#23383;&#20173;&#20250;&#24341;&#29992;&#26087;&#34920;&#21517;&#12290;</p><h2 id="cb2f68c9c24e85d21e6b090b6e5657d8">&#21015;</h2><h3 id="ab08ef483e7adb48fcf639ffd6e41f6d">&#21019;&#24314;&#21015;</h3><p><code>Schema</code> facade &#30340; <code>table</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#26356;&#26032;&#24050;&#26377;&#34920;&#12290;&#19982; <code>create</code> &#26041;&#27861;&#19968;&#26679;&#65292;<code>table</code> &#26041;&#27861;&#25509;&#25910;&#20004;&#20010;&#21442;&#25968;&#65306;&#34920;&#21517;&#19982;&#19968;&#20010;&#25509;&#25910; <code>Illuminate\Database\Schema\Blueprint</code> &#23454;&#20363;&#30340;&#38381;&#21253;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992;&#23427;&#21521;&#34920;&#28155;&#21152;&#21015;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+Schema::table('users', function (Blueprint $table) {
+    $table-&gt;integer('votes');
+});</code></pre><h3 id="0a672490710a08fa66d0d8e97f1fddd4">&#21487;&#29992;&#30340;&#21015;&#31867;&#22411;</h3><p>Schema builder &#30340; blueprint &#25552;&#20379;&#20102;&#35768;&#22810;&#26041;&#27861;&#65292;&#23545;&#24212;&#19982;&#21487;&#20197;&#28155;&#21152;&#21040;&#34920;&#37324;&#30340;&#21508;&#31181;&#21015;&#31867;&#22411;&#12290;&#19979;&#34920;&#21015;&#20986;&#20102;&#25152;&#26377;&#21487;&#29992;&#30340;&#26041;&#27861;&#65306;</p><h4 id="cd29ffe670eb44bd09af7e6db6f98c29">&#24067;&#23572;&#31867;&#22411;</h4><p><a href="x3vo0g4vm1.html#column-method-boolean" target="_blank"><code>boolean</code></a></p><h4 id="b14d91db9ec526a608ce81d0524c7220">&#23383;&#31526;&#20018;&#19982;&#25991;&#26412;&#31867;&#22411;</h4><p><a href="x3vo0g4vm1.html#column-method-char" target="_blank"><code>char</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-longText" target="_blank"><code>longText</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-mediumText" target="_blank"><code>mediumText</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-string" target="_blank"><code>string</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-text" target="_blank"><code>text</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-tinyText" target="_blank"><code>tinyText</code></a></p><h4 id="47969bad6e36157fd1d641e009d7578f">&#25968;&#20540;&#31867;&#22411;</h4><p><a href="x3vo0g4vm1.html#column-method-bigIncrements" target="_blank"><code>bigIncrements</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-bigInteger" target="_blank"><code>bigInteger</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-decimal" target="_blank"><code>decimal</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-double" target="_blank"><code>double</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-float" target="_blank"><code>float</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-id" target="_blank"><code>id</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-increments" target="_blank"><code>increments</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-integer" target="_blank"><code>integer</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-mediumIncrements" target="_blank"><code>mediumIncrements</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-mediumInteger" target="_blank"><code>mediumInteger</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-smallIncrements" target="_blank"><code>smallIncrements</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-smallInteger" target="_blank"><code>smallInteger</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-tinyIncrements" target="_blank"><code>tinyIncrements</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-tinyInteger" target="_blank"><code>tinyInteger</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-unsignedBigInteger" target="_blank"><code>unsignedBigInteger</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-unsignedInteger" target="_blank"><code>unsignedInteger</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-unsignedMediumInteger" target="_blank"><code>unsignedMediumInteger</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-unsignedSmallInteger" target="_blank"><code>unsignedSmallInteger</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-unsignedTinyInteger" target="_blank"><code>unsignedTinyInteger</code></a></p><h4 id="49b006cad4738628c206dcde55b110ee">&#26085;&#26399;&#19982;&#26102;&#38388;&#31867;&#22411;</h4><p><a href="x3vo0g4vm1.html#column-method-dateTime" target="_blank"><code>dateTime</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-dateTimeTz" target="_blank"><code>dateTimeTz</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-date" target="_blank"><code>date</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-time" target="_blank"><code>time</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-timeTz" target="_blank"><code>timeTz</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-timestamp" target="_blank"><code>timestamp</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-timestamps" target="_blank"><code>timestamps</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-timestampsTz" target="_blank"><code>timestampsTz</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-softDeletes" target="_blank"><code>softDeletes</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-softDeletesTz" target="_blank"><code>softDeletesTz</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-year" target="_blank"><code>year</code></a></p><h4 id="447f76afc4a5d0f2de2c7a5cd111a56d">&#20108;&#36827;&#21046;&#31867;&#22411;</h4><p><a href="x3vo0g4vm1.html#column-method-binary" target="_blank"><code>binary</code></a></p><h4 id="6c20c3e985ab99b74f2b2c6c13307733">&#23545;&#35937;&#19982; JSON &#31867;&#22411;</h4><p><a href="x3vo0g4vm1.html#column-method-json" target="_blank"><code>json</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-jsonb" target="_blank"><code>jsonb</code></a></p><h4 id="40d3bd1683ab3aba0f6533d92ef3ac0d">UUID &#19982; ULID &#31867;&#22411;</h4><p><a href="x3vo0g4vm1.html#column-method-ulid" target="_blank"><code>ulid</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-ulidMorphs" target="_blank"><code>ulidMorphs</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-uuid" target="_blank"><code>uuid</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-uuidMorphs" target="_blank"><code>uuidMorphs</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-nullableUlidMorphs" target="_blank"><code>nullableUlidMorphs</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-nullableUuidMorphs" target="_blank"><code>nullableUuidMorphs</code></a></p><h4 id="453102ccbe6afc01fc0bad84bca48691">&#31354;&#38388;&#31867;&#22411;</h4><p><a href="x3vo0g4vm1.html#column-method-geography" target="_blank"><code>geography</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-geometry" target="_blank"><code>geometry</code></a></p><h4 id="0b609e04587599d1746db27c2561b403">&#20851;&#32852;&#31867;&#22411;</h4><p><a href="x3vo0g4vm1.html#column-method-foreignId" target="_blank"><code>foreignId</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-foreignIdFor" target="_blank"><code>foreignIdFor</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-foreignUlid" target="_blank"><code>foreignUlid</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-foreignUuid" target="_blank"><code>foreignUuid</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-foreignUuidFor" target="_blank"><code>foreignUuidFor</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-morphs" target="_blank"><code>morphs</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-nullableMorphs" target="_blank"><code>nullableMorphs</code></a></p><h4 id="bfc492a99ddbfddd11d6b3eb0876f7cf">&#29305;&#27530;&#31867;&#22411;</h4><p><a href="x3vo0g4vm1.html#column-method-enum" target="_blank"><code>enum</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-set" target="_blank"><code>set</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-macAddress" target="_blank"><code>macAddress</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-ipAddress" target="_blank"><code>ipAddress</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-rememberToken" target="_blank"><code>rememberToken</code></a><br>
+<a href="x3vo0g4vm1.html#column-method-vector" target="_blank"><code>vector</code></a></p><h4 class="collection-method first-collection-method" id="ede8a10f8e39746852e298d427436eb5"><code>bigIncrements()</code></h4><p><code>bigIncrements</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#33258;&#21160;&#36882;&#22686;&#30340; <code>UNSIGNED BIGINT</code>&#65288;&#20027;&#38190;&#65289;&#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;bigIncrements('id');</code></pre><h4 class="collection-method" id="402644bb4938c1c24335b0cfc8cb5dc7"><code>bigInteger()</code></h4><p><code>bigInteger</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>BIGINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;bigInteger('votes');</code></pre><h4 class="collection-method" id="d6f2a262cf0713f238d181585233ed6a"><code>binary()</code></h4><p><code>binary</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>BLOB</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;binary('photo');</code></pre><p>&#22312;&#20351;&#29992; MySQL&#12289;MariaDB &#25110; SQL Server &#26102;&#65292;&#21487;&#20197;&#20256;&#20837; <code>length</code> &#19982; <code>fixed</code> &#21442;&#25968;&#26469;&#21019;&#24314; <code>VARBINARY</code> &#25110; <code>BINARY</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;binary('data', length: 16); // VARBINARY(16)
+
+$table-&gt;binary('data', length: 16, fixed: true); // BINARY(16)</code></pre><h4 class="collection-method" id="d052369cc6704dcaaf14d62b19c02ae3"><code>boolean()</code></h4><p><code>boolean</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>BOOLEAN</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;boolean('confirmed');</code></pre><h4 class="collection-method" id="495d643c6bbc4d22220dedea98ab2989"><code>char()</code></h4><p><code>char</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#25351;&#23450;&#38271;&#24230;&#30340; <code>CHAR</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;char('name', length: 100);</code></pre><h4 class="collection-method" id="2a24324b2a581bf40c24246aa9a9ef58"><code>dateTimeTz()</code></h4><p><code>dateTimeTz</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>DATETIME</code>&#65288;&#24102;&#26102;&#21306;&#65289;&#31561;&#20215;&#21015;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#30340;&#23567;&#25968;&#31186;&#31934;&#24230;&#65306;</p><pre><code class="language-php">$table-&gt;dateTimeTz('created_at', precision: 0);</code></pre><h4 class="collection-method" id="83100ed4c5d6f6376c11159954ab513f"><code>dateTime()</code></h4><p><code>dateTime</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>DATETIME</code> &#31561;&#20215;&#21015;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#30340;&#23567;&#25968;&#31186;&#31934;&#24230;&#65306;</p><pre><code class="language-php">$table-&gt;dateTime('created_at', precision: 0);</code></pre><h4 class="collection-method" id="68323bfe2f920d6994da831c8a409195"><code>date()</code></h4><p><code>date</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>DATE</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;date('created_at');</code></pre><h4 class="collection-method" id="40e2c4a357e322e82f50982f509dc48d"><code>decimal()</code></h4><p><code>decimal</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#25351;&#23450;&#31934;&#24230;&#65288;&#24635;&#20301;&#25968;&#65289;&#21644;&#23567;&#25968;&#20301;&#25968;&#65288;&#26631;&#24230;&#65289;&#30340; <code>DECIMAL</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;decimal('amount', total: 8, places: 2);</code></pre><h4 class="collection-method" id="e1530923c70100293381e0c70040d776"><code>double()</code></h4><p><code>double</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>DOUBLE</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;double('amount');</code></pre><h4 class="collection-method" id="e0d16559aabe92bd37728f20e46a92f6"><code>enum()</code></h4><p><code>enum</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#25351;&#23450;&#21512;&#27861;&#21462;&#20540;&#30340; <code>ENUM</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;enum('difficulty', ['easy', 'hard']);</code></pre><p>&#24403;&#28982;&#65292;&#20320;&#20063;&#21487;&#20197;&#30452;&#25509;&#20351;&#29992; <code>Enum::cases()</code> &#26041;&#27861;&#65292;&#32780;&#19981;&#24517;&#25163;&#21160;&#23450;&#20041;&#21462;&#20540;&#25968;&#32452;&#65306;</p><pre><code class="language-php">use App\Enums\Difficulty;
+
+$table-&gt;enum('difficulty', Difficulty::cases());</code></pre><h4 class="collection-method" id="4f65c7d8409c2291349de9612dcd401e"><code>float()</code></h4><p><code>float</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#25351;&#23450;&#31934;&#24230;&#30340; <code>FLOAT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;float('amount', precision: 53);</code></pre><h4 class="collection-method" id="46be1edb5a1953b4a856222402100fe3"><code>foreignId()</code></h4><p><code>foreignId</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>UNSIGNED BIGINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;foreignId('user_id');</code></pre><h4 class="collection-method" id="5e64cf0c0d57113ac0cf6383928ddcf6"><code>foreignIdFor()</code></h4><p><code>foreignIdFor</code> &#26041;&#27861;&#20250;&#20026;&#32473;&#23450;&#30340;&#27169;&#22411;&#31867;&#28155;&#21152;&#19968;&#20010; <code>{column}_id</code> &#31561;&#20215;&#21015;&#12290;&#21015;&#31867;&#22411;&#26681;&#25454;&#27169;&#22411;&#20027;&#38190;&#31867;&#22411;&#20998;&#21035;&#20026; <code>UNSIGNED BIGINT</code>&#12289;<code>CHAR(36)</code> &#25110; <code>CHAR(26)</code>&#65306;</p><pre><code class="language-php">$table-&gt;foreignIdFor(User::class);</code></pre><h4 class="collection-method" id="c80621ad8d24056c860e533fafa61503"><code>foreignUlid()</code></h4><p><code>foreignUlid</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>ULID</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;foreignUlid('user_id');</code></pre><h4 class="collection-method" id="90dd353508fb84b785d6f0ea921e266e"><code>foreignUuid()</code></h4><p><code>foreignUuid</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>UUID</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;foreignUuid('user_id');</code></pre><h4 class="collection-method" id="427eca7f3a15ec6b8207a36929d7f232"><code>foreignUuidFor()</code></h4><p><code>foreignUuidFor</code> &#26041;&#27861;&#20250;&#20026;&#32473;&#23450;&#30340;&#27169;&#22411;&#31867;&#28155;&#21152;&#19968;&#20010; <code>{column}_id</code> UUID &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;foreignUuidFor(User::class);</code></pre><h4 class="collection-method" id="0555b47839f937a71f81fdc347c4f2c9"><code>geography()</code></h4><p><code>geography</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#25351;&#23450;&#31354;&#38388;&#31867;&#22411;&#19982; SRID&#65288;&#31354;&#38388;&#21442;&#32771;&#26631;&#35782;&#31526;&#65289;&#30340; <code>GEOGRAPHY</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;geography('coordinates', subtype: 'point', srid: 4326);</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#31354;&#38388;&#31867;&#22411;&#30340;&#25903;&#25345;&#31243;&#24230;&#21462;&#20915;&#20110;&#20320;&#25152;&#20351;&#29992;&#30340;&#25968;&#25454;&#24211;&#39537;&#21160;&#12290;&#35831;&#21442;&#38405;&#30456;&#24212;&#25968;&#25454;&#24211;&#30340;&#25991;&#26723;&#12290;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20351;&#29992; PostgreSQL &#25968;&#25454;&#24211;&#65292;&#21017;&#24517;&#39035;&#20808;&#23433;&#35013; <a href="https://postgis.net" target="_blank" rel="noopener noreferrer">PostGIS</a> &#25193;&#23637;&#21518;&#25165;&#33021;&#20351;&#29992; <code>geography</code> &#26041;&#27861;&#12290;</p>
+</blockquote><h4 class="collection-method" id="338b12aae1179d9e3406043ee3202980"><code>geometry()</code></h4><p><code>geometry</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#25351;&#23450;&#31354;&#38388;&#31867;&#22411;&#19982; SRID&#65288;&#31354;&#38388;&#21442;&#32771;&#26631;&#35782;&#31526;&#65289;&#30340; <code>GEOMETRY</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;geometry('positions', subtype: 'point', srid: 0);</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#31354;&#38388;&#31867;&#22411;&#30340;&#25903;&#25345;&#31243;&#24230;&#21462;&#20915;&#20110;&#20320;&#25152;&#20351;&#29992;&#30340;&#25968;&#25454;&#24211;&#39537;&#21160;&#12290;&#35831;&#21442;&#38405;&#30456;&#24212;&#25968;&#25454;&#24211;&#30340;&#25991;&#26723;&#12290;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20351;&#29992; PostgreSQL &#25968;&#25454;&#24211;&#65292;&#21017;&#24517;&#39035;&#20808;&#23433;&#35013; <a href="https://postgis.net" target="_blank" rel="noopener noreferrer">PostGIS</a> &#25193;&#23637;&#21518;&#25165;&#33021;&#20351;&#29992; <code>geometry</code> &#26041;&#27861;&#12290;</p>
+</blockquote><h4 class="collection-method" id="66d207c9cc617ecffba73056c823b7f5"><code>id()</code></h4><p><code>id</code> &#26041;&#27861;&#26159; <code>bigIncrements</code> &#26041;&#27861;&#30340;&#21035;&#21517;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#35813;&#26041;&#27861;&#20250;&#21019;&#24314;&#19968;&#20010;&#21517;&#20026; <code>id</code> &#30340;&#21015;&#65307;&#19981;&#36807;&#20320;&#20063;&#21487;&#20197;&#20256;&#20837;&#21015;&#21517;&#26469;&#25351;&#23450;&#19981;&#21516;&#30340;&#21015;&#21517;&#65306;</p><pre><code class="language-php">$table-&gt;id();</code></pre><h4 class="collection-method" id="61f156a657a5d30ff62d689164645728"><code>increments()</code></h4><p><code>increments</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#20316;&#20026;&#20027;&#38190;&#30340;&#33258;&#21160;&#36882;&#22686; <code>UNSIGNED INTEGER</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;increments('id');</code></pre><h4 class="collection-method" id="f49645aec3455703d0c9f38bf39d8305"><code>integer()</code></h4><p><code>integer</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>INTEGER</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;integer('votes');</code></pre><h4 class="collection-method" id="f38b1adfa799d7995cde7cd669d2e5e7"><code>ipAddress()</code></h4><p><code>ipAddress</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>VARCHAR</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;ipAddress('visitor');</code></pre><p>&#20351;&#29992; PostgreSQL &#26102;&#65292;&#20250;&#21019;&#24314;&#19968;&#20010; <code>INET</code> &#21015;&#12290;</p><h4 class="collection-method" id="6fd3760b68f5da63721c738dde8e8b8b"><code>json()</code></h4><p><code>json</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>JSON</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;json('options');</code></pre><p>&#20351;&#29992; SQLite &#26102;&#65292;&#20250;&#21019;&#24314;&#19968;&#20010; <code>TEXT</code> &#21015;&#12290;</p><h4 class="collection-method" id="c88365f339e7676f925a29eea4a8ba7b"><code>jsonb()</code></h4><p><code>jsonb</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>JSONB</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;jsonb('options');</code></pre><p>&#20351;&#29992; SQLite &#26102;&#65292;&#20250;&#21019;&#24314;&#19968;&#20010; <code>TEXT</code> &#21015;&#12290;</p><h4 class="collection-method" id="5f8cce96c1cd0d9b348467545691d057"><code>longText()</code></h4><p><code>longText</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>LONGTEXT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;longText('description');</code></pre><p>&#22312;&#20351;&#29992; MySQL &#25110; MariaDB &#26102;&#65292;&#21487;&#20197;&#21521;&#35813;&#21015;&#24212;&#29992; <code>binary</code> &#23383;&#31526;&#38598;&#20197;&#21019;&#24314; <code>LONGBLOB</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;longText('data')-&gt;charset('binary'); // LONGBLOB</code></pre><h4 class="collection-method" id="f794e56d67cfc8324aa8d6c07af08876"><code>macAddress()</code></h4><p><code>macAddress</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#29992;&#20110;&#20445;&#23384; MAC &#22320;&#22336;&#30340;&#21015;&#12290;&#26576;&#20123;&#25968;&#25454;&#24211;&#31995;&#32479;&#65288;&#22914; PostgreSQL&#65289;&#20026;&#36825;&#31181;&#25968;&#25454;&#25552;&#20379;&#20102;&#19987;&#38376;&#30340;&#21015;&#31867;&#22411;&#65292;&#20854;&#23427;&#25968;&#25454;&#24211;&#31995;&#32479;&#21017;&#20250;&#20351;&#29992;&#23383;&#31526;&#20018;&#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;macAddress('device');</code></pre><h4 class="collection-method" id="eae6f0fd7ee3c9c3b6b2b7ae08ebdf80"><code>mediumIncrements()</code></h4><p><code>mediumIncrements</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#20316;&#20026;&#20027;&#38190;&#30340;&#33258;&#21160;&#36882;&#22686; <code>UNSIGNED MEDIUMINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;mediumIncrements('id');</code></pre><h4 class="collection-method" id="b5cf3b5c7cc2e1b02cfee8367986e404"><code>mediumInteger()</code></h4><p><code>mediumInteger</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>MEDIUMINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;mediumInteger('votes');</code></pre><h4 class="collection-method" id="79ecdb84e8a95062a1aa4c9a9e5f386a"><code>mediumText()</code></h4><p><code>mediumText</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>MEDIUMTEXT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;mediumText('description');</code></pre><p>&#22312;&#20351;&#29992; MySQL &#25110; MariaDB &#26102;&#65292;&#21487;&#20197;&#21521;&#35813;&#21015;&#24212;&#29992; <code>binary</code> &#23383;&#31526;&#38598;&#20197;&#21019;&#24314; <code>MEDIUMBLOB</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;mediumText('data')-&gt;charset('binary'); // MEDIUMBLOB</code></pre><h4 class="collection-method" id="8b55247348f1bff5b63746234a7d5051"><code>morphs()</code></h4><p><code>morphs</code> &#26041;&#27861;&#26159;&#19968;&#20010;&#20415;&#25463;&#26041;&#27861;&#65292;&#20250;&#21516;&#26102;&#28155;&#21152;&#19968;&#20010; <code>{column}_type</code> &#31561;&#20215; <code>VARCHAR</code> &#21015;&#21644;&#19968;&#20010; <code>{column}_id</code> &#31561;&#20215;&#21015;&#12290;<code>{column}_id</code> &#21015;&#30340;&#31867;&#22411;&#21462;&#20915;&#20110;&#27169;&#22411;&#20027;&#38190;&#31867;&#22411;&#65292;&#20998;&#21035;&#20026; <code>UNSIGNED BIGINT</code>&#12289;<code>CHAR(36)</code> &#25110; <code>CHAR(26)</code>&#12290;</p><p>&#35813;&#26041;&#27861;&#36866;&#29992;&#20110;&#23450;&#20041; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent-relationships" target="_blank">&#22810;&#24577; Eloquent &#20851;&#32852;</a> &#25152;&#38656;&#35201;&#30340;&#21015;&#12290;&#22312;&#19979;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#20250;&#21019;&#24314; <code>taggable_type</code> &#21644; <code>taggable_id</code> &#20004;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;morphs('taggable');</code></pre><h4 class="collection-method" id="689380ea2a49b4e27f677e5ece9e2e2a"><code>nullableMorphs()</code></h4><p>&#35813;&#26041;&#27861;&#19982; <a href="x3vo0g4vm1.html#column-method-morphs" target="_blank">morphs</a> &#26041;&#27861;&#31867;&#20284;&#65292;&#20294;&#29983;&#25104;&#30340;&#21015;&#20801;&#35768;&#20026;&#31354;&#65288;<code>nullable</code>&#65289;&#65306;</p><pre><code class="language-php">$table-&gt;nullableMorphs('taggable');</code></pre><h4 class="collection-method" id="682cdddcce1a89ae1754ecb90cb131df"><code>nullableUlidMorphs()</code></h4><p>&#35813;&#26041;&#27861;&#19982; <a href="x3vo0g4vm1.html#column-method-ulidMorphs" target="_blank">ulidMorphs</a> &#26041;&#27861;&#31867;&#20284;&#65292;&#20294;&#29983;&#25104;&#30340;&#21015;&#20801;&#35768;&#20026;&#31354;&#65288;<code>nullable</code>&#65289;&#65306;</p><pre><code class="language-php">$table-&gt;nullableUlidMorphs('taggable');</code></pre><h4 class="collection-method" id="7c33a9eee769d0438b435c8265039ec2"><code>nullableUuidMorphs()</code></h4><p>&#35813;&#26041;&#27861;&#19982; <a href="x3vo0g4vm1.html#column-method-uuidMorphs" target="_blank">uuidMorphs</a> &#26041;&#27861;&#31867;&#20284;&#65292;&#20294;&#29983;&#25104;&#30340;&#21015;&#20801;&#35768;&#20026;&#31354;&#65288;<code>nullable</code>&#65289;&#65306;</p><pre><code class="language-php">$table-&gt;nullableUuidMorphs('taggable');</code></pre><h4 class="collection-method" id="a5b863785441358e6865cb4943ac6de2"><code>rememberToken()</code></h4><p><code>rememberToken</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#21487;&#31354;&#30340; <code>VARCHAR(100)</code> &#31561;&#20215;&#21015;&#65292;&#29992;&#20110;&#23384;&#20648;&#12300;&#35760;&#20303;&#25105;&#12301;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/authentication#remembering-users" target="_blank">&#35748;&#35777;&#20196;&#29260;</a>&#65306;</p><pre><code class="language-php">$table-&gt;rememberToken();</code></pre><h4 class="collection-method" id="bf8ba73c3df10fc6a66b20fab9804fc9"><code>set()</code></h4><p><code>set</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#25351;&#23450;&#21512;&#27861;&#21462;&#20540;&#21015;&#34920;&#30340; <code>SET</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;set('flavors', ['strawberry', 'vanilla']);</code></pre><h4 class="collection-method" id="300b83a4f4a9b6d2f192a59ddcb403d1"><code>smallIncrements()</code></h4><p><code>smallIncrements</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#20316;&#20026;&#20027;&#38190;&#30340;&#33258;&#21160;&#36882;&#22686; <code>UNSIGNED SMALLINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;smallIncrements('id');</code></pre><h4 class="collection-method" id="584d3bf70d763e5af62f36f625b61a5c"><code>smallInteger()</code></h4><p><code>smallInteger</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>SMALLINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;smallInteger('votes');</code></pre><h4 class="collection-method" id="9504af58906199eaa932aedf247c7984"><code>softDeletesTz()</code></h4><p><code>softDeletesTz</code> &#26041;&#27861;&#29992;&#20110;&#28155;&#21152;&#19968;&#20010;&#21487;&#31354;&#30340; <code>deleted_at</code> <code>TIMESTAMP</code>&#65288;&#24102;&#26102;&#21306;&#65289;&#31561;&#20215;&#21015;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#30340;&#23567;&#25968;&#31186;&#31934;&#24230;&#12290;&#35813;&#21015;&#29992;&#20110;&#23384;&#20648; Eloquent &#12300;&#36719;&#21024;&#38500;&#12301;&#21151;&#33021;&#25152;&#38656;&#30340; <code>deleted_at</code> &#26102;&#38388;&#25139;&#65306;</p><pre><code class="language-php">$table-&gt;softDeletesTz('deleted_at', precision: 0);</code></pre><h4 class="collection-method" id="aae049c7fe714541e7fde3e5b6504576"><code>softDeletes()</code></h4><p><code>softDeletes</code> &#26041;&#27861;&#29992;&#20110;&#28155;&#21152;&#19968;&#20010;&#21487;&#31354;&#30340; <code>deleted_at</code> <code>TIMESTAMP</code> &#31561;&#20215;&#21015;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#30340;&#23567;&#25968;&#31186;&#31934;&#24230;&#12290;&#35813;&#21015;&#29992;&#20110;&#23384;&#20648; Eloquent &#12300;&#36719;&#21024;&#38500;&#12301;&#21151;&#33021;&#25152;&#38656;&#30340; <code>deleted_at</code> &#26102;&#38388;&#25139;&#65306;</p><pre><code class="language-php">$table-&gt;softDeletes('deleted_at', precision: 0);</code></pre><h4 class="collection-method" id="77d88c3306c2758481925bc92af2a85e"><code>string()</code></h4><p><code>string</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#25351;&#23450;&#38271;&#24230;&#30340; <code>VARCHAR</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;string('name', length: 100);</code></pre><h4 class="collection-method" id="2470e62883baee066131bb9c623c1572"><code>text()</code></h4><p><code>text</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>TEXT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;text('description');</code></pre><p>&#22312;&#20351;&#29992; MySQL &#25110; MariaDB &#26102;&#65292;&#21487;&#20197;&#21521;&#35813;&#21015;&#24212;&#29992; <code>binary</code> &#23383;&#31526;&#38598;&#20197;&#21019;&#24314; <code>BLOB</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;text('data')-&gt;charset('binary'); // BLOB</code></pre><h4 class="collection-method" id="0ce7c591a8469c6ca4515950b790552d"><code>timeTz()</code></h4><p><code>timeTz</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>TIME</code>&#65288;&#24102;&#26102;&#21306;&#65289;&#31561;&#20215;&#21015;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#30340;&#23567;&#25968;&#31186;&#31934;&#24230;&#65306;</p><pre><code class="language-php">$table-&gt;timeTz('sunrise', precision: 0);</code></pre><h4 class="collection-method" id="e123142787daeb46944503552b8e2c40"><code>time()</code></h4><p><code>time</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>TIME</code> &#31561;&#20215;&#21015;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#30340;&#23567;&#25968;&#31186;&#31934;&#24230;&#65306;</p><pre><code class="language-php">$table-&gt;time('sunrise', precision: 0);</code></pre><h4 class="collection-method" id="02f19051762937a4fc8316dffeb67794"><code>timestampTz()</code></h4><p><code>timestampTz</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>TIMESTAMP</code>&#65288;&#24102;&#26102;&#21306;&#65289;&#31561;&#20215;&#21015;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#30340;&#23567;&#25968;&#31186;&#31934;&#24230;&#65306;</p><pre><code class="language-php">$table-&gt;timestampTz('added_at', precision: 0);</code></pre><h4 class="collection-method" id="b67d6325ac16bf6ed4850e9f6fb06bd8"><code>timestamp()</code></h4><p><code>timestamp</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>TIMESTAMP</code> &#31561;&#20215;&#21015;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#30340;&#23567;&#25968;&#31186;&#31934;&#24230;&#65306;</p><pre><code class="language-php">$table-&gt;timestamp('added_at', precision: 0);</code></pre><h4 class="collection-method" id="2f8bc445e1049972a75641268a07f27f"><code>timestampsTz()</code></h4><p><code>timestampsTz</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314; <code>created_at</code> &#19982; <code>updated_at</code> &#20004;&#20010; <code>TIMESTAMP</code>&#65288;&#24102;&#26102;&#21306;&#65289;&#31561;&#20215;&#21015;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#30340;&#23567;&#25968;&#31186;&#31934;&#24230;&#65306;</p><pre><code class="language-php">$table-&gt;timestampsTz(precision: 0);</code></pre><h4 class="collection-method" id="04478c0868f9617473fc5cf34f3b561c"><code>timestamps()</code></h4><p><code>timestamps</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314; <code>created_at</code> &#19982; <code>updated_at</code> &#20004;&#20010; <code>TIMESTAMP</code> &#31561;&#20215;&#21015;&#65292;&#24182;&#25903;&#25345;&#21487;&#36873;&#30340;&#23567;&#25968;&#31186;&#31934;&#24230;&#65306;</p><pre><code class="language-php">$table-&gt;timestamps(precision: 0);</code></pre><h4 class="collection-method" id="47b6dd1bd68cae0042419205ceb71bc1"><code>tinyIncrements()</code></h4><p><code>tinyIncrements</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010;&#20316;&#20026;&#20027;&#38190;&#30340;&#33258;&#21160;&#36882;&#22686; <code>UNSIGNED TINYINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;tinyIncrements('id');</code></pre><h4 class="collection-method" id="f0017ebfe859baf19c548c982d7cd05e"><code>tinyInteger()</code></h4><p><code>tinyInteger</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>TINYINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;tinyInteger('votes');</code></pre><h4 class="collection-method" id="328b647fe68c40eff727846eed2a07d7"><code>tinyText()</code></h4><p><code>tinyText</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>TINYTEXT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;tinyText('notes');</code></pre><p>&#22312;&#20351;&#29992; MySQL &#25110; MariaDB &#26102;&#65292;&#21487;&#20197;&#21521;&#35813;&#21015;&#24212;&#29992; <code>binary</code> &#23383;&#31526;&#38598;&#20197;&#21019;&#24314; <code>TINYBLOB</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;tinyText('data')-&gt;charset('binary'); // TINYBLOB</code></pre><h4 class="collection-method" id="a1c37080390a7975c8cc5fdb4efe3e06"><code>unsignedBigInteger()</code></h4><p><code>unsignedBigInteger</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>UNSIGNED BIGINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;unsignedBigInteger('votes');</code></pre><h4 class="collection-method" id="5dffbcec09759ecfe09435ed173dd425"><code>unsignedInteger()</code></h4><p><code>unsignedInteger</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>UNSIGNED INTEGER</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;unsignedInteger('votes');</code></pre><h4 class="collection-method" id="69a935c87608a82fd9a55027760a1262"><code>unsignedMediumInteger()</code></h4><p><code>unsignedMediumInteger</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>UNSIGNED MEDIUMINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;unsignedMediumInteger('votes');</code></pre><h4 class="collection-method" id="827ec9764257dace0e95339a2b6322ca"><code>unsignedSmallInteger()</code></h4><p><code>unsignedSmallInteger</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>UNSIGNED SMALLINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;unsignedSmallInteger('votes');</code></pre><h4 class="collection-method" id="4a4a0a777af0f47274884e800e3067ee"><code>unsignedTinyInteger()</code></h4><p><code>unsignedTinyInteger</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>UNSIGNED TINYINT</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;unsignedTinyInteger('votes');</code></pre><h4 class="collection-method" id="85ad38dbb16730203e7d0e97bcc5e06e"><code>ulidMorphs()</code></h4><p><code>ulidMorphs</code> &#26041;&#27861;&#26159;&#19968;&#20010;&#20415;&#25463;&#26041;&#27861;&#65292;&#20250;&#21516;&#26102;&#28155;&#21152;&#19968;&#20010; <code>{column}_type</code> &#31561;&#20215; <code>VARCHAR</code> &#21015;&#21644;&#19968;&#20010; <code>{column}_id</code> <code>CHAR(26)</code> &#31561;&#20215;&#21015;&#12290;</p><p>&#35813;&#26041;&#27861;&#36866;&#29992;&#20110;&#23450;&#20041;&#20351;&#29992; ULID &#26631;&#35782;&#31526;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent-relationships" target="_blank">&#22810;&#24577; Eloquent &#20851;&#32852;</a> &#25152;&#38656;&#35201;&#30340;&#21015;&#12290;&#22312;&#19979;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#20250;&#21019;&#24314; <code>taggable_type</code> &#21644; <code>taggable_id</code> &#20004;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;ulidMorphs('taggable');</code></pre><h4 class="collection-method" id="2530f76a071b6842352d1e11d8a669db"><code>uuidMorphs()</code></h4><p><code>uuidMorphs</code> &#26041;&#27861;&#26159;&#19968;&#20010;&#20415;&#25463;&#26041;&#27861;&#65292;&#20250;&#21516;&#26102;&#28155;&#21152;&#19968;&#20010; <code>{column}_type</code> &#31561;&#20215; <code>VARCHAR</code> &#21015;&#21644;&#19968;&#20010; <code>{column}_id</code> <code>CHAR(36)</code> &#31561;&#20215;&#21015;&#12290;</p><p>&#35813;&#26041;&#27861;&#36866;&#29992;&#20110;&#23450;&#20041;&#20351;&#29992; UUID &#26631;&#35782;&#31526;&#30340; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent-relationships#polymorphic-relationships" target="_blank">&#22810;&#24577; Eloquent &#20851;&#32852;</a> &#25152;&#38656;&#35201;&#30340;&#21015;&#12290;&#22312;&#19979;&#38754;&#30340;&#31034;&#20363;&#20013;&#65292;&#20250;&#21019;&#24314; <code>taggable_type</code> &#21644; <code>taggable_id</code> &#20004;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;uuidMorphs('taggable');</code></pre><h4 class="collection-method" id="6713199581f2bd2682ad6550b750f0a7"><code>ulid()</code></h4><p><code>ulid</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>ULID</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;ulid('id');</code></pre><h4 class="collection-method" id="1dc2d11af07e15a0bb518c3bfba95111"><code>uuid()</code></h4><p><code>uuid</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>UUID</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;uuid('id');</code></pre><h4 class="collection-method" id="b53665db8c5a420ab1e8c8a150b0cad5"><code>vector()</code></h4><p><code>vector</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>vector</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;vector('embedding', dimensions: 100);</code></pre><p>&#22312;&#20351;&#29992; PostgreSQL &#26102;&#65292;&#24517;&#39035;&#20808;&#21152;&#36733; <code>pgvector</code> &#25193;&#23637;&#25165;&#33021;&#21019;&#24314; <code>vector</code> &#21015;&#65306;</p><pre><code class="language-php">Schema::ensureVectorExtensionExists();</code></pre><h4 class="collection-method" id="4c336a44aaa42abeafdb92cae6e27ab2"><code>year()</code></h4><p><code>year</code> &#26041;&#27861;&#29992;&#20110;&#21019;&#24314;&#19968;&#20010; <code>YEAR</code> &#31561;&#20215;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;year('birth_year');</code></pre><h3 id="21e1509d282a5389af24595ac76302a2">&#21015;&#20462;&#39280;&#31526;</h3><p>&#38500;&#20102;&#19978;&#38754;&#21015;&#20986;&#30340;&#21015;&#31867;&#22411;&#22806;&#65292;&#21521;&#25968;&#25454;&#24211;&#34920;&#28155;&#21152;&#21015;&#26102;&#36824;&#21487;&#20197;&#20351;&#29992;&#33509;&#24178;&#12300;&#20462;&#39280;&#31526;&#12301;&#12290;&#20363;&#22914;&#65292;&#35201;&#35753;&#21015;&#20801;&#35768;&#20026;&#31354;&#65288;<code>nullable</code>&#65289;&#65292;&#21487;&#20197;&#20351;&#29992; <code>nullable</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+Schema::table('users', function (Blueprint $table) {
+    $table-&gt;string('email')-&gt;nullable();
+});</code></pre><p>&#19979;&#34920;&#21015;&#20986;&#20102;&#25152;&#26377;&#21487;&#29992;&#30340;&#21015;&#20462;&#39280;&#31526;&#12290;&#35813;&#21015;&#34920;&#19981;&#21253;&#21547; <a href="x3vo0g4vm1.html#creating-indexes" target="_blank">&#32034;&#24341;&#20462;&#39280;&#31526;</a>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#20462;&#39280;&#31526;</th>
+<th>&#25551;&#36848;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-&gt;after('column')</code></td>
+<td>&#23558;&#21015;&#25918;&#22312;&#21478;&#19968;&#21015;&#12300;&#20043;&#21518;&#12301;&#65288;MariaDB / MySQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;autoIncrement()</code></td>
+<td>&#23558; <code>INTEGER</code> &#21015;&#35774;&#20026;&#33258;&#21160;&#36882;&#22686;&#65288;&#20027;&#38190;&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;charset('utf8mb4')</code></td>
+<td>&#20026;&#21015;&#25351;&#23450;&#23383;&#31526;&#38598;&#65288;MariaDB / MySQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;collation('utf8mb4_unicode_ci')</code></td>
+<td>&#20026;&#21015;&#25351;&#23450;&#25490;&#24207;&#35268;&#21017;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;comment('my comment')</code></td>
+<td>&#20026;&#21015;&#28155;&#21152;&#27880;&#37322;&#65288;MariaDB / MySQL / PostgreSQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;default($value)</code></td>
+<td>&#20026;&#21015;&#25351;&#23450;&#12300;&#40664;&#35748;&#20540;&#12301;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;first()</code></td>
+<td>&#23558;&#21015;&#25918;&#22312;&#34920;&#30340;&#12300;&#31532;&#19968;&#20301;&#12301;&#65288;MariaDB / MySQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;from($integer)</code></td>
+<td>&#35774;&#32622;&#33258;&#21160;&#36882;&#22686;&#23383;&#27573;&#30340;&#36215;&#22987;&#20540;&#65288;MariaDB / MySQL / PostgreSQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;instant()</code></td>
+<td>&#20351;&#29992; MySQL &#30340; instant &#25805;&#20316;&#26469;&#28155;&#21152;&#25110;&#20462;&#25913;&#21015;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;invisible()</code></td>
+<td>&#35753;&#21015;&#23545; <code>SELECT *</code> &#26597;&#35810;&#12300;&#19981;&#21487;&#35265;&#12301;&#65288;MariaDB / MySQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;lock($mode)</code></td>
+<td>&#20026;&#21015;&#25805;&#20316;&#25351;&#23450;&#38145;&#27169;&#24335;&#65288;MySQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;nullable($value = true)</code></td>
+<td>&#20801;&#35768;&#21521;&#35813;&#21015;&#25554;&#20837; <code>NULL</code> &#20540;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;storedAs($expression)</code></td>
+<td>&#21019;&#24314;&#19968;&#20010;&#23384;&#20648;&#22411;&#29983;&#25104;&#21015;&#65288;MariaDB / MySQL / PostgreSQL / SQLite&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;unsigned()</code></td>
+<td>&#23558; <code>INTEGER</code> &#21015;&#35774;&#20026; <code>UNSIGNED</code>&#65288;MariaDB / MySQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;using($expression)</code></td>
+<td>&#22312;&#20462;&#25913;&#21015;&#31867;&#22411;&#26102;&#25351;&#23450;&#36716;&#25442;&#34920;&#36798;&#24335;&#65288;PostgreSQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;useCurrent()</code></td>
+<td>&#23558; <code>TIMESTAMP</code> &#21015;&#30340;&#40664;&#35748;&#20540;&#35774;&#20026; <code>CURRENT_TIMESTAMP</code>&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;useCurrentOnUpdate()</code></td>
+<td>&#23558; <code>TIMESTAMP</code> &#21015;&#22312;&#35760;&#24405;&#26356;&#26032;&#26102;&#30340;&#20540;&#35774;&#20026; <code>CURRENT_TIMESTAMP</code>&#65288;MariaDB / MySQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;virtualAs($expression)</code></td>
+<td>&#21019;&#24314;&#19968;&#20010;&#34394;&#25311;&#29983;&#25104;&#21015;&#65288;MariaDB / MySQL / SQLite&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;generatedAs($expression)</code></td>
+<td>&#21019;&#24314;&#19968;&#20010;&#24102;&#25351;&#23450;&#24207;&#21015;&#36873;&#39033;&#30340; identity &#21015;&#65288;PostgreSQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>-&gt;always()</code></td>
+<td>&#23450;&#20041; identity &#21015;&#20013;&#24207;&#21015;&#20540;&#30456;&#23545;&#36755;&#20837;&#20540;&#30340;&#20248;&#20808;&#32423;&#65288;PostgreSQL&#65289;&#12290;</td>
+</tr>
+</tbody>
+</table><h4 id="af128a19d149aaa388f135ab3f929ec1">&#40664;&#35748;&#34920;&#36798;&#24335;</h4><p><code>default</code> &#20462;&#39280;&#31526;&#25509;&#21463;&#19968;&#20010;&#20540;&#25110;&#19968;&#20010; <code>Illuminate\Database\Query\Expression</code> &#23454;&#20363;&#12290;&#20351;&#29992; <code>Expression</code> &#23454;&#20363;&#21487;&#20197;&#36991;&#20813; Laravel &#33258;&#21160;&#20026;&#20540;&#21152;&#19978;&#24341;&#21495;&#65292;&#20174;&#32780;&#21487;&#20197;&#20351;&#29992;&#29305;&#23450;&#25968;&#25454;&#24211;&#30340;&#20989;&#25968;&#12290;&#22312;&#38656;&#35201;&#20026; JSON &#21015;&#25351;&#23450;&#40664;&#35748;&#20540;&#26102;&#65292;&#36825;&#19968;&#29992;&#27861;&#29305;&#21035;&#26377;&#29992;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Query\Expression;
+use Illuminate\Database\Migrations\Migration;
+
+return new class extends Migration
+{
+    /**
+     * &#25191;&#34892;&#36801;&#31227;&#12290;
+     */
+    public function up(): void
+    {
+        Schema::create('flights', function (Blueprint $table) {
+            $table-&gt;id();
+            $table-&gt;json('movies')-&gt;default(new Expression('(JSON_ARRAY())'));
+            $table-&gt;timestamps();
+        });
+    }
+};</code></pre><blockquote>
+<p>[!WARNING]<br>
+&#40664;&#35748;&#34920;&#36798;&#24335;&#30340;&#25903;&#25345;&#24773;&#20917;&#21462;&#20915;&#20110;&#20320;&#25152;&#20351;&#29992;&#30340;&#25968;&#25454;&#24211;&#39537;&#21160;&#12289;&#25968;&#25454;&#24211;&#29256;&#26412;&#20197;&#21450;&#23383;&#27573;&#31867;&#22411;&#12290;&#35831;&#21442;&#38405;&#30456;&#24212;&#25968;&#25454;&#24211;&#30340;&#25991;&#26723;&#12290;</p>
+</blockquote><h4 id="8e68a60b6118afa4bd38432b1207073a">&#21015;&#39034;&#24207;</h4><p>&#22312;&#20351;&#29992; MariaDB &#25110; MySQL &#25968;&#25454;&#24211;&#26102;&#65292;&#21487;&#20197;&#20351;&#29992; <code>after</code> &#26041;&#27861;&#22312;&#24050;&#26377;&#21015;&#20043;&#21518;&#28155;&#21152;&#26032;&#21015;&#65306;</p><pre><code class="language-php">$table-&gt;after('password', function (Blueprint $table) {
+    $table-&gt;string('address_line1');
+    $table-&gt;string('address_line2');
+    $table-&gt;string('city');
+});</code></pre><h4 id="62e047fd3a62f44d0f40902cbd6ff870">Instant &#21015;&#25805;&#20316;</h4><p>&#22312;&#20351;&#29992; MySQL &#26102;&#65292;&#21487;&#20197;&#22312;&#21015;&#23450;&#20041;&#21518;&#38142;&#24335;&#35843;&#29992; <code>instant</code> &#20462;&#39280;&#31526;&#65292;&#20197;&#25351;&#31034;&#20351;&#29992; MySQL &#30340;&#12300;instant&#12301;&#31639;&#27861;&#28155;&#21152;&#25110;&#20462;&#25913;&#21015;&#12290;&#35813;&#31639;&#27861;&#20801;&#35768;&#22312;&#19981;&#23436;&#20840;&#37325;&#24314;&#34920;&#30340;&#21069;&#25552;&#19979;&#23436;&#25104;&#26576;&#20123; schema &#21464;&#26356;&#65292;&#22240;&#27492;&#26080;&#35770;&#34920;&#22823;&#23567;&#22914;&#20309;&#65292;&#20960;&#20046;&#37117;&#33021;&#21363;&#26102;&#23436;&#25104;&#65306;</p><pre><code class="language-php">$table-&gt;string('name')-&gt;nullable()-&gt;instant();</code></pre><p>Instant &#21015;&#28155;&#21152;&#21482;&#33021;&#25226;&#21015;&#36861;&#21152;&#21040;&#34920;&#30340;&#26411;&#23614;&#65292;&#22240;&#27492; <code>instant</code> &#20462;&#39280;&#31526;&#19981;&#33021;&#19982; <code>after</code> &#25110; <code>first</code> &#20462;&#39280;&#31526;&#21516;&#26102;&#20351;&#29992;&#12290;&#27492;&#22806;&#65292;instant &#31639;&#27861;&#24182;&#38750;&#25903;&#25345;&#25152;&#26377;&#21015;&#31867;&#22411;&#25110;&#25805;&#20316;&#12290;&#22914;&#26524;&#25152;&#35831;&#27714;&#30340;&#25805;&#20316;&#19982; instant &#31639;&#27861;&#19981;&#20860;&#23481;&#65292;MySQL &#20250;&#25243;&#20986;&#38169;&#35823;&#12290;</p><p>&#35831;&#21442;&#38405; <a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html" target="_blank" rel="noopener noreferrer">MySQL &#25991;&#26723;</a> &#20197;&#30830;&#23450;&#21738;&#20123;&#25805;&#20316;&#19982; instant &#21015;&#20462;&#25913;&#20860;&#23481;&#12290;</p><h4 id="c37c9e20c1dc4a7d57ff7c93723079a7">DDL &#38145;</h4><p>&#22312;&#20351;&#29992; MySQL &#26102;&#65292;&#21487;&#20197;&#22312;&#21015;&#12289;&#32034;&#24341;&#25110;&#22806;&#38190;&#23450;&#20041;&#21518;&#38142;&#24335;&#35843;&#29992; <code>lock</code> &#20462;&#39280;&#31526;&#65292;&#20197;&#25511;&#21046; schema &#25805;&#20316;&#26399;&#38388;&#30340;&#34920;&#38145;&#34892;&#20026;&#12290;MySQL &#25903;&#25345;&#22810;&#31181;&#38145;&#27169;&#24335;&#65306;<code>none</code> &#20801;&#35768;&#24182;&#21457;&#35835;&#20889;&#65292;<code>shared</code> &#20801;&#35768;&#24182;&#21457;&#35835;&#20294;&#38459;&#22622;&#20889;&#65292;<code>exclusive</code> &#38459;&#22622;&#25152;&#26377;&#24182;&#21457;&#35775;&#38382;&#65292;<code>default</code> &#30001; MySQL &#36873;&#25321;&#26368;&#21512;&#36866;&#30340;&#27169;&#24335;&#65306;</p><pre><code class="language-php">$table-&gt;string('name')-&gt;lock('none');
+
+$table-&gt;index('email')-&gt;lock('shared');</code></pre><p>&#22914;&#26524;&#25152;&#35831;&#27714;&#30340;&#38145;&#27169;&#24335;&#19982;&#35813;&#25805;&#20316;&#19981;&#20860;&#23481;&#65292;MySQL &#20250;&#25243;&#20986;&#38169;&#35823;&#12290;<code>lock</code> &#20462;&#39280;&#31526;&#21487;&#20197;&#19982; <code>instant</code> &#20462;&#39280;&#31526;&#32452;&#21512;&#20351;&#29992;&#65292;&#20197;&#36827;&#19968;&#27493;&#20248;&#21270; schema &#21464;&#26356;&#65306;</p><pre><code class="language-php">$table-&gt;string('name')-&gt;instant()-&gt;lock('none');</code></pre><h3 id="679988072cca37bb5f00cf157bf0bad4">&#20462;&#25913;&#21015;</h3><p><code>change</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#20462;&#25913;&#24050;&#26377;&#21015;&#30340;&#31867;&#22411;&#19982;&#23646;&#24615;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#33021;&#24076;&#26395;&#23558; <code>string</code> &#21015;&#30340;&#38271;&#24230;&#35843;&#22823;&#12290;&#35201;&#30475; <code>change</code> &#26041;&#27861;&#30340;&#23454;&#38469;&#25928;&#26524;&#65292;&#25105;&#20204;&#26469;&#23558; <code>name</code> &#21015;&#30340;&#38271;&#24230;&#20174; 25 &#35843;&#21040; 50&#12290;&#20026;&#27492;&#65292;&#21482;&#38656;&#23450;&#20041;&#35813;&#21015;&#30340;&#26032;&#29366;&#24577;&#65292;&#28982;&#21518;&#35843;&#29992; <code>change</code> &#26041;&#27861;&#21363;&#21487;&#65306;</p><pre><code class="language-php">Schema::table('users', function (Blueprint $table) {
+    $table-&gt;string('name', 50)-&gt;change();
+});</code></pre><p>&#20462;&#25913;&#21015;&#26102;&#65292;&#24517;&#39035;&#26174;&#24335;&#21253;&#21547;&#20320;&#24076;&#26395;&#20445;&#30041;&#30340;&#20840;&#37096;&#20462;&#39280;&#31526;&mdash;&mdash;&#20219;&#20309;&#36951;&#28431;&#30340;&#23646;&#24615;&#37117;&#23558;&#34987;&#20002;&#24323;&#12290;&#20363;&#22914;&#65292;&#33509;&#35201;&#20445;&#30041; <code>unsigned</code>&#12289;<code>default</code> &#19982; <code>comment</code> &#23646;&#24615;&#65292;&#24517;&#39035;&#22312;&#35843;&#29992; <code>change</code> &#26102;&#26174;&#24335;&#22768;&#26126;&#27599;&#20010;&#20462;&#39280;&#31526;&#65306;</p><pre><code class="language-php">Schema::table('users', function (Blueprint $table) {
+    $table-&gt;integer('votes')-&gt;unsigned()-&gt;default(1)-&gt;comment('my comment')-&gt;change();
+});</code></pre><p><code>change</code> &#26041;&#27861;&#19981;&#20250;&#25913;&#21464;&#21015;&#30340;&#32034;&#24341;&#12290;&#22240;&#27492;&#65292;&#21487;&#20197;&#22312;&#20462;&#25913;&#21015;&#26102;&#20351;&#29992;&#32034;&#24341;&#20462;&#39280;&#31526;&#26174;&#24335;&#28155;&#21152;&#25110;&#31227;&#38500;&#32034;&#24341;&#65306;</p><pre><code class="language-php">// &#28155;&#21152;&#32034;&#24341;...
+$table-&gt;bigIncrements('id')-&gt;primary()-&gt;change();
+
+// &#21024;&#38500;&#32034;&#24341;...
+$table-&gt;char('postal_code', 10)-&gt;unique(false)-&gt;change();</code></pre><h4 id="e60256d3dfe0e55785d75239dfd99efc">PostgreSQL &#21015;&#20462;&#25913;</h4><p>&#22312; PostgreSQL &#19978;&#20462;&#25913;&#21015;&#31867;&#22411;&#26102;&#65292;&#21487;&#20197;&#20351;&#29992; <code>using</code> &#20462;&#39280;&#31526;&#25351;&#23450;&#29992;&#20110;&#36716;&#25442;&#24050;&#26377;&#25968;&#25454;&#30340;&#34920;&#36798;&#24335;&#65306;</p><pre><code class="language-php">Schema::table('users', function (Blueprint $table) {
+    $table-&gt;date('birthday')-&gt;using('birthday::date')-&gt;change();
+});</code></pre><h3 id="bd7eb2e30858550abab6001309380478">&#37325;&#21629;&#21517;&#21015;</h3><p>&#35201;&#37325;&#21629;&#21517;&#19968;&#20010;&#21015;&#65292;&#21487;&#20197;&#20351;&#29992; schema builder &#25552;&#20379;&#30340; <code>renameColumn</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Schema::table('users', function (Blueprint $table) {
+    $table-&gt;renameColumn('from', 'to');
+});</code></pre><h3 id="3aac0e33ab967bf61e97fdb0f629d2de">&#21024;&#38500;&#21015;</h3><p>&#35201;&#21024;&#38500;&#19968;&#20010;&#21015;&#65292;&#21487;&#20197;&#22312; schema builder &#19978;&#20351;&#29992; <code>dropColumn</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">Schema::table('users', function (Blueprint $table) {
+    $table-&gt;dropColumn('votes');
+});</code></pre><p>&#21487;&#20197;&#36890;&#36807;&#21521; <code>dropColumn</code> &#26041;&#27861;&#20256;&#20837;&#21015;&#21517;&#25968;&#32452;&#19968;&#27425;&#24615;&#21024;&#38500;&#22810;&#21015;&#65306;</p><pre><code class="language-php">Schema::table('users', function (Blueprint $table) {
+    $table-&gt;dropColumn(['votes', 'avatar', 'location']);
+});</code></pre><h4 id="65e35e5e13052e1c143408c054d76f25">&#21487;&#29992;&#30340;&#21629;&#20196;&#21035;&#21517;</h4><p>Laravel &#25552;&#20379;&#20102;&#19968;&#20123;&#20415;&#25463;&#26041;&#27861;&#65292;&#29992;&#20110;&#21024;&#38500;&#24120;&#35265;&#31867;&#22411;&#30340;&#21015;&#12290;&#19979;&#34920;&#23545;&#36825;&#20123;&#26041;&#27861;&#36880;&#19968;&#20316;&#20102;&#35828;&#26126;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#21629;&#20196;</th>
+<th>&#25551;&#36848;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$table-&gt;dropMorphs('morphable');</code></td>
+<td>&#21024;&#38500; <code>morphable_type</code> &#21644; <code>morphable_id</code> &#21015;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;dropRememberToken();</code></td>
+<td>&#21024;&#38500; <code>remember_token</code> &#21015;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;dropSoftDeletes();</code></td>
+<td>&#21024;&#38500; <code>deleted_at</code> &#21015;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;dropSoftDeletesTz();</code></td>
+<td><code>dropSoftDeletes()</code> &#26041;&#27861;&#30340;&#21035;&#21517;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;dropTimestamps();</code></td>
+<td>&#21024;&#38500; <code>created_at</code> &#21644; <code>updated_at</code> &#21015;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;dropTimestampsTz();</code></td>
+<td><code>dropTimestamps()</code> &#26041;&#27861;&#30340;&#21035;&#21517;&#12290;</td>
+</tr>
+</tbody>
+</table><h2 id="b271e427962758c71e342a2c06df493a">&#32034;&#24341;</h2><h3 id="de4e5908cda4e6f60246193ed5de75fc">&#21019;&#24314;&#32034;&#24341;</h3><p>Laravel schema builder &#25903;&#25345;&#22810;&#31181;&#31867;&#22411;&#30340;&#32034;&#24341;&#12290;&#19979;&#38754;&#30340;&#31034;&#20363;&#21019;&#24314;&#19968;&#20010;&#26032;&#30340; <code>email</code> &#21015;&#65292;&#24182;&#25351;&#23450;&#20854;&#21462;&#20540;&#21807;&#19968;&#12290;&#35201;&#21019;&#24314;&#35813;&#32034;&#24341;&#65292;&#21487;&#20197;&#23558; <code>unique</code> &#26041;&#27861;&#38142;&#25509;&#21040;&#21015;&#23450;&#20041;&#19978;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+Schema::table('users', function (Blueprint $table) {
+    $table-&gt;string('email')-&gt;unique();
+});</code></pre><p>&#25110;&#32773;&#65292;&#20063;&#21487;&#20197;&#22312;&#23450;&#20041;&#21015;&#20043;&#21518;&#20877;&#21019;&#24314;&#32034;&#24341;&#12290;&#20026;&#27492;&#65292;&#38656;&#35201;&#22312; schema builder blueprint &#19978;&#35843;&#29992; <code>unique</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#25509;&#25910;&#38656;&#35201;&#24314;&#31435;&#21807;&#19968;&#32034;&#24341;&#30340;&#21015;&#21517;&#65306;</p><pre><code class="language-php">$table-&gt;unique('email');</code></pre><p>&#20320;&#29978;&#33267;&#21487;&#20197;&#21521;&#32034;&#24341;&#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#21015;&#25968;&#32452;&#65292;&#20174;&#32780;&#21019;&#24314;&#22797;&#21512;&#32034;&#24341;&#65306;</p><pre><code class="language-php">$table-&gt;index(['account_id', 'created_at']);</code></pre><p>&#21019;&#24314;&#32034;&#24341;&#26102;&#65292;Laravel &#20250;&#33258;&#21160;&#22522;&#20110;&#34920;&#21517;&#12289;&#21015;&#21517;&#21644;&#32034;&#24341;&#31867;&#22411;&#29983;&#25104;&#32034;&#24341;&#21517;&#65292;&#20294;&#20320;&#20063;&#21487;&#20197;&#21521;&#35813;&#26041;&#27861;&#20256;&#20837;&#31532;&#20108;&#20010;&#21442;&#25968;&#26469;&#33258;&#34892;&#25351;&#23450;&#32034;&#24341;&#21517;&#65306;</p><pre><code class="language-php">$table-&gt;unique('email', 'unique_email');</code></pre><h4 id="1222bc755be6fa32edeec0334cf4c01a">&#21487;&#29992;&#30340;&#32034;&#24341;&#31867;&#22411;</h4><p>Laravel &#30340; schema builder blueprint &#31867;&#20026; Laravel &#25152;&#25903;&#25345;&#30340;&#27599;&#19968;&#31181;&#32034;&#24341;&#37117;&#25552;&#20379;&#20102;&#30456;&#24212;&#30340;&#21019;&#24314;&#26041;&#27861;&#12290;&#27599;&#20010;&#32034;&#24341;&#26041;&#27861;&#37117;&#25509;&#25910;&#19968;&#20010;&#21487;&#36873;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#65292;&#29992;&#20110;&#25351;&#23450;&#32034;&#24341;&#21517;&#12290;&#22914;&#26524;&#30465;&#30053;&#32034;&#24341;&#21517;&#65292;Laravel &#20250;&#22522;&#20110;&#34920;&#21517;&#12289;&#21442;&#19982;&#32034;&#24341;&#30340;&#21015;&#21517;&#20197;&#21450;&#32034;&#24341;&#31867;&#22411;&#33258;&#21160;&#25512;&#23548;&#12290;&#19979;&#34920;&#25551;&#36848;&#20102;&#25152;&#26377;&#21487;&#29992;&#30340;&#32034;&#24341;&#26041;&#27861;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#21629;&#20196;</th>
+<th>&#25551;&#36848;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$table-&gt;primary('id');</code></td>
+<td>&#28155;&#21152;&#20027;&#38190;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;primary(['id', 'parent_id']);</code></td>
+<td>&#28155;&#21152;&#22797;&#21512;&#38190;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;unique('email');</code></td>
+<td>&#28155;&#21152;&#21807;&#19968;&#32034;&#24341;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;index('state');</code></td>
+<td>&#28155;&#21152;&#26222;&#36890;&#32034;&#24341;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;fullText('body');</code></td>
+<td>&#28155;&#21152;&#20840;&#25991;&#32034;&#24341;&#65288;MariaDB / MySQL / PostgreSQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;fullText('body')-&gt;language('english');</code></td>
+<td>&#28155;&#21152;&#25351;&#23450;&#35821;&#35328;&#30340;&#20840;&#25991;&#32034;&#24341;&#65288;PostgreSQL&#65289;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;spatialIndex('location');</code></td>
+<td>&#28155;&#21152;&#31354;&#38388;&#32034;&#24341;&#65288;SQLite &#38500;&#22806;&#65289;&#12290;</td>
+</tr>
+</tbody>
+</table><h4 id="5dc8125e2dc3bcc735fef15c5ac710f5">&#22312;&#32447;&#21019;&#24314;&#32034;&#24341;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#20026;&#19968;&#24352;&#22823;&#34920;&#21019;&#24314;&#32034;&#24341;&#26102;&#20250;&#38145;&#20303;&#35813;&#34920;&#65292;&#24182;&#22312;&#32034;&#24341;&#26500;&#24314;&#26399;&#38388;&#38459;&#22622;&#35835;&#20889;&#12290;&#22312;&#20351;&#29992; PostgreSQL &#25110; SQL Server &#26102;&#65292;&#21487;&#20197;&#22312;&#32034;&#24341;&#23450;&#20041;&#21518;&#38142;&#24335;&#35843;&#29992; <code>online</code> &#26041;&#27861;&#26469;&#23454;&#29616;&#22312;&#32447;&#21019;&#24314;&#32034;&#24341;&#65292;&#20174;&#32780;&#22312;&#21019;&#24314;&#36807;&#31243;&#20013;&#20801;&#35768;&#24212;&#29992;&#32487;&#32493;&#35835;&#20889;&#25968;&#25454;&#65306;</p><pre><code class="language-php">$table-&gt;string('email')-&gt;unique()-&gt;online();</code></pre><p>&#22312;&#20351;&#29992; PostgreSQL &#26102;&#65292;&#36825;&#20250;&#20026;&#32034;&#24341;&#21019;&#24314;&#35821;&#21477;&#21152;&#19978; <code>CONCURRENTLY</code> &#36873;&#39033;&#65307;&#22312;&#20351;&#29992; SQL Server &#26102;&#65292;&#36825;&#20250;&#21152;&#19978; <code>WITH (online = on)</code> &#36873;&#39033;&#12290;</p><h3 id="472fba92e37c520356e2f42d7414e11a">&#37325;&#21629;&#21517;&#32034;&#24341;</h3><p>&#35201;&#37325;&#21629;&#21517;&#19968;&#20010;&#32034;&#24341;&#65292;&#21487;&#20197;&#20351;&#29992; schema builder blueprint &#25552;&#20379;&#30340; <code>renameIndex</code> &#26041;&#27861;&#12290;&#35813;&#26041;&#27861;&#25509;&#25910;&#24403;&#21069;&#32034;&#24341;&#21517;&#20316;&#20026;&#31532;&#19968;&#20010;&#21442;&#25968;&#65292;&#26399;&#26395;&#30340;&#26032;&#21517;&#23383;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#65306;</p><pre><code class="language-php">$table-&gt;renameIndex('from', 'to')</code></pre><h3 id="af9dfbc0265c11c731434efa4f659bbc">&#21024;&#38500;&#32034;&#24341;</h3><p>&#35201;&#21024;&#38500;&#19968;&#20010;&#32034;&#24341;&#65292;&#24517;&#39035;&#25351;&#23450;&#32034;&#24341;&#30340;&#21517;&#31216;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;Laravel &#20250;&#22522;&#20110;&#34920;&#21517;&#12289;&#34987;&#32034;&#24341;&#21015;&#21517;&#20197;&#21450;&#32034;&#24341;&#31867;&#22411;&#33258;&#21160;&#20998;&#37197;&#32034;&#24341;&#21517;&#12290;&#31034;&#20363;&#22914;&#19979;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#21629;&#20196;</th>
+<th>&#25551;&#36848;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$table-&gt;dropPrimary('users_id_primary');</code></td>
+<td>&#20174; "users" &#34920;&#21024;&#38500;&#20027;&#38190;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;dropUnique('users_email_unique');</code></td>
+<td>&#20174; "users" &#34920;&#21024;&#38500;&#21807;&#19968;&#32034;&#24341;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;dropIndex('geo_state_index');</code></td>
+<td>&#20174; "geo" &#34920;&#21024;&#38500;&#26222;&#36890;&#32034;&#24341;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;dropFullText('posts_body_fulltext');</code></td>
+<td>&#20174; "posts" &#34920;&#21024;&#38500;&#20840;&#25991;&#32034;&#24341;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;dropSpatialIndex('geo_location_spatialindex');</code></td>
+<td>&#20174; "geo" &#34920;&#21024;&#38500;&#31354;&#38388;&#32034;&#24341;&#65288;SQLite &#38500;&#22806;&#65289;&#12290;</td>
+</tr>
+</tbody>
+</table><p>&#22914;&#26524;&#23558;&#19968;&#20010;&#21015;&#25968;&#32452;&#20256;&#20837;&#21024;&#38500;&#32034;&#24341;&#30340;&#26041;&#27861;&#65292;&#32034;&#24341;&#21517;&#20250;&#22522;&#20110;&#34920;&#21517;&#12289;&#21015;&#19982;&#32034;&#24341;&#31867;&#22411;&#25353;&#32422;&#23450;&#29983;&#25104;&#65306;</p><pre><code class="language-php">Schema::table('geo', function (Blueprint $table) {
+    $table-&gt;dropIndex(['state']); // &#21024;&#38500;&#32034;&#24341; 'geo_state_index'
+});</code></pre><h3 id="499c95f9984533889e81c4c221184667">&#22806;&#38190;&#32422;&#26463;</h3><p>Laravel &#36824;&#25903;&#25345;&#21019;&#24314;&#22806;&#38190;&#32422;&#26463;&#65292;&#29992;&#20110;&#22312;&#25968;&#25454;&#24211;&#23618;&#38754;&#24378;&#21046;&#20445;&#25345;&#24341;&#29992;&#23436;&#25972;&#24615;&#12290;&#20363;&#22914;&#65292;&#25105;&#20204;&#22312; <code>posts</code> &#34920;&#19978;&#23450;&#20041;&#19968;&#20010; <code>user_id</code> &#21015;&#65292;&#20351;&#20854;&#24341;&#29992; <code>users</code> &#34920;&#30340; <code>id</code> &#21015;&#65306;</p><pre><code class="language-php">use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+Schema::table('posts', function (Blueprint $table) {
+    $table-&gt;unsignedBigInteger('user_id');
+
+    $table-&gt;foreign('user_id')-&gt;references('id')-&gt;on('users');
+});</code></pre><p>&#30001;&#20110;&#19978;&#36848;&#20889;&#27861;&#27604;&#36739;&#20887;&#38271;&#65292;Laravel &#25552;&#20379;&#20102;&#26356;&#31616;&#27905;&#30340;&#12289;&#22522;&#20110;&#32422;&#23450;&#30340;&#20889;&#27861;&#12290;&#24403;&#20351;&#29992; <code>foreignId</code> &#26041;&#27861;&#21019;&#24314;&#21015;&#26102;&#65292;&#19978;&#38754;&#30340;&#20363;&#23376;&#21487;&#20197;&#25913;&#20889;&#20026;&#65306;</p><pre><code class="language-php">Schema::table('posts', function (Blueprint $table) {
+    $table-&gt;foreignId('user_id')-&gt;constrained();
+});</code></pre><p><code>foreignId</code> &#26041;&#27861;&#20250;&#21019;&#24314;&#19968;&#20010; <code>UNSIGNED BIGINT</code> &#31561;&#20215;&#21015;&#65292;<code>constrained</code> &#26041;&#27861;&#21017;&#20250;&#26681;&#25454;&#32422;&#23450;&#25512;&#26029;&#34987;&#24341;&#29992;&#30340;&#34920;&#19982;&#21015;&#12290;&#22914;&#26524;&#20320;&#30340;&#34920;&#21517;&#19981;&#31526;&#21512; Laravel &#30340;&#32422;&#23450;&#65292;&#21487;&#20197;&#25163;&#21160;&#21521; <code>constrained</code> &#26041;&#27861;&#25552;&#20379;&#34920;&#21517;&#12290;&#21516;&#26102;&#65292;&#20063;&#21487;&#20197;&#20026;&#29983;&#25104;&#32034;&#24341;&#25351;&#23450;&#19968;&#20010;&#21517;&#23383;&#65306;</p><pre><code class="language-php">Schema::table('posts', function (Blueprint $table) {
+    $table-&gt;foreignId('user_id')-&gt;constrained(
+        table: 'users', indexName: 'posts_user_id'
+    );
+});</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#20026;&#32422;&#26463;&#30340;&#12300;on delete&#12301;&#19982;&#12300;on update&#12301;&#23646;&#24615;&#25351;&#23450;&#26399;&#26395;&#30340;&#21160;&#20316;&#65306;</p><pre><code class="language-php">$table-&gt;foreignId('user_id')
+    -&gt;constrained()
+    -&gt;onUpdate('cascade')
+    -&gt;onDelete('cascade');</code></pre><p>Laravel &#21516;&#26102;&#20026;&#36825;&#20123;&#21160;&#20316;&#25552;&#20379;&#20102;&#19968;&#22871;&#26356;&#20855;&#34920;&#36798;&#21147;&#30340;&#26367;&#20195;&#35821;&#27861;&#65306;</p><table>
+<thead>
+<tr>
+<th>&#26041;&#27861;</th>
+<th>&#25551;&#36848;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$table-&gt;cascadeOnUpdate();</code></td>
+<td>&#26356;&#26032;&#26102;&#32423;&#32852;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;restrictOnUpdate();</code></td>
+<td>&#26356;&#26032;&#26102;&#38480;&#21046;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;nullOnUpdate();</code></td>
+<td>&#26356;&#26032;&#26102;&#23558;&#22806;&#38190;&#20540;&#32622;&#20026; NULL&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;noActionOnUpdate();</code></td>
+<td>&#26356;&#26032;&#26102;&#19981;&#25191;&#34892;&#20219;&#20309;&#21160;&#20316;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;cascadeOnDelete();</code></td>
+<td>&#21024;&#38500;&#26102;&#32423;&#32852;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;restrictOnDelete();</code></td>
+<td>&#21024;&#38500;&#26102;&#38480;&#21046;&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;nullOnDelete();</code></td>
+<td>&#21024;&#38500;&#26102;&#23558;&#22806;&#38190;&#20540;&#32622;&#20026; NULL&#12290;</td>
+</tr>
+<tr>
+<td><code>$table-&gt;noActionOnDelete();</code></td>
+<td>&#33509;&#23384;&#22312;&#23376;&#35760;&#24405;&#21017;&#38459;&#27490;&#21024;&#38500;&#12290;</td>
+</tr>
+</tbody>
+</table><p>&#20219;&#20309;&#39069;&#22806;&#30340; <a href="x3vo0g4vm1.html#column-modifiers" target="_blank">&#21015;&#20462;&#39280;&#31526;</a> &#37117;&#24517;&#39035;&#22312; <code>constrained</code> &#26041;&#27861;&#20043;&#21069;&#35843;&#29992;&#65306;</p><pre><code class="language-php">$table-&gt;foreignId('user_id')
+    -&gt;nullable()
+    -&gt;constrained();</code></pre><h4 id="dbde626650c7927da34e0204f50d69b8">&#21024;&#38500;&#22806;&#38190;</h4><p>&#35201;&#21024;&#38500;&#22806;&#38190;&#65292;&#21487;&#20197;&#20351;&#29992; <code>dropForeign</code> &#26041;&#27861;&#65292;&#24182;&#23558;&#24453;&#21024;&#38500;&#30340;&#22806;&#38190;&#32422;&#26463;&#21517;&#20316;&#20026;&#21442;&#25968;&#20256;&#20837;&#12290;&#22806;&#38190;&#32422;&#26463;&#30340;&#21629;&#21517;&#35268;&#21017;&#19982;&#32034;&#24341;&#30456;&#21516;&#12290;&#25442;&#21477;&#35805;&#35828;&#65292;&#22806;&#38190;&#32422;&#26463;&#21517;&#22522;&#20110;&#34920;&#21517;&#20197;&#21450;&#21442;&#19982;&#32422;&#26463;&#30340;&#21015;&#21517;&#65292;&#24182;&#38468;&#21152;&#19968;&#20010;&#12300;_foreign&#12301;&#21518;&#32512;&#65306;</p><pre><code class="language-php">$table-&gt;dropForeign('posts_user_id_foreign');</code></pre><p>&#20063;&#21487;&#20197;&#21521; <code>dropForeign</code> &#26041;&#27861;&#20256;&#20837;&#19968;&#20010;&#21253;&#21547;&#22806;&#38190;&#21015;&#21517;&#30340;&#25968;&#32452;&#12290;&#35813;&#25968;&#32452;&#20250;&#25353; Laravel &#30340;&#32422;&#26463;&#21629;&#21517;&#32422;&#23450;&#36716;&#25442;&#20026;&#22806;&#38190;&#32422;&#26463;&#21517;&#65306;</p><pre><code class="language-php">$table-&gt;dropForeign(['user_id']);</code></pre><h4 id="41dc0dc8ef6def6a1923b0c919036981">&#20999;&#25442;&#22806;&#38190;&#32422;&#26463;</h4><p>&#21487;&#20197;&#22312;&#36801;&#31227;&#20013;&#36890;&#36807;&#20197;&#19979;&#26041;&#27861;&#21551;&#29992;&#25110;&#31105;&#29992;&#22806;&#38190;&#32422;&#26463;&#65306;</p><pre><code class="language-php">Schema::enableForeignKeyConstraints();
+
+Schema::disableForeignKeyConstraints();
+
+Schema::withoutForeignKeyConstraints(function () {
+    // &#35813;&#38381;&#21253;&#20869;&#65292;&#22806;&#38190;&#32422;&#26463;&#34987;&#31105;&#29992;...
+});</code></pre><blockquote>
+<p>[!WARNING]<br>
+SQLite &#40664;&#35748;&#31105;&#29992;&#22806;&#38190;&#32422;&#26463;&#12290;&#22312;&#20351;&#29992; SQLite &#26102;&#65292;&#35831;&#30830;&#20445;&#24050;&#22312;&#25968;&#25454;&#24211;&#37197;&#32622;&#20013; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/database#configuration" target="_blank">&#21551;&#29992;&#22806;&#38190;&#25903;&#25345;</a>&#65292;&#28982;&#21518;&#20877;&#23581;&#35797;&#22312;&#36801;&#31227;&#20013;&#21019;&#24314;&#22806;&#38190;&#12290;</p>
+</blockquote><h2 id="10b2761db5a8e089049df39675abc550">&#20107;&#20214;</h2><p>&#20026;&#20102;&#20415;&#21033;&#65292;&#27599;&#27425;&#36801;&#31227;&#25805;&#20316;&#37117;&#20250;&#27966;&#21457;&#19968;&#20010; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#20107;&#20214;</a>&#12290;&#19979;&#38754;&#25152;&#26377;&#30340;&#20107;&#20214;&#37117;&#32487;&#25215;&#33258;&#22522;&#31867; <code>Illuminate\Database\Events\MigrationEvent</code>&#65306;</p><table>
+<thead>
+<tr>
+<th>&#31867;</th>
+<th>&#25551;&#36848;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Illuminate\Database\Events\DatabaseRefreshed</code></td>
+<td><code>migrate:refresh</code> &#21629;&#20196;&#24050;&#23436;&#25104;&#12290;</td>
+</tr>
+<tr>
+<td><code>Illuminate\Database\Events\MigrationsStarted</code></td>
+<td>&#19968;&#25209;&#36801;&#31227;&#21363;&#23558;&#25191;&#34892;&#12290;</td>
+</tr>
+<tr>
+<td><code>Illuminate\Database\Events\MigrationsEnded</code></td>
+<td>&#19968;&#25209;&#36801;&#31227;&#24050;&#25191;&#34892;&#23436;&#25104;&#12290;</td>
+</tr>
+<tr>
+<td><code>Illuminate\Database\Events\MigrationStarted</code></td>
+<td>&#21333;&#26465;&#36801;&#31227;&#21363;&#23558;&#25191;&#34892;&#12290;</td>
+</tr>
+<tr>
+<td><code>Illuminate\Database\Events\MigrationEnded</code></td>
+<td>&#21333;&#26465;&#36801;&#31227;&#24050;&#25191;&#34892;&#23436;&#25104;&#12290;</td>
+</tr>
+<tr>
+<td><code>Illuminate\Database\Events\NoPendingMigrations</code></td>
+<td>&#36801;&#31227;&#21629;&#20196;&#26410;&#21457;&#29616;&#24453;&#25191;&#34892;&#30340;&#36801;&#31227;&#12290;</td>
+</tr>
+<tr>
+<td><code>Illuminate\Database\Events\SchemaDumped</code></td>
+<td>&#25968;&#25454;&#24211;&#32467;&#26500;&#36716;&#20648;&#24050;&#23436;&#25104;&#12290;</td>
+</tr>
+<tr>
+<td><code>Illuminate\Database\Events\SchemaLoaded</code></td>
+<td>&#24050;&#21152;&#36733;&#19968;&#20221;&#29616;&#26377;&#30340;&#25968;&#25454;&#24211;&#32467;&#26500;&#36716;&#20648;&#12290;</td>
+</tr>
+</tbody>
+</table>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> facade: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/facades" target="_blank">/docs/Laravel 13.x/facades</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Artisan 命令: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/artisan" target="_blank">/docs/Laravel 13.x/artisan</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> stub publishing: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/artisan#stub-customization" target="_blank">/docs/Laravel 13.x/artisan#stub-customization</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> 查阅其文档: <i><a href="x3vo0g4vm1.html#creating-tables" target="_blank">#creating-tables</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> 配置文件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/configuration" target="_blank">/docs/Laravel 13.x/configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> 列方法: <i><a href="x3vo0g4vm1.html#creating-columns" target="_blank">#creating-columns</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> `boolean`: <i><a href="x3vo0g4vm1.html#column-method-boolean" target="_blank">#column-method-boolean</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> `char`: <i><a href="x3vo0g4vm1.html#column-method-char" target="_blank">#column-method-char</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> `longText`: <i><a href="x3vo0g4vm1.html#column-method-longText" target="_blank">#column-method-longText</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> `mediumText`: <i><a href="x3vo0g4vm1.html#column-method-mediumText" target="_blank">#column-method-mediumText</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> `string`: <i><a href="x3vo0g4vm1.html#column-method-string" target="_blank">#column-method-string</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> `text`: <i><a href="x3vo0g4vm1.html#column-method-text" target="_blank">#column-method-text</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> `tinyText`: <i><a href="x3vo0g4vm1.html#column-method-tinyText" target="_blank">#column-method-tinyText</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> `bigIncrements`: <i><a href="x3vo0g4vm1.html#column-method-bigIncrements" target="_blank">#column-method-bigIncrements</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> `bigInteger`: <i><a href="x3vo0g4vm1.html#column-method-bigInteger" target="_blank">#column-method-bigInteger</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> `decimal`: <i><a href="x3vo0g4vm1.html#column-method-decimal" target="_blank">#column-method-decimal</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> `double`: <i><a href="x3vo0g4vm1.html#column-method-double" target="_blank">#column-method-double</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> `float`: <i><a href="x3vo0g4vm1.html#column-method-float" target="_blank">#column-method-float</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> `id`: <i><a href="x3vo0g4vm1.html#column-method-id" target="_blank">#column-method-id</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> `increments`: <i><a href="x3vo0g4vm1.html#column-method-increments" target="_blank">#column-method-increments</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> `integer`: <i><a href="x3vo0g4vm1.html#column-method-integer" target="_blank">#column-method-integer</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> `mediumIncrements`: <i><a href="x3vo0g4vm1.html#column-method-mediumIncrements" target="_blank">#column-method-mediumIncrements</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> `mediumInteger`: <i><a href="x3vo0g4vm1.html#column-method-mediumInteger" target="_blank">#column-method-mediumInteger</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> `smallIncrements`: <i><a href="x3vo0g4vm1.html#column-method-smallIncrements" target="_blank">#column-method-smallIncrements</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> `smallInteger`: <i><a href="x3vo0g4vm1.html#column-method-smallInteger" target="_blank">#column-method-smallInteger</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> `tinyIncrements`: <i><a href="x3vo0g4vm1.html#column-method-tinyIncrements" target="_blank">#column-method-tinyIncrements</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> `tinyInteger`: <i><a href="x3vo0g4vm1.html#column-method-tinyInteger" target="_blank">#column-method-tinyInteger</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> `unsignedBigInteger`: <i><a href="x3vo0g4vm1.html#column-method-unsignedBigInteger" target="_blank">#column-method-unsignedBigInteger</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> `unsignedInteger`: <i><a href="x3vo0g4vm1.html#column-method-unsignedInteger" target="_blank">#column-method-unsignedInteger</a></i><br><code style="font-size: 90%; opacity: 0.6;">[30]</code> `unsignedMediumInteger`: <i><a href="x3vo0g4vm1.html#column-method-unsignedMediumInteger" target="_blank">#column-method-unsignedMediumInteger</a></i><br><code style="font-size: 90%; opacity: 0.6;">[31]</code> `unsignedSmallInteger`: <i><a href="x3vo0g4vm1.html#column-method-unsignedSmallInteger" target="_blank">#column-method-unsignedSmallInteger</a></i><br><code style="font-size: 90%; opacity: 0.6;">[32]</code> `unsignedTinyInteger`: <i><a href="x3vo0g4vm1.html#column-method-unsignedTinyInteger" target="_blank">#column-method-unsignedTinyInteger</a></i><br><code style="font-size: 90%; opacity: 0.6;">[33]</code> `dateTime`: <i><a href="x3vo0g4vm1.html#column-method-dateTime" target="_blank">#column-method-dateTime</a></i><br><code style="font-size: 90%; opacity: 0.6;">[34]</code> `dateTimeTz`: <i><a href="x3vo0g4vm1.html#column-method-dateTimeTz" target="_blank">#column-method-dateTimeTz</a></i><br><code style="font-size: 90%; opacity: 0.6;">[35]</code> `date`: <i><a href="x3vo0g4vm1.html#column-method-date" target="_blank">#column-method-date</a></i><br><code style="font-size: 90%; opacity: 0.6;">[36]</code> `time`: <i><a href="x3vo0g4vm1.html#column-method-time" target="_blank">#column-method-time</a></i><br><code style="font-size: 90%; opacity: 0.6;">[37]</code> `timeTz`: <i><a href="x3vo0g4vm1.html#column-method-timeTz" target="_blank">#column-method-timeTz</a></i><br><code style="font-size: 90%; opacity: 0.6;">[38]</code> `timestamp`: <i><a href="x3vo0g4vm1.html#column-method-timestamp" target="_blank">#column-method-timestamp</a></i><br><code style="font-size: 90%; opacity: 0.6;">[39]</code> `timestamps`: <i><a href="x3vo0g4vm1.html#column-method-timestamps" target="_blank">#column-method-timestamps</a></i><br><code style="font-size: 90%; opacity: 0.6;">[40]</code> `timestampsTz`: <i><a href="x3vo0g4vm1.html#column-method-timestampsTz" target="_blank">#column-method-timestampsTz</a></i><br><code style="font-size: 90%; opacity: 0.6;">[41]</code> `softDeletes`: <i><a href="x3vo0g4vm1.html#column-method-softDeletes" target="_blank">#column-method-softDeletes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[42]</code> `softDeletesTz`: <i><a href="x3vo0g4vm1.html#column-method-softDeletesTz" target="_blank">#column-method-softDeletesTz</a></i><br><code style="font-size: 90%; opacity: 0.6;">[43]</code> `year`: <i><a href="x3vo0g4vm1.html#column-method-year" target="_blank">#column-method-year</a></i><br><code style="font-size: 90%; opacity: 0.6;">[44]</code> `binary`: <i><a href="x3vo0g4vm1.html#column-method-binary" target="_blank">#column-method-binary</a></i><br><code style="font-size: 90%; opacity: 0.6;">[45]</code> `json`: <i><a href="x3vo0g4vm1.html#column-method-json" target="_blank">#column-method-json</a></i><br><code style="font-size: 90%; opacity: 0.6;">[46]</code> `jsonb`: <i><a href="x3vo0g4vm1.html#column-method-jsonb" target="_blank">#column-method-jsonb</a></i><br><code style="font-size: 90%; opacity: 0.6;">[47]</code> `ulid`: <i><a href="x3vo0g4vm1.html#column-method-ulid" target="_blank">#column-method-ulid</a></i><br><code style="font-size: 90%; opacity: 0.6;">[48]</code> `ulidMorphs`: <i><a href="x3vo0g4vm1.html#column-method-ulidMorphs" target="_blank">#column-method-ulidMorphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[49]</code> `uuid`: <i><a href="x3vo0g4vm1.html#column-method-uuid" target="_blank">#column-method-uuid</a></i><br><code style="font-size: 90%; opacity: 0.6;">[50]</code> `uuidMorphs`: <i><a href="x3vo0g4vm1.html#column-method-uuidMorphs" target="_blank">#column-method-uuidMorphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[51]</code> `nullableUlidMorphs`: <i><a href="x3vo0g4vm1.html#column-method-nullableUlidMorphs" target="_blank">#column-method-nullableUlidMorphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[52]</code> `nullableUuidMorphs`: <i><a href="x3vo0g4vm1.html#column-method-nullableUuidMorphs" target="_blank">#column-method-nullableUuidMorphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[53]</code> `geography`: <i><a href="x3vo0g4vm1.html#column-method-geography" target="_blank">#column-method-geography</a></i><br><code style="font-size: 90%; opacity: 0.6;">[54]</code> `geometry`: <i><a href="x3vo0g4vm1.html#column-method-geometry" target="_blank">#column-method-geometry</a></i><br><code style="font-size: 90%; opacity: 0.6;">[55]</code> `foreignId`: <i><a href="x3vo0g4vm1.html#column-method-foreignId" target="_blank">#column-method-foreignId</a></i><br><code style="font-size: 90%; opacity: 0.6;">[56]</code> `foreignIdFor`: <i><a href="x3vo0g4vm1.html#column-method-foreignIdFor" target="_blank">#column-method-foreignIdFor</a></i><br><code style="font-size: 90%; opacity: 0.6;">[57]</code> `foreignUlid`: <i><a href="x3vo0g4vm1.html#column-method-foreignUlid" target="_blank">#column-method-foreignUlid</a></i><br><code style="font-size: 90%; opacity: 0.6;">[58]</code> `foreignUuid`: <i><a href="x3vo0g4vm1.html#column-method-foreignUuid" target="_blank">#column-method-foreignUuid</a></i><br><code style="font-size: 90%; opacity: 0.6;">[59]</code> `foreignUuidFor`: <i><a href="x3vo0g4vm1.html#column-method-foreignUuidFor" target="_blank">#column-method-foreignUuidFor</a></i><br><code style="font-size: 90%; opacity: 0.6;">[60]</code> `morphs`: <i><a href="x3vo0g4vm1.html#column-method-morphs" target="_blank">#column-method-morphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[61]</code> `nullableMorphs`: <i><a href="x3vo0g4vm1.html#column-method-nullableMorphs" target="_blank">#column-method-nullableMorphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[62]</code> `enum`: <i><a href="x3vo0g4vm1.html#column-method-enum" target="_blank">#column-method-enum</a></i><br><code style="font-size: 90%; opacity: 0.6;">[63]</code> `set`: <i><a href="x3vo0g4vm1.html#column-method-set" target="_blank">#column-method-set</a></i><br><code style="font-size: 90%; opacity: 0.6;">[64]</code> `macAddress`: <i><a href="x3vo0g4vm1.html#column-method-macAddress" target="_blank">#column-method-macAddress</a></i><br><code style="font-size: 90%; opacity: 0.6;">[65]</code> `ipAddress`: <i><a href="x3vo0g4vm1.html#column-method-ipAddress" target="_blank">#column-method-ipAddress</a></i><br><code style="font-size: 90%; opacity: 0.6;">[66]</code> `rememberToken`: <i><a href="x3vo0g4vm1.html#column-method-rememberToken" target="_blank">#column-method-rememberToken</a></i><br><code style="font-size: 90%; opacity: 0.6;">[67]</code> `vector`: <i><a href="x3vo0g4vm1.html#column-method-vector" target="_blank">#column-method-vector</a></i><br><code style="font-size: 90%; opacity: 0.6;">[68]</code> PostGIS: <i><a href="https://postgis.net" target="_blank">https://postgis.net</a></i><br><code style="font-size: 90%; opacity: 0.6;">[69]</code> PostGIS: <i><a href="https://postgis.net" target="_blank">https://postgis.net</a></i><br><code style="font-size: 90%; opacity: 0.6;">[70]</code> 多态 Eloquent 关联: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent-relationships" target="_blank">/docs/Laravel 13.x/eloquent-relationships</a></i><br><code style="font-size: 90%; opacity: 0.6;">[71]</code> morphs: <i><a href="x3vo0g4vm1.html#column-method-morphs" target="_blank">#column-method-morphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[72]</code> ulidMorphs: <i><a href="x3vo0g4vm1.html#column-method-ulidMorphs" target="_blank">#column-method-ulidMorphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[73]</code> uuidMorphs: <i><a href="x3vo0g4vm1.html#column-method-uuidMorphs" target="_blank">#column-method-uuidMorphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[74]</code> 认证令牌: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/authentication#remembering-users" target="_blank">/docs/Laravel 13.x/authentication#remembering-users</a></i><br><code style="font-size: 90%; opacity: 0.6;">[75]</code> 多态 Eloquent 关联: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent-relationships" target="_blank">/docs/Laravel 13.x/eloquent-relationships</a></i><br><code style="font-size: 90%; opacity: 0.6;">[76]</code> 多态 Eloquent 关联: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent-relationships#polymorphic-relationships" target="_blank">/docs/Laravel 13.x/eloquent-relationships#polymorphic-relationships</a></i><br><code style="font-size: 90%; opacity: 0.6;">[77]</code> 索引修饰符: <i><a href="x3vo0g4vm1.html#creating-indexes" target="_blank">#creating-indexes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[78]</code> MySQL 文档: <i><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html" target="_blank">https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[79]</code> 列修饰符: <i><a href="x3vo0g4vm1.html#column-modifiers" target="_blank">#column-modifiers</a></i><br><code style="font-size: 90%; opacity: 0.6;">[80]</code> 启用外键支持: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/database#configuration" target="_blank">/docs/Laravel 13.x/database#configuration</a></i><br><code style="font-size: 90%; opacity: 0.6;">[81]</code> 事件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="3xyq454vmq.html#blog1057" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">数据库：分页</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="qk942novw1.html#blog1059" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">数据库：数据填充</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>

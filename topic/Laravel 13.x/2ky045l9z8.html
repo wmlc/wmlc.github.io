@@ -1,0 +1,2247 @@
+<!doctype html>
+<html>
+<head>
+    <!-- META Tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>通知 | 风中的木偶</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SEO -->
+    <meta name="author" content="风中的木偶">
+    <meta name="description" content="">
+    <meta name="keywords" content="木偶笔记,个人技术博客,IT技术笔记,博客,个人网站,风中的木偶,木偶">
+    <meta name="twitter:card" value="summary">
+                                            <meta property="og:title" content="风中的木偶个人博客"/>
+                                                <meta property="og:type" content="article"/>
+                                                <meta property="og:url" content="https://wangmaolin.net"/>
+                                                                
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/app.css">
+
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome.css">
+            <link rel="stylesheet" href="../../vendor/binarytorch/larecipe/assets/css/font-awesome-v4-shims.css">
+    
+    <!-- Dynamic Colors -->
+    <style>
+    :root {
+        --primary: #787AF6;
+        --secondary: #2b9cf2;
+    }
+
+    :not(pre)>code[class*=language-], pre[class*=language-] {
+        border-top: 3px solid #787AF6;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(87deg, #787AF6 0, #2b9cf2 100%) !important;
+    }
+
+    [v-cloak] > * { 
+        display: none; 
+    }
+    
+    [v-cloak]::before { 
+        content: " ";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F2F6FA;
+    }
+
+    #passwordModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #passwordModal input {
+        padding: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+</style>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="B1NUKp4VSY111jdi6tzE5VDJDjfquqd0z8olchXN">
+
+    
+</head>
+<body>
+
+<!-- 密码输入层 -->
+<style>
+    #passwordModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .password-container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .password-container h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .password-container .subtitle {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .password-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    #pwdInput {
+        width: 100%;
+        padding: 14px 45px 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    #pwdInput:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #pwdInput::placeholder {
+        color: #aaa;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        color: #999;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .toggle-password:hover {
+        color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    #errorMsg {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+        font-weight: 500;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+        .password-container {
+            padding: 30px 20px;
+        }
+
+        .password-container h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div id="passwordModal">
+    <div class="password-container">
+        <div class="lock-icon">🔒</div>
+        <h3>需要访问密码</h3>
+        <p class="subtitle">请输入密码以继续访问</p>
+
+        <div class="password-input-wrapper">
+            <input
+                type="password"
+                id="pwdInput"
+                placeholder="请输入密码"
+                autocomplete="off"
+            />
+            <button class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码">
+                👁️
+            </button>
+        </div>
+
+        <button class="submit-btn" onclick="checkPassword()">确认进入</button>
+        <p id="errorMsg"></p>
+    </div>
+</div>
+
+<div id="app" v-cloak style="display: block;">
+    <div class="fixed pin-t pin-x z-40">
+    <div class="bg-gradient-primary text-white h-1"></div>
+
+    <nav class="flex items-center justify-between text-black bg-navbar shadow-xs h-16">
+        <div class="flex items-center flex-no-shrink">
+            <a href="../../index.html" class="flex items-center flex-no-shrink text-black mx-4">
+                
+                <p class="inline-block font-semibold mx-1 text-grey-dark">
+                    风中的木偶
+                </p>
+            </a>
+
+            <div class="switch">
+                <input type="checkbox" name="1" id="1" v-model="sidebar" class="switch-checkbox"/>
+                <label class="switch-label" for="1"></label>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center justify-end pr-4">
+            <div class="relative">
+                <form action="https://wangmaolin.net/search" onsubmit="return validateForm()" class="form-search">
+                    <input id="search-input" name="q" type="text" placeholder="Search" class="bg-gray-100 appearance-none border-2 border-gray-200 rounded py-2 px-4
+         text-gray-800 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </form>
+            </div>
+        </div>
+
+        <div class="block mx-4 flex items-center">
+                        
+            
+            
+            
+            
+
+            
+            <larecipe-dropdown>
+                <larecipe-button type="primary" class="flex">
+                    Laravel 13.x <i class="mx-1 fa fa-angle-down"></i>
+                </larecipe-button>
+
+                <template slot="list">
+                    <ul class="list-reset" style="height: 800px;width: 200px">
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../AI/overview.html">AI</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../APP/overview.html">APP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../CSS/overview.html">CSS</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Docker/overview.html">Docker</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../ELK/overview.html">ELK</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Git/overview.html">Git</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Go语言/overview.html">Go语言</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Laravel/overview.html">Laravel</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="overview.html">Laravel 13.x</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux/overview.html">Linux</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Linux&#32;服务器配置/overview.html">Linux 服务器配置</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mac/overview.html">Mac</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MongoDB/overview.html">MongoDB</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Mqtt/overview.html">Mqtt</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../MySQL/overview.html">MySQL</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Nginx/overview.html">Nginx</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../PHP/overview.html">PHP</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Protobuf/overview.html">Protobuf</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Python/overview.html">Python</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../SEO/overview.html">SEO</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Vue&#32;教程/overview.html">Vue 教程</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../Windows/overview.html">Windows</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../一无所有到财富自由/overview.html">一无所有到财富自由</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../云服务/overview.html">云服务</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../产品/overview.html">产品</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../倪海厦/overview.html">倪海厦</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../元宇宙/overview.html">元宇宙</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../前端/overview.html">前端</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../合伙的本质/overview.html">合伙的本质</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../商业/overview.html">商业</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../大数据/overview.html">大数据</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../天机38局/overview.html">天机38局</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开店/overview.html">开店</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../开源项目/overview.html">开源项目</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../微信/overview.html">微信</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../控糖革命/overview.html">控糖革命</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../搜索/overview.html">搜索</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../支付/overview.html">支付</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../智慧人生/overview.html">智慧人生</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../架构/overview.html">架构</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../游戏开发/overview.html">游戏开发</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../算法/overview.html">算法</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../缓存/overview.html">缓存</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../网络/overview.html">网络</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../胡说老王&#32;-&#32;逐利/overview.html">胡说老王 - 逐利</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../自媒体/overview.html">自媒体</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../菜谱/overview.html">菜谱</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../设计模式/overview.html">设计模式</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../资源/overview.html">资源</a>
+                            </li>
+                                                    <li class="py-2 hover:bg-grey-lightest">
+                                <a class="px-6 text-grey-darkest"
+                                   href="../软件工具/overview.html">软件工具</a>
+                            </li>
+                                            </ul>
+                </template>
+            </larecipe-dropdown>
+            
+
+                    </div>
+    </nav>
+</div>
+
+    
+    <div>
+	<div class="sidebar" :class="[{'is-hidden': ! sidebar}]">
+    <ul>
+<li>
+<h2>前言</h2>
+<ul>
+<li id="blog999"><a href="3dykqpzyl0.html#blog999">版本说明</a>
+<li id="blog1000"><a href="e296o3w9q7.html#blog1000">升级指南</a>
+<li id="blog1001"><a href="xq9zrjjvdo.html#blog1001">贡献指南</a>
+</ul>
+</li>
+<li>
+<h2>入门</h2>
+<ul>
+<li id="blog1002"><a href="2wy3lj3ykm.html#blog1002">安装</a>
+<li id="blog1003"><a href="3dykqpoyl0.html#blog1003">配置</a>
+<li id="blog1004"><a href="enyd5l197d.html#blog1004">AI 辅助开发</a>
+<li id="blog1005"><a href="5dve213v4x.html#blog1005">目录结构</a>
+<li id="blog1006"><a href="4rvgnw3ydj.html#blog1006">前端</a>
+<li id="blog1007"><a href="kl9nop7vz4.html#blog1007">入门套件</a>
+<li id="blog1008"><a href="xpv52dgv86.html#blog1008">部署</a>
+</ul>
+</li>
+<li>
+<h2>架构概念</h2>
+<ul>
+<li id="blog1009"><a href="3xyq4o4vmq.html#blog1009">请求生命周期</a>
+<li id="blog1010"><a href="x3vo054vm1.html#blog1010">服务容器</a>
+<li id="blog1011"><a href="qk942kovw1.html#blog1011">服务提供者</a>
+<li id="blog1012"><a href="569x508yep.html#blog1012">Facades</a>
+</ul>
+</li>
+<li>
+<h2>基础</h2>
+<ul>
+<li id="blog1013"><a href="dgy7xg5vw2.html#blog1013">路由</a>
+<li id="blog1014"><a href="rwyl2exvz8.html#blog1014">中间件</a>
+<li id="blog1015"><a href="kpv136298w.html#blog1015">CSRF 保护</a>
+<li id="blog1016"><a href="d6vro4rv3g.html#blog1016">控制器</a>
+<li id="blog1017"><a href="2ky040l9z8.html#blog1017">HTTP 请求</a>
+<li id="blog1018"><a href="2qvpxqz93m.html#blog1018">HTTP 响应</a>
+<li id="blog1019"><a href="m892gz6y01.html#blog1019">视图</a>
+<li id="blog1020"><a href="wevwmrz9l2.html#blog1020">Blade 模板</a>
+<li id="blog1021"><a href="ndvm3gj93j.html#blog1021">资源打包（Vite）</a>
+<li id="blog1022"><a href="3oyjdkxyp5.html#blog1022">URL 生成</a>
+<li id="blog1023"><a href="2ev86noyor.html#blog1023">HTTP Session</a>
+<li id="blog1024"><a href="e296oew9q7.html#blog1024">验证</a>
+<li id="blog1025"><a href="xq9zrzjvdo.html#blog1025">错误处理</a>
+<li id="blog1026"><a href="2wy3l33ykm.html#blog1026">日志</a>
+</ul>
+</li>
+<li>
+<h2>深入探索</h2>
+<ul>
+<li id="blog1027"><a href="3dykqdoyl0.html#blog1027">Artisan 控制台</a>
+<li id="blog1028"><a href="enyd5w197d.html#blog1028">广播</a>
+<li id="blog1029"><a href="5dve2w3v4x.html#blog1029">缓存</a>
+<li id="blog1030"><a href="4rvgn63ydj.html#blog1030">集合</a>
+<li id="blog1031"><a href="kl9non7vz4.html#blog1031">并发</a>
+<li id="blog1032"><a href="xpv527gv86.html#blog1032">上下文</a>
+<li id="blog1033"><a href="3xyq4r4vmq.html#blog1033">契约（Contracts）</a>
+<li id="blog1034"><a href="x3vo0l4vm1.html#blog1034">事件</a>
+<li id="blog1035"><a href="qk9428ovw1.html#blog1035">文件存储</a>
+<li id="blog1036"><a href="569x5d8yep.html#blog1036">辅助函数</a>
+<li id="blog1037"><a href="dgy7x15vw2.html#blog1037">HTTP 客户端</a>
+<li id="blog1038"><a href="rwyl24xvz8.html#blog1038">图像处理</a>
+<li id="blog1039"><a href="kpv13q298w.html#blog1039">本地化</a>
+<li id="blog1040"><a href="d6vro0rv3g.html#blog1040">邮件</a>
+<li id="blog1041"><a href="2ky045l9z8.html#blog1041">通知</a>
+<li id="blog1042"><a href="2qvpx1z93m.html#blog1042">扩展包开发</a>
+<li id="blog1043"><a href="m892go6y01.html#blog1043">进程</a>
+<li id="blog1044"><a href="wevwmkz9l2.html#blog1044">队列</a>
+<li id="blog1045"><a href="ndvm3xj93j.html#blog1045">速率限制</a>
+<li id="blog1046"><a href="3oyjdqxyp5.html#blog1046">搜索</a>
+<li id="blog1047"><a href="2ev86royor.html#blog1047">字符串</a>
+<li id="blog1048"><a href="e296olw9q7.html#blog1048">任务调度</a>
+</ul>
+</li>
+<li>
+<h2>安全</h2>
+<ul>
+<li id="blog1049"><a href="xq9zrgjvdo.html#blog1049">用户认证</a>
+<li id="blog1050"><a href="2wy3l43ykm.html#blog1050">授权</a>
+<li id="blog1051"><a href="3dykqooyl0.html#blog1051">邮箱验证</a>
+<li id="blog1052"><a href="enyd5k197d.html#blog1052">加密</a>
+<li id="blog1053"><a href="5dve2d3v4x.html#blog1053">哈希</a>
+<li id="blog1054"><a href="4rvgng3ydj.html#blog1054">重置密码</a>
+</ul>
+</li>
+<li>
+<h2>数据库</h2>
+<ul>
+<li id="blog1055"><a href="kl9no87vz4.html#blog1055">数据库：入门</a>
+<li id="blog1056"><a href="xpv525gv86.html#blog1056">数据库：查询构造器</a>
+<li id="blog1057"><a href="3xyq454vmq.html#blog1057">数据库：分页</a>
+<li id="blog1058"><a href="x3vo0g4vm1.html#blog1058">数据库：迁移</a>
+<li id="blog1059"><a href="qk942novw1.html#blog1059">数据库：数据填充</a>
+<li id="blog1060"><a href="569x518yep.html#blog1060">Redis</a>
+<li id="blog1061"><a href="dgy7xo5vw2.html#blog1061">MongoDB</a>
+</ul>
+</li>
+<li>
+<h2>Eloquent ORM</h2>
+<ul>
+<li id="blog1062"><a href="rwyl2kxvz8.html#blog1062">Eloquent：入门</a>
+<li id="blog1063"><a href="kpv13d298w.html#blog1063">Eloquent：关联关系</a>
+<li id="blog1064"><a href="d6vroqrv3g.html#blog1064">Eloquent：集合</a>
+<li id="blog1065"><a href="2ky04kl9z8.html#blog1065">Eloquent：修改器与类型转换</a>
+<li id="blog1066"><a href="2qvpxnz93m.html#blog1066">Eloquent：API 资源</a>
+<li id="blog1067"><a href="m892ge6y01.html#blog1067">Eloquent：序列化</a>
+<li id="blog1068"><a href="wevwmlz9l2.html#blog1068">Eloquent：工厂</a>
+</ul>
+</li>
+<li>
+<h2>AI</h2>
+<ul>
+<li id="blog1069"><a href="ndvm3dj93j.html#blog1069">Laravel AI SDK</a>
+<li id="blog1070"><a href="3oyjdzxyp5.html#blog1070">Laravel MCP</a>
+<li id="blog1071"><a href="2ev864oyor.html#blog1071">Laravel Boost</a>
+</ul>
+</li>
+<li>
+<h2>测试</h2>
+<ul>
+<li id="blog1072"><a href="e296oqw9q7.html#blog1072">测试：入门</a>
+<li id="blog1073"><a href="xq9zr0jvdo.html#blog1073">HTTP 测试</a>
+<li id="blog1074"><a href="2wy3lg3ykm.html#blog1074">控制台测试</a>
+<li id="blog1075"><a href="3dykq3oyl0.html#blog1075">浏览器测试</a>
+<li id="blog1076"><a href="enyd51197d.html#blog1076">数据库测试</a>
+<li id="blog1077"><a href="5dve2r3v4x.html#blog1077">模拟（Mocking）</a>
+</ul>
+</li>
+<li>
+<h2>扩展包</h2>
+<ul>
+<li id="blog1078"><a href="4rvgnp3ydj.html#blog1078">Cashier (Stripe)</a>
+<li id="blog1079"><a href="kl9noe7vz4.html#blog1079">Laravel Cashier (Paddle)</a>
+<li id="blog1080"><a href="xpv520gv86.html#blog1080">Laravel Dusk</a>
+<li id="blog1081"><a href="3xyq4l4vmq.html#blog1081">Laravel Envoy</a>
+<li id="blog1082"><a href="x3vo0x4vm1.html#blog1082">Laravel Fortify</a>
+<li id="blog1083"><a href="qk942rovw1.html#blog1083">Laravel Folio</a>
+<li id="blog1084"><a href="569x568yep.html#blog1084">Laravel Head</a>
+<li id="blog1085"><a href="dgy7x25vw2.html#blog1085">Laravel Homestead</a>
+<li id="blog1086"><a href="rwyl28xvz8.html#blog1086">Laravel Horizon</a>
+<li id="blog1087"><a href="kpv137298w.html#blog1087">Laravel Mix</a>
+<li id="blog1088"><a href="d6vro1rv3g.html#blog1088">Laravel Octane</a>
+<li id="blog1089"><a href="2ky04xl9z8.html#blog1089">Laravel Passport</a>
+<li id="blog1090"><a href="2qvpx7z93m.html#blog1090">Laravel Pennant</a>
+<li id="blog1091"><a href="m892gl6y01.html#blog1091">Laravel Pint</a>
+<li id="blog1092"><a href="wevwmwz9l2.html#blog1092">Precognition</a>
+<li id="blog1093"><a href="ndvm3oj93j.html#blog1093">Prompts（交互式提示）</a>
+<li id="blog1094"><a href="3oyjdnxyp5.html#blog1094">Laravel Pulse</a>
+<li id="blog1095"><a href="2ev868oyor.html#blog1095">Laravel Reverb</a>
+<li id="blog1096"><a href="e296opw9q7.html#blog1096">Laravel Sail</a>
+<li id="blog1097"><a href="xq9zr3jvdo.html#blog1097">Laravel Sanctum</a>
+<li id="blog1098"><a href="2wy3l13ykm.html#blog1098">Laravel Scout</a>
+<li id="blog1099"><a href="3dykq5oyl0.html#blog1099">Laravel Socialite</a>
+<li id="blog1100"><a href="e296opq9q7.html#blog1100">Laravel Telescope</a>
+</ul>
+</li>
+</ul>
+</div>
+
+<style>
+    #cnzz_stat_icon_1280630928
+    {
+        display: none;
+    }
+</style>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/jquery.min.js"></script>
+<script src="../../modules/blog/js/detail.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.get('https://wangmaolin.net/api/blog/addView/article/2ky045l9z8.html', function (data, status) {
+            addView('2ky045l9z8.html')
+        });
+    });
+
+    (function autoToggleSidebar() {
+        const BREAKPOINT = 1620;
+
+        // 核心逻辑：根据屏幕宽度强制设置 localStorage 和初始状态
+        function enforceSidebarState() {
+            const isWideScreen = window.innerWidth > BREAKPOINT;
+
+            // 1. 修正 localStorage，防止 Vue 读取到旧的错误状态
+            if (typeof Storage !== "undefined") {
+                localStorage.setItem("larecipeSidebar", isWideScreen);
+            }
+
+            // 2. 尝试直接修改已存在的 Vue 实例（如果已经加载）
+            const app = document.getElementById('app');
+            if (app && app.__vue__) {
+                app.__vue__.sidebar = isWideScreen;
+            } else {
+                // 3. 如果 Vue 还没好，确保 checkbox 的状态是对的，等待 Vue 来同步它
+                const checkbox = document.getElementById('1');
+                if (checkbox && checkbox.checked !== isWideScreen) {
+                    // 注意：这里不触发 click，只改属性，避免多次触发事件
+                    checkbox.checked = isWideScreen;
+                }
+            }
+        }
+
+        // 立即执行一次
+        enforceSidebarState();
+
+        // 监听窗口变化
+        window.addEventListener('resize', () => {
+            // 加个简单的防抖，避免频繁触发
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(enforceSidebarState, 100);
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    // ===== 侧边目录：非当前文章的父分组默认折叠，点击父分组标题展开 / 收起 =====
+    $(function () {
+        // 注意：位于 #app 容器内的 <style> 会被 Vue 模板编译移除，折叠样式必须注入 <head> 才能生效
+        if (!document.getElementById('sidebar-tree-style')) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'sidebar-tree-style';
+            styleEl.textContent =
+                '.sidebar > ul > li{border-bottom:1px solid #e5e7eb}' +
+                '.sidebar > ul > li > h2{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}' +
+                '.sidebar > ul > li > h2::after{content:"";flex:none;width:0;height:0;border-style:solid;border-width:6px 5px 0;border-color:#3d4852 transparent transparent}' +
+                '.sidebar > ul > li > ul{overflow:hidden;transition:max-height .35s cubic-bezier(.33,1,.68,1),opacity .3s ease}' +
+                '.sidebar > ul > li.is-collapsed > ul{max-height:0;opacity:0}' +
+                '.sidebar > ul > li.is-collapsed > h2::after{border-width:5px 6px 5px 0;border-color:transparent #3d4852 transparent}' +
+                '.sidebar.tree-init *{transition:none!important}';
+            (document.head || document.documentElement).appendChild(styleEl);
+        }
+
+        var $sidebar = $('.sidebar');
+        if (!$sidebar.length) {
+            return;
+        }
+
+        // 初始化阶段禁用过渡：避免页面加载时其它目录先“展开再收起”造成闪动
+        $sidebar.addClass('tree-init');
+
+        // 父分组项：直接包含 <h2> 标题与子文章列表的 li
+        var $groups = $sidebar.find('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        });
+        if (!$groups.length) {
+            return;
+        }
+
+        // 当前文章：与当前页面路径一致的侧栏链接（去除 # 锚点后比较）
+        var currentPath = window.location.pathname;
+        var $currentGroup = $sidebar.find('a').filter(function () {
+            var href = $(this).attr('href') || '';
+            return href.split('#')[0] === currentPath;
+        }).first().parents('li').filter(function () {
+            return $(this).children('h2').length && $(this).children('ul').length;
+        }).first();
+
+        // 命中当前文章时：其所在父分组保持展开，其余自动折叠；
+        // 未命中（非文章页面）时保持原有全部展开，避免误折叠
+        if ($currentGroup.length) {
+            $groups.not($currentGroup).addClass('is-collapsed');
+        }
+
+        // 点击父分组标题：切换折叠 / 展开（max-height 精确到内容高度，实现匀称丝滑的上下动画）
+        $groups.on('click', '> h2', function () {
+            var li = this.parentElement;
+            var ul = li.querySelector(':scope > ul');
+            if (!ul) {
+                return;
+            }
+            if ($(li).hasClass('is-collapsed')) {
+                // 展开：从 0 过渡到内容真实高度，结束后清除内联高度以便自适应内容变化
+                ul.style.maxHeight = '0';
+                li.classList.remove('is-collapsed');
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                var done = function (e) {
+                    if (e && e.propertyName && e.propertyName !== 'max-height') {
+                        return;
+                    }
+                    ul.style.maxHeight = '';
+                    ul.removeEventListener('transitionend', done);
+                };
+                ul.addEventListener('transitionend', done);
+            } else {
+                // 收起：固定当前实际高度，再过渡到 0（避免瞬间闪烁）
+                ul.style.maxHeight = ul.scrollHeight + 'px';
+                li.classList.add('is-collapsed');
+                void ul.offsetHeight; // 强制重排，确保起跳高度生效
+                ul.style.maxHeight = '0';
+            }
+        });
+
+        // 初始化完成后恢复过渡动画（下一帧执行，确保初始折叠是无动画的）
+        window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () {
+                $sidebar.removeClass('tree-init');
+            });
+        });
+    });
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7c12b9716af39eb368cff4a19aa89393";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7125202304422722"
+     crossorigin="anonymous"></script>
+	
+	<div class="documentation is-dark" :class="{'expanded': ! sidebar}">
+		<h1>通知</h1><ul>
+<li><a href="2ky045l9z8.html#e05dce83e5129785b9f316978a14b896">简介</a></li>
+<li><a href="2ky045l9z8.html#cde295d40280f858a25bc441817bb749">生成通知</a></li>
+<li><a href="2ky045l9z8.html#fd6d4c582b51b511490d49b1f1b77e20">发送通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#37688fe334061b1dbcea19942692e67e">使用 Notifiable Trait</a></li>
+<li><a href="2ky045l9z8.html#dc8524b888134d82133f746633acd4dc">使用 Notification Facade</a></li>
+<li><a href="2ky045l9z8.html#aa8cc1888596a0998bf3930bed743e95">指定传送频道</a></li>
+<li><a href="2ky045l9z8.html#bbdcb57b5095393589b38f8e17615236">队列化通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#aa7c77fe6d215e69d8ba0fccb064c4d8">延迟通知</a></li>
+<li><a href="2ky045l9z8.html#3cb7adb741d9b42e2c15fb65d597bf80">自定义通知队列连接</a></li>
+<li><a href="2ky045l9z8.html#c6f49c6638eddff7957eb521e2ecf4cb">自定义通知频道队列</a></li>
+<li><a href="2ky045l9z8.html#475a92c1ab11a332f3e09c79b5fca56e">自定义队列化通知任务属性</a></li>
+<li><a href="2ky045l9z8.html#eb81767248336fd0de7b6570c2647511">队列化通知中间件</a></li>
+<li><a href="2ky045l9z8.html#a1fd324c32d4d3abcc5f8ad9478eedbb">队列化通知与数据库事务</a></li>
+<li><a href="2ky045l9z8.html#5b801ac5b0ffb00277f279ff97131d5d">确定是否应发送队列化通知</a></li>
+<li><a href="2ky045l9z8.html#7971285cc37e7be1e1ccd7213050e5fa">发送通知后</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#b4449d578fa4ab90e44c2958e29ba7d6">按需通知</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#0b4ad8b882867df33feeb42f3516e139">邮件通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#1113214f15b3ef0aaabc4348f273584e">格式化邮件消息</a>
+<ul>
+<li><a href="2ky045l9z8.html#98d346f28538c34a5651f2954995c524">错误消息</a></li>
+<li><a href="2ky045l9z8.html#6c9fb0714bb03639574bbb18f9e4f059">其他邮件通知格式化选项</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#0f5ee5752efc8ba78efbcfce89d3f340">自定义发送者</a></li>
+<li><a href="2ky045l9z8.html#743acb76caa443330fd4a5501f62aa14">自定义收件人</a></li>
+<li><a href="2ky045l9z8.html#76fe220f22f678d6256b0b27115cc22c">自定义主题</a></li>
+<li><a href="2ky045l9z8.html#6fc2fb3a00043d221189eebe021c82d8">自定义 Mailer</a></li>
+<li><a href="2ky045l9z8.html#f9a365f9ad157c908819c6b21f5ac7a9">自定义模板</a></li>
+<li><a href="2ky045l9z8.html#c9a6ee90f5d43732e3f6cf4dcaa8493c">附件</a>
+<ul>
+<li><a href="2ky045l9z8.html#18d4869a9cb8bb58614abc764975af0c">原始数据附件</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#1d55ffdb5cf715fa88d233684c17a343">添加标签和元数据</a></li>
+<li><a href="2ky045l9z8.html#50ac752bfc0ea191df2147c0af41193c">自定义 Symfony 消息</a></li>
+<li><a href="2ky045l9z8.html#d2a739c01590f7b7b462fe11dce80d83">使用 Mailables</a>
+<ul>
+<li><a href="2ky045l9z8.html#a8a835e7659283aac84de3eacd9d3fd2">Mailables 和按需通知</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#8cc14a4c22a4cd1e6f71e71dffdd385e">预览邮件通知</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#eb22111467aef7b090e609c20c62f768">Markdown 邮件通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#16060c2e2080b2a835a5aba4ba77d12e">生成消息</a></li>
+<li><a href="2ky045l9z8.html#0166d73a447fbe723bae49fe1825131a">编写消息</a>
+<ul>
+<li><a href="2ky045l9z8.html#27ffe95c5b2569b835a070cbaf0b4ddf">按钮组件</a></li>
+<li><a href="2ky045l9z8.html#d2869eb323a099bcdcf60d2fa5f78388">面板组件</a></li>
+<li><a href="2ky045l9z8.html#85654e5abb8a6897140f0db644cff733">表格组件</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#6fce1c9aa3654ae2f0eedcc068a7e189">自定义组件</a>
+<ul>
+<li><a href="2ky045l9z8.html#76c43b23829c7d0629e04bae0f6918de">自定义 CSS</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#c7aec6048e695b9c386ef464a0e03e70">数据库通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#b0ff454ac9620e7643a24ef9ec31ac4d">前提条件</a></li>
+<li><a href="2ky045l9z8.html#22ffe97fab359a92115531b3220f4a3d">格式化数据库通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#91204f39663ebca82f2c200473832a82">toDatabase 与 toArray</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#197aad4305b9755b5b236c87bb7f4476">访问通知</a></li>
+<li><a href="2ky045l9z8.html#d64c0201af63a714c7d16ef9e2f148ca">将通知标记为已读</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#beb12dc332cf0419d030dc0464e7a2f4">广播通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#b0ff454ac9620e7643a24ef9ec31ac4d">前提条件</a></li>
+<li><a href="2ky045l9z8.html#d50b8afff865eae3051f90873abe7404">格式化广播通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#52d4198b4511dab98b76431a18f407d1">广播队列配置</a></li>
+<li><a href="2ky045l9z8.html#a79af488509f249e2bcdf1be9dceb6e7">自定义通知类型</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#f0b70b7135a6cba4b74dd6a243b68904">监听通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#748985045e597f112c7f61935af455d5">使用 React、Vue 或 Svelte</a></li>
+<li><a href="2ky045l9z8.html#1f58b9c94c679b922c960b453ba7986a">自定义通知频道</a></li>
+</ul></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#0fe78ffd7cbb055024638c3c223f93ae">SMS 通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#b0ff454ac9620e7643a24ef9ec31ac4d">前提条件</a></li>
+<li><a href="2ky045l9z8.html#ca847b6e2c84816683b95162e7f2fb55">格式化 SMS 通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#93d4312cd628eea98ed6e9472523d278">Unicode 内容</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#f616fd061d0d7f70e993fc35fc606897">自定义「From」号码</a></li>
+<li><a href="2ky045l9z8.html#0c59ed7606d63a3eab9603fb9f205ce8">添加客户端引用</a></li>
+<li><a href="2ky045l9z8.html#f9d73b825e148cae0ff1922a46678b68">路由 SMS 通知</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#424bd0a0600563d4be77ecb0e240e6ac">Slack 通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#b0ff454ac9620e7643a24ef9ec31ac4d">前提条件</a>
+<ul>
+<li><a href="2ky045l9z8.html#ada12c9fa7ec7b8b356317e8509162fd">App 分发</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#58b16d7b3408f6d9215b22cedf8736e0">格式化 Slack 通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#55729741938d5a84dd3e57545ae5be97">使用 Slack 的 Block Kit Builder 模板</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#13b82f5be535d04878797e5434b464c7">Slack 交互</a>
+<ul>
+<li><a href="2ky045l9z8.html#edd1acd1179649ea6db2fc97a82b6818">确认弹窗</a></li>
+<li><a href="2ky045l9z8.html#1c8f34a904039fa9bd261e32d7fa80b3">检查 Slack 块</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#bd45da3702431b32c8239d60da9db713">路由 Slack 通知</a></li>
+<li><a href="2ky045l9z8.html#e0d9aa4dd6f48f5b485c63e780f12a30">通知外部 Slack Workspace</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#595f096061bc1a48236cdf43dfdba9b7">本地化通知</a>
+<ul>
+<li><a href="2ky045l9z8.html#324c50bcfcc51721345d0cef592abe95">用户首选语言环境</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#db06c78d1e24cf708a14ce81c9b617ec">测试</a>
+<ul>
+<li><a href="2ky045l9z8.html#b4449d578fa4ab90e44c2958e29ba7d6">按需通知</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#add6b1b1170662b28b1a4e37ab3d466c">通知事件</a>
+<ul>
+<li><a href="2ky045l9z8.html#b154551798d394462f7612b30ab4ead6">通知发送事件</a></li>
+<li><a href="2ky045l9z8.html#b0ff5d01d1558bfe542e4f8bc8b377b7">通知已发送事件</a></li>
+</ul></li>
+<li><a href="2ky045l9z8.html#a47046d476d57cd729c8762fd1b12246">自定义频道</a></li>
+</ul><?xml encoding="UTF-8"><h2 id="e05dce83e5129785b9f316978a14b896">&#31616;&#20171;</h2><p>&#38500;&#20102;&#25903;&#25345;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/mail" target="_blank">&#21457;&#36865;&#37038;&#20214;</a>&#20043;&#22806;&#65292;Laravel &#36824;&#25903;&#25345;&#36890;&#36807;&#22810;&#31181;&#20256;&#36865;&#39057;&#36947;&#21457;&#36865;&#36890;&#30693;&#65292;&#21253;&#25324;&#37038;&#20214;&#12289;&#30701;&#20449;&#65288;&#36890;&#36807; <a href="https://www.vonage.com/communications-apis/" target="_blank" rel="noopener noreferrer">Vonage</a>&#65292;&#21069;&#36523;&#20026; Nexmo&#65289;&#21644; <a href="https://slack.com" target="_blank" rel="noopener noreferrer">Slack</a>&#12290;&#27492;&#22806;&#65292;&#31038;&#21306;&#24050;&#32463;&#21019;&#24314;&#20102;&#22810;&#31181;<a href="https://laravel-notification-channels.com/about/#suggesting-a-new-channel" target="_blank" rel="noopener noreferrer">&#31038;&#21306;&#26500;&#24314;&#30340;&#36890;&#30693;&#39057;&#36947;</a>&#65292;&#21487;&#20197;&#36890;&#36807;&#25968;&#21313;&#20010;&#19981;&#21516;&#30340;&#39057;&#36947;&#21457;&#36865;&#36890;&#30693;&#65281;&#36890;&#30693;&#20063;&#21487;&#20197;&#23384;&#20648;&#22312;&#25968;&#25454;&#24211;&#20013;&#65292;&#20197;&#20415;&#22312; Web &#30028;&#38754;&#20013;&#26174;&#31034;&#12290;</p><p>&#36890;&#24120;&#65292;&#36890;&#30693;&#24212;&#35813;&#26159;&#31616;&#30701;&#30340;&#20449;&#24687;&#24615;&#28040;&#24687;&#65292;&#29992;&#20110;&#21578;&#30693;&#29992;&#25143;&#24212;&#29992;&#20013;&#20013;&#21457;&#29983;&#30340;&#26576;&#20123;&#20107;&#20214;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#20320;&#27491;&#22312;&#32534;&#20889;&#19968;&#20010;&#35745;&#36153;&#24212;&#29992;&#65292;&#21487;&#20197;&#36890;&#36807;&#30005;&#23376;&#37038;&#20214;&#21644;&#30701;&#20449;&#39057;&#36947;&#21521;&#29992;&#25143;&#21457;&#36865;&#12300;&#21457;&#31080;&#24050;&#25903;&#20184;&#12301;&#36890;&#30693;&#12290;</p><h2 id="cde295d40280f858a25bc441817bb749">&#29983;&#25104;&#36890;&#30693;</h2><p>&#22312; Laravel &#20013;&#65292;&#27599;&#20010;&#36890;&#30693;&#37117;&#30001;&#19968;&#20010;&#31867;&#34920;&#31034;&#65292;&#36890;&#24120;&#23384;&#20648;&#22312; <code>app/Notifications</code> &#30446;&#24405;&#20013;&#12290;&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20013;&#30475;&#19981;&#21040;&#27492;&#30446;&#24405;&#65292;&#35831;&#19981;&#35201;&#25285;&#24515;&mdash;&mdash;&#24403;&#20320;&#36816;&#34892; <code>make:notification</code> Artisan &#21629;&#20196;&#26102;&#65292;&#31995;&#32479;&#20250;&#20026;&#20320;&#21019;&#24314;&#35813;&#30446;&#24405;&#65306;</p><pre><code class="language-shell">php artisan make:notification InvoicePaid</code></pre><p>&#27492;&#21629;&#20196;&#20250;&#23558;&#19968;&#20010;&#26032;&#30340;&#36890;&#30693;&#31867;&#25918;&#20837;&#24212;&#29992;&#30340; <code>app/Notifications</code> &#30446;&#24405;&#20013;&#12290;&#27599;&#20010;&#36890;&#30693;&#31867;&#37117;&#21253;&#21547;&#19968;&#20010; <code>via</code> &#26041;&#27861;&#21644;&#25968;&#37327;&#21487;&#21464;&#30340;&#28040;&#24687;&#26500;&#24314;&#26041;&#27861;&#65288;&#22914; <code>toMail</code> &#25110; <code>toDatabase</code>&#65289;&#65292;&#36825;&#20123;&#26041;&#27861;&#23558;&#36890;&#30693;&#36716;&#25442;&#20026;&#38024;&#23545;&#29305;&#23450;&#39057;&#36947;&#37327;&#36523;&#23450;&#21046;&#30340;&#28040;&#24687;&#12290;</p><h2 id="fd6d4c582b51b511490d49b1f1b77e20">&#21457;&#36865;&#36890;&#30693;</h2><h3 id="37688fe334061b1dbcea19942692e67e">&#20351;&#29992; Notifiable Trait</h3><p>&#21487;&#20197;&#36890;&#36807;&#20004;&#31181;&#26041;&#24335;&#21457;&#36865;&#36890;&#30693;&#65306;&#20351;&#29992; <code>Notifiable</code> Trait &#30340; <code>notify</code> &#26041;&#27861;&#65292;&#25110;&#20351;&#29992; <code>Notification</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/facades" target="_blank">Facade</a>&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;<code>Notifiable</code> Trait &#21253;&#21547;&#22312;&#24212;&#29992;&#30340; <code>App\Models\User</code> &#27169;&#22411;&#20013;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+}</code></pre><p>&#27492; Trait &#25552;&#20379;&#30340; <code>notify</code> &#26041;&#27861;&#26399;&#26395;&#25509;&#25910;&#19968;&#20010;&#36890;&#30693;&#23454;&#20363;&#65306;</p><pre><code class="language-php">use App\Notifications\InvoicePaid;
+
+$user-&gt;notify(new InvoicePaid($invoice));</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#35831;&#35760;&#20303;&#65292;&#20320;&#21487;&#20197;&#22312;&#20219;&#20309;&#27169;&#22411;&#19978;&#20351;&#29992; <code>Notifiable</code> Trait&#65292;&#19981;&#38480;&#20110;&#20165;&#22312; <code>User</code> &#27169;&#22411;&#19978;&#20351;&#29992;&#12290;</p>
+</blockquote><h3 id="dc8524b888134d82133f746633acd4dc">&#20351;&#29992; Notification Facade</h3><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807; <code>Notification</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/facades" target="_blank">Facade</a> &#21457;&#36865;&#36890;&#30693;&#12290;&#24403;&#20320;&#38656;&#35201;&#21521;&#22810;&#20010;&#21487;&#36890;&#30693;&#23454;&#20307;&#65288;&#20363;&#22914;&#29992;&#25143;&#38598;&#21512;&#65289;&#21457;&#36865;&#36890;&#30693;&#26102;&#65292;&#27492;&#26041;&#27861;&#38750;&#24120;&#26377;&#29992;&#12290;&#35201;&#20351;&#29992; Facade &#21457;&#36865;&#36890;&#30693;&#65292;&#35831;&#23558;&#25152;&#26377;&#21487;&#36890;&#30693;&#23454;&#20307;&#21644;&#36890;&#30693;&#23454;&#20363;&#20256;&#36882;&#32473; <code>send</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Facades\Notification;
+
+Notification::send($users, new InvoicePaid($invoice));</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#20351;&#29992; <code>sendNow</code> &#26041;&#27861;&#31435;&#21363;&#21457;&#36865;&#36890;&#30693;&#12290;&#21363;&#20351;&#36890;&#30693;&#23454;&#29616;&#20102; <code>ShouldQueue</code> &#25509;&#21475;&#65292;&#27492;&#26041;&#27861;&#20063;&#20250;&#31435;&#21363;&#21457;&#36865;&#36890;&#30693;&#65306;</p><pre><code class="language-php">Notification::sendNow($developers, new DeploymentCompleted($deployment));</code></pre><h3 id="aa8cc1888596a0998bf3930bed743e95">&#25351;&#23450;&#20256;&#36865;&#39057;&#36947;</h3><p>&#27599;&#20010;&#36890;&#30693;&#31867;&#37117;&#26377;&#19968;&#20010; <code>via</code> &#26041;&#27861;&#65292;&#29992;&#20110;&#30830;&#23450;&#36890;&#30693;&#23558;&#36890;&#36807;&#21738;&#20123;&#39057;&#36947;&#20256;&#36865;&#12290;&#36890;&#30693;&#21487;&#20197;&#36890;&#36807; <code>mail</code>&#12289;<code>database</code>&#12289;<code>broadcast</code>&#12289;<code>vonage</code> &#21644; <code>slack</code> &#39057;&#36947;&#21457;&#36865;&#12290;</p><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#24819;&#20351;&#29992;&#20854;&#20182;&#20256;&#36865;&#39057;&#36947;&#65288;&#22914; Telegram &#25110; Pusher&#65289;&#65292;&#35831;&#26597;&#30475;&#31038;&#21306;&#32500;&#25252;&#30340; <a href="http://laravel-notification-channels.com" target="_blank" rel="noopener noreferrer">Laravel Notification Channels &#32593;&#31449;</a>&#12290;</p>
+</blockquote><p><code>via</code> &#26041;&#27861;&#25509;&#25910;&#19968;&#20010; <code>$notifiable</code> &#23454;&#20363;&#65292;&#35813;&#23454;&#20363;&#23558;&#26159;&#36890;&#30693;&#21457;&#36865;&#30446;&#26631;&#31867;&#30340;&#23454;&#20363;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <code>$notifiable</code> &#26469;&#30830;&#23450;&#36890;&#30693;&#24212;&#36890;&#36807;&#21738;&#20123;&#39057;&#36947;&#20256;&#36865;&#65306;</p><pre><code class="language-php">/**
+ * Get the notification's delivery channels.
+ *
+ * @return array&lt;int, string&gt;
+ */
+public function via(object $notifiable): array
+{
+    return $notifiable-&gt;prefers_sms ? ['vonage'] : ['mail', 'database'];
+}</code></pre><h3 id="bbdcb57b5095393589b38f8e17615236">&#38431;&#21015;&#21270;&#36890;&#30693;</h3><blockquote>
+<p>[!WARNING]<br>
+&#22312;&#38431;&#21015;&#21270;&#36890;&#30693;&#20043;&#21069;&#65292;&#24212;&#37197;&#32622;&#38431;&#21015;&#24182;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues#running-the-queue-worker" target="_blank">&#21551;&#21160; worker</a>&#12290;</p>
+</blockquote><p>&#21457;&#36865;&#36890;&#30693;&#21487;&#33021;&#38656;&#35201;&#19968;&#20123;&#26102;&#38388;&#65292;&#29305;&#21035;&#26159;&#24403;&#39057;&#36947;&#38656;&#35201;&#36827;&#34892;&#22806;&#37096; API &#35843;&#29992;&#20197;&#20256;&#36865;&#36890;&#30693;&#26102;&#12290;&#20026;&#20102;&#21152;&#24555;&#24212;&#29992;&#30340;&#21709;&#24212;&#26102;&#38388;&#65292;&#21487;&#20197;&#36890;&#36807;&#21521;&#31867;&#28155;&#21152; <code>ShouldQueue</code> &#25509;&#21475;&#21644; <code>Queueable</code> Trait &#26469;&#35753;&#36890;&#30693;&#36827;&#20837;&#38431;&#21015;&#12290;&#35813;&#25509;&#21475;&#21644; Trait &#24050;&#20026;&#20351;&#29992; <code>make:notification</code> &#21629;&#20196;&#29983;&#25104;&#30340;&#25152;&#26377;&#36890;&#30693;&#23548;&#20837;&#65292;&#22240;&#27492;&#21487;&#20197;&#31435;&#21363;&#23558;&#23427;&#20204;&#28155;&#21152;&#21040;&#36890;&#30693;&#31867;&#20013;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+
+class InvoicePaid extends Notification implements ShouldQueue
+{
+    use Queueable;
+
+    // ...
+}</code></pre><p>&#23558; <code>ShouldQueue</code> &#25509;&#21475;&#28155;&#21152;&#21040;&#36890;&#30693;&#21518;&#65292;&#20320;&#21487;&#20197;&#20687;&#24448;&#24120;&#19968;&#26679;&#21457;&#36865;&#36890;&#30693;&#12290;Laravel &#23558;&#26816;&#27979;&#31867;&#19978;&#30340; <code>ShouldQueue</code> &#25509;&#21475;&#24182;&#33258;&#21160;&#23558;&#36890;&#30693;&#30340;&#20256;&#36865;&#21152;&#20837;&#38431;&#21015;&#65306;</p><pre><code class="language-php">$user-&gt;notify(new InvoicePaid($invoice));</code></pre><p>&#38431;&#21015;&#21270;&#36890;&#30693;&#26102;&#65292;&#23558;&#20026;&#27599;&#20010;&#25910;&#20214;&#20154;&#21644;&#39057;&#36947;&#32452;&#21512;&#21019;&#24314;&#19968;&#20010;&#38431;&#21015;&#20219;&#21153;&#12290;&#20363;&#22914;&#65292;&#22914;&#26524;&#36890;&#30693;&#26377;&#19977;&#20010;&#25910;&#20214;&#20154;&#21644;&#20004;&#20010;&#39057;&#36947;&#65292;&#23558;&#21521;&#38431;&#21015;&#20998;&#21457;&#20845;&#20010;&#20219;&#21153;&#12290;</p><h4 id="aa7c77fe6d215e69d8ba0fccb064c4d8">&#24310;&#36831;&#36890;&#30693;</h4><p>&#22914;&#26524;&#24076;&#26395;&#24310;&#36831;&#20256;&#36865;&#36890;&#30693;&#65292;&#21487;&#20197;&#22312;&#36890;&#30693;&#23454;&#20363;&#21270;&#19978;&#38142;&#25509; <code>delay</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$delay = now()-&gt;plus(minutes: 10);
+
+$user-&gt;notify((new InvoicePaid($invoice))-&gt;delay($delay));</code></pre><p>&#20320;&#21487;&#20197;&#23558;&#25968;&#32452;&#20256;&#36882;&#32473; <code>delay</code> &#26041;&#27861;&#65292;&#20197;&#20026;&#29305;&#23450;&#39057;&#36947;&#25351;&#23450;&#24310;&#36831;&#26102;&#38271;&#65306;</p><pre><code class="language-php">$user-&gt;notify((new InvoicePaid($invoice))-&gt;delay([
+    'mail' =&gt; now()-&gt;plus(minutes: 5),
+    'sms' =&gt; now()-&gt;plus(minutes: 10),
+]));</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#22312;&#36890;&#30693;&#31867;&#26412;&#36523;&#19978;&#23450;&#20041; <code>withDelay</code> &#26041;&#27861;&#12290;<code>withDelay</code> &#26041;&#27861;&#24212;&#36820;&#22238;&#39057;&#36947;&#21517;&#31216;&#21644;&#24310;&#36831;&#20540;&#30340;&#25968;&#32452;&#65306;</p><pre><code class="language-php">/**
+ * Determine the notification's delivery delay.
+ *
+ * @return array&lt;string, \Illuminate\Support\Carbon&gt;
+ */
+public function withDelay(object $notifiable): array
+{
+    return [
+        'mail' =&gt; now()-&gt;plus(minutes: 5),
+        'sms' =&gt; now()-&gt;plus(minutes: 10),
+    ];
+}</code></pre><h4 id="3cb7adb741d9b42e2c15fb65d597bf80">&#33258;&#23450;&#20041;&#36890;&#30693;&#38431;&#21015;&#36830;&#25509;</h4><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#38431;&#21015;&#21270;&#36890;&#30693;&#23558;&#20351;&#29992;&#24212;&#29992;&#30340;&#40664;&#35748;&#38431;&#21015;&#36830;&#25509;&#36827;&#34892;&#25490;&#38431;&#12290;&#22914;&#26524;&#24076;&#26395;&#20026;&#29305;&#23450;&#36890;&#30693;&#25351;&#23450;&#24212;&#20351;&#29992;&#30340;&#19981;&#21516;&#36830;&#25509;&#65292;&#21487;&#20197;&#22312;&#36890;&#30693;&#30340;&#26500;&#36896;&#20989;&#25968;&#20013;&#35843;&#29992; <code>onConnection</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+
+class InvoicePaid extends Notification implements ShouldQueue
+{
+    use Queueable;
+
+    /**
+     * Create a new notification instance.
+     */
+    public function __construct()
+    {
+        $this-&gt;onConnection('redis');
+    }
+}</code></pre><p>&#25110;&#32773;&#65292;&#22914;&#26524;&#24076;&#26395;&#20026;&#36890;&#30693;&#25903;&#25345;&#30340;&#27599;&#20010;&#36890;&#30693;&#39057;&#36947;&#25351;&#23450;&#24212;&#20351;&#29992;&#30340;&#29305;&#23450;&#38431;&#21015;&#36830;&#25509;&#65292;&#21487;&#20197;&#22312;&#36890;&#30693;&#19978;&#23450;&#20041; <code>viaConnections</code> &#26041;&#27861;&#12290;&#27492;&#26041;&#27861;&#24212;&#36820;&#22238;&#39057;&#36947;&#21517;&#31216;/&#38431;&#21015;&#36830;&#25509;&#21517;&#31216;&#23545;&#25968;&#32452;&#65306;</p><pre><code class="language-php">/**
+ * Determine which connections should be used for each notification channel.
+ *
+ * @return array&lt;string, string&gt;
+ */
+public function viaConnections(): array
+{
+    return [
+        'mail' =&gt; 'redis',
+        'database' =&gt; 'sync',
+    ];
+}</code></pre><h4 id="c6f49c6638eddff7957eb521e2ecf4cb">&#33258;&#23450;&#20041;&#36890;&#30693;&#39057;&#36947;&#38431;&#21015;</h4><p>&#22914;&#26524;&#24076;&#26395;&#20026;&#36890;&#30693;&#25903;&#25345;&#30340;&#27599;&#20010;&#36890;&#30693;&#39057;&#36947;&#25351;&#23450;&#24212;&#20351;&#29992;&#30340;&#29305;&#23450;&#38431;&#21015;&#65292;&#21487;&#20197;&#22312;&#36890;&#30693;&#19978;&#23450;&#20041; <code>viaQueues</code> &#26041;&#27861;&#12290;&#27492;&#26041;&#27861;&#24212;&#36820;&#22238;&#39057;&#36947;&#21517;&#31216;/&#38431;&#21015;&#21517;&#31216;&#23545;&#25968;&#32452;&#65306;</p><pre><code class="language-php">/**
+ * Determine which queues should be used for each notification channel.
+ *
+ * @return array&lt;string, string&gt;
+ */
+public function viaQueues(): array
+{
+    return [
+        'mail' =&gt; 'mail-queue',
+        'slack' =&gt; 'slack-queue',
+    ];
+}</code></pre><h4 id="475a92c1ab11a332f3e09c79b5fca56e">&#33258;&#23450;&#20041;&#38431;&#21015;&#21270;&#36890;&#30693;&#20219;&#21153;&#23646;&#24615;</h4><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041;&#38431;&#21015;&#23646;&#24615;&#26469;&#33258;&#23450;&#20041;&#24213;&#23618;&#38431;&#21015;&#21270;&#20219;&#21153;&#30340;&#34892;&#20026;&#12290;&#36825;&#20123;&#23646;&#24615;&#23558;&#30001;&#21457;&#36865;&#36890;&#30693;&#30340;&#38431;&#21015;&#20219;&#21153;&#32487;&#25215;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+use Illuminate\Queue\Attributes\FailOnTimeout;
+use Illuminate\Queue\Attributes\MaxExceptions;
+use Illuminate\Queue\Attributes\Timeout;
+use Illuminate\Queue\Attributes\Tries;
+
+#[Tries(5)]
+#[Timeout(120)]
+#[MaxExceptions(3)]
+#[FailOnTimeout]
+class InvoicePaid extends Notification implements ShouldQueue
+{
+    use Queueable;
+
+    // ...
+}</code></pre><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#36890;&#36807;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/encryption" target="_blank">&#21152;&#23494;</a>&#30830;&#20445;&#38431;&#21015;&#21270;&#36890;&#30693;&#25968;&#25454;&#30340;&#38544;&#31169;&#24615;&#21644;&#23436;&#25972;&#24615;&#65292;&#35831;&#23558; <code>ShouldBeEncrypted</code> &#25509;&#21475;&#28155;&#21152;&#21040;&#36890;&#30693;&#31867;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeEncrypted;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+
+class InvoicePaid extends Notification implements ShouldQueue, ShouldBeEncrypted
+{
+    use Queueable;
+
+    // ...
+}</code></pre><p>&#38500;&#20102;&#30452;&#25509;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041;&#36825;&#20123;&#23646;&#24615;&#22806;&#65292;&#20320;&#36824;&#21487;&#20197;&#23450;&#20041; <code>backoff</code> &#21644; <code>retryUntil</code> &#26041;&#27861;&#65292;&#20197;&#25351;&#23450;&#38431;&#21015;&#21270;&#36890;&#30693;&#20219;&#21153;&#30340;&#36864;&#36991;&#31574;&#30053;&#21644;&#37325;&#35797;&#36229;&#26102;&#65306;</p><pre><code class="language-php">use DateTime;
+
+/**
+ * Calculate the number of seconds to wait before retrying the notification.
+ */
+public function backoff(): int
+{
+    return 3;
+}
+
+/**
+ * Determine the time at which the notification should timeout.
+ */
+public function retryUntil(): DateTime
+{
+    return now()-&gt;plus(minutes: 5);
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#26377;&#20851;&#36825;&#20123;&#20219;&#21153;&#23646;&#24615;&#21644;&#26041;&#27861;&#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#26597;&#38405;&#26377;&#20851;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues#max-job-attempts-and-timeout" target="_blank">&#38431;&#21015;&#20219;&#21153;</a>&#30340;&#25991;&#26723;&#12290;</p>
+</blockquote><h4 id="eb81767248336fd0de7b6570c2647511">&#38431;&#21015;&#21270;&#36890;&#30693;&#20013;&#38388;&#20214;</h4><p>&#38431;&#21015;&#21270;&#36890;&#30693;&#21487;&#20197;&#20687;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues#job-middleware" target="_blank">&#38431;&#21015;&#20219;&#21153;</a>&#19968;&#26679;&#23450;&#20041;&#20013;&#38388;&#20214;&#12290;&#39318;&#20808;&#65292;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041; <code>middleware</code> &#26041;&#27861;&#12290;<code>middleware</code> &#26041;&#27861;&#23558;&#25509;&#25910; <code>$notifiable</code> &#21644; <code>$channel</code> &#21464;&#37327;&#65292;&#20351;&#20320;&#33021;&#22815;&#26681;&#25454;&#36890;&#30693;&#30340;&#30446;&#26631;&#33258;&#23450;&#20041;&#36820;&#22238;&#30340;&#20013;&#38388;&#20214;&#65306;</p><pre><code class="language-php">use Illuminate\Queue\Middleware\RateLimited;
+
+/**
+ * Get the middleware the notification job should pass through.
+ *
+ * @return array&lt;int, object&gt;
+ */
+public function middleware(object $notifiable, string $channel)
+{
+    return match ($channel) {
+        'mail' =&gt; [new RateLimited('postmark')],
+        'slack' =&gt; [new RateLimited('slack')],
+        default =&gt; [],
+    };
+}</code></pre><h4 id="a1fd324c32d4d3abcc5f8ad9478eedbb">&#38431;&#21015;&#21270;&#36890;&#30693;&#19982;&#25968;&#25454;&#24211;&#20107;&#21153;</h4><p>&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#20013;&#20998;&#21457;&#38431;&#21015;&#21270;&#36890;&#30693;&#26102;&#65292;&#23427;&#20204;&#21487;&#33021;&#20250;&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#25552;&#20132;&#20043;&#21069;&#30001;&#38431;&#21015;&#22788;&#29702;&#12290;&#21457;&#29983;&#36825;&#31181;&#24773;&#20917;&#26102;&#65292;&#22312;&#25968;&#25454;&#24211;&#20107;&#21153;&#26399;&#38388;&#23545;&#27169;&#22411;&#25110;&#25968;&#25454;&#24211;&#35760;&#24405;&#25152;&#20570;&#30340;&#20219;&#20309;&#26356;&#26032;&#21487;&#33021;&#23578;&#26410;&#21453;&#26144;&#22312;&#25968;&#25454;&#24211;&#20013;&#12290;&#27492;&#22806;&#65292;&#22312;&#20107;&#21153;&#20013;&#21019;&#24314;&#30340;&#20219;&#20309;&#27169;&#22411;&#25110;&#25968;&#25454;&#24211;&#35760;&#24405;&#21487;&#33021;&#19981;&#23384;&#22312;&#20110;&#25968;&#25454;&#24211;&#20013;&#12290;&#22914;&#26524;&#20320;&#30340;&#36890;&#30693;&#20381;&#36182;&#20110;&#36825;&#20123;&#27169;&#22411;&#65292;&#21017;&#22312;&#22788;&#29702;&#21457;&#36865;&#38431;&#21015;&#21270;&#36890;&#30693;&#30340;&#20219;&#21153;&#26102;&#21487;&#33021;&#20250;&#21457;&#29983;&#24847;&#22806;&#38169;&#35823;&#12290;</p><p>&#22914;&#26524;&#38431;&#21015;&#36830;&#25509;&#30340; <code>after_commit</code> &#37197;&#32622;&#36873;&#39033;&#35774;&#32622;&#20026; <code>false</code>&#65292;&#21017;&#20173;&#21487;&#20197;&#36890;&#36807;&#22312;&#21457;&#36865;&#36890;&#30693;&#26102;&#35843;&#29992; <code>afterCommit</code> &#26041;&#27861;&#26469;&#25351;&#31034;&#24212;&#22312;&#25152;&#26377;&#25171;&#24320;&#30340;&#25968;&#25454;&#24211;&#20107;&#21153;&#25552;&#20132;&#21518;&#20877;&#20998;&#21457;&#29305;&#23450;&#30340;&#38431;&#21015;&#21270;&#36890;&#30693;&#65306;</p><pre><code class="language-php">use App\Notifications\InvoicePaid;
+
+$user-&gt;notify((new InvoicePaid($invoice))-&gt;afterCommit());</code></pre><p>&#25110;&#32773;&#65292;&#20320;&#21487;&#20197;&#20174;&#36890;&#30693;&#30340;&#26500;&#36896;&#20989;&#25968;&#20013;&#35843;&#29992; <code>afterCommit</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+
+class InvoicePaid extends Notification implements ShouldQueue
+{
+    use Queueable;
+
+    /**
+     * Create a new notification instance.
+     */
+    public function __construct()
+    {
+        $this-&gt;afterCommit();
+    }
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#35201;&#20102;&#35299;&#26377;&#20851;&#35299;&#20915;&#36825;&#20123;&#38382;&#39064;&#30340;&#26356;&#22810;&#20449;&#24687;&#65292;&#35831;&#26597;&#30475;&#26377;&#20851;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/queues#jobs-and-database-transactions" target="_blank">&#38431;&#21015;&#20219;&#21153;&#21644;&#25968;&#25454;&#24211;&#20107;&#21153;</a>&#30340;&#25991;&#26723;&#12290;</p>
+</blockquote><h4 id="5b801ac5b0ffb00277f279ff97131d5d">&#30830;&#23450;&#26159;&#21542;&#24212;&#21457;&#36865;&#38431;&#21015;&#21270;&#36890;&#30693;</h4><p>&#38431;&#21015;&#21270;&#36890;&#30693;&#24050;&#20998;&#21457;&#21040;&#38431;&#21015;&#20197;&#36827;&#34892;&#21518;&#21488;&#22788;&#29702;&#21518;&#65292;&#36890;&#24120;&#20250;&#34987;&#38431;&#21015; worker &#25509;&#21463;&#24182;&#21457;&#36865;&#32473;&#20854;&#39044;&#26399;&#25910;&#20214;&#20154;&#12290;</p><p>&#20294;&#26159;&#65292;&#22914;&#26524;&#20320;&#24076;&#26395;&#22312;&#38431;&#21015; worker &#22788;&#29702;&#36890;&#30693;&#21518;&#23545;&#20854;&#36827;&#34892;&#26368;&#32456;&#20915;&#23450;&#65288;&#26159;&#21542;&#24212;&#21457;&#36865;&#38431;&#21015;&#21270;&#36890;&#30693;&#65289;&#65292;&#21017;&#21487;&#20197;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041; <code>shouldSend</code> &#26041;&#27861;&#12290;&#22914;&#26524;&#27492;&#26041;&#27861;&#36820;&#22238; <code>false</code>&#65292;&#21017;&#19981;&#20250;&#21457;&#36865;&#36890;&#30693;&#65306;</p><pre><code class="language-php">/**
+ * Determine if the notification should be sent.
+ */
+public function shouldSend(object $notifiable, string $channel): bool
+{
+    return $this-&gt;invoice-&gt;isPaid();
+}</code></pre><h4 id="7971285cc37e7be1e1ccd7213050e5fa">&#21457;&#36865;&#36890;&#30693;&#21518;</h4><p>&#22914;&#26524;&#24076;&#26395;&#22312;&#21457;&#36865;&#36890;&#30693;&#21518;&#25191;&#34892;&#20195;&#30721;&#65292;&#21487;&#20197;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041; <code>afterSending</code> &#26041;&#27861;&#12290;&#27492;&#26041;&#27861;&#23558;&#25509;&#25910;&#21487;&#36890;&#30693;&#23454;&#20307;&#12289;&#39057;&#36947;&#21517;&#31216;&#20197;&#21450;&#26469;&#33258;&#39057;&#36947;&#30340;&#21709;&#24212;&#65306;</p><pre><code class="language-php">/**
+ * Handle the notification after it has been sent.
+ */
+public function afterSending(object $notifiable, string $channel, mixed $response): void
+{
+    // ...
+}</code></pre><h3 id="b4449d578fa4ab90e44c2958e29ba7d6">&#25353;&#38656;&#36890;&#30693;</h3><p>&#26377;&#26102;&#20320;&#21487;&#33021;&#38656;&#35201;&#21521;&#26410;&#20316;&#20026;&#24212;&#29992;&#12300;&#29992;&#25143;&#12301;&#23384;&#20648;&#30340;&#26576;&#20154;&#21457;&#36865;&#36890;&#30693;&#12290;&#20351;&#29992; <code>Notification</code> Facade &#30340; <code>route</code> &#26041;&#27861;&#65292;&#20320;&#21487;&#20197;&#22312;&#21457;&#36865;&#36890;&#30693;&#20043;&#21069;&#25351;&#23450;&#20020;&#26102;&#36890;&#30693;&#36335;&#30001;&#20449;&#24687;&#65306;</p><pre><code class="language-php">use Illuminate\Broadcasting\Channel;
+use Illuminate\Support\Facades\Notification;
+
+Notification::route('mail', 'taylor@example.com')
+    -&gt;route('vonage', '5555555555')
+    -&gt;route('slack', '#slack-channel')
+    -&gt;route('broadcast', [new Channel('channel-name')])
+    -&gt;notify(new InvoicePaid($invoice));</code></pre><p>&#22914;&#26524;&#24076;&#26395;&#22312;&#36890;&#36807; <code>mail</code> &#36335;&#30001;&#21457;&#36865;&#25353;&#38656;&#36890;&#30693;&#26102;&#25552;&#20379;&#25910;&#20214;&#20154;&#30340;&#22995;&#21517;&#65292;&#21487;&#20197;&#25552;&#20379;&#19968;&#20010;&#23558;&#30005;&#23376;&#37038;&#31665;&#22320;&#22336;&#20316;&#20026;&#38190;&#12289;&#22995;&#21517;&#20316;&#20026;&#25968;&#32452;&#31532;&#19968;&#20010;&#20803;&#32032;&#30340;&#20540;&#30340;&#25968;&#32452;&#65306;</p><pre><code class="language-php">Notification::route('mail', [
+    'barrett@example.com' =&gt; 'Barrett Blair',
+])-&gt;notify(new InvoicePaid($invoice));</code></pre><p>&#20351;&#29992; <code>routes</code> &#26041;&#27861;&#65292;&#20320;&#21487;&#20197;&#19968;&#27425;&#20026;&#22810;&#20010;&#36890;&#30693;&#39057;&#36947;&#25552;&#20379;&#20020;&#26102;&#36335;&#30001;&#20449;&#24687;&#65306;</p><pre><code class="language-php">Notification::routes([
+    'mail' =&gt; ['barrett@example.com' =&gt; 'Barrett Blair'],
+    'vonage' =&gt; '5555555555',
+])-&gt;notify(new InvoicePaid($invoice));</code></pre><h2 id="0b4ad8b882867df33feeb42f3516e139">&#37038;&#20214;&#36890;&#30693;</h2><h3 id="1113214f15b3ef0aaabc4348f273584e">&#26684;&#24335;&#21270;&#37038;&#20214;&#28040;&#24687;</h3><p>&#22914;&#26524;&#36890;&#30693;&#25903;&#25345;&#20316;&#20026;&#30005;&#23376;&#37038;&#20214;&#21457;&#36865;&#65292;&#21017;&#24212;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041; <code>toMail</code> &#26041;&#27861;&#12290;&#27492;&#26041;&#27861;&#23558;&#25509;&#25910;&#19968;&#20010; <code>$notifiable</code> &#23454;&#20307;&#65292;&#24182;&#24212;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Notifications\Messages\MailMessage</code> &#23454;&#20363;&#12290;</p><p><code>MailMessage</code> &#31867;&#21253;&#21547;&#19968;&#20123;&#31616;&#21333;&#30340;&#26041;&#27861;&#26469;&#24110;&#21161;&#20320;&#26500;&#24314;&#20107;&#21153;&#24615;&#30005;&#23376;&#37038;&#20214;&#28040;&#24687;&#12290;&#37038;&#20214;&#28040;&#24687;&#21487;&#20197;&#21253;&#21547;&#25991;&#26412;&#34892;&#20197;&#21450;&#19968;&#20010;&#12300;call to action&#12301;&#12290;&#35753;&#25105;&#20204;&#30475;&#19968;&#19979; <code>toMail</code> &#26041;&#27861;&#30340;&#31034;&#20363;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    $url = url('/invoice/'.$this-&gt;invoice-&gt;id);
+
+    return (new MailMessage)
+        -&gt;greeting('Hello!')
+        -&gt;line('One of your invoices has been paid!')
+        -&gt;lineIf($this-&gt;amount &gt; 0, "Amount paid: {$this-&gt;amount}")
+        -&gt;action('View Invoice', $url)
+        -&gt;line('Thank you for using our application!');
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#35831;&#27880;&#24847;&#65292;&#25105;&#20204;&#22312; <code>toMail</code> &#26041;&#27861;&#20013;&#20351;&#29992;&#20102; <code>$this-&gt;invoice-&gt;id</code>&#12290;&#20320;&#21487;&#20197;&#23558;&#36890;&#30693;&#29983;&#25104;&#28040;&#24687;&#25152;&#38656;&#30340;&#20219;&#20309;&#25968;&#25454;&#20256;&#36882;&#21040;&#36890;&#30693;&#30340;&#26500;&#36896;&#20989;&#25968;&#20013;&#12290;</p>
+</blockquote><p>&#22312;&#27492;&#31034;&#20363;&#20013;&#65292;&#25105;&#20204;&#27880;&#20876;&#20102;&#19968;&#20010;&#38382;&#20505;&#35821;&#12289;&#19968;&#34892;&#25991;&#26412;&#12289;&#19968;&#20010;&#34892;&#21160;&#21495;&#21484;&#65292;&#28982;&#21518;&#26159;&#21478;&#19968;&#34892;&#25991;&#26412;&#12290;<code>MailMessage</code> &#23545;&#35937;&#25552;&#20379;&#30340;&#36825;&#20123;&#26041;&#27861;&#20351;&#26684;&#24335;&#21270;&#21644;&#24555;&#36895;&#21457;&#36865;&#23567;&#22411;&#20107;&#21153;&#24615;&#30005;&#23376;&#37038;&#20214;&#21464;&#24471;&#31616;&#21333;&#12290;&#28982;&#21518;&#65292;&#37038;&#20214;&#39057;&#36947;&#20250;&#23558;&#28040;&#24687;&#32452;&#20214;&#36716;&#25442;&#20026;&#32654;&#35266;&#30340;&#21709;&#24212;&#24335; HTML &#30005;&#23376;&#37038;&#20214;&#27169;&#26495;&#20197;&#21450;&#32431;&#25991;&#26412;&#23545;&#24212;&#29256;&#26412;&#12290;&#20197;&#19979;&#26159;&#30001; <code>mail</code> &#39057;&#36947;&#29983;&#25104;&#30340;&#30005;&#23376;&#37038;&#20214;&#31034;&#20363;&#65306;</p><img src="https://laravel.com/img/docs/notification-example-2.png"><blockquote>
+<p>[!NOTE]<br>
+&#21457;&#36865;&#37038;&#20214;&#36890;&#30693;&#26102;&#65292;&#35831;&#30830;&#20445;&#22312; <code>config/app.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#35774;&#32622; <code>name</code> &#37197;&#32622;&#36873;&#39033;&#12290;&#27492;&#20540;&#23558;&#29992;&#20110;&#37038;&#20214;&#36890;&#30693;&#28040;&#24687;&#30340;&#39029;&#30473;&#21644;&#39029;&#33050;&#20013;&#12290;</p>
+</blockquote><h4 id="98d346f28538c34a5651f2954995c524">&#38169;&#35823;&#28040;&#24687;</h4><p>&#26576;&#20123;&#36890;&#30693;&#20250;&#21578;&#30693;&#29992;&#25143;&#38169;&#35823;&#20449;&#24687;&#65292;&#20363;&#22914;&#21457;&#31080;&#25903;&#20184;&#22833;&#36133;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#26500;&#24314;&#28040;&#24687;&#26102;&#35843;&#29992; <code>error</code> &#26041;&#27861;&#26469;&#25351;&#31034;&#37038;&#20214;&#28040;&#24687;&#19982;&#38169;&#35823;&#30456;&#20851;&#12290;&#22312;&#37038;&#20214;&#28040;&#24687;&#19978;&#20351;&#29992; <code>error</code> &#26041;&#27861;&#26102;&#65292;&#34892;&#21160;&#21495;&#21484;&#25353;&#38062;&#23558;&#20026;&#32418;&#33394;&#32780;&#19981;&#26159;&#40657;&#33394;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;error()
+        -&gt;subject('Invoice Payment Failed')
+        -&gt;line('...');
+}</code></pre><h4 id="6c9fb0714bb03639574bbb18f9e4f059">&#20854;&#20182;&#37038;&#20214;&#36890;&#30693;&#26684;&#24335;&#21270;&#36873;&#39033;</h4><p>&#20320;&#19981;&#24517;&#22312;&#36890;&#30693;&#31867;&#20013;&#23450;&#20041;&#12300;lines&#12301;&#25991;&#26412;&#65292;&#32780;&#21487;&#20197;&#20351;&#29992; <code>view</code> &#26041;&#27861;&#25351;&#23450;&#24212;&#29992;&#20110;&#28210;&#26579;&#36890;&#30693;&#30005;&#23376;&#37038;&#20214;&#30340;&#33258;&#23450;&#20041;&#27169;&#26495;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)-&gt;view(
+        'mail.invoice.paid', ['invoice' =&gt; $this-&gt;invoice]
+    );
+}</code></pre><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#23558;&#35270;&#22270;&#21517;&#31216;&#20316;&#20026;&#20256;&#36882;&#32473; <code>view</code> &#26041;&#27861;&#30340;&#25968;&#32452;&#30340;&#31532;&#20108;&#20010;&#20803;&#32032;&#65292;&#26469;&#20026;&#37038;&#20214;&#28040;&#24687;&#25351;&#23450;&#32431;&#25991;&#26412;&#35270;&#22270;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)-&gt;view(
+        ['mail.invoice.paid', 'mail.invoice.paid-text'],
+        ['invoice' =&gt; $this-&gt;invoice]
+    );
+}</code></pre><p>&#25110;&#32773;&#65292;&#22914;&#26524;&#28040;&#24687;&#20165;&#26377;&#32431;&#25991;&#26412;&#35270;&#22270;&#65292;&#21017;&#21487;&#20197;&#20351;&#29992; <code>text</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)-&gt;text(
+        'mail.invoice.paid-text', ['invoice' =&gt; $this-&gt;invoice]
+    );
+}</code></pre><h3 id="0f5ee5752efc8ba78efbcfce89d3f340">&#33258;&#23450;&#20041;&#21457;&#36865;&#32773;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#30005;&#23376;&#37038;&#20214;&#30340;&#21457;&#36865;&#32773;/&#21457;&#20214;&#20154;&#22320;&#22336;&#22312; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#12290;&#20294;&#26159;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <code>from</code> &#26041;&#27861;&#20026;&#29305;&#23450;&#36890;&#30693;&#25351;&#23450;&#21457;&#20214;&#20154;&#22320;&#22336;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;from('barrett@example.com', 'Barrett Blair')
+        -&gt;line('...');
+}</code></pre><h3 id="743acb76caa443330fd4a5501f62aa14">&#33258;&#23450;&#20041;&#25910;&#20214;&#20154;</h3><p>&#36890;&#36807; <code>mail</code> &#39057;&#36947;&#21457;&#36865;&#36890;&#30693;&#26102;&#65292;&#36890;&#30693;&#31995;&#32479;&#23558;&#33258;&#21160;&#22312;&#21487;&#36890;&#30693;&#23454;&#20307;&#19978;&#26597;&#25214; <code>email</code> &#23646;&#24615;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#21487;&#36890;&#30693;&#23454;&#20307;&#19978;&#23450;&#20041; <code>routeNotificationForMail</code> &#26041;&#27861;&#26469;&#33258;&#23450;&#20041;&#29992;&#20110;&#20256;&#36865;&#36890;&#30693;&#30340;&#30005;&#23376;&#37038;&#31665;&#22320;&#22336;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @return  array&lt;string, string&gt;|string
+     */
+    public function routeNotificationForMail(Notification $notification): array|string
+    {
+        // &#20165;&#36820;&#22238;&#30005;&#23376;&#37038;&#31665;&#22320;&#22336;...
+        return $this-&gt;email_address;
+
+        // &#36820;&#22238;&#30005;&#23376;&#37038;&#31665;&#22320;&#22336;&#21644;&#22995;&#21517;...
+        return [$this-&gt;email_address =&gt; $this-&gt;name];
+    }
+}</code></pre><h3 id="76fe220f22f678d6256b0b27115cc22c">&#33258;&#23450;&#20041;&#20027;&#39064;</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#30005;&#23376;&#37038;&#20214;&#30340;&#20027;&#39064;&#26159;&#36890;&#30693;&#31867;&#21517;&#26684;&#24335;&#21270;&#20026;&#12300;Title Case&#12301;&#21518;&#30340;&#24418;&#24335;&#12290;&#22240;&#27492;&#65292;&#22914;&#26524;&#20320;&#30340;&#36890;&#30693;&#31867;&#21517;&#20026; <code>InvoicePaid</code>&#65292;&#21017;&#30005;&#23376;&#37038;&#20214;&#30340;&#20027;&#39064;&#23558;&#20026; <code>Invoice Paid</code>&#12290;&#22914;&#26524;&#24076;&#26395;&#20026;&#28040;&#24687;&#25351;&#23450;&#19981;&#21516;&#20027;&#39064;&#65292;&#21487;&#20197;&#22312;&#26500;&#24314;&#28040;&#24687;&#26102;&#35843;&#29992; <code>subject</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;subject('Notification Subject')
+        -&gt;line('...');
+}</code></pre><h3 id="6fc2fb3a00043d221189eebe021c82d8">&#33258;&#23450;&#20041; Mailer</h3><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#30005;&#23376;&#37038;&#20214;&#36890;&#30693;&#23558;&#20351;&#29992; <code>config/mail.php</code> &#37197;&#32622;&#25991;&#20214;&#20013;&#23450;&#20041;&#30340;&#40664;&#35748; mailer &#36827;&#34892;&#21457;&#36865;&#12290;&#20294;&#26159;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#26500;&#24314;&#28040;&#24687;&#26102;&#35843;&#29992; <code>mailer</code> &#26041;&#27861;&#22312;&#36816;&#34892;&#26102;&#25351;&#23450;&#19981;&#21516;&#30340; mailer&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;mailer('postmark')
+        -&gt;line('...');
+}</code></pre><h3 id="f9a365f9ad157c908819c6b21f5ac7a9">&#33258;&#23450;&#20041;&#27169;&#26495;</h3><p>&#20320;&#21487;&#20197;&#36890;&#36807;&#21457;&#24067;&#36890;&#30693;&#21253;&#30340;&#36164;&#28304;&#26469;&#20462;&#25913;&#37038;&#20214;&#36890;&#30693;&#20351;&#29992;&#30340; HTML &#21644;&#32431;&#25991;&#26412;&#27169;&#26495;&#12290;&#36816;&#34892;&#27492;&#21629;&#20196;&#21518;&#65292;&#37038;&#20214;&#36890;&#30693;&#27169;&#26495;&#23558;&#20301;&#20110; <code>resources/views/vendor/notifications</code> &#30446;&#24405;&#20013;&#65306;</p><pre><code class="language-shell">php artisan vendor:publish --tag=laravel-notifications</code></pre><h3 id="c9a6ee90f5d43732e3f6cf4dcaa8493c">&#38468;&#20214;</h3><p>&#35201;&#23558;&#38468;&#20214;&#28155;&#21152;&#21040;&#30005;&#23376;&#37038;&#20214;&#36890;&#30693;&#65292;&#35831;&#22312;&#26500;&#24314;&#28040;&#24687;&#26102;&#20351;&#29992; <code>attach</code> &#26041;&#27861;&#12290;<code>attach</code> &#26041;&#27861;&#25509;&#21463;&#25991;&#20214;&#30340;&#32477;&#23545;&#36335;&#24452;&#20316;&#20026;&#20854;&#31532;&#19968;&#20010;&#21442;&#25968;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;greeting('Hello!')
+        -&gt;attach('/path/to/file');
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#36890;&#30693;&#37038;&#20214;&#28040;&#24687;&#25552;&#20379;&#30340; <code>attach</code> &#26041;&#27861;&#20063;&#25509;&#21463;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/mail#attachable-objects" target="_blank">&#21487;&#38468;&#21152;&#23545;&#35937;</a>&#12290;&#35831;&#26597;&#38405;&#23436;&#25972;&#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/mail#attachable-objects" target="_blank">&#21487;&#38468;&#21152;&#23545;&#35937;&#25991;&#26723;</a>&#20197;&#20102;&#35299;&#26356;&#22810;&#20449;&#24687;&#12290;</p>
+</blockquote><p>&#23558;&#25991;&#20214;&#38468;&#21152;&#21040;&#28040;&#24687;&#26102;&#65292;&#20320;&#36824;&#21487;&#20197;&#36890;&#36807;&#23558; <code>array</code> &#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>attach</code> &#26041;&#27861;&#26469;&#25351;&#23450;&#26174;&#31034;&#21517;&#31216;&#21644;/&#25110; MIME &#31867;&#22411;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;greeting('Hello!')
+        -&gt;attach('/path/to/file', [
+            'as' =&gt; 'name.pdf',
+            'mime' =&gt; 'application/pdf',
+        ]);
+}</code></pre><p>&#24517;&#35201;&#26102;&#65292;&#21487;&#20197;&#20351;&#29992; <code>attachMany</code> &#26041;&#27861;&#23558;&#22810;&#20010;&#25991;&#20214;&#38468;&#21152;&#21040;&#28040;&#24687;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;greeting('Hello!')
+        -&gt;attachMany([
+            '/path/to/forge.svg',
+            '/path/to/vapor.svg' =&gt; [
+                'as' =&gt; 'Logo.svg',
+                'mime' =&gt; 'image/svg+xml',
+            ],
+        ]);
+}</code></pre><p>&#21487;&#20197;&#20351;&#29992; <code>attachFromStorageDisk</code> &#26041;&#27861;&#38468;&#21152;&#23384;&#22312;&#20110;&#29305;&#23450;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/filesystem" target="_blank">&#25991;&#20214;&#31995;&#32479;&#30913;&#30424;</a>&#19978;&#30340;&#25991;&#20214;&#12290;&#27492;&#26041;&#27861;&#25509;&#21463;&#30913;&#30424;&#21517;&#31216;&#21644;&#35813;&#30913;&#30424;&#19978;&#25991;&#20214;&#30340;&#36335;&#24452;&#65306;</p><pre><code class="language-php">use App\Mail\InvoicePaid as InvoicePaidMailable;
+
+/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): Mailable
+{
+    return (new InvoicePaidMailable($this-&gt;invoice))
+        -&gt;to($notifiable-&gt;email)
+        -&gt;attachFromStorageDisk('s3', '/path/to/file', 'invoice.pdf', [
+            'mime' =&gt; 'application/pdf',
+        ]);
+}</code></pre><h4 id="18d4869a9cb8bb58614abc764975af0c">&#21407;&#22987;&#25968;&#25454;&#38468;&#20214;</h4><p><code>attachData</code> &#26041;&#27861;&#21487;&#29992;&#20110;&#38468;&#21152;&#21407;&#22987;&#23383;&#33410;&#23383;&#31526;&#20018;&#20316;&#20026;&#38468;&#20214;&#12290;&#35843;&#29992; <code>attachData</code> &#26041;&#27861;&#26102;&#65292;&#24212;&#25552;&#20379;&#24212;&#20998;&#37197;&#32473;&#38468;&#20214;&#30340;&#25991;&#20214;&#21517;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;greeting('Hello!')
+        -&gt;attachData($this-&gt;pdf, 'name.pdf', [
+            'mime' =&gt; 'application/pdf',
+        ]);
+}</code></pre><h3 id="1d55ffdb5cf715fa88d233684c17a343">&#28155;&#21152;&#26631;&#31614;&#21644;&#20803;&#25968;&#25454;</h3><p>&#26576;&#20123;&#31532;&#19977;&#26041;&#30005;&#23376;&#37038;&#20214;&#25552;&#20379;&#21830;&#65288;&#22914; Mailgun &#21644; Postmark&#65289;&#25903;&#25345;&#28040;&#24687;&#12300;tags&#12301;&#21644;&#12300;metadata&#12301;&#65292;&#21487;&#29992;&#20110;&#23545;&#24212;&#29992;&#21457;&#36865;&#30340;&#30005;&#23376;&#37038;&#20214;&#36827;&#34892;&#20998;&#32452;&#21644;&#36319;&#36394;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807; <code>tag</code> &#21644; <code>metadata</code> &#26041;&#27861;&#21521;&#30005;&#23376;&#37038;&#20214;&#28040;&#24687;&#28155;&#21152;&#26631;&#31614;&#21644;&#20803;&#25968;&#25454;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;greeting('Comment Upvoted!')
+        -&gt;tag('upvote')
+        -&gt;metadata('comment_id', $this-&gt;comment-&gt;id);
+}</code></pre><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#27491;&#22312;&#20351;&#29992; Mailgun &#39537;&#21160;&#65292;&#21487;&#20197;&#26597;&#38405; Mailgun &#30340;&#25991;&#26723;&#20197;&#20102;&#35299;&#26377;&#20851; <a href="https://documentation.mailgun.com/docs/mailgun/user-manual/tracking-messages/#tags" target="_blank" rel="noopener noreferrer">tags</a> &#21644; <a href="https://documentation.mailgun.com/docs/mailgun/user-manual/sending-messages/#attaching-metadata-to-messages" target="_blank" rel="noopener noreferrer">metadata</a> &#30340;&#26356;&#22810;&#20449;&#24687;&#12290;&#21516;&#26679;&#65292;&#20063;&#21487;&#20197;&#26597;&#38405; Postmark &#25991;&#26723;&#20197;&#20102;&#35299;&#20182;&#20204;&#23545; <a href="https://postmarkapp.com/blog/tags-support-for-smtp" target="_blank" rel="noopener noreferrer">tags</a> &#21644; <a href="https://postmarkapp.com/support/article/1125-custom-metadata-faq" target="_blank" rel="noopener noreferrer">metadata</a> &#30340;&#25903;&#25345;&#24773;&#20917;&#12290;</p><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#20351;&#29992; Amazon SES &#21457;&#36865;&#30005;&#23376;&#37038;&#20214;&#65292;&#21017;&#24212;&#20351;&#29992; <code>metadata</code> &#26041;&#27861;&#23558; <a href="https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html" target="_blank" rel="noopener noreferrer">SES&#12300;tags&#12301;</a> &#38468;&#21152;&#21040;&#28040;&#24687;&#20013;&#12290;</p><h3 id="50ac752bfc0ea191df2147c0af41193c">&#33258;&#23450;&#20041; Symfony &#28040;&#24687;</h3><p><code>MailMessage</code> &#31867;&#30340; <code>withSymfonyMessage</code> &#26041;&#27861;&#20801;&#35768;&#20320;&#27880;&#20876;&#19968;&#20010;&#38381;&#21253;&#65292;&#35813;&#38381;&#21253;&#23558;&#22312;&#21457;&#36865;&#28040;&#24687;&#20043;&#21069;&#20351;&#29992; Symfony Message &#23454;&#20363;&#35843;&#29992;&#12290;&#36825;&#20026;&#20320;&#25552;&#20379;&#20102;&#22312;&#28040;&#24687;&#20256;&#36865;&#20043;&#21069;&#23545;&#20854;&#36827;&#34892;&#28145;&#24230;&#33258;&#23450;&#20041;&#30340;&#26426;&#20250;&#65306;</p><pre><code class="language-php">use Symfony\Component\Mime\Email;
+
+/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;withSymfonyMessage(function (Email $message) {
+            $message-&gt;getHeaders()-&gt;addTextHeader(
+                'Custom-Header', 'Header Value'
+            );
+        });
+}</code></pre><h3 id="d2a739c01590f7b7b462fe11dce80d83">&#20351;&#29992; Mailables</h3><p>&#22914;&#26524;&#38656;&#35201;&#65292;&#20320;&#21487;&#20197;&#20174;&#36890;&#30693;&#30340; <code>toMail</code> &#26041;&#27861;&#36820;&#22238;&#23436;&#25972;&#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/mail" target="_blank">mailable &#23545;&#35937;</a>&#12290;&#36820;&#22238; <code>Mailable</code> &#32780;&#19981;&#26159; <code>MailMessage</code> &#26102;&#65292;&#20320;&#38656;&#35201;&#20351;&#29992; mailable &#23545;&#35937;&#30340; <code>to</code> &#26041;&#27861;&#25351;&#23450;&#28040;&#24687;&#25910;&#20214;&#20154;&#65306;</p><pre><code class="language-php">use App\Mail\InvoicePaid as InvoicePaidMailable;
+use Illuminate\Mail\Mailable;
+
+/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): Mailable
+{
+    return (new InvoicePaidMailable($this-&gt;invoice))
+        -&gt;to($notifiable-&gt;email);
+}</code></pre><h4 id="a8a835e7659283aac84de3eacd9d3fd2">Mailables &#21644;&#25353;&#38656;&#36890;&#30693;</h4><p>&#22914;&#26524;&#27491;&#22312;&#21457;&#36865;<a href="2ky045l9z8.html#on-demand-notifications" target="_blank">&#25353;&#38656;&#36890;&#30693;</a>&#65292;&#20256;&#36882;&#32473; <code>toMail</code> &#26041;&#27861;&#30340; <code>$notifiable</code> &#23454;&#20363;&#23558;&#26159; <code>Illuminate\Notifications\AnonymousNotifiable</code> &#30340;&#23454;&#20363;&#65292;&#23427;&#25552;&#20379;&#20102;&#19968;&#20010; <code>routeNotificationFor</code> &#26041;&#27861;&#65292;&#21487;&#29992;&#20110;&#26816;&#32034;&#25353;&#38656;&#36890;&#30693;&#24212;&#21457;&#36865;&#21040;&#30340;&#30005;&#23376;&#37038;&#31665;&#22320;&#22336;&#65306;</p><pre><code class="language-php">use App\Mail\InvoicePaid as InvoicePaidMailable;
+use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Mail\Mailable;
+
+/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): Mailable
+{
+    $address = $notifiable instanceof AnonymousNotifiable
+        ? $notifiable-&gt;routeNotificationFor('mail')
+        : $notifiable-&gt;email;
+
+    return (new InvoicePaidMailable($this-&gt;invoice))
+        -&gt;to($address);
+}</code></pre><h3 id="8cc14a4c22a4cd1e6f71e71dffdd385e">&#39044;&#35272;&#37038;&#20214;&#36890;&#30693;</h3><p>&#35774;&#35745;&#37038;&#20214;&#36890;&#30693;&#27169;&#26495;&#26102;&#65292;&#26041;&#20415;&#30340;&#20570;&#27861;&#26159;&#22312;&#27983;&#35272;&#22120;&#20013;&#20687;&#20856;&#22411;&#30340; Blade &#27169;&#26495;&#19968;&#26679;&#24555;&#36895;&#39044;&#35272;&#28210;&#26579;&#30340;&#37038;&#20214;&#28040;&#24687;&#12290;&#22240;&#27492;&#65292;Laravel &#20801;&#35768;&#20320;&#30452;&#25509;&#20174;&#36335;&#30001;&#38381;&#21253;&#25110;&#25511;&#21046;&#22120;&#36820;&#22238;&#30001;&#37038;&#20214;&#36890;&#30693;&#29983;&#25104;&#30340;&#20219;&#20309;&#37038;&#20214;&#28040;&#24687;&#12290;&#24403;&#36820;&#22238; <code>MailMessage</code> &#26102;&#65292;&#23427;&#23558;&#34987;&#28210;&#26579;&#24182;&#26174;&#31034;&#22312;&#27983;&#35272;&#22120;&#20013;&#65292;&#20351;&#20320;&#33021;&#22815;&#24555;&#36895;&#39044;&#35272;&#20854;&#35774;&#35745;&#65292;&#32780;&#26080;&#38656;&#23558;&#20854;&#21457;&#36865;&#21040;&#23454;&#38469;&#30340;&#30005;&#23376;&#37038;&#31665;&#22320;&#22336;&#65306;</p><pre><code class="language-php">use App\Models\Invoice;
+use App\Notifications\InvoicePaid;
+
+Route::get('/notification', function () {
+    $invoice = Invoice::find(1);
+
+    return (new InvoicePaid($invoice))
+        -&gt;toMail($invoice-&gt;user);
+});</code></pre><h2 id="eb22111467aef7b090e609c20c62f768">Markdown &#37038;&#20214;&#36890;&#30693;</h2><p>Markdown &#37038;&#20214;&#36890;&#30693;&#20801;&#35768;&#20320;&#21033;&#29992;&#37038;&#20214;&#36890;&#30693;&#30340;&#39044;&#26500;&#24314;&#27169;&#26495;&#65292;&#21516;&#26102;&#20026;&#20320;&#25552;&#20379;&#26356;&#22823;&#30340;&#33258;&#30001;&#24230;&#26469;&#32534;&#20889;&#26356;&#38271;&#30340;&#33258;&#23450;&#20041;&#28040;&#24687;&#12290;&#30001;&#20110;&#28040;&#24687;&#26159;&#29992; Markdown &#32534;&#20889;&#30340;&#65292;Laravel &#33021;&#22815;&#20026;&#28040;&#24687;&#28210;&#26579;&#32654;&#35266;&#30340;&#21709;&#24212;&#24335; HTML &#27169;&#26495;&#65292;&#21516;&#26102;&#36824;&#20250;&#33258;&#21160;&#29983;&#25104;&#32431;&#25991;&#26412;&#23545;&#24212;&#29256;&#26412;&#12290;</p><h3 id="16060c2e2080b2a835a5aba4ba77d12e">&#29983;&#25104;&#28040;&#24687;</h3><p>&#35201;&#20351;&#29992;&#30456;&#24212;&#30340; Markdown&#27169;&#26495;&#29983;&#25104;&#36890;&#30693;&#65292;&#21487;&#20197;&#20351;&#29992; <code>make:notification</code> Artisan &#21629;&#20196;&#30340; <code>--markdown</code> &#36873;&#39033;&#65306;</p><pre><code class="language-shell">php artisan make:notification InvoicePaid --markdown=mail.invoice.paid</code></pre><p>&#19982;&#25152;&#26377;&#20854;&#20182;&#37038;&#20214;&#36890;&#30693;&#19968;&#26679;&#65292;&#20351;&#29992; Markdown&#27169;&#26495;&#30340;&#36890;&#30693;&#24212;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041; <code>toMail</code> &#26041;&#27861;&#12290;&#20294;&#26159;&#65292;&#19982;&#20351;&#29992; <code>line</code> &#21644; <code>action</code> &#26041;&#27861;&#26500;&#36896;&#36890;&#30693;&#19981;&#21516;&#65292;&#24212;&#20351;&#29992; <code>markdown</code> &#26041;&#27861;&#25351;&#23450;&#24212;&#20351;&#29992;&#30340; Markdown&#27169;&#26495;&#30340;&#21517;&#31216;&#12290;&#24076;&#26395;&#25552;&#20379;&#32473;&#27169;&#26495;&#30340;&#25968;&#25454;&#25968;&#32452;&#21487;&#20197;&#20316;&#20026;&#26041;&#27861;&#30340;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    $url = url('/invoice/'.$this-&gt;invoice-&gt;id);
+
+    return (new MailMessage)
+        -&gt;subject('Invoice Paid')
+        -&gt;markdown('mail.invoice.paid', ['url' =&gt; $url]);
+}</code></pre><h3 id="0166d73a447fbe723bae49fe1825131a">&#32534;&#20889;&#28040;&#24687;</h3><p>Markdown &#37038;&#20214;&#36890;&#30693;&#20351;&#29992; Blade &#32452;&#20214;&#21644; Markdown &#35821;&#27861;&#30340;&#32452;&#21512;&#65292;&#20351;&#20320;&#33021;&#22815;&#22312;&#21033;&#29992; Laravel &#39044;&#21046;&#36890;&#30693;&#32452;&#20214;&#30340;&#21516;&#26102;&#36731;&#26494;&#26500;&#24314;&#36890;&#30693;&#65306;</p><pre><code class="language-blade">&lt;x-mail::message&gt;
+# Invoice Paid
+
+Your invoice has been paid!
+
+&lt;x-mail::button :url="$url"&gt;
+View Invoice
+&lt;/x-mail::button&gt;
+
+Thanks,&lt;br&gt;
+{{ config('app.name') }}
+&lt;/x-mail::message&gt;</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#32534;&#20889; Markdown &#37038;&#20214;&#26102;&#65292;&#35831;&#21247;&#20351;&#29992;&#36807;&#22810;&#32553;&#36827;&#12290;&#25353;&#29031; Markdown &#26631;&#20934;&#65292;Markdown &#35299;&#26512;&#22120;&#20250;&#23558;&#32553;&#36827;&#20869;&#23481;&#28210;&#26579;&#20026;&#20195;&#30721;&#22359;&#12290;</p>
+</blockquote><h4 id="27ffe95c5b2569b835a070cbaf0b4ddf">&#25353;&#38062;&#32452;&#20214;</h4><p>&#25353;&#38062;&#32452;&#20214;&#28210;&#26579;&#23621;&#20013;&#30340;&#25353;&#38062;&#38142;&#25509;&#12290;&#35813;&#32452;&#20214;&#25509;&#21463;&#20004;&#20010;&#21442;&#25968;&#65306;<code>url</code> &#21644;&#21487;&#36873;&#30340; <code>color</code>&#12290;&#25903;&#25345;&#30340;&#39068;&#33394;&#20026; <code>primary</code>&#12289;<code>green</code> &#21644; <code>red</code>&#12290;&#20320;&#21487;&#20197;&#26681;&#25454;&#38656;&#35201;&#21521;&#36890;&#30693;&#28155;&#21152;&#20219;&#24847;&#25968;&#37327;&#30340;&#25353;&#38062;&#32452;&#20214;&#65306;</p><pre><code class="language-blade">&lt;x-mail::button :url="$url" color="green"&gt;
+View Invoice
+&lt;/x-mail::button&gt;</code></pre><h4 id="d2869eb323a099bcdcf60d2fa5f78388">&#38754;&#26495;&#32452;&#20214;</h4><p>&#38754;&#26495;&#32452;&#20214;&#23558;&#32473;&#23450;&#30340;&#25991;&#26412;&#22359;&#28210;&#26579;&#20026;&#38754;&#26495;&#65292;&#20854;&#32972;&#26223;&#39068;&#33394;&#19982;&#36890;&#30693;&#30340;&#20854;&#20313;&#37096;&#20998;&#30053;&#26377;&#19981;&#21516;&#12290;&#36825;&#20801;&#35768;&#20320;&#23558;&#27880;&#24847;&#21147;&#21560;&#24341;&#21040;&#32473;&#23450;&#30340;&#25991;&#26412;&#22359;&#19978;&#65306;</p><pre><code class="language-blade">&lt;x-mail::panel&gt;
+This is the panel content.
+&lt;/x-mail::panel&gt;</code></pre><h4 id="85654e5abb8a6897140f0db644cff733">&#34920;&#26684;&#32452;&#20214;</h4><p>&#34920;&#26684;&#32452;&#20214;&#20801;&#35768;&#20320;&#23558; Markdown &#34920;&#36716;&#25442;&#20026; HTML &#34920;&#12290;&#35813;&#32452;&#20214;&#25509;&#21463; Markdown &#34920;&#20316;&#20026;&#20854;&#20869;&#23481;&#12290;&#34920;&#21015;&#23545;&#40784;&#20351;&#29992;&#40664;&#35748;&#30340; Markdown &#34920;&#23545;&#40784;&#35821;&#27861;&#25903;&#25345;&#65306;</p><pre><code class="language-blade">&lt;x-mail::table&gt;
+| Laravel       | Table         | Example       |
+| ------------- | :-----------: | ------------: |
+| Col 2 is      | Centered      | $10           |
+| Col 3 is      | Right-Aligned | $20           |
+&lt;/x-mail::table&gt;</code></pre><h3 id="6fce1c9aa3654ae2f0eedcc068a7e189">&#33258;&#23450;&#20041;&#32452;&#20214;</h3><p>&#20320;&#21487;&#20197;&#23558;&#25152;&#26377; Markdown &#36890;&#30693;&#32452;&#20214;&#23548;&#20986;&#21040;&#33258;&#24049;&#30340;&#24212;&#29992;&#36827;&#34892;&#33258;&#23450;&#20041;&#12290;&#35201;&#23548;&#20986;&#36825;&#20123;&#32452;&#20214;&#65292;&#35831;&#20351;&#29992; <code>vendor:publish</code> Artisan &#21629;&#20196;&#21457;&#24067; <code>laravel-mail</code> &#36164;&#20135;&#26631;&#31614;&#65306;</p><pre><code class="language-shell">php artisan vendor:publish --tag=laravel-mail</code></pre><p>&#27492;&#21629;&#20196;&#20250;&#23558; Markdown &#37038;&#20214;&#32452;&#20214;&#21457;&#24067;&#21040; <code>resources/views/vendor/mail</code> &#30446;&#24405;&#12290;<code>mail</code> &#30446;&#24405;&#23558;&#21253;&#21547;&#19968;&#20010; <code>html</code> &#30446;&#24405;&#21644;&#19968;&#20010; <code>text</code> &#30446;&#24405;&#65292;&#27599;&#20010;&#30446;&#24405;&#37117;&#21253;&#21547;&#27599;&#20010;&#21487;&#29992;&#32452;&#20214;&#30340;&#30456;&#24212;&#34920;&#31034;&#12290;&#20320;&#21487;&#20197;&#38543;&#24847;&#33258;&#23450;&#20041;&#36825;&#20123;&#32452;&#20214;&#12290;</p><h4 id="76c43b23829c7d0629e04bae0f6918de">&#33258;&#23450;&#20041; CSS</h4><p>&#23548;&#20986;&#32452;&#20214;&#21518;&#65292;<code>resources/views/vendor/mail/html/themes</code> &#30446;&#24405;&#23558;&#21253;&#21547;&#19968;&#20010; <code>default.css</code> &#25991;&#20214;&#12290;&#20320;&#21487;&#20197;&#33258;&#23450;&#20041;&#27492;&#25991;&#20214;&#20013;&#30340; CSS&#65292;&#20320;&#30340;&#26679;&#24335;&#23558;&#33258;&#21160;&#20197;&#20869;&#32852;&#26041;&#24335;&#23884;&#20837; Markdown &#36890;&#30693;&#30340; HTML &#34920;&#31034;&#20013;&#12290;</p><p>&#22914;&#26524;&#20320;&#24076;&#26395;&#20026; Laravel &#30340; Markdown &#32452;&#20214;&#26500;&#24314;&#19968;&#20010;&#20840;&#26032;&#30340;&#20027;&#39064;&#65292;&#21487;&#20197;&#23558; CSS &#25991;&#20214;&#25918;&#22312; <code>html/themes</code> &#30446;&#24405;&#20013;&#12290;&#21629;&#21517;&#24182;&#20445;&#23384; CSS &#25991;&#20214;&#21518;&#65292;&#26356;&#26032; <code>mail</code> &#37197;&#32622;&#25991;&#20214;&#30340; <code>theme</code> &#36873;&#39033;&#20197;&#21305;&#37197;&#26032;&#20027;&#39064;&#30340;&#21517;&#31216;&#12290;</p><p>&#35201;&#20026;&#21333;&#20010;&#36890;&#30693;&#33258;&#23450;&#20041;&#20027;&#39064;&#65292;&#21487;&#20197;&#22312;&#26500;&#24314;&#36890;&#30693;&#30340;&#37038;&#20214;&#28040;&#24687;&#26102;&#35843;&#29992; <code>theme</code> &#26041;&#27861;&#12290;<code>theme</code> &#26041;&#27861;&#25509;&#21463;&#24212;&#22312;&#21457;&#36865;&#36890;&#30693;&#26102;&#20351;&#29992;&#30340;&#20027;&#39064;&#21517;&#31216;&#65306;</p><pre><code class="language-php">/**
+ * Get the mail representation of the notification.
+ */
+public function toMail(object $notifiable): MailMessage
+{
+    return (new MailMessage)
+        -&gt;theme('invoice')
+        -&gt;subject('Invoice Paid')
+        -&gt;markdown('mail.invoice.paid', ['url' =&gt; $url]);
+}</code></pre><h2 id="c7aec6048e695b9c386ef464a0e03e70">&#25968;&#25454;&#24211;&#36890;&#30693;</h2><h3 id="b0ff454ac9620e7643a24ef9ec31ac4d">&#21069;&#25552;&#26465;&#20214;</h3><p><code>database</code> &#36890;&#30693;&#39057;&#36947;&#23558;&#36890;&#30693;&#20449;&#24687;&#23384;&#20648;&#22312;&#25968;&#25454;&#24211;&#34920;&#20013;&#12290;&#35813;&#34920;&#23558;&#21253;&#21547;&#36890;&#30693;&#31867;&#22411;&#20197;&#21450;&#25551;&#36848;&#36890;&#30693;&#30340; JSON &#25968;&#25454;&#32467;&#26500;&#31561;&#20449;&#24687;&#12290;</p><p>&#20320;&#21487;&#20197;&#26597;&#35810;&#35813;&#34920;&#20197;&#22312;&#24212;&#29992;&#30340;&#29992;&#25143;&#30028;&#38754;&#20013;&#26174;&#31034;&#36890;&#30693;&#12290;&#20294;&#26159;&#65292;&#22312;&#25191;&#34892;&#27492;&#25805;&#20316;&#20043;&#21069;&#65292;&#38656;&#35201;&#21019;&#24314;&#19968;&#20010;&#25968;&#25454;&#24211;&#34920;&#26469;&#20445;&#23384;&#36890;&#30693;&#12290;&#21487;&#20197;&#20351;&#29992; <code>make:notifications-table</code> &#21629;&#20196;&#29983;&#25104;&#24102;&#26377;&#27491;&#30830;&#34920;&#26550;&#26500;&#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/migrations" target="_blank">migration</a>&#65306;</p><pre><code class="language-shell">php artisan make:notifications-table
+
+php artisan migrate</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#22914;&#26524;&#20320;&#30340;&#21487;&#36890;&#30693;&#27169;&#22411;&#27491;&#22312;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent#uuid-and-ulid-keys" target="_blank">UUID &#25110; ULID &#20027;&#38190;</a>&#65292;&#21017;&#24212;&#22312;&#36890;&#30693;&#34920; migration &#20013;&#23558; <code>morphs</code> &#26041;&#27861;&#26367;&#25442;&#20026; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/migrations#column-method-uuidMorphs" target="_blank">uuidMorphs</a> &#25110; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/migrations#column-method-ulidMorphs" target="_blank">ulidMorphs</a>&#12290;</p>
+</blockquote><h3 id="22ffe97fab359a92115531b3220f4a3d">&#26684;&#24335;&#21270;&#25968;&#25454;&#24211;&#36890;&#30693;</h3><p>&#22914;&#26524;&#36890;&#30693;&#25903;&#25345;&#23384;&#20648;&#22312;&#25968;&#25454;&#24211;&#34920;&#20013;&#65292;&#21017;&#24212;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041; <code>toDatabase</code> &#25110; <code>toArray</code> &#26041;&#27861;&#12290;&#27492;&#26041;&#27861;&#23558;&#25509;&#25910;&#19968;&#20010; <code>$notifiable</code> &#23454;&#20307;&#65292;&#24182;&#24212;&#36820;&#22238;&#19968;&#20010;&#26222;&#36890;&#30340; PHP &#25968;&#32452;&#12290;&#36820;&#22238;&#30340;&#25968;&#32452;&#23558;&#34987;&#32534;&#30721;&#20026; JSON &#24182;&#23384;&#20648;&#22312; <code>notifications</code> &#34920;&#30340; <code>data</code> &#21015;&#20013;&#12290;&#35753;&#25105;&#20204;&#30475;&#19968;&#19979; <code>toArray</code> &#26041;&#27861;&#30340;&#31034;&#20363;&#65306;</p><pre><code class="language-php">/**
+ * Get the array representation of the notification.
+ *
+ * @return array&lt;string, mixed&gt;
+ */
+public function toArray(object $notifiable): array
+{
+    return [
+        'invoice_id' =&gt; $this-&gt;invoice-&gt;id,
+        'amount' =&gt; $this-&gt;invoice-&gt;amount,
+    ];
+}</code></pre><p>&#24403;&#36890;&#30693;&#23384;&#20648;&#22312;&#24212;&#29992;&#30340;&#25968;&#25454;&#24211;&#20013;&#26102;&#65292;<code>type</code> &#21015;&#40664;&#35748;&#35774;&#32622;&#20026;&#36890;&#30693;&#30340;&#31867;&#21517;&#65292;<code>read_at</code> &#21015;&#23558;&#20026; <code>null</code>&#12290;&#20294;&#26159;&#65292;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;&#36890;&#30693;&#31867;&#20013;&#23450;&#20041; <code>databaseType</code> &#21644; <code>initialDatabaseReadAtValue</code> &#26041;&#27861;&#26469;&#33258;&#23450;&#20041;&#27492;&#34892;&#20026;&#65306;</p><pre><code class="language-php">use Illuminate\Support\Carbon;
+
+/**
+ * Get the notification's database type.
+ */
+public function databaseType(object $notifiable): string
+{
+    return 'invoice-paid';
+}
+
+/**
+ * Get the initial value for the "read_at" column.
+ */
+public function initialDatabaseReadAtValue(): ?Carbon
+{
+    return null;
+}</code></pre><h4 id="91204f39663ebca82f2c200473832a82"><code>toDatabase</code> &#19982; <code>toArray</code></h4><p><code>toArray</code> &#26041;&#27861;&#20063;&#34987; <code>broadcast</code> &#39057;&#36947;&#29992;&#20110;&#30830;&#23450;&#35201;&#24191;&#25773;&#21040; JavaScript &#21069;&#31471;&#30340;&#25968;&#25454;&#12290;&#22914;&#26524;&#24076;&#26395;&#20026; <code>database</code> &#21644; <code>broadcast</code> &#39057;&#36947;&#25552;&#20379;&#20004;&#31181;&#19981;&#21516;&#30340;&#25968;&#32452;&#34920;&#31034;&#24418;&#24335;&#65292;&#21017;&#24212;&#23450;&#20041; <code>toDatabase</code> &#26041;&#27861;&#32780;&#19981;&#26159; <code>toArray</code> &#26041;&#27861;&#12290;</p><h3 id="197aad4305b9755b5b236c87bb7f4476">&#35775;&#38382;&#36890;&#30693;</h3><p>&#36890;&#30693;&#23384;&#20648;&#22312;&#25968;&#25454;&#24211;&#20013;&#21518;&#65292;&#38656;&#35201;&#19968;&#31181;&#20415;&#25463;&#30340;&#26041;&#27861;&#20174;&#21487;&#36890;&#30693;&#23454;&#20307;&#35775;&#38382;&#23427;&#20204;&#12290;<code>Illuminate\Notifications\Notifiable</code> Trait &#21253;&#21547;&#22312; Laravel &#30340;&#40664;&#35748; <code>App\Models\User</code> &#27169;&#22411;&#20013;&#65292;&#23427;&#21253;&#21547;&#19968;&#20010; <code>notifications</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/eloquent-relationships" target="_blank">Eloquent &#20851;&#32852;</a>&#65292;&#29992;&#20110;&#36820;&#22238;&#23454;&#20307;&#30340;&#36890;&#30693;&#12290;&#35201;&#33719;&#21462;&#36890;&#30693;&#65292;&#21487;&#20197;&#20687;&#35775;&#38382;&#20219;&#20309;&#20854;&#20182; Eloquent &#20851;&#32852;&#19968;&#26679;&#35775;&#38382;&#27492;&#26041;&#27861;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#36890;&#30693;&#23558;&#25353; <code>created_at</code> &#26102;&#38388;&#25139;&#25490;&#24207;&#65292;&#26368;&#26032;&#30340;&#36890;&#30693;&#20301;&#20110;&#38598;&#21512;&#30340;&#24320;&#22836;&#65306;</p><pre><code class="language-php">$user = App\Models\User::find(1);
+
+foreach ($user-&gt;notifications as $notification) {
+    echo $notification-&gt;type;
+}</code></pre><p>&#22914;&#26524;&#21482;&#24819;&#26816;&#32034;&#12300;&#26410;&#35835;&#12301;&#36890;&#30693;&#65292;&#21487;&#20197;&#20351;&#29992; <code>unreadNotifications</code> &#20851;&#32852;&#12290;&#21516;&#26679;&#65292;&#36825;&#20123;&#36890;&#30693;&#23558;&#25353; <code>created_at</code> &#26102;&#38388;&#25139;&#25490;&#24207;&#65292;&#26368;&#26032;&#30340;&#36890;&#30693;&#20301;&#20110;&#38598;&#21512;&#30340;&#24320;&#22836;&#65306;</p><pre><code class="language-php">$user = App\Models\User::find(1);
+
+foreach ($user-&gt;unreadNotifications as $notification) {
+    echo $notification-&gt;type;
+}</code></pre><p>&#22914;&#26524;&#21482;&#24819;&#26816;&#32034;&#12300;&#24050;&#35835;&#12301;&#36890;&#30693;&#65292;&#21487;&#20197;&#20351;&#29992; <code>readNotifications</code> &#20851;&#32852;&#65306;</p><pre><code class="language-php">$user = App\Models\User::find(1);
+
+foreach ($user-&gt;readNotifications as $notification) {
+    echo $notification-&gt;type;
+}</code></pre><blockquote>
+<p>[!NOTE]<br>
+&#35201;&#20174; JavaScript &#23458;&#25143;&#31471;&#35775;&#38382;&#36890;&#30693;&#65292;&#24212;&#20026;&#24212;&#29992;&#23450;&#20041;&#19968;&#20010;&#36890;&#30693;&#25511;&#21046;&#22120;&#65292;&#35813;&#25511;&#21046;&#22120;&#36820;&#22238;&#21487;&#36890;&#30693;&#23454;&#20307;&#65288;&#20363;&#22914;&#24403;&#21069;&#29992;&#25143;&#65289;&#30340;&#36890;&#30693;&#12290;&#28982;&#21518;&#21487;&#20197;&#20174; JavaScript &#23458;&#25143;&#31471;&#21521;&#35813;&#25511;&#21046;&#22120;&#30340; URL &#21457;&#36215; HTTP &#35831;&#27714;&#12290;</p>
+</blockquote><h3 id="d64c0201af63a714c7d16ef9e2f148ca">&#23558;&#36890;&#30693;&#26631;&#35760;&#20026;&#24050;&#35835;</h3><p>&#36890;&#24120;&#65292;&#20320;&#24076;&#26395;&#22312;&#29992;&#25143;&#26597;&#30475;&#36890;&#30693;&#26102;&#23558;&#20854;&#26631;&#35760;&#20026;&#12300;&#24050;&#35835;&#12301;&#12290;<code>Illuminate\Notifications\Notifiable</code> Trait &#25552;&#20379;&#20102;&#19968;&#20010; <code>markAsRead</code> &#26041;&#27861;&#65292;&#35813;&#26041;&#27861;&#20250;&#26356;&#26032;&#36890;&#30693;&#30340;&#25968;&#25454;&#24211;&#35760;&#24405;&#19978;&#30340; <code>read_at</code> &#21015;&#65306;</p><pre><code class="language-php">$user = App\Models\User::find(1);
+
+foreach ($user-&gt;unreadNotifications as $notification) {
+    $notification-&gt;markAsRead();
+}</code></pre><p>&#20294;&#26159;&#65292;&#20320;&#20063;&#21487;&#20197;&#30452;&#25509;&#22312;&#36890;&#30693;&#38598;&#21512;&#19978;&#20351;&#29992; <code>markAsRead</code> &#26041;&#27861;&#65292;&#32780;&#19981;&#24517;&#24490;&#29615;&#36941;&#21382;&#27599;&#20010;&#36890;&#30693;&#65306;</p><pre><code class="language-php">$user-&gt;unreadNotifications-&gt;markAsRead();</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#20351;&#29992;&#25209;&#37327;&#26356;&#26032;&#26597;&#35810;&#23558;&#25152;&#26377;&#36890;&#30693;&#26631;&#35760;&#20026;&#24050;&#35835;&#65292;&#32780;&#26080;&#38656;&#20174;&#25968;&#25454;&#24211;&#20013;&#26816;&#32034;&#23427;&#20204;&#65306;</p><pre><code class="language-php">$user = App\Models\User::find(1);
+
+$user-&gt;unreadNotifications()-&gt;update(['read_at' =&gt; now()]);</code></pre><p>&#20320;&#21487;&#20197;&#21024;&#38500;&#36890;&#30693;&#20197;&#23558;&#20854;&#20174;&#34920;&#20013;&#23436;&#20840;&#31227;&#38500;&#65306;</p><pre><code class="language-php">$user-&gt;notifications()-&gt;delete();</code></pre><h2 id="beb12dc332cf0419d030dc0464e7a2f4">&#24191;&#25773;&#36890;&#30693;</h2><h3 id="b0ff454ac9620e7643a24ef9ec31ac4d">&#21069;&#25552;&#26465;&#20214;</h3><p>&#22312;&#24191;&#25773;&#36890;&#30693;&#20043;&#21069;&#65292;&#24212;&#37197;&#32622;&#24182;&#29087;&#24713; Laravel &#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/broadcasting" target="_blank">&#20107;&#20214;&#24191;&#25773;</a>&#26381;&#21153;&#12290;&#20107;&#20214;&#24191;&#25773;&#25552;&#20379;&#20102;&#19968;&#31181;&#20174; JavaScript &#21069;&#31471;&#23545;&#26381;&#21153;&#31471; Laravel &#20107;&#20214;&#20570;&#20986;&#21453;&#24212;&#30340;&#26041;&#27861;&#12290;</p><h3 id="d50b8afff865eae3051f90873abe7404">&#26684;&#24335;&#21270;&#24191;&#25773;&#36890;&#30693;</h3><p><code>broadcast</code> &#39057;&#36947;&#20351;&#29992; Laravel &#30340;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/broadcasting" target="_blank">&#20107;&#20214;&#24191;&#25773;</a>&#26381;&#21153;&#24191;&#25773;&#36890;&#30693;&#65292;&#20351;&#20320;&#30340; JavaScript &#21069;&#31471;&#33021;&#22815;&#23454;&#26102;&#25429;&#33719;&#36890;&#30693;&#12290;&#22914;&#26524;&#36890;&#30693;&#25903;&#25345;&#24191;&#25773;&#65292;&#21487;&#20197;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041; <code>toBroadcast</code> &#26041;&#27861;&#12290;&#27492;&#26041;&#27861;&#23558;&#25509;&#25910;&#19968;&#20010; <code>$notifiable</code> &#23454;&#20307;&#65292;&#24182;&#24212;&#36820;&#22238;&#19968;&#20010; <code>BroadcastMessage</code> &#23454;&#20363;&#12290;&#22914;&#26524; <code>toBroadcast</code> &#26041;&#27861;&#19981;&#23384;&#22312;&#65292;&#21017;&#23558;&#20351;&#29992; <code>toArray</code> &#26041;&#27861;&#26469;&#25910;&#38598;&#24212;&#24191;&#25773;&#30340;&#25968;&#25454;&#12290;&#36820;&#22238;&#30340;&#25968;&#25454;&#23558;&#34987;&#32534;&#30721;&#20026; JSON &#24182;&#24191;&#25773;&#21040;&#20320;&#30340; JavaScript &#21069;&#31471;&#12290;&#35753;&#25105;&#20204;&#30475;&#19968;&#19979; <code>toBroadcast</code> &#26041;&#27861;&#30340;&#31034;&#20363;&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Messages\BroadcastMessage;
+
+/**
+ * Get the broadcastable representation of the notification.
+ */
+public function toBroadcast(object $notifiable): BroadcastMessage
+{
+    return new BroadcastMessage([
+        'invoice_id' =&gt; $this-&gt;invoice-&gt;id,
+        'amount' =&gt; $this-&gt;invoice-&gt;amount,
+    ]);
+}</code></pre><h4 id="52d4198b4511dab98b76431a18f407d1">&#24191;&#25773;&#38431;&#21015;&#37197;&#32622;</h4><p>&#25152;&#26377;&#24191;&#25773;&#36890;&#30693;&#37117;&#23558;&#25490;&#38431;&#31561;&#24453;&#24191;&#25773;&#12290;&#22914;&#26524;&#24076;&#26395;&#37197;&#32622;&#29992;&#20110;&#25490;&#38431;&#24191;&#25773;&#25805;&#20316;&#30340;&#38431;&#21015;&#36830;&#25509;&#25110;&#38431;&#21015;&#21517;&#31216;&#65292;&#21487;&#20197;&#20351;&#29992; <code>BroadcastMessage</code> &#30340; <code>onConnection</code> &#21644; <code>onQueue</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">return (new BroadcastMessage($data))
+    -&gt;onConnection('sqs')
+    -&gt;onQueue('broadcasts');</code></pre><h4 id="a79af488509f249e2bcdf1be9dceb6e7">&#33258;&#23450;&#20041;&#36890;&#30693;&#31867;&#22411;</h4><p>&#38500;&#20320;&#25351;&#23450;&#30340;&#25968;&#25454;&#22806;&#65292;&#25152;&#26377;&#24191;&#25773;&#36890;&#30693;&#36824;&#20855;&#26377;&#19968;&#20010; <code>type</code> &#23383;&#27573;&#65292;&#20854;&#20013;&#21253;&#21547;&#36890;&#30693;&#30340;&#23436;&#25972;&#31867;&#21517;&#12290;&#22914;&#26524;&#24076;&#26395;&#33258;&#23450;&#20041;&#36890;&#30693; <code>type</code>&#65292;&#21487;&#20197;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041; <code>broadcastType</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">/**
+ * Get the type of the notification being broadcast.
+ */
+public function broadcastType(): string
+{
+    return 'broadcast.message';
+}</code></pre><h3 id="f0b70b7135a6cba4b74dd6a243b68904">&#30417;&#21548;&#36890;&#30693;</h3><p>&#36890;&#30693;&#23558;&#22312;&#20351;&#29992; <code>{notifiable}.{id}</code> &#32422;&#23450;&#26684;&#24335;&#21270;&#30340;&#31169;&#26377;&#39057;&#36947;&#19978;&#24191;&#25773;&#12290;&#22240;&#27492;&#65292;&#22914;&#26524;&#35201;&#21521; ID &#20026; <code>1</code> &#30340; <code>App\Models\User</code> &#23454;&#20363;&#21457;&#36865;&#36890;&#30693;&#65292;&#21017;&#36890;&#30693;&#23558;&#22312; <code>App.Models.User.1</code> &#31169;&#26377;&#39057;&#36947;&#19978;&#24191;&#25773;&#12290;&#22312;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/broadcasting#client-side-installation" target="_blank">Laravel Echo</a> &#26102;&#65292;&#21487;&#20197;&#20351;&#29992; <code>notification</code> &#26041;&#27861;&#36731;&#26494;&#30417;&#21548;&#39057;&#36947;&#19978;&#30340;&#36890;&#30693;&#65306;</p><pre><code class="language-js">Echo.private('App.Models.User.' + userId)
+    .notification((notification) =&gt; {
+        console.log(notification.type);
+    });</code></pre><h4 id="748985045e597f112c7f61935af455d5">&#20351;&#29992; React&#12289;Vue &#25110; Svelte</h4><p>Laravel Echo &#21253;&#21547; React&#12289;Vue &#21644; Svelte &#38057;&#23376;&#65292;&#20351;&#30417;&#21548;&#36890;&#30693;&#21464;&#24471;&#36731;&#26494;&#12290;&#35201;&#24320;&#22987;&#20351;&#29992;&#65292;&#35831;&#35843;&#29992; <code>useEchoNotification</code> &#38057;&#23376;&#65292;&#35813;&#38057;&#23376;&#29992;&#20110;&#30417;&#21548;&#36890;&#30693;&#12290;<code>useEchoNotification</code> &#38057;&#23376;&#23558;&#22312;&#20351;&#29992;&#23427;&#30340;&#32452;&#20214;&#21368;&#36733;&#26102;&#33258;&#21160;&#31163;&#24320;&#39057;&#36947;&#65306;</p><pre><code class="language-js">import { useEchoNotification } from "@laravel/echo-react";
+
+useEchoNotification(
+    `App.Models.User.${userId}`,
+    (notification) =&gt; {
+        console.log(notification.type);
+    },
+);</code></pre><pre><code class="language-vue">&lt;script setup lang="ts"&gt;
+import { useEchoNotification } from "@laravel/echo-vue";
+
+useEchoNotification(
+    `App.Models.User.${userId}`,
+    (notification) =&gt; {
+        console.log(notification.type);
+    },
+);
+&lt;/script&gt;</code></pre><pre><code class="language-svelte">&lt;script&gt;
+import { useEchoNotification } from "@laravel/echo-svelte";
+
+useEchoNotification(
+    `App.Models.User.${userId}`,
+    (notification) =&gt; {
+        console.log(notification.type);
+    },
+);
+&lt;/script&gt;</code></pre><p>&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;&#38057;&#23376;&#20250;&#30417;&#21548;&#25152;&#26377;&#36890;&#30693;&#12290;&#35201;&#25351;&#23450;&#20320;&#24076;&#26395;&#30417;&#21548;&#30340;&#36890;&#30693;&#31867;&#22411;&#65292;&#21487;&#20197;&#23558;&#23383;&#31526;&#20018;&#25110;&#31867;&#22411;&#25968;&#32452;&#25552;&#20379;&#32473; <code>useEchoNotification</code>&#65306;</p><pre><code class="language-js">import { useEchoNotification } from "@laravel/echo-react";
+
+useEchoNotification(
+    `App.Models.User.${userId}`,
+    (notification) =&gt; {
+        console.log(notification.type);
+    },
+    'App.Notifications.InvoicePaid',
+);</code></pre><pre><code class="language-vue">&lt;script setup lang="ts"&gt;
+import { useEchoNotification } from "@laravel/echo-vue";
+
+useEchoNotification(
+    `App.Models.User.${userId}`,
+    (notification) =&gt; {
+        console.log(notification.type);
+    },
+    'App.Notifications.InvoicePaid',
+);
+&lt;/script&gt;</code></pre><pre><code class="language-svelte">&lt;script&gt;
+import { useEchoNotification } from "@laravel/echo-svelte";
+
+useEchoNotification(
+    `App.Models.User.${userId}`,
+    (notification) =&gt; {
+        console.log(notification.type);
+    },
+    'App.Notifications.InvoicePaid',
+);
+&lt;/script&gt;</code></pre><p>&#20320;&#36824;&#21487;&#20197;&#25351;&#23450;&#36890;&#30693;&#26377;&#25928;&#36733;&#33655;&#25968;&#25454;&#30340;&#24418;&#29366;&#65292;&#20174;&#32780;&#25552;&#20379;&#26356;&#39640;&#30340;&#31867;&#22411;&#23433;&#20840;&#24615;&#21644;&#32534;&#36753;&#20415;&#21033;&#24615;&#65306;</p><pre><code class="language-ts">type InvoicePaidNotification = {
+    invoice_id: number;
+    created_at: string;
+};
+
+useEchoNotification&lt;InvoicePaidNotification&gt;(
+    `App.Models.User.${userId}`,
+    (notification) =&gt; {
+        console.log(notification.invoice_id);
+        console.log(notification.created_at);
+        console.log(notification.type);
+    },
+    'App.Notifications.InvoicePaid',
+);</code></pre><h4 id="1f58b9c94c679b922c960b453ba7986a">&#33258;&#23450;&#20041;&#36890;&#30693;&#39057;&#36947;</h4><p>&#22914;&#26524;&#24076;&#26395;&#33258;&#23450;&#20041;&#23454;&#20307;&#30340;&#24191;&#25773;&#36890;&#30693;&#24191;&#25773;&#21040;&#30340;&#39057;&#36947;&#65292;&#21487;&#20197;&#22312;&#21487;&#36890;&#30693;&#23454;&#20307;&#19978;&#23450;&#20041; <code>receivesBroadcastNotificationsOn</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * The channels the user receives notification broadcasts on.
+     */
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'users.'.$this-&gt;id;
+    }
+}</code></pre><h2 id="0fe78ffd7cbb055024638c3c223f93ae">SMS &#36890;&#30693;</h2><h3 id="b0ff454ac9620e7643a24ef9ec31ac4d">&#21069;&#25552;&#26465;&#20214;</h3><p>&#22312; Laravel &#20013;&#21457;&#36865; SMS &#36890;&#30693;&#30001; <a href="https://www.vonage.com/" target="_blank" rel="noopener noreferrer">Vonage</a>&#65288;&#21069;&#36523;&#20026; Nexmo&#65289;&#25552;&#20379;&#25903;&#25345;&#12290;&#22312;&#36890;&#36807; Vonage &#21457;&#36865;&#36890;&#30693;&#20043;&#21069;&#65292;&#38656;&#35201;&#23433;&#35013; <code>laravel/vonage-notification-channel</code> &#21644; <code>guzzlehttp/guzzle</code> &#21253;&#65306;</p><pre><code class="language-shell">composer require laravel/vonage-notification-channel guzzlehttp/guzzle</code></pre><p>&#35813;&#21253;&#21253;&#21547;&#19968;&#20010;<a href="https://github.com/laravel/vonage-notification-channel/blob/3.x/config/vonage.php" target="_blank" rel="noopener noreferrer">&#37197;&#32622;&#25991;&#20214;</a>&#12290;&#20294;&#26159;&#65292;&#20320;&#26080;&#38656;&#23558;&#27492;&#37197;&#32622;&#25991;&#20214;&#23548;&#20986;&#21040;&#33258;&#24049;&#30340;&#24212;&#29992;&#20013;&#12290;&#21487;&#20197;&#31616;&#21333;&#22320;&#20351;&#29992; <code>VONAGE_KEY</code> &#21644; <code>VONAGE_SECRET</code> &#29615;&#22659;&#21464;&#37327;&#26469;&#23450;&#20041;&#20320;&#30340; Vonage &#20844;&#38053;&#21644;&#23494;&#38053;&#12290;</p><p>&#23450;&#20041;&#23494;&#38053;&#21518;&#65292;&#24212;&#35774;&#32622; <code>VONAGE_SMS_FROM</code> &#29615;&#22659;&#21464;&#37327;&#65292;&#35813;&#21464;&#37327;&#23450;&#20041;&#20102;&#20320;&#30340; SMS &#28040;&#24687;&#40664;&#35748;&#24212;&#21457;&#36865;&#30340;&#30005;&#35805;&#21495;&#30721;&#12290;&#21487;&#20197;&#22312; Vonage &#25511;&#21046;&#38754;&#26495;&#20013;&#29983;&#25104;&#27492;&#30005;&#35805;&#21495;&#30721;&#65306;</p><pre><code class="language-ini">VONAGE_SMS_FROM=15556666666</code></pre><h3 id="ca847b6e2c84816683b95162e7f2fb55">&#26684;&#24335;&#21270; SMS &#36890;&#30693;</h3><p>&#22914;&#26524;&#36890;&#30693;&#25903;&#25345;&#20316;&#20026; SMS &#21457;&#36865;&#65292;&#21017;&#24212;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041; <code>toVonage</code> &#26041;&#27861;&#12290;&#27492;&#26041;&#27861;&#23558;&#25509;&#25910;&#19968;&#20010; <code>$notifiable</code> &#23454;&#20307;&#65292;&#24182;&#24212;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Notifications\Messages\VonageMessage</code> &#23454;&#20363;&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Messages\VonageMessage;
+
+/**
+ * Get the Vonage / SMS representation of the notification.
+ */
+public function toVonage(object $notifiable): VonageMessage
+{
+    return (new VonageMessage)
+        -&gt;content('Your SMS message content');
+}</code></pre><h4 id="93d4312cd628eea98ed6e9472523d278">Unicode &#20869;&#23481;</h4><p>&#22914;&#26524; SMS &#28040;&#24687;&#23558;&#21253;&#21547; unicode &#23383;&#31526;&#65292;&#21017;&#24212;&#22312;&#26500;&#36896; <code>VonageMessage</code> &#23454;&#20363;&#26102;&#35843;&#29992; <code>unicode</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Messages\VonageMessage;
+
+/**
+ * Get the Vonage / SMS representation of the notification.
+ */
+public function toVonage(object $notifiable): VonageMessage
+{
+    return (new VonageMessage)
+        -&gt;content('Your unicode message')
+        -&gt;unicode();
+}</code></pre><h3 id="f616fd061d0d7f70e993fc35fc606897">&#33258;&#23450;&#20041;&#12300;From&#12301;&#21495;&#30721;</h3><p>&#22914;&#26524;&#24076;&#26395;&#20174;&#19982; <code>VONAGE_SMS_FROM</code> &#29615;&#22659;&#21464;&#37327;&#25351;&#23450;&#30340;&#30005;&#35805;&#21495;&#30721;&#19981;&#21516;&#30340;&#30005;&#35805;&#21495;&#30721;&#21457;&#36865;&#26576;&#20123;&#36890;&#30693;&#65292;&#21487;&#20197;&#22312; <code>VonageMessage</code> &#23454;&#20363;&#19978;&#35843;&#29992; <code>from</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Messages\VonageMessage;
+
+/**
+ * Get the Vonage / SMS representation of the notification.
+ */
+public function toVonage(object $notifiable): VonageMessage
+{
+    return (new VonageMessage)
+        -&gt;content('Your SMS message content')
+        -&gt;from('15554443333');
+}</code></pre><h3 id="0c59ed7606d63a3eab9603fb9f205ce8">&#28155;&#21152;&#23458;&#25143;&#31471;&#24341;&#29992;</h3><p>&#22914;&#26524;&#24076;&#26395;&#25353;&#29992;&#25143;&#12289;&#22242;&#38431;&#25110;&#23458;&#25143;&#31471;&#36319;&#36394;&#25104;&#26412;&#65292;&#21487;&#20197;&#21521;&#36890;&#30693;&#28155;&#21152;&#12300;&#23458;&#25143;&#31471;&#24341;&#29992;&#12301;&#12290;Vonage &#23558;&#20801;&#35768;&#20320;&#20351;&#29992;&#27492;&#23458;&#25143;&#31471;&#24341;&#29992;&#29983;&#25104;&#25253;&#21578;&#65292;&#20197;&#20415;&#20320;&#21487;&#20197;&#26356;&#22909;&#22320;&#20102;&#35299;&#29305;&#23450;&#23458;&#25143;&#30340; SMS &#20351;&#29992;&#24773;&#20917;&#12290;&#23458;&#25143;&#31471;&#24341;&#29992;&#21487;&#20197;&#26159;&#20219;&#24847;&#38271;&#24230;&#19981;&#36229;&#36807; 40 &#20010;&#23383;&#31526;&#30340;&#23383;&#31526;&#20018;&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Messages\VonageMessage;
+
+/**
+ * Get the Vonage / SMS representation of the notification.
+ */
+public function toVonage(object $notifiable): VonageMessage
+{
+    return (new VonageMessage)
+        -&gt;clientReference((string) $notifiable-&gt;id)
+        -&gt;content('Your SMS message content');
+}</code></pre><h3 id="f9d73b825e148cae0ff1922a46678b68">&#36335;&#30001; SMS &#36890;&#30693;</h3><p>&#35201;&#23558; Vonage &#36890;&#30693;&#36335;&#30001;&#21040;&#27491;&#30830;&#30340;&#30005;&#35805;&#21495;&#30721;&#65292;&#35831;&#22312;&#21487;&#36890;&#30693;&#23454;&#20307;&#19978;&#23450;&#20041; <code>routeNotificationForVonage</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * Route notifications for the Vonage channel.
+     */
+    public function routeNotificationForVonage(Notification $notification): string
+    {
+        return $this-&gt;phone_number;
+    }
+}</code></pre><h2 id="424bd0a0600563d4be77ecb0e240e6ac">Slack &#36890;&#30693;</h2><h3 id="b0ff454ac9620e7643a24ef9ec31ac4d">&#21069;&#25552;&#26465;&#20214;</h3><p>&#22312;&#21457;&#36865; Slack &#36890;&#30693;&#20043;&#21069;&#65292;&#24212;&#36890;&#36807; Composer &#23433;&#35013; Slack &#36890;&#30693;&#39057;&#36947;&#65306;</p><pre><code class="language-shell">composer require laravel/slack-notification-channel</code></pre><p>&#27492;&#22806;&#65292;&#20320;&#24517;&#39035;&#20026;&#20320;&#30340; Slack workspace &#21019;&#24314;&#19968;&#20010; <a href="https://api.slack.com/apps?new_app=1" target="_blank" rel="noopener noreferrer">Slack App</a>&#12290;</p><p>&#22914;&#26524;&#20165;&#38656;&#35201;&#21521;&#21019;&#24314; App &#25152;&#22312;&#30340;&#21516;&#19968; Slack workspace &#21457;&#36865;&#36890;&#30693;&#65292;&#24212;&#30830;&#20445;&#20320;&#30340; App &#20855;&#26377; <code>chat:write</code>&#12289;<code>chat:write.public</code> &#21644; <code>chat:write.customize</code> &#20316;&#29992;&#22495;&#12290;&#36825;&#20123;&#20316;&#29992;&#22495;&#21487;&#20197;&#20174; Slack &#20013;&#30340;&#12300;OAuth &amp; Permissions&#12301;App &#31649;&#29702;&#36873;&#39033;&#21345;&#28155;&#21152;&#12290;</p><p>&#25509;&#19979;&#26469;&#65292;&#22797;&#21046; App &#30340;&#12300;Bot User OAuth Token&#12301;&#24182;&#23558;&#20854;&#25918;&#22312;&#24212;&#29992;&#30340; <code>services.php</code> &#37197;&#32622;&#25991;&#20214;&#20013; <code>slack</code> &#37197;&#32622;&#25968;&#32452;&#20013;&#12290;&#27492;&#20196;&#29260;&#21487;&#22312; Slack &#20013;&#30340;&#12300;OAuth &amp; Permissions&#12301;&#36873;&#39033;&#21345;&#20013;&#25214;&#21040;&#65306;</p><pre><code class="language-php">'slack' =&gt; [
+    'notifications' =&gt; [
+        'bot_user_oauth_token' =&gt; env('SLACK_BOT_USER_OAUTH_TOKEN'),
+        'channel' =&gt; env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
+    ],
+],</code></pre><h4 id="ada12c9fa7ec7b8b356317e8509162fd">App &#20998;&#21457;</h4><p>&#22914;&#26524;&#20320;&#30340;&#24212;&#29992;&#23558;&#21521;&#24212;&#29992;&#29992;&#25143;&#25317;&#26377;&#30340;&#22806;&#37096; Slack workspace &#21457;&#36865;&#36890;&#30693;&#65292;&#21017;&#38656;&#35201;&#36890;&#36807; Slack&#12300;&#20998;&#21457;&#12301;&#20320;&#30340; App&#12290;&#21487;&#20197;&#20174; Slack &#20013; App &#30340;&#12300;Manage Distribution&#12301;&#36873;&#39033;&#21345;&#31649;&#29702; App &#20998;&#21457;&#12290;&#19968;&#26086;&#20320;&#30340; App &#34987;&#20998;&#21457;&#65292;&#20320;&#21487;&#20197;&#20351;&#29992; <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/socialite" target="_blank">Socialite</a> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/socialite#slack-bot-scopes" target="_blank">&#33719;&#21462; Slack Bot &#20196;&#29260;</a>&#65292;&#20197;&#20195;&#34920;&#20320;&#30340;&#24212;&#29992;&#29992;&#25143;&#12290;</p><h3 id="58b16d7b3408f6d9215b22cedf8736e0">&#26684;&#24335;&#21270; Slack &#36890;&#30693;</h3><p>&#22914;&#26524;&#36890;&#30693;&#25903;&#25345;&#20316;&#20026; Slack &#28040;&#24687;&#21457;&#36865;&#65292;&#21017;&#24212;&#22312;&#36890;&#30693;&#31867;&#19978;&#23450;&#20041; <code>toSlack</code> &#26041;&#27861;&#12290;&#27492;&#26041;&#27861;&#23558;&#25509;&#25910;&#19968;&#20010; <code>$notifiable</code> &#23454;&#20307;&#65292;&#24182;&#24212;&#36820;&#22238;&#19968;&#20010; <code>Illuminate\Notifications\Slack\SlackMessage</code> &#23454;&#20363;&#12290;&#20320;&#21487;&#20197;&#20351;&#29992; <a href="https://api.slack.com/block-kit" target="_blank" rel="noopener noreferrer">Slack &#30340; Block Kit API</a> &#26500;&#36896;&#20016;&#23500;&#30340;&#36890;&#30693;&#12290;&#20197;&#19979;&#31034;&#20363;&#21487;&#20197;&#22312; <a href="https://app.slack.com/block-kit-builder/T01KWS6K23Z#%7B%22blocks%22:%5B%7B%22type%22:%22header%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Invoice%20Paid%22%7D%7D,%7B%22type%22:%22context%22,%22elements%22:%5B%7B%22type%22:%22plain_text%22,%22text%22:%22Customer%20%231234%22%7D%5D%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22An%20invoice%20has%20been%20paid.%22%7D,%22fields%22:%5B%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Invoice%20No:*%5Cn1000%22%7D,%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Invoice%20Recipient:*%5Cntaylor@laravel.com%22%7D%5D%7D,%7B%22type%22:%22divider%22%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Congratulations!%22%7D%7D%5D%7D" target="_blank" rel="noopener noreferrer">Slack &#30340; Block Kit builder</a> &#20013;&#39044;&#35272;&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Slack\BlockKit\Blocks\ContextBlock;
+use Illuminate\Notifications\Slack\BlockKit\Blocks\SectionBlock;
+use Illuminate\Notifications\Slack\SlackMessage;
+
+/**
+ * Get the Slack representation of the notification.
+ */
+public function toSlack(object $notifiable): SlackMessage
+{
+    return (new SlackMessage)
+        -&gt;text('One of your invoices has been paid!')
+        -&gt;headerBlock('Invoice Paid')
+        -&gt;contextBlock(function (ContextBlock $block) {
+            $block-&gt;text('Customer #1234');
+        })
+        -&gt;sectionBlock(function (SectionBlock $block) {
+            $block-&gt;text('An invoice has been paid.');
+            $block-&gt;field("*Invoice No:*\n1000")-&gt;markdown();
+            $block-&gt;field("*Invoice Recipient:*\ntaylor@laravel.com")-&gt;markdown();
+        })
+        -&gt;dividerBlock()
+        -&gt;sectionBlock(function (SectionBlock $block) {
+            $block-&gt;text('Congratulations!');
+        });
+}</code></pre><h4 id="55729741938d5a84dd3e57545ae5be97">&#20351;&#29992; Slack &#30340; Block Kit Builder &#27169;&#26495;</h4><p>&#21487;&#20197;&#20351;&#29992; <code>usingBlockKitTemplate</code> &#26041;&#27861;&#25552;&#20379;&#30001; Slack &#30340; Block Kit Builder &#29983;&#25104;&#30340;&#21407;&#22987; JSON &#26377;&#25928;&#36733;&#33655;&#65292;&#32780;&#19981;&#26159;&#20351;&#29992;&#27969;&#30021;&#30340;&#28040;&#24687;&#26500;&#24314;&#22120;&#26041;&#27861;&#26469;&#26500;&#36896; Block Kit &#28040;&#24687;&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Slack\SlackMessage;
+use Illuminate\Support\Str;
+
+/**
+ * Get the Slack representation of the notification.
+ */
+public function toSlack(object $notifiable): SlackMessage
+{
+    $template = &lt;&lt;&lt;JSON
+        {
+          "blocks": [
+            {
+              "type": "header",
+              "text": {
+                "type": "plain_text",
+                "text": "Team Announcement"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "plain_text",
+                "text": "We are hiring!"
+              }
+            }
+          ]
+        }
+    JSON;
+
+    return (new SlackMessage)
+        -&gt;usingBlockKitTemplate($template);
+}</code></pre><h3 id="13b82f5be535d04878797e5434b464c7">Slack &#20132;&#20114;</h3><p>Slack &#30340; Block Kit &#36890;&#30693;&#31995;&#32479;&#25552;&#20379;&#24378;&#22823;&#30340;&#21151;&#33021;&#26469;<a href="https://api.slack.com/interactivity/handling" target="_blank" rel="noopener noreferrer">&#22788;&#29702;&#29992;&#25143;&#20132;&#20114;</a>&#12290;&#35201;&#20351;&#29992;&#36825;&#20123;&#21151;&#33021;&#65292;&#20320;&#30340; Slack App &#24212;&#21551;&#29992;&#12300;Interactivity&#12301;&#24182;&#37197;&#32622;&#19968;&#20010;&#25351;&#21521;&#24212;&#29992;&#25552;&#20379;&#30340; URL &#30340;&#12300;Request URL&#12301;&#12290;&#36825;&#20123;&#35774;&#32622;&#21487;&#20197;&#20174; Slack &#20013;&#30340;&#12300;Interactivity &amp; Shortcuts&#12301;App &#31649;&#29702;&#36873;&#39033;&#21345;&#36827;&#34892;&#31649;&#29702;&#12290;</p><p>&#22312;&#19979;&#38754;&#30340;&#31034;&#20363;&#20013;&#65288;&#20351;&#29992; <code>actionsBlock</code> &#26041;&#27861;&#65289;&#65292;Slack &#23558;&#21521;&#20320;&#30340;&#12300;Request URL&#12301;&#21457;&#36865; <code>POST</code> &#35831;&#27714;&#65292;&#20854;&#20013;&#21253;&#21547;&#28857;&#20987;&#25353;&#38062;&#30340; Slack &#29992;&#25143;&#12289;&#28857;&#20987;&#25353;&#38062;&#30340; ID &#31561;&#20869;&#23481;&#30340;&#26377;&#25928;&#36733;&#33655;&#12290;&#28982;&#21518;&#65292;&#20320;&#30340;&#24212;&#29992;&#21487;&#20197;&#26681;&#25454;&#35813;&#26377;&#25928;&#36733;&#33655;&#30830;&#23450;&#35201;&#25191;&#34892;&#30340;&#25805;&#20316;&#12290;&#20320;&#36824;&#24212;<a href="https://api.slack.com/authentication/verifying-requests-from-slack" target="_blank" rel="noopener noreferrer">&#39564;&#35777;&#35813;&#35831;&#27714;</a>&#26159;&#30001; Slack &#21457;&#36215;&#30340;&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Slack\BlockKit\Blocks\ActionsBlock;
+use Illuminate\Notifications\Slack\BlockKit\Blocks\ContextBlock;
+use Illuminate\Notifications\Slack\BlockKit\Blocks\SectionBlock;
+use Illuminate\Notifications\Slack\SlackMessage;
+
+/**
+ * Get the Slack representation of the notification.
+ */
+public function toSlack(object $notifiable): SlackMessage
+{
+    return (new SlackMessage)
+        -&gt;text('One of your invoices has been paid!')
+        -&gt;headerBlock('Invoice Paid')
+        -&gt;contextBlock(function (ContextBlock $block) {
+            $block-&gt;text('Customer #1234');
+        })
+        -&gt;sectionBlock(function (SectionBlock $block) {
+            $block-&gt;text('An invoice has been paid.');
+        })
+        -&gt;actionsBlock(function (ActionsBlock $block) {
+             // ID &#40664;&#35748;&#20026; "button_acknowledge_invoice"...
+            $block-&gt;button('Acknowledge Invoice')-&gt;primary();
+
+            // &#25163;&#21160;&#37197;&#32622; ID...
+            $block-&gt;button('Deny')-&gt;danger()-&gt;id('deny_invoice');
+        });
+}</code></pre><h4 id="edd1acd1179649ea6db2fc97a82b6818">&#30830;&#35748;&#24377;&#31383;</h4><p>&#22914;&#26524;&#24076;&#26395;&#29992;&#25143;&#22312;&#25191;&#34892;&#25805;&#20316;&#20043;&#21069;&#24517;&#39035;&#30830;&#35748;&#25805;&#20316;&#65292;&#21487;&#20197;&#22312;&#23450;&#20041;&#25353;&#38062;&#26102;&#35843;&#29992; <code>confirm</code> &#26041;&#27861;&#12290;<code>confirm</code> &#26041;&#27861;&#25509;&#21463;&#19968;&#26465;&#28040;&#24687;&#21644;&#19968;&#20010;&#25509;&#25910; <code>ConfirmObject</code> &#23454;&#20363;&#30340;&#38381;&#21253;&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Slack\BlockKit\Blocks\ActionsBlock;
+use Illuminate\Notifications\Slack\BlockKit\Blocks\ContextBlock;
+use Illuminate\Notifications\Slack\BlockKit\Blocks\SectionBlock;
+use Illuminate\Notifications\Slack\BlockKit\Composites\ConfirmObject;
+use Illuminate\Notifications\Slack\SlackMessage;
+
+/**
+ * Get the Slack representation of the notification.
+ */
+public function toSlack(object $notifiable): SlackMessage
+{
+    return (new SlackMessage)
+        -&gt;text('One of your invoices has been paid!')
+        -&gt;headerBlock('Invoice Paid')
+        -&gt;contextBlock(function (ContextBlock $block) {
+            $block-&gt;text('Customer #1234');
+        })
+        -&gt;sectionBlock(function (SectionBlock $block) {
+            $block-&gt;text('An invoice has been paid.');
+        })
+        -&gt;actionsBlock(function (ActionsBlock $block) {
+            $block-&gt;button('Acknowledge Invoice')
+                -&gt;primary()
+                -&gt;confirm(
+                    'Acknowledge the payment and send a thank you email?',
+                    function (ConfirmObject $dialog) {
+                        $dialog-&gt;confirm('Yes');
+                        $dialog-&gt;deny('No');
+                    }
+                );
+        });
+}</code></pre><h4 id="1c8f34a904039fa9bd261e32d7fa80b3">&#26816;&#26597; Slack &#22359;</h4><p>&#22914;&#26524;&#24076;&#26395;&#24555;&#36895;&#26816;&#26597;&#27491;&#22312;&#26500;&#24314;&#30340;&#22359;&#65292;&#21487;&#20197;&#22312; <code>SlackMessage</code> &#23454;&#20363;&#19978;&#35843;&#29992; <code>dd</code> &#26041;&#27861;&#12290;<code>dd</code> &#26041;&#27861;&#23558;&#29983;&#25104;&#24182;&#36716;&#20648; Slack <a href="https://app.slack.com/block-kit-builder/" target="_blank" rel="noopener noreferrer">Block Kit Builder</a> &#30340; URL&#65292;&#35813; URL &#22312;&#27983;&#35272;&#22120;&#20013;&#26174;&#31034;&#26377;&#25928;&#36733;&#33655;&#21644;&#36890;&#30693;&#30340;&#39044;&#35272;&#12290;&#21487;&#20197;&#23558; <code>true</code> &#20256;&#36882;&#32473; <code>dd</code> &#26041;&#27861;&#20197;&#36716;&#20648;&#21407;&#22987;&#26377;&#25928;&#36733;&#33655;&#65306;</p><pre><code class="language-php">return (new SlackMessage)
+    -&gt;text('One of your invoices has been paid!')
+    -&gt;headerBlock('Invoice Paid')
+    -&gt;dd();</code></pre><h3 id="bd45da3702431b32c8239d60da9db713">&#36335;&#30001; Slack &#36890;&#30693;</h3><p>&#35201;&#23558; Slack &#36890;&#30693;&#23450;&#21521;&#21040;&#36866;&#24403;&#30340; Slack &#22242;&#38431;&#21644;&#39057;&#36947;&#65292;&#35831;&#22312;&#21487;&#36890;&#30693;&#27169;&#22411;&#19978;&#23450;&#20041; <code>routeNotificationForSlack</code> &#26041;&#27861;&#12290;&#27492;&#26041;&#27861;&#21487;&#20197;&#36820;&#22238;&#20197;&#19979;&#19977;&#20010;&#20540;&#20043;&#19968;&#65306;</p><ul style="padding-left: 1.5em;">
+<li style="list-style-type: disc;"><code>null</code> - &#25512;&#36831;&#21040;&#36890;&#30693;&#26412;&#36523;&#20013;&#37197;&#32622;&#30340;&#39057;&#36947;&#36827;&#34892;&#36335;&#30001;&#12290;&#21487;&#20197;&#22312;&#26500;&#24314; <code>SlackMessage</code> &#26102;&#20351;&#29992; <code>to</code> &#26041;&#27861;&#22312;&#36890;&#30693;&#20869;&#37197;&#32622;&#39057;&#36947;&#12290;</li>
+<li style="list-style-type: disc;">&#25351;&#23450; Slack &#39057;&#36947;&#30340;&#23383;&#31526;&#20018;&#65292;&#20363;&#22914; <code>#support-channel</code>&#12290;</li>
+<li style="list-style-type: disc;"><code>SlackRoute</code> &#23454;&#20363;&#65292;&#20801;&#35768;&#20320;&#25351;&#23450; OAuth &#20196;&#29260;&#21644;&#39057;&#36947;&#21517;&#31216;&#65292;&#20363;&#22914; <code>SlackRoute::make($this-&gt;slack_channel, $this-&gt;slack_token)</code>&#12290;&#27492;&#26041;&#27861;&#24212;&#29992;&#20110;&#21521;&#22806;&#37096; workspace &#21457;&#36865;&#36890;&#30693;&#12290;</li>
+</ul><p>&#20363;&#22914;&#65292;&#20174; <code>routeNotificationForSlack</code> &#26041;&#27861;&#36820;&#22238; <code>#support-channel</code> &#20250;&#23558;&#36890;&#30693;&#21457;&#36865;&#21040; <code>services.php</code> &#37197;&#32622;&#25991;&#20214;&#20013; Bot User OAuth &#20196;&#29260;&#20851;&#32852;&#30340; workspace &#20013;&#30340; <code>#support-channel</code> &#39057;&#36947;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * Route notifications for the Slack channel.
+     */
+    public function routeNotificationForSlack(Notification $notification): mixed
+    {
+        return '#support-channel';
+    }
+}</code></pre><h3 id="e0d9aa4dd6f48f5b485c63e780f12a30">&#36890;&#30693;&#22806;&#37096; Slack Workspace</h3><blockquote>
+<p>[!NOTE]<br>
+&#22312;&#21521;&#22806;&#37096; Slack workspace &#21457;&#36865;&#36890;&#30693;&#20043;&#21069;&#65292;&#20320;&#30340; Slack App &#24517;&#39035;&#34987;<a href="2ky045l9z8.html#slack-app-distribution" target="_blank">&#20998;&#21457;</a>&#12290;</p>
+</blockquote><p>&#24403;&#28982;&#65292;&#20320;&#36890;&#24120;&#24076;&#26395;&#21521;&#24212;&#29992;&#29992;&#25143;&#25317;&#26377;&#30340; Slack workspace &#21457;&#36865;&#36890;&#30693;&#12290;&#20026;&#27492;&#65292;&#39318;&#20808;&#38656;&#35201;&#20026;&#29992;&#25143;&#33719;&#21462; Slack OAuth &#20196;&#29260;&#12290;&#20540;&#24471;&#24198;&#24184;&#30340;&#26159;&#65292;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/socialite" target="_blank">Laravel Socialite</a> &#21253;&#21547;&#19968;&#20010; Slack &#39537;&#21160;&#31243;&#24207;&#65292;&#21487;&#35753;&#20320;&#36731;&#26494;&#22320;&#36890;&#36807; Slack &#23545;&#24212;&#29992;&#29992;&#25143;&#36827;&#34892;&#36523;&#20221;&#39564;&#35777;&#24182;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/socialite#slack-bot-scopes" target="_blank">&#33719;&#21462; bot &#20196;&#29260;</a>&#12290;</p><p>&#33719;&#21462; bot &#20196;&#29260;&#24182;&#23558;&#20854;&#23384;&#20648;&#22312;&#24212;&#29992;&#30340;&#25968;&#25454;&#24211;&#20013;&#21518;&#65292;&#21487;&#20197;&#20351;&#29992; <code>SlackRoute::make</code> &#26041;&#27861;&#23558;&#36890;&#30693;&#36335;&#30001;&#21040;&#29992;&#25143;&#30340; workspace&#12290;&#27492;&#22806;&#65292;&#20320;&#30340;&#24212;&#29992;&#21487;&#33021;&#38656;&#35201;&#20026;&#29992;&#25143;&#25552;&#20379;&#26426;&#20250;&#25351;&#23450;&#36890;&#30693;&#24212;&#21457;&#36865;&#21040;&#21738;&#20010;&#39057;&#36947;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Slack\SlackRoute;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * Route notifications for the Slack channel.
+     */
+    public function routeNotificationForSlack(Notification $notification): mixed
+    {
+        return SlackRoute::make($this-&gt;slack_channel, $this-&gt;slack_token);
+    }
+}</code></pre><h2 id="595f096061bc1a48236cdf43dfdba9b7">&#26412;&#22320;&#21270;&#36890;&#30693;</h2><p>Laravel &#20801;&#35768;&#20320;&#20197; HTTP &#35831;&#27714;&#24403;&#21069;&#35821;&#35328;&#29615;&#22659;&#20197;&#22806;&#30340;&#35821;&#35328;&#29615;&#22659;&#21457;&#36865;&#36890;&#30693;&#65292;&#24182;&#19988;&#22914;&#26524;&#36890;&#30693;&#34987;&#38431;&#21015;&#21270;&#65292;&#23427;&#29978;&#33267;&#20250;&#35760;&#20303;&#27492;&#35821;&#35328;&#29615;&#22659;&#12290;</p><p>&#20026;&#27492;&#65292;<code>Illuminate\Notifications\Notification</code> &#31867;&#25552;&#20379;&#20102;&#19968;&#20010; <code>locale</code> &#26041;&#27861;&#26469;&#35774;&#32622;&#25152;&#38656;&#30340;&#35821;&#35328;&#12290;&#24212;&#29992;&#23558;&#22312;&#35780;&#20272;&#36890;&#30693;&#26102;&#20999;&#25442;&#21040;&#27492;&#35821;&#35328;&#29615;&#22659;&#65292;&#28982;&#21518;&#22312;&#35780;&#20272;&#23436;&#25104;&#26102;&#20999;&#25442;&#22238;&#20043;&#21069;&#30340;&#35821;&#35328;&#29615;&#22659;&#65306;</p><pre><code class="language-php">$user-&gt;notify((new InvoicePaid($invoice))-&gt;locale('es'));</code></pre><p>&#22810;&#20010;&#21487;&#36890;&#30693;&#26465;&#30446;&#30340;&#26412;&#22320;&#21270;&#20063;&#21487;&#20197;&#36890;&#36807; <code>Notification</code> Facade &#23454;&#29616;&#65306;</p><pre><code class="language-php">Notification::locale('es')-&gt;send(
+    $users, new InvoicePaid($invoice)
+);</code></pre><h4 id="324c50bcfcc51721345d0cef592abe95">&#29992;&#25143;&#39318;&#36873;&#35821;&#35328;&#29615;&#22659;</h4><p>&#26377;&#26102;&#65292;&#24212;&#29992;&#20250;&#23384;&#20648;&#27599;&#20010;&#29992;&#25143;&#30340;&#39318;&#36873;&#35821;&#35328;&#29615;&#22659;&#12290;&#36890;&#36807;&#22312;&#21487;&#36890;&#30693;&#27169;&#22411;&#19978;&#23454;&#29616; <code>HasLocalePreference</code> &#22865;&#32422;&#65292;&#21487;&#20197;&#25351;&#31034; Laravel &#22312;&#21457;&#36865;&#36890;&#30693;&#26102;&#20351;&#29992;&#27492;&#23384;&#20648;&#30340;&#35821;&#35328;&#29615;&#22659;&#65306;</p><pre><code class="language-php">use Illuminate\Contracts\Translation\HasLocalePreference;
+
+class User extends Model implements HasLocalePreference
+{
+    /**
+     * Get the user's preferred locale.
+     */
+    public function preferredLocale(): string
+    {
+        return $this-&gt;locale;
+    }
+}</code></pre><p>&#19968;&#26086;&#23454;&#29616;&#20102;&#35813;&#25509;&#21475;&#65292;Laravel &#23558;&#22312;&#21521;&#27169;&#22411;&#21457;&#36865;&#36890;&#30693;&#21644; mailable &#26102;&#33258;&#21160;&#20351;&#29992;&#39318;&#36873;&#35821;&#35328;&#29615;&#22659;&#12290;&#22240;&#27492;&#65292;&#20351;&#29992;&#27492;&#25509;&#21475;&#26102;&#26080;&#38656;&#35843;&#29992; <code>locale</code> &#26041;&#27861;&#65306;</p><pre><code class="language-php">$user-&gt;notify(new InvoicePaid($invoice));</code></pre><h2 id="db06c78d1e24cf708a14ce81c9b617ec">&#27979;&#35797;</h2><p>&#21487;&#20197;&#20351;&#29992; <code>Notification</code> Facade &#30340; <code>fake</code> &#26041;&#27861;&#26469;&#38450;&#27490;&#21457;&#36865;&#36890;&#30693;&#12290;&#36890;&#24120;&#65292;&#21457;&#36865;&#36890;&#30693;&#19982;&#20320;&#23454;&#38469;&#27491;&#22312;&#27979;&#35797;&#30340;&#20195;&#30721;&#26080;&#20851;&#12290;&#24456;&#21487;&#33021;&#20250;&#31616;&#21333;&#22320;&#26029;&#35328;&#24050;&#25351;&#31034; Laravel &#21457;&#36865;&#32473;&#23450;&#36890;&#30693;&#23601;&#36275;&#22815;&#20102;&#12290;</p><p>&#35843;&#29992; <code>Notification</code> Facade &#30340; <code>fake</code> &#26041;&#27861;&#21518;&#65292;&#21487;&#20197;&#26029;&#35328;&#24050;&#25351;&#31034;&#21521;&#29992;&#25143;&#21457;&#36865;&#36890;&#30693;&#65292;&#29978;&#33267;&#21487;&#20197;&#26816;&#26597;&#36890;&#30693;&#25509;&#25910;&#21040;&#30340;&#25968;&#25454;&#65306;</p><pre><code class="language-php">&lt;?php
+
+use App\Notifications\OrderShipped;
+use Illuminate\Support\Facades\Notification;
+
+test('orders can be shipped', function () {
+    Notification::fake();
+
+    // &#25191;&#34892;&#35746;&#21333;&#21457;&#36135;...
+
+    // &#26029;&#35328;&#26410;&#21457;&#36865;&#20219;&#20309;&#36890;&#30693;...
+    Notification::assertNothingSent();
+
+    // &#26029;&#35328;&#24050;&#21521;&#32473;&#23450;&#29992;&#25143;&#21457;&#36865;&#36890;&#30693;...
+    Notification::assertSentTo(
+        [$user], OrderShipped::class
+    );
+
+    // &#26029;&#35328;&#26410;&#21457;&#36865;&#36890;&#30693;...
+    Notification::assertNotSentTo(
+        [$user], AnotherNotification::class
+    );
+
+    // &#26029;&#35328;&#36890;&#30693;&#24050;&#21457;&#36865;&#20004;&#27425;...
+    Notification::assertSentTimes(WeeklyReminder::class, 2);
+
+    // &#26029;&#35328;&#24050;&#21457;&#36865;&#32473;&#23450;&#25968;&#37327;&#30340;&#36890;&#30693;...
+    Notification::assertCount(3);
+});</code></pre><pre><code class="language-php">&lt;?php
+
+namespace Tests\Feature;
+
+use App\Notifications\OrderShipped;
+use Illuminate\Support\Facades\Notification;
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    public function test_orders_can_be_shipped(): void
+    {
+        Notification::fake();
+
+        // &#25191;&#34892;&#35746;&#21333;&#21457;&#36135;...
+
+        // &#26029;&#35328;&#26410;&#21457;&#36865;&#20219;&#20309;&#36890;&#30693;...
+        Notification::assertNothingSent();
+
+        // &#26029;&#35328;&#24050;&#21521;&#32473;&#23450;&#29992;&#25143;&#21457;&#36865;&#36890;&#30693;...
+        Notification::assertSentTo(
+            [$user], OrderShipped::class
+        );
+
+        // &#26029;&#35328;&#26410;&#21457;&#36865;&#36890;&#30693;...
+        Notification::assertNotSentTo(
+            [$user], AnotherNotification::class
+        );
+
+        // &#26029;&#35328;&#36890;&#30693;&#24050;&#21457;&#36865;&#20004;&#27425;...
+        Notification::assertSentTimes(WeeklyReminder::class, 2);
+
+        // &#26029;&#35328;&#24050;&#21457;&#36865;&#32473;&#23450;&#25968;&#37327;&#30340;&#36890;&#30693;...
+        Notification::assertCount(3);
+    }
+}</code></pre><p>&#20320;&#21487;&#20197;&#23558;&#38381;&#21253;&#20256;&#36882;&#32473; <code>assertSentTo</code> &#25110; <code>assertNotSentTo</code> &#26041;&#27861;&#65292;&#20197;&#26029;&#35328;&#21457;&#36865;&#20102;&#36890;&#36807;&#32473;&#23450;&#12300;&#30495;&#20540;&#27979;&#35797;&#12301;&#30340;&#36890;&#30693;&#12290;&#22914;&#26524;&#33267;&#23569;&#21457;&#36865;&#20102;&#19968;&#20010;&#36890;&#36807;&#32473;&#23450;&#30495;&#20540;&#27979;&#35797;&#30340;&#36890;&#30693;&#65292;&#21017;&#26029;&#35328;&#23558;&#25104;&#21151;&#65306;</p><pre><code class="language-php">Notification::assertSentTo(
+    $user,
+    function (OrderShipped $notification, array $channels) use ($order) {
+        return $notification-&gt;order-&gt;id === $order-&gt;id;
+    }
+);</code></pre><h4 id="b4449d578fa4ab90e44c2958e29ba7d6">&#25353;&#38656;&#36890;&#30693;</h4><p>&#22914;&#26524;&#27491;&#22312;&#27979;&#35797;&#30340;&#20195;&#30721;&#21457;&#36865;<a href="2ky045l9z8.html#on-demand-notifications" target="_blank">&#25353;&#38656;&#36890;&#30693;</a>&#65292;&#21017;&#21487;&#20197;&#36890;&#36807; <code>assertSentOnDemand</code> &#26041;&#27861;&#27979;&#35797;&#25353;&#38656;&#36890;&#30693;&#26159;&#21542;&#24050;&#21457;&#36865;&#65306;</p><pre><code class="language-php">Notification::assertSentOnDemand(OrderShipped::class);</code></pre><p>&#36890;&#36807;&#23558;&#38381;&#21253;&#20316;&#20026;&#31532;&#20108;&#20010;&#21442;&#25968;&#20256;&#36882;&#32473; <code>assertSentOnDemand</code> &#26041;&#27861;&#65292;&#21487;&#20197;&#30830;&#23450;&#26159;&#21542;&#24050;&#21521;&#27491;&#30830;&#30340;&#12300;route&#12301;&#22320;&#22336;&#21457;&#36865;&#25353;&#38656;&#36890;&#30693;&#65306;</p><pre><code class="language-php">Notification::assertSentOnDemand(
+    OrderShipped::class,
+    function (OrderShipped $notification, array $channels, object $notifiable) use ($user) {
+        return $notifiable-&gt;routes['mail'] === $user-&gt;email;
+    }
+);</code></pre><h2 id="add6b1b1170662b28b1a4e37ab3d466c">&#36890;&#30693;&#20107;&#20214;</h2><h4 id="b154551798d394462f7612b30ab4ead6">&#36890;&#30693;&#21457;&#36865;&#20107;&#20214;</h4><p>&#24403;&#36890;&#30693;&#27491;&#22312;&#21457;&#36865;&#26102;&#65292;&#36890;&#30693;&#31995;&#32479;&#20250;&#20998;&#21457; <code>Illuminate\Notifications\Events\NotificationSending</code> &#20107;&#20214;&#12290;&#23427;&#21253;&#21547;&#12300;notifiable&#12301;&#23454;&#20307;&#21644;&#36890;&#30693;&#23454;&#20363;&#26412;&#36523;&#12290;&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#20013;&#20026;&#27492;&#20107;&#20214;&#21019;&#24314;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#20107;&#20214;&#30417;&#21548;&#22120;</a>&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Events\NotificationSending;
+
+class CheckNotificationStatus
+{
+    /**
+     * Handle the event.
+     */
+    public function handle(NotificationSending $event): void
+    {
+        // ...
+    }
+}</code></pre><p>&#22914;&#26524; <code>NotificationSending</code> &#20107;&#20214;&#30340;&#20107;&#20214;&#30417;&#21548;&#22120;&#20174;&#20854; <code>handle</code> &#26041;&#27861;&#36820;&#22238; <code>false</code>&#65292;&#21017;&#19981;&#20250;&#21457;&#36865;&#36890;&#30693;&#65306;</p><pre><code class="language-php">/**
+ * Handle the event.
+ */
+public function handle(NotificationSending $event): bool
+{
+    return false;
+}</code></pre><p>&#22312;&#20107;&#20214;&#30417;&#21548;&#22120;&#20013;&#65292;&#20320;&#21487;&#20197;&#35775;&#38382;&#20107;&#20214;&#30340; <code>notifiable</code>&#12289;<code>notification</code> &#21644; <code>channel</code> &#23646;&#24615;&#65292;&#20197;&#20102;&#35299;&#26377;&#20851;&#36890;&#30693;&#25910;&#20214;&#20154;&#25110;&#36890;&#30693;&#26412;&#36523;&#30340;&#26356;&#22810;&#20449;&#24687;&#65306;</p><pre><code class="language-php">/**
+ * Handle the event.
+ */
+public function handle(NotificationSending $event): void
+{
+    // $event-&gt;channel
+    // $event-&gt;notifiable
+    // $event-&gt;notification
+}</code></pre><h4 id="b0ff5d01d1558bfe542e4f8bc8b377b7">&#36890;&#30693;&#24050;&#21457;&#36865;&#20107;&#20214;</h4><p>&#24403;&#36890;&#30693;&#24050;&#21457;&#36865;&#26102;&#65292;&#36890;&#30693;&#31995;&#32479;&#20250;&#20998;&#21457; <code>Illuminate\Notifications\Events\NotificationSent</code> <a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#20107;&#20214;</a>&#12290;&#23427;&#21253;&#21547;&#12300;notifiable&#12301;&#23454;&#20307;&#21644;&#36890;&#30693;&#23454;&#20363;&#26412;&#36523;&#12290;&#20320;&#21487;&#20197;&#22312;&#24212;&#29992;&#20013;&#20026;&#27492;&#20107;&#20214;&#21019;&#24314;<a href="https://wangmaolin.net/docs/%7B%7Bversion%7D%7D/events" target="_blank">&#20107;&#20214;&#30417;&#21548;&#22120;</a>&#65306;</p><pre><code class="language-php">use Illuminate\Notifications\Events\NotificationSent;
+
+class LogNotification
+{
+    /**
+     * Handle the event.
+     */
+    public function handle(NotificationSent $event): void
+    {
+        // ...
+    }
+}</code></pre><p>&#22312;&#20107;&#20214;&#30417;&#21548;&#22120;&#20013;&#65292;&#20320;&#21487;&#20197;&#35775;&#38382;&#20107;&#20214;&#30340; <code>notifiable</code>&#12289;<code>notification</code>&#12289;<code>channel</code> &#21644; <code>response</code> &#23646;&#24615;&#65292;&#20197;&#20102;&#35299;&#26377;&#20851;&#36890;&#30693;&#25910;&#20214;&#20154;&#25110;&#36890;&#30693;&#26412;&#36523;&#30340;&#26356;&#22810;&#20449;&#24687;&#65306;</p><pre><code class="language-php">/**
+ * Handle the event.
+ */
+public function handle(NotificationSent $event): void
+{
+    // $event-&gt;channel
+    // $event-&gt;notifiable
+    // $event-&gt;notification
+    // $event-&gt;response
+}</code></pre><h2 id="a47046d476d57cd729c8762fd1b12246">&#33258;&#23450;&#20041;&#39057;&#36947;</h2><p>Laravel &#33258;&#24102;&#23569;&#25968;&#20960;&#20010;&#36890;&#30693;&#39057;&#36947;&#65292;&#20294;&#20320;&#21487;&#33021;&#24076;&#26395;&#32534;&#20889;&#33258;&#24049;&#30340;&#39537;&#21160;&#31243;&#24207;&#20197;&#36890;&#36807;&#20854;&#20182;&#39057;&#36947;&#20256;&#36865;&#36890;&#30693;&#12290;Laravel &#35753;&#36825;&#21464;&#24471;&#31616;&#21333;&#12290;&#39318;&#20808;&#65292;&#23450;&#20041;&#19968;&#20010;&#21253;&#21547; <code>send</code> &#26041;&#27861;&#30340;&#31867;&#12290;&#35813;&#26041;&#27861;&#24212;&#25509;&#25910;&#20004;&#20010;&#21442;&#25968;&#65306;<code>$notifiable</code> &#21644; <code>$notification</code>&#12290;</p><p>&#22312; <code>send</code> &#26041;&#27861;&#20013;&#65292;&#21487;&#20197;&#35843;&#29992;&#36890;&#30693;&#19978;&#30340;&#26041;&#27861;&#26469;&#26816;&#32034;&#20320;&#30340;&#39057;&#36947;&#21487;&#20197;&#29702;&#35299;&#30340;&#28040;&#24687;&#23545;&#35937;&#65292;&#28982;&#21518;&#20197;&#20320;&#24076;&#26395;&#30340;&#20219;&#20309;&#26041;&#24335;&#23558;&#36890;&#30693;&#21457;&#36865;&#32473; <code>$notifiable</code> &#23454;&#20363;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Notifications;
+
+use Illuminate\Notifications\Notification;
+
+class VoiceChannel
+{
+    /**
+     * Send the given notification.
+     */
+    public function send(object $notifiable, Notification $notification): void
+    {
+        $message = $notification-&gt;toVoice($notifiable);
+
+        // &#23558;&#36890;&#30693;&#21457;&#36865;&#32473; $notifiable &#23454;&#20363;...
+    }
+}</code></pre><p>&#23450;&#20041;&#22909;&#36890;&#30693;&#39057;&#36947;&#31867;&#21518;&#65292;&#21487;&#20197;&#20174;&#20219;&#20309;&#36890;&#30693;&#30340; <code>via</code> &#26041;&#27861;&#36820;&#22238;&#35813;&#31867;&#21517;&#12290;&#22312;&#26412;&#20363;&#20013;&#65292;&#36890;&#30693;&#30340;&#30340; <code>toVoice</code> &#26041;&#27861;&#21487;&#20197;&#36820;&#22238;&#20320;&#36873;&#25321;&#29992;&#26469;&#34920;&#31034;&#35821;&#38899;&#28040;&#24687;&#30340;&#20219;&#20309;&#23545;&#35937;&#12290;&#20363;&#22914;&#65292;&#20320;&#21487;&#20197;&#23450;&#20041;&#33258;&#24049;&#30340; <code>VoiceMessage</code> &#31867;&#26469;&#34920;&#31034;&#36825;&#20123;&#28040;&#24687;&#65306;</p><pre><code class="language-php">&lt;?php
+
+namespace App\Notifications;
+
+use App\Notifications\Messages\VoiceMessage;
+use App\Notifications\VoiceChannel;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+
+class InvoicePaid extends Notification
+{
+    use Queueable;
+
+    /**
+     * Get the notification channels.
+     */
+    public function via(object $notifiable): string
+    {
+        return VoiceChannel::class;
+    }
+
+    /**
+     * Get the voice representation of the notification.
+     */
+    public function toVoice(object $notifiable): VoiceMessage
+    {
+        // ...
+    }
+}</code></pre>
+<h4 style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:14px;font-weight:bold;margin:2em 8px 0.5em;color:rgba(250, 81, 81, 1)">引用链接</h4><p style="text-align:left;line-height:1.75;font-family:-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;font-size:80%;margin:0.5em 8px;color:#3f3f3f"><code style="font-size: 90%; opacity: 0.6;">[1]</code> 发送邮件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/mail" target="_blank">/docs/Laravel 13.x/mail</a></i><br><code style="font-size: 90%; opacity: 0.6;">[2]</code> Vonage: <i><a href="https://www.vonage.com/communications-apis/" target="_blank">https://www.vonage.com/communications-apis/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[3]</code> Slack: <i><a href="https://slack.com" target="_blank">https://slack.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[4]</code> 社区构建的通知频道: <i><a href="https://laravel-notification-channels.com/about/#suggesting-a-new-channel" target="_blank">https://laravel-notification-channels.com/about/#suggesting-a-new-channel</a></i><br><code style="font-size: 90%; opacity: 0.6;">[5]</code> Facade: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/facades" target="_blank">/docs/Laravel 13.x/facades</a></i><br><code style="font-size: 90%; opacity: 0.6;">[6]</code> Facade: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/facades" target="_blank">/docs/Laravel 13.x/facades</a></i><br><code style="font-size: 90%; opacity: 0.6;">[7]</code> Laravel Notification Channels 网站: <i><a href="http://laravel-notification-channels.com" target="_blank">http://laravel-notification-channels.com</a></i><br><code style="font-size: 90%; opacity: 0.6;">[8]</code> 启动 worker: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues#running-the-queue-worker" target="_blank">/docs/Laravel 13.x/queues#running-the-queue-worker</a></i><br><code style="font-size: 90%; opacity: 0.6;">[9]</code> 加密: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/encryption" target="_blank">/docs/Laravel 13.x/encryption</a></i><br><code style="font-size: 90%; opacity: 0.6;">[10]</code> 队列任务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues#max-job-attempts-and-timeout" target="_blank">/docs/Laravel 13.x/queues#max-job-attempts-and-timeout</a></i><br><code style="font-size: 90%; opacity: 0.6;">[11]</code> 队列任务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues#job-middleware" target="_blank">/docs/Laravel 13.x/queues#job-middleware</a></i><br><code style="font-size: 90%; opacity: 0.6;">[12]</code> 队列任务和数据库事务: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/queues#jobs-and-database-transactions" target="_blank">/docs/Laravel 13.x/queues#jobs-and-database-transactions</a></i><br><code style="font-size: 90%; opacity: 0.6;">[13]</code> 可附加对象: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/mail#attachable-objects" target="_blank">/docs/Laravel 13.x/mail#attachable-objects</a></i><br><code style="font-size: 90%; opacity: 0.6;">[14]</code> 可附加对象文档: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/mail#attachable-objects" target="_blank">/docs/Laravel 13.x/mail#attachable-objects</a></i><br><code style="font-size: 90%; opacity: 0.6;">[15]</code> 文件系统磁盘: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/filesystem" target="_blank">/docs/Laravel 13.x/filesystem</a></i><br><code style="font-size: 90%; opacity: 0.6;">[16]</code> tags: <i><a href="https://documentation.mailgun.com/docs/mailgun/user-manual/tracking-messages/#tags" target="_blank">https://documentation.mailgun.com/docs/mailgun/user-manual/tracking-messages/#tags</a></i><br><code style="font-size: 90%; opacity: 0.6;">[17]</code> metadata: <i><a href="https://documentation.mailgun.com/docs/mailgun/user-manual/sending-messages/#attaching-metadata-to-messages" target="_blank">https://documentation.mailgun.com/docs/mailgun/user-manual/sending-messages/#attaching-metadata-to-messages</a></i><br><code style="font-size: 90%; opacity: 0.6;">[18]</code> tags: <i><a href="https://postmarkapp.com/blog/tags-support-for-smtp" target="_blank">https://postmarkapp.com/blog/tags-support-for-smtp</a></i><br><code style="font-size: 90%; opacity: 0.6;">[19]</code> metadata: <i><a href="https://postmarkapp.com/support/article/1125-custom-metadata-faq" target="_blank">https://postmarkapp.com/support/article/1125-custom-metadata-faq</a></i><br><code style="font-size: 90%; opacity: 0.6;">[20]</code> SES「tags」: <i><a href="https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html" target="_blank">https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html</a></i><br><code style="font-size: 90%; opacity: 0.6;">[21]</code> mailable 对象: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/mail" target="_blank">/docs/Laravel 13.x/mail</a></i><br><code style="font-size: 90%; opacity: 0.6;">[22]</code> 按需通知: <i><a href="2ky045l9z8.html#on-demand-notifications" target="_blank">#on-demand-notifications</a></i><br><code style="font-size: 90%; opacity: 0.6;">[23]</code> migration: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/migrations" target="_blank">/docs/Laravel 13.x/migrations</a></i><br><code style="font-size: 90%; opacity: 0.6;">[24]</code> UUID 或 ULID 主键: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent#uuid-and-ulid-keys" target="_blank">/docs/Laravel 13.x/eloquent#uuid-and-ulid-keys</a></i><br><code style="font-size: 90%; opacity: 0.6;">[25]</code> uuidMorphs: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/migrations#column-method-uuidMorphs" target="_blank">/docs/Laravel 13.x/migrations#column-method-uuidMorphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[26]</code> ulidMorphs: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/migrations#column-method-ulidMorphs" target="_blank">/docs/Laravel 13.x/migrations#column-method-ulidMorphs</a></i><br><code style="font-size: 90%; opacity: 0.6;">[27]</code> Eloquent 关联: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/eloquent-relationships" target="_blank">/docs/Laravel 13.x/eloquent-relationships</a></i><br><code style="font-size: 90%; opacity: 0.6;">[28]</code> 事件广播: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/broadcasting" target="_blank">/docs/Laravel 13.x/broadcasting</a></i><br><code style="font-size: 90%; opacity: 0.6;">[29]</code> 事件广播: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/broadcasting" target="_blank">/docs/Laravel 13.x/broadcasting</a></i><br><code style="font-size: 90%; opacity: 0.6;">[30]</code> Laravel Echo: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/broadcasting#client-side-installation" target="_blank">/docs/Laravel 13.x/broadcasting#client-side-installation</a></i><br><code style="font-size: 90%; opacity: 0.6;">[31]</code> Vonage: <i><a href="https://www.vonage.com/" target="_blank">https://www.vonage.com/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[32]</code> 配置文件: <i><a href="https://github.com/laravel/vonage-notification-channel/blob/3.x/config/vonage.php" target="_blank">https://github.com/laravel/vonage-notification-channel/blob/3.x/config/vonage.php</a></i><br><code style="font-size: 90%; opacity: 0.6;">[33]</code> Slack App: <i><a href="https://api.slack.com/apps?new_app=1" target="_blank">https://api.slack.com/apps?new_app=1</a></i><br><code style="font-size: 90%; opacity: 0.6;">[34]</code> Socialite: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/socialite" target="_blank">/docs/Laravel 13.x/socialite</a></i><br><code style="font-size: 90%; opacity: 0.6;">[35]</code> 获取 Slack Bot 令牌: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/socialite#slack-bot-scopes" target="_blank">/docs/Laravel 13.x/socialite#slack-bot-scopes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[36]</code> Slack 的 Block Kit API: <i><a href="https://api.slack.com/block-kit" target="_blank">https://api.slack.com/block-kit</a></i><br><code style="font-size: 90%; opacity: 0.6;">[37]</code> Slack 的 Block Kit builder: <i><a href="https://app.slack.com/block-kit-builder/T01KWS6K23Z#%7B%22blocks%22:%5B%7B%22type%22:%22header%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Invoice%20Paid%22%7D%7D,%7B%22type%22:%22context%22,%22elements%22:%5B%7B%22type%22:%22plain_text%22,%22text%22:%22Customer%20%231234%22%7D%5D%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22An%20invoice%20has%20been%20paid.%22%7D,%22fields%22:%5B%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Invoice%20No:*%5Cn1000%22%7D,%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Invoice%20Recipient:*%5Cntaylor@laravel.com%22%7D%5D%7D,%7B%22type%22:%22divider%22%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Congratulations!%22%7D%7D%5D%7D" target="_blank">https://app.slack.com/block-kit-builder/T01KWS6K23Z#%7B%22blocks%22:%5B%7B%22type%22:%22header%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Invoice%20Paid%22%7D%7D,%7B%22type%22:%22context%22,%22elements%22:%5B%7B%22type%22:%22plain_text%22,%22text%22:%22Customer%20%231234%22%7D%5D%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22An%20invoice%20has%20been%20paid.%22%7D,%22fields%22:%5B%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Invoice%20No:*%5Cn1000%22%7D,%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Invoice%20Recipient:*%5Cntaylor@laravel.com%22%7D%5D%7D,%7B%22type%22:%22divider%22%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Congratulations!%22%7D%7D%5D%7D</a></i><br><code style="font-size: 90%; opacity: 0.6;">[38]</code> 处理用户交互: <i><a href="https://api.slack.com/interactivity/handling" target="_blank">https://api.slack.com/interactivity/handling</a></i><br><code style="font-size: 90%; opacity: 0.6;">[39]</code> 验证该请求: <i><a href="https://api.slack.com/authentication/verifying-requests-from-slack" target="_blank">https://api.slack.com/authentication/verifying-requests-from-slack</a></i><br><code style="font-size: 90%; opacity: 0.6;">[40]</code> Block Kit Builder: <i><a href="https://app.slack.com/block-kit-builder/" target="_blank">https://app.slack.com/block-kit-builder/</a></i><br><code style="font-size: 90%; opacity: 0.6;">[41]</code> 分发: <i><a href="2ky045l9z8.html#slack-app-distribution" target="_blank">#slack-app-distribution</a></i><br><code style="font-size: 90%; opacity: 0.6;">[42]</code> Laravel Socialite: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/socialite" target="_blank">/docs/Laravel 13.x/socialite</a></i><br><code style="font-size: 90%; opacity: 0.6;">[43]</code> 获取 bot 令牌: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/socialite#slack-bot-scopes" target="_blank">/docs/Laravel 13.x/socialite#slack-bot-scopes</a></i><br><code style="font-size: 90%; opacity: 0.6;">[44]</code> 按需通知: <i><a href="2ky045l9z8.html#on-demand-notifications" target="_blank">#on-demand-notifications</a></i><br><code style="font-size: 90%; opacity: 0.6;">[45]</code> 事件监听器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br><code style="font-size: 90%; opacity: 0.6;">[46]</code> 事件: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br><code style="font-size: 90%; opacity: 0.6;">[47]</code> 事件监听器: <i><a href="https://wangmaolin.net/docs/Laravel&#32;13.x/events" target="_blank">/docs/Laravel 13.x/events</a></i><br></p>
+		<div class="nearpost-navigation">
+    <table class="nearpost-table" style="width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:0;box-shadow:none !important;">
+        <tr style="border:0;">
+        <td class="nearpost-item is-left" style="width:50%;vertical-align:top;text-align:left;border:0;padding-right:16px;">
+                        <a href="d6vro0rv3g.html#blog1040" class="nav-link prev-link">
+                <span class="nav-label" style="color:#1abc9c">上一篇:</span>
+                <h4 class="nav-title" style="color: #202020">邮件</h4>
+            </a>
+                    </td>
+
+        <td class="nearpost-item is-right" style="width:50%;vertical-align:top;text-align:right;border:0;padding-left:16px;">
+                        <a href="2qvpx1z93m.html#blog1042" class="nav-link next-link">
+                <span class="nav-label" style="color:#1abc9c">下一篇:</span>
+                <h4 class="nav-title" style="color: #202020 ">扩展包开发</h4>
+            </a>
+                    </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.nearpost-navigation {
+    margin: 48px 0;
+    padding: 44px 48px;
+    background: #e9e9eb;
+    border: 2px solid #c2c2c4;
+    border-radius: 36px;
+    overflow: hidden;
+}
+
+.nearpost-navigation .nearpost-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .nearpost-item {
+    width: 50% !important;
+    min-width: 0;
+    vertical-align: top !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.nearpost-navigation .is-right {
+    text-align: right;
+}
+
+.nearpost-navigation .nav-link {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.nearpost-navigation .nav-label {
+    display: block;
+    margin-bottom: 14px;
+    font-size: clamp(18px, 1.5vw, 40px);
+    line-height: 1.2;
+    color: #1abc9c !important;
+    font-weight: 600;
+}
+
+.nearpost-navigation .nav-title {
+    margin: 0;
+    font-size: clamp(32px, 2.6vw, 64px);
+    line-height: 1.22;
+    font-weight: 500;
+    color: #202020 !important;
+    transition: color 0.3s ease;
+}
+
+.nearpost-navigation .nav-link:hover .nav-title {
+    color: #202020 !important;
+}
+
+.nearpost-navigation .nav-empty {
+    display: block;
+    width: 100%;
+    min-height: 1px;
+}
+
+@media (max-width: 768px) {
+    .nearpost-navigation {
+        padding: 24px;
+        border-radius: 22px;
+    }
+
+    .nearpost-navigation .nearpost-table {
+        border-spacing: 0 !important;
+        margin: 0;
+    }
+
+    .nearpost-navigation .nearpost-item {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .nearpost-navigation .nav-label {
+        margin-bottom: 8px;
+    }
+}
+</style>
+
+	</div>
+</div>
+
+    <larecipe-back-to-top></larecipe-back-to-top>
+</div>
+
+
+<script>
+    window.config = [];
+</script>
+
+<script type="text/javascript">
+    if (localStorage.getItem('larecipeSidebar') == null) {
+        localStorage.setItem('larecipeSidebar', !!1);
+    }
+</script>
+
+<script src="../../vendor/binarytorch/larecipe/assets/js/app.js"></script>
+
+<script>
+    window.LaRecipe = new CreateLarecipe(config)
+</script>
+
+<!-- Google Analytics -->
+<!-- /Google Analytics -->
+
+
+<script>
+    LaRecipe.run()
+</script>
+
+<script>
+    const CORRECT_PASSWORD = atob('MTIxMzE1Ng==');
+
+    function checkPassword() {
+        const input = document.getElementById('pwdInput').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!input) {
+            errorMsg.textContent = '请输入密码';
+            return;
+        }
+
+        if (input === CORRECT_PASSWORD) {
+            // 验证成功，保存状态并显示内容
+            localStorage.setItem('unlock_time', Date.now());
+
+            // 添加淡出动画
+            const modal = document.getElementById('passwordModal');
+            modal.style.transition = 'opacity 0.3s ease';
+            modal.style.opacity = '0';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
+        } else {
+            errorMsg.textContent = '❌ 密码错误，请重试';
+            const pwdInput = document.getElementById('pwdInput');
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    // 切换密码可见性
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('pwdInput');
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleBtn.textContent = '🙈';
+        } else {
+            pwdInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+        pwdInput.focus();
+    }
+
+    // 页面加载时检查是否已解锁
+    window.onload = function () {
+        // const unlockTime = localStorage.getItem('unlock_time');
+        // if (unlockTime && (Date.now() - unlockTime) < 7 * 24 * 60 * 60 * 1000) {
+        //     document.getElementById('app').style.display = 'block';
+        // } else {
+        //     const modal = document.getElementById('passwordModal');
+        //     modal.style.display = 'flex';
+        //     // 自动聚焦到输入框
+        //     setTimeout(() => {
+        //         document.getElementById('pwdInput').focus();
+        //     }, 100);
+        // }
+    };
+
+    // 支持回车提交
+    document.getElementById('pwdInput').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
+
+<script type="module">
+    // 引入 Mermaid (使用 ES Module 方式，更现代)
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    // 1. 检测系统是否是深色模式
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // 2. 初始化配置
+    mermaid.initialize({
+        startOnLoad: true, // 我们手动控制渲染
+        theme: isDarkMode ? 'dark' : 'default', // 自动切换主题
+        securityLevel: 'loose',
+        fontFamily: '"Microsoft YaHei", sans-serif', // 再次确保字体生效
+        flowchart: {
+            useMaxWidth: true, // 关键：让流程图宽度适应容器，而不是固定像素
+            htmlLabels: true,
+            useHtmlLabels: false,
+            curve: 'basis'     // 线条曲线风格，更像 GitHub
+        }
+    });
+
+    // 3. 处理你的特定 HTML 结构
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 延时 1 秒执行，避免与其他脚本冲突
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // 查找所有 pre.language-mermaid
+        const blocks = document.querySelectorAll('pre.language-mermaid');
+
+        for (let i = 0; i < blocks.length; i++) {
+            const preBlock = blocks[i];
+            const codeElement = preBlock.querySelector('code');
+
+            if (!codeElement) continue;
+
+            // 提取源码
+            const graphDefinition = codeElement.innerText.trim();
+
+            // 创建渲染容器
+            const container = document.createElement('div');
+            container.className = 'mermaid';
+            container.id = `mermaid-graph-${i}`; // 唯一 ID
+            container.textContent = graphDefinition;
+
+            // 替换原有的 pre 标签
+            preBlock.replaceWith(container);
+        }
+
+        // 4. 执行渲染
+        await mermaid.run();
+    });
+</script>
+</body>
+</html>
